@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S216 Vergleich von Verbünden - Veranschaulichung</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #1f2937; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border-radius: 18px; box-shadow: 0 18px 50px rgba(0,0,0,0.22); overflow: hidden; min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
+    .header { padding: 28px 32px; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-bottom: 2px solid rgba(255,255,255,0.22); }
+    .header h1 { font-size: 2rem; margin-bottom: 6px; }
+    .subtitle { font-size: 1rem; opacity: 0.92; line-height: 1.5; max-width: 920px; }
+    .cross-link { background: #e8eaf6; border-left: 4px solid #667eea; color: #333; padding: 14px 16px; margin-top: 16px; border-radius: 8px; }
+    .lesson-links { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(102,126,234,0.25); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .lesson-links a { color: #3949ab; font-weight: 700; text-decoration: none; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px; background: #f5f5f5; border-bottom: 2px solid #e5e7eb; max-height: 124px; overflow-y: auto; }
+    .tab { padding: 10px 12px; border: 2px solid #d1d5db; border-radius: 10px 10px 0 0; background: #fff; cursor: pointer; font-size: 0.82rem; font-weight: 700; transition: 0.2s ease; white-space: nowrap; }
+    .tab.active { background: #667eea; border-color: #667eea; color: white; }
+    .tab:hover { background: #eef2ff; }
+    .content-area { flex: 1; overflow-y: auto; padding: 30px; }
+    .step-content { display: none; }
+    .step-content.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    h3 { color: #667eea; margin-bottom: 12px; }
+    p { line-height: 1.7; margin: 10px 0; }
+    .code-block { background: #2d2d2d; color: #f8f8f2; padding: 18px; border-radius: 10px; margin: 16px 0; white-space: pre; line-height: 1.5; font-family: 'Courier New', monospace; overflow-x: auto; font-size: 0.92rem; }
+    .info-box, .requirement, .danger, .tip, .success-box { padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .info-box { background: #d1ecf1; border-left: 4px solid #17a2b8; color: #0c5460; }
+    .requirement { background: #fff3cd; border-left: 4px solid #ffc107; color: #856404; }
+    .danger { background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24; }
+    .tip { background: #e8eaf6; border-left: 4px solid #667eea; color: #3949ab; }
+    .success-box { background: #d4edda; border-left: 4px solid #28a745; color: #155724; }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.94rem; }
+    .comparison-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: left; padding: 12px; }
+    .comparison-table td { padding: 11px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+    .comparison-table tr:hover { background: #f8fafc; }
+    .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .concept-card { border: 2px solid #667eea; border-radius: 10px; padding: 14px; background: #f8f9ff; }
+    .concept-card .label { color: #667eea; font-weight: 700; margin-bottom: 8px; }
+    .nav-buttons { display: flex; justify-content: space-between; gap: 12px; border-top: 2px solid #e5e7eb; margin-top: 24px; padding-top: 20px; }
+    .nav-button { padding: 12px 24px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+    code { background: #f1f5f9; border-radius: 4px; padding: 2px 5px; font-family: Consolas, monospace; }
+    @media (max-width: 700px) { body { padding: 10px; } .content-area { padding: 20px; } .header { padding: 22px 20px; } .header h1 { font-size: 1.6rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kapitel 8.2.5: Vergleich von Verbünden</h1>
+      <div class="subtitle">Veranschaulichung zu Vergleichbarkeit, Feld-fuer-Feld-Vergleich, Wertgleichheit und dem Unterschied zwischen gleichen Werten und gleichen Speicherstellen.</div>
+      <div class="cross-link">
+        Ziel: zeigen, wann == und != auf struct-Werte anwendbar sind und warum Wertgleichheit nicht Identitaet bedeutet.
+        <div class="lesson-links">
+          <strong>Praxisbezug:</strong>
+          <a href="S214_zeiger_auf_verbund_demo_veranschaulichung.html">Rueckblick S214</a>
+          <a href="../../S216_verbund_vergleich_demo.go">Go-Demo S216_verbund_vergleich_demo.go</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showStep(1)">1 Vergleichbarkeit</div>
+      <div class="tab" onclick="showStep(2)">2 Feld fuer Feld</div>
+      <div class="tab" onclick="showStep(3)">3 Wert vs Identitaet</div>
+      <div class="tab" onclick="showStep(4)">4 Zuweisung</div>
+      <div class="tab" onclick="showStep(5)">5 Zeigervergleich</div>
+      <div class="tab" onclick="showStep(6)">6 Merksaetze</div>
+    </div>
+
+    <div class="content-area">
+      <div class="step-content active" id="step-1">
+        <h3>1. Wann ist ein struct vergleichbar?</h3>
+        <p>Ein Verbund ist genau dann vergleichbar, wenn alle seine Feld-Typen vergleichbar sind. Dann koennen <code>==</code> und <code>!=</code> verwendet werden.</p>
+        <div class="concept-grid">
+          <div class="concept-card"><div class="label">Voraussetzung</div><p>Alle Feld-Typen muessen vergleichbar sein.</p></div>
+          <div class="concept-card"><div class="label">Folge</div><p>Der gesamte Verbund ist mit <code>==</code> und <code>!=</code> vergleichbar.</p></div>
+        </div>
+        <div class="info-box"><strong>Kernidee:</strong> Der Vergleich von struct ist feldweise und nicht nur oberflaechlich.</div>
+        <div class="nav-buttons"><button class="nav-button" disabled>Zurueck</button><button class="nav-button" onclick="showStep(2)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-2">
+        <h3>2. Vergleich Feld fuer Feld</h3>
+        <p>Der Studienbrief zeigt das am Koordinaten-Beispiel. Nur wenn alle Felder gleich sind, ist auch der gesamte Verbund gleich.</p>
+        <div class="code-block">a := koordinate{5, -7, 8}</div>
+        <div class="code-block">b := koordinate{0, -7, 8}</div>
+        <div class="code-block">fmt.Println(a == b)</div>
+        <div class="code-block">b.x = 3 + 2</div>
+        <div class="code-block">fmt.Println(a == b)</div>
+        <table class="comparison-table">
+          <thead><tr><th>Vergleich</th><th>Aussage</th></tr></thead>
+          <tbody>
+            <tr><td><code>a == b</code></td><td>true nur wenn alle Feldwerte gleich sind</td></tr>
+            <tr><td><code>a.x == b.x &amp;&amp; a.y == b.y &amp;&amp; a.z == b.z</code></td><td>entspricht dem internen Vergleichsmechanismus</td></tr>
+          </tbody>
+        </table>
+        <div class="tip"><strong>Wichtig:</strong> Ein einziges unterschiedliches Feld macht den gesamten Vergleich false.</div>
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(1)">Zurueck</button><button class="nav-button" onclick="showStep(3)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-3">
+        <h3>3. Gleicher Wert ist nicht gleiche Identitaet</h3>
+        <p>Zwei Verbund-Variablen koennen denselben Wert haben und trotzdem verschiedene Variablen bleiben. Die Adressen sind dann verschieden.</p>
+        <div class="code-block">p1 := person{vorname: "Anna", nachname: "Schmidt", alter: 30}</div>
+        <div class="code-block">p2 := person{vorname: "Anna", nachname: "Schmidt", alter: 30}</div>
+        <div class="code-block">fmt.Println(p1 == p2)</div>
+        <div class="code-block">fmt.Println(&amp;p1 == &amp;p2)</div>
+        <div class="danger"><strong>Merksatz:</strong> Wertgleichheit bedeutet nicht Identitaet. Gleicher Inhalt ist nicht dieselbe Speicherstelle.</div>
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(2)">Zurueck</button><button class="nav-button" onclick="showStep(4)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-4">
+        <h3>4. Zuweisung versus Vergleich</h3>
+        <p>Eine Zuweisung kopiert den Wert. Danach sind die beiden Variablen getrennt. Aenderungen an einer Variable betreffen die andere nicht.</p>
+        <div class="code-block">f1 := farbe{rot: 255, gruen: 0, blau: 0}</div>
+        <div class="code-block">f2 := farbe{rot: 0, gruen: 255, blau: 0}</div>
+        <div class="code-block">f2 = f1</div>
+        <div class="code-block">f1.rot = 128</div>
+        <table class="comparison-table">
+          <thead><tr><th>Aktion</th><th>Folge</th></tr></thead>
+          <tbody>
+            <tr><td><code>f2 = f1</code></td><td>Wert wird kopiert, Adressen bleiben verschieden</td></tr>
+            <tr><td><code>f1.rot = 128</code></td><td>f2 bleibt unveraendert</td></tr>
+          </tbody>
+        </table>
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(3)">Zurueck</button><button class="nav-button" onclick="showStep(5)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-5">
+        <h3>5. Zeigervergleich ist etwas anderes</h3>
+        <p>Vergleicht man Zeiger auf Verbunde, dann werden Adressen verglichen. Zwei unterschiedliche Zeiger koennen auf Verbunde mit gleichem Wert zeigen und trotzdem ungleich sein.</p>
+        <div class="code-block">k1 := koordinate{5, 10, 15}</div>
+        <div class="code-block">k2 := koordinate{5, 10, 15}</div>
+        <div class="code-block">pk1 := &amp;k1</div>
+        <div class="code-block">pk2 := &amp;k2</div>
+        <div class="code-block">fmt.Println(k1 == k2)</div>
+        <div class="code-block">fmt.Println(pk1 == pk2)</div>
+        <div class="success-box"><strong>Unterscheidung:</strong> <code>k1 == k2</code> vergleicht Werte, <code>pk1 == pk2</code> vergleicht Adressen.</div>
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(4)">Zurueck</button><button class="nav-button" onclick="showStep(6)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-6">
+        <h3>6. Zusammenfassung fuer S216</h3>
+        <table class="comparison-table">
+          <thead><tr><th>Konzept</th><th>Kernaussage</th><th>Typischer Fehler</th></tr></thead>
+          <tbody>
+            <tr><td>Vergleichbarkeit</td><td>Ein struct ist vergleichbar, wenn alle Felder vergleichbar sind</td><td>ein einzelnes nicht vergleichbares Feld uebersehen</td></tr>
+            <tr><td><code>==</code></td><td>vergleicht alle Felder feldweise</td><td>nur ein Feld ansehen</td></tr>
+            <tr><td>Wertgleichheit</td><td>gleicher Inhalt bedeutet gleiche Werte</td><td>mit Identitaet verwechseln</td></tr>
+            <tr><td>Identitaet</td><td>gleiche Adresse bedeutet gleiche Variable</td><td>Adressgleichheit mit Wertgleichheit vermischen</td></tr>
+            <tr><td>Zeigervergleich</td><td>vergleicht Speicheradressen</td><td>auf Werte statt Adressen schauen</td></tr>
+          </tbody>
+        </table>
+        <div class="cross-link" style="margin-top: 16px;">
+          Anschluss im Kapitel: Danach folgt die Frage, wie ein Zeiger auf einen Verbund als Rueckgabewert verwendet wird.
+          <div class="lesson-links"><a href="../../S219_verbund_parameter_demo.go">S219_verbund_parameter_demo.go</a></div>
+        </div>
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(5)">Zurueck</button><button class="nav-button" disabled>Fertig</button></div>
+      </div>
+    </div>
++  </div>
++
++  <script>
++    function showStep(stepNumber) {
++      const steps = document.querySelectorAll('.step-content');
++      const tabs = document.querySelectorAll('.tab');
++      steps.forEach((step) => step.classList.remove('active'));
++      tabs.forEach((tab) => tab.classList.remove('active'));
++      document.getElementById('step-' + stepNumber).classList.add('active');
++      tabs[stepNumber - 1].classList.add('active');
++      document.querySelector('.content-area').scrollTop = 0;
++    }
++  </script>
++</body>
++</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zusatz Demos - Erklärseite</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --panel: rgba(16, 27, 54, 0.94);
+      --panel-strong: rgba(23, 37, 84, 0.92);
+      --text: #eef2ff;
+      --muted: #cbd5e1;
+      --accent: #667eea;
+      --accent-2: #764ba2;
+      --border: rgba(255,255,255,0.12);
+      --success: #28a745;
+      --warn: #f59e0b;
+      --info: #0ea5e9;
+      --code-bg: #111827;
+      --code-text: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(102,126,234,0.20), transparent 34%),
+        radial-gradient(circle at right, rgba(118,75,162,0.16), transparent 28%),
+        linear-gradient(135deg, #08101f 0%, #101b36 55%, #09111f 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 46px 20px 28px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(102,126,234,0.18), rgba(118,75,162,0.12));
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px 56px;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      border-left: 5px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    h3 {
+      font-size: 1.12rem;
+      color: #dbeafe;
+    }
+
+    p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(102,126,234,0.16);
+      color: #dce6ff;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .intro,
+    .section,
+    .concepts,
+    .code-block,
+    .callout {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    .intro,
+    .section,
+    .concepts,
+    .callout {
+      padding: 22px;
+      margin-top: 18px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card strong,
+    .concept-tag {
+      color: #fff;
+    }
+
+    .section-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .section-header .link {
+      color: #eff6ff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .section-header .link:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .list {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .list li { margin-bottom: 8px; }
+
+    .concept-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .concept-tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(102,126,234,0.16);
+      border: 1px solid rgba(102,126,234,0.28);
+      font-size: 0.92rem;
+    }
+
+    .code-block {
+      padding: 16px 18px;
+      margin-top: 14px;
+      background: var(--code-bg);
+      color: var(--code-text);
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-family: Consolas, "Courier New", monospace;
+      overflow-x: auto;
+    }
+
+    .two-col {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin-top: 18px;
+    }
+
+    .info {
+      background: rgba(14,165,233,0.12);
+      border-left: 4px solid var(--info);
+      color: #d7f3ff;
+    }
+
+    .warn {
+      background: rgba(245,158,11,0.12);
+      border-left: 4px solid var(--warn);
+      color: #fde68a;
+    }
+
+    .success {
+      background: rgba(40,167,69,0.12);
+      border-left: 4px solid var(--success);
+      color: #dcfce7;
+    }
+
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    .mini-table th,
+    .mini-table td {
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .mini-table th {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .footer-nav a {
+      color: #eff6ff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.24), rgba(118,75,162,0.20));
+      border: 1px solid var(--border);
+    }
+
+    .footer-nav a:hover { filter: brightness(1.08); }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 700px) {
+      main { padding-inline: 14px; }
+      header { padding-inline: 14px; }
+      .intro, .section, .concepts, .callout { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">Zusatz Demos · keine Quizzes</span>
+    <h1>Erklärseite zu den Zusatz-Demos</h1>
+    <p>Hier stehen nicht die Antworten im Vordergrund, sondern die Idee hinter den Programmen: Was passiert beim Ausführen, welche Go-Konzepte werden genutzt und warum ist das praktisch interessant?</p>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Worum geht es hier?</h2>
+      <p>Die drei Zusatz-Demos zeigen keine Lehrbuch-Kleinbeispiele mehr, sondern größere Anwendungen mit echten Datenquellen, Verschachtelung und Auswertung. Damit wird sichtbar, wie Verbünde, Slices, HTTP, JSON, Maps und externe Pakete in einem realistischen Programm zusammenspielen.</p>
+      <div class="two-col">
+        <div class="card">
+          <strong>Gemeinsame Idee</strong>
+          <p>Die Programme sammeln Daten, strukturieren sie in eigenen Typen und berechnen daraus neue Informationen.</p>
+        </div>
+        <div class="card">
+          <strong>Warum das wichtig ist</strong>
+          <p>So sieht man, dass Verbünde nicht nur ein Kapitelthema sind, sondern in echten Programmen zur Modellierung komplexer Sachverhalte gebraucht werden.</p>
+        </div>
+      </div>
+      <div class="concept-cloud">
+        <span class="concept-tag">struct</span>
+        <span class="concept-tag">slices</span>
+        <span class="concept-tag">hierarchische Verbünde</span>
+        <span class="concept-tag">Pointer</span>
+        <span class="concept-tag">HTTP</span>
+        <span class="concept-tag">JSON</span>
+        <span class="concept-tag">Maps</span>
+        <span class="concept-tag">time.Time</span>
+        <span class="concept-tag">sortieren</span>
+        <span class="concept-tag">externe Pakete</span>
+        <span class="concept-tag">RSS</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>S250: Aktien-Portfolio mit Live-Daten</h2>
+          <p class="note">Datei: <a class="link" href="S250_aktien_app_demo.go">S250_aktien_app_demo.go</a></p>
+        </div>
+        <a class="link" href="S250_aktien_app_demo.go">Go-Demo öffnen</a>
+      </div>
+
+      <p>Diese Demo holt Live-Kurse von Yahoo Finance, wandelt die Rückgabedaten in eigene Go-Verbünde um und baut daraus ein Portfolio mit mehreren Positionen. Danach werden aktuelle Werte, Gewinne und Verluste berechnet.</p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Was passiert hier?</strong>
+          <ul class="list">
+            <li>Ein einzelner Aktienkurs wird per HTTP abgerufen.</li>
+            <li>Mehrere Kurse werden gesammelt und als Liste verarbeitet.</li>
+            <li>Ein Portfolio speichert Positionen mit Aktie, Anzahl und Kaufpreis.</li>
+            <li>Aus den Daten werden Gesamtwerte und Performance berechnet.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Welche Konzepte werden benutzt?</strong>
+          <ul class="list">
+            <li>Verbünde mit verschachtelten Feldern.</li>
+            <li>Arrays und Slices für mehrere Positionen.</li>
+            <li>JSON-Parsing für API-Daten.</li>
+            <li>Berechnungen auf Feldwerten und Laufzeitdaten.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="code-block">Portfolio -> Positionen -> Aktie
+
+Aktie:
+- Symbol
+- aktueller Preis
+- Änderung in Prozent
+
+PortfolioPosition:
+- Aktie
+- Anzahl
+- Kaufpreis
+- Gewinn/Verlust
+
+Portfolio:
+- Liste aller Positionen
+- Gesamtwerte</div>
+
+      <div class="callout info">
+        <strong>Einordnung:</strong> Das ist eine typische Anwendung von hierarchischen Verbünden. Ein Portfolio enthält mehrere Positionen, und jede Position enthält wiederum eine Aktie mit ihren Detaildaten.
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>S260: Wetter-App mit Live-Daten</h2>
+          <p class="note">Datei: <a class="link" href="S260_wetter_app_demo.go">S260_wetter_app_demo.go</a></p>
+        </div>
+        <a class="link" href="S260_wetter_app_demo.go">Go-Demo öffnen</a>
+      </div>
+
+      <p>Die Wetter-Demo fragt eine API ab, bildet daraus Wetterberichte und vergleicht mehrere Städte. Sie zeigt sehr gut, wie Daten aus einer externen Quelle in eigene Typen übertragen und anschließend ausgewertet werden.</p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Was passiert hier?</strong>
+          <ul class="list">
+            <li>Städte werden mit Koordinaten beschrieben.</li>
+            <li>Wetterdaten werden von OpenMeteo geladen.</li>
+            <li>Aktuelles Wetter und 7-Tage-Vorhersage werden getrennt gespeichert.</li>
+            <li>Aus allen Berichten werden Statistiken berechnet.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Welche Konzepte werden benutzt?</strong>
+          <ul class="list">
+            <li>Geschachtelte Verbünde für Stadt, Wetter und Vorhersage.</li>
+            <li><code>time.Time</code> für Zeitpunkte.</li>
+            <li>Slices für mehrere Städte und Tage.</li>
+            <li>HTTP und JSON als Schnittstelle zur API.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="code-block">Stadt -> Koordinaten
+Stadt -> AktuellesWetter
+Stadt -> WochenVorhersage
+
+WetterBericht bündelt alles zu einem Objekt.</div>
+
+      <div class="callout warn">
+        <strong>Wichtiger Punkt:</strong> Hier sieht man, dass ein Programm nicht nur Daten abruft, sondern sie auch in eine eigene Struktur überführt, damit spätere Berechnungen und Vergleiche einfacher werden.
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>S270: Holiday Screener mit Live-RSS</h2>
+          <p class="note">Datei: <a class="link" href="S270_holiday_screener_live.go">S270_holiday_screener_live.go</a></p>
+        </div>
+        <a class="link" href="S270_holiday_screener_live.go">Go-Demo öffnen</a>
+      </div>
+
+      <p>Diese Demo kombiniert mehrere Datenquellen: RSS-Feeds liefern Reise-Deals, Wetterdaten werden für Zielorte nachgeladen und die Ergebnisse werden anschließend sortiert und bewertet. Das ist die technisch umfangreichste der drei Zusatz-Demos.</p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Was passiert hier?</strong>
+          <ul class="list">
+            <li>RSS-Feeds werden mit einem externen Paket eingelesen.</li>
+            <li>Deals werden geparst, bereinigt und gefiltert.</li>
+            <li>Zu Zielorten werden Wetterdaten nachgeladen.</li>
+            <li>Am Ende werden die besten Angebote sortiert ausgegeben.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Welche Konzepte werden benutzt?</strong>
+          <ul class="list">
+            <li>Verbünde für Reiseangebote, Wetterinfos und Quellen.</li>
+            <li>Maps für Städte und Koordinaten.</li>
+            <li>Pointer für optionale Wetterdaten.</li>
+            <li>Regex, Sortierung und externe Bibliothek <code>gofeed</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="code-block">RSS-Feed -> ReiseDeal
+ReiseDeal -> WetterInfo (optional)
+ReiseDeal -> Score
+
+Danach:
+- filtern
+- anreichern
+- sortieren
+- ausgeben</div>
+
+      <div class="callout success">
+        <strong>Einordnung:</strong> Das Programm zeigt, wie mehrere kleine Bausteine zu einer Pipeline werden: laden, analysieren, anreichern und bewerten. Genau das ist der typische Stil größerer Go-Programme.
+      </div>
+    </section>
+
+    <section class="concepts">
+      <h2>Welche Konzepte tauchen über alle drei Demos hinweg auf?</h2>
+      <table class="mini-table">
+        <thead>
+          <tr>
+            <th>Konzept</th>
+            <th>Rolle in den Demos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Verbünde</td>
+            <td>Modellieren fachliche Objekte wie Aktie, Wetterbericht, Deal oder Position.</td>
+          </tr>
+          <tr>
+            <td>Hierarchische Strukturen</td>
+            <td>Ein Objekt enthält andere Objekte als Felder.</td>
+          </tr>
+          <tr>
+            <td>Slices</td>
+            <td>Mehrere Aktien, Städte, Tage oder Deals werden gesammelt.</td>
+          </tr>
+          <tr>
+            <td>HTTP und JSON</td>
+            <td>Externe Datenquellen werden abgefragt und in Go-Typen überführt.</td>
+          </tr>
+          <tr>
+            <td>Maps</td>
+            <td>Beispielsweise für Stadt-Koordinaten oder schnelle Zuordnungen.</td>
+          </tr>
+          <tr>
+            <td>time</td>
+            <td>Zeitpunkte, Alter von Daten und Verzögerungen bei Requests.</td>
+          </tr>
+          <tr>
+            <td>Sortierung und Filterung</td>
+            <td>Ergebnisse werden geordnet und auf relevante Datensätze reduziert.</td>
+          </tr>
+          <tr>
+            <td>Externe Pakete</td>
+            <td>Zeigen, wie Go über den Kernumfang hinaus praktisch erweitert wird.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="callout info">
+      <strong>Hinweis:</strong> Diese Seite ersetzt bewusst die Quiz-Struktur. Es geht hier nur um Einordnung, Ablauf und Konzepte. Die Demo-Dateien selbst bleiben als Praxisbezug verlinkt.
+    </section>
+
+    <div class="footer-nav">
+      <a href="S250_aktien_app_demo.go">S250</a>
+      <a href="S260_wetter_app_demo.go">S260</a>
+      <a href="S270_holiday_screener_live.go">S270</a>
+    </div>
+  </main>
+</body>
+</html>

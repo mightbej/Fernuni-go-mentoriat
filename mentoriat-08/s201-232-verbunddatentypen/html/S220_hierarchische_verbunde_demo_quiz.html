@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S220 Hierarchische Verbünde - Quiz</title>
+  <style>
+    :root { --bg1:#07111f; --bg2:#0f172a; --accent:#0f766e; --accent2:#155e75; --muted:#cbd5e1; --card:rgba(8,15,31,0.96); --line:rgba(255,255,255,0.12); }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; color: #eef2ff; background: radial-gradient(circle at top, rgba(15,118,110,0.18), transparent 35%), linear-gradient(135deg, var(--bg1), var(--bg2)); min-height: 100vh; }
+    header { padding: 46px 20px 26px; text-align: center; border-bottom: 1px solid var(--line); background: linear-gradient(135deg, rgba(15,118,110,0.18), rgba(21,94,117,0.12)); }
+    main { max-width: 960px; margin: 0 auto; padding: 24px 20px 56px; }
+    .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(20,184,166,0.16); color: #ccfbf1; margin-bottom: 12px; }
+    h1, h2, h3 { margin: 0 0 12px; line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 4vw, 3rem); }
+    h2 { font-size: 1.35rem; border-left: 5px solid #2dd4bf; padding-left: 12px; }
+    p { color: var(--muted); line-height: 1.65; }
+    .links { margin: 14px auto 0; max-width: 960px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.05); text-align: left; }
+    .links a { color: #ecfeff; font-weight: 700; margin-right: 10px; }
+    .panel, .question { background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 40px rgba(0,0,0,0.3); }
+    .panel { padding: 22px; margin-top: 18px; }
+    .question { padding: 20px; margin-top: 18px; }
+    .score { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; padding: 14px 16px; border-radius: 14px; background: rgba(17,24,39,0.92); border: 1px solid var(--line); }
+    .score strong { color: #fff; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { background: rgba(17,24,39,0.92); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+    .options { display: grid; gap: 10px; margin-top: 12px; }
+    label.option { display: block; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); cursor: pointer; }
+    input[type="radio"], input[type="checkbox"] { margin-right: 10px; }
+    button { border: 0; border-radius: 12px; padding: 11px 14px; color: white; background: linear-gradient(135deg, var(--accent), var(--accent2)); cursor: pointer; margin-right: 8px; margin-top: 10px; }
+    button.secondary { background: rgba(255,255,255,0.08); border: 1px solid var(--line); }
+    .feedback { margin-top: 12px; padding: 12px 14px; border-radius: 12px; display: none; }
+    .feedback.ok { display: block; background: rgba(34,197,94,0.12); color: #bbf7d0; }
+    .feedback.bad { display: block; background: rgba(239,68,68,0.12); color: #fecaca; }
+    .result { margin-top: 18px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(8,15,31,0.96); display: none; }
+    .result.show { display: block; }
+    .hint { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: rgba(45,212,191,0.1); border-left: 5px solid #2dd4bf; color: #99f6e4; }
+    footer { text-align: center; color: var(--muted); padding: 0 20px 40px; }
+    @media (max-width: 640px) { main { padding-inline: 14px; } header { padding-inline: 14px; } button { width: 100%; } }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">FernUni Hagen · Kurs 01613 · Kapitel 8.3</span>
+    <h1>Quiz: Hierarchische Verbünde</h1>
+    <p>10 Fragen zu Wert-Feldern, Zeiger-Feldern und verschachtelten Verbund-Typen.</p>
+    <div class="links">
+      <strong>Lernpfad:</strong>
+      <a href="S220_hierarchische_verbunde_demo_veranschaulichung.html">Veranschaulichung S220</a>
+      <a href="../../S220_hierarchische_verbunde_demo.go">Go-Demo S220_hierarchische_verbunde_demo.go</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Start</h2>
+      <div class="grid">
+        <div class="card"><strong>Struktur</strong><p>Verbund-Typen können andere Verbünde als Felder enthalten.</p></div>
+        <div class="card"><strong>Kopie oder Referenz</strong><p>Ein Wert-Feld kopiert, ein Zeiger-Feld verweist.</p></div>
+        <div class="card"><strong>Anwendung</strong><p>Die Beispiele drehen sich um Besitzer und Fahrzeuge.</p></div>
+      </div>
+      <div class="hint">FernUni Hagen - Kurs 01613 - Kapitel 8.3 Hierarchische Verbünde</div>
+    </section>
+
+    <section class="panel"><div class="score"><div><strong>Punkte:</strong> <span id="score">0</span> / 10</div><div><strong>Beantwortet:</strong> <span id="answered">0</span></div><div><strong>Status:</strong> <span id="status">bereit</span></div></div></section>
+
+    <form id="quizForm">
+      <section class="question"><h3>1. Was ist ein hierarchischer Verbund?</h3><div class="options"><label class="option"><input type="radio" name="q1" value="1">Ein Verbund, der selbst wieder einen Verbund als Feld enthält</label><label class="option"><input type="radio" name="q1" value="0">Ein Verbund ohne Felder</label><label class="option"><input type="radio" name="q1" value="0">Ein Array aus Zahlen</label><label class="option"><input type="radio" name="q1" value="0">Ein Zeiger auf einen String</label></div><div class="feedback" id="fb1"></div></section>
+      <section class="question"><h3>2. Was speichert <code>fahrzeug auto</code> in <code>besitzerW</code>?</h3><div class="options"><label class="option"><input type="radio" name="q2" value="1">Einen kompletten auto-Wert als Kopie</label><label class="option"><input type="radio" name="q2" value="0">Nur die Adresse des Fahrzeugs</label><label class="option"><input type="radio" name="q2" value="0">Nur den Kennzeichen-String</label><label class="option"><input type="radio" name="q2" value="0">Einen Fehler, weil Verbünde als Felder verboten sind</label></div><div class="feedback" id="fb2"></div></section>
+      <section class="question"><h3>3. Welche Aussagen zu Wert-Feldern sind richtig? Mehrfachauswahl.</h3><div class="options"><label class="option"><input type="checkbox" name="q3" value="1">Der Feldwert wird kopiert.</label><label class="option"><input type="checkbox" name="q3" value="1">Jeder Besitzer hat sein eigenes Auto.</label><label class="option"><input type="checkbox" name="q3" value="0">Alle Besitzer teilen automatisch dieselbe Referenz.</label><label class="option"><input type="checkbox" name="q3" value="0">Änderungen am Original wirken immer auf alle Kopien.</label></div><div class="feedback" id="fb3"></div></section>
+      <section class="question"><h3>4. Was speichert <code>fahrzeug *auto</code> in <code>besitzerZ</code>?</h3><div class="options"><label class="option"><input type="radio" name="q4" value="1">Einen Zeiger auf ein auto-Objekt</label><label class="option"><input type="radio" name="q4" value="0">Eine Kopie des gesamten autos</label><label class="option"><input type="radio" name="q4" value="0">Nur einen booleschen Status</label><label class="option"><input type="radio" name="q4" value="0">Eine Liste aller Autos</label></div><div class="feedback" id="fb4"></div></section>
+      <section class="question"><h3>5. Was ist der Vorteil eines Zeiger-Felds?</h3><div class="options"><label class="option"><input type="radio" name="q5" value="1">Mehrere Strukturen können dasselbe Objekt teilen</label><label class="option"><input type="radio" name="q5" value="0">Es erzeugt immer eine eigene Kopie</label><label class="option"><input type="radio" name="q5" value="0">Es verhindert jede Änderung des Objekts</label><label class="option"><input type="radio" name="q5" value="0">Es ist nur für Strings erlaubt</label></div><div class="feedback" id="fb5"></div></section>
+      <section class="question"><h3>6. Was zeigt <code>altesAuto := mike.fahrzeug</code>?</h3><div class="options"><label class="option"><input type="radio" name="q6" value="1">Eine Kopie des Feldwerts</label><label class="option"><input type="radio" name="q6" value="0">Eine neue Referenz auf die gleiche Speicherstelle</label><label class="option"><input type="radio" name="q6" value="0">Ein Zeiger auf einen Zeiger</label><label class="option"><input type="radio" name="q6" value="0">Einen Fehler, weil Zuweisung nicht erlaubt ist</label></div><div class="feedback" id="fb6"></div></section>
+      <section class="question"><h3>7. Was zeigt <code>var pMikesAuto *auto = &(mike.fahrzeug)</code>?</h3><div class="options"><label class="option"><input type="radio" name="q7" value="1">Einen Zeiger auf das Feld selbst</label><label class="option"><input type="radio" name="q7" value="0">Eine Kopie des gesamten Autos</label><label class="option"><input type="radio" name="q7" value="0">Eine Zahl ohne Bezug zum Feld</label><label class="option"><input type="radio" name="q7" value="0">Eine Rekursion ohne Ende</label></div><div class="feedback" id="fb7"></div></section>
+      <section class="question"><h3>8. Welche Aussage ist richtig?</h3><div class="options"><label class="option"><input type="radio" name="q8" value="1">Ein Zeiger-Feld macht gemeinsame Änderungen sichtbar</label><label class="option"><input type="radio" name="q8" value="0">Ein Wert-Feld zeigt immer dieselbe Speicheradresse</label><label class="option"><input type="radio" name="q8" value="0">Ein Zeiger-Feld speichert immer eine Kopie</label><label class="option"><input type="radio" name="q8" value="0">Ein Wert-Feld ist identisch zu einem Zeiger-Feld</label></div><div class="feedback" id="fb8"></div></section>
+      <section class="question"><h3>9. Welche Aussagen sind richtig? Mehrfachauswahl.</h3><div class="options"><label class="option"><input type="checkbox" name="q9" value="1">Wert-Feld und Zeiger-Feld haben unterschiedliche Folgen für Änderungen.</label><label class="option"><input type="checkbox" name="q9" value="1">Zeiger-Felder sind gut für gemeinsames Objekt-Sharing.</label><label class="option"><input type="checkbox" name="q9" value="0">Wert-Felder und Zeiger-Felder verhalten sich immer gleich.</label><label class="option"><input type="checkbox" name="q9" value="0">Ein Wert-Feld erzeugt keine Kopie.</label></div><div class="feedback" id="fb9"></div></section>
+      <section class="question"><h3>10. Was ist die beste Zusammenfassung?</h3><div class="options"><label class="option"><input type="radio" name="q10" value="1">Hierarchische Verbünde strukturieren Daten; Wert kopiert, Zeiger teilt</label><label class="option"><input type="radio" name="q10" value="0">Hierarchische Verbünde sind nur unnötige Komplexität</label><label class="option"><input type="radio" name="q10" value="0">Zeiger-Felder sind immer falsch</label><label class="option"><input type="radio" name="q10" value="0">Wert-Felder verweisen auf das Original</label></div><div class="feedback" id="fb10"></div></section>
+
+      <section class="panel"><button type="button" onclick="gradeQuiz()">Auswerten</button><button type="button" class="secondary" onclick="resetQuiz()">Neu starten</button><div class="result" id="resultBox"><h2>Ergebnis</h2><p id="resultText"></p></div></section>
+    </form>
+  </main>
+
+  <footer>FernUni Hagen - Kurs 01613 - Kapitel 8.3 - Quiz</footer>
+
+  <script>
+    const questionData = [
+      { correct: [0], type: 'single', text: 'Ein hierarchischer Verbund enthält selbst wieder einen Verbund als Feld.' },
+      { correct: [0], type: 'single', text: 'Ein Wert-Feld speichert einen kompletten Verbund-Wert.' },
+      { correct: [0,1], type: 'multi', text: 'Wert-Felder kopieren; jeder Besitzer hat sein eigenes Objekt.' },
+      { correct: [0], type: 'single', text: 'Ein Zeiger-Feld speichert eine Adresse auf ein Objekt.' },
+      { correct: [0], type: 'single', text: 'Zeiger-Felder erlauben gemeinsames Objekt-Sharing.' },
+      { correct: [0], type: 'single', text: 'Die Zuweisung erzeugt bei Wert-Feldern eine Kopie.' },
+      { correct: [0], type: 'single', text: 'Ein Zeiger auf das Feld verweist direkt auf die Speicherstelle.' },
+      { correct: [0], type: 'single', text: 'Zeiger-Felder machen gemeinsame Änderungen sichtbar.' },
+      { correct: [0,1], type: 'multi', text: 'Wert- und Zeiger-Felder haben unterschiedliche Folgen für Änderungen und Sharing.' },
+      { correct: [0], type: 'single', text: 'Hierarchische Verbünde strukturieren Daten; Wert kopiert, Zeiger teilt.' }
+    ];
+
+    function selectedValues(name, type) {
+      if (type === 'multi') { return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(item => Number(item.value)); }
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? [Number(checked.value)] : [];
+    }
+
+    function sameSet(a, b) {
+      const left = [...a].sort((x, y) => x - y);
+      const right = [...b].sort((x, y) => x - y);
+      return left.length === right.length && left.every((value, index) => value === right[index]);
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      let answered = 0;
+      questionData.forEach((item, index) => {
+        const values = selectedValues(`q${index + 1}`, item.type);
+        const correct = sameSet(values, item.correct);
+        const feedback = document.getElementById(`fb${index + 1}`);
+        if (values.length > 0) answered += 1;
+        if (correct) score += 1;
+        feedback.className = `feedback ${correct ? 'ok' : 'bad'}`;
+        feedback.textContent = correct ? `Richtig. ${item.text}` : `Nicht ganz. ${item.text}`;
+      });
+      document.getElementById('score').textContent = score;
+      document.getElementById('answered').textContent = answered;
+      document.getElementById('status').textContent = score === 10 ? 'perfekt' : score >= 7 ? 'gut' : 'weiter ueben';
+      document.getElementById('resultBox').classList.add('show');
+      document.getElementById('resultText').textContent = `Du hast ${score} von 10 Punkten erreicht. ${score >= 8 ? 'Die Unterscheidung zwischen Wert-Feld und Zeiger-Feld ist schon stabil.' : score >= 5 ? 'Wiederhole vor allem Kopie versus Referenz und die Folgen für Änderungen.' : 'Den Abschnitt solltest du noch einmal an den Beispielen wiederholen.'}`;
+    }
+
+    function resetQuiz() {
+      document.getElementById('quizForm').reset();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('answered').textContent = '0';
+      document.getElementById('status').textContent = 'bereit';
+      document.getElementById('resultBox').classList.remove('show');
+      questionData.forEach((_, index) => {
+        const feedback = document.getElementById(`fb${index + 1}`);
+        feedback.className = 'feedback';
+        feedback.textContent = '';
+      });
+    }
+  </script>
+</body>
+</html>
