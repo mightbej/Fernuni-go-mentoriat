@@ -43,11 +43,3 @@ Die Programme im Ordner `exkurse/go` holen Daten von fremden Diensten und brauch
 ## Quellen
 
 Zwei Programme bauen auf Listings des Kurstexts auf und nennen die Quelle im Dateikopf: `kap8-verbund/go/S230_binaere_suche_demo.go` und `kap9-dynamische-datenstrukturen/go/S234_bubblesort_demo.go`.
-
-## Startseite neu erzeugen
-
-Nach dem Hinzufügen einer Seite:
-
-```bash
-python werkzeuge/startseite.py
-```
