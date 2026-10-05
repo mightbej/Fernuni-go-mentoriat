@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#be123c;--wahr:#0f766e;--wahr-bg:#d1fae5;--falsch:#b91c1c;--falsch-bg:#fee2e2;--aus:#6b7280;--aus-bg:#f3f4f6;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ffe4e6 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#be123c 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(190,18,60,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    pre.konsole { background:#111827;color:#d1fae5;border:2px solid #374151; }
+    pre.konsole .abbruch { color:#fca5a5; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .fehler { color:var(--falsch);font-size:.92rem;min-height:1.4em; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:96px;background:#fff; }
+    input:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label,.zeile .name { color:var(--muted);font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+    .zweispaltig { display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start; }
+    @media (max-width:900px) { .zweispaltig { grid-template-columns:1fr; } }
+
+    /* Wahrheitswerte zum Umschalten */
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0; }
+    .operanden { display:flex;justify-content:center;gap:28px;flex-wrap:wrap; }
+    .operand { display:flex;flex-direction:column;align-items:center;gap:6px; }
+    .operand .name { font-family:Consolas,monospace;font-size:1.2rem;font-weight:700;color:var(--muted); }
+    .wert { font-family:Consolas,monospace;font-size:1.7rem;font-weight:700;min-width:130px;padding:8px 14px;border-width:2px; }
+    .wert.wahr { background:var(--wahr-bg);border-color:var(--wahr);color:var(--wahr); }
+    .wert.falsch { background:var(--falsch-bg);border-color:var(--falsch);color:var(--falsch); }
+    .ergebnisse { display:grid;grid-template-columns:auto auto 1fr;gap:8px 16px;align-items:center;margin-top:16px;font-family:Consolas,monospace;font-size:1.1rem; }
+    .marke { display:inline-block;padding:2px 12px;border-radius:6px;font-weight:700;border:2px solid; }
+    .marke.wahr { background:var(--wahr-bg);border-color:var(--wahr);color:var(--wahr); }
+    .marke.falsch { background:var(--falsch-bg);border-color:var(--falsch);color:var(--falsch); }
+    .ergebnisse .dazu { font-family:"Segoe UI",sans-serif;font-size:.95rem;color:var(--muted); }
+
+    /* Schritte der Auswertung */
+    .ausdruck { font-family:Consolas,monospace;font-size:1.4rem;font-weight:700;text-align:center;margin:6px 0 14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;align-items:center; }
+    .teil { padding:6px 12px;border-radius:8px;border:2px solid #cbd5e1;background:#fff; }
+    .teil.wahr { background:var(--wahr-bg);border-color:var(--wahr); }
+    .teil.falsch { background:var(--falsch-bg);border-color:var(--falsch); }
+    .teil.aus { background:var(--aus-bg);border-color:#9ca3af;color:#9ca3af;text-decoration:line-through; }
+    .teil.abbruch { background:#111827;border-color:#111827;color:#fca5a5; }
+    .schritt { padding:10px 14px;border-radius:8px;border-left:4px solid #cbd5e1;background:#fff;margin:8px 0; }
+    .schritt.wahr { border-left-color:var(--wahr); }
+    .schritt.falsch { border-left-color:var(--falsch); }
+    .schritt.aus { border-left-color:#9ca3af;color:var(--aus);background:var(--aus-bg); }
+    .schritt.abbruch { border-left-color:#111827;background:#fef2f2; }
+    .schluss { padding:12px 14px;border-radius:8px;margin-top:12px;font-size:1.1rem;text-align:center;font-weight:700; }
+    .schluss.wahr { background:var(--wahr-bg);color:var(--wahr); }
+    .schluss.falsch { background:var(--falsch-bg);color:var(--falsch); }
+    .schluss.abbruch { background:#111827;color:#fca5a5; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Wahrheitswerte: bool und die Kurzschluss-Auswertung</h1>
+    <p>Bei <code style="background:rgba(255,255,255,.2);color:#fff">a &amp;&amp; b</code> und <code style="background:rgba(255,255,255,.2);color:#fff">a || b</code> wertet Go zuerst den linken Operanden aus. Den rechten wertet es nur aus, wenn das Ergebnis noch nicht feststeht. Kurstext Kapitel 4.5, Boolescher Datentyp.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was die Seite zeigt</h2>
+    <p>Der Typ <code>bool</code> hat nur zwei Werte, <code>true</code> und <code>false</code>. Interessant wird er durch die Reihenfolge, in der Go einen Ausdruck auswertet. Ist bei <code>a &amp;&amp; b</code> der linke Operand falsch, steht das Ergebnis fest, und Go lässt den rechten aus. Ist bei <code>a || b</code> der linke Operand wahr, lässt Go den rechten ebenfalls aus. Das heißt Kurzschluss-Auswertung.</p>
+    <p>Am Wert des Ausdrucks ändert das nichts. Es ändert aber, was das Programm tut. Steht rechts eine Division, findet sie nicht statt. Steht rechts ein Funktionsaufruf, wird die Funktion nicht aufgerufen. Damit kann man eine Division durch 0 verhindern, und man kann sich wundern, warum eine Ausgabe fehlt.</p>
+    <p>Die Seite zeigt beides an den zwei Beispielen des Kurstexts.</p>
+  </div>
+
+  <div class="card">
+    <h2>Der Typ bool in Go</h2>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Typ</th><th>Werte</th><th>Woher ein Wert dieses Typs kommt</th></tr></thead>
+      <tbody>
+        <tr><td><code>bool</code></td><td><code>true</code> und <code>false</code></td><td>aus den Konstanten <code>true</code> und <code>false</code>, aus jedem Vergleich mit <code>==</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code> und aus den drei logischen Operatoren</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Operator</th><th>Der Ausdruck ist wahr, wenn …</th><th>Go wertet den rechten Operanden aus, wenn …</th></tr></thead>
+      <tbody>
+        <tr><td><code>!a</code></td><td><code>a</code> falsch ist</td><td>es gibt keinen rechten Operanden</td></tr>
+        <tr><td><code>a &amp;&amp; b</code></td><td><code>a</code> und <code>b</code> beide wahr sind</td><td><code>a</code> wahr ist</td></tr>
+        <tr><td><code>a || b</code></td><td><code>a</code> oder <code>b</code> wahr ist, oder beide</td><td><code>a</code> falsch ist</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="hinweis">Go wandelt zwischen <code>bool</code> und Zahlen nichts um. Eine 0 ist kein <code>false</code> und eine 1 kein <code>true</code>, anders als in C++. Auch <code>false &lt; true</code> übersetzt Go nicht, weil <code>bool</code> kein geordneter Typ ist.</div>
+    <p class="quelle">Nach Kurstext, Abschnitt 4.5 und Sprachvergleich 4.17.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 1: Zwei Wahrheitswerte</h2>
+    <div class="feld">
+      <div class="operanden">
+        <div class="operand"><span class="name">a</span><button class="wert" id="wa" type="button"></button></div>
+        <div class="operand"><span class="name">b</span><button class="wert" id="wb" type="button"></button></div>
+      </div>
+      <div class="ergebnisse" id="ergebnisse"></div>
+      <p class="quelle" style="text-align:center;margin-top:12px">Ein Klick auf einen Wert schaltet ihn um.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 2: Die Division, die nicht stattfindet</h2>
+    <div class="zeile">
+      <label for="x">x</label>
+      <input id="x" type="number" value="0" step="1">
+      <button type="button" data-x="0">0</button>
+      <button type="button" data-x="5">5</button>
+      <button type="button" data-x="10">10</button>
+      <button type="button" data-x="20">20</button>
+    </div>
+    <div class="zeile">
+      <span class="name">Reihenfolge</span>
+      <button id="ordA" type="button">x != 0 &amp;&amp; (100 / x) &gt; 10</button>
+      <button id="ordB" type="button">(100 / x) &gt; 10 &amp;&amp; x != 0</button>
+    </div>
+    <div class="fehler" id="fehlerX"></div>
+    <div class="feld">
+      <div class="ausdruck" id="ausdruck"></div>
+      <div id="schritte"></div>
+    </div>
+    <div id="code2"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 3: Die Funktion, die nicht aufgerufen wird</h2>
+    <p>Das ist Listing 4.2 des Kurstexts zum Umbauen. Die Funktion <code>f</code> gibt bei jedem Aufruf eine Zeile aus. Ob die Zeile erscheint, hängt vom linken Operanden ab.</p>
+    <div class="zeile">
+      <span class="name">Linker Operand</span>
+      <button id="lTrue" type="button">true</button><button id="lFalse" type="button">false</button>
+      <span class="name">Operator</span>
+      <button id="opAnd" type="button">&amp;&amp;</button><button id="opOr" type="button">||</button>
+      <span class="name">f liefert</span>
+      <button id="fTrue" type="button">true</button><button id="fFalse" type="button">false</button>
+    </div>
+    <div class="zweispaltig">
+      <div><h3>Programm</h3><div id="code3"></div></div>
+      <div><h3>Ausgabe</h3><pre class="konsole" id="konsole"></pre><div id="erkl3"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li><code>a</code> ist <code>false</code>. Wertet Go bei <code>a &amp;&amp; b</code> den Operanden <code>b</code> aus?
+        <details><summary>Auflösung</summary>Nein. Mit einem falschen linken Operanden ist <code>a &amp;&amp; b</code> immer falsch, egal welchen Wert <code>b</code> hat.</details></li>
+      <li><code>x</code> ist 0. Was liefert <code>x != 0 &amp;&amp; (100 / x) &gt; 10</code>?
+        <details><summary>Auflösung</summary><code>false</code>, ohne Abbruch. Der linke Operand ist falsch, die Division wird nicht ausgeführt.</details></li>
+      <li><code>x</code> ist 0. Was geschieht bei <code>(100 / x) &gt; 10 &amp;&amp; x != 0</code>?
+        <details><summary>Auflösung</summary>Das Programm bricht mit einem Laufzeitfehler ab. Jetzt steht die Division links und wird zuerst ausgeführt. Die Prüfung auf 0 kommt zu spät.</details></li>
+      <li><code>x</code> ist 10. Was liefert <code>x != 0 &amp;&amp; (100 / x) &gt; 10</code>, und welche Operanden wertet Go aus?
+        <details><summary>Auflösung</summary><code>false</code>, und Go wertet beide aus. Der linke Operand ist wahr, also muss der rechte geprüft werden. 100 / 10 ist 10, und 10 ist nicht größer als 10.</details></li>
+      <li>Erscheint bei <code>true || f()</code> die Ausgabe der Funktion <code>f</code>?
+        <details><summary>Auflösung</summary>Nein. Der linke Operand ist wahr, das Ergebnis steht fest, und <code>f</code> wird nicht aufgerufen.</details></li>
+      <li>Erscheint bei <code>false || f()</code> die Ausgabe der Funktion <code>f</code>?
+        <details><summary>Auflösung</summary>Ja. Der linke Operand ist falsch, also entscheidet der rechte, und <code>f</code> wird aufgerufen.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const kl = w => w ? 'wahr' : 'falsch';
+  const marke = w => '<span class="marke ' + kl(w) + '">' + w + '</span>';
+
+  // ---------- Ausprobieren 1 ----------
+  const W = { a: true, b: false };
+  function zeige1() {
+    [['wa', W.a], ['wb', W.b]].forEach(([id, w]) => { el(id).textContent = w; el(id).className = 'wert ' + kl(w); });
+    const zeile = (ausdruck, w, dazu) => '<span>' + ausdruck + '</span>' + marke(w) + '<span class="dazu">' + dazu + '</span>';
+    el('ergebnisse').innerHTML =
+      zeile('!a', !W.a, 'Die Negation kehrt den Wert um.') +
+      zeile('a &amp;&amp; b', W.a && W.b, W.a ? 'a ist wahr. Go wertet b aus, b entscheidet.' : 'a ist falsch. Das Ergebnis steht fest, Go wertet b nicht aus.') +
+      zeile('a || b', W.a || W.b, W.a ? 'a ist wahr. Das Ergebnis steht fest, Go wertet b nicht aus.' : 'a ist falsch. Go wertet b aus, b entscheidet.');
+  }
+  el('wa').onclick = () => { W.a = !W.a; zeige1(); };
+  el('wb').onclick = () => { W.b = !W.b; zeige1(); };
+
+  // ---------- Ausprobieren 2 ----------
+  const D = { x: 0, pruefungZuerst: true };
+  function zeige2() {
+    el('ordA').classList.toggle('aktiv', D.pruefungZuerst); el('ordB').classList.toggle('aktiv', !D.pruefungZuerst);
+    const x = D.x;
+    const pruefung = { text: 'x != 0', werte: () => ({ w: x !== 0, rechnung: x + ' != 0' }) };
+    const division = { text: '(100 / x) > 10', werte: () => x === 0 ? { abbruch: true, rechnung: '100 / 0' }
+      : { w: Math.trunc(100 / x) > 10, rechnung: '100 / ' + x + ' ist ' + Math.trunc(100 / x) + ', und ' + Math.trunc(100 / x) + ' > 10' } };
+    const teile = D.pruefungZuerst ? [pruefung, division] : [division, pruefung];
+    const links = teile[0].werte();
+    let rechts = null, zustand = [], schritte = '', schluss;
+
+    if (links.abbruch) {
+      zustand = ['abbruch', 'aus'];
+      schritte += '<div class="schritt abbruch"><strong>Schritt 1:</strong> Go wertet den linken Operanden aus: <code>' + links.rechnung + '</code>. Durch 0 kann man nicht teilen.</div>';
+      schritte += '<div class="schritt aus"><strong>Schritt 2:</strong> Der rechte Operand kommt nicht mehr an die Reihe. Die Prüfung auf 0 steht an der falschen Stelle.</div>';
+      schluss = '<div class="schluss abbruch">Das Programm bricht ab: panic: runtime error: integer divide by zero</div>';
+    } else {
+      schritte += '<div class="schritt ' + kl(links.w) + '"><strong>Schritt 1:</strong> Go wertet den linken Operanden aus: <code>' + esc(links.rechnung) + '</code> ist ' + marke(links.w) + '</div>';
+      if (!links.w) {
+        zustand = ['falsch', 'aus'];
+        schritte += '<div class="schritt aus"><strong>Schritt 2:</strong> Der rechte Operand wird übersprungen. Mit einem falschen linken Operanden ist <code>&amp;&amp;</code> immer falsch.' + (D.pruefungZuerst ? ' Die Division findet nicht statt.' : '') + '</div>';
+        schluss = '<div class="schluss falsch">Der Ausdruck hat den Wert false</div>';
+      } else {
+        rechts = teile[1].werte();
+        zustand = ['wahr', kl(rechts.w)];
+        schritte += '<div class="schritt ' + kl(rechts.w) + '"><strong>Schritt 2:</strong> Der linke Operand ist wahr, also entscheidet der rechte: <code>' + esc(rechts.rechnung) + '</code> ist ' + marke(rechts.w) + '</div>';
+        schluss = '<div class="schluss ' + kl(rechts.w) + '">Der Ausdruck hat den Wert ' + rechts.w + '</div>';
+      }
+    }
+    el('ausdruck').innerHTML = '<span class="teil ' + zustand[0] + '">' + esc(teile[0].text) + '</span><span>&amp;&amp;</span><span class="teil ' + zustand[1] + '">' + esc(teile[1].text) + '</span>';
+    el('schritte').innerHTML = schritte + schluss;
+    const ausgabe = links.abbruch ? 'panic: runtime error: integer divide by zero' : String(links.w && rechts.w);
+    el('code2').innerHTML = '<pre>' + esc('var x int = ' + x + '\nfmt.Println(' + teile[0].text + ' && ' + teile[1].text + ')\n// ' + ausgabe) + '</pre>';
+  }
+  function setzeX(v) {
+    if (!Number.isInteger(v) || Math.abs(v) > 1000000) { el('fehlerX').textContent = 'Bitte eine ganze Zahl zwischen −1000000 und 1000000 eingeben.'; return; }
+    el('fehlerX').textContent = ''; D.x = v; el('x').value = v; zeige2();
+  }
+  el('x').addEventListener('input', () => setzeX(Number(el('x').value)));
+  document.querySelectorAll('[data-x]').forEach(b => b.onclick = () => setzeX(Number(b.dataset.x)));
+  el('ordA').onclick = () => { D.pruefungZuerst = true; zeige2(); };
+  el('ordB').onclick = () => { D.pruefungZuerst = false; zeige2(); };
+
+  // ---------- Ausprobieren 3 ----------
+  const F = { links: true, und: true, f: false };
+  function zeige3() {
+    el('lTrue').classList.toggle('aktiv', F.links); el('lFalse').classList.toggle('aktiv', !F.links);
+    el('opAnd').classList.toggle('aktiv', F.und); el('opOr').classList.toggle('aktiv', !F.und);
+    el('fTrue').classList.toggle('aktiv', F.f); el('fFalse').classList.toggle('aktiv', !F.f);
+    const op = F.und ? '&&' : '||';
+    const aufruf = F.und ? F.links : !F.links;                 // wird f aufgerufen?
+    const wert = aufruf ? F.f : F.links;
+    el('code3').innerHTML = '<pre>' + esc(
+      'func f() bool {\n    fmt.Println("<<Funktion f wird aufgerufen>>")\n    return ' + F.f + '\n}\n\n' +
+      'func main() {\n    fmt.Println("ergibt", ' + F.links + ' ' + op + ' f())\n}') + '</pre>';
+    el('konsole').textContent = (aufruf ? '<<Funktion f wird aufgerufen>>\n' : '') + 'ergibt ' + wert;
+    el('erkl3').innerHTML = '<div class="hinweis">' + (aufruf
+      ? 'Der linke Operand ist ' + F.links + '. Bei <code>' + esc(op) + '</code> steht das Ergebnis damit noch nicht fest. Go ruft <code>f</code> auf, und ihre Ausgabe erscheint vor dem Ergebnis.'
+      : 'Der linke Operand ist ' + F.links + '. Bei <code>' + esc(op) + '</code> steht das Ergebnis damit fest. Go ruft <code>f</code> nicht auf, und ihre Ausgabe fehlt.') + '</div>';
+  }
+  el('lTrue').onclick = () => { F.links = true; zeige3(); };
+  el('lFalse').onclick = () => { F.links = false; zeige3(); };
+  el('opAnd').onclick = () => { F.und = true; zeige3(); };
+  el('opOr').onclick = () => { F.und = false; zeige3(); };
+  el('fTrue').onclick = () => { F.f = true; zeige3(); };
+  el('fFalse').onclick = () => { F.f = false; zeige3(); };
+
+  zeige1(); zeige2(); zeige3();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strings: Bytes und Zeichen in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#b45309;--ein:#0f766e;--ein-bg:#d1fae5;--mehr:#b45309;--mehr-bg:#ffedd5;--wahl:#1e40af;--wahl-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ffedd5 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#b45309 0%,#0f766e 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(180,83,9,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .meldung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--ein);background:var(--ein-bg);margin:12px 0; }
+    .meldung.schnitt { border-left-color:var(--rot);background:#fef2f2; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    input[type="text"],input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;background:#fff; }
+    input[type="text"] { width:240px; } input[type="number"] { width:76px; }
+    input:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label { color:var(--muted);font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    td.zahl { font-family:Consolas,monospace;white-space:nowrap; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+
+    /* Byte-Reihe */
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow-x:auto; }
+    .raster { display:grid;gap:6px;width:max-content;margin:0 auto;align-items:stretch; }
+    .zeilenname { color:var(--muted);font-size:.85rem;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;white-space:nowrap; }
+    .zeichen { border-radius:8px;padding:6px 4px;text-align:center;border:2px solid var(--ein);background:var(--ein-bg); }
+    .zeichen.mehr { border-color:var(--mehr);background:var(--mehr-bg); }
+    .zeichen { cursor:pointer; }
+    .zeichen.ganz { box-shadow:0 0 0 3px var(--wahl); }
+    .zeichen.zerteilt { box-shadow:0 0 0 3px var(--rot); }
+    .runenindex { text-align:center;font-family:Consolas,monospace;font-size:1rem;font-weight:700;color:var(--muted); }
+    .runenindex.ganz { color:var(--wahl); }
+    .zeichen .glyphe { font-size:1.9rem;line-height:1.2;font-weight:700; }
+    .zeichen .nummer { font-family:Consolas,monospace;font-size:.75rem;color:var(--muted); }
+    .byte { display:flex;flex-direction:column;align-items:center;justify-content:center;width:58px;padding:6px 0;font-family:Consolas,monospace;background:#fff;border:2px solid #cbd5e1;border-radius:8px;cursor:pointer; }
+    .byte .hex { font-size:1.25rem;font-weight:700; }
+    .byte .dez { font-size:.78rem;color:var(--muted); }
+    .byte.wahl { background:var(--wahl-bg);border-color:var(--wahl); }
+    .index { text-align:center;font-family:Consolas,monospace;font-size:1rem;font-weight:700;color:var(--muted); }
+    .index.wahl { color:var(--wahl); }
+    .legende { color:var(--muted);font-size:.88rem;text-align:center;margin-top:10px; }
+    .farbe { display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 4px 0 12px;vertical-align:-1px; }
+    .anzeige { display:grid;grid-template-columns:auto 1fr;gap:6px 16px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:1.02rem;margin:10px 0;overflow-wrap:anywhere; }
+    .anzeige .name { font-family:Consolas,monospace;color:var(--muted); }
+    .anzeige .gross { font-size:1.3rem;font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Strings: Bytes und Zeichen</h1>
+    <p>Ein String in Go ist eine Folge von Bytes. Ein Zeichen kann ein Byte belegen oder bis zu vier. Deshalb hat „Tür" drei Zeichen und die Länge 4. Kurstext Kapitel 4.6, String Datentyp.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was die Seite zeigt</h2>
+    <p>Go speichert jedes Zeichen eines Strings im Format UTF-8. Die 128 ASCII-Zeichen brauchen je ein Byte. Alle anderen Unicode-Zeichen brauchen zwei bis vier Bytes, zum Beispiel ü und ß je zwei.</p>
+    <p>Drei Dinge in Go zählen Bytes und nicht Zeichen: Die Funktion <code>len(s)</code> liefert die Zahl der Bytes. Der Index-Ausdruck <code>s[i]</code> liefert ein einzelnes Byte. Der Slice-Ausdruck <code>s[low:high]</code> schneidet nach Bytes. Wer mit Zeichen rechnet, bekommt bei Umlauten falsche Ergebnisse.</p>
+    <p>Wer mit Zeichen arbeiten will, wandelt den String in ein <code>[]rune</code> um. Darin ist jedes Element genau ein Zeichen, und der Index zählt Zeichen. Ein Schnitt kann dann kein Zeichen mehr zerteilen.</p>
+    <p>Die Seite legt den String als Reihe von Bytes hin. Über jedem Byte steht das Zeichen, zu dem es gehört, darunter sein Index im String. Ganz oben steht der Index desselben Zeichens im <code>[]rune</code>. So sieht man beide Zählweisen übereinander.</p>
+  </div>
+
+  <div class="card">
+    <h2>Die Typen string, byte und rune in Go</h2>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Typ</th><th>Was ein Wert dieses Typs ist</th><th>Wo er auf dieser Seite vorkommt</th></tr></thead>
+      <tbody>
+        <tr><td><code>string</code></td><td>eine Folge von Bytes beliebiger Länge</td><td>der ganze String <code>s</code> und jeder Substring <code>s[low:high]</code></td></tr>
+        <tr><td><code>byte</code></td><td>ein Byte, anderer Name für <code>uint8</code></td><td>der Wert von <code>s[i]</code></td></tr>
+        <tr><td><code>rune</code></td><td>die Unicode-Nummer eines Zeichens, anderer Name für <code>int32</code></td><td>die Nummer unter jedem Zeichen, zum Beispiel U+00FC für ü</td></tr>
+        <tr><td><code>[]rune</code></td><td>eine Folge von Runen, also eine Folge ganzer Zeichen</td><td><code>r := []rune(s)</code>, dann zählen <code>len(r)</code>, <code>r[i]</code> und <code>r[a:b]</code> Zeichen</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Zeichen</th><th>Beispiele</th><th>Bytes in UTF-8</th></tr></thead>
+      <tbody>
+        <tr><td>ASCII-Zeichen</td><td class="zahl">A b 7 ? Leerzeichen</td><td>1</td></tr>
+        <tr><td>Umlaute und viele Buchstaben mit Akzent</td><td class="zahl">ü ß é</td><td>2</td></tr>
+        <tr><td>viele Sonderzeichen</td><td class="zahl">∞ €</td><td>3</td></tr>
+        <tr><td>Emojis und seltene Zeichen</td><td class="zahl">😀</td><td>4</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="quelle">Nach Kurstext, Abschnitt 4.6. Der Typ <code>[]rune</code> kommt dort nicht vor, er ist eine Ergänzung.</p>
+  </div>
+
+  <div class="card">
+    <h2>Mit Zeichen statt mit Bytes arbeiten</h2>
+    <p>Die Umwandlung <code>[]rune(s)</code> zerlegt den String in seine Zeichen. Die Umwandlung <code>string(…)</code> macht aus Runen wieder einen String.</p>
+<pre>s := "Maßstab"
+r := []rune(s)
+
+fmt.Println(len(s))         // 8, Bytes
+fmt.Println(len(r))         // 7, Zeichen
+fmt.Println(string(r[2]))   // ß
+fmt.Println(string(r[3:7])) // stab
+fmt.Println(s[3:7])         // schneidet durch das ß</pre>
+    <p>Auch die Schleife mit <code>range</code> läuft zeichenweise über einen String. Der Index, den sie liefert, ist aber die Position des ersten Bytes:</p>
+<pre>for i, z := range "Tür" {
+    fmt.Println(i, string(z))
+}
+// 0 T
+// 1 ü
+// 3 r</pre>
+    <div class="hinweis">Ein <code>[]rune</code> belegt für jedes Zeichen 4 Bytes, auch für ein a, und die Umwandlung kopiert den ganzen Text. Deshalb ist der String in Go die sparsame Form und <code>[]rune</code> die bequeme.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren</h2>
+    <div class="zeile">
+      <label for="eingabe">String</label>
+      <input id="eingabe" type="text" value="Tür" maxlength="24" aria-label="String">
+      <button class="haupt" id="zeige" type="button">anzeigen</button>
+      <button type="button" data-s="Tür">Tür</button>
+      <button type="button" data-s="Maßstab">Maßstab</button>
+      <button type="button" data-s="anrufen">anrufen</button>
+      <button type="button" data-s="Grüße">Grüße</button>
+      <button type="button" data-s="∞">∞</button>
+      <button type="button" data-s="😀">😀</button>
+    </div>
+
+    <div class="feld">
+      <div class="raster" id="raster"></div>
+      <div class="legende"><span class="farbe" style="background:var(--ein-bg);border:2px solid var(--ein)"></span>Zeichen mit 1 Byte<span class="farbe" style="background:var(--mehr-bg);border:2px solid var(--mehr)"></span>Zeichen mit mehreren Bytes<span class="farbe" style="background:var(--wahl-bg);border:2px solid var(--wahl)"></span>ausgewählte Bytes</div>
+      <div class="legende">Ein Klick auf ein Byte wählt es aus. Ein zweiter Klick auf ein anderes Byte wählt den Bereich dazwischen. Ein Klick auf ein Zeichen wählt alle seine Bytes.</div>
+    </div>
+
+    <div class="zeile">
+      <label for="low">low</label><input id="low" type="number" min="0" value="1">
+      <label for="high">high</label><input id="high" type="number" min="0" value="3">
+      <button id="setze" type="button">Bereich setzen</button>
+    </div>
+    <div class="fehler" id="fehler"></div>
+
+    <div class="anzeige" id="anzeige"></div>
+    <div id="meldung"></div>
+    <div id="gocode"></div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>Welchen Wert liefert <code>len("Tür")</code>?
+        <details><summary>Auflösung</summary>4. Das ü belegt zwei Bytes, T und r je eines.</details></li>
+      <li>Welchen Substring liefert <code>"Tür"[1:3]</code>?
+        <details><summary>Auflösung</summary>„ü". Die Bytes mit Index 1 und 2 bilden zusammen das ü. Der obere Index 3 gehört nicht mehr dazu.</details></li>
+      <li>Mit welchem Slice-Ausdruck bekommt man aus „Tür" das r?
+        <details><summary>Auflösung</summary><code>"Tür"[3:4]</code>. Das r ist das vierte Byte, nicht das dritte.</details></li>
+      <li>Was liefert <code>"Tür"[1:2]</code>?
+        <details><summary>Auflösung</summary>Ein einzelnes Byte mit dem Wert 195, die erste Hälfte des ü. Das ist kein gültiges Zeichen. Go meldet keinen Fehler, die Konsole zeigt dafür meist das Ersatzzeichen �.</details></li>
+      <li>Wie viele Bytes und wie viele Zeichen hat „Grüße"?
+        <details><summary>Auflösung</summary>7 Bytes und 5 Zeichen. <code>len(s)</code> liefert 7, <code>len([]rune(s))</code> und <code>utf8.RuneCountInString(s)</code> liefern 5.</details></li>
+      <li>Der String ist „Maßstab". Was liefert <code>s[3:7]</code>, und wie bekommt man „stab", ohne Bytes zu zählen?
+        <details><summary>Auflösung</summary><code>s[3:7]</code> beginnt mit der zweiten Hälfte des ß und liefert <code>"\x9fsta"</code>. Mit <code>r := []rune(s)</code> liefert <code>string(r[3:7])</code> den String „stab". Das s ist das vierte Zeichen, also Index 3.</details></li>
+      <li>Der String ist „Abo". Welchen Wert und welchen Typ hat <code>s[0]</code>?
+        <details><summary>Auflösung</summary>Den Wert 65 und den Typ <code>byte</code>. <code>s[0]</code> ist kein String. Deshalb übersetzt Go <code>"H" + s[0]</code> nicht.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const enc = new TextEncoder(), dec = new TextDecoder('utf-8', { fatal: true });
+  const hex2 = b => b.toString(16).padStart(2, '0');
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const st = { s: 'Tür', bytes: null, zeichen: [], low: 1, high: 3, anker: null, ankerZ: null };
+
+  // Zerlegt den String in Zeichen mit ihren Bytes
+  function zerlege(s) {
+    const zeichen = []; let start = 0;
+    for (const ch of s) {
+      const b = enc.encode(ch);
+      zeichen.push({ ch, start, n: b.length, nr: ch.codePointAt(0) });
+      start += b.length;
+    }
+    return zeichen;
+  }
+
+  // Wie das Verb %q in Go: gültige Zeichen direkt, Bytes ohne gültiges Zeichen als \xNN
+  function alsLiteral(bytes) {
+    let out = '', halb = false, i = 0;
+    while (i < bytes.length) {
+      const b = bytes[i];
+      const n = b < 0x80 ? 1 : (b >= 0xc2 && b < 0xe0) ? 2 : (b >= 0xe0 && b < 0xf0) ? 3 : (b >= 0xf0 && b < 0xf5) ? 4 : 0;
+      let ch = null;
+      if (n > 0 && i + n <= bytes.length) { try { ch = dec.decode(bytes.slice(i, i + n)); } catch (e) { ch = null; } }
+      if (ch === null) { out += '\\x' + hex2(b); halb = true; i++; }
+      else { out += ch === '"' ? '\\"' : ch === '\\' ? '\\\\' : ch; i += n; }
+    }
+    return { text: '"' + out + '"', halb };
+  }
+
+  const zeichenZu = i => st.zeichen.find(z => i >= z.start && i < z.start + z.n);
+
+  function zeichne() {
+    const N = st.bytes.length, r = el('raster');
+    r.replaceChildren();
+    r.style.gridTemplateColumns = 'auto repeat(' + Math.max(N, 1) + ', 58px)';
+    const name = (t, row) => { const d = document.createElement('div'); d.className = 'zeilenname'; d.textContent = t; d.style.gridRow = row; d.style.gridColumn = 1; r.append(d); };
+    name('Index in []rune', 1); name('Zeichen', 2); name('Byte', 3); name('Index im String', 4);
+    st.zeichen.forEach((z, k) => {
+      // Wie viele Bytes dieses Zeichens liegen in der Auswahl?
+      const drin = Math.max(0, Math.min(st.high, z.start + z.n) - Math.max(st.low, z.start));
+      const lage = drin === z.n ? ' ganz' : drin > 0 ? ' zerteilt' : '';
+      const spalte = (z.start + 2) + ' / span ' + z.n;
+      const ri = document.createElement('div');
+      ri.className = 'runenindex' + (drin === z.n ? ' ganz' : ''); ri.textContent = k;
+      ri.style.gridRow = 1; ri.style.gridColumn = spalte;
+      const d = document.createElement('div');
+      d.className = 'zeichen' + (z.n > 1 ? ' mehr' : '') + lage;
+      d.style.gridRow = 2; d.style.gridColumn = spalte;
+      d.innerHTML = '<div class="glyphe">' + (z.ch === ' ' ? '␣' : esc(z.ch)) + '</div><div class="nummer">U+' + z.nr.toString(16).toUpperCase().padStart(4, '0') + '</div>';
+      d.addEventListener('click', () => klickZeichen(k));
+      r.append(ri, d);
+    });
+    for (let i = 0; i < N; i++) {
+      const wahl = i >= st.low && i < st.high;
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'byte' + (wahl ? ' wahl' : '');
+      b.style.gridRow = 3; b.style.gridColumn = i + 2;
+      b.innerHTML = '<span class="hex">' + hex2(st.bytes[i]) + '</span><span class="dez">' + st.bytes[i] + '</span>';
+      b.setAttribute('aria-label', 'Byte mit Index ' + i + ', Wert ' + st.bytes[i]);
+      b.addEventListener('click', () => klick(i));
+      const x = document.createElement('div');
+      x.className = 'index' + (wahl ? ' wahl' : ''); x.textContent = i;
+      x.style.gridRow = 4; x.style.gridColumn = i + 2;
+      r.append(b, x);
+    }
+    el('low').value = st.low; el('high').value = st.high;
+    el('low').max = N; el('high').max = N;
+    berichte();
+  }
+
+  function berichte() {
+    const N = st.bytes.length, lit = alsLiteral(st.bytes).text;
+    const teil = alsLiteral(st.bytes.slice(st.low, st.high));
+    const zeilen = [['len(s)', '<span class="gross">' + N + '</span> Bytes'],
+                    ['len(r)', '<span class="gross">' + st.zeichen.length + '</span> Zeichen &nbsp;mit r := []rune(s). Dasselbe liefert utf8.RuneCountInString(s).']];
+    const code = [['var s string = ' + lit, ''], ['r := []rune(s)', ''], ['fmt.Println(len(s))', String(N)], ['fmt.Println(len(r))', String(st.zeichen.length)]];
+    let meldung = '', schnitt = false;
+    if (N === 0) {
+      meldung = 'Der leere String hat die Länge 0.';
+    } else {
+      if (st.low < N) {
+        const z = zeichenZu(st.low), b = st.bytes[st.low];
+        const wo = z.n === 1 ? 'Das ist das Zeichen ' + esc(z.ch === ' ' ? 'Leerzeichen' : z.ch) + '.' : 'Das ist Byte ' + (st.low - z.start + 1) + ' von ' + z.n + ' des Zeichens ' + esc(z.ch) + '.';
+        zeilen.push(['s[' + st.low + ']', b + ' &nbsp;(hexadezimal 0x' + hex2(b) + ', Typ byte) &nbsp;' + wo]);
+        code.push(['fmt.Println(s[' + st.low + '])', String(b)]);
+      }
+      zeilen.push(['s[' + st.low + ':' + st.high + ']', '<span class="gross">' + esc(teil.text) + '</span> &nbsp;Länge ' + st.high + ' − ' + st.low + ' = ' + (st.high - st.low)]);
+      code.push(['fmt.Printf("%q\\n", s[' + st.low + ':' + st.high + '])', teil.text]);
+      // Dieselbe Auswahl in Zeichen gezählt: alle Zeichen, die die Auswahl berührt
+      let runen = '';
+      if (st.high > st.low) {
+        const a = st.zeichen.indexOf(zeichenZu(st.low)), b = st.zeichen.indexOf(zeichenZu(st.high - 1)) + 1;
+        const ganz = alsLiteral(enc.encode(st.zeichen.slice(a, b).map(z => z.ch).join(''))).text;
+        runen = 'string(r[' + a + ':' + b + '])';
+        zeilen.push([runen, '<span class="gross">' + esc(ganz) + '</span> &nbsp;' + (b - a) + ' Zeichen, in Zeichen gezählt']);
+        code.push(['fmt.Printf("%q\\n", ' + runen + ')', ganz]);
+      }
+      if (teil.halb) {
+        schnitt = true;
+        meldung = '<strong>Der Schnitt geht mitten durch ein Zeichen.</strong> Übrig bleibt ein Teil eines Zeichens, der für sich kein gültiges Zeichen ist. Go meldet keinen Fehler. Das Verb <code>%q</code> zeigt die Bytes als <code>\\x…</code>, <code>fmt.Println</code> gibt sie unverändert aus, und die Konsole zeigt dafür meist das Ersatzzeichen �.<br>Mit <code>' + runen + '</code> kann das nicht geschehen. Dort zählt der Index Zeichen.';
+      } else if (st.high > st.low) {
+        const anzahl = zerlege(dec.decode(st.bytes.slice(st.low, st.high))).length;
+        meldung = 'Der Substring besteht aus ' + (st.high - st.low) + (st.high - st.low === 1 ? ' Byte' : ' Bytes') + ' und ' + anzahl + ' Zeichen.';
+      } else meldung = 'Der Bereich ist leer. Der Substring ist der leere String.';
+    }
+    el('anzeige').innerHTML = zeilen.map(z => '<span class="name">' + z[0] + '</span><span>' + z[1] + '</span>').join('');
+    el('meldung').innerHTML = '<div class="meldung' + (schnitt ? ' schnitt' : '') + '">' + meldung + '</div>';
+    const breite = Math.max(...code.slice(1).map(c => c[0].length));
+    el('gocode').innerHTML = '<pre>' + code.map(c => esc(c[1] === '' ? c[0] : c[0].padEnd(breite) + ' // ' + c[1])).join('\n') + '</pre>';
+  }
+
+  function klick(i) {
+    el('fehler').textContent = '';
+    if (st.anker === null) { st.low = i; st.high = i + 1; st.anker = i; }
+    else { st.low = Math.min(st.anker, i); st.high = Math.max(st.anker, i) + 1; st.anker = null; }
+    st.ankerZ = null; zeichne();
+  }
+
+  // Klick auf ein Zeichen wählt alle seine Bytes, ein zweiter Klick den Bereich bis zu diesem Zeichen
+  function klickZeichen(k) {
+    el('fehler').textContent = '';
+    const z = st.zeichen[k];
+    if (st.ankerZ === null || st.ankerZ === undefined) { st.low = z.start; st.high = z.start + z.n; st.ankerZ = k; }
+    else {
+      const a = st.zeichen[Math.min(st.ankerZ, k)], b = st.zeichen[Math.max(st.ankerZ, k)];
+      st.low = a.start; st.high = b.start + b.n; st.ankerZ = null;
+    }
+    st.anker = null; zeichne();
+  }
+
+  function lade(s, low, high) {
+    st.ankerZ = null;
+    st.s = s; st.bytes = enc.encode(s); st.zeichen = zerlege(s); st.anker = null;
+    const N = st.bytes.length;
+    st.low = Math.min(low, N); st.high = Math.min(Math.max(high, st.low), N);
+    el('eingabe').value = s; el('fehler').textContent = '';
+    zeichne();
+  }
+
+  el('zeige').onclick = () => lade(el('eingabe').value, 0, enc.encode(el('eingabe').value).length);
+  el('eingabe').addEventListener('keydown', e => { if (e.key === 'Enter') el('zeige').click(); });
+  document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => lade(b.dataset.s, 0, enc.encode(b.dataset.s).length));
+  el('setze').onclick = () => {
+    const low = parseInt(el('low').value, 10), high = parseInt(el('high').value, 10), N = st.bytes.length;
+    if (Number.isNaN(low) || Number.isNaN(high) || low < 0 || high > N || low > high) {
+      el('fehler').textContent = 'Es muss gelten: 0 ≤ low ≤ high ≤ ' + N + '. Sonst meldet Go einen Fehler.'; return;
+    }
+    el('fehler').textContent = ''; st.low = low; st.high = high; st.anker = null; zeichne();
+  };
+  ['low', 'high'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') el('setze').click(); }));
+
+  lade('Tür', 1, 3);
+})();
+</script>
+</body>
+</html>

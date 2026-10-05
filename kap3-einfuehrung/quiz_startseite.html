@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Quiz Hub - Startseite</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --accent: #0f766e;
+      --accent-2: #1d4ed8;
+      --shadow: rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% -10%, #d7f3e8 0%, transparent 42%),
+        radial-gradient(circle at 95% 0%, #dbeafe 0%, transparent 40%),
+        linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      background: linear-gradient(135deg, #0f766e 0%, #1d4ed8 100%);
+      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.22);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+      max-width: 72ch;
+    }
+
+    .toolbar {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    .toolbar a {
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: #fff;
+    }
+
+    .toolbar a:hover {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 16px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+
+    .meta {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(0.95);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--accent-2);
+      border-color: #bfdbfe;
+    }
+
+    .btn-secondary:hover {
+      background: #eff6ff;
+    }
+
+    .note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 1.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Go Quiz Hub</h1>
+      <p>Zentrale Startseite fuer alle Unterrichts-Quiz. Empfohlener Ablauf: Thema auswaehlen, gemeinsam abschaetzen, dann in der jeweiligen Seite die Aufloesung einblenden.</p>
+    </section>
+
+    <nav class="toolbar" aria-label="Schnellnavigation">
+      <a href="go_verschachtelte_funktionsaufrufe_quiz.html">Verschachtelte Aufrufe</a>
+      <a href="go_scope_block_return_quiz.html">Scope/Block/return</a>
+      <a href="go_funktionen_im_programm_quiz.html">Funktionen im Programm</a>
+      <a href="go_parameter_argument_quiz.html">Parameter vs. Argument</a>
+      <a href="go_ausgabe_verkettung_string_quiz.html">Ausgabe & String-Verkettung</a>
+      <a href="go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Bindungsstaerken</a>
+      <a href="go_bezeichner_schluesselwoerter_quiz.html">Bezeichner & Schluesselwoerter</a>
+      <a href="go_implizite_semikolons_quiz.html">Implizite Semikolons</a>
+      <a href="go_fehlersuche_programme_einfach.html">Fehlersuche einfach</a>
+      <a href="go_fehlersuche_programme.html">Fehlersuche erweitert</a>
+    </nav>
+
+    <section class="grid">
+      <article class="card">
+        <h2>1) Bezeichner: gueltig/ungueltig</h2>
+        <p class="meta">Grundlagen zu Namensregeln und typischen Fehlern.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_bezeichner_arbeitsblatt.html">Oeffnen</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>2) Bezeichner vs. Schluesselwoerter</h2>
+        <p class="meta">Drei-Klassen-Quiz: Bezeichner, Schluesselwort, ungueltig.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_bezeichner_schluesselwoerter_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>3) Implizite Semikolons</h2>
+        <p class="meta">Ja/Nein-Entscheidungen zur automatischen Semikolon-Setzung.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_implizite_semikolons_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>4) Auswertungsreihenfolge und Bindungsstaerken</h2>
+        <p class="meta">Punkt-vor-Strich, Links-nach-Rechts und Klammerwirkung.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>5) Ausgabe und String-Verkettung</h2>
+        <p class="meta">fmt.Println, Leerzeile und Verkettung mit +.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_ausgabe_verkettung_string_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>6) Parameter vs. Argument</h2>
+        <p class="meta">Deklaration vs. Aufruf sauber unterscheiden.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_parameter_argument_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>7) Funktionen im Go Programm</h2>
+        <p class="meta">Funktionsdeklaration, Rueckgabetyp, call-by-value, Block.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_funktionen_im_programm_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>8) Scope, Sichtbarkeit und return</h2>
+        <p class="meta">Geltungsbereich lokaler Variablen und Wirkung von return.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_scope_block_return_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>9) Verschachtelte Funktionsaufrufe</h2>
+        <p class="meta">Funktionsaufruf als Ausdruck und innere/aeussere Auswertung.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_verschachtelte_funktionsaufrufe_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>10) Fehlersuche fuer Anfaenger</h2>
+        <p class="meta">Drei sehr kurze Programme mit einfachen, gut besprechbaren Fehlern.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_fehlersuche_programme_einfach.html">Seite oeffnen</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>11) Fehlersuche erweitert</h2>
+        <p class="meta">Drei etwas reichhaltigere Programme mit mehreren fachlich passenden Fehlern.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_fehlersuche_programme.html">Seite oeffnen</a>
+        </div>
+      </article>
+    </section>
+
+    <p class="note">Stand: 18.04.2026. Tipp: Diese Seite als Startpunkt offen lassen und pro Thema in neuem Tab oeffnen.</p>
+  </main>
+</body>
+</html>

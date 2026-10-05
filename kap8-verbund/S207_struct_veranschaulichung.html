@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S207 struct in Go - Veranschaulichung</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+      min-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 28px 32px;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.92;
+      line-height: 1.5;
+      max-width: 900px;
+    }
+
+    .cross-link {
+      background: #e8eaf6;
+      border-left: 4px solid #667eea;
+      color: #333;
+      padding: 14px 16px;
+      margin-top: 16px;
+      border-radius: 8px;
+    }
+
+    .lesson-links {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(102, 126, 234, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .lesson-links a {
+      color: #3949ab;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 12px 20px;
+      background: #f5f5f5;
+      border-bottom: 2px solid #e5e7eb;
+      max-height: 124px;
+      overflow-y: auto;
+    }
+
+    .tab {
+      padding: 10px 12px;
+      border: 2px solid #d1d5db;
+      border-radius: 10px 10px 0 0;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab:hover { background: #eef2ff; }
+
+    .tab.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; animation: fadeIn 0.25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h3 {
+      color: #667eea;
+      margin-bottom: 12px;
+    }
+
+    h4 {
+      color: #334155;
+      margin: 18px 0 8px;
+    }
+
+    p {
+      line-height: 1.7;
+      margin: 10px 0;
+    }
+
+    ul, ol {
+      margin: 12px 0 12px 22px;
+      line-height: 1.8;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 18px;
+      border-radius: 10px;
+      margin: 16px 0;
+      white-space: pre;
+      line-height: 1.5;
+      font-family: 'Courier New', monospace;
+      overflow-x: auto;
+      font-size: 0.92rem;
+    }
+
+    .keyword { color: #ff79c6; }
+    .string { color: #f1fa8c; }
+    .number { color: #bd93f9; }
+    .comment { color: #6272a4; }
+
+    .info-box,
+    .requirement,
+    .danger,
+    .tip,
+    .success-box {
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .info-box {
+      background: #d1ecf1;
+      border-left: 4px solid #17a2b8;
+      color: #0c5460;
+    }
+
+    .requirement {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      color: #856404;
+    }
+
+    .danger {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      color: #721c24;
+    }
+
+    .tip {
+      background: #e8eaf6;
+      border-left: 4px solid #667eea;
+      color: #3949ab;
+    }
+
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      color: #155724;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.94rem;
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: left;
+      padding: 12px;
+    }
+
+    .comparison-table td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    .comparison-table tr:hover { background: #f8fafc; }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .flow-box {
+      background: #eef2ff;
+      border: 1px solid #667eea;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-weight: 700;
+      min-width: 145px;
+      text-align: center;
+    }
+
+    .arrow {
+      font-size: 1.5rem;
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .memory-row,
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .memory-card,
+    .concept-card {
+      border: 2px solid #667eea;
+      border-radius: 10px;
+      padding: 14px;
+      background: #f8f9ff;
+    }
+
+    .memory-card .label,
+    .concept-card .label {
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .memory-cell {
+      border: 1px dashed #94a3b8;
+      background: white;
+      border-radius: 6px;
+      padding: 9px;
+      margin-top: 8px;
+      font-family: Consolas, monospace;
+    }
+
+    .interactive-box {
+      border: 2px solid #667eea;
+      background: #f8f9ff;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .action-button,
+    .nav-button {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .action-button {
+      padding: 10px 14px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 2px solid #e5e7eb;
+      margin-top: 24px;
+      padding-top: 20px;
+    }
+
+    .nav-button {
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
+
+    .action-button:hover,
+    .nav-button:hover { transform: translateY(-1px); }
+
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #c7d2fe;
+      min-height: 72px;
+    }
+
+    code {
+      background: #f1f5f9;
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-family: Consolas, monospace;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 10px; }
+      .content-area { padding: 20px; }
+      .header { padding: 22px 20px; }
+      .header h1 { font-size: 1.6rem; }
+      .tabs { padding: 10px; }
+      .tab { font-size: 0.76rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kapitel 8.2: struct in Go</h1>
+      <div class="subtitle">Didaktische Veranschaulichung zu Verbund-Typen, Literal-Schreibweisen, Nullwerten und Feldzugriffen auf Basis des Studienbriefs S. 205-210.</div>
+      <div class="cross-link">
+        Ziel: sichtbar machen, warum struct mehr ist als Syntax, naemlich ein eigener Datentyp fuer zusammengehoerige Werte unterschiedlichen Typs.
+        <div class="lesson-links">
+          <strong>Praxisbezug:</strong>
+          <a href="go/S207_struct_demo.go">Go-Demo S207_struct_demo.go</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showStep(1)">1 Motivation</div>
+      <div class="tab" onclick="showStep(2)">2 struct lesen</div>
+      <div class="tab" onclick="showStep(3)">3 Felder</div>
+      <div class="tab" onclick="showStep(4)">4 Typidentitaet</div>
+      <div class="tab" onclick="showStep(5)">5 Benannter Typ</div>
+      <div class="tab" onclick="showStep(6)">6 Exportregeln</div>
+      <div class="tab" onclick="showStep(7)">7 Nullwert</div>
+      <div class="tab" onclick="showStep(8)">8 Literale I</div>
+      <div class="tab" onclick="showStep(9)">9 Literale II</div>
+      <div class="tab" onclick="showStep(10)">10 Ausgabe</div>
+      <div class="tab" onclick="showStep(11)">11 Feldvariablen</div>
+      <div class="tab" onclick="showStep(12)">12 Merksaetze</div>
+    </div>
+
+    <div class="content-area">
+      <div class="step-content active" id="step-1">
+        <h3>1. Motivation: Warum Verbunde?</h3>
+        <p>Der Studienbrief fuehrt Verbunde nicht als bloe neue Schreibweise ein, sondern als Antwort auf ein konkretes Modellierungsproblem: Daten einer Person gehoeren zusammen, sind aber nicht alle vom selben Typ. Arrays koennen viele Werte speichern, aber nur desselben Typs. Ein struct fasst dagegen heterogene Daten unter einem gemeinsamen Typ zusammen.</p>
+
+        <div class="flow">
+          <div class="flow-box">Personalnummer</div>
+          <div class="arrow">+</div>
+          <div class="flow-box">Nachname</div>
+          <div class="arrow">+</div>
+          <div class="flow-box">Geburtsjahr</div>
+          <div class="arrow">=</div>
+          <div class="flow-box">eine Person</div>
+        </div>
+
+        <div class="info-box"><strong>Kernidee:</strong> Ein Verbund speichert zusammengehoerige Informationen in einer einzigen Variable. Dadurch wird die fachliche Einheit auch im Programm sichtbar.</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Ansatz</th><th>Was wird gruppiert?</th><th>Schwaeche</th></tr></thead>
+          <tbody>
+            <tr><td>Mehrere Einzelvariablen</td><td>gar nicht</td><td>Zusammengehoerigkeit bleibt nur im Namen versteckt</td></tr>
+            <tr><td>Array</td><td>viele Werte eines Typs</td><td>nicht fuer gemischte Datentypen gedacht</td></tr>
+            <tr><td>struct</td><td>zusammengehoerige Werte verschiedener Typen</td><td>muss sauber definiert werden</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" disabled>Zurueck</button><button class="nav-button" onclick="showStep(2)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-2">
+        <h3>2. Einen struct-Typ lesen</h3>
+        <p>In Go wird ein Verbund mit dem Schluesselwort <code>struct</code> beschrieben. Die uebliche Schreibweise ist zeilenweise. Gerade bei mehreren Feldern ist das die lesbarste Form.</p>
+
+        <div class="code-block"><span class="keyword">struct</span> {
+vorname <span class="keyword">string</span>
+nachname <span class="keyword">string</span>
+gebJahr <span class="keyword">int</span>
+ort <span class="keyword">string</span>
+verheiratet <span class="keyword">bool</span>
+}</div>
+
+        <div class="requirement"><strong>Wichtig:</strong> Hinter die Typangabe eines Felds kommt kein Komma. Jedes Feld steht ueblicherweise in einer eigenen Zeile.</div>
+
+        <div class="tip"><strong>Lesetraining:</strong> Lies einen struct immer als Liste von Feldern: Wie heisst die Komponente und welchen Typ hat sie?</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(1)">Zurueck</button><button class="nav-button" onclick="showStep(3)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-3">
+        <h3>3. Felder deklarieren</h3>
+        <p>Jedes Feld braucht einen eindeutigen Namen und einen Typ. Aufeinanderfolgende Felder desselben Typs duerfen auch kompakt zusammen notiert werden. Beides beschreibt denselben Datenaufbau.</p>
+
+        <div class="code-block"><span class="comment">// ausfuehrlich</span>
+<span class="keyword">struct</span> {
+vorname <span class="keyword">string</span>
+nachname <span class="keyword">string</span>
+gebJahr <span class="keyword">int</span>
+ort <span class="keyword">string</span>
+verheiratet <span class="keyword">bool</span>
+}
+
+<span class="comment">// kompakter fuer gleiche Typen</span>
+<span class="keyword">struct</span> {
+vorname, nachname <span class="keyword">string</span>
+gebJahr <span class="keyword">int</span>
+ort <span class="keyword">string</span>
+verheiratet <span class="keyword">bool</span>
+}</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Regel</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td>Eindeutiger Feldname</td><td>sonst ist ein Zugriff nicht eindeutig</td></tr>
+            <tr><td>Typ pro Feld</td><td>jedes Feld gehoert fest zu einem Datentyp</td></tr>
+            <tr><td>Gruppierung gleicher Typen</td><td>nur Schreibkuerzung, kein anderer Semantikwechsel</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(2)">Zurueck</button><button class="nav-button" onclick="showStep(4)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-4">
+        <h3>4. Die Reihenfolge der Felder gehoert zum Typ</h3>
+        <p>Ein typischer Denkfehler ist: gleiche Feldnamen und gleiche Feldtypen reichen aus. Laut Studienbrief ist das nicht genug. Auch die Reihenfolge der Felder bestimmt die Typidentitaet.</p>
+
+        <div class="code-block"><span class="keyword">struct</span> {
+vorname, nachname, ort <span class="keyword">string</span>
+gebJahr <span class="keyword">int</span>
+verheiratet <span class="keyword">bool</span>
+}
+
+<span class="keyword">struct</span> {
+nachname, vorname, ort <span class="keyword">string</span>
+verheiratet <span class="keyword">bool</span>
+gebJahr <span class="keyword">int</span>
+}</div>
+
+        <div class="danger"><strong>Achtung:</strong> Andere Feldreihenfolge bedeutet anderer Datentyp. Zwei struct-Typen koennen also trotz aehnlicher Felder unvertraeglich sein.</div>
+
+        <div class="interactive-box">
+          <strong>Kurztest:</strong> Welche Literal-Schreibweise bleibt robuster, wenn sich die Feldreihenfolge spaeter aendert?
+          <div class="button-row">
+            <button class="action-button" onclick="showLiteralAdvice('positional')">Werte nur nach Position</button>
+            <button class="action-button" onclick="showLiteralAdvice('named')">Feldname: Wert</button>
+          </div>
+          <div class="result-box" id="literal-advice">Klicke eine Option an, um die didaktische Begruendung einzublenden.</div>
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(3)">Zurueck</button><button class="nav-button" onclick="showStep(5)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-5">
+        <h3>5. Benannte struct-Typen mit type</h3>
+        <p>In der Praxis wird der Verbund fast immer mit <code>type</code> und einem Typnamen versehen. Erst dadurch kann derselbe Datentyp an vielen Stellen bequem wiederverwendet werden.</p>
+
+        <div class="code-block"><span class="keyword">type</span> person <span class="keyword">struct</span> {
+vorname <span class="keyword">string</span>
+nachname <span class="keyword">string</span>
+gebJahr <span class="keyword">int</span>
+ort <span class="keyword">string</span>
+verheiratet <span class="keyword">bool</span>
+}
+
+<span class="keyword">var</span> ich person
+<span class="keyword">var</span> grosseltern [<span class="number">4</span>]person
+
+<span class="keyword">func</span> juenger(p1, p2 person) person {
+    <span class="comment">// ...</span>
+}</div>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">Typname</div>
+            <div class="memory-cell">person</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Einsetzbar als</div>
+            <div class="memory-cell">Variable</div>
+            <div class="memory-cell">Array-Elementtyp</div>
+            <div class="memory-cell">Funktionsparameter</div>
+          </div>
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(4)">Zurueck</button><button class="nav-button" onclick="showStep(6)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-6">
+        <h3>6. Exportierte und nicht exportierte Namen</h3>
+        <p>Der Studienbrief erinnert daran, dass fuer struct-Typen dieselben Exportregeln gelten wie fuer andere Bezeichner in Go. Grossbuchstaben am Anfang exportieren, Kleinbuchstaben bleiben paketintern.</p>
+
+        <div class="code-block"><span class="keyword">type</span> Person <span class="keyword">struct</span> {
+Vorname <span class="keyword">string</span>
+Nachname <span class="keyword">string</span>
+}
+
+<span class="keyword">type</span> person <span class="keyword">struct</span> {
+vorname <span class="keyword">string</span>
+nachname <span class="keyword">string</span>
+}</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Schreibweise</th><th>Sichtbarkeit</th><th>Didaktischer Punkt</th></tr></thead>
+          <tbody>
+            <tr><td><code>Person</code>, <code>Vorname</code></td><td>exportiert</td><td>von anderen Paketen nutzbar</td></tr>
+            <tr><td><code>person</code>, <code>vorname</code></td><td>nicht exportiert</td><td>fuer kleine lokale Beispiele oft ausreichend</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip"><strong>Studienbrief-Konvention:</strong> Die Beispiele bleiben klein geschrieben, weil sie bewusst nicht exportiert werden sollen.</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(5)">Zurueck</button><button class="nav-button" onclick="showStep(7)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-7">
+        <h3>7. Nullwert eines Verbund-Typs</h3>
+        <p>Wird bei einer struct-Variable kein Initialwert angegeben, dann erhaelt sie den Nullwert ihres Typs. Dieser setzt sich Feld fuer Feld aus den jeweiligen Nullwerten zusammen.</p>
+
+        <div class="code-block"><span class="keyword">var</span> anna, karl person
+fmt.Println(anna, karl)
+<span class="comment">// {  0  false} {  0  false}</span></div>
+
+        <div class="concept-grid">
+          <div class="concept-card"><div class="label">string</div><p>Nullwert ist leere Zeichenkette <code>""</code>.</p></div>
+          <div class="concept-card"><div class="label">int</div><p>Nullwert ist <code>0</code>.</p></div>
+          <div class="concept-card"><div class="label">bool</div><p>Nullwert ist <code>false</code>.</p></div>
+        </div>
+
+        <div class="requirement"><strong>Merksatz:</strong> Der Nullwert eines struct ist kein eigener Sonderwert, sondern die Zusammensetzung der Nullwerte aller Felder.</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(6)">Zurueck</button><button class="nav-button" onclick="showStep(8)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-8">
+        <h3>8. Verbund-Literale: erste Syntax-Variante</h3>
+        <p>Die erste Schreibweise funktioniert rein positionsbasiert. Alle Feldwerte muessen angegeben werden, und zwar genau in der Reihenfolge der struct-Definition.</p>
+
+        <div class="code-block">anna = person{<span class="string">"Anna"</span>, <span class="string">"Schmidt"</span>, <span class="number">1966</span>, <span class="string">"Hamburg"</span>, false}
+
+<span class="comment">// unzulaessig, weil unvollstaendig</span>
+<span class="comment">// anna = person{"Anna", "Schmidt", 1966, "Hamburg"}</span></div>
+
+        <div class="danger"><strong>Risiko:</strong> Wenn spaeter die Feldreihenfolge geaendert wird, muessen alle positionsbasierten Literale mit angepasst werden. Besonders heikel wird das, wenn zwei Felder denselben Typ haben.</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(7)">Zurueck</button><button class="nav-button" onclick="showStep(9)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-9">
+        <h3>9. Verbund-Literale: zweite Syntax-Variante</h3>
+        <p>Die zweite Schreibweise nennt jedes Feld explizit. Dadurch duerfen Feldname-Wert-Paare in beliebiger Reihenfolge stehen, und fehlende Felder erhalten automatisch ihren Nullwert.</p>
+
+        <div class="code-block">karl = person{
+nachname: <span class="string">"Mueller"</span>,
+vorname: <span class="string">"Karl"</span>,
+ort: <span class="string">"Koeln"</span>,
+gebJahr: <span class="number">1955</span>,
+<span class="comment">// verheiratet: false wird implizit ergaenzt</span>
+}</div>
+
+        <div class="success-box"><strong>Praxisvorteil:</strong> Diese Schreibweise ist unabhaengig von der Feldreihenfolge und im Studienbrief die empfohlene alltagstaugliche Variante.</div>
+
+        <div class="requirement"><strong>Syntax-Detail:</strong> In der mehrzeiligen Form muss auch nach dem letzten explizit notierten Feld ein Komma stehen.</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(8)">Zurueck</button><button class="nav-button" onclick="showStep(10)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-10">
+        <h3>10. Ausgabe von struct-Werten</h3>
+        <p>Fuer die Ausgabe reicht nicht nur irgendein Print. Der Studienbrief unterscheidet drei nuetzliche Blickwinkel: nur Werte, Feldnamen mit Werten und Ausgabe in Literal-Syntax.</p>
+
+        <div class="code-block">fmt.Printf(<span class="string">"%v\n"</span>, anna)
+fmt.Printf(<span class="string">"%+v\n"</span>, anna)
+fmt.Printf(<span class="string">"%#v\n"</span>, anna)</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Format</th><th>Was wird sichtbar?</th><th>Nutzen</th></tr></thead>
+          <tbody>
+            <tr><td><code>%v</code></td><td>nur Feldwerte</td><td>schnelle Normalansicht</td></tr>
+            <tr><td><code>%+v</code></td><td>Feldnamen und Werte</td><td>gut zum Lernen und Debuggen</td></tr>
+            <tr><td><code>%#v</code></td><td>Go-aehnliche Literal-Syntax</td><td>zeigt die Struktur besonders explizit</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(9)">Zurueck</button><button class="nav-button" onclick="showStep(11)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-11">
+        <h3>11. Feldvariablen und Punktnotation</h3>
+        <p>Eine struct-Variable besteht aus Feldern, und jedes Feld ist selbst wieder eine Variable. Der Zugriff erfolgt mit Punktnotation. Genau hier wird sichtbar, dass ein Verbund nicht nur gesammelt speichert, sondern seine Teile gezielt ansprechbar haelt.</p>
+
+        <div class="code-block"><span class="keyword">var</span> anna = person{<span class="string">"Anna"</span>, <span class="string">"Schmidt"</span>, <span class="number">1966</span>, <span class="string">"Hamburg"</span>, false}
+anna.nachname += <span class="string">"-Schiller"</span>
+anna.verheiratet = true
+fmt.Println(anna.nachname, anna.verheiratet)</div>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">Verbund-Variable</div>
+            <div class="memory-cell">anna</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Feld-Variablen</div>
+            <div class="memory-cell">anna.nachname</div>
+            <div class="memory-cell">anna.verheiratet</div>
+          </div>
+        </div>
+
+        <div class="info-box"><strong>Punktnotation:</strong> Der Punkt verbindet die Verbund-Variable mit einem konkreten Feld. So wird aus dem grossen Gesamtwert ein gezielt bearbeitbares Teilstueck.</div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(10)">Zurueck</button><button class="nav-button" onclick="showStep(12)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-12">
+        <h3>12. Zusammenfassung fuer S207</h3>
+        <p>Die ersten struct-Inhalte des Studienbriefs verbinden Modellierung und Syntax. Entscheidend ist nicht nur, wie man ein struct schreibt, sondern was sein Typ ausmacht und warum die benannte Feldnotation in der Praxis meist sicherer ist.</p>
+
+        <table class="comparison-table">
+          <thead><tr><th>Konzept</th><th>Kernaussage</th><th>Typischer Fehler</th></tr></thead>
+          <tbody>
+            <tr><td>struct</td><td>fasst zusammengehoerige Werte verschiedener Typen zusammen</td><td>mit Array gleichsetzen</td></tr>
+            <tr><td>Felder</td><td>Name, Typ und Reihenfolge gehoeren zur Definition</td><td>Reihenfolge fuer unwichtig halten</td></tr>
+            <tr><td>type person</td><td>macht den Verbund bequem wiederverwendbar</td><td>anonyme Definitionen ueberall wiederholen</td></tr>
+            <tr><td>Literal I</td><td>alle Werte muessen positionsgenau angegeben werden</td><td>unvollstaendiges Literal erwarten</td></tr>
+            <tr><td>Literal II</td><td>Feldnamen machen die Zuweisung robuster und klarer</td><td>Komma in mehrzeiliger Form vergessen</td></tr>
+            <tr><td>Punktnotation</td><td>Felder sind einzeln ansprechbare Variablen</td><td>struct nur als unteilbaren Block sehen</td></tr>
+          </tbody>
+        </table>
+
+        <div class="cross-link" style="margin-top: 16px;">
+          Anschluss im Kapitel: Als naechstes geht es zu Verbund-Variablen und Feld-Variablen. Die praktische Demo dazu liegt in
+          <div class="lesson-links">
+            <a href="go/S212_verbund_felder_demo.go">S212_verbund_felder_demo.go</a>
+          </div>
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(11)">Zurueck</button><button class="nav-button" disabled>Fertig</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showStep(stepNumber) {
+      const steps = document.querySelectorAll('.step-content');
+      const tabs = document.querySelectorAll('.tab');
+
+      steps.forEach((step) => step.classList.remove('active'));
+      tabs.forEach((tab) => tab.classList.remove('active'));
+
+      document.getElementById('step-' + stepNumber).classList.add('active');
+      tabs[stepNumber - 1].classList.add('active');
+      document.querySelector('.content-area').scrollTop = 0;
+    }
+
+    function showLiteralAdvice(mode) {
+      const box = document.getElementById('literal-advice');
+      if (mode === 'positional') {
+        box.innerHTML = '<strong>Nicht die robustere Wahl:</strong> positionsbasierte Literale haengen an der Feldreihenfolge. Wenn spaeter zwei gleichartige Felder vertauscht werden, kann sogar ohne Typfehler ein fachlicher Fehler entstehen.';
+        return;
+      }
+
+      box.innerHTML = '<strong>Richtig fuer Wartbarkeit:</strong> die Schreibweise mit Feldnamen bleibt stabiler, weil jede Zuweisung explizit an ein Feld gebunden ist und fehlende Felder ihren Nullwert behalten.';
+    }
+  </script>
+</body>
+</html>

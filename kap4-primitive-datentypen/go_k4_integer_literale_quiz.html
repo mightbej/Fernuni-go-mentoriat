@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Quiz K4: Integer-Literale und Zahlensysteme</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ok:#065f46;--ok-bg:#ecfdf5;--bad:#991b1b;--bad-bg:#fef2f2; }
+    * { box-sizing: border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.5; }
+    .container { max-width:1120px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#155e75 100%);color:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 24px rgba(15,118,110,.22);margin-bottom:18px; }
+    .hero h1 { margin:0 0 8px;font-size:1.7rem; }
+    .hero p { margin:0;opacity:.96; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px; }
+    h2 { margin-top:0;font-size:1.2rem; }
+    ul { margin:8px 0 0;padding-left:20px; }
+    code,pre { font-family:Consolas,"Courier New",monospace; }
+    code { background:#f3f4f6;padding:2px 6px;border-radius:6px; }
+    pre { margin:0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;white-space:pre-wrap; }
+    table { width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:10px; }
+    th,td { border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    tr:last-child td { border-bottom:none; }
+    .option-wrap { display:flex;gap:10px;flex-wrap:wrap; }
+    .solution { display:none;font-weight:600; }
+    .solution.ok { color:var(--ok); }
+    .solution.bad { color:var(--bad); }
+    .row-correct { background:var(--ok-bg); }
+    .row-wrong { background:var(--bad-bg); }
+    .controls { display:flex;gap:10px;flex-wrap:wrap;margin-top:12px; }
+    button { border:none;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer; }
+    .btn-primary { background:var(--accent);color:#fff; }
+    .btn-secondary { background:#e5e7eb;color:#111827; }
+    .result-box { margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#f9fafb;font-weight:600; }
+    .note { color:var(--muted);font-size:.92rem; }
+    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
+    .back:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <a class="back" href="go_k4_quiz_hub.html">← Zurück zur Übersicht</a>
+  <section class="hero">
+    <h1>Quiz 4 – Integer-Literale und Zahlensysteme</h1>
+    <p>Dezimal, hexadezimal, oktal, binär – wie schreibt man Zahlen in Go?</p>
+  </section>
+
+  <section class="card">
+    <h2>Merkhilfe: Präfixe für Zahlensysteme</h2>
+    <pre>123        → dezimal    (kein Präfix)
+0x7B       → hexadezimal (Präfix 0x)  → Wert 123
+0b01111011 → binär       (Präfix 0b)  → Wert 123
+0173       → oktal       (Präfix 0)   → Wert 123
+1_000_000  → Unterstrich als Trennzeichen (nur zur Lesbarkeit)</pre>
+    <ul>
+      <li>Alle vier Schreibweisen für <code>123</code> repräsentieren <strong>denselben Wert</strong>.</li>
+      <li>Hex-Ziffern A–F können groß oder klein geschrieben werden.</li>
+      <li>Unterstriche (<code>_</code>) dürfen zur Lesbarkeit eingesetzt werden.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Quizrunde (richtig / falsch)</h2>
+    <p class="note">Erst gemeinsam abstimmen, dann auswerten.</p>
+    <table>
+      <thead><tr><th>Aussage</th><th>Deine Wahl</th><th>Auflösung</th></tr></thead>
+      <tbody>
+        <tr data-correct="richtig">
+          <td><code>0x7B</code> und <code>123</code> repräsentieren in Go denselben Wert.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q1" value="richtig"> richtig</label><label><input type="radio" name="q1" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: 0x7B = 7×16 + 11 = 123.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td>Das Literal <code>0b1010</code> repräsentiert den dezimalen Wert 10.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q2" value="richtig"> richtig</label><label><input type="radio" name="q2" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: 1010 binär = 8+2 = 10 dezimal.</span></td>
+        </tr>
+        <tr data-correct="falsch">
+          <td>In Go zeigt <code>0</code> als Präfix ein hexadezimales Literal an.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q3" value="richtig"> richtig</label><label><input type="radio" name="q3" value="falsch"> falsch</label></div></td>
+          <td><span class="solution bad">Falsch: 0 als Präfix bedeutet oktal. Hexadezimal verwendet 0x.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td>Das Literal <code>1_000_000</code> ist in Go gültig und hat den Wert eine Million.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q4" value="richtig"> richtig</label><label><input type="radio" name="q4" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: Unterstriche dienen nur der Lesbarkeit und haben keinen Einfluss auf den Wert.</span></td>
+        </tr>
+        <tr data-correct="falsch">
+          <td><code>0xFF</code> und <code>0XFF</code> sind unterschiedlich – nur Kleinbuchstaben sind gültig.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q5" value="richtig"> richtig</label><label><input type="radio" name="q5" value="falsch"> falsch</label></div></td>
+          <td><span class="solution bad">Falsch: Sowohl 0x als auch 0X sind gültige Präfixe. Auch A–F und a–f sind erlaubt.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td>Ein Integer-Literal auf der rechten Seite einer Zuweisung wie <code>a = 255</code> ist syntaktisch ein Ausdruck.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q6" value="richtig"> richtig</label><label><input type="radio" name="q6" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: Auf syntaktischer Ebene ist jedes Literal zugleich ein Ausdruck.</span></td>
+        </tr>
+        <tr data-correct="falsch">
+          <td>In Go wird gespeichert, in welchem Zahlensystem ein Literal ursprünglich angegeben wurde.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q7" value="richtig"> richtig</label><label><input type="radio" name="q7" value="falsch"> falsch</label></div></td>
+          <td><span class="solution bad">Falsch: Nur der numerische Wert wird gespeichert – nicht die Schreibweise.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td>Das Literal <code>010</code> hat in Go den dezimalen Wert 8 (oktal).</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q8" value="richtig"> richtig</label><label><input type="radio" name="q8" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: 010 (oktal) = 1×8 = 8 dezimal.</span></td>
+        </tr>
+        <tr data-correct="falsch">
+          <td>Das Literal <code>1y3</code> ist ein gültiges Integer-Literal in Go.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q9" value="richtig"> richtig</label><label><input type="radio" name="q9" value="falsch"> falsch</label></div></td>
+          <td><span class="solution bad">Falsch: 'y' ist kein gültiges Zeichen in einem Integer-Literal.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td><code>0b11111111</code> hat denselben Wert wie <code>0xFF</code> und wie <code>255</code>.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q10" value="richtig"> richtig</label><label><input type="radio" name="q10" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: Alle drei sind unterschiedliche Schreibweisen für den Wert 255.</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="controls">
+      <button id="evaluateBtn" class="btn-primary" type="button">Auswerten + Auflösung</button>
+      <button id="resetBtn" class="btn-secondary" type="button">Zurücksetzen</button>
+    </div>
+    <div id="resultBox" class="result-box" aria-live="polite">Noch nicht ausgewertet.</div>
+  </section>
+  <p class="note">Kapitel 4 – Primitive Datentypen in Go | Stand: 25.04.2026</p>
+</main>
+<script>
+(function () {
+  const rows = Array.from(document.querySelectorAll("tbody tr[data-correct]"));
+  document.getElementById("evaluateBtn").addEventListener("click", function () {
+    let correct = 0, answered = 0;
+    rows.forEach(function (row) {
+      const expected = row.getAttribute("data-correct");
+      const checked = row.querySelector("input:checked");
+      const sol = row.querySelector(".solution");
+      row.classList.remove("row-correct", "row-wrong");
+      sol.style.display = "inline";
+      if (!checked) return;
+      answered++;
+      if (checked.value === expected) { correct++; row.classList.add("row-correct"); }
+      else { row.classList.add("row-wrong"); }
+    });
+    document.getElementById("resultBox").textContent = "Richtig: " + correct + " von " + rows.length + " | Beantwortet: " + answered + " von " + rows.length;
+  });
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    rows.forEach(function (row) {
+      row.querySelectorAll("input").forEach(function (r) { r.checked = false; });
+      row.classList.remove("row-correct", "row-wrong");
+      row.querySelector(".solution").style.display = "none";
+    });
+    document.getElementById("resultBox").textContent = "Noch nicht ausgewertet.";
+  });
+}());
+</script>
+</body>
+</html>

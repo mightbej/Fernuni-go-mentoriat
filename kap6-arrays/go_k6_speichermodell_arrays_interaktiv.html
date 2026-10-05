@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Speichermodell: Arrays in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .layout { display:grid;grid-template-columns:minmax(320px,600px) 1fr;gap:24px;align-items:start; }
+    .layout > div { min-width:0; }
+    @media (max-width:900px) { .layout { grid-template-columns:minmax(0,1fr); } }
+    @media (max-width:640px) { .container { padding:12px; } .card { padding:14px; } .programm { overflow-x:auto; } .bitzelle button { font-size:1.4rem; } .bitzelle .gewicht { font-size:.7rem; } }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .meldung { padding:14px;border-radius:8px;border-left:4px solid var(--accent);background:var(--pos-bg);margin:12px 0;min-height:120px; }
+    .meldung ol { margin:0;padding-left:22px; } .meldung li { margin:6px 0;overflow-wrap:anywhere; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .seiten { margin:0;padding-left:22px; }
+    .seiten .hier { font-weight:700; }
+
+    /* Tabellen */
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left; }
+    th { background:#f9fafb;font-weight:600; }
+    tr.benutzt td { background:#f0fdfa; }
+
+    /* Programm */
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;list-style:none; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#64748b;display:flex;gap:12px;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { width:1.2em;text-align:right;flex:none; }
+    .programm li.fertig { color:#cbd5e1; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:#fbbf24;font-weight:700; }
+
+    /* Hauptspeicher */
+    .speicher { position:relative;padding-top:22px; }
+    .zellen { display:grid;grid-template-columns:repeat(8,1fr);gap:16px 6px; }
+    @media (max-width:640px) { .zellen { grid-template-columns:repeat(4,1fr); } }
+    .zelle { display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0 6px;min-width:0;border:2px solid #cbd5e1;border-radius:8px;background:#fff;color:#9ca3af;font-weight:400; }
+    .zelle:hover { background:#fff; }
+    .zelle .adr { font-family:"Segoe UI",sans-serif;font-size:.78rem;color:var(--muted); }
+    .zelle .inhalt { font-family:Consolas,monospace;font-size:.82rem;letter-spacing:-.2px; }
+    .zelle.belegt { color:#111827;font-weight:700; }
+    .f0 { background:#d1fae5 !important;border-color:#0f766e !important; }
+    .f1 { background:#dbeafe !important;border-color:#1e40af !important; }
+    .f2 { background:#fef3c7 !important;border-color:#b45309 !important; }
+    .f3 { background:#fce7f3 !important;border-color:#be185d !important; }
+    .f4 { background:#ede9fe !important;border-color:#6d28d9 !important; }
+    .f0.zweit { background:#a7f3d0 !important; }
+    .f1.zweit { background:#bfdbfe !important; }
+    .f2.zweit { background:#fde68a !important; }
+    .f3.zweit { background:#fbcfe8 !important; }
+    .f4.zweit { background:#ddd6fe !important; }
+    .zelle.lesen { box-shadow:0 0 0 3px var(--lesen); }
+    .zelle.schreiben { box-shadow:0 0 0 3px var(--schreiben); }
+    .zelle.hell { transform:translateY(-3px);box-shadow:0 4px 0 0 #111827; }
+    .zelle.gewaehlt { border-color:#111827 !important;border-width:3px;padding:4px 0 5px; }
+    #pfeile { position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible; }
+    #pfeile path { fill:none;stroke:#111827;stroke-width:2.5; }
+    #pfeile circle { fill:#111827; }
+    .legende { display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.88rem;margin-top:12px; }
+    .legende span::before { content:"";display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:6px;vertical-align:-2px;border:3px solid; }
+    .legende .l1::before { border-color:var(--lesen); }
+    .legende .l2::before { border-color:var(--schreiben); }
+    .legende .l3::before { border-color:#cbd5e1;border-width:2px; }
+
+    /* Tabelle der Namen */
+    #namen td { font-family:Consolas,monospace;font-size:1.05rem;cursor:pointer;white-space:nowrap; }
+    #namen td.ohne { font-family:"Segoe UI",sans-serif;font-style:italic;color:var(--muted);font-size:.95rem; }
+    #namen tr.hell td, #namen tr.markiert td { background:var(--highlight); }
+    #namen .farbe { display:inline-block;width:14px;height:14px;border-radius:4px;border:2px solid;margin-right:8px;vertical-align:-2px; }
+    #namen td.leer { font-family:"Segoe UI",sans-serif;color:var(--muted);cursor:default;font-size:.95rem; }
+
+    /* Eine Zelle groß */
+    .bitfeld { margin-top:18px;padding:14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;text-align:center; }
+    .bitkopf { color:var(--muted);font-size:.95rem;margin-bottom:8px; }
+    .bitfuss { color:var(--muted);font-size:.85rem;margin-top:6px; }
+    .bitreihe { display:flex;justify-content:center;gap:6px;flex-wrap:nowrap; }
+    .bitzelle { display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 1 64px;min-width:0; }
+    .bitzelle .gewicht { font-family:Consolas,monospace;font-size:.9rem;color:var(--muted);white-space:nowrap; }
+    .bitzelle.an .gewicht { color:#111827;font-weight:700; }
+    .bitzelle button { width:100%;padding:6px 0;font-family:Consolas,monospace;font-size:2rem;line-height:1.2;font-weight:700;background:#fff;color:#9ca3af;border:2px solid #cbd5e1; }
+    .bitzelle.an button { background:var(--pos-bg);color:#111827;border-color:var(--pos); }
+    .bitzelle.an.minus button { background:var(--neg-bg);border-color:var(--neg); }
+    .bitzelle:nth-child(4) { margin-right:12px; }
+    .bitsumme { margin-top:12px;min-height:3.2em; }
+    .bitsumme .muster { font-family:Consolas,monospace;font-size:1.15rem;display:block;margin-top:4px;overflow-wrap:anywhere; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Speichermodell: Arrays</h1>
+    <p>Ein Array hat einen Namen und viele Elemente. In der Tabelle steht nur der Anfang. Die Adresse eines Elements rechnet der Rechner aus dem Index aus. Kurstext Kapitel 6, Arrays.</p>
+  </div>
+
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ sagt, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
+    <p>Ein Array ist eine Reihe gleich großer Elemente, die lückenlos hintereinander liegen. Die Tabelle bekommt für das ganze Array eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Elements.</p>
+    <p>Im Typ <code>[4]int16</code> steckt alles, was der Rechner braucht: Das Array hat 4 Elemente, und jedes Element ist ein <code>int16</code> mit 2 Zellen.</p>
+  </div>
+
+  <div class="card">
+    <h2>Wie der Rechner ein Element findet</h2>
+    <p>Für <code>a[2]</code> gibt es keine Zeile in der Tabelle. Der Rechner rechnet die Adresse aus:</p>
+    <div class="formel">Adresse des Elements = Adresse des Arrays + Index · Zellen pro Element</div>
+    <p>Die Tabelle zeigt die Rechnung für <code>var a [4]int16</code>, wenn das Array an der Adresse 100 beginnt.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Element</th><th>Rechnung</th><th>Adresse des Elements</th><th>Zellen des Elements</th></tr></thead>
+      <tbody>
+        <tr><td><code>a[0]</code></td><td>100 + 0 · 2</td><td>100</td><td>100 und 101</td></tr>
+        <tr><td><code>a[1]</code></td><td>100 + 1 · 2</td><td>102</td><td>102 und 103</td></tr>
+        <tr><td><code>a[2]</code></td><td>100 + 2 · 2</td><td>104</td><td>104 und 105</td></tr>
+        <tr><td><code>a[3]</code></td><td>100 + 3 · 2</td><td>106</td><td>106 und 107</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Im Hauptspeicher unten sind die Elemente abwechselnd hell und dunkel gefärbt.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren</h2>
+    <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>.</p>
+    <ol class="programm" id="programm"></ol>
+    <div class="zeile">
+      <button id="weiter" class="haupt" type="button">nächste Zeile ausführen</button>
+      <button id="zurueck" type="button">eine Zeile zurück</button>
+      <button id="vorn" type="button">von vorn</button>
+    </div>
+
+    <div class="layout">
+
+      <div>
+        <h3>Hauptspeicher, Zellen 100 bis 131</h3>
+        <div class="speicher" id="speicher">
+          <div class="zellen" id="zellen"></div>
+          <svg id="pfeile" aria-hidden="true">
+            <defs><marker id="spitze" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#111827;stroke:none"/></marker></defs>
+            <g id="pfeilgruppe"></g>
+          </svg>
+        </div>
+        <div class="legende">
+          <span class="l1">Diese Zellen hat die Zeile gelesen.</span>
+          <span class="l2">Diese Zellen hat die Zeile beschrieben.</span>
+          <span class="l3">Diese Zellen sind frei.</span>
+        </div>
+
+        <div class="bitfeld">
+          <div class="bitkopf" id="bitkopf"></div>
+          <div class="bitreihe" id="bitreihe"></div>
+          <div class="bitsumme" id="bitsumme"></div>
+          <div class="bitfuss">Ein Klick auf eine Zelle im Hauptspeicher zeigt sie hier groß. Ein Klick auf ein Bit schaltet es um.</div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Tabelle des Rechners</h3>
+        <div class="tabellenrahmen">
+        <table id="namen">
+          <thead><tr><th>Name</th><th>Typ</th><th>Adresse</th><th>Zellen</th></tr></thead>
+          <tbody id="namenkoerper"></tbody>
+        </table>
+        </div>
+        <h3>Was der Rechner in dieser Zeile tut</h3>
+        <div class="meldung" id="meldung"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>Wie viele Zellen reserviert <code>var a [4]int16</code>? Wie viele Zeilen bekommt die Tabelle?
+        <details><summary>Antwort</summary>8 Zellen, denn 4 Elemente brauchen je 2 Zellen. Die Tabelle bekommt eine Zeile.</details></li>
+      <li>An welcher Adresse beginnt <code>a[3]</code>?
+        <details><summary>Antwort</summary>100 + 3 · 2 = 106.</details></li>
+      <li>Warum hat das erste Element den Index 0?
+        <details><summary>Antwort</summary>Der Index sagt, wie viele Elemente vor dem gesuchten liegen. Vor dem ersten liegt keines: 100 + 0 · 2 = 100.</details></li>
+      <li>Führe das Programm bis <code>i := 3</code> aus. Klicke auf Zelle 115 und schalte das Bit mit der Wertigkeit 4 an. Jetzt hat <code>i</code> den Wert 7. Was geschieht in der nächsten Zeile?
+        <details><summary>Antwort</summary>Go prüft den Index und bricht das Programm ab. Ohne die Prüfung käme der Rechner auf die Adresse 100 + 7 · 2 = 114. Diese Zelle gehört zu <code>i</code>.</details></li>
+      <li>Ein Array hat 1000 Elemente. Braucht der Rechner für <code>a[999]</code> länger als für <code>a[0]</code>?
+        <details><summary>Antwort</summary>Nein. Er rechnet in beiden Fällen einmal: Adresse des Arrays plus Index mal Zellen pro Element.</details></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Dasselbe Modell auf vier Seiten</h2>
+    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
+    <ol class="seiten">
+      <li><a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4)</a></li>
+      <li class="hier">Arrays: ein Name für viele Elemente (Kapitel 6). Das ist diese Seite.</li>
+      <li><a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Zeiger: eine Adresse als Wert (Kapitel 7)</a></li>
+      <li><a href="../kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8)</a></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var START = 100, ANZAHL = 32;
+  var TYPEN = {
+    "int8":   { n: 1, vorzeichen: true },
+    "int16":  { n: 2, vorzeichen: true },
+    "int32":  { n: 4, vorzeichen: true },
+    "int":    { n: 8, vorzeichen: true },
+    "*int32": { n: 8, vorzeichen: false, zeiger: true, ziel: "int32" }
+  };
+  // Zusammengesetzte Typen dieser Seite: Jeder Teil hat einen Abstand vom Anfang.
+  var BAU = { "[4]int16": [0, 1, 2, 3].map(function (i) { return { anhang: "[" + i + "]", ab: 2 * i, typ: "int16" }; }) };
+  var RAHMEN = ["#0f766e", "#1e40af", "#b45309", "#be185d", "#6d28d9"];
+  var FLAECHE = ["#d1fae5", "#dbeafe", "#fef3c7", "#fce7f3", "#ede9fe"];
+
+  var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
+
+  function $(id) { return document.getElementById(id); }
+  function bits(b) { return b.toString(2).padStart(8, "0"); }
+  function c(s) { return "<code>" + String(s).replace(/&/g, "&amp;") + "</code>"; }
+  function adressen(adr, n) { var a = []; for (var i = 0; i < n; i++) a.push(adr + i); return a; }
+  function zellenWort(n) { return n === 1 ? "1 Zelle" : n + " Zellen"; }
+  function bereich(adr, n) { return n === 1 ? "die Zelle " + adr : "die Zellen " + adr + (n === 2 ? " und " : " bis ") + (adr + n - 1); }
+  function nameVon(e) { return e.name ? c(e.name) : "der Variable ohne Namen"; }   // Dativ
+  function nameWer(e) { return e.name ? c(e.name) : "die Variable ohne Namen"; }   // Nominativ
+  function groesse(typ) {
+    if (TYPEN[typ]) return TYPEN[typ].n;
+    return BAU[typ].reduce(function (s, t) { return s + TYPEN[t.typ].n; }, 0);
+  }
+
+  function lies(adr, n, vorzeichen) {
+    var v = 0n;
+    for (var i = 0; i < n; i++) v = (v << 8n) | BigInt(zellen[adr - START + i]);
+    return vorzeichen ? BigInt.asIntN(8 * n, v) : v;
+  }
+  function schreibe(adr, n, wert) {
+    var v = BigInt.asUintN(8 * n, BigInt(wert));
+    for (var i = n - 1; i >= 0; i--) { zellen[adr - START + i] = Number(v & 255n); v >>= 8n; }
+  }
+  function muster(adr, n) { return adressen(adr, n).map(function (a) { return bits(zellen[a - START]); }).join(" "); }
+  function finde(name) { return tabelle.find(function (e) { return e.name === name; }); }
+  function eintragBei(adr) { return tabelle.find(function (e) { return adr >= e.adr && adr < e.adr + e.n; }); }
+  function teilBei(adr) {
+    var e = eintragBei(adr);
+    if (!e) return null;
+    for (var i = 0; i < e.teile.length; i++) {
+      var t = e.teile[i];
+      if (adr >= t.adr && adr < t.adr + t.n) return { e: e, t: t, nr: i };
+    }
+    return null;
+  }
+  function wertBei(adr, typ) { return lies(adr, TYPEN[typ].n, TYPEN[typ].vorzeichen); }
+  function wertVon(e) { return wertBei(e.adr, e.typ); }
+  function imModell(adr, n) { return adr >= BigInt(START) && adr + BigInt(n) <= BigInt(START + ANZAHL); }
+
+  function reserviere(name, typ) {
+    var bau = BAU[typ] || [{ anhang: "", ab: 0, typ: typ }], adr = frei;
+    var e = {
+      name: name, typ: typ, adr: adr, n: groesse(typ), farbe: tabelle.length % RAHMEN.length,
+      teile: bau.map(function (t) { return { anhang: t.anhang, adr: adr + t.ab, typ: t.typ, n: TYPEN[t.typ].n }; })
+    };
+    frei += e.n;
+    tabelle.push(e);
+    return e;
+  }
+
+  // Wohin führt eine Adresse?
+  function zielText(adr) {
+    if (!imModell(adr, 1)) return "Die Adresse " + adr + " gibt es in diesem Modell nicht.";
+    var a = Number(adr), e = eintragBei(a);
+    if (!e) return "Die Zelle " + a + " ist frei.";
+    if (e.adr === a) return "An der Adresse " + a + " beginnt " + nameWer(e) + ".";
+    return "Die Adresse " + a + " liegt mitten in " + nameVon(e) + ".";
+  }
+
+  // Der Weg vom Ausdruck im Programm zur Adresse: a, a[2], a[i] oder s.note
+  function ort(ausdruck) {
+    var m = /^(\w+)(?:\[(\w+)\]|\.(\w+))?$/.exec(ausdruck), e = finde(m[1]), t;
+    var o = { e: e, zeilen: [e], lesen: [], punkte: [] };
+    var kopf = "Der Rechner sucht den Namen " + c(e.name) + " in der Tabelle. In der Zeile stehen die Adresse " + e.adr + " und der Typ " + c(e.typ) + ".";
+    if (m[2] !== undefined) {
+      var el = e.teile[0], index;
+      if (/^\d+$/.test(m[2])) index = BigInt(m[2]);
+      else {
+        var iv = finde(m[2]);
+        index = wertVon(iv);
+        o.zeilen.push(iv); o.lesen = adressen(iv.adr, iv.n);
+        o.punkte.push("Der Rechner sucht den Namen " + c(iv.name) + " in der Tabelle und liest an der Adresse " + iv.adr + " den Wert " + index + ".");
+      }
+      o.punkte.push(kopf + " Ein Element hat den Typ " + c(el.typ) + " und braucht " + zellenWort(el.n) + ".");
+      if (index < 0n || index >= BigInt(e.teile.length)) {
+        o.fehler = true;
+        o.punkte.push("Das Array hat die Elemente 0 bis " + (e.teile.length - 1) + ". Der Index " + index + " liegt außerhalb. Go prüft den Index vor jedem Zugriff und bricht das Programm hier ab.");
+        o.punkte.push("Ohne die Prüfung käme der Rechner auf die Adresse " + e.adr + " + " + index + " · " + el.n + " = " + (BigInt(e.adr) + index * BigInt(el.n)) + ". " + zielText(BigInt(e.adr) + index * BigInt(el.n)));
+        return o;
+      }
+      t = e.teile[Number(index)];
+      o.rechnung = e.adr + " + " + index + " · " + el.n + " = " + t.adr;
+      o.punkte.push("Das Element mit dem Index " + index + " beginnt an der Adresse " + o.rechnung + ".");
+    } else if (m[3] !== undefined) {
+      t = e.teile.find(function (x) { return x.anhang === "." + m[3]; });
+      var ab = t.adr - e.adr;
+      o.rechnung = ab === 0 ? String(t.adr) : e.adr + " + " + ab + " = " + t.adr;
+      o.punkte.push(kopf);
+      o.punkte.push("Im Bauplan von " + c(e.typ) + " steht: Das Feld " + c(m[3]) + " beginnt " + (ab === 0 ? "am Anfang" : zellenWort(ab) + " hinter dem Anfang") + " und hat den Typ " + c(t.typ) + ". Seine Adresse ist " + o.rechnung + ".");
+    } else {
+      o.adr = e.adr; o.n = e.n; o.typ = e.typ;
+      o.punkte.push(kopf + " Der Typ sagt: " + zellenWort(e.n) + ".");
+      o.kurz = c(ausdruck) + " liegt laut Tabelle an der Adresse " + e.adr + ".";
+      return o;
+    }
+    o.adr = t.adr; o.n = t.n; o.typ = t.typ;
+    o.kurz = c(ausdruck) + " liegt an der Adresse " + o.rechnung + ".";
+    return o;
+  }
+
+  function fertig(zeilen, lesen, schreiben, punkte) {
+    return { zeilen: zeilen, lesen: lesen, schreiben: schreiben, text: "<ol><li>" + punkte.join("</li><li>") + "</li></ol>" };
+  }
+
+  function abbruch(r) { r.abbruch = true; return r; }
+
+  // Der Wert eines Ausdrucks, wie fmt.Println ihn ausgibt
+  function ausgabeWert(e) {
+    if (TYPEN[e.typ]) return String(wertVon(e));
+    var werte = e.teile.map(function (t) { return wertBei(t.adr, t.typ); }).join(" ");
+    return e.typ.charAt(0) === "[" ? "[" + werte + "]" : "{" + werte + "}";
+  }
+
+  // ---- Die Zeilen des Programms ----
+
+  function typDeklaration(typ) {
+    var bau = BAU[typ], liste = bau.map(function (t) {
+      return c(t.anhang.slice(1)) + (t.ab === 0 ? " beginnt am Anfang" : " beginnt " + zellenWort(t.ab) + " dahinter");
+    }).join(", ");
+    return fertig([], [], [], [
+      "Diese Zeile reserviert keine Zelle. Sie legt einen Bauplan mit dem Namen " + c(typ) + " fest.",
+      "Der Rechner merkt sich für jedes Feld den Typ und den Abstand vom Anfang: " + liste + ".",
+      "Eine Variable vom Typ " + c(typ) + " braucht zusammen " + zellenWort(groesse(typ)) + "."
+    ]);
+  }
+
+  function deklariere(name, typ) {
+    var e = reserviere(name, typ), n = e.n, art, zusatz = "";
+    if (typ.charAt(0) === "[") {
+      art = "Der Typ " + c(typ) + " ist ein Array aus " + e.teile.length + " Elementen vom Typ " + c(e.teile[0].typ) + ". Jedes Element braucht " + zellenWort(e.teile[0].n) + ", zusammen sind das " + n + " Zellen.";
+      zusatz = " Für das ganze Array gibt es nur diese eine Zeile.";
+    } else if (BAU[typ]) {
+      art = "Nach dem Bauplan braucht der Typ " + c(typ) + " " + zellenWort(n) + ".";
+      zusatz = " Für den ganzen Verbund gibt es nur diese eine Zeile.";
+    } else art = "Der Typ " + c(typ) + " braucht " + zellenWort(n) + ".";
+    return fertig([e], [], adressen(e.adr, n), [
+      art,
+      "Die nächste freie Zelle hat die Adresse " + e.adr + ". Der Rechner reserviert " + bereich(e.adr, n) + ".",
+      "Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c(typ) + ", Adresse " + e.adr + "." + zusatz,
+      "Go füllt jede neue Variable mit Nullen."
+    ]);
+  }
+
+  function deklariereKurz(name, wert) {
+    var e = reserviere(name, "int");
+    schreibe(e.adr, e.n, wert);
+    return fertig([e], [], adressen(e.adr, e.n), [
+      "Die Kurzform " + c(":=") + " legt eine neue Variable an. Die Zahl " + wert + " ist eine ganze Zahl, darum bekommt " + c(name) + " den Typ " + c("int") + ". Auf einem 64-Bit-Rechner braucht " + c("int") + " 8 Zellen.",
+      "Der Rechner reserviert " + bereich(e.adr, e.n) + ". Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c("int") + ", Adresse " + e.adr + ".",
+      "Er schreibt den Wert " + wert + " hinein. Für diese kleine Zahl genügt die letzte der acht Zellen."
+    ]);
+  }
+
+  function weiseZu(ziel, wert, zusatz) {
+    var o = ort(ziel);
+    if (o.fehler) return abbruch(fertig(o.zeilen, o.lesen, [], o.punkte));
+    schreibe(o.adr, o.n, wert);
+    var punkte = o.punkte.concat(["Der Rechner schreibt " + wert + " als Bitmuster in " + bereich(o.adr, o.n) + ": " + c(muster(o.adr, o.n))]);
+    if (zusatz) punkte.push(zusatz);
+    return fertig(o.zeilen, o.lesen, adressen(o.adr, o.n), punkte);
+  }
+
+  function erhoehe(name, summand) {
+    var o = ort(name), alt = wertBei(o.adr, o.typ), summe = alt + BigInt(summand);
+    var altesMuster = muster(o.adr, o.n);
+    schreibe(o.adr, o.n, summe);
+    var neu = wertBei(o.adr, o.typ);
+    var punkte = [
+      o.punkte[0],
+      "Er liest " + bereich(o.adr, o.n) + ": " + c(altesMuster) + ". Als " + c(o.typ) + " gelesen ist das der Wert " + alt + ".",
+      "Er rechnet " + alt + " + " + summand + " = " + summe + ".",
+      "Er schreibt das Ergebnis zurück an die Adresse " + o.adr + ": " + c(muster(o.adr, o.n))
+    ];
+    if (neu !== summe) punkte.push("Das Ergebnis " + summe + " passt nicht in den Typ " + c(o.typ) + ". In der Zelle steht jetzt " + neu + ". Das ist der Überlauf vom Zahlenkreis.");
+    return fertig(o.zeilen, adressen(o.adr, o.n), adressen(o.adr, o.n), punkte);
+  }
+
+  function kopiere(ziel, quelle) {
+    var q = ort(quelle), z = ort(ziel), i;
+    var punkte = [q.punkte.join(" ")];
+    punkte.push("Er liest " + bereich(q.adr, q.n) + ": " + c(muster(q.adr, q.n)) + (TYPEN[q.typ] ? ". Als " + c(q.typ) + " gelesen ist das der Wert " + wertBei(q.adr, q.typ) + "." : ""));
+    var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
+    for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
+    punkte.push(z.punkte.join(" "));
+    punkte.push("Er schreibt " + (z.n === 1 ? "dasselbe Bitmuster" : "dieselben Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
+    return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
+  }
+
+  function addiere(ziel, x, y) {
+    var ox = ort(x), oy = ort(y), vx = wertBei(ox.adr, ox.typ), vy = wertBei(oy.adr, oy.typ), summe = vx + vy;
+    var lesen = adressen(ox.adr, ox.n).concat(adressen(oy.adr, oy.n));
+    var punkte = [
+      ox.kurz + " Dort steht der Wert " + vx + ".",
+      oy.kurz + " Dort steht der Wert " + vy + ".",
+      "Der Rechner rechnet " + vx + " + " + vy + " = " + summe + "."
+    ];
+    var oz = ort(ziel);
+    punkte = punkte.concat(oz.punkte);
+    lesen = lesen.concat(oz.lesen);
+    if (oz.fehler) return abbruch(fertig(oz.zeilen, lesen, [], punkte));
+    schreibe(oz.adr, oz.n, summe);
+    punkte.push("Er schreibt " + wertBei(oz.adr, oz.typ) + " in " + bereich(oz.adr, oz.n) + ": " + c(muster(oz.adr, oz.n)));
+    return fertig(oz.zeilen, lesen, adressen(oz.adr, oz.n), punkte);
+  }
+
+  function gibAus(ausdruecke) {
+    var lesen = [], zeilen = [], werte = [];
+    ausdruecke.forEach(function (a) {
+      if (a.charAt(0) === "*") {
+        var z = finde(a.slice(1)), adr = wertVon(z), typ = TYPEN[z.typ].ziel, n = TYPEN[typ].n;
+        zeilen.push(z); lesen = lesen.concat(adressen(z.adr, z.n));
+        if (imModell(adr, n)) { lesen = lesen.concat(adressen(Number(adr), n)); werte.push(String(wertBei(Number(adr), typ))); }
+        else werte.push("?");
+      } else {
+        var o = ort(a);
+        zeilen.push(o.e); lesen = lesen.concat(adressen(o.adr, o.n));
+        werte.push(TYPEN[o.typ] ? String(wertBei(o.adr, o.typ)) : ausgabeWert(o.e));
+      }
+    });
+    return fertig(zeilen, lesen, [], [
+      c("fmt.Println") + " gibt Werte aus. Der Rechner sucht dazu jeden Namen in der Tabelle und liest die Zellen so, wie der Typ es vorgibt.",
+      "Die Ausgabe lautet: " + c(werte.join(" "))
+    ]);
+  }
+
+  // Zeiger
+
+  function nimmAdresse(name, vonName) {
+    var ziel = finde(vonName), typ = "*" + ziel.typ, e = reserviere(name, typ);
+    schreibe(e.adr, e.n, ziel.adr);
+    return fertig([ziel, e], [], adressen(e.adr, e.n), [
+      c("&" + vonName) + " fragt: An welcher Adresse liegt " + c(vonName) + "? Die Antwort steht in der Tabelle: " + ziel.adr + ".",
+      c(name) + " ist eine neue Variable vom Typ " + c(typ) + ". Eine Adresse braucht 8 Zellen. Der Rechner reserviert " + bereich(e.adr, e.n) + ".",
+      "In diese Zellen schreibt er die Zahl " + ziel.adr + ". Der Pfeil zeigt, wohin die Adresse führt.",
+      c(name) + " hat einen Wert wie jede Variable. Dieser Wert ist die Adresse einer anderen Variable. Eine solche Variable heißt Zeiger."
+    ]);
+  }
+
+  function geheZu(zeigerName) {     // *p: die Adresse lesen, die im Zeiger steht
+    var z = finde(zeigerName), typ = TYPEN[z.typ].ziel, n = TYPEN[typ].n, adr = wertVon(z);
+    var w = { z: z, typ: typ, n: n, lesen: adressen(z.adr, z.n), gueltig: imModell(adr, n), adr: adr };
+    w.punkt = c("*" + zeigerName) + " heißt: Geh zu der Adresse, die in " + c(zeigerName) + " steht. Der Rechner sucht " + c(zeigerName) + " in der Tabelle und liest die 8 Zellen ab Adresse " + z.adr + ". Darin steht " + adr + ".";
+    w.keinZiel = "An der Adresse " + adr + " liegen keine " + n + " Zellen des Modells. Der Rechner führt die Zeile hier nicht aus. In Go lässt sich eine Adresse nicht von Hand verstellen.";
+    if (w.gueltig) w.adr = Number(adr);
+    return w;
+  }
+
+  function schreibeUeber(zeigerName, wert) {
+    var w = geheZu(zeigerName);
+    if (!w.gueltig) return fertig([w.z], w.lesen, [], [w.punkt, w.keinZiel]);
+    schreibe(w.adr, w.n, wert);
+    var e = eintragBei(w.adr), punkte = [
+      w.punkt,
+      "Der Typ " + c(w.z.typ) + " sagt: An der Adresse " + w.adr + " liegen " + w.n + " Zellen, und sie sind als " + c(w.typ) + " zu lesen.",
+      "Der Rechner schreibt " + wert + " in " + bereich(w.adr, w.n) + ": " + c(muster(w.adr, w.n))
+    ];
+    if (e && e.name && e.adr === w.adr) punkte.push("Die Zeile nennt den Namen " + c(e.name) + " nicht. Trotzdem hat " + c(e.name) + " jetzt den Wert " + wertVon(e) + ".");
+    return fertig(e ? [w.z, e] : [w.z], w.lesen, adressen(w.adr, w.n), punkte);
+  }
+
+  function neu(name, typ) {
+    var ohne = reserviere(null, typ), e = reserviere(name, "*" + typ);
+    schreibe(e.adr, e.n, ohne.adr);
+    return fertig([ohne, e], [], adressen(ohne.adr, ohne.n).concat(adressen(e.adr, e.n)), [
+      c("new(" + typ + ")") + " reserviert " + bereich(ohne.adr, ohne.n) + " für einen Wert vom Typ " + c(typ) + ".",
+      "Diese Zellen bekommen keinen Namen. In der Tabelle bleibt das Feld für den Namen leer.",
+      c(name) + " ist eine neue Variable vom Typ " + c("*" + typ) + ". Der Rechner reserviert " + bereich(e.adr, e.n) + " und schreibt die Adresse " + ohne.adr + " hinein.",
+      "Den Wert in den Zellen ohne Namen erreicht das Programm nur über die Adresse, die in " + c(name) + " steht."
+    ]);
+  }
+
+  function kopiereUeberZeiger(nachName, vonName) {
+    var von = geheZu(vonName), nach = geheZu(nachName), lesen = von.lesen.concat(nach.lesen);
+    if (!von.gueltig) return fertig([von.z, nach.z], lesen, [], [von.punkt, von.keinZiel]);
+    if (!nach.gueltig) return fertig([von.z, nach.z], lesen, [], [von.punkt, nach.punkt, nach.keinZiel]);
+    var wert = wertBei(von.adr, von.typ);
+    lesen = lesen.concat(adressen(von.adr, von.n));
+    schreibe(nach.adr, nach.n, wert);
+    return fertig([von.z, nach.z], lesen, adressen(nach.adr, nach.n), [
+      von.punkt,
+      "Der Typ " + c(von.z.typ) + " sagt: An der Adresse " + von.adr + " liegen " + von.n + " Zellen, und sie sind als " + c(von.typ) + " zu lesen. Der Rechner liest den Wert " + wert + ".",
+      c("*" + nachName) + " heißt: Geh zu der Adresse, die in " + c(nachName) + " steht. Dort steht " + nach.adr + ".",
+      "Der Rechner schreibt " + wert + " in " + bereich(nach.adr, nach.n) + ". Einen Namen für diese Zellen brauchte er dafür nicht."
+    ]);
+  }
+
+  var PROGRAMM = [
+    { code: "var a [4]int16", tun: function () { return deklariere("a", "[4]int16"); } },
+    { code: "a[0] = 17", tun: function () { return weiseZu("a[0]", 17); } },
+    { code: "a[2] = 1000", tun: function () { return weiseZu("a[2]", 1000); } },
+    { code: "i := 3", tun: function () { return deklariereKurz("i", 3); } },
+    { code: "a[i] = a[0] + a[2]", tun: function () { return addiere("a[i]", "a[0]", "a[2]"); } },
+    { code: "fmt.Println(a)", tun: function () { return gibAus(["a"]); } }
+  ];
+
+  var ANFANG = "Noch ist keine Zeile ausgeführt. Alle 32 Zellen sind frei, und die Tabelle ist leer.";
+
+  // ---- Ablauf ----
+
+  function vonVorn() {
+    zellen = new Uint8Array(ANZAHL);
+    tabelle = []; frei = START; schritt = 0; verlauf = [];
+    marke = { zeilen: [], lesen: [], schreiben: [] };
+    text = ANFANG; auswahl = START; abgebrochen = false;
+    zeichne();
+  }
+
+  function weiter() {
+    if (schritt >= PROGRAMM.length || abgebrochen) return;
+    verlauf.push({
+      zellen: zellen.slice(), tabelle: tabelle.map(function (e) { return Object.assign({}, e); }),
+      frei: frei, marke: marke, text: text, auswahl: auswahl, abgebrochen: abgebrochen
+    });
+    var r = PROGRAMM[schritt].tun();
+    schritt++;
+    marke = { zeilen: r.zeilen.map(function (e) { return tabelle.indexOf(e); }), lesen: r.lesen, schreiben: r.schreiben };
+    text = r.text; abgebrochen = !!r.abbruch;
+    if (r.schreiben.length) auswahl = r.schreiben[r.schreiben.length - 1];
+    zeichne();
+  }
+
+  function zurueck() {
+    if (!verlauf.length) return;
+    var s = verlauf.pop();
+    zellen = s.zellen; tabelle = s.tabelle; frei = s.frei; marke = s.marke; text = s.text; auswahl = s.auswahl; abgebrochen = s.abgebrochen;
+    schritt--;
+    zeichne();
+  }
+
+  // ---- Darstellung ----
+
+  function zeichne() {
+    zeichneProgramm(); zeichneZellen(); zeichneTabelle(); zeichneBits();
+    $("meldung").innerHTML = text;
+    $("weiter").disabled = schritt >= PROGRAMM.length || abgebrochen;
+    $("zurueck").disabled = schritt === 0;
+    requestAnimationFrame(zeichnePfeile);
+  }
+
+  function zeichneProgramm() {
+    var ol = $("programm");
+    ol.textContent = "";
+    PROGRAMM.forEach(function (z, i) {
+      var li = document.createElement("li");
+      if (i < schritt - 1) li.className = "fertig";
+      if (i === schritt - 1) li.className = "aktuell";
+      var nr = document.createElement("span"); nr.className = "nr"; nr.textContent = i + 1;
+      var code = document.createElement("span"); code.textContent = z.code;
+      li.appendChild(nr); li.appendChild(code);
+      ol.appendChild(li);
+    });
+  }
+
+  // Hebt die Zellen einer Tabellenzeile an. Mit teil nur die Zellen eines Elements oder Feldes.
+  function hebe(index, an, teil) {
+    var e = tabelle[index];
+    if (!e) return;
+    (teil ? adressen(teil.adr, teil.n) : adressen(e.adr, e.n)).forEach(function (a) {
+      var z = document.querySelector('.zelle[data-adr="' + a + '"]');
+      if (z) z.classList.toggle("hell", an);
+    });
+    var tr = document.querySelector('#namenkoerper tr[data-index="' + index + '"]');
+    if (tr) tr.classList.toggle("hell", an);
+  }
+
+  function zeichneZellen() {
+    var feld = $("zellen");
+    feld.textContent = "";
+    for (var i = 0; i < ANZAHL; i++) {
+      (function (adr) {
+        var tb = teilBei(adr), e = tb && tb.e, index = tabelle.indexOf(e);
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "zelle" + (e ? " belegt f" + e.farbe : "") +
+          (tb && tb.nr % 2 ? " zweit" : "") +
+          (marke.lesen.indexOf(adr) >= 0 ? " lesen" : "") +
+          (marke.schreiben.indexOf(adr) >= 0 ? " schreiben" : "") +
+          (adr === auswahl ? " gewaehlt" : "");
+        b.dataset.adr = adr;
+        b.setAttribute("aria-label", "Zelle " + adr + ", Inhalt " + bits(zellen[adr - START]));
+        var s1 = document.createElement("span"); s1.className = "adr"; s1.textContent = adr;
+        var s2 = document.createElement("span"); s2.className = "inhalt"; s2.textContent = bits(zellen[adr - START]);
+        b.appendChild(s1); b.appendChild(s2);
+        b.addEventListener("click", function () { auswahl = adr; zeichne(); });
+        if (e) {
+          b.addEventListener("mouseenter", function () { hebe(index, true, tb.t); });
+          b.addEventListener("mouseleave", function () { hebe(index, false, tb.t); });
+        }
+        feld.appendChild(b);
+      })(START + i);
+    }
+  }
+
+  function zeichneTabelle() {
+    var k = $("namenkoerper");
+    k.textContent = "";
+    if (!tabelle.length) {
+      var tr0 = document.createElement("tr"), td0 = document.createElement("td");
+      td0.colSpan = 4; td0.className = "leer"; td0.textContent = "Die Tabelle hat noch keine Zeile.";
+      tr0.appendChild(td0); k.appendChild(tr0);
+      return;
+    }
+    tabelle.forEach(function (e, index) {
+      var tr = document.createElement("tr");
+      tr.dataset.index = index;
+      if (marke.zeilen.indexOf(index) >= 0) tr.className = "markiert";
+      var tdName = document.createElement("td");
+      var farbe = document.createElement("span");
+      farbe.className = "farbe"; farbe.style.background = FLAECHE[e.farbe]; farbe.style.borderColor = RAHMEN[e.farbe];
+      tdName.appendChild(farbe);
+      tdName.appendChild(document.createTextNode(e.name || "ohne Namen"));
+      if (!e.name) tdName.className = "ohne";
+      tr.appendChild(tdName);
+      [e.typ, e.adr, e.n].forEach(function (v) {
+        var td = document.createElement("td"); td.textContent = v; tr.appendChild(td);
+      });
+      tr.addEventListener("mouseenter", function () { hebe(index, true); });
+      tr.addEventListener("mouseleave", function () { hebe(index, false); });
+      tr.addEventListener("click", function () { auswahl = e.adr + e.teile[0].n - 1; zeichne(); });
+      k.appendChild(tr);
+    });
+  }
+
+  // Wertigkeit eines Bits: Sie hängt davon ab, die wievielte Zelle des Wertes es ist.
+  function gewicht(exponent, negativ) {
+    var vz = negativ ? "−" : "";
+    if (exponent <= 15) return vz + String(1n << BigInt(exponent));
+    return vz + "2<sup>" + exponent + "</sup>";
+  }
+
+  function zeichneBits() {
+    var tb = teilBei(auswahl), e = tb && tb.e, t = tb && tb.t, wert = zellen[auswahl - START];
+    var stelle = t ? auswahl - t.adr : 0, n = t ? t.n : 1;
+    var wer = e ? (e.name ? c(e.name + t.anhang) : "der Variable ohne Namen") : "";
+    var kopf = "Zelle " + auswahl + ": ";
+    if (!e) kopf += "Die Zelle ist frei. Kein Name in der Tabelle führt zu ihr.";
+    else if (n === 1) kopf += "Sie ist die einzige Zelle von " + wer + " mit dem Typ " + c(t.typ) + ".";
+    else kopf += "Sie ist die " + (stelle + 1) + ". von " + n + " Zellen von " + wer + " mit dem Typ " + c(t.typ) + ".";
+    $("bitkopf").innerHTML = kopf + " Über jedem Bit steht seine Wertigkeit.";
+
+    var reihe = $("bitreihe");
+    reihe.textContent = "";
+    for (var j = 7; j >= 0; j--) {
+      (function (j) {
+        var exponent = 8 * (n - 1 - stelle) + j;
+        var negativ = !!t && TYPEN[t.typ].vorzeichen && exponent === 8 * n - 1;
+        var an = (wert >> j) & 1;
+        var d = document.createElement("div");
+        d.className = "bitzelle" + (an ? " an" : "") + (negativ ? " minus" : "");
+        var g = document.createElement("span"); g.className = "gewicht"; g.innerHTML = gewicht(exponent, negativ);
+        var b = document.createElement("button"); b.type = "button"; b.textContent = an;
+        b.setAttribute("aria-label", "Bit mit der Wertigkeit 2 hoch " + exponent + ", steht auf " + an);
+        b.addEventListener("click", function () { zellen[auswahl - START] ^= (1 << j); zeichne(); });
+        d.appendChild(g); d.appendChild(b);
+        reihe.appendChild(d);
+      })(j);
+    }
+
+    var summe = $("bitsumme");
+    if (!e) { summe.innerHTML = "Ohne Typ ist das Bitmuster nur eine Reihe von Bits.<span class=\"muster\">" + bits(wert) + "</span>"; return; }
+    var v = wertBei(t.adr, t.typ), zeiger = TYPEN[t.typ].zeiger;
+    summe.innerHTML = "Der Typ " + c(t.typ) + " liest " + bereich(t.adr, t.n) + (t.n > 1 ? " zusammen" : "") + " als eine " + (zeiger ? "Adresse" : "Zahl") + "." +
+      "<span class=\"muster\">" + muster(t.adr, t.n) + " = " + v + "</span>" + (zeiger ? zielText(v) : "");
+  }
+
+  function zeichnePfeile() {
+    var g = $("pfeilgruppe"), rahmen = $("speicher").getBoundingClientRect();
+    g.textContent = "";
+    tabelle.forEach(function (e) {
+      if (!TYPEN[e.typ] || !TYPEN[e.typ].zeiger) return;
+      var ziel = wertVon(e);
+      if (!imModell(ziel, 1)) return;
+      var von = document.querySelector('.zelle[data-adr="' + e.adr + '"]');
+      var nach = document.querySelector('.zelle[data-adr="' + Number(ziel) + '"]');
+      if (!von || !nach) return;
+      var a = von.getBoundingClientRect(), b = nach.getBoundingClientRect();
+      var x1 = a.left + a.width / 2 - rahmen.left, x2 = b.left + b.width / 2 - rahmen.left;
+      var y1, y2, kx, ky;
+      if (b.top < a.top - 4) {            // Ziel liegt in einer Reihe darüber
+        y1 = a.top - rahmen.top; y2 = b.bottom - rahmen.top + 3;
+        kx = (x1 + x2) / 2; ky = (y1 + y2) / 2;
+      } else if (b.top > a.top + 4) {     // Ziel liegt in einer Reihe darunter
+        y1 = a.bottom - rahmen.top; y2 = b.top - rahmen.top - 3;
+        kx = (x1 + x2) / 2; ky = (y1 + y2) / 2;
+      } else {                            // gleiche Reihe: Bogen über den Zellen
+        y1 = a.top - rahmen.top; y2 = b.top - rahmen.top - 3;
+        kx = (x1 + x2) / 2; ky = y1 - 26;
+        if (x1 === x2) return;
+      }
+      var ns = "http://www.w3.org/2000/svg";
+      var p = document.createElementNS(ns, "path");
+      p.setAttribute("d", "M" + x1 + "," + y1 + " Q" + kx + "," + ky + " " + x2 + "," + y2);
+      p.setAttribute("marker-end", "url(#spitze)");
+      var k = document.createElementNS(ns, "circle");
+      k.setAttribute("cx", x1); k.setAttribute("cy", y1); k.setAttribute("r", 4);
+      g.appendChild(p); g.appendChild(k);
+    });
+  }
+
+  $("weiter").addEventListener("click", weiter);
+  $("zurueck").addEventListener("click", zurueck);
+  $("vorn").addEventListener("click", vonVorn);
+  window.addEventListener("resize", zeichnePfeile);
+  vonVorn();
+})();
+</script>
+</body>
+</html>

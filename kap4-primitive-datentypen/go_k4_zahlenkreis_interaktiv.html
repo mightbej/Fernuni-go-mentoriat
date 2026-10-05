@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zahlenkreis: Ganzzahlen und Überlauf in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap; }
+    .layout { display:grid;grid-template-columns:minmax(320px,560px) 1fr;gap:24px;align-items:start; }
+    @media (max-width:900px) { .layout { grid-template-columns:1fr; } }
+    svg { width:100%;height:auto;display:block; }
+    .schalter { display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.schritt { min-width:64px;font-family:Consolas,monospace;font-size:1.05rem; }
+    button:disabled { opacity:.5;cursor:default; }
+    input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:96px; }
+    input:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .anzeige { display:grid;grid-template-columns:auto 1fr;gap:6px 16px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:1.05rem;margin:10px 0; }
+    .anzeige .name { color:var(--muted);font-family:"Segoe UI",sans-serif;font-size:.95rem; }
+    .anzeige .gross { font-size:1.5rem;font-weight:700; }
+    .meldung { padding:14px;border-radius:8px;border-left:4px solid var(--accent);background:var(--pos-bg);margin:12px 0;min-height:76px; }
+    .meldung.ueberlauf { border-left-color:var(--naht);background:#fef2f2; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .fehler { color:var(--naht);font-size:.92rem;min-height:1.4em; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+
+    /* Tabelle der Go-Typen */
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap; }
+    td[colspan] { white-space:normal; }
+    th { background:#f9fafb;font-weight:600; }
+    td:nth-child(3),td:nth-child(4) { font-family:Consolas,monospace; }
+    tr.trenner td { border-top:2px solid #cbd5e1; }
+    tr.gewaehlt td { background:var(--highlight);font-weight:700; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+
+    /* Bitmuster unter dem Kreis */
+    .bitfeld { margin-top:14px;padding:14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;text-align:center; }
+    .bitkopf { color:var(--muted);font-size:.92rem;margin-bottom:8px; }
+    .bitfuss { color:var(--muted);font-size:.85rem;margin-top:6px; }
+    .bitreihe { display:flex;justify-content:center;gap:6px;flex-wrap:nowrap; }
+    .bitzelle { display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 1 58px;min-width:0; }
+    .bitzelle .gewicht { font-family:Consolas,monospace;font-size:.95rem;color:var(--muted); }
+    .bitzelle.an .gewicht { color:#111827;font-weight:700; }
+    .bitzelle button { width:100%;padding:6px 0;font-family:Consolas,monospace;font-size:2rem;line-height:1.2;font-weight:700;background:#fff;color:#9ca3af;border:2px solid #cbd5e1; }
+    .bitzelle.an button { background:var(--pos-bg);color:#111827;border-color:var(--pos); }
+    .bitzelle.an.minus button { background:var(--neg-bg);border-color:var(--neg); }
+    .bitzelle:nth-child(4):not(:last-child) { margin-right:12px; }
+    .bitsumme { font-family:Consolas,monospace;font-size:1.25rem;margin-top:12px;min-height:1.6em; }
+
+    /* Kreis */
+    .bahn { fill:none;stroke:#e5e7eb;stroke-width:2; }
+    .knoten { stroke-width:2;cursor:pointer; }
+    .knoten.pos { fill:var(--pos-bg);stroke:var(--pos); }
+    .knoten.neg { fill:var(--neg-bg);stroke:var(--neg); }
+    .knoten.akt { stroke:#111827;stroke-width:4; }
+    .wert { font-family:Consolas,monospace;font-size:15px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none;fill:#111827; }
+    .bits { font-family:Consolas,monospace;font-size:12px;text-anchor:middle;dominant-baseline:central;fill:var(--muted); }
+    .strich.pos { stroke:var(--pos); } .strich.neg { stroke:var(--neg); }
+    .strich { stroke-width:2; }
+    .marke { font-family:Consolas,monospace;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#111827; }
+    .treffer { fill:transparent;cursor:pointer; }
+    #naht { stroke:var(--naht);stroke-width:4;stroke-dasharray:7 5; }
+    #naht.blitz { stroke-width:11;stroke-dasharray:none; }
+    #nahttext { font-size:14px;font-weight:700;fill:var(--naht);text-anchor:middle; }
+    #zeiger { transform-box:view-box;transform-origin:260px 260px;transition:transform .12s linear; }
+    #zeiger.schnell { transition:none; }
+    #zeiger line { stroke:#111827;stroke-width:5;stroke-linecap:round; }
+    #zeiger polygon { fill:#111827; }
+    #punkt { fill:#f59e0b;stroke:#111827;stroke-width:2; }
+    .mitte { font-family:Consolas,monospace;text-anchor:middle;fill:#111827; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Zahlenkreis: Ganzzahlen und Überlauf in Go</h1>
+    <p>Ein Ganzzahl-Typ hat nur endlich viele Bitmuster. Wer über das letzte hinauszählt, kommt wieder beim ersten an. Kurstext Kapitel 4.3, Datentypen für Ganzzahlen.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was der Kreis zeigt</h2>
+    <p>Mit <em>n</em> Bit gibt es genau 2<sup><em>n</em></sup> Bitmuster. Auf dem Kreis stehen sie in der Reihenfolge, in der man beim Zählen an ihnen vorbeikommt. Addieren heißt: im Uhrzeigersinn weitergehen. Subtrahieren heißt: gegen den Uhrzeigersinn gehen.</p>
+    <p>Die Nahtstelle ist der Ort, an dem der größte Wert neben dem kleinsten liegt. Ohne Vorzeichen liegt sie zwischen 2<sup><em>n</em></sup> − 1 und 0. Mit Vorzeichen liegt sie zwischen 2<sup><em>n</em>−1</sup> − 1 und −2<sup><em>n</em>−1</sup>. Läuft der Zeiger darüber, ist das Ergebnis um 2<sup><em>n</em></sup> zu klein oder zu groß. Das ist der arithmetische Überlauf.</p>
+    <p>Unter dem Kreis steht das Bitmuster, auf das der Zeiger zeigt. Über jedem Bit steht seine Wertigkeit. Der Wert ist die Summe der Wertigkeiten aller Bits, die auf 1 stehen.</p>
+    <div class="hinweis">Go meldet den Überlauf zur Laufzeit nicht. Das Programm rechnet mit dem falschen Wert weiter. Nur bei Konstanten prüft der Compiler: <code>var x int8 = 127 + 1</code> wird nicht übersetzt.</div>
+  </div>
+
+  <div class="card">
+    <h2>Die Ganzzahl-Typen in Go</h2>
+    <p>Jeder Ganzzahl-Typ in Go ist ein solcher Kreis. Die Typen unterscheiden sich in der Zahl der Bits und darin, ob das vorderste Bit als Vorzeichen gelesen wird. Der Kreis unten zeigt <code>uint8</code> und <code>int8</code>, die Zeile des gewählten Typs ist markiert. Die größeren Typen verhalten sich genauso, ihr Kreis hat nur mehr Stellen.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Typ</th><th>Bits</th><th>Kleinster Wert</th><th>Größter Wert</th><th>Stellen auf dem Kreis</th></tr></thead>
+      <tbody>
+        <tr id="zeile-uint8"><td><code>uint8</code></td><td>8</td><td>0</td><td>255</td><td>2<sup>8</sup> = 256</td></tr>
+        <tr><td><code>uint16</code></td><td>16</td><td>0</td><td>65.535</td><td>2<sup>16</sup> = 65.536</td></tr>
+        <tr><td><code>uint32</code></td><td>32</td><td>0</td><td>4.294.967.295</td><td>2<sup>32</sup></td></tr>
+        <tr><td><code>uint64</code></td><td>64</td><td>0</td><td>18.446.744.073.709.551.615</td><td>2<sup>64</sup></td></tr>
+        <tr id="zeile-int8" class="trenner"><td><code>int8</code></td><td>8</td><td>−128</td><td>127</td><td>2<sup>8</sup> = 256</td></tr>
+        <tr><td><code>int16</code></td><td>16</td><td>−32.768</td><td>32.767</td><td>2<sup>16</sup> = 65.536</td></tr>
+        <tr><td><code>int32</code></td><td>32</td><td>−2.147.483.648</td><td>2.147.483.647</td><td>2<sup>32</sup></td></tr>
+        <tr><td><code>int64</code></td><td>64</td><td>−9.223.372.036.854.775.808</td><td>9.223.372.036.854.775.807</td><td>2<sup>64</sup></td></tr>
+        <tr class="trenner"><td><code>uint</code></td><td>32 oder 64</td><td colspan="3">ohne Vorzeichen, Größe hängt von Compiler und Hardware ab</td></tr>
+        <tr><td><code>int</code></td><td>32 oder 64</td><td colspan="3">mit Vorzeichen, gleiche Größe wie <code>uint</code></td></tr>
+        <tr><td><code>byte</code></td><td>8</td><td colspan="3">anderer Name für <code>uint8</code></td></tr>
+        <tr><td><code>rune</code></td><td>32</td><td colspan="3">anderer Name für <code>int32</code></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="quelle">Nach Kurstext, Abschnitt 4.3.4.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren</h2>
+    <div class="layout">
+
+      <div>
+        <svg id="kreis" viewBox="-12 -16 544 552" role="img" aria-label="Zahlenkreis mit Zeiger">
+          <circle class="bahn" cx="260" cy="260" r="185"/>
+          <g id="ring"></g>
+          <line id="naht" x1="0" y1="0" x2="0" y2="0"/>
+          <text id="nahttext" x="260" y="0"></text>
+          <g id="zeiger">
+            <line x1="260" y1="260" x2="398" y2="260"/>
+            <polygon points="412,260 392,250 392,270"/>
+          </g>
+          <circle cx="260" cy="260" r="9" fill="#111827"/>
+          <circle id="punkt" cx="0" cy="0" r="7"/>
+        </svg>
+        <div class="bitfeld">
+          <div class="bitkopf">Bitmuster mit Wertigkeit jedes Bits</div>
+          <div class="bitreihe" id="bitreihe"></div>
+          <div class="bitsumme" id="bitsumme"></div>
+          <div class="bitfuss">Ein Klick auf ein Bit schaltet es um.</div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Wie viele Bits?</h3>
+        <div class="schalter">
+          <button id="b4" type="button">4 Bit (Modell)</button>
+          <button id="b8" type="button">8 Bit</button>
+        </div>
+
+        <h3>Wie werden die Bits gelesen?</h3>
+        <div class="schalter">
+          <button id="lesU" type="button">ohne Vorzeichen</button>
+          <button id="lesS" type="button">mit Vorzeichen</button>
+        </div>
+
+        <div class="anzeige">
+          <span class="name">Typ</span><span id="aTyp"></span>
+          <span class="name">Wertebereich</span><span id="aBereich"></span>
+          <span class="name">Bitmuster</span><span id="aBits"></span>
+          <span class="name">Wert</span><span id="aWert" class="gross"></span>
+        </div>
+
+        <h3>Rechnen</h3>
+        <div class="zeile">
+          <button class="schritt" id="minus1" type="button">− 1</button>
+          <button class="schritt" id="plus1" type="button">+ 1</button>
+          <input id="zahl" type="number" value="5" aria-label="Zahl zum Addieren">
+          <button id="addiere" type="button">addieren</button>
+        </div>
+        <div class="zeile">
+          <input id="start" type="number" value="0" aria-label="Startwert">
+          <button id="setze" type="button">als Startwert setzen</button>
+          <button id="rand" type="button">an den größten Wert</button>
+        </div>
+        <div class="fehler" id="fehler"></div>
+
+        <div class="meldung" id="meldung"></div>
+        <div id="gocode"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>8 Bit mit Vorzeichen, Startwert 127. Was zeigt der Kreis nach <code>+ 1</code>?
+        <details><summary>Auflösung</summary>−128. Der Zeiger läuft über die Nahtstelle vom größten zum kleinsten Wert.</details></li>
+      <li>8 Bit ohne Vorzeichen, Startwert 0. Was zeigt der Kreis nach <code>− 1</code>?
+        <details><summary>Auflösung</summary>255. Bei <code>uint8</code> liegt die Nahtstelle zwischen 255 und 0.</details></li>
+      <li>8 Bit mit Vorzeichen, Startwert 100. Erst 100 addieren, dann −100 addieren. Wo steht der Zeiger am Ende?
+        <details><summary>Auflösung</summary>Wieder bei 100. Das Zwischenergebnis ist −56, also falsch. Der zweite Schritt läuft über dieselbe Nahtstelle zurück. Zwei Überläufe können sich ausgleichen.</details></li>
+      <li>8 Bit, Bitmuster <code>1111 1111</code>. Zwischen „ohne Vorzeichen" und „mit Vorzeichen" umschalten. Was ändert sich, was bleibt?
+        <details><summary>Auflösung</summary>Das Bitmuster und die Stelle des Zeigers bleiben. Der Wert wechselt von 255 auf −1, und die Nahtstelle wandert von oben nach unten. Der Typ legt fest, was die Bits bedeuten.</details></li>
+      <li>8 Bit ohne Vorzeichen, beliebiger Startwert. Welche Zahl muss man addieren, um wieder beim Startwert anzukommen?
+        <details><summary>Auflösung</summary>256, also 2<sup>8</sup>. So viele Bitmuster gibt es, und eine volle Runde führt an den Anfang zurück.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const C = 260, R = 185;
+  const el = id => document.getElementById(id);
+  const SVG = 'http://www.w3.org/2000/svg';
+  const st = { n: 8, signed: true, idx: 0, pos: 0, laeuft: false };
+
+  const N = () => 1 << st.n;
+  const schritt = () => 360 / N();
+  const wert = i => (st.signed && i >= N() / 2) ? i - N() : i;
+  const min = () => st.signed ? -N() / 2 : 0;
+  const max = () => st.signed ? N() / 2 - 1 : N() - 1;
+  const bits = i => { const b = i.toString(2).padStart(st.n, '0'); return st.n === 8 ? b.slice(0, 4) + ' ' + b.slice(4) : b; };
+  const typ = () => st.n === 8 ? (st.signed ? 'int8' : 'uint8') : (st.signed ? '4 Bit mit Vorzeichen' : '4 Bit ohne Vorzeichen');
+  const z = v => String(v).replace('-', '−');
+  const punkt = (i, r) => { const a = (-90 + i * schritt()) * Math.PI / 180; return [C + r * Math.cos(a), C + r * Math.sin(a)]; };
+  const neu = (name, attr, text) => { const e = document.createElementNS(SVG, name); for (const k in attr) e.setAttribute(k, attr[k]); if (text !== undefined) e.textContent = text; return e; };
+
+  function baueRing() {
+    const ring = el('ring'); ring.replaceChildren();
+    for (let i = 0; i < N(); i++) {
+      const kl = wert(i) < 0 ? 'neg' : 'pos';
+      if (st.n === 4) {
+        const [x, y] = punkt(i, R), [bx, by] = punkt(i, R + 40);
+        const k = neu('circle', { cx: x, cy: y, r: 21, class: 'knoten ' + kl, 'data-i': i });
+        k.addEventListener('click', () => springe(i));
+        ring.append(k, neu('text', { x, y, class: 'wert' }, z(wert(i))), neu('text', { x: bx, y: by, class: 'bits' }, bits(i)));
+      } else {
+        const lang = i % 16 === 0;
+        const [x1, y1] = punkt(i, R - (lang ? 12 : 6)), [x2, y2] = punkt(i, R + (lang ? 12 : 6));
+        ring.append(neu('line', { x1, y1, x2, y2, class: 'strich ' + kl }));
+        if (lang) { const [tx, ty] = punkt(i, R + 32); ring.append(neu('text', { x: tx, y: ty, class: 'marke' }, z(wert(i)))); }
+        const [hx, hy] = punkt(i, R);
+        const h = neu('circle', { cx: hx, cy: hy, r: 5, class: 'treffer' });
+        h.addEventListener('click', () => springe(i));
+        ring.append(h);
+      }
+    }
+    // Nahtstelle: zwischen größtem und kleinstem Wert
+    const s = (st.signed ? N() / 2 - 1 : N() - 1) + 0.5;
+    const [x1, y1] = punkt(s, R - 44), [x2, y2] = punkt(s, R + (st.n === 8 ? 20 : 50));
+    const naht = el('naht');
+    naht.setAttribute('x1', x1); naht.setAttribute('y1', y1); naht.setAttribute('x2', x2); naht.setAttribute('y2', y2);
+    const t = el('nahttext');
+    t.setAttribute('y', st.signed ? 530 : -2);
+    t.textContent = 'Nahtstelle zwischen ' + z(max()) + ' und ' + z(min());
+  }
+
+  function zeige() {
+    el('zeiger').style.transform = 'rotate(' + (-90 + st.pos * schritt()) + 'deg)';
+    const [px, py] = punkt(st.idx, R);
+    const p = el('punkt');
+    p.setAttribute('cx', px); p.setAttribute('cy', py);
+    p.style.display = st.n === 8 ? '' : 'none';
+    document.querySelectorAll('.knoten').forEach(k => k.classList.toggle('akt', Number(k.dataset.i) === st.idx));
+    zeigeBits();
+    el('lesU').textContent = st.n === 8 ? 'uint8 – ohne Vorzeichen' : 'ohne Vorzeichen';
+    el('lesS').textContent = st.n === 8 ? 'int8 – mit Vorzeichen' : 'mit Vorzeichen';
+    el('zeile-uint8').classList.toggle('gewaehlt', st.n === 8 && !st.signed);
+    el('zeile-int8').classList.toggle('gewaehlt', st.n === 8 && st.signed);
+    el('aTyp').textContent = typ();
+    el('aBereich').textContent = z(min()) + ' … ' + z(max());
+    el('aBits').textContent = bits(st.idx);
+    el('aWert').textContent = z(wert(st.idx));
+    el('b4').classList.toggle('aktiv', st.n === 4); el('b8').classList.toggle('aktiv', st.n === 8);
+    el('lesU').classList.toggle('aktiv', !st.signed); el('lesS').classList.toggle('aktiv', st.signed);
+  }
+
+  // Bitmuster unter dem Kreis: über jedem Bit seine Wertigkeit, darunter die Summe
+  function zeigeBits() {
+    const reihe = el('bitreihe'); reihe.replaceChildren();
+    const teile = [];
+    for (let j = st.n - 1; j >= 0; j--) {
+      const an = (st.idx >> j) & 1;
+      const minus = st.signed && j === st.n - 1;
+      const gewicht = minus ? -(1 << j) : (1 << j);
+      if (an) teile.push(gewicht);
+      const zelle = document.createElement('div');
+      zelle.className = 'bitzelle' + (an ? ' an' : '') + (minus ? ' minus' : '');
+      const g = document.createElement('span'); g.className = 'gewicht'; g.textContent = z(gewicht);
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = an; b.disabled = st.laeuft;
+      b.setAttribute('aria-label', 'Bit ' + j + ' mit Wertigkeit ' + gewicht + ' umschalten');
+      b.addEventListener('click', () => springe(st.idx ^ (1 << j)));
+      zelle.append(g, b); reihe.append(zelle);
+    }
+    const summe = teile.length === 0 ? '0'
+      : teile.map((t, i) => i === 0 ? z(t) : (t < 0 ? '− ' + (-t) : '+ ' + t)).join(' ');
+    el('bitsumme').innerHTML = (teile.length > 1 ? summe + ' = ' : '') + '<strong>' + z(wert(st.idx)) + '</strong>';
+  }
+
+  function sperre(an) {
+    st.laeuft = an;
+    document.querySelectorAll('button').forEach(b => b.disabled = an);
+  }
+
+  function melde(html, ueberlauf) {
+    const m = el('meldung'); m.innerHTML = html; m.classList.toggle('ueberlauf', !!ueberlauf);
+  }
+
+  function goCode(start, k, erg) {
+    if (st.n !== 8) { el('gocode').innerHTML = '<p style="color:var(--muted);font-size:.92rem">Go kennt keinen Typ mit 4 Bit. Das Modell zeigt das Prinzip. Mit 8 Bit steht hier der passende Go-Code.</p>'; return; }
+    // Eine Konstante außerhalb des Wertebereichs übersetzt Go nicht, dann steht hier die Schleife.
+    const rechnung = Math.abs(k) <= max()
+      ? 'x = x ' + (k < 0 ? '- ' + (-k) : '+ ' + k)
+      : 'for i := 0; i &lt; ' + Math.abs(k) + '; i++ {\n    x' + (k < 0 ? '--' : '++') + '\n}';
+    el('gocode').innerHTML = '<pre>var x ' + typ() + ' = ' + start + '\n' + rechnung + '\nfmt.Println(x) // ' + erg + '</pre>';
+  }
+
+  function springe(i) {
+    if (st.laeuft) return;
+    st.idx = i; st.pos = i; el('fehler').textContent = '';
+    el('zeiger').classList.add('schnell'); zeige();
+    melde('Startwert ' + z(wert(i)) + ', Bitmuster <code>' + bits(i) + '</code>.');
+    el('gocode').innerHTML = '';
+  }
+
+  function rechne(k) {
+    if (st.laeuft || k === 0) return;
+    el('fehler').textContent = '';
+    if (Math.abs(k) > 2000) { el('fehler').textContent = 'Bitte eine Zahl zwischen −2000 und 2000 eingeben.'; return; }
+    const start = wert(st.idx), dir = k > 0 ? 1 : -1, anzahl = Math.abs(k);
+    const obenIdx = st.signed ? N() / 2 - 1 : N() - 1;      // größter Wert
+    const untenIdx = st.signed ? N() / 2 : 0;               // kleinster Wert
+    let uebergaenge = 0, rest = anzahl;
+    const langsam = anzahl <= 16;
+    el('zeiger').classList.toggle('schnell', !langsam);
+    const proTick = langsam ? 1 : Math.max(1, Math.ceil(anzahl / 130));
+    sperre(true);
+    const timer = setInterval(() => {
+      let blitz = false;
+      for (let s = 0; s < proTick && rest > 0; s++, rest--) {
+        if ((dir === 1 && st.idx === obenIdx) || (dir === -1 && st.idx === untenIdx)) { uebergaenge++; blitz = true; }
+        st.pos += dir; st.idx = ((st.pos % N()) + N()) % N();
+      }
+      zeige();
+      if (blitz) { el('naht').classList.add('blitz'); setTimeout(() => el('naht').classList.remove('blitz'), 350); }
+      if (rest === 0) { clearInterval(timer); st.pos = st.idx; el('zeiger').classList.add('schnell'); zeige(); sperre(false); berichte(start, k, uebergaenge); }
+    }, langsam ? 150 : 16);
+  }
+
+  function berichte(start, k, ueb) {
+    const erg = wert(st.idx), wahr = start + k;
+    const rechnung = z(start) + (k < 0 ? ' − ' + (-k) : ' + ' + k);
+    if (ueb === 0) {
+      melde('<strong>' + rechnung + ' = ' + z(erg) + '</strong><br>Das Ergebnis liegt im Wertebereich. Kein Überlauf.');
+    } else {
+      const mal = ueb === 1 ? 'einmal' : ueb + '-mal';
+      const korr = (k > 0 ? ' − ' : ' + ') + (ueb === 1 ? '' : ueb + ' · ') + N();
+      melde('<strong>Überlauf.</strong> Rechnerisch ist ' + rechnung + ' = ' + z(wahr) + '. Dieser Wert liegt außerhalb von ' + z(min()) + ' … ' + z(max()) + '.<br>' +
+            'Der Zeiger ist ' + mal + ' über die Nahtstelle gelaufen. Gespeichert wird ' + z(wahr) + korr + ' = <strong>' + z(erg) + '</strong>.', true);
+    }
+    goCode(start, k, erg);
+  }
+
+  function stelleUm(n, signed) {
+    if (st.laeuft) return;
+    if (n !== st.n) { st.n = n; st.idx = 0; }
+    st.signed = signed; st.pos = st.idx;
+    el('zeiger').classList.add('schnell');
+    baueRing(); zeige();
+    melde('Bitmuster <code>' + bits(st.idx) + '</code> wird als ' + typ() + ' gelesen: Wert ' + z(wert(st.idx)) + '.');
+    el('gocode').innerHTML = ''; el('fehler').textContent = '';
+  }
+
+  el('b4').onclick = () => stelleUm(4, st.signed);
+  el('b8').onclick = () => stelleUm(8, st.signed);
+  el('lesU').onclick = () => stelleUm(st.n, false);
+  el('lesS').onclick = () => stelleUm(st.n, true);
+  el('plus1').onclick = () => rechne(1);
+  el('minus1').onclick = () => rechne(-1);
+  el('addiere').onclick = () => { const k = parseInt(el('zahl').value, 10); if (Number.isNaN(k)) { el('fehler').textContent = 'Bitte eine ganze Zahl eingeben.'; return; } rechne(k); };
+  el('rand').onclick = () => springe(st.signed ? N() / 2 - 1 : N() - 1);
+  el('setze').onclick = () => {
+    const v = parseInt(el('start').value, 10);
+    if (Number.isNaN(v) || v < min() || v > max()) { el('fehler').textContent = 'Der Startwert muss zwischen ' + z(min()) + ' und ' + z(max()) + ' liegen.'; return; }
+    springe(v < 0 ? v + N() : v);
+  };
+  el('zahl').addEventListener('keydown', e => { if (e.key === 'Enter') el('addiere').click(); });
+  el('start').addEventListener('keydown', e => { if (e.key === 'Enter') el('setze').click(); });
+
+  baueRing(); zeige();
+  melde('Auf einen Wert im Kreis klicken oder unten einen Startwert setzen. Dann rechnen und den Zeiger beobachten.');
+})();
+</script>
+</body>
+</html>

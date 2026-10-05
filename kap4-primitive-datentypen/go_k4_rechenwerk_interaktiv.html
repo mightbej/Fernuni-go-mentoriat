@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#4338ca;--an:#b45309;--an-bg:#fef3c7;--ueb:#be123c;--ueb-bg:#ffe4e6;--erg:#0f766e;--erg-bg:#d1fae5;--rot:#dc2626;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#e0e7ff 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#4338ca 0%,#0f766e 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(67,56,202,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .meldung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--erg);background:var(--erg-bg);margin:12px 0; }
+    .meldung.ueberlauf { border-left-color:var(--rot);background:#fef2f2; }
+    .erklaerung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#eef2ff;margin:12px 0;min-height:92px; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:88px;background:#fff; }
+    input:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label,.zeile .name { color:var(--muted);font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto; }
+    table.text { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    table.text th,table.text td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    table.text th { background:#f9fafb;font-weight:600; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+
+    /* Schalter und Lampen */
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow-x:auto; }
+    .schalterreihe { display:flex;justify-content:center;gap:28px;flex-wrap:wrap; }
+    .schalter { display:flex;flex-direction:column;align-items:center;gap:6px; }
+    .schalter .name { font-family:Consolas,monospace;font-size:1.2rem;font-weight:700;color:var(--muted); }
+    .schalter button { font-family:Consolas,monospace;font-size:1.15rem;font-weight:700;min-width:170px;padding:10px 14px;border-width:2px;background:#fff;color:#6b7280;border-color:#cbd5e1; }
+    .schalter button.an { background:var(--an-bg);border-color:var(--an);color:#111827; }
+    .lampen { display:grid;grid-template-columns:auto auto 1fr;gap:10px 16px;align-items:center;margin:18px auto 0;width:max-content;max-width:100%;font-size:1rem; }
+    .lampen .formel { font-family:Consolas,monospace;font-weight:700; }
+    .lampe { width:34px;height:34px;border-radius:50%;border:2px solid #9ca3af;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-weight:700;color:#6b7280; }
+    .lampe.an { background:#fde047;border-color:var(--an);color:#111827;box-shadow:0 0 12px #fde047; }
+    .lampen .dazu { color:var(--muted);font-size:.95rem; }
+    .lampen .trenner { grid-column:1 / -1;border-top:1px solid var(--line);margin:4px 0; }
+
+    /* Bit-Tabellen */
+    table.bits { border-collapse:separate;border-spacing:5px;margin:0 auto;font-family:Consolas,monospace; }
+    table.bits th { font-family:"Segoe UI",sans-serif;font-weight:600;font-size:.92rem;color:var(--muted);text-align:right;padding-right:10px;white-space:nowrap; }
+    table.bits th code { font-size:.95rem; }
+    table.bits td { text-align:center;padding:0; }
+    table.bits td.gewicht { font-size:.82rem;color:var(--muted); }
+    table.bits td.dez { text-align:left;padding-left:12px;font-size:1rem;white-space:nowrap; }
+    #tabG td.dez,#tabV td.dez { font-family:"Segoe UI",sans-serif;font-size:.95rem;color:var(--muted);white-space:normal; }
+    table.bits td.luecke { width:14px; }
+    .bit { display:flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:1.5rem;font-weight:700;font-family:Consolas,monospace;background:#fff;color:#9ca3af;border:2px solid #cbd5e1;border-radius:8px;padding:0; }
+    .bit.an { background:var(--an-bg);border-color:var(--an);color:#111827; }
+    .bit.erg { background:#fff;border-color:#cbd5e1; }
+    .bit.erg.an { background:var(--erg-bg);border-color:var(--erg);color:#111827; }
+    .bit.ueb { height:30px;font-size:1.05rem;border-style:dashed;border-color:#e5e7eb;color:#d1d5db;background:transparent; }
+    .bit.ueb.an { background:var(--ueb-bg);border-color:var(--ueb);color:var(--ueb);border-style:solid; }
+    .bit.leer { border-color:transparent;background:transparent;color:transparent; }
+    .bit.weg { text-decoration:line-through; }
+    td.jetzt .bit { outline:3px solid var(--accent);outline-offset:1px; }
+    tr.strich td,tr.strich th { border-top:3px solid #111827;padding-top:5px; }
+    button.bit { cursor:pointer; }
+    button.bit:hover { filter:brightness(.96); }
+    .legende { color:var(--muted);font-size:.88rem;text-align:center;margin-top:10px; }
+
+    /* Schaltung des Addierers für eine Stelle */
+    .schaltbild { width:100%;max-width:760px;height:auto;display:block;margin:0 auto; }
+    .draht { fill:none;stroke:#cbd5e1;stroke-width:3;stroke-linecap:round;stroke-linejoin:round; }
+    .draht.an { stroke:var(--an);stroke-width:5; }
+    .knoten { fill:#9ca3af; } .knoten.an { fill:var(--an); }
+    .gatter rect { fill:#fff;stroke:#111827;stroke-width:2; }
+    .gatter.an rect { fill:var(--an-bg); }
+    .gatter text { font-family:Consolas,monospace;font-size:17px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:#111827; }
+    .anschluss { font-family:"Segoe UI",sans-serif;font-size:14px;fill:var(--muted); }
+    .pegel { font-family:Consolas,monospace;font-size:20px;font-weight:700;fill:#9ca3af; }
+    .pegel.an { fill:var(--an); }
+    .pegel.klein { font-size:15px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Rechenwerk: Von Strom an und aus zu 17 + 4</h1>
+    <p>Ein Computer kennt nur zwei Zustände: Strom fließt oder Strom fließt nicht. Diese Seite zeigt, wie daraus eine Addition wird, und warum die Subtraktion keine eigene Schaltung braucht. Kurstext Kapitel 4.3.5 und 4.3.7.2.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was die Seite zeigt</h2>
+    <p>Eine Leitung führt Strom oder sie führt keinen. Das ist ein Bit: 1 oder 0. Acht Leitungen nebeneinander sind ein Byte, also ein Wert vom Typ <code>uint8</code>.</p>
+    <p>Eine Schaltung, die zwei Leitungen zu einer verknüpft, heißt Gatter. Es gibt nur wenige Sorten: AND, OR, XOR und NOT. In Go heißen sie <code>&amp;</code>, <code>|</code> und <code>^</code>. Auf ein Byte angewendet, arbeiten sie auf allen acht Leitungen zugleich.</p>
+    <p>Aus diesen Gattern lässt sich eine Schaltung bauen, die eine einzelne Stelle addiert. Sie bekommt drei Bits: je eines von den beiden Zahlen und den Übertrag von rechts. Sie liefert zwei Bits: die Summe dieser Stelle und den Übertrag nach links. Acht solche Schaltungen hintereinander addieren zwei Bytes. Das ist das Rechenwerk.</p>
+    <p>Die Seite geht diesen Weg in fünf Schritten: ein Gatter, die Gatter auf einem Byte, eine Stelle mit Übertrag, der Addierer mit acht Stellen, die Subtraktion.</p>
+    <p>Wie man die Gatter aus Schaltern, einer Batterie und einer Lampe baut, zeigt die Seite <a href="go_k4_schalter_interaktiv.html">Gatter aus Schaltern</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Die Bit-Operatoren in Go</h2>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Operator</th><th>Name</th><th>Das Ergebnis-Bit ist 1, wenn …</th><th>Aufgabe im Rechenwerk</th></tr></thead>
+      <tbody>
+        <tr><td><code>a &amp; b</code></td><td>AND</td><td>beide Bits 1 sind</td><td>erkennt, ob ein Übertrag entsteht</td></tr>
+        <tr><td><code>a | b</code></td><td>OR</td><td>mindestens ein Bit 1 ist</td><td>fasst zwei Quellen für den Übertrag zusammen</td></tr>
+        <tr><td><code>a ^ b</code></td><td>XOR</td><td>genau ein Bit 1 ist</td><td>bildet das Summenbit</td></tr>
+        <tr><td><code>^a</code></td><td>NOT</td><td>das Bit 0 ist</td><td>dreht für die Subtraktion alle Bits um</td></tr>
+        <tr><td><code>a &amp;^ b</code></td><td>AND NOT, auch bit-clear</td><td>das Bit von a 1 und das von b 0 ist</td><td>löscht gezielt Bits, im Addierer nicht nötig</td></tr>
+        <tr><td><code>a &lt;&lt; n</code></td><td>Schieben nach links</td><td colspan="2">Alle Bits rücken n Stellen nach links, rechts kommen Nullen nach. Das entspricht der Multiplikation mit 2<sup>n</sup>.</td></tr>
+        <tr><td><code>a &gt;&gt; n</code></td><td>Schieben nach rechts</td><td colspan="2">Alle Bits rücken n Stellen nach rechts. Das entspricht der Division durch 2<sup>n</sup> mit Abrunden.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Die Operatoren gelten für alle Ganzzahl-Typen. Wer ein Bitmuster meint und keine Zahl, nimmt einen vorzeichenlosen Typ wie <code>uint8</code>.</p>
+    <p class="quelle">Nach Kurstext, Abschnitt 4.3.7.2. Den Addierer führt der Kurstext nicht aus, er ist eine Ergänzung.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 1: Ein Gatter</h2>
+    <div class="feld">
+      <table class="bits" id="tabG"></table>
+      <div class="legende">Ein Klick auf das Bit von a oder b schaltet den Strom um. Die Zeilen stehen in derselben Reihenfolge wie unten beim Byte. Dort gibt es acht solche Spalten nebeneinander.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 2: Die Gatter auf einem Byte</h2>
+    <div class="zeile">
+      <label for="zba">a</label><input id="zba" type="number" min="0" max="255" data-zahl="ba">
+      <label for="zbb">b</label><input id="zbb" type="number" min="0" max="255" data-zahl="bb">
+      <button type="button" data-paar="ba,bb,10,12">Beispiel des Kurstexts</button>
+    </div>
+    <div class="feld"><table class="bits" id="tabB"></table>
+      <div class="legende">Ein Klick auf ein Bit von a oder b schaltet es um. Jedes Ergebnis-Bit hängt nur von den zwei Bits darüber ab.</div></div>
+    <div id="codeB"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 3: Eine Stelle mit Übertrag</h2>
+    <p>Die Stelle ganz rechts bekommt nie einen Übertrag. Ab der zweiten Stelle kann von rechts einer ankommen. Hier ist die Stelle mit der Wertigkeit 2 für sich allein. Alle drei Eingänge lassen sich umschalten: <code>a</code>, <code>b</code> und der Übertrag von rechts.</p>
+    <div class="feld">
+      <table class="bits" id="tabV"></table>
+      <div class="legende">Der Übertrag von rechts steht über der Stelle, in die er hineingeht. Der neue Übertrag steht eine Spalte weiter links, über der Stelle mit der Wertigkeit 4.</div>
+    </div>
+    <div class="erklaerung" id="erklV" style="min-height:0"></div>
+    <div class="feld">
+      <svg id="schaltV" class="schaltbild" viewBox="0 0 660 360" role="img" aria-label="Schaltung eines Addierers für eine Stelle"></svg>
+      <div class="legende">Eine dicke, farbige Leitung führt Strom und steht für 1. Eine dünne, graue Leitung führt keinen Strom und steht für 0. Ein Punkt verbindet zwei Leitungen, ein Bogen führt eine Leitung über eine andere hinweg.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 4: Der Addierer</h2>
+    <div class="zeile">
+      <label for="zaa">a</label><input id="zaa" type="number" min="0" max="255" data-zahl="aa">
+      <label for="zab">b</label><input id="zab" type="number" min="0" max="255" data-zahl="ab">
+      <button type="button" data-paar="aa,ab,17,4">17 + 4</button>
+      <button type="button" data-paar="aa,ab,23,9">23 + 9</button>
+      <button type="button" data-paar="aa,ab,255,1">255 + 1</button>
+      <button type="button" data-paar="aa,ab,127,1">127 + 1</button>
+    </div>
+    <div class="zeile">
+      <button class="haupt" id="weiter" type="button">nächste Stelle</button>
+      <button id="alle" type="button">alle Stellen</button>
+      <button id="vorn" type="button">von vorn</button>
+    </div>
+    <div class="feld"><table class="bits" id="tabA"></table>
+      <div class="legende">Das Rechenwerk beginnt rechts bei der Stelle mit der Wertigkeit 1 und gibt den Übertrag nach links weiter.</div></div>
+    <div class="erklaerung" id="erklA"></div>
+    <h3 id="schaltTitel"></h3>
+    <div class="feld">
+      <svg id="schaltA" class="schaltbild" viewBox="0 0 660 360" role="img" aria-label="Schaltung eines Addierers für eine Stelle"></svg>
+      <div class="legende">Das ist die Schaltung aus „Ausprobieren 3", hier für die Stelle, die der Addierer gerade gerechnet hat. Acht solche Schaltungen stehen nebeneinander. Der Ausgang „Übertrag nach links" der einen ist der Eingang „Übertrag von rechts" der nächsten.</div>
+    </div>
+    <div id="meldA"></div>
+    <div id="codeA"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 5: Die Subtraktion</h2>
+    <p>Das Rechenwerk subtrahiert nicht. Es bildet aus <code>b</code> die Zahl <code>−b</code> und addiert sie. Dafür dreht es alle Bits von <code>b</code> um und zählt 1 dazu. Diese Darstellung heißt Zweierkomplement.</p>
+    <div class="zeile">
+      <label for="zsa">a</label><input id="zsa" type="number" min="0" max="255" data-zahl="sa">
+      <label for="zsb">b</label><input id="zsb" type="number" min="0" max="255" data-zahl="sb">
+      <button type="button" data-paar="sa,sb,17,4">17 − 4</button>
+      <button type="button" data-paar="sa,sb,10,15">10 − 15</button>
+      <button type="button" data-paar="sa,sb,0,1">0 − 1</button>
+    </div>
+    <div class="feld"><table class="bits" id="tabS"></table></div>
+    <div id="meldS"></div>
+    <div id="codeS"></div>
+    <div class="hinweis">Ein echtes Rechenwerk spart sich den Zwischenschritt „1 dazuzählen". Es dreht die Bits von <code>b</code> um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist dasselbe.</div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>a und b stehen beide auf 1. Was steht in der Zeile „Addition"?
+        <details><summary>Auflösung</summary>Links eine 1, rechts eine 0, also nur der Übertrag. 1 + 1 ist im Zweiersystem 10: Summe 0, Übertrag 1. Das Summenbit kommt aus XOR, der Übertrag aus AND.</details></li>
+      <li>Eine Stelle mit Übertrag: a ist 1, b ist 1, und von rechts kommt eine 1. Was sind Summe und neuer Übertrag?
+        <details><summary>Auflösung</summary>Summe 1 und Übertrag 1. Drei Einsen ergeben im Zweiersystem 11.</details></li>
+      <li>An wie vielen Stellen entsteht bei 17 + 4 ein Übertrag?
+        <details><summary>Auflösung</summary>An keiner. 17 ist 0001 0001 und 4 ist 0000 0100. Die Einsen stehen an verschiedenen Stellen, also trifft nie 1 auf 1.</details></li>
+      <li>Was geschieht bei 255 + 1?
+        <details><summary>Auflösung</summary>An jeder Stelle entsteht ein Übertrag. Das Ergebnis ist 0000 0000, und der Übertrag aus der vordersten Stelle hat keinen Platz mehr. Das ist die Nahtstelle im Zahlenkreis bei <code>uint8</code>.</details></li>
+      <li>127 + 1: Fällt ein Übertrag aus der vordersten Stelle heraus? Und stimmt das Ergebnis?
+        <details><summary>Auflösung</summary>Es fällt keiner heraus. Das Ergebnis ist 1000 0000. Als <code>uint8</code> gelesen ist das 128 und richtig. Als <code>int8</code> gelesen ist es −128 und falsch, denn der Übertrag ist in das Vorzeichen-Bit gelaufen.</details></li>
+      <li>Was liefert 10 − 15 bei <code>uint8</code>?
+        <details><summary>Auflösung</summary>251. Das Rechenwerk addiert 10 und das Zweierkomplement von 15 und erhält 1111 1011. Als <code>int8</code> gelesen wäre das −5 und richtig. <code>uint8</code> kennt keine negativen Zahlen und liest 251.</details></li>
+      <li>a ist 13. Was ist <code>a &lt;&lt; 1</code>, und mit welcher Addition bekommt man dasselbe?
+        <details><summary>Auflösung</summary>26. Dasselbe liefert <code>a + a</code>. Um eine Stelle nach links schieben heißt verdoppeln.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const z = v => String(v).replace('-', '−');
+  const b8 = v => (v & 255).toString(2).padStart(8, '0');
+  const mitLuecke = v => b8(v).slice(0, 4) + ' ' + b8(v).slice(4);
+  const sv = v => (v & 255) > 127 ? (v & 255) - 256 : (v & 255);     // dasselbe Bitmuster als int8 gelesen
+  const bit = (v, j) => (v >> j) & 1;
+
+  // Zustand: ga/gb einzelne Bits, ba/bb Bytes für die Gatter, aa/ab Addierer, sa/sb Subtraktion
+  const Z = { ga: 1, gb: 1, va: 1, vb: 0, vc: 1, ba: 10, bb: 12, aa: 17, ab: 4, pos: 0, sa: 17, sb: 4 };
+
+  // ---------- Bausteine für die Bit-Tabellen ----------
+  const kopf = extra => '<tr><th></th>' + (extra ? '<td></td>' : '') +
+    [128, 64, 32, 16, 8, 4, 2, 1].map((g, i) => (i === 4 ? '<td class="luecke"></td>' : '') + '<td class="gewicht">' + g + '</td>').join('') + '<td></td></tr>';
+
+  // o.v: Variable für anklickbare Bits, o.art: 'erg' oder 'ueb', o.extra: Inhalt der Spalte links von Bit 7,
+  // o.bis: nur die Bits 0..bis-1 zeigen, o.jetzt: hervorgehobene Stelle, o.dez: Text rechts, o.strich: Summenstrich
+  function reihe(name, wert, o) {
+    o = o || {};
+    let s = '<tr' + (o.strich ? ' class="strich"' : '') + '><th>' + name + '</th>';
+    if (o.mitExtra) s += '<td>' + (o.extra || '') + '</td>';
+    for (let j = 7; j >= 0; j--) {
+      if (j === 3) s += '<td class="luecke"></td>';
+      const w = bit(wert, j), sichtbar = o.bis === undefined || j < o.bis;
+      const kl = 'bit' + (o.art ? ' ' + o.art : '') + (sichtbar ? (w ? ' an' : '') : ' leer');
+      const inhalt = o.v ? '<button type="button" class="' + kl + '" data-var="' + o.v + '" data-bit="' + j + '" aria-label="Bit mit Wertigkeit ' + (1 << j) + ' von ' + o.v.slice(1) + ' umschalten">' + w + '</button>'
+                         : '<span class="' + kl + '">' + (sichtbar ? w : '0') + '</span>';
+      s += '<td' + (o.jetzt === j ? ' class="jetzt"' : '') + '>' + inhalt + '</td>';
+    }
+    return s + '<td class="dez">' + (o.dez === undefined ? wert : o.dez) + '</td></tr>';
+  }
+
+  // Addition Stelle für Stelle. Liefert Summe, die Überträge in jede Stelle (c[0..8]) und c[8] als herausfallenden Übertrag
+  function addiere(a, b, ersterUebertrag) {
+    const c = [ersterUebertrag ? 1 : 0]; let s = 0;
+    for (let j = 0; j < 8; j++) {
+      const x = bit(a, j), y = bit(b, j);
+      s |= (x ^ y ^ c[j]) << j;
+      c.push((x & y) | (c[j] & (x ^ y)));
+    }
+    let ueb = 0; for (let j = 1; j < 8; j++) ueb |= c[j] << j;       // Überträge in die Stellen 1..7 als Bitmuster
+    return { s, c, ueb };
+  }
+
+  // ---------- Ausprobieren 1 ----------
+  function zeige1() {
+    // Eine einzige Spalte der Byte-Tabelle: a oben, b darunter, dann die Ergebnisse
+    const a = Z.ga, b = Z.gb;
+    const strom = w => w ? 'Strom an' : 'Strom aus';
+    const zelle = (w, art) => '<span class="bit ' + art + (w ? ' an' : '') + '">' + w + '</span>';
+    const eingabe = (name, v, w) => '<tr><th>' + name + '</th><td></td><td><button type="button" class="bit' + (w ? ' an' : '') + '" data-var="' + v + '" data-bit="0" aria-label="' + name + ' umschalten">' + w + '</button></td><td class="dez">' + strom(w) + '</td></tr>';
+    const ergebnis = (name, w, text, strich) => '<tr' + (strich ? ' class="strich"' : '') + '><th>' + name + '</th><td></td><td>' + zelle(w, 'erg') + '</td><td class="dez">' + text + '</td></tr>';
+    el('tabG').innerHTML =
+      eingabe('a', 'ga', a) + eingabe('b', 'gb', b) +
+      ergebnis('AND &nbsp;<code>a &amp; b</code>', a & b, '1, wenn beide 1 sind', true) +
+      ergebnis('OR &nbsp;<code>a | b</code>', a | b, '1, wenn mindestens einer 1 ist') +
+      ergebnis('XOR &nbsp;<code>a ^ b</code>', a ^ b, '1, wenn genau einer 1 ist') +
+      ergebnis('NOT &nbsp;<code>^a</code>', a ^ 1, '1, wenn a 0 ist', true) +
+      '<tr class="strich"><th>Addition &nbsp;<code>a + b</code></th><td>' + zelle(a & b, 'ueb') + '</td><td>' + zelle(a ^ b, 'erg') + '</td><td class="dez">' +
+        a + ' + ' + b + ' = ' + (a + b).toString(2).padStart(2, '0') + ' im Zweiersystem. Rechts die Summe aus XOR, links der Übertrag aus AND.</td></tr>';
+  }
+
+  // ---------- Ausprobieren 2 ----------
+  function zeige2() {
+    const a = Z.ba, b = Z.bb;
+    const erg = (name, w) => reihe(name, w & 255, { art: 'erg' });
+    el('tabB').innerHTML = kopf() +
+      reihe('a', a, { v: 'ba' }) + reihe('b', b, { v: 'bb' }) +
+      reihe('<code>a &amp; b</code>', a & b, { art: 'erg', strich: true }) +
+      erg('<code>a | b</code>', a | b) + erg('<code>a ^ b</code>', a ^ b) + erg('<code>a &amp;^ b</code>', a & ~b) +
+      reihe('<code>^a</code>', ~a & 255, { art: 'erg', strich: true }) +
+      erg('<code>a &lt;&lt; 1</code>', a << 1) + erg('<code>a &gt;&gt; 1</code>', a >> 1);
+    const zeilen = [['a&b', a & b], ['a|b', a | b], ['a^b', a ^ b], ['a&^b', a & ~b], ['^a', ~a], ['a<<1', a << 1], ['a>>1', a >> 1]];
+    el('codeB').innerHTML = '<pre>' + esc('var a uint8 = 0b' + b8(a) + ' // ' + a + '\nvar b uint8 = 0b' + b8(b) + ' // ' + b + '\n' +
+      zeilen.map(q => ('fmt.Printf("%08b\\n", ' + q[0] + ')').padEnd(28) + ' // ' + b8(q[1])).join('\n')) + '</pre>';
+  }
+
+  // Schaltung des Addierers für eine Stelle. a und b kommen von oben, der Übertrag von rechts,
+  // die Summe geht nach unten, der neue Übertrag nach links, so wie in der Bit-Tabelle.
+  function schaltung(x, y, c) {
+    const p = x ^ y, g = x & y, t = p & c, s = p ^ c, u = g | t;
+    const an = w => w ? ' an' : '';
+    const draht = (d, w) => '<path class="draht' + an(w) + '" d="' + d + '"/>';
+    const punkt = (px, py, w) => '<circle class="knoten' + an(w) + '" cx="' + px + '" cy="' + py + '" r="6"/>';
+    const gatter = (gx, gy, name, w) => '<g class="gatter' + an(w) + '"><rect x="' + gx + '" y="' + gy + '" width="100" height="40" rx="8"/><text x="' + (gx + 50) + '" y="' + (gy + 20) + '">' + name + '</text></g>';
+    const pegel = (px, py, w, klein, anker) => '<text class="pegel' + an(w) + (klein ? ' klein' : '') + '" x="' + px + '" y="' + py + '" text-anchor="' + (anker || 'middle') + '">' + w + '</text>';
+    const text = (px, py, t2, anker) => '<text class="anschluss" x="' + px + '" y="' + py + '" text-anchor="' + (anker || 'middle') + '">' + t2 + '</text>';
+    return '' +
+      // Leitungen von a und b
+      draht('M400,44 V90', x) + draht('M400,70 H150 V90', x) +
+      draht('M440,44 V90', y) + draht('M440,56 H408 a8,8 0 0 0 -16,0 H190 V90', y) +
+      // Zwischenergebnis a XOR b
+      draht('M420,130 V200', p) + draht('M420,165 H330 V200', p) +
+      // Übertrag von rechts
+      draht('M600,220 H470', c) + draht('M540,220 V275 H428 a8,8 0 0 0 -16,0 H300 V240', c) +
+      // Ausgänge
+      draht('M420,240 V312', s) + draht('M170,130 V200', g) + draht('M255,220 H220', t) + draht('M120,220 H70', u) +
+      punkt(400, 70, x) + punkt(440, 56, y) + punkt(420, 165, p) + punkt(540, 220, c) +
+      gatter(370, 90, 'XOR', p) + gatter(120, 90, 'AND', g) + gatter(370, 200, 'XOR', s) + gatter(255, 200, 'AND', t) + gatter(120, 200, 'OR', u) +
+      // Beschriftung
+      text(388, 22, 'a', 'end') + pegel(400, 30, x) + text(452, 22, 'b', 'start') + pegel(440, 30, y) +
+      text(650, 200, 'Übertrag von rechts', 'end') + pegel(618, 227, c) +
+      text(420, 352, 'Summe dieser Stelle') + pegel(420, 334, s) +
+      text(10, 250, 'Übertrag nach links', 'start') + pegel(52, 227, u) +
+      pegel(432, 152, p, true, 'start') + pegel(180, 170, g, true, 'start') + pegel(238, 212, t, true);
+  }
+
+  // ---------- Ausprobieren 3: eine Stelle mit Übertrag ----------
+  function zeigeStelle() {
+    const x = Z.va, y = Z.vb, c = Z.vc, s = x ^ y ^ c, u = (x & y) | (c & (x ^ y)), einsen = x + y + c;
+    const knopf = (v, w, art, name) => '<button type="button" class="bit' + (art ? ' ' + art : '') + (w ? ' an' : '') + '" data-var="' + v + '" data-bit="0" aria-label="' + name + ' umschalten">' + w + '</button>';
+    const fest = (w, art) => '<span class="bit ' + art + (w ? ' an' : '') + '">' + w + '</span>';
+    el('tabV').innerHTML =
+      '<tr><th></th><td class="gewicht">4</td><td class="gewicht">2</td><td></td></tr>' +
+      '<tr><th>Übertrag</th><td>' + fest(u, 'ueb') + '</td><td>' + knopf('vc', c, 'ueb', 'Übertrag von rechts') + '</td><td class="dez">rechts: von der Nachbarstelle, zum Umschalten. Links: der neue Übertrag</td></tr>' +
+      '<tr><th>a</th><td></td><td>' + knopf('va', x, '', 'a') + '</td><td class="dez"></td></tr>' +
+      '<tr><th>+ b</th><td></td><td>' + knopf('vb', y, '', 'b') + '</td><td class="dez"></td></tr>' +
+      '<tr class="strich"><th>Summe</th><td></td><td>' + fest(s, 'erg') + '</td><td class="dez"></td></tr>';
+    const regel = ['Keine Eins: Summe 0, kein Übertrag.', 'Eine Eins: Summe 1, kein Übertrag.', 'Zwei Einsen ergeben 10: Summe 0, Übertrag 1.', 'Drei Einsen ergeben 11: Summe 1, Übertrag 1.'][einsen];
+    el('erklV').innerHTML = 'a hat ' + x + ', b hat ' + y + ', von rechts kommt der Übertrag ' + c + '. ' + regel + '<br>' +
+      'Summe: <code>' + x + ' XOR ' + y + ' XOR ' + c + ' = ' + s + '</code><br>' +
+      'Übertrag nach links: <code>(' + x + ' AND ' + y + ') OR (' + c + ' AND (' + x + ' XOR ' + y + ')) = ' + u + '</code>';
+    el('schaltV').innerHTML = schaltung(x, y, c);
+  }
+
+  // ---------- Ausprobieren 4: der Addierer ----------
+  function lesarten(wahrU, wahrS, erg) {
+    const okU = wahrU >= 0 && wahrU <= 255, okS = wahrS >= -128 && wahrS <= 127;
+    return { okU, okS, text:
+      '<strong>Als <code>uint8</code> gelesen:</strong> ' + (erg & 255) + '. ' + (okU ? 'Das ist richtig.' : 'Rechnerisch wäre es ' + z(wahrU) + '. Dieser Wert liegt außerhalb von 0 … 255.') + '<br>' +
+      '<strong>Als <code>int8</code> gelesen:</strong> ' + z(sv(erg)) + '. ' + (okS ? 'Das ist richtig.' : 'Rechnerisch wäre es ' + z(wahrS) + '. Dieser Wert liegt außerhalb von −128 … 127.') };
+  }
+
+  function zeige3() {
+    const a = Z.aa, b = Z.ab, r = addiere(a, b, 0), p = Z.pos;
+    const fertig = p === 8;
+    // sichtbar sind die Überträge in die Stellen 1..p und die Summenbits 0..p-1
+    const uebSichtbar = Math.min(p + 1, 8);
+    const raus = fertig ? '<span class="bit ueb' + (r.c[8] ? ' an weg' : '') + '" title="Übertrag aus der vordersten Stelle">' + r.c[8] + '</span>' : '';
+    el('tabA').innerHTML = kopf(true) +
+      reihe('Übertrag', r.ueb, { art: 'ueb', mitExtra: true, extra: raus, bis: uebSichtbar, dez: '' }) +
+      reihe('a', a, { v: 'aa', mitExtra: true, jetzt: p > 0 ? p - 1 : undefined }) +
+      reihe('+ b', b, { v: 'ab', mitExtra: true, jetzt: p > 0 ? p - 1 : undefined }) +
+      reihe('Summe', r.s, { art: 'erg', mitExtra: true, strich: true, bis: p, jetzt: p > 0 ? p - 1 : undefined, dez: fertig ? r.s : '' });
+    el('weiter').disabled = fertig; el('alle').disabled = fertig; el('vorn').disabled = p === 0;
+    // Die Schaltung zeigt die zuletzt gerechnete Stelle, vor dem ersten Schritt die Stelle ganz rechts
+    const sj = p > 0 ? p - 1 : 0;
+    el('schaltTitel').textContent = 'Die Schaltung für die Stelle mit der Wertigkeit ' + (1 << sj);
+    el('schaltA').innerHTML = schaltung(bit(a, sj), bit(b, sj), r.c[sj]);
+
+    if (p === 0) {
+      el('erklA').innerHTML = 'Auf „nächste Stelle" klicken. Das Rechenwerk addiert zuerst die Stelle ganz rechts.';
+    } else {
+      const j = p - 1, x = bit(a, j), y = bit(b, j), c = r.c[j], einsen = x + y + c;
+      const regel = ['Keine Eins: Summe 0, kein Übertrag.', 'Eine Eins: Summe 1, kein Übertrag.', 'Zwei Einsen ergeben 10: Summe 0, Übertrag 1.', 'Drei Einsen ergeben 11: Summe 1, Übertrag 1.'][einsen];
+      el('erklA').innerHTML = '<strong>Stelle mit der Wertigkeit ' + (1 << j) + ':</strong> a hat ' + x + ', b hat ' + y + ', von rechts kommt der Übertrag ' + c + '. ' + regel + '<br>' +
+        'Summe: <code>' + x + ' XOR ' + y + ' XOR ' + c + ' = ' + bit(r.s, j) + '</code><br>' +
+        'Übertrag nach links: <code>(' + x + ' AND ' + y + ') OR (' + c + ' AND (' + x + ' XOR ' + y + ')) = ' + r.c[j + 1] + '</code>' +
+        (j === 7 ? '<br>Links von dieser Stelle gibt es keine weitere. ' + (r.c[8] ? 'Der Übertrag fällt weg.' : 'Es fällt kein Übertrag heraus.') : '');
+    }
+    if (fertig) {
+      const l = lesarten(a + b, sv(a) + sv(b), r.s);
+      el('meldA').innerHTML = '<div class="meldung' + (l.okU && l.okS ? '' : ' ueberlauf') + '">Ergebnis: <code>' + mitLuecke(r.s) + '</code><br>' + l.text + '</div>';
+      el('codeA').innerHTML = '<pre>' + esc('var a, b uint8 = ' + a + ', ' + b + '\nfmt.Println(a + b) // ' + r.s + '\n\nvar c, d int8 = ' + sv(a) + ', ' + sv(b) + '\nfmt.Println(c + d) // ' + sv(r.s)) + '</pre>';
+    } else { el('meldA').innerHTML = ''; el('codeA').innerHTML = ''; }
+  }
+
+  // ---------- Ausprobieren 4 ----------
+  function zeige4() {
+    const a = Z.sa, b = Z.sb, nb = ~b & 255, minusB = (nb + 1) & 255, r = addiere(a, minusB, 0);
+    const raus = '<span class="bit ueb' + (r.c[8] ? ' an weg' : '') + '" title="Übertrag aus der vordersten Stelle">' + r.c[8] + '</span>';
+    const leer = { mitExtra: true };
+    el('tabS').innerHTML = kopf(true) +
+      reihe('a', a, { v: 'sa', mitExtra: true }) +
+      reihe('b', b, { v: 'sb', mitExtra: true }) +
+      reihe('Schritt 1: <code>^b</code>, alle Bits umdrehen', nb, { art: 'erg', mitExtra: true, strich: true, dez: '' }) +
+      reihe('Schritt 2: <code>^b + 1</code>, das ist −b', minusB, { art: 'erg', mitExtra: true, dez: 'als int8: ' + z(sv(minusB)) }) +
+      reihe('Übertrag', r.ueb, { art: 'ueb', mitExtra: true, extra: raus, strich: true, dez: '' }) +
+      reihe('a', a, leer) +
+      reihe('+ (−b)', minusB, { mitExtra: true, dez: 'als int8: ' + z(sv(minusB)) }) +
+      reihe('Schritt 3: Summe', r.s, { art: 'erg', mitExtra: true, strich: true });
+    const l = lesarten(a - b, sv(a) - sv(b), r.s);
+    el('meldS').innerHTML = '<div class="meldung' + (l.okU && l.okS ? '' : ' ueberlauf') + '">Ergebnis: <code>' + mitLuecke(r.s) + '</code><br>' + l.text +
+      (r.c[8] ? '<br>Der Übertrag aus der vordersten Stelle fällt weg. Bei der Subtraktion gehört das dazu und ist kein Fehler.' : '') + '</div>';
+    el('codeS').innerHTML = '<pre>' + esc('var a, b uint8 = ' + a + ', ' + b + '\nfmt.Println(a - b)        // ' + r.s + '\nfmt.Println(a + (^b + 1)) // ' + r.s + ', dieselbe Rechnung') + '</pre>';
+  }
+
+  // ---------- Bedienung ----------
+  function zeigeAlles(ausser) {
+    zeige1(); zeige2(); zeigeStelle(); zeige3(); zeige4();
+    document.querySelectorAll('[data-zahl]').forEach(i => { if (i !== ausser) i.value = Z[i.dataset.zahl]; });
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-var]');
+    if (b) {
+      Z[b.dataset.var] ^= 1 << Number(b.dataset.bit);
+      if (b.dataset.var === 'aa' || b.dataset.var === 'ab') Z.pos = 0;
+      zeigeAlles(); return;
+    }
+    const p = e.target.closest('[data-paar]');
+    if (p) {
+      const t = p.dataset.paar.split(',');
+      Z[t[0]] = Number(t[2]); Z[t[1]] = Number(t[3]);
+      if (t[0] === 'aa') Z.pos = 0;
+      zeigeAlles();
+    }
+  });
+  document.querySelectorAll('[data-zahl]').forEach(i => i.addEventListener('input', () => {
+    const v = Number(i.value);
+    if (i.value === '' || !Number.isInteger(v) || v < 0 || v > 255) return;
+    Z[i.dataset.zahl] = v;
+    if (i.dataset.zahl === 'aa' || i.dataset.zahl === 'ab') Z.pos = 0;
+    zeigeAlles(i);
+  }));
+  el('weiter').onclick = () => { if (Z.pos < 8) Z.pos++; zeige3(); };
+  el('alle').onclick = () => { Z.pos = 8; zeige3(); };
+  el('vorn').onclick = () => { Z.pos = 0; zeige3(); };
+
+  zeigeAlles();
+})();
+</script>
+</body>
+</html>

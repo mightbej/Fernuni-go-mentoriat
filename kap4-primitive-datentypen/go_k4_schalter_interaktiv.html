@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gatter aus Schaltern: Das Rechenwerk zum Anfassen</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--an:#b45309;--an-bg:#fef3c7;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ccfbf1 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#b45309 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .hero a { color:#fff; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:0 0 4px;color:#111827; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .warnung { background:#fef2f2;padding:12px 14px;border-radius:8px;border-left:4px solid #dc2626;margin:12px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    ol,ul { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+    .raster { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+    @media (max-width:900px) { .raster { grid-template-columns:1fr; } }
+    .feld { padding:14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px; }
+    .feld p { margin:6px 0 0;color:var(--muted);font-size:.95rem; }
+    .stand { font-family:Consolas,monospace;font-weight:700;color:#111827; }
+    .ergebnis { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#ecfdf5;margin:14px 0 0;font-size:1.05rem; }
+    .legende { color:var(--muted);font-size:.88rem;margin-top:10px; }
+
+    /* Diagramme und Rechnung */
+    .achse { stroke:#111827;stroke-width:2; }
+    .gitter { stroke:#e5e7eb;stroke-width:1; }
+    .kurve { fill:none;stroke:var(--accent);stroke-width:3;stroke-linejoin:round; }
+    .punkt { fill:var(--an);stroke:#fff;stroke-width:2; }
+    .achsentext { font-family:"Segoe UI",sans-serif;font-size:15px;fill:var(--muted); }
+    .punkttext { font-family:"Segoe UI",sans-serif;font-size:14px;fill:#111827; }
+    .eingaben { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 18px;margin:12px 0; }
+    .eingaben label { display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:.95rem; }
+    .eingaben input { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:150px;background:#fff; }
+    .eingaben input:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    .ergebnis ul { margin:6px 0 0; }
+
+    /* Schaltbilder */
+    svg { width:100%;height:auto;display:block; }
+    .draht { fill:none;stroke:#cbd5e1;stroke-width:3;stroke-linecap:round;stroke-linejoin:round; }
+    .draht.an { stroke:var(--an);stroke-width:5; }
+    .hebel { fill:none;stroke:#111827;stroke-width:5;stroke-linecap:round; }
+    .hebel.an { stroke:var(--an); }
+    .kontakt { fill:#fff;stroke:#111827;stroke-width:2; }
+    .knoten { fill:#9ca3af; } .knoten.an { fill:var(--an); }
+    .treffer { fill:transparent;cursor:pointer; }
+    .treffer:hover { fill:rgba(15,118,110,.08); }
+    .name { font-family:Consolas,monospace;font-size:21px;font-weight:700;text-anchor:middle;fill:#111827;pointer-events:none; }
+    .schrift { font-family:"Segoe UI",sans-serif;font-size:15px;text-anchor:middle;fill:var(--muted);pointer-events:none; }
+    .lampe { fill:#e5e7eb;stroke:#111827;stroke-width:2; }
+    .lampe.an { fill:#fde047;filter:drop-shadow(0 0 8px #facc15); }
+    .lampenkreuz { stroke:#111827;stroke-width:2; }
+    .platte { stroke:#111827;stroke-linecap:round; }
+    .kasten { fill:#fff;stroke:#111827;stroke-width:2; }
+    .kasten.an { fill:var(--an-bg); }
+    .kopplung { fill:none;stroke:#6b7280;stroke-width:2;stroke-dasharray:5 5; }
+    .gehaeuse { fill:none;stroke:#9ca3af;stroke-width:1.5;stroke-dasharray:4 4; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Gatter aus Schaltern: Das Rechenwerk zum Anfassen</h1>
+    <p>Jedes Gatter lässt sich aus Schaltern, einer Batterie und einer Lampe bauen. Diese Seite zeigt die Verdrahtung, vom einzelnen Gatter bis zu einer Stelle des Addierers. Sie gehört zur Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was die Seite zeigt</h2>
+    <p>Ein Schalter lässt Strom durch oder nicht. Das ist ein Bit. Wie man zwei Schalter verdrahtet, entscheidet darüber, wann die Lampe leuchtet. Schaltet man sie hintereinander, müssen beide geschlossen sein. Schaltet man sie nebeneinander, genügt einer. Das sind schon AND und OR.</p>
+    <p>Für XOR braucht man Wechselschalter. Ein Wechselschalter hat einen Eingang und zwei Ausgänge und verbindet den Eingang immer mit genau einem davon. Zwei solche Schalter ergeben die Wechselschaltung aus dem Treppenhaus: Wer einen der beiden umlegt, wechselt das Licht.</p>
+    <p>In allen Schaltbildern auf dieser Seite gilt: Ein Klick auf einen Schalter legt ihn um. Schalter mit demselben Namen gehören zusammen und schalten gemeinsam.</p>
+  </div>
+
+  <div class="card">
+    <h2>Gatter und ihre Verdrahtung</h2>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Gatter</th><th>In Go</th><th>Verdrahtung</th><th>Wo man sie kennt</th></tr></thead>
+      <tbody>
+        <tr><td>AND</td><td><code>a &amp; b</code></td><td>Zwei Schalter hintereinander.</td><td>Maschine mit Hauptschalter und Sicherheitsschalter</td></tr>
+        <tr><td>OR</td><td><code>a | b</code></td><td>Zwei Schalter nebeneinander.</td><td>Türklingel mit zwei Tastern</td></tr>
+        <tr><td>XOR</td><td><code>a ^ b</code></td><td>Zwei Wechselschalter, dazwischen zwei Leitungen.</td><td>Licht im Treppenhaus</td></tr>
+        <tr><td>NOT</td><td><code>^a</code></td><td>Ein Schalter, der in Ruhe geschlossen ist und beim Drücken öffnet.</td><td>Lampe im Kühlschrank</td></tr>
+        <tr><td>XOR mit drei Eingängen</td><td><code>a ^ b ^ c</code></td><td>Zwei Wechselschalter und ein Kreuzschalter dazwischen.</td><td>Flur mit drei Lichtschaltern</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="quelle">Dass sich Schaltungen aus Schaltern und die Logik mit AND, OR und NOT genau entsprechen, hat Claude Shannon 1937 gezeigt. Im Kurstext kommt dieses Thema nicht vor.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 1: Vier Gatter aus Schaltern</h2>
+    <p>Alle vier Schaltungen benutzen dieselben Schalter <code>a</code> und <code>b</code>. Nur die Verdrahtung ist verschieden.</p>
+    <div class="raster">
+      <div class="feld"><h3>AND: hintereinander</h3><svg id="sAnd" viewBox="0 0 600 180"></svg><p id="tAnd"></p></div>
+      <div class="feld"><h3>OR: nebeneinander</h3><svg id="sOr" viewBox="0 0 600 240"></svg><p id="tOr"></p></div>
+      <div class="feld"><h3>XOR: die Wechselschaltung</h3><svg id="sXor" viewBox="0 0 600 230"></svg><p id="tXor"></p></div>
+      <div class="feld"><h3>NOT: der Öffner</h3><svg id="sNot" viewBox="0 0 600 180"></svg><p id="tNot"></p></div>
+    </div>
+    <div class="legende">Eine dicke, farbige Leitung führt Strom. Ein Punkt verbindet Leitungen. Leitungen, die sich ohne Punkt kreuzen, berühren sich nicht. Bei einem Wechselschalter steht die Stellung oben für 1.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 2: Eine Stelle des Addierers aus Schaltern</h2>
+    <p>Eine Stelle des Addierers hat drei Eingänge: <code>a</code>, <code>b</code> und den Übertrag von rechts, hier <code>c</code>. Sie hat zwei Ausgänge, also zwei Lampen. Die Summe ist ein XOR mit drei Eingängen. Der Übertrag leuchtet, wenn mindestens zwei der drei Schalter geschlossen sind.</p>
+    <div class="raster">
+      <div class="feld"><h3>Lampe „Summe": die Kreuzschaltung</h3><svg id="sSum" viewBox="0 0 600 230"></svg><p id="tSum"></p></div>
+      <div class="feld"><h3>Lampe „Übertrag nach links"</h3><svg id="sCar" viewBox="0 0 600 280"></svg><p id="tCar"></p></div>
+    </div>
+    <div class="ergebnis" id="ergebnis"></div>
+    <div class="legende">Die Schalter a und b kommen in der rechten Schaltung zweimal vor. Dafür nimmt man zweipolige Schalter: ein Hebel, zwei Kontakte.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 3: Das Relais, Strom schaltet Strom</h2>
+    <p>Bis hierher hat ein Mensch jeden Schalter betätigt. Im Addierer mit acht Stellen muss der Übertrag der einen Stelle den Schalter der nächsten umlegen. Dafür braucht man einen Schalter, den der Strom selbst betätigt. Das ist ein Relais: Fließt Strom durch die Spule, zieht sie den Kontakt an und schließt einen zweiten Stromkreis.</p>
+    <div class="feld"><svg id="sRel" viewBox="0 0 600 240" style="max-width:760px;margin:0 auto"></svg><p id="tRel"></p></div>
+    <p>Mit Relais kann die Lampe der einen Schaltung der Schalter der nächsten werden. Konrad Zuse hat seine Rechenmaschine Z3 im Jahr 1941 so gebaut, aus mehr als 2000 Relais. Ein Transistor ist dasselbe in klein: ein Schalter, den Strom betätigt. In einem heutigen Prozessor sitzen davon Milliarden.</p>
+  </div>
+
+  <div class="card">
+    <h2>Vom Relais zum Prozessor: wie schnell und wie viele</h2>
+    <p>Ein Prozessor ist dieselbe Schaltung wie oben, nur mit zwei Unterschieden: Die Schalter sind sehr viel schneller, und es sind sehr viel mehr. Der Takt sagt, wie oft in der Sekunde der Prozessor einen Schritt macht. Bei 3000 Megahertz, also 3 Gigahertz, sind das 3 Milliarden Schritte in der Sekunde.</p>
+    <div class="raster">
+      <div class="feld"><h3>Takt: Schritte in der Sekunde</h3><svg id="dTakt" viewBox="0 0 600 360"></svg>
+        <p>Bis etwa 2004 stieg der Takt steil an. Seitdem steigt er kaum noch, weil schnelleres Schalten zu viel Wärme erzeugt.</p></div>
+      <div class="feld"><h3>Zahl der Schalter in einem Rechner</h3><svg id="dZahl" viewBox="0 0 600 360"></svg>
+        <p>Die Zahl der Schalter wächst weiter. Seit der Takt nicht mehr steigt, kommt die Leistung aus mehr Schaltern und mehreren Rechenkernen.</p></div>
+    </div>
+    <div class="legende">Beide Achsen nach oben sind logarithmisch: Jeder Strich bedeutet das Tausendfache des Strichs darunter. Die Zahlen sind gerundet.</div>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Jahr</th><th>Rechner oder Prozessor</th><th>Takt</th><th>Schalter</th></tr></thead>
+      <tbody id="daten"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Die Baumarkt-Rechnung</h2>
+    <p>Was würde ein heutiger Prozessor kosten, wenn man ihn aus Schaltern vom Baumarkt bauen müsste? Und wie lange bräuchte ein Mensch, der die Schalter von Hand umlegt? Die Rechnung ist plakativ, aber sie zeigt die Größenordnung. Alle Zahlen lassen sich ändern.</p>
+    <div class="eingaben">
+      <label>Schalter im Prozessor, in Milliarden <input id="rZahl" type="number" value="13.1" step="0.1" min="0.001"></label>
+      <label>Preis des Prozessors in Euro <input id="rPreis" type="number" value="700" step="10" min="1"></label>
+      <label>Preis eines Schalters im Baumarkt in Euro <input id="rSchalter" type="number" value="3" step="0.5" min="0.01"></label>
+      <label>Takt in Gigahertz <input id="rTakt" type="number" value="5.7" step="0.1" min="0.001"></label>
+      <label>Schalter, die ein Mensch pro Sekunde umlegt <input id="rHand" type="number" value="2" step="1" min="1"></label>
+    </div>
+    <div class="ergebnis" id="rechnung"></div>
+    <p class="quelle">Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.</p>
+  </div>
+
+  <div class="card">
+    <h2>Zum Nachbauen</h2>
+    <ul>
+      <li>eine Flachbatterie mit 4,5 Volt oder ein Batteriehalter</li>
+      <li>zwei kleine Lampen oder Leuchtdioden mit Vorwiderstand</li>
+      <li>zwei Wechselschalter und ein Kreuzschalter für die Summe</li>
+      <li>für den Übertrag zweipolige Schalter für a und b und ein einfacher Schalter für c</li>
+      <li>Litze und Klemmen</li>
+    </ul>
+    <div class="warnung">Nur mit Batterie bauen, nie an der Steckdose. Die Schalter aus dem Baumarkt sind für 230 Volt gebaut, funktionieren aber genauso mit 4,5 Volt.</div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>Im Treppenhaus brennt das Licht. Jemand legt unten den Schalter um, dann jemand oben. Brennt das Licht?
+        <details><summary>Auflösung</summary>Ja. Jedes Umlegen wechselt das Licht, zweimal Umlegen stellt den alten Zustand wieder her. Das ist XOR: Es kommt darauf an, ob die beiden Schalter gleich oder verschieden stehen.</details></li>
+      <li>Eine Stelle des Addierers: a und b sind geschlossen, c ist offen. Welche Lampen leuchten?
+        <details><summary>Auflösung</summary>Nur der Übertrag. 1 + 1 + 0 ist im Zweiersystem 10: Summe 0, Übertrag 1.</details></li>
+      <li>Alle drei Schalter sind geschlossen. Welche Lampen leuchten?
+        <details><summary>Auflösung</summary>Beide. 1 + 1 + 1 ist im Zweiersystem 11.</details></li>
+      <li>Warum reichen Schalter allein nicht für einen Addierer mit acht Stellen?
+        <details><summary>Auflösung</summary>Der Übertrag einer Stelle ist eine Lampe. Die nächste Stelle braucht ihn als Schalter. Aus Strom muss also wieder eine Schalterstellung werden, und das leistet erst das Relais.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const Z = { a: 1, b: 0, c: 1, r: 0 };
+  const an = w => w ? ' an' : '';
+
+  // ---------- Bauteile ----------
+  const w = (d, on) => '<path class="draht' + an(on) + '" d="' + d + '"/>';
+  const knoten = (x, y, on) => '<circle class="knoten' + an(on) + '" cx="' + x + '" cy="' + y + '" r="6"/>';
+  const kontakt = (x, y) => '<circle class="kontakt" cx="' + x + '" cy="' + y + '" r="5"/>';
+  const treffer = (x, y, bw, bh, v) => v ? '<rect class="treffer" x="' + x + '" y="' + y + '" width="' + bw + '" height="' + bh + '" rx="8" data-var="' + v + '"/>' : '';
+  const name = (x, y, t) => '<text class="name" x="' + x + '" y="' + y + '">' + t + '</text>';
+  const schrift = (x, y, t) => '<text class="schrift" x="' + x + '" y="' + y + '">' + t + '</text>';
+
+  // Einfacher Schalter von (x,y) nach (x+60,y)
+  function schalter(x, y, zu, on, v, text, unten) {
+    return '<path class="hebel' + an(on) + '" d="M' + x + ',' + y + (zu ? ' L' + (x + 60) + ',' + y : ' L' + (x + 54) + ',' + (y - 26)) + '"/>' +
+      kontakt(x, y) + kontakt(x + 60, y) + name(x + 30, unten ? y + 24 : y - 36, text) + treffer(x - 10, y - 48, 80, 78, v);
+  }
+  // Wechselschalter: gemeinsamer Anschluss bei (x,y), zwei Kontakte bei x+60. Mit spiegel liegt der gemeinsame Anschluss rechts.
+  function wechsel(x, y, oben, on, v, text, spiegel) {
+    const gx = spiegel ? x + 60 : x, kx = spiegel ? x : x + 60;
+    return '<path class="hebel' + an(on) + '" d="M' + gx + ',' + y + ' L' + kx + ',' + (oben ? y - 25 : y + 25) + '"/>' +
+      kontakt(gx, y) + kontakt(kx, y - 25) + kontakt(kx, y + 25) + name(x + 30, y - 48, text) + treffer(x - 10, y - 62, 80, 100, v);
+  }
+  // Kreuzschalter: verbindet die beiden linken Kontakte gerade oder über Kreuz mit den beiden rechten
+  function kreuz(x, y, gekreuzt, obenAn, untenAn, v, text) {
+    const o = y - 25, u = y + 25, r = x + 70;
+    return '<rect class="gehaeuse" x="' + (x - 12) + '" y="' + (o - 14) + '" width="94" height="78" rx="8"/>' +
+      '<path class="hebel' + an(obenAn) + '" d="M' + x + ',' + o + ' L' + r + ',' + (gekreuzt ? u : o) + '"/>' +
+      '<path class="hebel' + an(untenAn) + '" d="M' + x + ',' + u + ' L' + r + ',' + (gekreuzt ? o : u) + '"/>' +
+      kontakt(x, o) + kontakt(x, u) + kontakt(r, o) + kontakt(r, u) + name(x + 35, y - 48, text) + treffer(x - 12, y - 62, 94, 102, v);
+  }
+  const lampe = (x, y, on) => '<circle class="lampe' + an(on) + '" cx="' + x + '" cy="' + y + '" r="16"/>' +
+    '<path class="lampenkreuz" d="M' + (x - 11) + ',' + (y - 11) + ' L' + (x + 11) + ',' + (y + 11) + ' M' + (x - 11) + ',' + (y + 11) + ' L' + (x + 11) + ',' + (y - 11) + '"/>';
+  const batterie = (x, y) => '<path class="platte" stroke-width="2" d="M' + (x - 14) + ',' + (y - 5) + ' H' + (x + 14) + '"/><path class="platte" stroke-width="5" d="M' + (x - 7) + ',' + (y + 5) + ' H' + (x + 7) + '"/>';
+
+  // Rahmen: Batterie links, Lampe rechts, Rückleitung unten. Die obere Leitung zeichnet jede Schaltung selbst.
+  function rahmen(yO, yU, on, xL, xR) {
+    xL = xL || 40; xR = xR || 560;
+    const m = (yO + yU) / 2;
+    return w('M' + xL + ',' + yO + ' V' + (m - 5), on) + w('M' + xL + ',' + (m + 5) + ' V' + yU + ' H' + xR + ' V' + (m + 16), on) + w('M' + xR + ',' + yO + ' V' + (m - 16), on) +
+      batterie(xL, m) + lampe(xR, m, on);
+  }
+  const stand = (t, wert) => t + ' <span class="stand">' + wert + '</span>';
+  const lampentext = on => on ? 'Die Lampe leuchtet.' : 'Die Lampe ist aus.';
+
+  // ---------- Ausprobieren 1 ----------
+  function zeigeGatter() {
+    const a = Z.a, b = Z.b;
+    let on = a & b;
+    el('sAnd').innerHTML = rahmen(60, 150, on) + w('M40,60 H150', on) + schalter(150, 60, a, on, 'a', 'a = ' + a) + w('M210,60 H330', on) + schalter(330, 60, b, on, 'b', 'b = ' + b) + w('M390,60 H560', on);
+    el('tAnd').innerHTML = lampentext(on) + ' Der Strom muss durch beide Schalter. ' + stand('<code>a &amp; b</code> =', on);
+
+    on = a | b;
+    el('sOr').innerHTML = rahmen(60, 210, on) + w('M40,60 H120', on) + w('M440,60 H560', on) +
+      w('M120,60 H240', a) + schalter(240, 60, a, a, 'a', 'a = ' + a) + w('M300,60 H440', a) +
+      w('M120,60 V130 H240', b) + schalter(240, 130, b, b, 'b', 'b = ' + b) + w('M300,130 H440 V60', b) +
+      knoten(120, 60, on) + knoten(440, 60, on);
+    el('tOr').innerHTML = lampentext(on) + ' Der Strom hat zwei Wege, einer genügt. ' + stand('<code>a | b</code> =', on);
+
+    on = a ^ b;
+    el('sXor').innerHTML = rahmen(90, 200, on) + w('M40,90 H130', on) + w('M430,90 H560', on) +
+      w('M190,65 H250 L310,115 H370', on && a) + w('M190,115 H250 L310,65 H370', on && !a) +
+      wechsel(130, 90, a, on, 'a', 'a = ' + a) + wechsel(370, 90, b, on, 'b', 'b = ' + b, true);
+    el('tXor').innerHTML = lampentext(on) + ' Die beiden Leitungen zwischen den Schaltern sind gekreuzt. Strom fließt, wenn die Schalter verschieden stehen. ' + stand('<code>a ^ b</code> =', on);
+
+    on = a ^ 1;
+    el('sNot').innerHTML = rahmen(60, 150, on) + w('M40,60 H240', on) + schalter(240, 60, !a, on, 'a', 'a = ' + a) + w('M300,60 H560', on);
+    el('tNot').innerHTML = lampentext(on) + ' Der Schalter ist ein Öffner: Bei a = 1 unterbricht er die Leitung. ' + stand('NOT a =', on);
+  }
+
+  // ---------- Ausprobieren 2 ----------
+  function zeigeStelle() {
+    const a = Z.a, b = Z.b, c = Z.c, ab = a ^ b;
+    const s = ab ^ c;
+    el('sSum').innerHTML = rahmen(90, 200, s) + w('M40,90 H100', s) + w('M490,90 H560', s) +
+      w('M160,65 H220', s && a) + w('M160,115 H220', s && !a) +
+      w('M290,65 H330 L390,115 H430', s && ab) + w('M290,115 H330 L390,65 H430', s && !ab) +
+      wechsel(100, 90, a, s, 'a', 'a = ' + a) + kreuz(220, 90, b, s && a, s && !a, 'b', 'b = ' + b) + wechsel(430, 90, c, s, 'c', 'c = ' + c, true);
+    el('tSum').innerHTML = lampentext(s) + ' Jeder der drei Schalter wechselt das Licht, wenn man ihn umlegt. ' + stand('<code>a ^ b ^ c</code> =', s);
+
+    const z1 = a & b, z2 = c & (a | b), za = c & a, zb = c & b, u = z1 | z2;
+    el('sCar').innerHTML = rahmen(60, 250, u) + w('M40,60 H120', u) + w('M480,60 H560', u) +
+      w('M120,60 H170', z1) + schalter(170, 60, a, z1, 'a', 'a = ' + a) + w('M230,60 H330', z1) + schalter(330, 60, b, z1, 'b', 'b = ' + b) + w('M390,60 H480', z1) +
+      w('M120,60 V170 H170', z2) + schalter(170, 170, c, z2, 'c', 'c = ' + c) + w('M230,170 H290', z2) +
+      w('M290,170 V140 H330', za) + schalter(330, 140, a, za, 'a', 'a', true) + w('M390,140 H430 V170', za) +
+      w('M290,170 V200 H330', zb) + schalter(330, 200, b, zb, 'b', 'b', true) + w('M390,200 H430 V170', zb) +
+      w('M430,170 H480 V60', z2) +
+      knoten(120, 60, u) + knoten(480, 60, u) + knoten(290, 170, z2) + knoten(430, 170, z2);
+    el('tCar').innerHTML = lampentext(u) + ' Oberer Weg: a und b. Unterer Weg: c und dazu a oder b. ' + stand('Übertrag =', u);
+
+    const einsen = a + b + c;
+    el('ergebnis').innerHTML = 'Geschlossen ' + (einsen === 1 ? 'ist ein Schalter' : 'sind ' + ['keine', '', 'zwei', 'drei'][einsen] + ' Schalter') + ': ' +
+      a + ' + ' + b + ' + ' + c + ' = <span class="stand">' + u + s + '</span> im Zweiersystem. Links der Übertrag, rechts die Summe.';
+  }
+
+  // ---------- Ausprobieren 3 ----------
+  function zeigeRelais() {
+    const r = Z.r;
+    el('sRel').innerHTML =
+      // Steuerkreis mit Schalter und Spule
+      w('M40,70 V130', r) + w('M40,140 V200 H230 V160', r) + batterie(40, 135) + w('M40,70 H100', r) + schalter(100, 70, r, r, 'r', 'Schalter') + w('M160,70 H230 V100', r) +
+      '<rect class="kasten' + an(r) + '" x="205" y="100" width="50" height="60" rx="6"/>' + schrift(230, 135, 'Spule') +
+      // Lastkreis mit Kontakt und Lampe
+      w('M320,70 V130', r) + w('M320,140 V200 H560 V151', r) + batterie(320, 135) + w('M320,70 H380', r) + schalter(380, 70, r, r, null, 'Kontakt') + w('M440,70 H560 V119', r) + lampe(560, 135, r) +
+      '<path class="kopplung" d="M255,130 H410 V' + (r ? 74 : 60) + '"/>' +
+      schrift(130, 228, 'Steuerkreis') + schrift(440, 228, 'zweiter Stromkreis');
+    el('tRel').innerHTML = r ? 'Der Schalter ist geschlossen. Durch die Spule fließt Strom, sie zieht den Kontakt an, und die Lampe im zweiten Stromkreis leuchtet.'
+                             : 'Der Schalter ist offen. Durch die Spule fließt kein Strom, der Kontakt bleibt offen, und die Lampe ist aus.';
+  }
+
+  // ---------- Takt und Zahl der Schalter ----------
+  // Gerundete Werte. takt in Hertz, zahl = Schalter (Relais oder Transistoren)
+  const DATEN = [
+    { jahr: 1941, name: 'Zuse Z3 (Relais)', takt: 5.3, zahl: 2600 },
+    { jahr: 1971, name: 'Intel 4004', takt: 740e3, zahl: 2300 },
+    { jahr: 1978, name: 'Intel 8086', takt: 5e6, zahl: 29000 },
+    { jahr: 1985, name: 'Intel 80386', takt: 16e6, zahl: 275000 },
+    { jahr: 1993, name: 'Intel Pentium', takt: 60e6, zahl: 3.1e6 },
+    { jahr: 2004, name: 'Intel Pentium 4', takt: 3.8e9, zahl: 125e6 },
+    { jahr: 2022, name: 'AMD Ryzen 9 7950X', takt: 5.7e9, zahl: 13.1e9 }
+  ];
+  const de = (v, stellen) => v.toLocaleString('de-DE', { maximumFractionDigits: stellen === undefined ? 0 : stellen });
+  function taktText(hz) {
+    if (hz >= 1e9) return de(hz / 1e9, 1) + ' GHz';
+    if (hz >= 1e6) return de(hz / 1e6, 1) + ' MHz';
+    if (hz >= 1e3) return de(hz / 1e3, 0) + ' kHz';
+    return de(hz, 1) + ' Hz';
+  }
+  function zahlText(n) {
+    if (n >= 1e9) return de(n / 1e9, 1) + ' Milliarden';
+    if (n >= 1e6) return de(n / 1e6, 1) + ' Millionen';
+    return de(n);
+  }
+  // Diagramm mit logarithmischer Hochachse. striche: [[Zehnerpotenz, Beschriftung], ...]
+  function diagramm(id, feld, striche, lMin, lMax, beschrifte) {
+    const x0 = 95, x1 = 580, y0 = 320, y1 = 20, j0 = 1940, j1 = 2025;
+    const x = j => x0 + (j - j0) / (j1 - j0) * (x1 - x0);
+    const y = v => y0 - (Math.log10(v) - lMin) / (lMax - lMin) * (y0 - y1);
+    let s = '';
+    striche.forEach(t => { const ty = y(Math.pow(10, t[0])); s += '<line class="gitter" x1="' + x0 + '" y1="' + ty + '" x2="' + x1 + '" y2="' + ty + '"/><text class="achsentext" x="' + (x0 - 8) + '" y="' + (ty + 5) + '" text-anchor="end">' + t[1] + '</text>'; });
+    for (let j = 1940; j <= 2020; j += 20) s += '<line class="gitter" x1="' + x(j) + '" y1="' + y0 + '" x2="' + x(j) + '" y2="' + y1 + '"/><text class="achsentext" x="' + x(j) + '" y="' + (y0 + 22) + '" text-anchor="middle">' + j + '</text>';
+    s += '<line class="achse" x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '"/><line class="achse" x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '"/>';
+    s += '<polyline class="kurve" points="' + DATEN.map(d => x(d.jahr) + ',' + y(d[feld])).join(' ') + '"/>';
+    DATEN.forEach((d, i) => {
+      const px = x(d.jahr), py = y(d[feld]), rechts = d.jahr < 2000;
+      s += '<circle class="punkt" cx="' + px + '" cy="' + py + '" r="7"/>' +
+        '<text class="punkttext" x="' + (rechts ? px + 12 : px - 12) + '" y="' + (py + (rechts ? 18 : -10)) + '" text-anchor="' + (rechts ? 'start' : 'end') + '">' + beschrifte(d) + '</text>';
+    });
+    el(id).innerHTML = s;
+  }
+  function zeigeDiagramme() {
+    diagramm('dTakt', 'takt', [[0, '1 Hz'], [3, '1 kHz'], [6, '1 MHz'], [9, '1 GHz']], 0, 10.5, d => taktText(d.takt));
+    diagramm('dZahl', 'zahl', [[3, '1000'], [6, '1 Million'], [9, '1 Milliarde']], 2.5, 11, d => zahlText(d.zahl));
+    el('daten').innerHTML = DATEN.map(d => '<tr><td>' + d.jahr + '</td><td>' + d.name + '</td><td>' + taktText(d.takt) + '</td><td>' + zahlText(d.zahl) + '</td></tr>').join('');
+  }
+
+  // ---------- Die Baumarkt-Rechnung ----------
+  function dauerText(sek) {
+    const jahr = 365.25 * 24 * 3600;
+    if (sek >= jahr) return 'rund ' + de(sek / jahr, sek / jahr < 10 ? 1 : 0) + ' Jahre';
+    if (sek >= 86400) return 'rund ' + de(sek / 86400, 0) + ' Tage';
+    if (sek >= 3600) return 'rund ' + de(sek / 3600, 1) + ' Stunden';
+    return 'rund ' + de(sek, 0) + ' Sekunden';
+  }
+  function euroText(e) {
+    if (e >= 1e9) return de(e / 1e9, 1) + ' Milliarden Euro';
+    if (e >= 1e6) return de(e / 1e6, 1) + ' Millionen Euro';
+    return de(e, 0) + ' Euro';
+  }
+  function rechne() {
+    const zahl = Number(el('rZahl').value) * 1e9, preis = Number(el('rPreis').value), schalter = Number(el('rSchalter').value),
+          takt = Number(el('rTakt').value) * 1e9, hand = Number(el('rHand').value);
+    if (!(zahl > 0 && preis > 0 && schalter > 0 && takt > 0 && hand > 0)) { el('rechnung').innerHTML = 'Bitte in alle Felder eine Zahl größer als 0 eintragen.'; return; }
+    const proCent = zahl / (preis * 100), baumarkt = zahl * schalter;
+    el('rechnung').innerHTML = '<strong>Ergebnis:</strong><ul>' +
+      '<li><strong>Preis im Prozessor:</strong> Für einen Cent bekommt man rund ' + zahlText(Number(proCent.toPrecision(2))) + ' Schalter.</li>' +
+      '<li><strong>Preis im Baumarkt:</strong> ' + zahlText(zahl) + ' Schalter zu je ' + de(schalter, 2) + ' Euro kosten ' + euroText(baumarkt) + '. Das ist rund ' + zahlText(Number((baumarkt / preis).toPrecision(2))) + ' mal so viel, wie der Prozessor kostet.</li>' +
+      '<li><strong>Von Hand geschaltet:</strong> Der Prozessor macht in einer Sekunde ' + zahlText(takt) + ' Schritte. Ein Mensch, der ' + de(hand) + ' Schalter pro Sekunde umlegt, bräuchte für ebenso viele Schaltvorgänge ' + dauerText(takt / hand) + ', ohne Pause.</li>' +
+      '<li><strong>Platz an der Wand:</strong> Bei 8 mal 8 Zentimetern je Schalter bedecken sie rund ' + de(zahl * 0.0064 / 1e6, 1) + ' Quadratkilometer. Im Prozessor liegen sie auf wenigen Quadratzentimetern.</li></ul>';
+  }
+  ['rZahl', 'rPreis', 'rSchalter', 'rTakt', 'rHand'].forEach(id => el(id).addEventListener('input', rechne));
+
+  function zeigeAlles() { zeigeGatter(); zeigeStelle(); zeigeRelais(); }
+  zeigeDiagramme(); rechne();
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-var]');
+    if (t) { Z[t.dataset.var] ^= 1; zeigeAlles(); }
+  });
+  zeigeAlles();
+})();
+</script>
+</body>
+</html>

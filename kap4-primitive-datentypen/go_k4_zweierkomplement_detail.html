@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zweierkomplement – Binäre Codierung in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ok:#065f46;--ok-bg:#ecfdf5;--bad:#991b1b;--bad-bg:#fef2f2;--highlight:#fef3c7;--info:#1e40af;--info-bg:#dbeafe; }
+    * { box-sizing: border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#155e75 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.22);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.8rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.1rem;margin-top:20px;margin-bottom:10px;color:var(--accent); }
+    h4 { font-size:1rem;margin-top:16px;margin-bottom:8px; }
+    p { margin:10px 0; }
+    ul,ol { margin:10px 0;padding-left:24px; }
+    li { margin:6px 0; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.9rem; }
+    pre { margin:12px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;white-space:pre-wrap;font-family:Consolas,monospace;font-size:.9rem;overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0; }
+    th,td { border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:middle; }
+    th { background:#f9fafb;font-weight:600;font-size:.92rem; }
+    tr:last-child td { border-bottom:none; }
+    .highlight { background:var(--highlight);padding:14px;border-radius:8px;border-left:4px solid #f59e0b;margin:14px 0; }
+    .info-box { background:var(--info-bg);padding:14px;border-radius:8px;border-left:4px solid var(--info);margin:14px 0; }
+    .warning-box { background:var(--bad-bg);padding:14px;border-radius:8px;border-left:4px solid var(--bad);margin:14px 0; }
+    .success-box { background:var(--ok-bg);padding:14px;border-radius:8px;border-left:4px solid var(--ok);margin:14px 0; }
+    .note { color:var(--muted);font-size:.92rem;font-style:italic; }
+    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
+    .back:hover { text-decoration:underline; }
+    button { border:none;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;transition:all .2s;font-size:.95rem; }
+    .btn-primary { background:var(--accent);color:#fff; }
+    .btn-primary:hover { background:#0d5c54; }
+    .btn-secondary { background:#e5e7eb;color:#111827; }
+    .btn-secondary:hover { background:#d1d5db; }
+    input[type="number"],select { border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:.95rem;font-family:Consolas,monospace; }
+    input:focus,select:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    .bit-position-table { font-family:Consolas,monospace;font-size:.95rem;margin:16px 0; }
+    .bit-position-table th { text-align:center;background:#e0f2f1; }
+    .bit-position-table td { text-align:center;padding:8px 6px; }
+    .bit-position-table .negative { background:#ffebee;color:#c62828;font-weight:700; }
+    .bit-display { display:flex;gap:6px;justify-content:center;margin:16px 0;flex-wrap:wrap; }
+    .bit-box { width:55px;height:70px;border:2px solid #0f766e;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;transition:all .2s; }
+    .bit-box.active { background:#0f766e;color:#fff; }
+    .bit-box.sign-bit { border-color:#c62828; }
+    .bit-box.sign-bit.active { background:#ef5350;color:#fff; }
+    .bit-value { font-size:1.6rem;font-weight:700; }
+    .bit-weight { font-size:.75rem;margin-top:4px;opacity:.8; }
+    .bit-pos { font-size:.7rem;margin-bottom:2px;opacity:.6; }
+    .interactive-section { background:#f8fafc;padding:16px;border:2px solid #0f766e;border-radius:10px;margin:16px 0; }
+    .controls { display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0; }
+    .formula { background:#fff;padding:14px;border:1px solid var(--line);border-radius:8px;font-family:Consolas,monospace;font-size:1.05rem;text-align:center;margin:12px 0; }
+    .comparison-table td { font-family:Consolas,monospace;font-size:.9rem; }
+    .comparison-table tr:hover { background:#f8fafc; }
+    .step-by-step { background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin:10px 0; }
+    .step-by-step .step { padding:10px;margin:8px 0;background:#f8fafc;border-radius:6px;border-left:3px solid var(--accent); }
+    .step-by-step .step-number { display:inline-block;width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;text-align:center;line-height:24px;font-weight:700;font-size:.85rem;margin-right:8px; }
+    .range-info { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0; }
+    .range-box { background:#f8fafc;padding:14px;border-radius:8px;text-align:center;border:2px solid var(--accent); }
+    .range-box .label { font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px; }
+    .range-box .value { font-size:1.4rem;font-weight:700;color:var(--accent);font-family:Consolas,monospace; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <a class="back" href="go_k4_zahlensysteme_interaktiv.html">← Zurück zum Zahlensystem-Konverter</a>
+  
+  <section class="hero">
+    <h1>🔢 Zweierkomplement – Binäre Codierung in Go</h1>
+    <p>Wie werden vorzeichenbehaftete Ganzzahlen auf Bit-Ebene dargestellt?<br>
+    Verstehe die Codierung von int8 und die Arithmetik im Rechenwerk.</p>
+  </section>
+
+  <section class="card">
+    <h2>📖 Grundlagen: Bit-Positionen und Nummerierung</h2>
+    <div class="info-box">
+      <strong>💡 Konvention:</strong> Das niederwertigste Bit (LSB) steht <strong>rechts</strong>, das höchstwertige Bit (MSB) steht <strong>links</strong>. 
+      Die Nummerierung beginnt bei 0 (rechts) und läuft bis n-1 (links).
+    </div>
+    
+    <p>Bei einer 8-Bit-Folge (1 Byte):</p>
+    <table class="bit-position-table">
+      <tr>
+        <th>Bit-Position</th>
+        <th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th>
+      </tr>
+      <tr>
+        <td style="font-weight:600;background:#f9fafb;">Beschreibung</td>
+        <td>MSB<br>(links)</td><td colspan="6" style="background:#f8fafc;">Mittlere Bits</td><td>LSB<br>(rechts)</td>
+      </tr>
+    </table>
+    
+    <p class="note">
+      <strong>MSB</strong> = Most Significant Bit (höchstwertiges Bit)<br>
+      <strong>LSB</strong> = Least Significant Bit (niederwertiges Bit)
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>➕ Vorzeichenlose Ganzzahlen (unsigned) – uint8</h2>
+    
+    <p>Bei <strong>vorzeichenlosen</strong> Datentypen haben alle Bits <strong>positive Wertigkeiten</strong>. 
+    Mit n Bits können Zahlen von <strong>0 bis 2<sup>n</sup> - 1</strong> dargestellt werden.</p>
+    
+    <div class="range-info">
+      <div class="range-box">
+        <div class="label">Anzahl Bits</div>
+        <div class="value">8 Bit (uint8)</div>
+      </div>
+      <div class="range-box">
+        <div class="label">Wertebereich</div>
+        <div class="value">0 bis 255</div>
+      </div>
+    </div>
+
+    <h3>Wertigkeiten bei uint8:</h3>
+    <table class="bit-position-table">
+      <tr>
+        <th>Bit-Position</th>
+        <th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th>
+      </tr>
+      <tr>
+        <td style="font-weight:600;background:#f9fafb;">Wertigkeit</td>
+        <td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;background:#f9fafb;">Als Potenz</td>
+        <td>2⁷</td><td>2⁶</td><td>2⁵</td><td>2⁴</td><td>2³</td><td>2²</td><td>2¹</td><td>2⁰</td>
+      </tr>
+    </table>
+
+    <h3>Beispiele aus dem Skript:</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Dezimalwert</th><th>Binärdarstellung (uint8)</th><th>Berechnung</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>00000000</td><td>Alle Bits = 0</td></tr>
+        <tr><td>1</td><td>00000001</td><td>2⁰ = 1</td></tr>
+        <tr><td>127</td><td>01111111</td><td>64+32+16+8+4+2+1 = 127</td></tr>
+        <tr><td>128</td><td>10000000</td><td>2⁷ = 128</td></tr>
+        <tr><td>129</td><td>10000001</td><td>128+1 = 129</td></tr>
+        <tr><td>255</td><td>11111111</td><td>128+64+32+16+8+4+2+1 = 255</td></tr>
+      </tbody>
+    </table>
+
+    <div class="interactive-section">
+      <h4>🎮 Interaktiv: uint8 visualisieren</h4>
+      <div class="controls">
+        <label style="font-weight:600;">Dezimalwert (0-255):</label>
+        <input type="number" id="uint8-input" min="0" max="255" value="0" style="width:100px;">
+        <button class="btn-primary" onclick="visualizeUint8()">Anzeigen</button>
+      </div>
+      <div class="bit-display" id="uint8-display"></div>
+      <div class="formula" id="uint8-formula"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>➖ Vorzeichenbehaftete Ganzzahlen (signed) – int8 mit Zweierkomplement</h2>
+    
+    <p>Bei <strong>vorzeichenbehafteten</strong> Datentypen wird das <strong>Zweierkomplement</strong> verwendet. 
+    Der entscheidende Unterschied: Das höchstwertige Bit (Bit 7) hat eine <strong>negative Wertigkeit</strong>!</p>
+    
+    <div class="range-info">
+      <div class="range-box">
+        <div class="label">Anzahl Bits</div>
+        <div class="value">8 Bit (int8)</div>
+      </div>
+      <div class="range-box">
+        <div class="label">Wertebereich</div>
+        <div class="value">-128 bis +127</div>
+      </div>
+    </div>
+
+    <div class="success-box">
+      <strong>✨ Vorteil des Zweierkomplements:</strong>
+      <ul style="margin:8px 0;">
+        <li><strong>Subtraktion</strong> kann auf <strong>Addition</strong> zurückgeführt werden</li>
+        <li>Keine separate Hardware für Subtraktion nötig</li>
+        <li><strong>Negation</strong> ist technisch sehr einfach realisierbar</li>
+      </ul>
+    </div>
+
+    <h3>Wertigkeiten bei int8 (Zweierkomplement):</h3>
+    <table class="bit-position-table">
+      <tr>
+        <th>Bit-Position</th>
+        <th class="negative">7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th>
+      </tr>
+      <tr>
+        <td style="font-weight:600;background:#f9fafb;">Wertigkeit</td>
+        <td class="negative">-128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;background:#f9fafb;">Als Potenz</td>
+        <td class="negative">-2⁷</td><td>2⁶</td><td>2⁵</td><td>2⁴</td><td>2³</td><td>2²</td><td>2¹</td><td>2⁰</td>
+      </tr>
+    </table>
+
+    <div class="highlight">
+      <strong>🔑 Kernprinzip:</strong> Die 7 rechten Bits (Position 0-6) haben die üblichen positiven Wertigkeiten (1, 2, 4, ..., 64). 
+      Das linke Bit (Position 7) hat eine <strong>negative Wertigkeit von -128</strong>.
+    </div>
+
+    <h3>Vorzeichen ablesen:</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;">
+      <div style="background:#ecfdf5;padding:14px;border-radius:8px;border:2px solid #065f46;">
+        <div style="font-weight:700;color:#065f46;margin-bottom:8px;">✓ Bit 7 = 0 → Positive Zahl</div>
+        <div style="font-family:Consolas,monospace;font-size:.9rem;">
+          Wert = 0 + (Bits 0-6)<br>
+          Bereich: 0 bis +127
+        </div>
+      </div>
+      <div style="background:#fef2f2;padding:14px;border-radius:8px;border:2px solid #991b1b;">
+        <div style="font-weight:700;color:#991b1b;margin-bottom:8px;">✓ Bit 7 = 1 → Negative Zahl</div>
+        <div style="font-family:Consolas,monospace;font-size:.9rem;">
+          Wert = -128 + (Bits 0-6)<br>
+          Bereich: -128 bis -1
+        </div>
+      </div>
+    </div>
+
+    <h3>Beispiele aus dem Skript:</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Dezimalwert</th>
+          <th>Binärdarstellung (int8)</th>
+          <th>Wert linkes Bit (Bit 7)</th>
+          <th>Wert rechte Bits (0-6)</th>
+          <th>Berechnung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>00000000</td><td>0</td><td>0</td><td>0 + 0 = <strong>0</strong></td></tr>
+        <tr><td>1</td><td>00000001</td><td>0</td><td>1</td><td>0 + 1 = <strong>1</strong></td></tr>
+        <tr><td>127</td><td>01111111</td><td>0</td><td>127</td><td>0 + 127 = <strong>127</strong></td></tr>
+        <tr style="background:#fff3cd;"><td>-128</td><td>10000000</td><td>-128</td><td>0</td><td>-128 + 0 = <strong>-128</strong></td></tr>
+        <tr style="background:#fff3cd;"><td>-127</td><td>10000001</td><td>-128</td><td>1</td><td>-128 + 1 = <strong>-127</strong></td></tr>
+        <tr style="background:#fff3cd;"><td>-1</td><td>11111111</td><td>-128</td><td>127</td><td>-128 + 127 = <strong>-1</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <strong>💡 Wichtig:</strong> Das höchstwertige Bit codiert das Vorzeichen <strong>nicht explizit</strong>, sondern das Vorzeichen 
+      ergibt sich als <strong>Konsequenz</strong> aus der definierten negativen Wertigkeit dieses Bits.
+    </div>
+
+    <div class="interactive-section">
+      <h4>🎮 Interaktiv: int8 visualisieren</h4>
+      <div class="controls">
+        <label style="font-weight:600;">Dezimalwert (-128 bis +127):</label>
+        <input type="number" id="int8-input" min="-128" max="127" value="0" style="width:100px;">
+        <button class="btn-primary" onclick="visualizeInt8()">Anzeigen</button>
+      </div>
+      <div class="bit-display" id="int8-display"></div>
+      <div class="formula" id="int8-formula"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🔄 Zweierkomplement berechnen – Negative Zahlen bilden</h2>
+    
+    <p>Um aus einer positiven Zahl die entsprechende negative Zahl im Zweierkomplement zu erhalten:</p>
+    
+    <div class="step-by-step">
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Betrag als Binärzahl darstellen</strong> – z.B. +42 = <code>00101010</code>
+      </div>
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>Alle Bits invertieren</strong> (0→1, 1→0) → <code>11010101</code> (Einerkomplement)
+      </div>
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>1 addieren</strong> → <code>11010110</code> (Zweierkomplement)
+      </div>
+    </div>
+
+    <div class="success-box">
+      <strong>🔄 Umkehrung:</strong> Das Zweierkomplement des Zweierkomplements ergibt die ursprüngliche Zahl zurück!
+    </div>
+
+    <div class="interactive-section">
+      <h4>🎮 Interaktiv: Zweierkomplement bilden</h4>
+      <div class="controls">
+        <label style="font-weight:600;">Positive Zahl (1-127):</label>
+        <input type="number" id="twos-input" min="1" max="127" value="42" style="width:100px;">
+        <button class="btn-primary" onclick="calculateTwosComplement()">Negieren</button>
+      </div>
+      <div id="twos-result" style="display:none;margin-top:16px;">
+        <table style="font-family:Consolas,monospace;font-size:1rem;">
+          <tr>
+            <td style="padding:10px;font-weight:600;width:200px;">Original (positiv):</td>
+            <td id="twos-original" style="padding:10px;font-size:1.1rem;"></td>
+          </tr>
+          <tr style="background:#f8fafc;">
+            <td style="padding:10px;font-weight:600;">Schritt 1: Invertieren:</td>
+            <td id="twos-inverted" style="padding:10px;font-size:1.1rem;"></td>
+          </tr>
+          <tr>
+            <td style="padding:10px;font-weight:600;">Schritt 2: +1 addieren:</td>
+            <td id="twos-final" style="padding:10px;font-size:1.1rem;color:#0f766e;font-weight:700;"></td>
+          </tr>
+          <tr style="background:#e0f2f1;">
+            <td style="padding:10px;font-weight:600;">Ergebnis (int8):</td>
+            <td id="twos-decimal" style="padding:10px;font-size:1.1rem;color:#c62828;font-weight:700;"></td>
+          </tr>
+        </table>
+        <div style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:8px;">
+          <strong>Verifikation:</strong> <span id="twos-verify" style="font-family:Consolas,monospace;"></span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Beispiel: -9 in Go</h3>
+    <div class="step-by-step">
+      <div class="step">
+        Betrag: +9 = <code>00001001</code>
+      </div>
+      <div class="step">
+        Invertieren: <code>11110110</code>
+      </div>
+      <div class="step">
+        +1 addieren: <code>11110111</code>
+      </div>
+      <div class="step" style="border-left-color:#c62828;background:#fef2f2;">
+        Ergebnis: -9 = <code>11110111</code>
+        <br><span style="font-size:.9rem;color:#666;">Probe: -128 + 64+32+16+4+2+1 = -128 + 119 = -9 ✓</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>⚠️ Wichtiger Hinweis: Zweierkomplement in Go-Quellcode</h2>
+    
+    <div class="warning-box">
+      <strong>🚨 Vorsicht – Verwechslungsgefahr!</strong>
+      <p style="margin:10px 0;">
+        Die hier erläuterte binäre Codierung im Zweierkomplement betrifft die <strong>Repräsentation auf System-Ebene</strong> 
+        (wie der Compiler die Werte speichert). Dies darf <strong>nicht</strong> mit der Notation von Integer-Literalen als Binärzahl 
+        im Go-Quellcode verwechselt werden!
+      </p>
+    </div>
+
+    <h3>Im Go-Quellcode:</h3>
+    <ul>
+      <li>Mit Integer-Literalen (<code>0b...</code>) können nur <strong>positive</strong> Zahlenwerte als Binärzahl notiert werden</li>
+      <li>Es existiert in Go <strong>keine</strong> Darstellungsform für negative Integer-Literale im Zweierkomplement</li>
+      <li>Eine negative Zahl wird notiert, indem man den <strong>Betrag</strong> als Binärzahl schreibt und ein <strong>Minuszeichen</strong> davor setzt</li>
+    </ul>
+
+    <h3>Beispiele:</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Go-Quellcode</th>
+          <th>Bedeutung</th>
+          <th>Interne Repräsentation (int8)</th>
+          <th>Gültig?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#ecfdf5;">
+          <td><code>var a int8 = 0b00001001</code></td>
+          <td>+9</td>
+          <td>00001001</td>
+          <td style="color:#065f46;font-weight:700;">✓ Gültig</td>
+        </tr>
+        <tr style="background:#ecfdf5;">
+          <td><code>var b int8 = -0b00001001</code></td>
+          <td>-9 (Betrag als Binär + Minus)</td>
+          <td>11110111 (Zweierkomplement)</td>
+          <td style="color:#065f46;font-weight:700;">✓ Gültig</td>
+        </tr>
+        <tr style="background:#fef2f2;">
+          <td><code>var c int8 = 0b11110111</code></td>
+          <td>247 (als uint interpretiert)</td>
+          <td>Overflow bei int8!</td>
+          <td style="color:#991b1b;font-weight:700;">✗ Fehler</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>💡 Merke:</strong> Im Quellcode schreibst du <code>-0b1001</code> für -9, 
+      aber intern speichert der Compiler dies als <code>11110111</code> im Zweierkomplement.
+    </div>
+
+    <pre>// Beispiel aus dem Skript
+var positiv int8 = 0b00001001    // +9
+var negativ int8 = -0b00001001   // -9 (nicht 0b11110111!)
+
+fmt.Println(positiv)  // Ausgabe: 9
+fmt.Println(negativ)  // Ausgabe: -9</pre>
+  </section>
+
+  <section class="card">
+    <h2>📊 Allgemeine Formel für n-Bit Zahlen</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Typ</th>
+          <th>Anzahl Bits</th>
+          <th>Wertebereich</th>
+          <th>Formel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Vorzeichenlos (unsigned)</strong></td>
+          <td>n Bit</td>
+          <td>0 bis 2<sup>n</sup> - 1</td>
+          <td>Bei 8 Bit: 0 bis 255<br>Bei 16 Bit: 0 bis 65535</td>
+        </tr>
+        <tr>
+          <td><strong>Vorzeichenbehaftet (signed)</strong></td>
+          <td>n Bit</td>
+          <td>-2<sup>n-1</sup> bis 2<sup>n-1</sup> - 1</td>
+          <td>Bei 8 Bit: -128 bis 127<br>Bei 16 Bit: -32768 bis 32767</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Go-Datentypen im Überblick:</h3>
+    <table>
+      <tr>
+        <th>Typ</th>
+        <th>Bits</th>
+        <th>Minimum</th>
+        <th>Maximum</th>
+      </tr>
+      <tr><td><code>uint8</code></td><td>8</td><td>0</td><td>255</td></tr>
+      <tr><td><code>uint16</code></td><td>16</td><td>0</td><td>65.535</td></tr>
+      <tr><td><code>uint32</code></td><td>32</td><td>0</td><td>4.294.967.295</td></tr>
+      <tr><td><code>uint64</code></td><td>64</td><td>0</td><td>18.446.744.073.709.551.615</td></tr>
+      <tr style="background:#f8fafc;"><td><code>int8</code></td><td>8</td><td>-128</td><td>127</td></tr>
+      <tr style="background:#f8fafc;"><td><code>int16</code></td><td>16</td><td>-32.768</td><td>32.767</td></tr>
+      <tr style="background:#f8fafc;"><td><code>int32</code></td><td>32</td><td>-2.147.483.648</td><td>2.147.483.647</td></tr>
+      <tr style="background:#f8fafc;"><td><code>int64</code></td><td>64</td><td>-9.223.372.036.854.775.808</td><td>9.223.372.036.854.775.807</td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>🎯 Zusammenfassung</h2>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:#ecfdf5;padding:16px;border-radius:8px;border:2px solid #065f46;">
+        <h4 style="margin-top:0;color:#065f46;">uint8 (vorzeichenlos)</h4>
+        <ul style="margin:8px 0;padding-left:20px;">
+          <li>Alle Bits positiv</li>
+          <li>Bereich: 0 bis 255</li>
+          <li>8 Bits = 2⁸ = 256 Werte</li>
+          <li>Keine negativen Zahlen</li>
+        </ul>
+      </div>
+      
+      <div style="background:#dbeafe;padding:16px;border-radius:8px;border:2px solid #1e40af;">
+        <h4 style="margin-top:0;color:#1e40af;">int8 (vorzeichenbehaftet)</h4>
+        <ul style="margin:8px 0;padding-left:20px;">
+          <li>Bit 7 hat negative Wertigkeit (-128)</li>
+          <li>Bereich: -128 bis +127</li>
+          <li>Zweierkomplement-Codierung</li>
+          <li>Subtraktion = Addition des Negativen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="success-box" style="margin-top:16px;">
+      <strong>✅ Vorteile des Zweierkomplements:</strong>
+      <ol style="margin:8px 0;">
+        <li>Nur <strong>eine Addition</strong> im Rechenwerk nötig (keine separate Subtraktion)</li>
+        <li><strong>Negation</strong> ist einfach: Bits invertieren + 1 addieren</li>
+        <li><strong>Eindeutige Darstellung</strong> der Null (nur <code>00000000</code>)</li>
+        <li>Vorzeichen ergibt sich automatisch aus der Bit-Wertigkeit</li>
+      </ol>
+    </div>
+  </section>
+
+  <p class="note" style="text-align:center;margin-top:24px;">
+    Kapitel 4.3 – Datentypen für Ganzzahlen | FernUni-Kurs 01613 | Stand: 28.05.2026
+  </p>
+</main>
+
+<script>
+function createBitBox(position, bit, weight, isSignBit = false) {
+  const div = document.createElement('div');
+  div.className = 'bit-box' + (bit === '1' ? ' active' : '') + (isSignBit ? ' sign-bit' : '');
+  div.innerHTML = `
+    <div class="bit-pos">Bit ${position}</div>
+    <div class="bit-value">${bit}</div>
+    <div class="bit-weight">${weight >= 0 ? weight : weight}</div>
+  `;
+  return div;
+}
+
+function visualizeUint8() {
+  const value = parseInt(document.getElementById('uint8-input').value);
+  if (isNaN(value) || value < 0 || value > 255) {
+    alert('Bitte eine Zahl zwischen 0 und 255 eingeben.');
+    return;
+  }
+
+  const binary = value.toString(2).padStart(8, '0');
+  const display = document.getElementById('uint8-display');
+  display.innerHTML = '';
+
+  const calculations = [];
+  for (let i = 0; i < 8; i++) {
+    const position = 7 - i;
+    const bit = binary[i];
+    const weight = Math.pow(2, position);
+    display.appendChild(createBitBox(position, bit, weight, false));
+    
+    if (bit === '1') {
+      calculations.push(weight);
+    }
+  }
+
+  const formula = calculations.length > 0 
+    ? calculations.join(' + ') + ' = <strong style="color:#0f766e;">' + value + '</strong>'
+    : '<strong style="color:#0f766e;">0</strong> (alle Bits = 0)';
+  
+  document.getElementById('uint8-formula').innerHTML = formula;
+}
+
+function visualizeInt8() {
+  const value = parseInt(document.getElementById('int8-input').value);
+  if (isNaN(value) || value < -128 || value > 127) {
+    alert('Bitte eine Zahl zwischen -128 und +127 eingeben.');
+    return;
+  }
+
+  let binary;
+  if (value >= 0) {
+    binary = value.toString(2).padStart(8, '0');
+  } else {
+    binary = (256 + value).toString(2);
+  }
+
+  const display = document.getElementById('int8-display');
+  display.innerHTML = '';
+
+  const calculations = [];
+  for (let i = 0; i < 8; i++) {
+    const position = 7 - i;
+    const bit = binary[i];
+    const weight = position === 7 ? -128 : Math.pow(2, position);
+    const isSignBit = position === 7;
+    display.appendChild(createBitBox(position, bit, weight, isSignBit));
+    
+    if (bit === '1') {
+      calculations.push((weight < 0 ? '' : '+') + weight);
+    }
+  }
+
+  const formula = calculations.length > 0 
+    ? calculations.join(' ') + ' = <strong style="color:' + (value < 0 ? '#c62828' : '#0f766e') + ';">' + value + '</strong>'
+    : '<strong style="color:#0f766e;">0</strong> (alle Bits = 0)';
+  
+  document.getElementById('int8-formula').innerHTML = formula;
+}
+
+function calculateTwosComplement() {
+  const value = parseInt(document.getElementById('twos-input').value);
+  if (isNaN(value) || value < 1 || value > 127) {
+    alert('Bitte eine positive Zahl zwischen 1 und 127 eingeben.');
+    return;
+  }
+
+  const original = value.toString(2).padStart(8, '0');
+  let inverted = '';
+  for (let i = 0; i < original.length; i++) {
+    inverted += original[i] === '0' ? '1' : '0';
+  }
+  
+  // +1 addieren
+  let carry = 1;
+  let twosComp = '';
+  for (let i = 7; i >= 0; i--) {
+    const sum = parseInt(inverted[i]) + carry;
+    twosComp = (sum % 2) + twosComp;
+    carry = Math.floor(sum / 2);
+  }
+
+  const negValue = -value;
+
+  // Verifikation berechnen
+  let verifySum = 0;
+  for (let i = 0; i < 8; i++) {
+    if (twosComp[i] === '1') {
+      const position = 7 - i;
+      const weight = position === 7 ? -128 : Math.pow(2, position);
+      verifySum += weight;
+    }
+  }
+
+  document.getElementById('twos-original').textContent = '+' + value + ' = ' + original;
+  document.getElementById('twos-inverted').textContent = inverted + ' (Einerkomplement)';
+  document.getElementById('twos-final').textContent = twosComp;
+  document.getElementById('twos-decimal').textContent = negValue;
+  document.getElementById('twos-verify').textContent = 
+    'Berechnung: ' + twosComp + ' im Zweierkomplement = ' + verifySum + ' ✓';
+
+  document.getElementById('twos-result').style.display = 'block';
+}
+
+// Initiale Darstellung
+visualizeUint8();
+visualizeInt8();
+</script>
+</body>
+</html>

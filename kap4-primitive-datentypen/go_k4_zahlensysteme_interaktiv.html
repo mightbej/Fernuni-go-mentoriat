@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interaktiv: Zahlensysteme in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ok:#065f46;--ok-bg:#ecfdf5;--bad:#991b1b;--bad-bg:#fef2f2;--highlight:#fef3c7; }
+    * { box-sizing: border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.5; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#155e75 100%);color:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 24px rgba(15,118,110,.22);margin-bottom:18px; }
+    .hero h1 { margin:0 0 8px;font-size:1.7rem; }
+    .hero p { margin:0;opacity:.96; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px; }
+    h2 { margin-top:0;font-size:1.2rem;color:var(--accent); }
+    h3 { font-size:1.05rem;margin-top:16px;margin-bottom:8px; }
+    ul { margin:8px 0 0;padding-left:20px; }
+    code,pre { font-family:Consolas,"Courier New",monospace; }
+    code { background:#f3f4f6;padding:2px 6px;border-radius:6px;font-size:.92rem; }
+    pre { margin:10px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;white-space:pre-wrap;font-size:.9rem; }
+    table { width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:10px; }
+    th,td { border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:middle; }
+    th { background:#f9fafb;font-weight:600;font-size:.92rem; }
+    tr:last-child td { border-bottom:none; }
+    .number-system-table td:first-child { font-weight:600; }
+    .controls { display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center; }
+    button { border:none;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer;transition:all .2s; }
+    .btn-primary { background:var(--accent);color:#fff; }
+    .btn-primary:hover { background:#0d5c54; }
+    .btn-secondary { background:#e5e7eb;color:#111827; }
+    .btn-secondary:hover { background:#d1d5db; }
+    .btn-small { padding:6px 10px;font-size:.88rem; }
+    input[type="text"],input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:1rem;width:100%;max-width:300px;font-family:Consolas,monospace; }
+    input:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    .result-box { margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#f9fafb;font-weight:600;min-height:42px; }
+    .result-box.success { background:var(--ok-bg);color:var(--ok);border-color:var(--ok); }
+    .result-box.error { background:var(--bad-bg);color:var(--bad);border-color:var(--bad); }
+    .highlight { background:var(--highlight);padding:12px;border-radius:8px;border-left:4px solid #f59e0b;margin:10px 0; }
+    .note { color:var(--muted);font-size:.92rem;margin-top:8px; }
+    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
+    .back:hover { text-decoration:underline; }
+    .grid-2 { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:12px; }
+    .display-box { background:#f8fafc;border:2px solid var(--accent);border-radius:8px;padding:12px;text-align:center; }
+    .display-box .label { font-size:.85rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px; }
+    .display-box .value { font-size:1.3rem;font-family:Consolas,monospace;font-weight:700;color:var(--accent);word-break:break-all; }
+    .tabs { display:flex;gap:4px;margin-bottom:12px;border-bottom:2px solid var(--line); }
+    .tab { background:transparent;border:none;border-bottom:3px solid transparent;padding:10px 16px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s; }
+    .tab.active { color:var(--accent);border-bottom-color:var(--accent); }
+    .tab:hover { color:var(--accent); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .example-list { list-style:none;padding:0; }
+    .example-list li { padding:8px 12px;margin:4px 0;background:#f8fafc;border-radius:6px;font-family:Consolas,monospace;cursor:pointer;transition:all .2s; }
+    .example-list li:hover { background:#e2e8f0;transform:translateX(4px); }
+    .flex-between { display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <a class="back" href="go_k4_quiz_hub.html">← Zurück zur Übersicht</a>
+  <section class="hero">
+    <h1>Interaktiv: Zahlensysteme in Go</h1>
+    <p>Verstehe Binär-, Oktal-, Dezimal- und Hexadezimalzahlen und ihre Notation in Go</p>
+  </section>
+
+  <section class="card">
+    <h2>📚 Übersicht: Zahlensysteme</h2>
+    <table class="number-system-table">
+      <thead>
+        <tr><th>Zahlensystem</th><th>Basis</th><th>Präfix in Go</th><th>Ziffern</th><th>Beispiel</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Binärsystem</td><td>2</td><td><code>0b</code> oder <code>0B</code></td><td>0, 1</td><td><code>0b1010</code> = 10</td>
+        </tr>
+        <tr>
+          <td>Oktalsystem</td><td>8</td><td><code>0o</code>, <code>0O</code> oder <code>0</code></td><td>0, 1, ..., 7</td><td><code>0o12</code> = 10</td>
+        </tr>
+        <tr>
+          <td>Dezimalsystem</td><td>10</td><td>ohne Präfix</td><td>0, 1, ..., 9</td><td><code>10</code> = 10</td>
+        </tr>
+        <tr>
+          <td>Hexadezimalsystem</td><td>16</td><td><code>0x</code> oder <code>0X</code></td><td>0-9, a-f, A-F</td><td><code>0xA</code> = 10</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="highlight">
+      <strong>⚠️ Achtung:</strong> Eine Dezimalzahl darf <strong>nicht</strong> mit führenden Nullen beginnen, da sie sonst als Oktalzahl interpretiert wird! <code>076</code> ist <strong>keine</strong> 76, sondern die Oktalzahl für 62.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🔄 Konverter: Zwischen Zahlensystemen umrechnen</h2>
+    <div class="tabs">
+      <button class="tab active" data-tab="converter">Konverter</button>
+      <button class="tab" data-tab="examples">Beispiele</button>
+    </div>
+
+    <div class="tab-content active" id="converter">
+      <p>Gib eine Zahl in einem beliebigen System ein und sieh die Darstellung in allen Systemen:</p>
+      <div class="flex-between">
+        <div>
+          <label for="inputValue" style="display:block;margin-bottom:6px;font-weight:600;">Eingabe:</label>
+          <input type="text" id="inputValue" placeholder="z.B. 42, 0b101010, 0o52, 0x2a">
+        </div>
+        <button id="convertBtn" class="btn-primary">Umrechnen</button>
+      </div>
+      
+      <div id="convertResult" class="result-box" style="margin-top:16px;">Gib eine Zahl ein und klicke auf "Umrechnen".</div>
+      
+      <div class="grid-2" id="displayBoxes" style="display:none;">
+        <div class="display-box">
+          <div class="label">Binär (0b)</div>
+          <div class="value" id="binOutput">-</div>
+        </div>
+        <div class="display-box">
+          <div class="label">Oktal (0o)</div>
+          <div class="value" id="octOutput">-</div>
+        </div>
+        <div class="display-box">
+          <div class="label">Dezimal</div>
+          <div class="value" id="decOutput">-</div>
+        </div>
+        <div class="display-box">
+          <div class="label">Hexadezimal (0x)</div>
+          <div class="value" id="hexOutput">-</div>
+        </div>
+      </div>
+      
+      <div id="explanationBox" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border:2px solid #0f766e;border-radius:8px;">
+        <h3 style="margin-top:0;color:#0f766e;">💡 Erklärung der Umrechnung</h3>
+        <div id="explanationContent"></div>
+      </div>
+      
+      <p class="note">Hinweis: Unterstriche <code>_</code> zur optischen Trennung sind erlaubt, z.B. <code>0b1000_1011</code></p>
+    </div>
+
+    <div class="tab-content" id="examples">
+      <p>Klicke auf ein Beispiel aus dem Skript, um es automatisch umzurechnen:</p>
+      <h3>Binärzahlen:</h3>
+      <ul class="example-list">
+        <li data-value="0b0011">0b0011 → Dezimal 3</li>
+        <li data-value="0B1101">0B1101 → Dezimal 13</li>
+        <li data-value="0b1000_1011">0b1000_1011 → Dezimal 139</li>
+      </ul>
+      
+      <h3>Oktalzahlen:</h3>
+      <ul class="example-list">
+        <li data-value="0o14">0o14 → Dezimal 12</li>
+        <li data-value="0O31">0O31 → Dezimal 25</li>
+        <li data-value="031">031 → Dezimal 25 (Achtung: Präfix 0!)</li>
+      </ul>
+      
+      <h3>Hexadezimalzahlen:</h3>
+      <ul class="example-list">
+        <li data-value="0x7b">0x7b → Dezimal 123</li>
+        <li data-value="0X0000_BAFF">0X0000_BAFF → Dezimal 47871</li>
+        <li data-value="0x0E7B_A90A">0x0E7B_A90A → Dezimal 242985226</li>
+        <li data-value="0x2B3F_5CD2">0x2B3F_5CD2 → Dezimal 725572818</li>
+      </ul>
+      
+      <h3>Gleiche Präfixe, verschiedene Werte:</h3>
+      <ul class="example-list">
+        <li data-value="0b_10">0b_10 → Dezimal 2</li>
+        <li data-value="0o_10">0o_10 → Dezimal 8</li>
+        <li data-value="0x_10">0x_10 → Dezimal 16</li>
+      </ul>
+      
+      <h3>Zahl 42 in allen Systemen:</h3>
+      <ul class="example-list">
+        <li data-value="0b_101010">0b_101010 → Binär</li>
+        <li data-value="0o_52">0o_52 → Oktal</li>
+        <li data-value="42">42 → Dezimal</li>
+        <li data-value="0x_2a">0x_2a → Hexadezimal</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🎯 Übung: Finde die Dezimalzahl</h2>
+    <p>Welchen Dezimalwert hat diese Zahl in Go?</p>
+    <div id="quizDisplay" style="background:#f8fafc;padding:16px;border-radius:8px;text-align:center;font-size:1.5rem;font-family:Consolas,monospace;font-weight:700;color:var(--accent);margin:12px 0;">
+      0b1010
+    </div>
+    <div class="flex-between">
+      <input type="number" id="quizAnswer" placeholder="Deine Antwort (Dezimalzahl)">
+      <div class="controls">
+        <button id="checkBtn" class="btn-primary">Prüfen</button>
+        <button id="nextQuizBtn" class="btn-secondary">Neue Aufgabe</button>
+      </div>
+    </div>
+    <div id="quizResult" class="result-box">Gib deine Antwort ein und klicke auf "Prüfen".</div>
+  </section>
+
+  <section class="card">
+    <h2>⚠️ Häufige Fehler</h2>
+    <table>
+      <thead><tr><th>Ungültige Notation</th><th>Problem</th><th>Korrekt</th></tr></thead>
+      <tbody>
+        <tr><td><code>_42</code></td><td>Unterstrich am Anfang</td><td><code>42</code></td></tr>
+        <tr><td><code>42_</code></td><td>Unterstrich am Ende</td><td><code>42</code></td></tr>
+        <tr><td><code>4__2</code></td><td>Doppelter Unterstrich</td><td><code>4_2</code> oder <code>42</code></td></tr>
+        <tr><td><code>0_x42</code></td><td>Unterstrich im Präfix</td><td><code>0x_42</code> oder <code>0x42</code></td></tr>
+        <tr><td><code>076</code> (als Dezimal gemeint)</td><td>Führende Null → Oktal!</td><td><code>76</code> (ohne führende Null)</td></tr>
+        <tr><td><code>0b102</code></td><td>Ziffer 2 nicht im Binärsystem</td><td><code>0b110</code> (für Dezimal 6)</td></tr>
+        <tr><td><code>0o89</code></td><td>Ziffern 8,9 nicht im Oktalsystem</td><td><code>0o11</code> (für Dezimal 9)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>🔬 Exkurs: Binäre Codierung und Zweierkomplement</h2>
+    <p>Wie werden Ganzzahlen auf Bit-Ebene dargestellt und wie funktionieren Addition und Subtraktion im Rechenwerk?</p>
+    
+    <div class="tabs">
+      <button class="tab active" data-tab="unsigned-tab">Vorzeichenlos (uint8)</button>
+      <button class="tab" data-tab="signed-tab">Vorzeichenbehaftet (int8)</button>
+      <button class="tab" data-tab="twos-complement-tab">Zweierkomplement bilden</button>
+      <button class="tab" data-tab="arithmetic-tab">Addition & Subtraktion</button>
+    </div>
+
+    <!-- Tab 1: Vorzeichenlos -->
+    <div class="tab-content active" id="unsigned-tab">
+      <h3>Vorzeichenlose Ganzzahlen (uint8)</h3>
+      <p>Mit 8 Bit können Zahlen von <strong>0 bis 255</strong> (2⁸ - 1) dargestellt werden. Alle Bits haben positive Wertigkeiten:</p>
+      
+      <div style="background:#f8fafc;padding:14px;border-radius:8px;margin:12px 0;overflow-x:auto;">
+        <table style="margin:0;font-family:Consolas,monospace;font-size:0.9rem;">
+          <tr style="background:#e0f2f1;">
+            <th style="text-align:center;padding:8px;">Bit-Position</th>
+            <th style="text-align:center;padding:4px;">7</th>
+            <th style="text-align:center;padding:4px;">6</th>
+            <th style="text-align:center;padding:4px;">5</th>
+            <th style="text-align:center;padding:4px;">4</th>
+            <th style="text-align:center;padding:4px;">3</th>
+            <th style="text-align:center;padding:4px;">2</th>
+            <th style="text-align:center;padding:4px;">1</th>
+            <th style="text-align:center;padding:4px;">0</th>
+          </tr>
+          <tr>
+            <td style="background:#e0f2f1;font-weight:600;padding:8px;">Wertigkeit</td>
+            <td style="text-align:center;padding:4px;">128</td>
+            <td style="text-align:center;padding:4px;">64</td>
+            <td style="text-align:center;padding:4px;">32</td>
+            <td style="text-align:center;padding:4px;">16</td>
+            <td style="text-align:center;padding:4px;">8</td>
+            <td style="text-align:center;padding:4px;">4</td>
+            <td style="text-align:center;padding:4px;">2</td>
+            <td style="text-align:center;padding:4px;">1</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="flex-between" style="margin:16px 0;">
+        <div>
+          <label style="display:block;margin-bottom:6px;font-weight:600;">Dezimalzahl (0-255):</label>
+          <input type="number" id="uint8Input" min="0" max="255" value="42" style="max-width:150px;">
+        </div>
+        <button id="uint8ConvertBtn" class="btn-primary">Visualisieren</button>
+      </div>
+
+      <div id="uint8Visual" style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
+        <div style="display:flex;gap:4px;justify-content:center;margin-bottom:12px;" id="uint8Bits"></div>
+        <div style="text-align:center;font-family:Consolas,monospace;margin-top:12px;">
+          <div style="color:#666;font-size:0.9rem;">Berechnung:</div>
+          <div id="uint8Calc" style="font-size:1.05rem;margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
+        <strong>Beispiele aus dem Skript:</strong>
+        <table style="margin-top:8px;">
+          <tr><td><code>00000000</code></td><td>= 0</td></tr>
+          <tr><td><code>00000001</code></td><td>= 1</td></tr>
+          <tr><td><code>01111111</code></td><td>= 127</td></tr>
+          <tr><td><code>10000000</code></td><td>= 128</td></tr>
+          <tr><td><code>10000001</code></td><td>= 129</td></tr>
+          <tr><td><code>11111111</code></td><td>= 255</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 2: Vorzeichenbehaftet -->
+    <div class="tab-content" id="signed-tab">
+      <h3>Vorzeichenbehaftete Ganzzahlen (int8) – Zweierkomplement</h3>
+      <p>Mit 8 Bit können Zahlen von <strong>-128 bis 127</strong> dargestellt werden. Das höchstwertige Bit hat <strong>negative</strong> Wertigkeit:</p>
+      
+      <div style="background:#f8fafc;padding:14px;border-radius:8px;margin:12px 0;overflow-x:auto;">
+        <table style="margin:0;font-family:Consolas,monospace;font-size:0.9rem;">
+          <tr style="background:#fef2f2;">
+            <th style="text-align:center;padding:8px;">Bit-Position</th>
+            <th style="text-align:center;padding:4px;background:#ffcdd2;">7</th>
+            <th style="text-align:center;padding:4px;">6</th>
+            <th style="text-align:center;padding:4px;">5</th>
+            <th style="text-align:center;padding:4px;">4</th>
+            <th style="text-align:center;padding:4px;">3</th>
+            <th style="text-align:center;padding:4px;">2</th>
+            <th style="text-align:center;padding:4px;">1</th>
+            <th style="text-align:center;padding:4px;">0</th>
+          </tr>
+          <tr>
+            <td style="background:#fef2f2;font-weight:600;padding:8px;">Wertigkeit</td>
+            <td style="text-align:center;padding:4px;background:#ffcdd2;color:#c62828;font-weight:700;">-128</td>
+            <td style="text-align:center;padding:4px;">64</td>
+            <td style="text-align:center;padding:4px;">32</td>
+            <td style="text-align:center;padding:4px;">16</td>
+            <td style="text-align:center;padding:4px;">8</td>
+            <td style="text-align:center;padding:4px;">4</td>
+            <td style="text-align:center;padding:4px;">2</td>
+            <td style="text-align:center;padding:4px;">1</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight">
+        <strong>💡 Vorzeichen ablesen:</strong> Wenn Bit 7 = 0 → positive Zahl (0 bis 127)<br>
+        Wenn Bit 7 = 1 → negative Zahl (-128 bis -1)
+      </div>
+
+      <div class="flex-between" style="margin:16px 0;">
+        <div>
+          <label style="display:block;margin-bottom:6px;font-weight:600;">Dezimalzahl (-128 bis 127):</label>
+          <input type="number" id="int8Input" min="-128" max="127" value="42" style="max-width:150px;">
+        </div>
+        <button id="int8ConvertBtn" class="btn-primary">Visualisieren</button>
+      </div>
+
+      <div id="int8Visual" style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
+        <div style="display:flex;gap:4px;justify-content:center;margin-bottom:12px;" id="int8Bits"></div>
+        <div style="text-align:center;font-family:Consolas,monospace;margin-top:12px;">
+          <div style="color:#666;font-size:0.9rem;">Berechnung (Zweierkomplement):</div>
+          <div id="int8Calc" style="font-size:1.05rem;margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
+        <strong>Beispiele aus dem Skript:</strong>
+        <table style="margin-top:8px;">
+          <tr><td><code>00000000</code></td><td>= -128 + 0 = <strong>0</strong></td></tr>
+          <tr><td><code>00000001</code></td><td>= -128 + 1 = <strong>1</strong></td></tr>
+          <tr><td><code>01111111</code></td><td>= -128 + 127 = <strong>127</strong></td></tr>
+          <tr><td><code>10000000</code></td><td>= -128 + 0 = <strong>-128</strong></td></tr>
+          <tr><td><code>10000001</code></td><td>= -128 + 1 = <strong>-127</strong></td></tr>
+          <tr><td><code>11111111</code></td><td>= -128 + 127 = <strong>-1</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Zweierkomplement bilden -->
+    <div class="tab-content" id="twos-complement-tab">
+      <h3>Zweierkomplement berechnen</h3>
+      <p>Um eine negative Zahl zu codieren, wird das Zweierkomplement gebildet:</p>
+      
+      <div style="background:#e0f2f1;padding:12px;border-radius:8px;margin:12px 0;">
+        <strong>Methode: Negative Zahl im Zweierkomplement</strong>
+        <ol style="margin:8px 0 0;">
+          <li>Betrag der Zahl als Binärzahl darstellen</li>
+          <li>Alle Bits invertieren (0 → 1, 1 → 0) = <strong>Einerkomplement</strong></li>
+          <li>1 addieren = <strong>Zweierkomplement</strong></li>
+        </ol>
+      </div>
+
+      <div class="flex-between" style="margin:16px 0;">
+        <div>
+          <label style="display:block;margin-bottom:6px;font-weight:600;">Positive Zahl (1-127):</label>
+          <input type="number" id="twosInput" min="1" max="127" value="42" style="max-width:150px;">
+        </div>
+        <button id="twosConvertBtn" class="btn-primary">Negieren</button>
+      </div>
+
+      <div id="twosResult" style="display:none;">
+        <div style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
+          <table style="width:100%;font-family:Consolas,monospace;">
+            <tr>
+              <td style="padding:8px;font-weight:600;width:200px;">Original (positiv):</td>
+              <td id="twosOriginal" style="padding:8px;font-size:1.1rem;"></td>
+            </tr>
+            <tr style="background:#f8fafc;">
+              <td style="padding:8px;font-weight:600;">Schritt 1: Invertieren:</td>
+              <td id="twosInverted" style="padding:8px;font-size:1.1rem;"></td>
+            </tr>
+            <tr>
+              <td style="padding:8px;font-weight:600;">Schritt 2: +1 addieren:</td>
+              <td id="twosFinal" style="padding:8px;font-size:1.1rem;color:#0f766e;font-weight:700;"></td>
+            </tr>
+            <tr style="background:#e0f2f1;">
+              <td style="padding:8px;font-weight:600;">Ergebnis (int8):</td>
+              <td id="twosDecimal" style="padding:8px;font-size:1.1rem;color:#c62828;font-weight:700;"></td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;border-left:4px solid #f59e0b;">
+          <strong>🔄 Umkehrung:</strong> Das Zweierkomplement des Zweierkomplements ergibt die ursprüngliche Zahl!<br>
+          <span id="twosReverse" style="font-family:Consolas,monospace;"></span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
+        <strong>Beispiel: -42 codieren</strong>
+        <table style="margin-top:8px;font-family:Consolas,monospace;">
+          <tr><td style="padding:4px 12px;">+42:</td><td><code>00101010</code></td></tr>
+          <tr><td style="padding:4px 12px;">Invertieren:</td><td><code>11010101</code></td></tr>
+          <tr><td style="padding:4px 12px;">+1:</td><td><code>11010110</code></td></tr>
+          <tr style="background:#e0f2f1;"><td style="padding:4px 12px;font-weight:700;">-42:</td><td style="font-weight:700;color:#c62828;"><code>11010110</code></td></tr>
+        </table>
+        <div style="margin-top:8px;font-size:0.9rem;color:#666;">
+          Probe: -128 + 64 + 16 + 4 + 2 = -42 ✓
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Addition & Subtraktion -->
+    <div class="tab-content" id="arithmetic-tab">
+      <h3>Rechenoperationen auf Bit-Ebene</h3>
+      <p>Der große Vorteil des Zweierkomplements: Subtraktion kann als Addition implementiert werden!</p>
+      
+      <div class="highlight">
+        <strong>💡 Prinzip:</strong> <code>a - b = a + (-b)</code><br>
+        Die Subtraktion wird auf die Addition zurückgeführt, indem der negative Wert (im Zweierkomplement) addiert wird.
+      </div>
+
+      <div style="margin:16px 0;">
+        <h4 style="margin-top:0;">Addition zweier Zahlen (int8):</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl A:</label>
+            <input type="number" id="addA" min="-128" max="127" value="15" style="max-width:120px;">
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl B:</label>
+            <input type="number" id="addB" min="-128" max="127" value="27" style="max-width:120px;">
+          </div>
+          <button id="addBtn" class="btn-primary">Rechnen</button>
+        </div>
+      </div>
+
+      <div id="addResult" style="display:none;background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
+        <h4 style="margin-top:0;color:#0f766e;">Addition im Rechenwerk:</h4>
+        <div id="addVisualization" style="font-family:Consolas,monospace;font-size:1rem;"></div>
+      </div>
+
+      <div style="margin:24px 0 16px;">
+        <h4 style="margin-top:0;">Subtraktion zweier Zahlen (int8):</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl A:</label>
+            <input type="number" id="subA" min="-128" max="127" value="15" style="max-width:120px;">
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl B:</label>
+            <input type="number" id="subB" min="-128" max="127" value="27" style="max-width:120px;">
+          </div>
+          <button id="subBtn" class="btn-primary">Rechnen</button>
+        </div>
+      </div>
+
+      <div id="subResult" style="display:none;background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
+        <h4 style="margin-top:0;color:#0f766e;">Subtraktion als Addition:</h4>
+        <div id="subVisualization" style="font-family:Consolas,monospace;font-size:1rem;"></div>
+      </div>
+
+      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
+        <strong>⚠️ Overflow:</strong> Wenn das Ergebnis den Wertebereich überschreitet (< -128 oder > 127), 
+        tritt ein Überlauf auf. Die überzähligen Bits werden abgeschnitten.
+      </div>
+    </div>
+  </section>
+
+  <p class="note">Kapitel 4 – Primitive Datentypen in Go | Stand: 28.05.2026</p>
+</main>
+
+<script>
+(function() {
+  // Tab-System
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(tc => tc.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // Konverter
+  const inputValue = document.getElementById('inputValue');
+  const convertBtn = document.getElementById('convertBtn');
+  const convertResult = document.getElementById('convertResult');
+  const displayBoxes = document.getElementById('displayBoxes');
+  const binOutput = document.getElementById('binOutput');
+  const octOutput = document.getElementById('octOutput');
+  const decOutput = document.getElementById('decOutput');
+  const hexOutput = document.getElementById('hexOutput');
+
+  function parseGoNumber(str) {
+    str = str.trim().replace(/_/g, ''); // Unterstriche entfernen
+    
+    if (str.startsWith('0b') || str.startsWith('0B')) {
+      return parseInt(str.slice(2), 2);
+    } else if (str.startsWith('0o') || str.startsWith('0O')) {
+      return parseInt(str.slice(2), 8);
+    } else if (str.startsWith('0x') || str.startsWith('0X')) {
+      return parseInt(str.slice(2), 16);
+    } else if (str.startsWith('0') && str.length > 1 && /^[0-7]+$/.test(str.slice(1))) {
+      // Oktal mit 0-Präfix
+      return parseInt(str, 8);
+    } else {
+      return parseInt(str, 10);
+    }
+  }
+
+  function formatWithUnderscores(str, groupSize) {
+    const parts = [];
+    for (let i = str.length; i > 0; i -= groupSize) {
+      parts.unshift(str.slice(Math.max(0, i - groupSize), i));
+    }
+    return parts.join('_');
+  }
+
+  function convert() {
+    const input = inputValue.value.trim();
+    if (!input) {
+      convertResult.textContent = 'Bitte gib eine Zahl ein.';
+      convertResult.className = 'result-box';
+      displayBoxes.style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+      return;
+    }
+
+    try {
+      const decValue = parseGoNumber(input);
+      if (isNaN(decValue) || decValue < 0) {
+        throw new Error('Ungültige Zahl');
+      }
+
+      const binStr = formatWithUnderscores(decValue.toString(2), 4);
+      const octStr = decValue.toString(8);
+      const hexStr = formatWithUnderscores(decValue.toString(16).toUpperCase(), 4);
+
+      binOutput.textContent = '0b' + binStr;
+      octOutput.textContent = '0o' + octStr;
+      decOutput.textContent = decValue;
+      hexOutput.textContent = '0x' + hexStr;
+
+      convertResult.textContent = '✓ Erfolgreich umgerechnet!';
+      convertResult.className = 'result-box success';
+      displayBoxes.style.display = 'grid';
+      
+      // Erklärung generieren
+      generateExplanation(input, decValue);
+    } catch (e) {
+      convertResult.textContent = '✗ Ungültige Eingabe. Bitte überprüfe die Syntax.';
+      convertResult.className = 'result-box error';
+      displayBoxes.style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+    }
+  }
+
+  function generateExplanation(input, decValue) {
+    const explanationBox = document.getElementById('explanationBox');
+    const explanationContent = document.getElementById('explanationContent');
+    const cleanInput = input.replace(/_/g, '');
+    
+    let html = '';
+    let sourceBase = 10;
+    let sourceSystem = 'Dezimal';
+    let digits = cleanInput;
+    
+    // Bestimme Quellsystem
+    if (cleanInput.startsWith('0b') || cleanInput.startsWith('0B')) {
+      sourceBase = 2;
+      sourceSystem = 'Binär';
+      digits = cleanInput.slice(2);
+    } else if (cleanInput.startsWith('0o') || cleanInput.startsWith('0O')) {
+      sourceBase = 8;
+      sourceSystem = 'Oktal';
+      digits = cleanInput.slice(2);
+    } else if (cleanInput.startsWith('0x') || cleanInput.startsWith('0X')) {
+      sourceBase = 16;
+      sourceSystem = 'Hexadezimal';
+      digits = cleanInput.slice(2);
+    } else if (cleanInput.startsWith('0') && cleanInput.length > 1) {
+      sourceBase = 8;
+      sourceSystem = 'Oktal (mit 0-Präfix)';
+      digits = cleanInput;
+    }
+    
+    html += '<div style="margin-bottom:16px;"><strong>Eingabe:</strong> <code>' + input + '</code> (' + sourceSystem + ')</div>';
+    
+    // Schritt 1: Von Quellsystem nach Dezimal (wenn nicht schon Dezimal)
+    if (sourceBase !== 10) {
+      html += '<div style="margin-bottom:16px;"><strong>Schritt 1: ' + sourceSystem + ' → Dezimal</strong><br>';
+      html += 'Jede Ziffer wird mit der entsprechenden Potenz der Basis multipliziert:<br>';
+      html += '<div style="background:#fff;padding:12px;margin-top:8px;border-radius:6px;font-family:Consolas,monospace;font-size:0.95rem;">';
+      
+      const digitArray = digits.split('').reverse();
+      const calculations = [];
+      let sum = 0;
+      
+      for (let i = 0; i < digitArray.length; i++) {
+        const digit = digitArray[i];
+        const digitValue = parseInt(digit, sourceBase);
+        const posValue = digitValue * Math.pow(sourceBase, i);
+        sum += posValue;
+        
+        let displayDigit = digit.toUpperCase();
+        if (sourceBase === 16 && isNaN(parseInt(digit))) {
+          displayDigit = digit.toUpperCase() + ' (=' + digitValue + ')';
+        }
+        
+        calculations.push(displayDigit + ' × ' + sourceBase + '<sup>' + i + '</sup> = ' + digitValue + ' × ' + Math.pow(sourceBase, i) + ' = ' + posValue);
+      }
+      
+      html += calculations.reverse().join('<br>');
+      html += '<br><br><strong>Summe:</strong> ' + calculations.map((_, i) => {
+        const digit = digitArray[digitArray.length - 1 - i];
+        return parseInt(digit, sourceBase) * Math.pow(sourceBase, digitArray.length - 1 - i);
+      }).join(' + ') + ' = <strong style="color:#0f766e;">' + decValue + '</strong>';
+      html += '</div></div>';
+    } else {
+      html += '<div style="margin-bottom:16px;">Die Eingabe ist bereits im Dezimalsystem: <strong style="color:#0f766e;">' + decValue + '</strong></div>';
+    }
+    
+    // Schritt 2: Von Dezimal in andere Systeme
+    html += '<div><strong>Schritt 2: Dezimal → Andere Systeme</strong><br>';
+    html += 'Die Dezimalzahl <strong>' + decValue + '</strong> wird durch wiederholte Division umgewandelt:<br>';
+    
+    // Beispiel für ein System (Binär)
+    html += '<div style="background:#fff;padding:12px;margin-top:8px;border-radius:6px;">';
+    html += '<strong style="color:#0f766e;">Beispiel Binär (Basis 2):</strong><br>';
+    html += '<div style="font-family:Consolas,monospace;font-size:0.9rem;margin-top:8px;">';
+    
+    let num = decValue;
+    const binarySteps = [];
+    if (num === 0) {
+      binarySteps.push('0 ÷ 2 = 0 Rest <strong>0</strong>');
+    } else {
+      while (num > 0) {
+        const remainder = num % 2;
+        const quotient = Math.floor(num / 2);
+        binarySteps.push(num + ' ÷ 2 = ' + quotient + ' Rest <strong>' + remainder + '</strong>');
+        num = quotient;
+      }
+    }
+    
+    html += binarySteps.join('<br>');
+    html += '<br><br>Die Reste von unten nach oben gelesen ergeben: <strong style="color:#0f766e;">0b' + decValue.toString(2) + '</strong>';
+    html += '</div></div>';
+    
+    html += '<div style="margin-top:12px;padding:10px;background:#e0f2f1;border-radius:6px;font-size:0.92rem;">';
+    html += '<strong>💡 Prinzip:</strong> Das gleiche Verfahren (wiederholte Division) funktioniert für alle Zahlensysteme:<br>';
+    html += '• <strong>Binär:</strong> Dividiere durch 2<br>';
+    html += '• <strong>Oktal:</strong> Dividiere durch 8<br>';
+    html += '• <strong>Hexadezimal:</strong> Dividiere durch 16 (Reste 10-15 werden zu A-F)';
+    html += '</div></div>';
+    
+    explanationContent.innerHTML = html;
+    explanationBox.style.display = 'block';
+  }
+
+  convertBtn.addEventListener('click', convert);
+  inputValue.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') convert();
+  });
+
+  // Beispiele klickbar machen
+  document.querySelectorAll('.example-list li').forEach(item => {
+    item.addEventListener('click', () => {
+      const value = item.getAttribute('data-value');
+      inputValue.value = value;
+      // Zum Konverter-Tab wechseln
+      tabs[0].click();
+      convert();
+    });
+  });
+
+  // Quiz
+  let currentQuizValue = 10;
+  const quizDisplay = document.getElementById('quizDisplay');
+  const quizAnswer = document.getElementById('quizAnswer');
+  const quizResult = document.getElementById('quizResult');
+  const checkBtn = document.getElementById('checkBtn');
+  const nextQuizBtn = document.getElementById('nextQuizBtn');
+
+  function generateQuiz() {
+    const value = Math.floor(Math.random() * 256); // 0-255
+    const formats = [
+      { prefix: '0b', base: 2, name: 'Binär' },
+      { prefix: '0o', base: 8, name: 'Oktal' },
+      { prefix: '0x', base: 16, name: 'Hex' }
+    ];
+    const format = formats[Math.floor(Math.random() * formats.length)];
+    
+    let str = value.toString(format.base).toUpperCase();
+    if (format.base === 2) {
+      str = formatWithUnderscores(str, 4);
+    } else if (format.base === 16 && str.length > 4) {
+      str = formatWithUnderscores(str, 4);
+    }
+    
+    currentQuizValue = value;
+    quizDisplay.textContent = format.prefix + str;
+    quizAnswer.value = '';
+    quizResult.textContent = 'Gib deine Antwort ein und klicke auf "Prüfen".';
+    quizResult.className = 'result-box';
+  }
+
+  checkBtn.addEventListener('click', () => {
+    const answer = parseInt(quizAnswer.value);
+    if (isNaN(answer)) {
+      quizResult.textContent = 'Bitte gib eine Zahl ein.';
+      quizResult.className = 'result-box';
+      return;
+    }
+    
+    if (answer === currentQuizValue) {
+      quizResult.textContent = '✓ Richtig! Die Dezimalzahl ist ' + currentQuizValue + '.';
+      quizResult.className = 'result-box success';
+    } else {
+      quizResult.textContent = '✗ Leider falsch. Die richtige Antwort ist ' + currentQuizValue + '.';
+      quizResult.className = 'result-box error';
+    }
+  });
+
+  nextQuizBtn.addEventListener('click', generateQuiz);
+  quizAnswer.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkBtn.click();
+  });
+
+  // Initiale Quiz-Aufgabe
+  generateQuiz();
+
+  // === BINÄRE CODIERUNG & ZWEIERKOMPLEMENT ===
+  
+  // uint8 Visualisierer
+  const uint8Input = document.getElementById('uint8Input');
+  const uint8ConvertBtn = document.getElementById('uint8ConvertBtn');
+  const uint8Bits = document.getElementById('uint8Bits');
+  const uint8Calc = document.getElementById('uint8Calc');
+
+  function visualizeUint8() {
+    const value = parseInt(uint8Input.value);
+    if (isNaN(value) || value < 0 || value > 255) {
+      alert('Bitte eine Zahl zwischen 0 und 255 eingeben.');
+      return;
+    }
+
+    const binary = value.toString(2).padStart(8, '0');
+    uint8Bits.innerHTML = '';
+    const calculations = [];
+
+    for (let i = 0; i < 8; i++) {
+      const bit = binary[i];
+      const position = 7 - i;
+      const weight = Math.pow(2, position);
+      const contribution = bit === '1' ? weight : 0;
+      
+      const bitBox = document.createElement('div');
+      bitBox.style.cssText = 'width:50px;height:60px;border:2px solid #0f766e;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:' + (bit === '1' ? '#0f766e' : '#fff') + ';color:' + (bit === '1' ? '#fff' : '#0f766e');
+      bitBox.innerHTML = '<div style="font-size:1.4rem;font-weight:700;">' + bit + '</div><div style="font-size:0.7rem;margin-top:2px;">' + weight + '</div>';
+      uint8Bits.appendChild(bitBox);
+
+      if (bit === '1') {
+        calculations.push(weight);
+      }
+    }
+
+    uint8Calc.innerHTML = calculations.length > 0 
+      ? calculations.join(' + ') + ' = <strong style="color:#0f766e;">' + value + '</strong>'
+      : '<strong style="color:#0f766e;">0</strong>';
+  }
+
+  uint8ConvertBtn.addEventListener('click', visualizeUint8);
+  uint8Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') visualizeUint8(); });
+  visualizeUint8(); // Initial
+
+  // int8 Visualisierer (Zweierkomplement)
+  const int8Input = document.getElementById('int8Input');
+  const int8ConvertBtn = document.getElementById('int8ConvertBtn');
+  const int8Bits = document.getElementById('int8Bits');
+  const int8Calc = document.getElementById('int8Calc');
+
+  function visualizeInt8() {
+    const value = parseInt(int8Input.value);
+    if (isNaN(value) || value < -128 || value > 127) {
+      alert('Bitte eine Zahl zwischen -128 und 127 eingeben.');
+      return;
+    }
+
+    // Zweierkomplement berechnen
+    let binary;
+    if (value >= 0) {
+      binary = value.toString(2).padStart(8, '0');
+    } else {
+      binary = (256 + value).toString(2);
+    }
+
+    int8Bits.innerHTML = '';
+    const calculations = [];
+
+    for (let i = 0; i < 8; i++) {
+      const bit = binary[i];
+      const position = 7 - i;
+      const weight = position === 7 ? -128 : Math.pow(2, position);
+      const contribution = bit === '1' ? weight : 0;
+      
+      const bitBox = document.createElement('div');
+      const isSignBit = position === 7;
+      bitBox.style.cssText = 'width:50px;height:60px;border:2px solid ' + (isSignBit ? '#c62828' : '#0f766e') + ';border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:' + (bit === '1' ? (isSignBit ? '#ffcdd2' : '#0f766e') : '#fff') + ';color:' + (bit === '1' && !isSignBit ? '#fff' : (isSignBit ? '#c62828' : '#0f766e'));
+      bitBox.innerHTML = '<div style="font-size:1.4rem;font-weight:700;">' + bit + '</div><div style="font-size:0.7rem;margin-top:2px;">' + weight + '</div>';
+      int8Bits.appendChild(bitBox);
+
+      if (bit === '1') {
+        calculations.push((weight < 0 ? '' : '+') + weight);
+      }
+    }
+
+    int8Calc.innerHTML = calculations.length > 0 
+      ? calculations.join(' ') + ' = <strong style="color:' + (value < 0 ? '#c62828' : '#0f766e') + ';">' + value + '</strong>'
+      : '<strong style="color:#0f766e;">0</strong>';
+  }
+
+  int8ConvertBtn.addEventListener('click', visualizeInt8);
+  int8Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') visualizeInt8(); });
+  visualizeInt8(); // Initial
+
+  // Zweierkomplement bilden
+  const twosInput = document.getElementById('twosInput');
+  const twosConvertBtn = document.getElementById('twosConvertBtn');
+  const twosResult = document.getElementById('twosResult');
+
+  function calculateTwosComplement() {
+    const value = parseInt(twosInput.value);
+    if (isNaN(value) || value < 1 || value > 127) {
+      alert('Bitte eine positive Zahl zwischen 1 und 127 eingeben.');
+      return;
+    }
+
+    const original = value.toString(2).padStart(8, '0');
+    let inverted = '';
+    for (let i = 0; i < original.length; i++) {
+      inverted += original[i] === '0' ? '1' : '0';
+    }
+    
+    // +1 addieren
+    let carry = 1;
+    let twosComp = '';
+    for (let i = 7; i >= 0; i--) {
+      const sum = parseInt(inverted[i]) + carry;
+      twosComp = (sum % 2) + twosComp;
+      carry = Math.floor(sum / 2);
+    }
+
+    const negValue = -value;
+
+    document.getElementById('twosOriginal').textContent = '+' + value + ' = ' + original;
+    document.getElementById('twosInverted').textContent = inverted;
+    document.getElementById('twosFinal').textContent = twosComp;
+    document.getElementById('twosDecimal').textContent = negValue;
+    document.getElementById('twosReverse').textContent = 
+      'Wenn du das Zweierkomplement von ' + twosComp + ' bildest, erhältst du wieder ' + original + ' (= +' + value + ')';
+
+    twosResult.style.display = 'block';
+  }
+
+  twosConvertBtn.addEventListener('click', calculateTwosComplement);
+  twosInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') calculateTwosComplement(); });
+
+  // Addition visualisieren
+  const addBtn = document.getElementById('addBtn');
+  const addResult = document.getElementById('addResult');
+  const addVisualization = document.getElementById('addVisualization');
+
+  function visualizeAddition() {
+    const a = parseInt(document.getElementById('addA').value);
+    const b = parseInt(document.getElementById('addB').value);
+    
+    if (isNaN(a) || isNaN(b) || a < -128 || a > 127 || b < -128 || b > 127) {
+      alert('Bitte Zahlen zwischen -128 und 127 eingeben.');
+      return;
+    }
+
+    const result = a + b;
+    const resultInRange = ((result + 128) % 256) - 128; // Overflow handling
+    
+    const binA = (a >= 0 ? a : 256 + a).toString(2).padStart(8, '0');
+    const binB = (b >= 0 ? b : 256 + b).toString(2).padStart(8, '0');
+    const binResult = (resultInRange >= 0 ? resultInRange : 256 + resultInRange).toString(2).padStart(8, '0');
+
+    let html = '<div style="background:#f8fafc;padding:12px;border-radius:6px;margin-bottom:12px;">';
+    html += '<div style="margin-bottom:8px;">A = ' + a + ' = <code>' + binA + '</code></div>';
+    html += '<div style="margin-bottom:8px;">B = ' + b + ' = <code>' + binB + '</code></div>';
+    html += '<div style="border-top:2px solid #0f766e;margin:8px 0;padding-top:8px;font-weight:700;color:#0f766e;">';
+    html += 'Summe = <code>' + binResult + '</code> = ' + resultInRange;
+    
+    if (result !== resultInRange) {
+      html += ' <span style="color:#c62828;">(Overflow! Erwartet: ' + result + ')</span>';
+    }
+    html += '</div></div>';
+
+    // Bit-by-bit Addition
+    html += '<div style="background:#fff;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">';
+    html += '<strong>Bit-by-bit Addition (von rechts nach links mit Übertrag):</strong><br>';
+    html += '<pre style="margin:8px 0;line-height:1.8;">';
+    
+    let carry = 0;
+    let addSteps = '  ' + binA + '  (A)\n+ ' + binB + '  (B)\n' + '-'.repeat(20) + '\n';
+    let resultBits = '';
+    
+    for (let i = 7; i >= 0; i--) {
+      const bitA = parseInt(binA[i]);
+      const bitB = parseInt(binB[i]);
+      const sum = bitA + bitB + carry;
+      resultBits = (sum % 2) + resultBits;
+      carry = Math.floor(sum / 2);
+    }
+    
+    addSteps += '  ' + resultBits + '  (Ergebnis)';
+    html += addSteps + '</pre></div>';
+
+    addVisualization.innerHTML = html;
+    addResult.style.display = 'block';
+  }
+
+  addBtn.addEventListener('click', visualizeAddition);
+
+  // Subtraktion visualisieren
+  const subBtn = document.getElementById('subBtn');
+  const subResult = document.getElementById('subResult');
+  const subVisualization = document.getElementById('subVisualization');
+
+  function visualizeSubtraction() {
+    const a = parseInt(document.getElementById('subA').value);
+    const b = parseInt(document.getElementById('subB').value);
+    
+    if (isNaN(a) || isNaN(b) || a < -128 || a > 127 || b < -128 || b > 127) {
+      alert('Bitte Zahlen zwischen -128 und 127 eingeben.');
+      return;
+    }
+
+    const result = a - b;
+    const resultInRange = ((result + 128) % 256) - 128;
+    
+    const binA = (a >= 0 ? a : 256 + a).toString(2).padStart(8, '0');
+    const binB = (b >= 0 ? b : 256 + b).toString(2).padStart(8, '0');
+    const binNegB = ((-b) >= 0 ? (-b) : 256 + (-b)).toString(2).padStart(8, '0');
+    const binResult = (resultInRange >= 0 ? resultInRange : 256 + resultInRange).toString(2).padStart(8, '0');
+
+    let html = '<div style="background:#fef3c7;padding:12px;border-radius:6px;border-left:4px solid #f59e0b;margin-bottom:12px;">';
+    html += '<strong>Idee:</strong> ' + a + ' - ' + b + ' = ' + a + ' + (' + (-b) + ')';
+    html += '</div>';
+
+    html += '<div style="background:#f8fafc;padding:12px;border-radius:6px;margin-bottom:12px;">';
+    html += '<div style="margin-bottom:8px;">A = ' + a + ' = <code>' + binA + '</code></div>';
+    html += '<div style="margin-bottom:8px;">B = ' + b + ' = <code>' + binB + '</code></div>';
+    html += '<div style="margin-bottom:8px;padding:10px;background:#fff;border-radius:4px;">';
+    html += '−B = ' + (-b) + ' = <code>' + binNegB + '</code> (Zweierkomplement von B)';
+    html += '</div>';
+    html += '<div style="border-top:2px solid #0f766e;margin:8px 0;padding-top:8px;font-weight:700;color:#0f766e;">';
+    html += 'A + (−B) = <code>' + binResult + '</code> = ' + resultInRange;
+    
+    if (result !== resultInRange) {
+      html += ' <span style="color:#c62828;">(Overflow! Erwartet: ' + result + ')</span>';
+    }
+    html += '</div></div>';
+
+    // Bit-by-bit Addition
+    html += '<div style="background:#fff;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">';
+    html += '<strong>Addition A + (−B) im Rechenwerk:</strong><br>';
+    html += '<pre style="margin:8px 0;line-height:1.8;">';
+    
+    let carry = 0;
+    let addSteps = '  ' + binA + '  (A)\n+ ' + binNegB + '  (−B)\n' + '-'.repeat(20) + '\n';
+    let resultBits = '';
+    
+    for (let i = 7; i >= 0; i--) {
+      const bitA = parseInt(binA[i]);
+      const bitB = parseInt(binNegB[i]);
+      const sum = bitA + bitB + carry;
+      resultBits = (sum % 2) + resultBits;
+      carry = Math.floor(sum / 2);
+    }
+    
+    addSteps += '  ' + resultBits + '  (Ergebnis)';
+    html += addSteps + '</pre></div>';
+
+    subVisualization.innerHTML = html;
+    subResult.style.display = 'block';
+  }
+
+  subBtn.addEventListener('click', visualizeSubtraction);
+})();
+</script>
+</body>
+</html>

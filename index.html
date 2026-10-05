@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Begleitmaterial zum Mentoriat Imperative Programmierung</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1000px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    ul { margin:0;padding-left:22px;columns:2;column-gap:32px; }
+    @media (max-width:700px) { ul { columns:1; } }
+    li { margin:4px 0;break-inside:avoid; }
+    a { color:#1e40af; }
+    a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin-bottom:18px; }
+    .go { margin:14px 0 0;font-size:.95rem; }
+    footer { color:var(--muted);font-size:.9rem;padding:8px 4px 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <h1>Begleitmaterial zum Mentoriat</h1>
+      <p>Kurs 01613 „Imperative Programmierung“ mit Go. Erklärseiten und Quizze, die wir in den Sitzungen des Mentoriats verwenden.</p>
+    </header>
+    <div class="hinweis">
+      Diese Seiten sind ein privates Angebot des Mentors und begleiten die Sitzungen. Verbindlich für Kurs und Klausur sind allein der Kurstext und die Moodle-Umgebung der FernUniversität in Hagen.
+    </div>
+    <section class="card">
+      <h2>Kapitel 3: Praktische Einführung in Go</h2>
+      <h3>Übersicht</h3>
+      <ul>
+        <li><a href="kap3-einfuehrung/quiz_startseite.html">Go Quiz Hub - Startseite</a></li>
+      </ul>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap3-einfuehrung/go_fehlersuche_programme.html">Go Fehlersuche - 3 Programme</a></li>
+        <li><a href="kap3-einfuehrung/go_fehlersuche_programme_einfach.html">Go Fehlersuche - Einfache Programme</a></li>
+        <li><a href="kap3-einfuehrung/go_bezeichner_arbeitsblatt.html">Go: Richtige und falsche Bezeichner</a></li>
+      </ul>
+      <h3>Quiz</h3>
+      <ul>
+        <li><a href="kap3-einfuehrung/go_ausgabe_verkettung_string_quiz.html">Ausgabe und String-Verkettung</a></li>
+        <li><a href="kap3-einfuehrung/go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Auswertungsreihenfolge und Bindungsstaerken</a></li>
+        <li><a href="kap3-einfuehrung/go_bezeichner_schluesselwoerter_quiz.html">Bezeichner und Schluesselwoerter</a></li>
+        <li><a href="kap3-einfuehrung/go_funktionen_im_programm_quiz.html">Funktionen im Go Programm</a></li>
+        <li><a href="kap3-einfuehrung/go_implizite_semikolons_quiz.html">Implizite Semikolons</a></li>
+        <li><a href="kap3-einfuehrung/go_parameter_argument_quiz.html">Parameter vs. Argument</a></li>
+        <li><a href="kap3-einfuehrung/go_scope_block_return_quiz.html">Scope, Block und return</a></li>
+        <li><a href="kap3-einfuehrung/go_verschachtelte_funktionsaufrufe_quiz.html">Verschachtelte Funktionsaufrufe</a></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Kapitel 4: Primitive Datentypen</h2>
+      <h3>Übersicht</h3>
+      <ul>
+        <li><a href="kap4-primitive-datentypen/go_k4_quiz_hub.html">Go Quiz Hub – Kapitel 4: Primitive Datentypen</a></li>
+      </ul>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap4-primitive-datentypen/go_k4_schalter_interaktiv.html">Gatter aus Schaltern: Das Rechenwerk zum Anfassen</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_strings_interaktiv.html">Go Strings - Interaktiv</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Go Typkonvertierung - Interaktiv</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html">Interaktiv: Zahlensysteme in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html">Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell: Name, Typ und Adresse in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis: Ganzzahlen und Überlauf in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_zweierkomplement_detail.html">Zweierkomplement – Binäre Codierung in Go</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf (Overflow) bei Ganzzahlen in Go</a></li>
+      </ul>
+      <h3>Quiz</h3>
+      <ul>
+        <li><a href="kap4-primitive-datentypen/go_k4_gemischt_quiz.html">Alle Typen – Gemischte Fragen</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_integer_division_modulo_quiz.html">Ganzzahl-Division und Modulo</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_integer_literale_quiz.html">Integer-Literale und Zahlensysteme</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_integer_wertebereiche_quiz.html">Integer-Typen und Wertebereiche</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_logische_operatoren_quiz.html">Logische Operatoren</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_primitive_grundlagen_quiz.html">Primitive Datentypen – Grundlagen</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_typkonvertierung_quiz.html">Typkonvertierung</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_bool_vergleich_quiz.html">bool-Typ und Vergleichsoperatoren</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_float_typen_quiz.html">float32 und float64</a></li>
+        <li><a href="kap4-primitive-datentypen/go_k4_string_typ_quiz.html">string-Typ und Unveränderbarkeit</a></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Kapitel 6: Arrays</h2>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays in Go</a></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Kapitel 7: Funktionen und Zeiger</h2>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger in Go</a></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Kapitel 8: Verbund-Datentyp</h2>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap8-verbund/S207_struct_veranschaulichung.html">S207 struct in Go - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/S212_verbund_felder_demo_veranschaulichung.html">S212 Verbund-Variablen und Feld-Variablen - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/S214_zeiger_auf_verbund_demo_veranschaulichung.html">S214 Zeiger auf Verbünde - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/S216_verbund_vergleich_demo_veranschaulichung.html">S216 Vergleich von Verbünden - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/S219_verbund_parameter_demo_veranschaulichung.html">S219 Verbund-Parameter - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/S220_hierarchische_verbunde_demo_veranschaulichung.html">S220 Hierarchische Verbünde - Veranschaulichung</a></li>
+        <li><a href="kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund-Datentyp in Go</a></li>
+      </ul>
+      <h3>Quiz</h3>
+      <ul>
+        <li><a href="kap8-verbund/S207_struct_quiz.html">S207 struct in Go - Quiz</a></li>
+        <li><a href="kap8-verbund/S212_verbund_felder_demo_quiz.html">S212 Verbund-Variablen und Feld-Variablen - Quiz</a></li>
+        <li><a href="kap8-verbund/S214_zeiger_auf_verbund_demo_quiz.html">S214 Zeiger auf Verbünde - Quiz</a></li>
+        <li><a href="kap8-verbund/S216_verbund_vergleich_demo_quiz.html">S216 Vergleich von Verbünden - Quiz</a></li>
+        <li><a href="kap8-verbund/S219_verbund_parameter_demo_quiz.html">S219 Verbund-Parameter - Quiz</a></li>
+        <li><a href="kap8-verbund/S220_hierarchische_verbunde_demo_quiz.html">S220 Hierarchische Verbünde - Quiz</a></li>
+      </ul>
+      <p class="go"><a href="https://github.com/mightbej/Fernuni-go-mentoriat/tree/main/kap8-verbund/go">Go-Programme zu diesem Abschnitt auf GitHub</a></p>
+    </section>
+    <section class="card">
+      <h2>Kapitel 9: Dynamische Datenstrukturen</h2>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html">S233-250 Dynamische Datenstrukturen - Erklärseite</a></li>
+        <li><a href="kap9-dynamische-datenstrukturen/S234_bubblesort_demo_erklaerung.html">S234 Bubblesort Demo - Erklaerung</a></li>
+        <li><a href="kap9-dynamische-datenstrukturen/S240_array_operationen_demo_erklaerung.html">S240 Array-Operationen Demo - Erklaerung</a></li>
+      </ul>
+      <p class="go"><a href="https://github.com/mightbej/Fernuni-go-mentoriat/tree/main/kap9-dynamische-datenstrukturen/go">Go-Programme zu diesem Abschnitt auf GitHub</a></p>
+    </section>
+    <section class="card">
+      <h2>Exkurse: Themen neben dem Kurstext</h2>
+      <h3>Erklärseiten</h3>
+      <ul>
+        <li><a href="exkurse/Blockchain_Analogie_Go_Mentoriat.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a></li>
+        <li><a href="exkurse/Zusatz_Demos_erklaerung.html">Zusatz Demos - Erklärseite</a></li>
+      </ul>
+      <p class="go"><a href="https://github.com/mightbej/Fernuni-go-mentoriat/tree/main/exkurse/go">Go-Programme zu diesem Abschnitt auf GitHub</a></p>
+    </section>
+    <footer>Die Seiten sind nach den Kapiteln des Kurstexts geordnet. Jede Seite läuft im Browser, eine Installation ist dafür nicht nötig.</footer>
+  </div>
+</body>
+</html>

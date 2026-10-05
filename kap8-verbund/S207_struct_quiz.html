@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S207 struct in Go - Quiz</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #101b36;
+      --text: #e5eefc;
+      --muted: #b7c5e1;
+      --accent: #667eea;
+      --accent-2: #764ba2;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warn: #ffc107;
+      --border: rgba(255,255,255,0.12);
+      --code-bg: #2d2d2d;
+      --code-text: #f8f8f2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, rgba(102,126,234,0.22), transparent 36%), linear-gradient(135deg, #08101f 0%, #101b36 55%, #09111f 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 46px 20px 28px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.16));
+      border-bottom: 1px solid var(--border);
+    }
+
+    main { max-width: 940px; margin: 0 auto; padding: 24px 20px 56px; }
+    h1, h2, h3 { margin: 0 0 12px; line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 4vw, 3rem); }
+    h2 { font-size: 1.45rem; border-left: 5px solid var(--accent); padding-left: 12px; }
+    p { color: var(--muted); line-height: 1.65; margin: 0 0 12px; }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(102,126,234,0.16);
+      color: #dce6ff;
+      margin-bottom: 12px;
+    }
+
+    .lesson-links {
+      margin: 14px auto 0;
+      max-width: 940px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      text-align: left;
+      line-height: 1.7;
+      color: #dce6ff;
+      font-size: 0.95rem;
+    }
+
+    .lesson-links a {
+      color: #e8edff;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .panel, .question, .result-box {
+      background: rgba(16,27,54,0.94);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    .panel, .question { padding: 22px; margin-top: 18px; }
+
+    .scorebar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(23,37,84,0.85);
+      border: 1px solid var(--border);
+    }
+
+    .scorebar strong { color: #fff; }
+
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 14px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.5;
+      font-family: "Courier New", monospace;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .options { display: grid; gap: 10px; margin-top: 12px; }
+
+    label.option {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    input[type="radio"], input[type="checkbox"] { margin-right: 10px; }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 10px;
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .feedback.ok { display: block; background: rgba(40,167,69,0.12); color: #c8f3d2; }
+    .feedback.bad { display: block; background: rgba(220,53,69,0.12); color: #ffd0d5; }
+
+    .result-box {
+      margin-top: 18px;
+      padding: 18px;
+      display: none;
+    }
+
+    .result-box.show { display: block; }
+
+    .mini-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .mini-card {
+      background: rgba(23,37,84,0.85);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .hint {
+      background: rgba(255,193,7,0.12);
+      border-left: 5px solid var(--warn);
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #f6e7b3;
+    }
+
+    footer { padding: 0 20px 40px; text-align: center; color: var(--muted); }
+
+    @media (max-width: 640px) {
+      main { padding-inline: 14px; }
+      header { padding-inline: 14px; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">FernUni Hagen · Kurs 01613 · Kapitel 8.2</span>
+    <h1>Quiz: struct in Go</h1>
+    <p>10 Fragen mit Sofort-Feedback zu Verbund-Typen, Literal-Schreibweisen, Nullwerten und Feldzugriff.</p>
+    <div class="lesson-links">
+      <strong>Lernpfad:</strong>
+      <a href="S207_struct_veranschaulichung.html">Veranschaulichung S207</a>
+      <a href="go/S207_struct_demo.go">Go-Demo S207_struct_demo.go</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Start</h2>
+      <div class="mini-grid">
+        <div class="mini-card"><strong>Fragen</strong><p>10 Aufgaben aus den Studienbriefabschnitten 8.2 bis 8.2.3.</p></div>
+        <div class="mini-card"><strong>Feedback</strong><p>Jede Antwort wird direkt mit fachlicher Begruendung rueckgemeldet.</p></div>
+        <div class="mini-card"><strong>Wiederholen</strong><p>Nach der Auswertung kannst du das Quiz mit einem Klick neu starten.</p></div>
+      </div>
+      <div class="hint" style="margin-top:14px;">FernUni Hagen - Kurs 01613 - Kapitel 8.2 struct, 8.2.1 Literale, 8.2.2 Ausgabe, 8.2.3 Feldzugriff</div>
+    </section>
+
+    <section class="panel">
+      <div class="scorebar">
+        <div><strong>Punkte:</strong> <span id="score">0</span> / 10</div>
+        <div><strong>Beantwortet:</strong> <span id="answered">0</span></div>
+        <div><strong>Status:</strong> <span id="status">bereit</span></div>
+      </div>
+    </section>
+
+    <form id="quizForm">
+      <section class="question">
+        <h3>1. Welcher Satz beschreibt einen Verbund in Go am treffendsten?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="1">Ein struct fasst zusammengehoerige Daten verschiedener Typen in einem Wert zusammen.</label>
+          <label class="option"><input type="radio" name="q1" value="0">Ein struct ist nur ein anderes Wort fuer ein Array.</label>
+          <label class="option"><input type="radio" name="q1" value="0">Ein struct kann nur Werte desselben Typs enthalten.</label>
+          <label class="option"><input type="radio" name="q1" value="0">Ein struct dient nur zur Ein- und Ausgabe mit fmt.</label>
+        </div>
+        <div class="feedback" id="fb1"></div>
+      </section>
+
+      <section class="question">
+        <h3>2. Welche struct-Definition entspricht der im Studienbrief ueblichen Schreibweise?</h3>
+        <div class="code-block">type person struct {
+    vorname string
+    nachname string
+    gebJahr int
+}</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="1">Zeilenweise Felddeklaration ohne Komma hinter dem Typ</label>
+          <label class="option"><input type="radio" name="q2" value="0">Nur eine von mehreren unzulaessigen Schreibweisen</label>
+          <label class="option"><input type="radio" name="q2" value="0">Eine Array-Definition mit drei Elementen</label>
+          <label class="option"><input type="radio" name="q2" value="0">Eine Funktionssignatur</label>
+        </div>
+        <div class="feedback" id="fb2"></div>
+      </section>
+
+      <section class="question">
+        <h3>3. Welche Aussagen muessen fuer Felder eines struct gelten? Mehrfachauswahl.</h3>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="q3" value="0">Jedes Feld braucht einen eindeutigen Namen.</label>
+          <label class="option"><input type="checkbox" name="q3" value="1">Jedes Feld braucht einen Typ.</label>
+          <label class="option"><input type="checkbox" name="q3" value="1">Felder gleichen Typs duerfen zusammen deklariert werden.</label>
+          <label class="option"><input type="checkbox" name="q3" value="0">Zwischen Feldnamen und Typ muss immer ein Komma stehen.</label>
+        </div>
+        <div class="feedback" id="fb3"></div>
+      </section>
+
+      <section class="question">
+        <h3>4. Was bewirkt eine andere Reihenfolge der Felder?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="0">Nichts, solange die Typen gleich bleiben.</label>
+          <label class="option"><input type="radio" name="q4" value="1">Es entsteht ein anderer struct-Datentyp.</label>
+          <label class="option"><input type="radio" name="q4" value="0">Nur die Ausgabe mit fmt aendert sich.</label>
+          <label class="option"><input type="radio" name="q4" value="0">Die Felder werden automatisch alphabetisch sortiert.</label>
+        </div>
+        <div class="feedback" id="fb4"></div>
+      </section>
+
+      <section class="question">
+        <h3>5. Wozu dient die Deklaration <code>type person struct { ... }</code>?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q5" value="0">Sie initialisiert sofort eine Variable namens person.</label>
+          <label class="option"><input type="radio" name="q5" value="1">Sie vergibt einen Typnamen, der spaeter fuer Variablen, Arrays und Funktionsparameter verwendet werden kann.</label>
+          <label class="option"><input type="radio" name="q5" value="0">Sie exportiert automatisch alle Felder.</label>
+          <label class="option"><input type="radio" name="q5" value="0">Sie erlaubt struct nur innerhalb von main.</label>
+        </div>
+        <div class="feedback" id="fb5"></div>
+      </section>
+
+      <section class="question">
+        <h3>6. Welche Aussage zu exportierten Namen ist richtig?</h3>
+        <div class="code-block">type Person struct {
+    Vorname string
+}
+
+type person struct {
+    vorname string
+}</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q6" value="1">Grossgeschriebene Typ- und Feldnamen sind exportiert, kleingeschriebene nicht.</label>
+          <label class="option"><input type="radio" name="q6" value="0">Nur Feldnamen koennen exportiert werden, Typnamen nicht.</label>
+          <label class="option"><input type="radio" name="q6" value="0">Exportregeln gelten fuer struct nicht.</label>
+          <label class="option"><input type="radio" name="q6" value="0">Kleinschreibung bedeutet, dass der Typ ungueltig ist.</label>
+        </div>
+        <div class="feedback" id="fb6"></div>
+      </section>
+
+      <section class="question">
+        <h3>7. Welcher Ausdruck beschreibt den Nullwert einer struct-Variable am besten?</h3>
+        <div class="code-block">var anna person</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q7" value="0">anna ist uninitialisiert und darf nicht gelesen werden.</label>
+          <label class="option"><input type="radio" name="q7" value="1">Alle Felder von anna erhalten die jeweiligen Nullwerte ihrer Typen.</label>
+          <label class="option"><input type="radio" name="q7" value="0">Alle string-Felder werden nil.</label>
+          <label class="option"><input type="radio" name="q7" value="0">anna enthaelt nur Zufallswerte.</label>
+        </div>
+        <div class="feedback" id="fb7"></div>
+      </section>
+
+      <section class="question">
+        <h3>8. Welche Aussage zur ersten Literal-Schreibweise ist richtig?</h3>
+        <div class="code-block">anna = person{"Anna", "Schmidt", 1966, "Hamburg", false}</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q8" value="0">Nicht alle Felder muessen angegeben werden.</label>
+          <label class="option"><input type="radio" name="q8" value="1">Alle Feldwerte muessen in der richtigen Reihenfolge angegeben werden.</label>
+          <label class="option"><input type="radio" name="q8" value="0">Die Reihenfolge ist egal, solange die Werte verschiedene Typen haben.</label>
+          <label class="option"><input type="radio" name="q8" value="0">Diese Schreibweise funktioniert nur fuer exportierte Felder.</label>
+        </div>
+        <div class="feedback" id="fb8"></div>
+      </section>
+
+      <section class="question">
+        <h3>9. Welche Vorteile hat die zweite Literal-Schreibweise mit Feldnamen? Mehrfachauswahl.</h3>
+        <div class="code-block">karl = person{
+    nachname: "Mueller",
+    vorname: "Karl",
+    ort: "Koeln",
+    gebJahr: 1955,
+}</div>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="q9" value="1">Die Feldname-Wert-Paare duerfen in beliebiger Reihenfolge stehen.</label>
+          <label class="option"><input type="checkbox" name="q9" value="1">Nicht angegebene Felder bekommen ihren Nullwert.</label>
+          <label class="option"><input type="checkbox" name="q9" value="0">Die Schreibweise verbietet mehrzeilige Notation.</label>
+          <label class="option"><input type="checkbox" name="q9" value="0">Sie macht die Feldreihenfolge in der Typdefinition bedeutungslos.</label>
+        </div>
+        <div class="feedback" id="fb9"></div>
+      </section>
+
+      <section class="question">
+        <h3>10. Was zeigt <code>anna.nachname</code> in Go an?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q10" value="0">Den Namen des struct-Typs von anna</label>
+          <label class="option"><input type="radio" name="q10" value="0">Einen Zeiger auf die komplette Variable anna</label>
+          <label class="option"><input type="radio" name="q10" value="1">Die Feld-Variable nachname innerhalb der Verbund-Variable anna</label>
+          <label class="option"><input type="radio" name="q10" value="0">Eine besondere fmt-Ausgabe fuer struct-Werte</label>
+        </div>
+        <div class="feedback" id="fb10"></div>
+      </section>
+
+      <section class="panel">
+        <button type="button" onclick="gradeQuiz()">Auswerten</button>
+        <button type="button" class="secondary" onclick="resetQuiz()">Neu starten</button>
+        <div class="result-box" id="resultBox">
+          <h2>Ergebnis</h2>
+          <p id="resultText"></p>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <footer>FernUni Hagen - Kurs 01613 - Kapitel 8.2 - Quiz</footer>
+
+  <script>
+    const questionData = [
+      { correct: [0], type: 'single', text: 'Ein struct modelliert zusammengehoerige Daten verschiedener Typen in einem gemeinsamen Wert.' },
+      { correct: [0], type: 'single', text: 'Die gezeigte Schreibweise ist die uebliche zeilenweise struct-Notation ohne Kommas hinter Typangaben.' },
+      { correct: [0,1], type: 'multi', text: 'Felder brauchen Namen und Typen; gleiche Typen duerfen zusammen notiert werden. Ein Komma zwischen Feldname und Typ gehoert nicht dazu.' },
+      { correct: [1], type: 'single', text: 'Auch die Feldreihenfolge gehoert zum Datentyp. Deshalb erzeugt eine andere Reihenfolge einen anderen struct-Typ.' },
+      { correct: [1], type: 'single', text: 'Mit type bekommt der Verbund einen Namen und kann dann bequem wiederverwendet werden.' },
+      { correct: [0], type: 'single', text: 'Grossbuchstaben exportieren, Kleinbuchstaben bleiben paketintern. Das gilt auch fuer struct-Typen und Felder.' },
+      { correct: [1], type: 'single', text: 'Der Nullwert eines struct setzt sich aus den Nullwerten seiner einzelnen Felder zusammen.' },
+      { correct: [1], type: 'single', text: 'Die positionsbasierte Literal-Form verlangt alle Felder in exakt der definierten Reihenfolge.' },
+      { correct: [0,1], type: 'multi', text: 'Feldnamen machen die Zuweisung explizit und erlauben implizite Nullwerte fuer ausgelassene Felder.' },
+      { correct: [2], type: 'single', text: 'Die Punktnotation greift auf ein konkretes Feld innerhalb der Verbund-Variable zu.' }
+    ];
+
+    function selectedValues(name, type) {
+      const options = [...document.querySelectorAll(`input[name="${name}"]`)];
+      if (type === 'multi') {
+        return options
+          .map((item, index) => (item.checked ? index : -1))
+          .filter((index) => index >= 0);
+      }
+      const selectedIndex = options.findIndex((item) => item.checked);
+      return selectedIndex >= 0 ? [selectedIndex] : [];
+    }
+
+    function sameSet(a, b) {
+      const left = [...a].sort((x, y) => x - y);
+      const right = [...b].sort((x, y) => x - y);
+      return left.length === right.length && left.every((value, index) => value === right[index]);
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      let answered = 0;
+
+      questionData.forEach((item, index) => {
+        const values = selectedValues(`q${index + 1}`, item.type);
+        const feedback = document.getElementById(`fb${index + 1}`);
+        if (values.length > 0) answered += 1;
+        const correct = sameSet(values, item.correct);
+        if (correct) score += 1;
+        feedback.className = `feedback ${correct ? 'ok' : 'bad'}`;
+        feedback.textContent = correct ? `Richtig. ${item.text}` : `Nicht ganz. ${item.text}`;
+      });
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('answered').textContent = answered;
+      document.getElementById('status').textContent = score === 10 ? 'perfekt' : score >= 7 ? 'gut' : 'weiter ueben';
+      document.getElementById('resultBox').classList.add('show');
+      document.getElementById('resultText').textContent = `Du hast ${score} von 10 Punkten erreicht. ${score >= 8 ? 'Sehr gut - die struct-Grundlagen sitzen weitgehend.' : score >= 5 ? 'Solide Basis, aber Literal-Schreibweisen und Typregeln solltest du noch einmal gezielt ansehen.' : 'Die Grundlagen zu struct solltest du noch einmal Schritt fuer Schritt wiederholen.'}`;
+    }
+
+    function resetQuiz() {
+      document.getElementById('quizForm').reset();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('answered').textContent = '0';
+      document.getElementById('status').textContent = 'bereit';
+      document.getElementById('resultBox').classList.remove('show');
+
+      questionData.forEach((_, index) => {
+        const feedback = document.getElementById(`fb${index + 1}`);
+        feedback.className = 'feedback';
+        feedback.textContent = '';
+      });
+    }
+  </script>
+</body>
+</html>

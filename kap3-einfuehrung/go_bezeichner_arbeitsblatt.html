@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go: Richtige und falsche Bezeichner</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --ok: #065f46;
+      --ok-bg: #ecfdf5;
+      --bad: #991b1b;
+      --bad-bg: #fef2f2;
+      --line: #e5e7eb;
+      --accent: #0f766e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #155e75 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: #111827;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ok-title {
+      color: var(--ok);
+    }
+
+    .bad-title {
+      color: var(--bad);
+    }
+
+    .ok-chip, .bad-chip {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .ok-chip {
+      color: var(--ok);
+      background: var(--ok-bg);
+    }
+
+    .bad-chip {
+      color: var(--bad);
+      background: var(--bad-bg);
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .print-hint {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .quiz-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .result-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      font-weight: 600;
+    }
+
+    .solution {
+      display: none;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .solution.ok {
+      color: var(--ok);
+    }
+
+    .solution.bad {
+      color: var(--bad);
+    }
+
+    .row-correct {
+      background: var(--ok-bg);
+    }
+
+    .row-wrong {
+      background: var(--bad-bg);
+    }
+
+    .option-wrap {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .hero {
+        box-shadow: none;
+      }
+
+      .container {
+        max-width: none;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Programmiersprache Go: Bezeichner</h1>
+      <p>Exemplarische Liste mit richtigen und falschen Bezeichnern zur gemeinsamen Besprechung im Unterricht.</p>
+    </section>
+
+    <section class="card">
+      <h2>Kurzregeln</h2>
+      <ul>
+        <li>Erlaubt sind Buchstaben, Ziffern und Unterstrich (<code>_</code>).</li>
+        <li>Das erste Zeichen darf keine Ziffer sein.</li>
+        <li>Schluesselwoerter (z. B. <code>func</code>, <code>var</code>, <code>package</code>) sind nicht erlaubt.</li>
+        <li>Go unterscheidet Gross- und Kleinschreibung.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Quiz: Gueltig oder ungueltig?</h2>
+      <p class="quiz-note">Lass zuerst die Studierenden abstimmen. Klicke danach auf <strong>Auswerten + Aufloesung</strong>.</p>
+      <table aria-label="Quiz zu Go-Bezeichnern">
+        <thead>
+          <tr>
+            <th>Bezeichner</th>
+            <th>Deine Wahl</th>
+            <th>Aufloesung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-correct="ok">
+            <td><code>alter2</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q1" value="ok"> gueltig</label>
+                <label><input type="radio" name="q1" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution ok">gueltig: Ziffer am Ende ist erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>2alter</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q2" value="ok"> gueltig</label>
+                <label><input type="radio" name="q2" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: darf nicht mit Ziffer beginnen.</span></td>
+          </tr>
+          <tr data-correct="ok">
+            <td><code>name_vorname</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q3" value="ok"> gueltig</label>
+                <label><input type="radio" name="q3" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution ok">gueltig: Unterstrich ist erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>mein-name</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q4" value="ok"> gueltig</label>
+                <label><input type="radio" name="q4" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Minuszeichen ist nicht erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>func</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q5" value="ok"> gueltig</label>
+                <label><input type="radio" name="q5" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Schluesselwort in Go.</span></td>
+          </tr>
+          <tr data-correct="ok">
+            <td><code>HTTPServer</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q6" value="ok"> gueltig</label>
+                <label><input type="radio" name="q6" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution ok">gueltig: Buchstabenfolge ist erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>user.name</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q7" value="ok"> gueltig</label>
+                <label><input type="radio" name="q7" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Punkt ist im Bezeichner nicht erlaubt.</span></td>
+          </tr>
+          <tr data-correct="ok">
+            <td><code>x</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q8" value="ok"> gueltig</label>
+                <label><input type="radio" name="q8" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution ok">gueltig: einzelner Buchstabe ist erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>mein name</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q9" value="ok"> gueltig</label>
+                <label><input type="radio" name="q9" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Leerzeichen sind nicht erlaubt.</span></td>
+          </tr>
+          <tr data-correct="ok">
+            <td><code>konto123</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q10" value="ok"> gueltig</label>
+                <label><input type="radio" name="q10" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution ok">gueltig: Ziffern am Ende sind erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>go!</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q11" value="ok"> gueltig</label>
+                <label><input type="radio" name="q11" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Ausrufezeichen nicht erlaubt.</span></td>
+          </tr>
+          <tr data-correct="bad">
+            <td><code>var</code></td>
+            <td>
+              <div class="option-wrap">
+                <label><input type="radio" name="q12" value="ok"> gueltig</label>
+                <label><input type="radio" name="q12" value="bad"> ungueltig</label>
+              </div>
+            </td>
+            <td><span class="solution bad">ungueltig: Schluesselwort in Go.</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="controls">
+        <button id="evaluateBtn" class="btn-primary" type="button">Auswerten + Aufloesung</button>
+        <button id="resetBtn" class="btn-secondary" type="button">Zuruecksetzen</button>
+      </div>
+      <div id="resultBox" class="result-box" aria-live="polite">Noch nicht ausgewertet.</div>
+    </section>
+
+    <section class="card">
+      <h2>Diskussion im Unterricht (formal gueltig, aber kritisch)</h2>
+      <table aria-label="Didaktische Diskussion">
+        <thead>
+          <tr>
+            <th>Bezeichner</th>
+            <th>Didaktischer Hinweis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>_</code></td><td>Blank Identifier mit Sonderbedeutung, nicht als normaler Name nutzen</td></tr>
+          <tr><td><code>int</code></td><td>formell moeglich, aber kollidiert mit eingebautem Typnamen</td></tr>
+          <tr><td><code>String</code></td><td>leicht mit Typkonzepten verwechselbar</td></tr>
+        </tbody>
+      </table>
+      <p class="print-hint">Tipp: Diese Seite laesst sich direkt aus dem Browser ausdrucken (z. B. als Arbeitsblatt).</p>
+    </section>
+
+    <p class="note">Stand: 18.04.2026</p>
+  </main>
+
+  <script>
+    (function () {
+      const evaluateBtn = document.getElementById("evaluateBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const resultBox = document.getElementById("resultBox");
+      const rows = Array.from(document.querySelectorAll("tbody tr[data-correct]"));
+
+      evaluateBtn.addEventListener("click", function () {
+        let correct = 0;
+        let answered = 0;
+
+        rows.forEach(function (row) {
+          const expected = row.getAttribute("data-correct");
+          const checked = row.querySelector("input[type='radio']:checked");
+          const solution = row.querySelector(".solution");
+
+          row.classList.remove("row-correct", "row-wrong");
+          solution.style.display = "inline";
+
+          if (!checked) {
+            return;
+          }
+
+          answered += 1;
+          if (checked.value === expected) {
+            correct += 1;
+            row.classList.add("row-correct");
+          } else {
+            row.classList.add("row-wrong");
+          }
+        });
+
+        const total = rows.length;
+        resultBox.textContent = "Richtig: " + correct + " von " + total + " | Beantwortet: " + answered + " von " + total;
+      });
+
+      resetBtn.addEventListener("click", function () {
+        rows.forEach(function (row) {
+          const radios = row.querySelectorAll("input[type='radio']");
+          const solution = row.querySelector(".solution");
+
+          radios.forEach(function (radio) {
+            radio.checked = false;
+          });
+
+          row.classList.remove("row-correct", "row-wrong");
+          solution.style.display = "none";
+        });
+
+        resultBox.textContent = "Noch nicht ausgewertet.";
+      });
+    })();
+  </script>
+</body>
+</html>

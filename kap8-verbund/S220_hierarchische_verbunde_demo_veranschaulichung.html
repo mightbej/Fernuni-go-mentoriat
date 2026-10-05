@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S220 Hierarchische Verbünde - Veranschaulichung</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0b1020 0%, #0f766e 48%, #155e75 100%); min-height: 100vh; padding: 20px; color: #e5eefc; }
+    .container { max-width: 1180px; margin: 0 auto; background: rgba(8, 15, 31, 0.96); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; box-shadow: 0 24px 70px rgba(0,0,0,0.35); }
+    .header { padding: 30px; background: linear-gradient(135deg, rgba(15,118,110,0.25), rgba(21,94,117,0.22)); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .header h1 { font-size: 2rem; margin-bottom: 8px; }
+    .subtitle { color: #ccfbf1; line-height: 1.6; max-width: 980px; }
+    .links { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
+    .links a { color: #ecfeff; font-weight: 700; text-decoration: none; margin-right: 10px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 18px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .tab { padding: 10px 12px; border-radius: 12px 12px 0 0; background: rgba(255,255,255,0.08); color: #e2e8f0; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+    .tab.active { background: linear-gradient(135deg, #0f766e, #155e75); color: white; }
+    .content { padding: 28px; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeIn .22s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    h3 { color: #99f6e4; margin-bottom: 12px; }
+    p { line-height: 1.7; margin: 10px 0; color: #dbeafe; }
+    .code { background: #111827; color: #f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; white-space: pre; line-height: 1.55; overflow-x: auto; margin: 14px 0; font-family: Consolas, monospace; }
+    .box { padding: 14px 16px; border-radius: 12px; margin: 14px 0; line-height: 1.6; }
+    .info { background: rgba(14,165,233,0.14); border-left: 4px solid #0ea5e9; color: #cffafe; }
+    .warn { background: rgba(245,158,11,0.14); border-left: 4px solid #f59e0b; color: #fde68a; }
+    .good { background: rgba(34,197,94,0.14); border-left: 4px solid #22c55e; color: #dcfce7; }
+    .table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+    .table th, .table td { text-align: left; padding: 11px 12px; border-bottom: 1px solid rgba(255,255,255,0.12); vertical-align: top; }
+    .table th { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 22px; }
+    .btn { padding: 11px 18px; border: 0; border-radius: 10px; cursor: pointer; color: white; font-weight: 700; background: linear-gradient(135deg, #0f766e, #155e75); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 5px; }
+    @media (max-width: 700px) { body { padding: 10px; } .content { padding: 18px; } .header { padding: 22px 18px; } .header h1 { font-size: 1.55rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kapitel 8.3: Hierarchische Verbünde</h1>
+      <div class="subtitle">Die Seite zeigt, wie ein Verbund andere Verbünde als Felder enthalten kann und warum ein Feld als Wert oder als Zeiger modelliert werden sollte.</div>
+      <div class="links">
+        <strong>Praxisbezug:</strong>
+        <a href="S219_verbund_parameter_demo_veranschaulichung.html">Rückblick S219</a>
+        <a href="go/S220_hierarchische_verbunde_demo.go">Go-Demo S220_hierarchische_verbunde_demo.go</a>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showStep(1)">1 Idee</div>
+      <div class="tab" onclick="showStep(2)">2 Wert-Feld</div>
+      <div class="tab" onclick="showStep(3)">3 Zeiger-Feld</div>
+      <div class="tab" onclick="showStep(4)">4 Kopie vs Referenz</div>
+      <div class="tab" onclick="showStep(5)">5 Sharing</div>
+      <div class="tab" onclick="showStep(6)">6 Zusammenfassung</div>
+    </div>
+
+    <div class="content">
+      <section class="step active" id="step-1">
+        <h3>1. Was ist ein hierarchischer Verbund?</h3>
+        <p>Ein hierarchischer Verbund enthält selbst wieder einen Verbund als Feld. So lassen sich Daten in sinnvollen Ebenen strukturieren, etwa Person und Fahrzeug oder Adresse und Firma.</p>
+        <div class="box info"><strong>Kernidee:</strong> Statt alles flach nebeneinander zu speichern, werden zusammengehörige Informationen gruppiert.</div>
+        <div class="nav"><button class="btn" disabled>Zurück</button><button class="btn" onclick="showStep(2)">Weiter</button></div>
+      </section>
+
+      <section class="step" id="step-2">
+        <h3>2. Feld als Verbund-Wert</h3>
+        <p>Im Typ <code>besitzerW</code> speichert das Feld <code>fahrzeug</code> den kompletten <code>auto</code>-Wert. Das bedeutet: Jeder Besitzer besitzt seine eigene Kopie.</p>
+        <div class="code">type besitzerW struct {
+    name string
+    ort  string
+    fahrzeug auto
+}</div>
+        <div class="box warn"><strong>Folge:</strong> Wird das Fahrzeug später geändert, dann bleibt eine frühere Kopie unverändert.</div>
+        <div class="nav"><button class="btn" onclick="showStep(1)">Zurück</button><button class="btn" onclick="showStep(3)">Weiter</button></div>
+      </section>
+
+      <section class="step" id="step-3">
+        <h3>3. Feld als Zeiger</h3>
+        <p>Im Typ <code>besitzerZ</code> speichert das Feld <code>fahrzeug</code> nur einen Zeiger auf ein <code>auto</code>. Dadurch können mehrere Besitzer auf dasselbe Fahrzeug zeigen.</p>
+        <div class="code">type besitzerZ struct {
+    name string
+    ort  string
+    fahrzeug *auto
+}</div>
+        <div class="box good"><strong>Folge:</strong> Änderungen am gemeinsamen Fahrzeug sind für alle Referenzen sichtbar.</div>
+        <div class="nav"><button class="btn" onclick="showStep(2)">Zurück</button><button class="btn" onclick="showStep(4)">Weiter</button></div>
+      </section>
+
+      <section class="step" id="step-4">
+        <h3>4. Kopie versus Referenz</h3>
+        <p>Die Demo zeigt, dass ein Wertfeld ein eigenständiges Objekt erzeugt, während ein Zeigerfeld nur auf die vorhandene Struktur verweist.</p>
+        <div class="code">altesAuto := mike.fahrzeug
+var pMikesAuto *auto = &(mike.fahrzeug)</div>
+        <table class="table">
+          <thead><tr><th>Variante</th><th>Eigenschaft</th></tr></thead>
+          <tbody>
+            <tr><td><code>altesAuto</code></td><td>Kopie des Feldwerts, unabhängig vom Original</td></tr>
+            <tr><td><code>pMikesAuto</code></td><td>Zeiger auf das Feld, sichtbar bei jeder Änderung</td></tr>
+          </tbody>
+        </table>
+        <div class="nav"><button class="btn" onclick="showStep(3)">Zurück</button><button class="btn" onclick="showStep(5)">Weiter</button></div>
+      </section>
+
+      <section class="step" id="step-5">
+        <h3>5. Warum Zeiger-Felder oft praktischer sind</h3>
+        <p>Wenn mehrere Strukturen dieselben Daten teilen sollen, ist ein Zeiger-Feld flexibler. Das spart Kopien und erlaubt gemeinsames Arbeiten am gleichen Objekt.</p>
+        <div class="box info"><strong>Praxis:</strong> Die Go-Demo zeigt ein gemeinsames Auto für mehrere Besitzer-Zeiger.</div>
+        <div class="nav"><button class="btn" onclick="showStep(4)">Zurück</button><button class="btn" onclick="showStep(6)">Weiter</button></div>
+      </section>
+
+      <section class="step" id="step-6">
+        <h3>6. Zusammenfassung</h3>
+        <table class="table">
+          <thead><tr><th>Konzept</th><th>Merksatz</th></tr></thead>
+          <tbody>
+            <tr><td>Hierarchischer Verbund</td><td>Verbund enthält wieder einen Verbund</td></tr>
+            <tr><td>Wert-Feld</td><td>eigene Kopie, keine gemeinsame Änderung</td></tr>
+            <tr><td>Zeiger-Feld</td><td>gemeinsame Referenz, Änderungen sichtbar</td></tr>
+          </tbody>
+        </table>
+        <div class="box good"><strong>Fazit:</strong> Wert für Unabhängigkeit, Zeiger für gemeinsames Objekt und effizienten Zugriff.</div>
+        <div class="nav"><button class="btn" onclick="showStep(5)">Zurück</button><button class="btn" disabled>Fertig</button></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function showStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById('step-' + stepNumber).classList.add('active');
+      document.querySelectorAll('.tab')[stepNumber - 1].classList.add('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#6d28d9;--pos:#0f766e;--pos-bg:#d1fae5;--exp:#1e40af;--exp-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ede9fe 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#6d28d9 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(109,40,217,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap;overflow-x:auto; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
+    .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    input[type="text"],select { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:130px;background:#fff; }
+    select { width:auto; }
+    input:focus,select:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label { color:var(--muted);font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    td.zahl { font-family:Consolas,monospace;white-space:nowrap; }
+    tr.betont td { background:var(--highlight);font-weight:700; }
+    tr.schlecht td { background:#fef2f2; }
+    ol { padding-left:22px; } li { margin:8px 0; }
+    details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
+
+    /* Bitmuster */
+    .bitfeld { padding:14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;text-align:center;margin:12px 0; }
+    .teile { display:flex;justify-content:center;align-items:flex-end;gap:18px;flex-wrap:wrap; }
+    .teil { display:flex;flex-direction:column;align-items:center;gap:6px; }
+    .teilname { color:var(--muted);font-size:.9rem; }
+    .bitreihe { display:flex;gap:6px; }
+    .bitzelle { display:flex;flex-direction:column;align-items:center;gap:4px;width:56px; }
+    .bitzelle .gewicht { font-family:Consolas,monospace;font-size:.92rem;color:var(--muted); }
+    .bitzelle.an .gewicht { color:#111827;font-weight:700; }
+    .bitzelle button { width:100%;padding:6px 0;font-family:Consolas,monospace;font-size:2rem;line-height:1.2;font-weight:700;background:#fff;color:#9ca3af;border:2px solid #cbd5e1; }
+    .bitzelle.an button { background:var(--pos-bg);color:#111827;border-color:var(--pos); }
+    .bitzelle button:disabled { cursor:default;opacity:1; }
+    .vorkomma { font-family:Consolas,monospace;font-size:2rem;font-weight:700;padding-bottom:8px; }
+    .expfeld { display:flex;align-items:center;gap:6px; }
+    .expwert { font-family:Consolas,monospace;font-size:2rem;font-weight:700;min-width:76px;padding:6px 10px;background:var(--exp-bg);border:2px solid var(--exp);border-radius:8px; }
+    .vzknopf { font-family:Consolas,monospace;font-size:2rem;font-weight:700;min-width:56px;padding:6px 0; }
+    .rund { min-width:42px;font-size:1.2rem;font-family:Consolas,monospace; }
+    .bitsumme { font-family:Consolas,monospace;font-size:1.15rem;margin-top:14px;line-height:1.9; }
+    .bitfuss { color:var(--muted);font-size:.85rem;margin-top:6px; }
+    .anzeige { display:grid;grid-template-columns:auto 1fr;gap:6px 16px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:1.02rem;margin:10px 0;overflow-wrap:anywhere; }
+    .anzeige .name { color:var(--muted);font-family:"Segoe UI",sans-serif;font-size:.95rem; }
+
+    /* Zahlenstrahl */
+    svg { width:100%;height:auto;display:block; }
+    .strahl { stroke:#111827;stroke-width:2; }
+    .tick { stroke:#111827;stroke-width:2; }
+    .tick.mitte { stroke:var(--pos);stroke-width:5; }
+    .ticktext { font-family:Consolas,monospace;font-size:12px;text-anchor:middle;fill:var(--muted); }
+    .ticktext.mitte { fill:var(--pos);font-weight:700;font-size:13px; }
+    .eingabe { fill:var(--rot); }
+    .eingabetext { font-family:"Segoe UI",sans-serif;font-size:13px;font-weight:700;text-anchor:middle;fill:var(--rot); }
+    .abstand { stroke:var(--exp);stroke-width:2; }
+    .abstandtext { font-family:"Segoe UI",sans-serif;font-size:12px;text-anchor:middle;fill:var(--exp); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler</h1>
+    <p>Eine Gleitkommazahl hat nur endlich viele Stellen. Zwischen zwei darstellbaren Zahlen liegt eine Lücke, und fast jede Eingabe fällt in eine solche Lücke. Kurstext Kapitel 4.4, Datentypen für Gleitkommazahlen.</p>
+  </div>
+
+  <div class="card">
+    <h2>Was die Seite zeigt</h2>
+    <p>Eine Gleitkommazahl besteht aus drei Teilen: dem Vorzeichen, der Mantisse und dem Exponenten. Die Mantisse ist eine Binärzahl, die mit 0,1 beginnt. Sie liegt also zwischen 1/2 und 1. Der Exponent sagt, mit welcher Zweierpotenz die Mantisse multipliziert wird.</p>
+    <p>Man kann dasselbe auch so lesen: Die Zahl bleibt eine Binärzahl, und der Exponent verschiebt ihr Komma. Ein Exponent von 7 schiebt das Komma um 7 Stellen nach rechts, aus 0,11001000 wird 1100100, also 100. Ein negativer Exponent schiebt es nach links. Daher der Name Gleitkommazahl.</p>
+    <p>Die Seite rechnet mit dem Modell aus dem Kurstext: Die Mantisse hat 8 Bit. Mit so wenigen Stellen sieht man die Lücken zwischen den Zahlen mit bloßem Auge. Bei <code>float64</code> sind es 52 Bit. Die Lücken sind dort viel kleiner, aber sie sind da.</p>
+    <p>Der Abstand zweier darstellbarer Zahlen hängt vom Exponenten ab. Bei kleinen Zahlen ist er klein, bei großen Zahlen groß. Eine Eingabe, die zwischen zwei darstellbaren Zahlen liegt, wird durch ihre Nachbarzahl ersetzt. Das ist der Darstellungsfehler. Beim Rechnen kann er wachsen, vor allem bei der Subtraktion zweier ähnlich großer Zahlen. Das ist der Rundungsfehler.</p>
+    <div class="hinweis">Das Modell schneidet Stellen ab, die nicht in die Mantisse passen. So rechnen auch die Beispiele im Kurstext. Go rundet bei <code>float32</code> und <code>float64</code> zur nächsten darstellbaren Zahl.</div>
+  </div>
+
+  <div class="card">
+    <h2>Die Gleitkomma-Typen in Go</h2>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Typ</th><th>Bits gesamt</th><th>Vorzeichen</th><th>Exponent</th><th>Mantisse</th><th>Genauigkeit</th></tr></thead>
+      <tbody>
+        <tr><td><code>float32</code></td><td>32</td><td>1 Bit</td><td>8 Bit</td><td>23 Bit</td><td>etwa 7 Dezimalziffern</td></tr>
+        <tr><td><code>float64</code></td><td>64</td><td>1 Bit</td><td>11 Bit</td><td>52 Bit</td><td>etwa 16 Dezimalziffern</td></tr>
+        <tr class="betont"><td>Modell auf dieser Seite</td><td></td><td>1 Bit</td><td>−12 bis 12</td><td>8 Bit</td><td>etwa 2 Dezimalziffern</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Der Kurstext empfiehlt, in der Praxis <code>float64</code> zu verwenden. Bei <code>float32</code> verstärken sich Rundungsfehler schnell.</p>
+    <p class="quelle">Nach Kurstext, Abschnitt 4.4.2.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 1: Eine Zahl speichern</h2>
+    <div class="zeile">
+      <label for="eingabe">Zahl</label>
+      <input id="eingabe" type="text" value="0,67" aria-label="Zahl, die gespeichert werden soll">
+      <button class="haupt" id="speichere" type="button">speichern</button>
+      <button type="button" data-zahl="2/3">2/3</button>
+      <button type="button" data-zahl="0,67">0,67</button>
+      <button type="button" data-zahl="0,1">0,1</button>
+      <button type="button" data-zahl="0,5">0,5</button>
+      <button type="button" data-zahl="100,3">100,3</button>
+    </div>
+    <div class="fehler" id="fehlerA"></div>
+
+    <div class="bitfeld">
+      <div class="teile">
+        <div class="teil"><span class="teilname">Vorzeichen</span><button class="vzknopf" id="vz" type="button">+</button></div>
+        <div class="teil"><span class="teilname">Mantisse mit Wertigkeit jedes Bits</span>
+          <div class="bitreihe"><span class="vorkomma">0,</span><span class="bitreihe" id="bitreihe"></span></div></div>
+        <div class="teil"><span class="teilname">Exponent</span>
+          <div class="expfeld"><button class="rund" id="expMinus" type="button">−</button><span class="expwert" id="expwert"></span><button class="rund" id="expPlus" type="button">+</button></div></div>
+      </div>
+      <div class="bitsumme" id="bitsumme"></div>
+      <div class="bitfuss">Ein Klick auf ein Bit schaltet es um. Das erste Bit der Mantisse ist immer 1.</div>
+    </div>
+
+    <svg id="strahl" viewBox="0 0 640 184" role="img" aria-label="Zahlenstrahl mit der gespeicherten Zahl und ihren Nachbarn"></svg>
+
+    <div class="anzeige">
+      <span class="name">Eingegeben</span><span id="aEin"></span>
+      <span class="name">Gespeichert</span><span id="aGesp"></span>
+      <span class="name">Darstellungsfehler</span><span id="aFehler"></span>
+      <span class="name">Abstand zur nächstgrößeren Zahl</span><span id="aAbstand"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 2: Im Modell rechnen</h2>
+    <div class="zeile">
+      <input id="ra" type="text" value="0,67" aria-label="erste Zahl">
+      <select id="rop" aria-label="Rechenart"><option value="-">−</option><option value="+">+</option><option value="*">·</option></select>
+      <input id="rb" type="text" value="2/3" aria-label="zweite Zahl">
+      <button class="haupt" id="rechne" type="button">rechnen</button>
+    </div>
+    <div class="zeile">
+      <button type="button" data-r="0,67|-|2/3">0,67 − 2/3</button>
+      <button type="button" data-r="0,67|+|2/3">0,67 + 2/3</button>
+      <button type="button" data-r="3|*|2/3">3 · 2/3</button>
+      <button type="button" data-r="100|+|0,2">100 + 0,2</button>
+    </div>
+    <div class="fehler" id="fehlerB"></div>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th></th><th>Mantisse und Exponent</th><th>Wert</th></tr></thead>
+      <tbody id="rtab"></tbody>
+    </table>
+    </div>
+    <div id="rmeldung"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ausprobieren 3: Dasselbe in Go mit float64</h2>
+    <p>Hier rechnet der Browser mit 64-Bit-Gleitkommazahlen nach IEEE 754. Das ist dieselbe Darstellung wie <code>float64</code> in Go.</p>
+    <div class="zeile">
+      <label for="ga">a</label><input id="ga" type="text" value="0.1">
+      <label for="gb">b</label><input id="gb" type="text" value="0.2">
+      <label for="gc">c</label><input id="gc" type="text" value="0.3">
+      <button class="haupt" id="grechne" type="button">vergleichen</button>
+    </div>
+    <div class="fehler" id="fehlerC"></div>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Variable</th><th>Gespeicherter Wert, auf 22 Ziffern</th></tr></thead>
+      <tbody id="gtab"></tbody>
+    </table>
+    </div>
+    <div id="gcode"></div>
+    <div class="hinweis">Schreibt man die Zahlen direkt in den Vergleich, also <code>0.1 + 0.2 == 0.3</code>, liefert Go <code>true</code>. Go rechnet konstante Ausdrücke beim Übersetzen exakt aus. Der Rundungsfehler entsteht erst, wenn die Werte in Variablen vom Typ <code>float64</code> stehen.</div>
+  </div>
+
+  <div class="card">
+    <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <ol>
+      <li>Im Modell 0,5 speichern. Wie groß ist der Darstellungsfehler?
+        <details><summary>Auflösung</summary>Null. 0,5 ist 1/2, und dafür gibt es ein Bit in der Mantisse. Brüche mit einer Zweierpotenz im Nenner sind genau darstellbar.</details></li>
+      <li>Im Modell 0,1 speichern. Welcher Wert wird gespeichert?
+        <details><summary>Auflösung</summary>0,099609375. Ein Zehntel ist im Binärsystem ein unendlicher periodischer Bruch, so wie ein Drittel im Dezimalsystem. Das gilt auch bei <code>float64</code>, der Fehler ist dort nur viel kleiner.</details></li>
+      <li>Im Modell 0,67 speichern. Dann den Exponenten von 0 auf 7 erhöhen. Was geschieht mit dem Abstand zur nächstgrößeren Zahl?
+        <details><summary>Auflösung</summary>Er wächst von 1/256 auf 0,5. Jeder Schritt im Exponenten verdoppelt den Abstand. Bei Zahlen um 100 kann das Modell also keine Zehntel mehr unterscheiden.</details></li>
+      <li>Im Modell 0,67 − 2/3 rechnen. Wie viel Prozent weicht das Ergebnis vom wahren Wert ab?
+        <details><summary>Auflösung</summary>Etwa 17 Prozent. Beide Zahlen sind für sich auf weniger als ein halbes Prozent genau gespeichert. Bei der Subtraktion heben sich die vorderen Stellen auf, und übrig bleibt fast nur der Fehler.</details></li>
+      <li>Im Modell 100 + 0,2 rechnen. Was kommt heraus?
+        <details><summary>Auflösung</summary>100. Der Abstand zweier Zahlen beträgt bei 100 schon 0,5. Der Summand 0,2 ist kleiner als dieser Abstand und verschwindet.</details></li>
+      <li>In Go: <code>a</code> ist 0.1, <code>b</code> ist 0.2. Was liefert <code>a + b == 0.3</code>?
+        <details><summary>Auflösung</summary><code>false</code>. Die Summe ist 0.30000000000000004. Gleitkommazahlen vergleicht man deshalb nie mit <code>==</code>, sondern prüft, ob ihr Abstand kleiner als ein kleines ε ist.</details></li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const SVG = 'http://www.w3.org/2000/svg';
+  const GEWICHT = ['1/2', '1/4', '1/8', '1/16', '1/32', '1/64', '1/128', '1/256'];
+  const EMIN = -12, EMAX = 12;
+
+  // Zahl mit Komma und ohne überflüssige Nullen
+  function komma(v) {
+    if (!Number.isFinite(v)) return String(v);
+    let s = String(v);                       // kürzeste eindeutige Darstellung
+    if (s.includes('e')) {                   // Exponentenschreibweise in Dezimalstellen auflösen
+      const t = s.split('e'), nach = (t[0].split('.')[1] || '').length - Number(t[1]);
+      s = v.toFixed(Math.max(0, Math.min(100, nach)));
+    }
+    return s.replace('-', '−').replace('.', ',');
+  }
+  const kurz = v => komma(parseFloat(v.toPrecision(7)));
+  const prozent = p => (p < 0.01 && p > 0 ? 'unter 0,01' : komma(parseFloat(p.toFixed(2)))) + ' %';
+
+  function lies(text) {
+    const s = text.trim().replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    let v;
+    if (s.includes('/')) { const t = s.split('/'); if (t.length !== 2) return null; v = Number(t[0]) / Number(t[1]); }
+    else v = Number(s);
+    return Number.isFinite(v) ? v : null;
+  }
+
+  // Zerlegt x in Vorzeichen, 8-Bit-Mantisse M (128..255) und Exponent e, so dass |x| ≈ M/256 · 2^e.
+  // Überzählige Stellen werden abgeschnitten, wie in den Beispielen des Kurstexts.
+  function zerlege(x) {
+    if (x === 0) return { neg: false, M: 0, e: 0 };
+    const a = Math.abs(x);
+    let e = Math.floor(Math.log2(a)) + 1, m = a / Math.pow(2, e);
+    if (m >= 1) { e++; m /= 2; }
+    if (m < 0.5) { e--; m *= 2; }
+    return { neg: x < 0, M: Math.floor(m * 256), e };
+  }
+  const wertVon = z => (z.neg ? -1 : 1) * z.M / 256 * Math.pow(2, z.e);
+  const bitsVon = M => M.toString(2).padStart(8, '0');
+  const hoch = e => '2<sup>' + String(e).replace('-', '−') + '</sup>';
+  const alsText = z => z.M === 0 ? '0' : (z.neg ? '−' : '') + '0,' + bitsVon(z.M) + ' · ' + hoch(z.e);
+  const passt = z => z.M === 0 || (z.e >= EMIN && z.e <= EMAX);
+  const neu = (name, attr, text) => { const e = document.createElementNS(SVG, name); for (const k in attr) e.setAttribute(k, attr[k]); if (text !== undefined) e.textContent = text; return e; };
+
+  // ---------- Ausprobieren 1 ----------
+  const A = { z: zerlege(0.67), eingabe: 0.67 };
+
+  function nachbar(z, richtung) {          // nächste Zahl mit größerem (+1) oder kleinerem (−1) Betrag
+    if (richtung > 0) return z.M < 255 ? { neg: z.neg, M: z.M + 1, e: z.e } : { neg: z.neg, M: 128, e: z.e + 1 };
+    return z.M > 128 ? { neg: z.neg, M: z.M - 1, e: z.e } : { neg: z.neg, M: 255, e: z.e - 1 };
+  }
+
+  // Die Mantisse als Binärzahl, das Komma um e Stellen verschoben
+  function verschoben(z) {
+    const b = bitsVon(z.M), e = z.e;
+    let vor, nach;
+    if (e <= 0) { vor = '0'; nach = '0'.repeat(-e) + b; }
+    else if (e <= 8) { vor = b.slice(0, e); nach = b.slice(e); }
+    else { vor = b + '0'.repeat(e - 8); nach = ''; }
+    nach = nach.replace(/0+$/, '');
+    return vor + (nach ? ',' + nach : '');
+  }
+  const verschiebung = e => e === 0 ? 'das Komma bleibt stehen'
+    : 'das Komma ' + Math.abs(e) + (Math.abs(e) === 1 ? ' Stelle' : ' Stellen') + ' nach ' + (e > 0 ? 'rechts' : 'links');
+
+  function zeigeA() {
+    const z = A.z, S = wertVon(z);
+    // Bits
+    const reihe = el('bitreihe'); reihe.replaceChildren();
+    const teile = [];
+    for (let j = 0; j < 8; j++) {
+      const an = (z.M >> (7 - j)) & 1;
+      if (an) teile.push(GEWICHT[j]);
+      const zelle = document.createElement('div'); zelle.className = 'bitzelle' + (an ? ' an' : '');
+      const g = document.createElement('span'); g.className = 'gewicht'; g.textContent = GEWICHT[j];
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = an;
+      if (j === 0) { b.disabled = true; b.title = 'Das erste Bit der Mantisse ist immer 1.'; }
+      else b.addEventListener('click', () => { A.z = { neg: z.neg, M: (z.M ^ (1 << (7 - j))) | 128, e: z.e }; A.eingabe = null; el('fehlerA').textContent = ''; zeigeA(); });
+      zelle.append(g, b); reihe.append(zelle);
+    }
+    el('vz').textContent = z.neg ? '−' : '+';
+    el('expwert').textContent = String(z.e).replace('-', '−');
+    if (z.M === 0) {
+      el('bitsumme').innerHTML = 'Die Null ist eine Ausnahme. Sie hat keine Mantisse, die mit 0,1 beginnt.';
+    } else {
+      el('bitsumme').innerHTML = 'Mantisse: ' + teile.join(' + ') + ' = ' + komma(z.M / 256) +
+        '<br>Wert: ' + (z.neg ? '−' : '') + komma(z.M / 256) + ' · ' + hoch(z.e) + ' = <strong>' + komma(S) + '</strong>' +
+        '<br>Als Binärzahl: 0,' + bitsVon(z.M) + ', ' + verschiebung(z.e) + ', ergibt <strong>' + (z.neg ? '−' : '') + verschoben(z) + '</strong>';
+    }
+    // Anzeige
+    const d = Math.pow(2, z.e - 8);
+    el('aGesp').textContent = komma(S);
+    el('aAbstand').textContent = z.M === 0 ? '–' : komma(d);
+    if (A.eingabe === null) { el('aEin').textContent = '– (Bits von Hand gesetzt)'; el('aFehler').textContent = '–'; }
+    else {
+      const f = Math.abs(A.eingabe - S);
+      el('aEin').textContent = kurz(A.eingabe) + (kurz(A.eingabe) !== komma(A.eingabe) ? '…' : '');
+      el('aFehler').textContent = f === 0 ? '0, die Zahl ist genau darstellbar' : kurz(f) + (A.eingabe !== 0 ? ', das sind ' + prozent(f / Math.abs(A.eingabe) * 100) + ' der Eingabe' : '');
+    }
+    zeichneStrahl();
+  }
+
+  function zeichneStrahl() {
+    const svg = el('strahl'); svg.replaceChildren();
+    const z = A.z;
+    if (z.M === 0) { svg.append(neu('text', { x: 320, y: 80, class: 'ticktext' }, 'Für die Null gibt es keinen Zahlenstrahl mit Nachbarn.')); return; }
+    const S = wertVon(z), d = Math.pow(2, z.e - 8), cx = 320, y = 92, px = 115;
+    const x = v => cx + (v - S) / d * px;
+    svg.append(neu('line', { x1: 20, y1: y, x2: 620, y2: y, class: 'strahl' }));
+    const punkte = [nachbar(nachbar(z, -1), -1), nachbar(z, -1), z, nachbar(z, 1), nachbar(nachbar(z, 1), 1)];
+    punkte.forEach((p, i) => {
+      const v = wertVon(p), mitte = i === 2, tx = x(v);
+      if (tx < 15 || tx > 625) return;
+      svg.append(neu('line', { x1: tx, y1: y - (mitte ? 16 : 9), x2: tx, y2: y + (mitte ? 16 : 9), class: 'tick' + (mitte ? ' mitte' : '') }));
+      svg.append(neu('text', { x: tx, y: y + (i % 2 === 0 ? 34 : 50), class: 'ticktext' + (mitte ? ' mitte' : '') }, kurz(v)));
+    });
+    // Abstand zur nächstgrößeren Zahl
+    const x2 = x(wertVon(nachbar(z, 1)));
+    const links = Math.min(cx, x2), rechts = Math.max(cx, x2);
+    svg.append(neu('line', { x1: links, y1: 160, x2: rechts, y2: 160, class: 'abstand' }));
+    svg.append(neu('text', { x: (links + rechts) / 2, y: 176, class: 'abstandtext' }, 'Abstand ' + kurz(d)));
+    svg.append(neu('text', { x: cx, y: y - 50, class: 'ticktext mitte' }, ''));
+    if (A.eingabe !== null) {
+      const ex = Math.max(12, Math.min(628, x(A.eingabe)));
+      svg.append(neu('polygon', { points: (ex - 7) + ',' + (y - 30) + ' ' + (ex + 7) + ',' + (y - 30) + ' ' + ex + ',' + (y - 14), class: 'eingabe' }));
+      svg.append(neu('text', { x: Math.max(70, Math.min(570, ex)), y: y - 38, class: 'eingabetext' }, A.eingabe === S ? 'eingegeben = gespeichert' : 'eingegeben'));
+    }
+    svg.append(neu('text', { x: 20, y: 16, class: 'abstandtext', 'text-anchor': 'start' }, 'Grün: gespeicherte Zahl. Striche: darstellbare Nachbarn.'));
+  }
+
+  function speichere(text) {
+    const v = lies(text);
+    if (v === null) { el('fehlerA').textContent = 'Bitte eine Zahl eingeben, zum Beispiel 0,67 oder 2/3.'; return; }
+    const z = zerlege(v);
+    if (!passt(z)) { el('fehlerA').textContent = 'Das Modell stellt nur Exponenten von −12 bis 12 dar. Diese Zahl ist zu ' + (z.e > EMAX ? 'groß (Überlauf).' : 'klein (Unterlauf).'); return; }
+    el('fehlerA').textContent = ''; el('eingabe').value = text;
+    A.z = z; A.eingabe = v; zeigeA();
+  }
+
+  el('speichere').onclick = () => speichere(el('eingabe').value);
+  el('eingabe').addEventListener('keydown', e => { if (e.key === 'Enter') speichere(el('eingabe').value); });
+  document.querySelectorAll('[data-zahl]').forEach(b => b.onclick = () => speichere(b.dataset.zahl));
+  el('vz').onclick = () => { if (A.z.M === 0) return; A.z = { neg: !A.z.neg, M: A.z.M, e: A.z.e }; if (A.eingabe !== null) A.eingabe = -A.eingabe; zeigeA(); };
+  function schiebe(r) {
+    if (A.z.M === 0) return;
+    const e = A.z.e + r;
+    if (e < EMIN || e > EMAX) { el('fehlerA').textContent = 'Das Modell stellt nur Exponenten von −12 bis 12 dar.'; return; }
+    el('fehlerA').textContent = ''; A.z = { neg: A.z.neg, M: A.z.M, e }; A.eingabe = null; zeigeA();
+  }
+  el('expPlus').onclick = () => schiebe(1);
+  el('expMinus').onclick = () => schiebe(-1);
+
+  // ---------- Ausprobieren 2 ----------
+  const OPS = { '+': (a, b) => a + b, '-': (a, b) => a - b, '*': (a, b) => a * b };
+  const OPZ = { '+': '+', '-': '−', '*': '·' };
+
+  function rechne() {
+    const a = lies(el('ra').value), b = lies(el('rb').value), op = el('rop').value;
+    el('rmeldung').innerHTML = '';
+    if (a === null || b === null) { el('fehlerB').textContent = 'Bitte zwei Zahlen eingeben, zum Beispiel 0,67 und 2/3.'; return; }
+    const za = zerlege(a), zb = zerlege(b);
+    const va = wertVon(za), vb = wertVon(zb);
+    const zr = zerlege(OPS[op](va, vb)), vr = wertVon(zr), wahr = OPS[op](a, b);
+    if (!passt(za) || !passt(zb) || !passt(zr)) { el('fehlerB').textContent = 'Das Modell stellt nur Exponenten von −12 bis 12 dar. Eine der Zahlen liegt außerhalb.'; return; }
+    el('fehlerB').textContent = '';
+    const f = Math.abs(vr - wahr), p = wahr !== 0 ? f / Math.abs(wahr) * 100 : (f === 0 ? 0 : Infinity);
+    const zeile = (name, mant, w, kl) => '<tr' + (kl ? ' class="' + kl + '"' : '') + '><td>' + name + '</td><td class="zahl">' + mant + '</td><td class="zahl">' + w + '</td></tr>';
+    const fa = a !== 0 ? prozent(Math.abs(va - a) / Math.abs(a) * 100) : '0 %', fb = b !== 0 ? prozent(Math.abs(vb - b) / Math.abs(b) * 100) : '0 %';
+    el('rtab').innerHTML =
+      zeile('Erste Zahl, gespeichert', alsText(za), komma(va) + ' (Fehler ' + fa + ')') +
+      zeile('Zweite Zahl, gespeichert', alsText(zb), komma(vb) + ' (Fehler ' + fb + ')') +
+      zeile('Ergebnis im Modell', alsText(zr), komma(vr), 'betont') +
+      zeile('Wahres Ergebnis', '', kurz(wahr) + (kurz(wahr) !== komma(wahr) ? '…' : '')) +
+      zeile('Abweichung', '', f === 0 ? '0' : kurz(f) + (Number.isFinite(p) ? ', das sind ' + prozent(p) + ' des wahren Ergebnisses' : ''), p >= 1 ? 'schlecht' : '');
+    let m = '';
+    if (op === '+' && vb !== 0 && va !== 0 && (vr === va || vr === vb)) m = 'Der kleinere Summand ist verschwunden. Er ist kleiner als der Abstand zweier darstellbarer Zahlen bei diesem Exponenten.';
+    else if (p >= 5) m = 'Die beiden Zahlen waren genauer gespeichert als das Ergebnis. Der Fehler ist beim Rechnen gewachsen.';
+    else if (f === 0) m = 'Das Ergebnis ist genau.';
+    if (m) el('rmeldung').innerHTML = '<div class="hinweis">' + m + '</div>';
+  }
+  el('rechne').onclick = rechne;
+  ['ra', 'rb'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') rechne(); }));
+  el('rop').onchange = rechne;
+  document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { const t = b.dataset.r.split('|'); el('ra').value = t[0]; el('rop').value = t[1]; el('rb').value = t[2]; rechne(); });
+
+  // ---------- Ausprobieren 3 ----------
+  // Ausgabe wie fmt.Println bei float64: kürzeste eindeutige Darstellung, Exponentenschreibweise unter 1e-4 und ab 1e21
+  function goAusgabe(x) {
+    if (x === 0) return '0';
+    const t = x.toExponential().split('e'), exp = Number(t[1]);
+    if (exp < -4 || exp >= 21) return t[0] + 'e' + (exp < 0 ? '-' : '+') + String(Math.abs(exp)).padStart(2, '0');
+    return String(x);
+  }
+  const genau = x => x.toPrecision(22);
+
+  function vergleiche() {
+    const a = lies(el('ga').value), b = lies(el('gb').value), c = lies(el('gc').value);
+    if (a === null || b === null || c === null) { el('fehlerC').textContent = 'Bitte drei Zahlen eingeben.'; return; }
+    if ([a, b, c].some(v => Math.abs(v) > 1e15)) { el('fehlerC').textContent = 'Bitte Zahlen mit einem Betrag bis 10^15 eingeben.'; return; }
+    el('fehlerC').textContent = '';
+    const s = a + b;
+    const z = (n, v, kl) => '<tr' + (kl ? ' class="' + kl + '"' : '') + '><td><code>' + n + '</code></td><td class="zahl">' + genau(v) + '</td></tr>';
+    el('gtab').innerHTML = z('a', a) + z('b', b) + z('a + b', s, 'betont') + z('c', c);
+    const txt = v => goAusgabe(v);
+    const zeilen = [
+      ['var a, b, c float64 = ' + txt(a) + ', ' + txt(b) + ', ' + txt(c), ''],
+      ['fmt.Println(a + b)', txt(s)],
+      ['fmt.Println(a + b == c)', String(s === c)],
+      ['fmt.Println(math.Abs(a+b-c) < 1e-9)', String(Math.abs(s - c) < 1e-9)]
+    ];
+    const breite = Math.max(...zeilen.slice(1).map(q => q[0].length));
+    el('gcode').innerHTML = '<pre>' + zeilen.map(q => q[1] === '' ? q[0] : q[0].padEnd(breite) + ' // ' + q[1]).join('\n').replace(/</g, '&lt;') + '</pre>';
+  }
+  el('grechne').onclick = vergleiche;
+  ['ga', 'gb', 'gc'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') vergleiche(); }));
+
+  zeigeA(); rechne(); vergleiche();
+})();
+</script>
+</body>
+</html>

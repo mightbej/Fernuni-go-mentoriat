@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Quiz Hub – Kapitel 4: Primitive Datentypen</title>
+  <style>
+    :root {
+      --bg: #f4f7fb; --card: #ffffff; --text: #1f2937; --muted: #4b5563;
+      --line: #e5e7eb; --accent: #0f766e; --accent-2: #1d4ed8;
+      --shadow: rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% -10%, #d7f3e8 0%, transparent 42%),
+        radial-gradient(circle at 95% 0%, #dbeafe 0%, transparent 40%),
+        linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+      line-height: 1.5;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .hero {
+      border-radius: 16px; padding: 24px; color: #fff;
+      background: linear-gradient(135deg, #0f766e 0%, #1d4ed8 100%);
+      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.22);
+      margin-bottom: 18px;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 1.9rem; }
+    .hero p { margin: 0; opacity: 0.95; max-width: 72ch; }
+    .toolbar {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 12px; display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 16px; box-shadow: 0 6px 16px var(--shadow);
+    }
+    .toolbar a {
+      text-decoration: none; border-radius: 8px; padding: 8px 12px;
+      font-weight: 600; font-size: 0.95rem; border: 1px solid var(--line);
+      color: var(--text); background: #fff;
+    }
+    .toolbar a:hover { border-color: var(--accent-2); color: var(--accent-2); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px; box-shadow: 0 6px 16px var(--shadow);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card h2 { margin: 0; font-size: 1.12rem; }
+    .meta { margin: 0; font-size: 0.92rem; color: var(--muted); }
+    .actions { margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      text-decoration: none; border-radius: 8px; padding: 8px 12px;
+      font-weight: 600; font-size: 0.92rem; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { filter: brightness(0.95); }
+    .note { margin-top: 16px; color: var(--muted); font-size: 0.92rem; }
+    .badge {
+      display: inline-block; font-size: .75rem; font-weight: 700;
+      padding: 1px 8px; border-radius: 999px; margin-left: 6px;
+      vertical-align: middle;
+    }
+    .badge-int    { background: #dbeafe; color: #1e40af; }
+    .badge-float  { background: #fef9c3; color: #854d0e; }
+    .badge-bool   { background: #fce7f3; color: #9d174d; }
+    .badge-string { background: #dcfce7; color: #166534; }
+    .badge-conv   { background: #ede9fe; color: #5b21b6; }
+    .badge-mix    { background: #f3f4f6; color: #374151; }
+    @media (max-width: 920px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.55rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Go Quiz Hub – Kapitel 4</h1>
+      <p>Primitive Datentypen in Go: int, float64, bool, string und Typkonvertierung. Empfohlener Ablauf: Thema auswählen, gemeinsam abstimmen, dann Auflösung einblenden.</p>
+    </section>
+
+    <nav class="toolbar" aria-label="Schnellnavigation">
+      <a href="go_k4_primitive_grundlagen_quiz.html">Grundlagen</a>
+      <a href="go_k4_integer_wertebereiche_quiz.html">Integer-Wertebereiche</a>
+      <a href="go_k4_integer_division_modulo_quiz.html">Division &amp; Modulo</a>
+      <a href="go_k4_integer_literale_quiz.html">Literale &amp; Zahlensysteme</a>
+      <a href="go_k4_float_typen_quiz.html">float32 / float64</a>
+      <a href="go_k4_bool_vergleich_quiz.html">bool &amp; Vergleiche</a>
+      <a href="go_k4_logische_operatoren_quiz.html">Logische Operatoren</a>
+      <a href="go_k4_string_typ_quiz.html">string-Typ</a>
+      <a href="go_k4_typkonvertierung_quiz.html">Typkonvertierung</a>
+      <a href="go_k4_gemischt_quiz.html">Gemischt</a>
+    </nav>
+
+    <section class="grid">
+
+      <article class="card">
+        <h2>1) Primitive Datentypen – Grundlagen</h2>
+        <p class="meta">Was sind primitive Typen? Go-Typsystem, Nullwerte, statische Typisierung.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_primitive_grundlagen_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>2) Integer-Typen und Wertebereiche <span class="badge badge-int">int</span></h2>
+        <p class="meta">int8 bis int64, uint, byte, rune – wer passt was?</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_integer_wertebereiche_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>3) Ganzzahl-Division und Modulo <span class="badge badge-int">int</span></h2>
+        <p class="meta">int/int schneidet ab. Was liefert %? Typische Stolperfallen.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_integer_division_modulo_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>4) Integer-Literale und Zahlensysteme <span class="badge badge-int">int</span></h2>
+        <p class="meta">Dezimal, hexadezimal (0x), binär (0b), oktal (0), Unterstriche.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_integer_literale_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>5) Floating-Point: float32 vs. float64 <span class="badge badge-float">float</span></h2>
+        <p class="meta">Genauigkeit, Standardtyp, implizite Anpassung konstanter Ausdrücke.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_float_typen_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>6) bool-Typ und Vergleichsoperatoren <span class="badge badge-bool">bool</span></h2>
+        <p class="meta">true/false, ==, !=, &lt;, &gt;, &lt;=, &gt;= – auch für Strings.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_bool_vergleich_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>7) Logische Operatoren <span class="badge badge-bool">bool</span></h2>
+        <p class="meta">&amp;&amp;, ||, ! – Wahrheitstabellen und kombinierte Ausdrücke.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_logische_operatoren_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>8) string-Typ und Unveränderbarkeit <span class="badge badge-string">string</span></h2>
+        <p class="meta">Immutability, Konkatenation mit +, s[0] liefert byte.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_string_typ_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>9) Typkonvertierung int ↔ float64 <span class="badge badge-conv">Konv.</span></h2>
+        <p class="meta">float64(a), int(f), Abschneiden, typischer Denkfehler float64(a/b).</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_typkonvertierung_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>10) Alle Typen – Gemischte Wiederholung <span class="badge badge-mix">Mix</span></h2>
+        <p class="meta">12 Fragen quer durch alle Themen des Kapitels als Abschlussrunde.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="go_k4_gemischt_quiz.html">Quiz starten</a>
+        </div>
+      </article>
+
+    </section>
+
+    <p class="note">Stand: 25.04.2026 | Kapitel 4 – Primitive Datentypen in Go. Tipp: Diese Seite als Startpunkt offen lassen und jedes Quiz in einem neuen Tab öffnen.</p>
+  </main>
+</body>
+</html>

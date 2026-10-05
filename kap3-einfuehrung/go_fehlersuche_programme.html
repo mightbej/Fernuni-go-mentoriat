@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Fehlersuche - 3 Programme</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --accent: #b45309;
+      --accent-2: #1d4ed8;
+      --shadow: rgba(15, 23, 42, 0.08);
+      --code-bg: #0f172a;
+      --code-text: #e5eefb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% -10%, #fde68a 0%, transparent 34%),
+        radial-gradient(circle at 100% 0%, #dbeafe 0%, transparent 36%),
+        linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+      line-height: 1.55;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #b45309 0%, #d97706 45%, #1d4ed8 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 14px 30px rgba(180, 83, 9, 0.24);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 75ch;
+      opacity: 0.96;
+    }
+
+    .intro {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    .intro h2,
+    .program h2 {
+      margin-top: 0;
+      font-size: 1.18rem;
+    }
+
+    .program {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    .meta {
+      color: var(--muted);
+      margin: 6px 0 12px;
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-copy {
+      background: var(--accent-2);
+      color: #fff;
+    }
+
+    .btn-copy:hover {
+      filter: brightness(0.96);
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 12px;
+      padding: 16px;
+      overflow: auto;
+      border: 1px solid #1e293b;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    details {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fafafa;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .footnote {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 18px;
+    }
+
+    .copy-status {
+      font-size: 0.92rem;
+      color: var(--muted);
+      min-height: 1.2em;
+    }
+
+    @media (max-width: 760px) {
+      .hero h1 {
+        font-size: 1.55rem;
+      }
+
+      pre {
+        font-size: 0.89rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Go Fehlersuche: 3 Beispielprogramme</h1>
+      <p>Diese Seite enthaelt drei absichtlich fehlerhafte Go-Programme. Die Fehler sind fachlich an eure Unterrichtseinheit angepasst und sollen sich gut fuer gemeinsames Suchen, Begruenden und anschliessendes Testen im Go-Editor eignen.</p>
+    </section>
+
+    <section class="intro">
+      <h2>Didaktische Idee</h2>
+      <ul>
+        <li>Zuerst nur das Programm ansehen und Vermutungen sammeln.</li>
+        <li>Dann das Programm in den Go-Editor kopieren und Compiler-Meldungen besprechen.</li>
+        <li>Danach die inhaltlichen oder logischen Fehler suchen, die nicht sofort vom Compiler gefunden werden.</li>
+        <li>Die Lehrkraft-Hinweise sind absichtlich eingeklappt.</li>
+      </ul>
+    </section>
+
+    <section class="program">
+      <h2>Programm 1: Rechteck und Quader</h2>
+      <p class="meta">Fokus: Funktionsaufrufe, Scope, Rueckgabewert, verschachtelte Berechnung.</p>
+      <div class="actions">
+        <button class="btn-copy" data-copy-target="code1">Code kopieren</button>
+        <span class="copy-status" id="status-code1"></span>
+      </div>
+      <pre id="code1">package main
+
+import "fmt"
+
+func rechteck(seiteA int, seiteB int) int {
+    var flaeche int = seiteA * seiteB
+    return flaeche
+}
+
+func quader(grundflaeche int, hoehe int) int {
+    var volumen int = grundflaeche * hoehe
+    return grundflaeche
+}
+
+func main() {
+    var a int = 3
+    var b int = 4
+    var c int = 5
+
+    fmt.Println("Flaeche:", rechteck(a b))
+    fmt.Println("Volumen:", quader(flaeche, c))
+}</pre>
+      <details>
+        <summary>Lehrkraft-Hinweise</summary>
+        <ul>
+          <li>Ein Syntaxfehler steckt im Funktionsaufruf von rechteck.</li>
+          <li>Ein Bezeichner wird ausserhalb seines Scope verwendet.</li>
+          <li>Die Funktion quader liefert zwar einen Wert zurueck, aber nicht den gemeinten.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="program">
+      <h2>Programm 2: Temperaturausgabe</h2>
+      <p class="meta">Fokus: Ausgabe, String-Verkettung, Bindungsstaerken, Datentypen.</p>
+      <div class="actions">
+        <button class="btn-copy" data-copy-target="code2">Code kopieren</button>
+        <span class="copy-status" id="status-code2"></span>
+      </div>
+      <pre id="code2">package main
+
+import "fmt"
+
+func main() {
+    var tempC float64 = 22
+    var tempText string = "Temperatur in"
+    var tempF float64 = (32 + tempC) * 1.8
+    var tempK float64 = tempC - 273.15
+
+    fmt.Println()
+    fmt.Println(tempText + " C:" + tempC)
+    fmt.Println(tempText + " F:", tempF)
+    fmt.Println(tempText + " K:", tempK)
+}</pre>
+      <details>
+        <summary>Lehrkraft-Hinweise</summary>
+        <ul>
+          <li>Ein Fehler betrifft die Verknuepfung von String und Zahl.</li>
+          <li>Mindestens zwei Rechenfehler sind inhaltlich, nicht rein syntaktisch.</li>
+          <li>Die Ausgabe wirkt auf den ersten Blick fast plausibel, ist aber fachlich nicht sauber.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="program">
+      <h2>Programm 3: if, return und call-by-value</h2>
+      <p class="meta">Fokus: implizite Semikolons, Blocksyntax, Parameter und Werteuebergabe.</p>
+      <div class="actions">
+        <button class="btn-copy" data-copy-target="code3">Code kopieren</button>
+        <span class="copy-status" id="status-code3"></span>
+      </div>
+      <pre id="code3">package main
+
+import "fmt"
+
+func addiereEins(zahl int) int {
+    zahl = zahl + 1
+    return zahl
+}
+
+func main() {
+    var x int = 7
+
+    if x &gt; 0
+    {
+        fmt.Println("x ist positiv")
+    }
+
+    addiereEins(x)
+    fmt.Println("Wert von x:", x)
+}</pre>
+      <details>
+        <summary>Lehrkraft-Hinweise</summary>
+        <ul>
+          <li>Ein Fehler haengt mit der Stellung der geschweiften Klammer nach if zusammen.</li>
+          <li>Das Programm zeigt nach einer Korrektur noch immer ein interessantes inhaltliches Verhalten.</li>
+          <li>Sehr gut geeignet fuer die Frage: Warum ist x am Ende nicht 8?</li>
+        </ul>
+      </details>
+    </section>
+
+    <p class="footnote">Stand: 18.04.2026. Wenn du spaeter willst, kann ich daraus noch eine zweite Variante machen: einmal mit nur Compilerfehlern und einmal mit eher logischen Fehlern.</p>
+  </main>
+
+  <script>
+    (function () {
+      const buttons = Array.from(document.querySelectorAll(".btn-copy"));
+
+      buttons.forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const targetId = button.getAttribute("data-copy-target");
+          const code = document.getElementById(targetId).innerText;
+          const status = document.getElementById("status-" + targetId);
+
+          try {
+            await navigator.clipboard.writeText(code);
+            status.textContent = "Code wurde in die Zwischenablage kopiert.";
+          } catch (error) {
+            status.textContent = "Kopieren im Browser nicht moeglich. Bitte Text manuell markieren.";
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

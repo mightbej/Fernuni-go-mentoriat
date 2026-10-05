@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Quiz: Ausgabe und String-Verkettung</title>
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --accent: #0f766e;
+      --ok: #065f46;
+      --ok-bg: #ecfdf5;
+      --bad: #991b1b;
+      --bad-bg: #fef2f2;
+      --hint-bg: #eff6ff;
+      --hint: #1d4ed8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 18% -12%, #d9fbe8 0%, #f7f9fc 46%, #f8fafc 100%);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 45%, #155e75 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.96;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .chip {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .chip-hint {
+      background: var(--hint-bg);
+      color: var(--hint);
+    }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    pre {
+      margin: 0;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      white-space: pre-wrap;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .option-wrap {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .solution {
+      display: none;
+      font-weight: 600;
+    }
+
+    .solution.ok { color: var(--ok); }
+    .solution.bad { color: var(--bad); }
+
+    .row-correct { background: var(--ok-bg); }
+    .row-wrong { background: var(--bad-bg); }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .result-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f9fafb;
+      font-weight: 600;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      th:nth-child(3), td:nth-child(3) {
+        min-width: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Quiz: Ausgabe und Verkettung von String in Go</h1>
+      <p>Zuerst gemeinsam raten, dann mit einem Klick die Aufloesung einblenden.</p>
+    </section>
+
+    <section class="card">
+      <h2>Merkhilfe aus dem Skript</h2>
+      <ul>
+        <li><code>fmt.Println()</code> ohne Argumente erzeugt nur einen Zeilenumbruch.</li>
+        <li>Bei <code>string + string</code> wird ein neuer String durch Verkettung gebildet.</li>
+        <li><code>fmt.Println(a, b)</code> trennt Argumente in der Ausgabe mit Leerzeichen.</li>
+        <li>Der urspruengliche String in einer Variablen wird durch Verkettung nicht geaendert.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip chip-hint">Beispiel: tempText + " C:"</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Quizrunde (richtig/falsch)</h2>
+      <p class="note">Hinweis: Erst abstimmen lassen, dann auf Auswerten + Aufloesung klicken.</p>
+      <table aria-label="Quiz Ausgabe und String-Verkettung">
+        <thead>
+          <tr>
+            <th>Aussage</th>
+            <th>Deine Wahl</th>
+            <th>Aufloesung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-correct="richtig">
+            <td><code>fmt.Println()</code> ohne Argumente erzeugt eine Leerzeile.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q1" value="richtig"> richtig</label>
+              <label><input type="radio" name="q1" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: nur Zeilenumbruch.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td>Der Ausdruck <code>tempText + " C:"</code> ist eine String-Verkettung.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q2" value="richtig"> richtig</label>
+              <label><input type="radio" name="q2" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: links und rechts sind String.</span></td>
+          </tr>
+          <tr data-correct="falsch">
+            <td>String-Verkettung mit <code>+</code> aendert den linken Operanden direkt.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q3" value="richtig"> richtig</label>
+              <label><input type="radio" name="q3" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution bad">Falsch: es entsteht ein neuer String.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td>Bei <code>fmt.Println(tempText+" C:", tempC)</code> wird zwischen den zwei Argumenten ein Leerzeichen ausgegeben.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q4" value="richtig"> richtig</label>
+              <label><input type="radio" name="q4" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: Println trennt Argumente mit Leerzeichen.</span></td>
+          </tr>
+          <tr data-correct="falsch">
+            <td><code>fmt.Println("A" + 5)</code> ist gueltig, weil <code>+</code> alles verketten kann.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q5" value="richtig"> richtig</label>
+              <label><input type="radio" name="q5" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution bad">Falsch: String und Zahl koennen nicht direkt mit + verknuepft werden.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td>Wenn <code>tempText</code> den Wert <code>"Temperatur in "</code> hat, dann ergibt <code>tempText + " F:"</code> den String <code>"Temperatur in  F:"</code> mit dem vorhandenen Leerzeichen aus <code>tempText</code>.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q6" value="richtig"> richtig</label>
+              <label><input type="radio" name="q6" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: Verkettung uebernimmt vorhandene Zeichen exakt.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td>Die drei Zeilen fuer C/F/K koennen alle denselben Basisstring <code>tempText</code> verwenden.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q7" value="richtig"> richtig</label>
+              <label><input type="radio" name="q7" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: je Zeile wird nur ein anderer Suffix angehaengt.</span></td>
+          </tr>
+          <tr data-correct="falsch">
+            <td><code>fmt.Println("Temperatur in C:", 22)</code> gibt ohne Leerzeichen aus.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q8" value="richtig"> richtig</label>
+              <label><input type="radio" name="q8" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution bad">Falsch: es erscheint ein Leerzeichen zwischen den Argumenten.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td><code>fmt.Println("A", "B")</code> und <code>fmt.Println("A"+"B")</code> erzeugen unterschiedliche Ausgabe.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q9" value="richtig"> richtig</label>
+              <label><input type="radio" name="q9" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: erstes ergibt A B, zweites AB.</span></td>
+          </tr>
+          <tr data-correct="richtig">
+            <td>Der Datentyp <code>string</code> legt fest, dass in der Variablen Zeichenketten gespeichert werden.</td>
+            <td><div class="option-wrap">
+              <label><input type="radio" name="q10" value="richtig"> richtig</label>
+              <label><input type="radio" name="q10" value="falsch"> falsch</label>
+            </div></td>
+            <td><span class="solution ok">Richtig: Typbindung bestimmt erlaubte Werte.</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="controls">
+        <button id="evaluateBtn" class="btn-primary" type="button">Auswerten + Aufloesung</button>
+        <button id="resetBtn" class="btn-secondary" type="button">Zuruecksetzen</button>
+      </div>
+      <div id="resultBox" class="result-box" aria-live="polite">Noch nicht ausgewertet.</div>
+    </section>
+
+    <section class="card">
+      <h2>Mini-Code zum Durchsprechen</h2>
+      <pre>var tempText string = "Temperatur in "
+var tempC float64 = 22
+fmt.Println()
+fmt.Println(tempText+" C:", tempC)</pre>
+      <p class="note">Didaktischer Fokus: Leerzeile durch leeres Println und danach Ausgabe mit verkettetem Label plus Zahlenwert.</p>
+    </section>
+
+    <p class="note">Stand: 18.04.2026</p>
+  </main>
+
+  <script>
+    (function () {
+      const evaluateBtn = document.getElementById("evaluateBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const resultBox = document.getElementById("resultBox");
+      const rows = Array.from(document.querySelectorAll("tbody tr[data-correct]"));
+
+      evaluateBtn.addEventListener("click", function () {
+        let correct = 0;
+        let answered = 0;
+
+        rows.forEach(function (row) {
+          const expected = row.getAttribute("data-correct");
+          const checked = row.querySelector("input[type='radio']:checked");
+          const solution = row.querySelector(".solution");
+
+          row.classList.remove("row-correct", "row-wrong");
+          solution.style.display = "inline";
+
+          if (!checked) {
+            return;
+          }
+
+          answered += 1;
+          if (checked.value === expected) {
+            correct += 1;
+            row.classList.add("row-correct");
+          } else {
+            row.classList.add("row-wrong");
+          }
+        });
+
+        const total = rows.length;
+        resultBox.textContent = "Richtig: " + correct + " von " + total + " | Beantwortet: " + answered + " von " + total;
+      });
+
+      resetBtn.addEventListener("click", function () {
+        rows.forEach(function (row) {
+          const radios = row.querySelectorAll("input[type='radio']");
+          const solution = row.querySelector(".solution");
+
+          radios.forEach(function (radio) {
+            radio.checked = false;
+          });
+
+          row.classList.remove("row-correct", "row-wrong");
+          solution.style.display = "none";
+        });
+
+        resultBox.textContent = "Noch nicht ausgewertet.";
+      });
+    })();
+  </script>
+</body>
+</html>

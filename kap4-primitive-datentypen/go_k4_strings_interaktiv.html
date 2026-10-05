@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Strings - Interaktiv</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: #e5e7eb;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #d1d5db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+        }
+
+        .interactive-area {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px 10px 0;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .result.success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .result.info {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .result.warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+        .code-block .function { color: #61afef; }
+        .code-block .number { color: #d19a66; }
+
+        .byte-visualizer {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .byte-box {
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .byte-box.ascii {
+            background: #10b981;
+        }
+
+        .byte-box.unicode {
+            background: #f59e0b;
+        }
+
+        .char-display {
+            margin-top: 10px;
+            font-size: 2em;
+            text-align: center;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .escape-table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .escape-item {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .escape-item code {
+            font-size: 1.1em;
+            color: #667eea;
+        }
+
+        .quiz-container {
+            margin-top: 30px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-question h4 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #f3f4f6;
+            border-color: #667eea;
+        }
+
+        .quiz-option.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .quiz-option.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .string-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .comparison-operator {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .slice-visualizer {
+            margin: 20px 0;
+        }
+
+        .slice-chars {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+        }
+
+        .slice-char {
+            padding: 15px 10px;
+            background: #e5e7eb;
+            border: 2px solid #9ca3af;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            min-width: 50px;
+            position: relative;
+        }
+
+        .slice-char.highlighted {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .slice-char.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .slice-index {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            color: #6b7280;
+            font-weight: bold;
+        }
+
+        .utf8-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .utf8-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .utf8-card .char {
+            font-size: 3em;
+            margin: 10px 0;
+        }
+
+        .utf8-card .info {
+            font-family: 'Courier New', monospace;
+            color: #4b5563;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🔤 Go String-Datentyp</h1>
+            <p>Interaktive Beispiele zu String-Literalen, Unicode, UTF-8 und String-Operationen</p>
+        </div>
+
+        <div class="content">
+            <!-- String-Literale -->
+            <div class="section">
+                <h2>1️⃣ String-Literale</h2>
+                
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('literals', 0)">Interpretierte Strings</button>
+                    <button class="tab-button" onclick="switchTab('literals', 1)">Rohe Strings</button>
+                    <button class="tab-button" onclick="switchTab('literals', 2)">Escape-Sequenzen</button>
+                    <button class="tab-button" onclick="switchTab('literals', 3)">Unicode</button>
+                </div>
+
+                <div id="literals-0" class="tab-content active">
+                    <div class="card">
+                        <h3>Interpretierte String-Literale ("...")</h3>
+                        <p>String-Literale werden mit <strong>doppelten Anführungszeichen</strong> begrenzt und unterstützen Escape-Sequenzen.</p>
+                        
+                        <div class="code-block">
+<span class="keyword">var</span> text <span class="keyword">string</span> = <span class="string">"grüne Wiese"</span>
+<span class="keyword">var</span> pfad <span class="keyword">string</span> = <span class="string">"C:\\Program Files\\Go"</span>
+<span class="keyword">var</span> zitat <span class="keyword">string</span> = <span class="string">"Er sagte \"Hallo\""</span>
+<span class="keyword">var</span> zeilen <span class="keyword">string</span> = <span class="string">"Zeile 1\nZeile 2"</span></div>
+
+                        <div class="highlight-box">
+                            <strong>⚠️ Wichtig:</strong> Backslash <code>\</code> und Anführungszeichen <code>"</code> müssen escaped werden: <code>\\</code> und <code>\"</code>
+                        </div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Interaktiver String-Parser</h4>
+                        <div class="input-group">
+                            <label>String-Literal eingeben (mit Escape-Sequenzen):</label>
+                            <input type="text" id="interpretedInput" placeholder='"Hallo\nWelt"' value='"Hallo\nWelt"'>
+                        </div>
+                        <button onclick="parseInterpretedString()">String interpretieren</button>
+                        <div id="interpretedResult" class="result"></div>
+                    </div>
+                </div>
+
+                <div id="literals-1" class="tab-content">
+                    <div class="card">
+                        <h3>Rohe String-Literale (`...`)</h3>
+                        <p>Mit <strong>Backquotes</strong> (`) begrenzt. Escape-Sequenzen werden NICHT interpretiert!</p>
+                        
+                        <div class="code-block">
+<span class="keyword">var</span> pfad <span class="keyword">string</span> = <span class="string">`C:\Program Files\Go`</span>
+<span class="keyword">var</span> zitat <span class="keyword">string</span> = <span class="string">`Er sagte "Hallo"`</span>
+<span class="keyword">var</span> html <span class="keyword">string</span> = <span class="string">`&lt;html&gt;
+  &lt;body&gt;
+    &lt;p&gt;Text&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;`</span></div>
+
+                        <div class="highlight-box">
+                            <strong>✅ Vorteile:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Keine Escape-Sequenzen nötig</li>
+                                <li>Perfekt für Windows-Pfade</li>
+                                <li>Kann Zeilenumbrüche enthalten</li>
+                                <li>Ideal für mehrzeiligen Code (HTML, JSON, etc.)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Vergleich: Interpretiert vs. Roh</h4>
+                        <div class="input-group">
+                            <label>Text eingeben (z.B. Windows-Pfad):</label>
+                            <input type="text" id="rawCompareInput" placeholder='C:\Users\info\Documents' value='C:\Users\info\Documents'>
+                        </div>
+                        <button onclick="compareRawVsInterpreted()">Vergleichen</button>
+                        <div id="rawCompareResult" class="result"></div>
+                    </div>
+                </div>
+
+                <div id="literals-2" class="tab-content">
+                    <div class="card">
+                        <h3>Escape-Sequenzen</h3>
+                        <p>Spezielle Zeichenfolgen mit besonderer Bedeutung in interpretierten String-Literalen:</p>
+                        
+                        <div class="escape-table">
+                            <div class="escape-item">
+                                <code>\n</code> – Zeilenumbruch (newline)
+                            </div>
+                            <div class="escape-item">
+                                <code>\t</code> – Tabulator (horizontal tab)
+                            </div>
+                            <div class="escape-item">
+                                <code>\\</code> – Backslash
+                            </div>
+                            <div class="escape-item">
+                                <code>\"</code> – Doppelte Anführungszeichen
+                            </div>
+                            <div class="escape-item">
+                                <code>\r</code> – Wagenrücklauf (carriage return)
+                            </div>
+                            <div class="escape-item">
+                                <code>\a</code> – Alarm/Bell
+                            </div>
+                            <div class="escape-item">
+                                <code>\b</code> – Backspace
+                            </div>
+                            <div class="escape-item">
+                                <code>\f</code> – Form Feed
+                            </div>
+                            <div class="escape-item">
+                                <code>\v</code> – Vertikaler Tab
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+<span class="keyword">var</span> text = <span class="string">"Der Backslash \\ ist ein \"besonderes\" Zeichen."</span>
+fmt.Println(text)
+<span class="comment">// Ausgabe: Der Backslash \ ist ein "besonderes" Zeichen.</span></div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Escape-Sequenz Tester</h4>
+                        <div class="input-group">
+                            <label>String mit Escape-Sequenzen:</label>
+                            <textarea id="escapeInput" rows="3">"Zeile 1\nZeile 2\tTabulator\nBackslash: \\ Quote: \""</textarea>
+                        </div>
+                        <button onclick="testEscapeSequences()">Escape-Sequenzen anwenden</button>
+                        <div id="escapeResult" class="result"></div>
+                    </div>
+                </div>
+
+                <div id="literals-3" class="tab-content">
+                    <div class="card">
+                        <h3>Unicode-Zeichen</h3>
+                        <p>Go unterstützt den vollständigen Unicode-Zeichensatz mit über 120.000 Zeichen!</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Unicode code points (Runes):</strong><br>
+                            <code>\uXXXX</code> – 4-stellige Hexadezimalzahl (für BMP-Zeichen)<br>
+                            <code>\UXXXXXXXX</code> – 8-stellige Hexadezimalzahl (für alle Unicode-Zeichen)
+                        </div>
+
+                        <div class="code-block">
+<span class="keyword">var</span> unendlich = <span class="string">"∞"</span>              <span class="comment">// direkte Eingabe</span>
+<span class="keyword">var</span> unendlich2 = <span class="string">"\u221e"</span>       <span class="comment">// Unicode \u221e</span>
+<span class="keyword">var</span> smiley = <span class="string">"😀"</span>               <span class="comment">// direkte Eingabe</span>
+<span class="keyword">var</span> smiley2 = <span class="string">"\U0001f600"</span>    <span class="comment">// Unicode \U0001f600</span></div>
+
+                        <div class="utf8-info">
+                            <div class="utf8-card">
+                                <div class="char">∞</div>
+                                <div class="info">Unendlich</div>
+                                <div class="info">\u221e</div>
+                                <div class="info">3 Bytes (UTF-8)</div>
+                            </div>
+                            <div class="utf8-card">
+                                <div class="char">😀</div>
+                                <div class="info">Smiley</div>
+                                <div class="info">\U0001f600</div>
+                                <div class="info">4 Bytes (UTF-8)</div>
+                            </div>
+                            <div class="utf8-card">
+                                <div class="char">€</div>
+                                <div class="info">Euro</div>
+                                <div class="info">\u20ac</div>
+                                <div class="info">3 Bytes (UTF-8)</div>
+                            </div>
+                            <div class="utf8-card">
+                                <div class="char">ü</div>
+                                <div class="info">U-Umlaut</div>
+                                <div class="info">\u00fc</div>
+                                <div class="info">2 Bytes (UTF-8)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Unicode-Explorer</h4>
+                        <div class="input-group">
+                            <label>Unicode Code Point (Hexadezimal, z.B. 221e oder 1f600):</label>
+                            <input type="text" id="unicodeInput" placeholder="221e">
+                        </div>
+                        <button onclick="exploreUnicode()">Zeichen anzeigen</button>
+                        <div id="unicodeResult" class="result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- String-Datentyp und UTF-8 -->
+            <div class="section">
+                <h2>2️⃣ String-Datentyp und UTF-8</h2>
+                
+                <div class="card">
+                    <h3>Strings als Byte-Sequenzen</h3>
+                    <p>Ein String in Go ist eine <strong>Sequenz von Bytes</strong>, die Unicode-Zeichen im <strong>UTF-8 Format</strong> codiert.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>UTF-8 Encoding:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>ASCII-Zeichen (A-Z, 0-9, ...):</strong> 1 Byte</li>
+                            <li><strong>Umlaute (ä, ö, ü, ß):</strong> 2 Bytes</li>
+                            <li><strong>Viele Symbole (∞, €, ...):</strong> 3 Bytes</li>
+                            <li><strong>Emojis (😀, 🎉, ...):</strong> 4 Bytes</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-block">
+<span class="keyword">var</span> a = <span class="string">"anrufen"</span>     <span class="comment">// len(a) == 7 (7 ASCII-Zeichen, je 1 Byte)</span>
+<span class="keyword">var</span> e = <span class="string">"Tür"</span>         <span class="comment">// len(e) == 4 (T=1, ü=2, r=1 Byte)</span>
+<span class="keyword">var</span> f = <span class="string">"Maßstab"</span>     <span class="comment">// len(f) == 8 (M=1, a=1, ß=2, s=1, t=1, a=1, b=1)</span>
+<span class="keyword">var</span> g = <span class="string">"\u221e"</span>      <span class="comment">// len(g) == 3 (∞ benötigt 3 Bytes)</span>
+<span class="keyword">var</span> h = <span class="string">"\U0001f600"</span> <span class="comment">// len(h) == 4 (😀 benötigt 4 Bytes)</span></div>
+
+                    <div class="highlight-box">
+                        <strong>⚠️ Wichtig:</strong> <code>len(s)</code> liefert die <strong>Anzahl der Bytes</strong>, nicht die Anzahl der Zeichen!
+                        Die Anzahl der Zeichen liefert <code>utf8.RuneCountInString(s)</code>.<br>
+                        Die Bytes eines Strings mit Index zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.
+                    </div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>String-Längen-Analyzer</h4>
+                    <div class="input-group">
+                        <label>String eingeben:</label>
+                        <input type="text" id="lengthInput" placeholder="Tür" value="Tür">
+                    </div>
+                    <button onclick="analyzeStringLength()">Länge analysieren</button>
+                    <div id="lengthResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Zugriff auf String-Teile -->
+            <div class="section">
+                <h2>3️⃣ Zugriff auf String-Teile</h2>
+                
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('access', 0)">Index-Ausdruck</button>
+                    <button class="tab-button" onclick="switchTab('access', 1)">Slice-Ausdruck</button>
+                </div>
+
+                <div id="access-0" class="tab-content active">
+                    <div class="card">
+                        <h3>Index-Ausdruck s[idx]</h3>
+                        <p>Zugriff auf ein einzelnes <strong>Byte</strong> (nicht Zeichen!) an Position <code>idx</code>.</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Wichtig:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Index beginnt bei <strong>0</strong></li>
+                                <li>Letzter Index ist <code>len(s)-1</code></li>
+                                <li>Rückgabewert ist vom Typ <code>byte</code> (= <code>uint8</code>)</li>
+                                <li>Bei Unicode-Zeichen &gt; 1 Byte: Index zeigt auf einzelnes Byte!</li>
+                            </ul>
+                        </div>
+
+                        <div class="code-block">
+<span class="keyword">var</span> s = <span class="string">"Abo"</span>
+fmt.Println(s[<span class="number">0</span>], s[<span class="number">1</span>], s[<span class="number">2</span>])  <span class="comment">// Ausgabe: 65 98 111</span>
+fmt.Printf(<span class="string">"%#x %#x %#x"</span>, s[<span class="number">0</span>], s[<span class="number">1</span>], s[<span class="number">2</span>]) <span class="comment">// 0x41 0x62 0x6f</span>
+<span class="comment">// A=65=0x41, b=98=0x62, o=111=0x6f</span></div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Byte-Index Explorer</h4>
+                        <div class="input-group">
+                            <label>String eingeben:</label>
+                            <input type="text" id="indexString" placeholder="Abo" value="Abo">
+                        </div>
+                        <div class="input-group">
+                            <label>Index (0 bis len-1):</label>
+                            <input type="number" id="indexValue" min="0" value="0">
+                        </div>
+                        <button onclick="exploreByteIndex()">Byte abrufen</button>
+                        <div id="indexResult" class="result"></div>
+                    </div>
+                </div>
+
+                <div id="access-1" class="tab-content">
+                    <div class="card">
+                        <h3>Slice-Ausdruck s[low:high]</h3>
+                        <p>Zugriff auf einen <strong>Substring</strong> (Teilstring) von Index <code>low</code> bis <code>high-1</code>.</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Syntax:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><code>s[low:high]</code> – von <code>low</code> bis <code>high-1</code></li>
+                                <li><code>s[:high]</code> – von Anfang bis <code>high-1</code> (= <code>s[0:high]</code>)</li>
+                                <li><code>s[low:]</code> – von <code>low</code> bis Ende (= <code>s[low:len(s)]</code>)</li>
+                                <li><strong>Länge:</strong> <code>high - low</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="code-block">
+<span class="string">"anrufen"</span>[<span class="number">2</span>:<span class="number">5</span>]      <span class="comment">// "ruf" (Länge 5-2=3)</span>
+<span class="string">"anrufen"</span>[:<span class="number">2</span>]         <span class="comment">// "an" (entspricht [0:2])</span>
+<span class="string">"anrufen"</span>[<span class="number">2</span>:]         <span class="comment">// "rufen" (entspricht [2:7])</span>
+<span class="string">"Hallo Welt"</span>[<span class="number">0</span>:<span class="number">5</span>]    <span class="comment">// "Hallo"</span>
+<span class="string">"Hallo Welt"</span>[<span class="number">6</span>:<span class="number">10</span>]   <span class="comment">// "Welt"</span>
+<span class="string">"Tür"</span>[<span class="number">1</span>:<span class="number">3</span>]          <span class="comment">// "ü" (2 Bytes!)</span></div>
+                    </div>
+
+                    <div class="interactive-area">
+                        <h4>Slice-Visualizer</h4>
+                        <div class="input-group">
+                            <label>String eingeben:</label>
+                            <input type="text" id="sliceString" placeholder="anrufen" value="anrufen">
+                        </div>
+                        <div class="input-group">
+                            <label>Unterer Index (low):</label>
+                            <input type="number" id="sliceLow" min="0" value="2">
+                        </div>
+                        <div class="input-group">
+                            <label>Oberer Index (high):</label>
+                            <input type="number" id="sliceHigh" min="0" value="5">
+                        </div>
+                        <button onclick="visualizeSlice()">Slice erstellen</button>
+                        <div id="sliceResult" class="result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- String-Operationen -->
+            <div class="section">
+                <h2>4️⃣ String-Operationen</h2>
+                
+                <div class="card">
+                    <h3>Konkatenation mit +</h3>
+                    <p>Strings können mit dem <code>+</code> Operator verkettet werden.</p>
+                    
+                    <div class="code-block">
+<span class="keyword">var</span> a = <span class="string">"hoch"</span> + <span class="string">"springen"</span>  <span class="comment">// "hochspringen"</span>
+<span class="keyword">var</span> b = <span class="string">"Sommer"</span>
+<span class="keyword">var</span> c = b + <span class="string">"zeit"</span>        <span class="comment">// "Sommerzeit"</span></div>
+
+                    <div class="highlight-box">
+                        <strong>⚠️ Wichtig:</strong> Keine implizite Typumwandlung!<br>
+                        <code>"Zahl: " + 42</code> ist NICHT erlaubt!<br>
+                        Stattdessen: <code>"Zahl: " + strconv.Itoa(42)</code>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Unveränderbarkeit (Immutability)</h3>
+                    <p>Strings sind <strong>unveränderbar</strong> – einzelne Zeichen können nicht modifiziert werden!</p>
+                    
+                    <div class="code-block">
+<span class="keyword">var</span> s = <span class="string">"Ohr"</span>
+s[<span class="number">0</span>] = <span class="number">85</span>          <span class="comment">// ❌ FEHLER! Strings sind unveränderbar</span>
+s = <span class="string">"Uhr"</span>          <span class="comment">// ✅ OK: Neuen String zuweisen</span></div>
+
+                    <div class="code-block">
+<span class="keyword">var</span> a = <span class="string">"Sommer"</span>
+<span class="keyword">var</span> b = a          <span class="comment">// b enthält "Sommer"</span>
+a = a + <span class="string">"zeit"</span>     <span class="comment">// a enthält jetzt "Sommerzeit"</span>
+fmt.Println(b)     <span class="comment">// Ausgabe: "Sommer" (unverändert!)</span></div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>String-Konkatenation</h4>
+                    <div class="input-group">
+                        <label>String 1:</label>
+                        <input type="text" id="concat1" placeholder="hoch" value="hoch">
+                    </div>
+                    <div class="input-group">
+                        <label>String 2:</label>
+                        <input type="text" id="concat2" placeholder="springen" value="springen">
+                    </div>
+                    <button onclick="concatenateStrings()">Verketten</button>
+                    <div id="concatResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="section">
+                <h2>🎯 Quiz: String-Datentyp</h2>
+                
+                <div class="quiz-container">
+                    <!-- Frage 1 -->
+                    <div class="quiz-question">
+                        <h4>Frage 1: Was ist die Ausgabe von <code>len("Tür")</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(1, 0)">
+                                <strong>A)</strong> 3
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 1)">
+                                <strong>B)</strong> 4
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 2)">
+                                <strong>C)</strong> 5
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 3)">
+                                <strong>D)</strong> Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-1" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 2 -->
+                    <div class="quiz-question">
+                        <h4>Frage 2: Welches String-Literal repräsentiert NICHT den String <code>C:\Go\bin</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(2, 0)">
+                                <strong>A)</strong> <code>"C:\\Go\\bin"</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 1)">
+                                <strong>B)</strong> <code>`C:\Go\bin`</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 2)">
+                                <strong>C)</strong> <code>"C:\Go\bin"</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 3)">
+                                <strong>D)</strong> Alle repräsentieren diesen String
+                            </div>
+                        </div>
+                        <div id="feedback-2" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 3 -->
+                    <div class="quiz-question">
+                        <h4>Frage 3: Was ist der Wert von <code>"anrufen"[2:5]</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(3, 0)">
+                                <strong>A)</strong> "nru"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 1)">
+                                <strong>B)</strong> "ruf"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 2)">
+                                <strong>C)</strong> "rufe"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 3)">
+                                <strong>D)</strong> "uf"
+                            </div>
+                        </div>
+                        <div id="feedback-3" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 4 -->
+                    <div class="quiz-question">
+                        <h4>Frage 4: Welcher Code ist NICHT erlaubt?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(4, 0)">
+                                <strong>A)</strong> <code>var s = "Hallo" + "Welt"</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 1)">
+                                <strong>B)</strong> <code>var s = "test"; s = "neu"</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 2)">
+                                <strong>C)</strong> <code>var s = "test"; s[0] = 'T'</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 3)">
+                                <strong>D)</strong> <code>var x = "Abo"[1]</code>
+                            </div>
+                        </div>
+                        <div id="feedback-4" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 5 -->
+                    <div class="quiz-question">
+                        <h4>Frage 5: Was ist die Ausgabe von <code>len("\u221e")</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(5, 0)">
+                                <strong>A)</strong> 1
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 1)">
+                                <strong>B)</strong> 2
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 2)">
+                                <strong>C)</strong> 3
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 3)">
+                                <strong>D)</strong> 6
+                            </div>
+                        </div>
+                        <div id="feedback-5" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 6 -->
+                    <div class="quiz-question">
+                        <h4>Frage 6: Welches Literal erlaubt Zeilenumbrüche direkt im Quellcode?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(6, 0)">
+                                <strong>A)</strong> Interpretierte String-Literale <code>"..."</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 1)">
+                                <strong>B)</strong> Rohe String-Literale <code>`...`</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 2)">
+                                <strong>C)</strong> Beide
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 3)">
+                                <strong>D)</strong> Keines
+                            </div>
+                        </div>
+                        <div id="feedback-6" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 7 -->
+                    <div class="quiz-question">
+                        <h4>Frage 7: Was ist der Typ des Ausdrucks <code>s[0]</code> wenn <code>s</code> ein String ist?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(7, 0)">
+                                <strong>A)</strong> string
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 1)">
+                                <strong>B)</strong> byte (= uint8)
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 2)">
+                                <strong>C)</strong> rune (= int32)
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 3)">
+                                <strong>D)</strong> char
+                            </div>
+                        </div>
+                        <div id="feedback-7" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 8 -->
+                    <div class="quiz-question">
+                        <h4>Frage 8: Was ist der Wert von <code>"Hallo"[:3]</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(8, 0)">
+                                <strong>A)</strong> "Hal"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 1)">
+                                <strong>B)</strong> "Hall"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 2)">
+                                <strong>C)</strong> "llo"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 3)">
+                                <strong>D)</strong> "Hallo"
+                            </div>
+                        </div>
+                        <div id="feedback-8" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 9 -->
+                    <div class="quiz-question">
+                        <h4>Frage 9: Wie viele Bytes benötigt das Zeichen 😀 (U+1F600) in UTF-8?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(9, 0)">
+                                <strong>A)</strong> 1 Byte
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 1)">
+                                <strong>B)</strong> 2 Bytes
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 2)">
+                                <strong>C)</strong> 3 Bytes
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 3)">
+                                <strong>D)</strong> 4 Bytes
+                            </div>
+                        </div>
+                        <div id="feedback-9" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 10 -->
+                    <div class="quiz-question">
+                        <h4>Frage 10: Was bewirkt folgende Code-Sequenz?<br><code>var a = "Sommer"; var b = a; a = a + "zeit"</code></h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(10, 0)">
+                                <strong>A)</strong> a="Sommerzeit", b="Sommerzeit"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 1)">
+                                <strong>B)</strong> a="Sommerzeit", b="Sommer"
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 2)">
+                                <strong>C)</strong> Compiler-Fehler
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 3)">
+                                <strong>D)</strong> Laufzeitfehler
+                            </div>
+                        </div>
+                        <div id="feedback-10" class="quiz-feedback"></div>
+                    </div>
+
+                    <button onclick="submitQuiz()" style="background: #10b981; font-size: 1.2em; padding: 15px 40px;">
+                        Quiz auswerten
+                    </button>
+                    
+                    <div id="quiz-score" class="quiz-score"></div>
+                </div>
+            </div>
+
+            <a href="go_k4_quiz_hub.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
+        </div>
+    </div>
+
+    <script>
+        // Tab-Verwaltung
+        function switchTab(group, index) {
+            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}']`);
+            const contents = document.querySelectorAll(`[id^="${group}-"]`);
+            
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            contents.forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        // Hilfsfunktionen: Go rechnet bei Strings mit Bytes, nicht mit Zeichen
+        function htmlSicher(t) {
+            return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Wandelt eine Byte-Folge in Text um. Bytes, die kein gültiges Zeichen bilden, erscheinen als \xNN (wie beim Verb %q).
+        function bytesAlsText(bytes) {
+            const dec = new TextDecoder('utf-8', { fatal: true });
+            let out = '', i = 0;
+            while (i < bytes.length) {
+                const b = bytes[i];
+                const n = b < 0x80 ? 1 : (b >= 0xc2 && b < 0xe0) ? 2 : (b >= 0xe0 && b < 0xf0) ? 3 : (b >= 0xf0 && b < 0xf5) ? 4 : 0;
+                let ch = null;
+                if (n > 0 && i + n <= bytes.length) {
+                    try { ch = dec.decode(bytes.slice(i, i + n)); } catch (e) { ch = null; }
+                }
+                if (ch === null) { out += '\\x' + b.toString(16).padStart(2, '0'); i++; }
+                else { out += ch; i += n; }
+            }
+            return out;
+        }
+
+        // Liefert zu jedem Byte das Zeichen, zu dem es gehört
+        function zeichenJeByte(str) {
+            const liste = [];
+            for (const ch of str) {
+                const n = new TextEncoder().encode(ch).length;
+                for (let k = 0; k < n; k++) liste.push({ ch, teil: k + 1, von: n });
+            }
+            return liste;
+        }
+
+        // String-Parser
+        function parseInterpretedString() {
+            const input = document.getElementById('interpretedInput').value;
+            const result = document.getElementById('interpretedResult');
+            
+            try {
+                // Entferne äußere Anführungszeichen
+                let str = input.trim();
+                if (!str.startsWith('"') || !str.endsWith('"')) {
+                    throw new Error('String muss mit " beginnen und enden');
+                }
+                str = str.slice(1, -1);
+                
+                // Interpretiere Escape-Sequenzen in einem Durchgang von links nach rechts
+                const einfach = { n: '\n', t: '\t', r: '\r', '\\': '\\', '"': '"' };
+                const interpreted = str.replace(/\\(u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|.)/g, (ganz, s) => {
+                    if (s[0] === 'u' || s[0] === 'U') return s.length > 1 ? String.fromCodePoint(parseInt(s.slice(1), 16)) : ganz;
+                    return s in einfach ? einfach[s] : ganz;
+                });
+                const byteLaenge = new TextEncoder().encode(interpreted).length;
+                const zeichenAnzahl = Array.from(interpreted).length;
+
+                result.className = 'result show info';
+                result.innerHTML = `
+                    <strong>Interpretierter String:</strong><br>
+                    <div style="margin-top: 10px; padding: 15px; background: white; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace;">${htmlSicher(interpreted).replace(/\n/g, '↵\n')}</div>
+                    <div style="margin-top: 10px;"><strong>len(s):</strong> ${byteLaenge} Bytes, das sind ${zeichenAnzahl} Zeichen</div>
+                `;
+            } catch (e) {
+                result.className = 'result show warning';
+                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
+            }
+        }
+
+        // Vergleich roh vs. interpretiert
+        function compareRawVsInterpreted() {
+            const input = document.getElementById('rawCompareInput').value;
+            const result = document.getElementById('rawCompareResult');
+            
+            const interpreted = '"' + input.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+            const raw = '`' + input + '`';
+            
+            result.className = 'result show info';
+            result.innerHTML = `
+                <strong>Interpretiertes Literal:</strong><br>
+                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${interpreted}</code>
+                <strong>Rohes Literal:</strong><br>
+                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${raw}</code>
+                <div style="margin-top: 15px; padding: 10px; background: #d1fae5; border-radius: 6px;">
+                    ✅ Das rohe Literal ist deutlich einfacher zu lesen!
+                </div>
+            `;
+        }
+
+        // Escape-Sequenzen testen
+        function testEscapeSequences() {
+            const input = document.getElementById('escapeInput').value.trim();
+            const result = document.getElementById('escapeResult');
+            
+            try {
+                let str = input;
+                if (str.startsWith('"') && str.endsWith('"')) {
+                    str = str.slice(1, -1);
+                }
+                
+                const interpreted = str
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\t/g, '\t')
+                    .replace(/\\r/g, '\r')
+                    .replace(/\\\\/g, '\\')
+                    .replace(/\\"/g, '"')
+                    .replace(/\\a/g, '🔔')
+                    .replace(/\\b/g, '⌫')
+                    .replace(/\\f/g, '⏏')
+                    .replace(/\\v/g, '⇳');
+                
+                result.className = 'result show info';
+                result.innerHTML = `
+                    <strong>Ergebnis:</strong><br>
+                    <div style="margin-top: 10px; padding: 15px; background: white; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace;">${interpreted.replace(/\n/g, '↵\n').replace(/\t/g, '→   ')}</div>
+                `;
+            } catch (e) {
+                result.className = 'result show warning';
+                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
+            }
+        }
+
+        // Unicode-Explorer
+        function exploreUnicode() {
+            const input = document.getElementById('unicodeInput').value.trim();
+            const result = document.getElementById('unicodeResult');
+            
+            try {
+                const codePoint = parseInt(input, 16);
+                if (isNaN(codePoint)) {
+                    throw new Error('Ungültige Hexadezimalzahl');
+                }
+                
+                const char = String.fromCodePoint(codePoint);
+                const bytes = new TextEncoder().encode(char);
+                const literal = input.length <= 4 ? `\\u${input.padStart(4, '0')}` : `\\U${input.padStart(8, '0')}`;
+                
+                result.className = 'result show success';
+                result.innerHTML = `
+                    <div class="char-display">${char}</div>
+                    <div style="margin-top: 15px;">
+                        <strong>Unicode Code Point:</strong> U+${input.toUpperCase()}<br>
+                        <strong>Go-Literal:</strong> <code>${literal}</code><br>
+                        <strong>UTF-8 Bytes:</strong> ${bytes.length} (${Array.from(bytes).map(b => '0x' + b.toString(16).padStart(2, '0')).join(', ')})<br>
+                        <strong>Dezimal:</strong> ${codePoint}
+                    </div>
+                `;
+            } catch (e) {
+                result.className = 'result show warning';
+                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
+            }
+        }
+
+        // String-Längen-Analyzer
+        function analyzeStringLength() {
+            const input = document.getElementById('lengthInput').value;
+            const result = document.getElementById('lengthResult');
+            
+            const bytes = new TextEncoder().encode(input);
+            const charCount = Array.from(input).length;
+            
+            let byteViz = '<div class="byte-visualizer">';
+            for (let i = 0; i < bytes.length; i++) {
+                const isAscii = bytes[i] < 128;
+                byteViz += `<div class="byte-box ${isAscii ? 'ascii' : 'unicode'}">0x${bytes[i].toString(16).padStart(2, '0')}</div>`;
+            }
+            byteViz += '</div>';
+            
+            result.className = 'result show info';
+            result.innerHTML = `
+                <strong>String:</strong> "${input}"<br>
+                <strong>len(s):</strong> ${bytes.length} Bytes<br>
+                <strong>Zeichen:</strong> ${charCount}<br>
+                <div style="margin-top: 15px;">
+                    <strong>Byte-Darstellung:</strong>
+                    ${byteViz}
+                    <div style="margin-top: 10px; font-size: 0.9em;">
+                        <span style="color: #10b981;">■</span> Grün = ASCII (1 Byte)
+                        <span style="color: #f59e0b; margin-left: 15px;">■</span> Orange = Unicode (2+ Bytes)
+                    </div>
+                </div>
+            `;
+        }
+
+        // Byte-Index Explorer
+        function exploreByteIndex() {
+            const str = document.getElementById('indexString').value;
+            const idx = parseInt(document.getElementById('indexValue').value);
+            const result = document.getElementById('indexResult');
+            
+            // Go zählt Bytes: gültig sind die Indizes 0 bis len(s)-1
+            const bytes = new TextEncoder().encode(str);
+            if (isNaN(idx) || idx < 0 || idx >= bytes.length) {
+                result.className = 'result show warning';
+                result.innerHTML = `<strong>Fehler:</strong> Index ${idx} außerhalb des gültigen Bereichs (0 bis ${bytes.length - 1}, denn len(s) ist ${bytes.length})`;
+                return;
+            }
+
+            const byteValue = bytes[idx];
+            const z = zeichenJeByte(str)[idx];
+            const gehoertZu = z.von === 1
+                ? `das Zeichen '${htmlSicher(z.ch)}'`
+                : `Byte ${z.teil} von ${z.von} des Zeichens '${htmlSicher(z.ch)}'`;
+
+            result.className = 'result show info';
+            result.innerHTML = `
+                <strong>String:</strong> "${htmlSicher(str)}" (len(s) = ${bytes.length})<br>
+                <strong>Index:</strong> ${idx}<br>
+                <strong>Byte-Wert:</strong> ${byteValue} (dezimal) = 0x${byteValue.toString(16).toUpperCase()} (hex)<br>
+                <strong>Dieses Byte ist:</strong> ${gehoertZu}<br>
+                <div style="margin-top: 15px; padding: 10px; background: #fef3c7; border-radius: 6px;">
+                    ⚠️ <code>s[${idx}]</code> hat den Typ <code>byte</code> (nicht <code>string</code>)
+                </div>
+            `;
+        }
+
+        // Slice-Visualizer
+        function visualizeSlice() {
+            const str = document.getElementById('sliceString').value;
+            const low = parseInt(document.getElementById('sliceLow').value);
+            const high = parseInt(document.getElementById('sliceHigh').value);
+            const result = document.getElementById('sliceResult');
+            
+            // Go schneidet nach Bytes: es muss gelten 0 <= low <= high <= len(s)
+            const bytes = new TextEncoder().encode(str);
+            if (isNaN(low) || isNaN(high) || low < 0 || high > bytes.length || low > high) {
+                result.className = 'result show warning';
+                result.innerHTML = `<strong>Fehler:</strong> Ungültige Indizes (low=${low}, high=${high}, len=${bytes.length})`;
+                return;
+            }
+
+            const substring = htmlSicher(bytesAlsText(bytes.slice(low, high)));
+
+            // Ein Kästchen je Byte: ASCII-Bytes zeigen ihr Zeichen, die übrigen ihren Hex-Wert
+            let charViz = '<div class="slice-visualizer"><div class="slice-chars">';
+            const zuordnung = zeichenJeByte(str);
+            for (let i = 0; i < bytes.length; i++) {
+                const selected = i >= low && i < high;
+                const z = zuordnung[i];
+                const inhalt = z.von === 1 ? htmlSicher(z.ch === ' ' ? '␣' : z.ch) : `${htmlSicher(z.ch)}<br><small>${bytes[i].toString(16)}</small>`;
+                charViz += `
+                    <div class="slice-char ${selected ? 'selected' : ''}">
+                        <div class="slice-index">${i}</div>
+                        ${inhalt}
+                    </div>
+                `;
+            }
+            charViz += '</div></div>';
+
+            result.className = 'result show success';
+            result.innerHTML = `
+                <strong>Slice-Ausdruck:</strong> <code>s[${low}:${high}]</code><br>
+                <strong>Ergebnis:</strong> "${substring}"<br>
+                <strong>Länge:</strong> ${high - low} ${high - low === 1 ? 'Byte' : 'Bytes'}<br>
+                ${charViz}
+                <div style="margin-top: 15px; padding: 10px; background: #dbeafe; border-radius: 6px; font-size: 0.95em;">
+                    💡 Der Slice enthält Bytes von Index <strong>${low}</strong> bis <strong>${high - 1}</strong> (high ist exklusiv!)
+                </div>
+            `;
+        }
+
+        // String-Konkatenation
+        function concatenateStrings() {
+            const str1 = document.getElementById('concat1').value;
+            const str2 = document.getElementById('concat2').value;
+            const result = document.getElementById('concatResult');
+            
+            const concatenated = str1 + str2;
+            
+            result.className = 'result show success';
+            result.innerHTML = `
+                <strong>String 1:</strong> "${str1}"<br>
+                <strong>String 2:</strong> "${str2}"<br>
+                <strong>Ergebnis:</strong> "${concatenated}"<br>
+                <div style="margin-top: 15px;">
+                    <strong>Code:</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+<span class="string">"${str1}"</span> + <span class="string">"${str2}"</span> = <span class="string">"${concatenated}"</span></div>
+                </div>
+            `;
+        }
+
+        // Quiz-System
+        const quizAnswers = {
+            1: 1,   // B) 4 (T=1, ü=2, r=1)
+            2: 2,   // C) "C:\Go\bin" (Escape-Fehler)
+            3: 1,   // B) "ruf"
+            4: 2,   // C) Strings sind immutable
+            5: 2,   // C) 3 Bytes
+            6: 1,   // B) Rohe String-Literale
+            7: 1,   // B) byte
+            8: 0,   // A) "Hal"
+            9: 3,   // D) 4 Bytes
+            10: 1   // B) a="Sommerzeit", b="Sommer"
+        };
+
+        const quizExplanations = {
+            1: '✅ Richtig! "Tür" hat 4 Bytes: T=1 Byte, ü=2 Bytes, r=1 Byte.',
+            2: '✅ Richtig! In Option C ist der Backslash nicht escaped. \\G ist keine gültige Escape-Sequenz, Go übersetzt dieses Literal nicht. \\b stünde für Backspace.',
+            3: '✅ Richtig! [2:5] bedeutet Zeichen an Position 2, 3 und 4, also "ruf".',
+            4: '✅ Richtig! Strings sind immutable. s[0] kann nicht zugewiesen werden.',
+            5: '✅ Richtig! Das Unendlich-Zeichen ∞ benötigt 3 Bytes in UTF-8.',
+            6: '✅ Richtig! Nur rohe String-Literale (`...`) erlauben echte Zeilenumbrüche im Quellcode.',
+            7: '✅ Richtig! s[0] liefert ein einzelnes Byte (Typ byte = uint8).',
+            8: '✅ Richtig! [:3] ist äquivalent zu [0:3], also die ersten 3 Zeichen "Hal".',
+            9: '✅ Richtig! Emojis benötigen 4 Bytes in UTF-8-Codierung.',
+            10: '✅ Richtig! b bleibt "Sommer", da Strings immutable sind. a wird neu zugewiesen.'
+        };
+
+        const selectedAnswers = {};
+
+        function selectQuizOption(question, option) {
+            // Deselektiere alle Optionen dieser Frage
+            const options = document.querySelectorAll(`.quiz-question:nth-of-type(${question}) .quiz-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Selektiere gewählte Option
+            options[option].classList.add('selected');
+            selectedAnswers[question] = option;
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            const total = Object.keys(quizAnswers).length;
+            
+            for (let q = 1; q <= total; q++) {
+                const userAnswer = selectedAnswers[q];
+                const correctAnswer = quizAnswers[q];
+                const feedback = document.getElementById(`feedback-${q}`);
+                const options = document.querySelectorAll(`.quiz-question:nth-of-type(${q}) .quiz-option`);
+                
+                // Markiere richtige und falsche Antworten
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    if (idx === correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (idx === userAnswer && idx !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                // Zeige Feedback
+                if (userAnswer === correctAnswer) {
+                    correct++;
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#d1fae5';
+                    feedback.style.border = '2px solid #10b981';
+                    feedback.style.color = '#065f46';
+                    feedback.innerHTML = quizExplanations[q];
+                } else if (userAnswer !== undefined) {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fee2e2';
+                    feedback.style.border = '2px solid #ef4444';
+                    feedback.style.color = '#991b1b';
+                    feedback.innerHTML = '❌ Falsch. ' + quizExplanations[q];
+                } else {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fef3c7';
+                    feedback.style.border = '2px solid #f59e0b';
+                    feedback.style.color = '#92400e';
+                    feedback.innerHTML = '⚠️ Keine Antwort gewählt. ' + quizExplanations[q];
+                }
+            }
+            
+            // Zeige Gesamtergebnis
+            const percentage = (correct / total * 100).toFixed(0);
+            const scoreDiv = document.getElementById('quiz-score');
+            let grade = '';
+            if (percentage >= 90) grade = '🏆 Ausgezeichnet!';
+            else if (percentage >= 75) grade = '🌟 Sehr gut!';
+            else if (percentage >= 60) grade = '✅ Gut!';
+            else if (percentage >= 50) grade = '📖 Noch etwas üben!';
+            else grade = '💪 Weiter lernen!';
+            
+            scoreDiv.className = 'quiz-score show';
+            scoreDiv.innerHTML = `
+                <div style="font-size: 2em; margin-bottom: 15px;">${grade}</div>
+                <div style="font-size: 1.5em;">${correct} von ${total} Fragen richtig</div>
+                <div style="font-size: 1.2em; margin-top: 10px;">${percentage}%</div>
+            `;
+            
+            // Scrolle zum Ergebnis
+            scoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', () => {
+            parseInterpretedString();
+        });
+    </script>
+</body>
+</html>
