@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* Hero */
+  .hero {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+  }
+  .hero h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .hero p { font-size: 1.1rem; opacity: 0.9; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    margin-top: 10px;
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    border-left: 5px solid #667eea;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .card h2 { color: #4a4a8a; margin-bottom: 15px; font-size: 1.4rem; }
+  .card h3 { color: #667eea; margin: 18px 0 10px; font-size: 1.1rem; }
+  .card p { color: #555; line-height: 1.7; margin-bottom: 12px; }
+
+  /* Code blocks */
+  .code-block {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    white-space: pre;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  .kw  { color: #ff79c6; }
+  .str { color: #f1fa8c; }
+  .num { color: #bd93f9; }
+  .cmt { color: #6272a4; font-style: italic; }
+  .fn  { color: #50fa7b; }
+  .tp  { color: #8be9fd; }
+
+  /* Info boxes */
+  .info-box {
+    background: #d1ecf1; border-left: 4px solid #17a2b8;
+    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #0c5460;
+  }
+  .warn-box {
+    background: #fff3cd; border-left: 4px solid #ffc107;
+    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #856404;
+  }
+  .success-box {
+    background: #d4edda; border-left: 4px solid #28a745;
+    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #155724;
+  }
+  .error-box {
+    background: #f8d7da; border-left: 4px solid #dc3545;
+    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #721c24;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
+    background: #e9ecef; color: #555;
+  }
+  .tab-btn.active { background: #667eea; color: white; }
+  .tab-btn:hover:not(.active) { background: #d0d0f0; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+  th { background: #667eea; color: white; padding: 12px; text-align: left; }
+  td { padding: 11px 12px; border-bottom: 1px solid #e9ecef; color: #444; }
+  tr:hover td { background: #f0f0ff; }
+
+  /* Interactive demo */
+  .demo-row { display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap; }
+  .demo-input { flex: 1; min-width: 200px; }
+  .demo-input label { display: block; font-weight: 600; color: #555; margin-bottom: 6px; }
+  .demo-input input, .demo-input select {
+    width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;
+    font-size: 0.95rem; transition: border 0.2s;
+  }
+  .demo-input input:focus, .demo-input select:focus { outline: none; border-color: #667eea; }
+  .btn {
+    padding: 10px 24px; background: #667eea; color: white;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+    font-weight: 600; transition: background 0.2s; margin-top: 24px;
+  }
+  .btn:hover { background: #5569d4; }
+  .output-box {
+    background: #1e1e2e; color: #cdd6f4; border-radius: 8px;
+    padding: 15px; font-family: 'Courier New', monospace;
+    font-size: 0.9rem; min-height: 60px; margin-top: 12px;
+    white-space: pre-wrap;
+  }
+
+  /* Array visualizer */
+  .array-vis {
+    display: flex; gap: 4px; flex-wrap: wrap; margin: 15px 0;
+  }
+  .array-cell {
+    border: 2px solid #667eea; border-radius: 6px;
+    padding: 8px 14px; text-align: center; min-width: 50px;
+    background: #f0f0ff; transition: all 0.2s;
+  }
+  .array-cell:hover { background: #667eea; color: white; transform: translateY(-2px); }
+  .array-cell .idx { font-size: 0.7rem; color: #888; display: block; }
+  .array-cell .val { font-size: 1rem; font-weight: 700; color: #4a4a8a; }
+  .array-cell:hover .val, .array-cell:hover .idx { color: white; }
+
+  /* Grid für Vergleiche */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    margin: 15px 0;
+  }
+  .compare-card {
+    background: #f8f9ff;
+    border: 2px solid #e0e0ff;
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .compare-card h4 { color: #667eea; margin-bottom: 10px; }
+
+  /* Section header */
+  .section-label {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Matrix */
+  .matrix {
+    display: inline-block;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px;
+  }
+  .matrix-row { display: flex; }
+  .matrix-cell {
+    width: 50px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #ddd;
+    font-weight: 600; color: #444;
+    transition: background 0.2s;
+  }
+  .matrix-cell:hover { background: #667eea; color: white; }
+  .matrix-header { background: #667eea; color: white !important; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>📦 Arrays in Go</h1>
+    <p>Interaktive Veranschaulichung · Kurstext v3.0.6, Kapitel 6, Seiten 151–162</p>
+    <div class="badge">FernUni Hagen · Kurs 01613 · Go-Programmierung</div>
+  </div>
+
+  <!-- KARTE 1: Was ist ein Array? -->
+  <div class="card">
+    <div class="section-label">Grundlagen</div>
+    <h2>6.0 Was ist ein Array?</h2>
+    <p>Ein <strong>Array</strong> ist eine Folge einer <em>festen Anzahl</em> von Elementen, die allesamt Werte <em>desselben Typs</em> sind. Mathematisch entspricht ein Array der Länge n einem <strong>n-Tupel</strong>.</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>❌ Ohne Array – unhandlich</h4>
+        <div class="code-block"><span class="kw">var</span> z1, z2, z3, z4, z5, z6 <span class="tp">int</span> = 3, 17, 24, 31, 36, 47
+<span class="fn">fmt.Println</span>(z1, z2, z3, z4, z5, z6)</div>
+        <p style="color:#721c24; font-size:0.9rem;">Schwer zu verarbeiten, schlecht skalierbar.</p>
+      </div>
+      <div class="compare-card">
+        <h4>✅ Mit Array – kompakt</h4>
+        <div class="code-block">lotto := [<span class="num">6</span>]<span class="tp">int</span>{<span class="num">3</span>, <span class="num">17</span>, <span class="num">24</span>, <span class="num">31</span>, <span class="num">36</span>, <span class="num">47</span>}
+<span class="fn">fmt.Println</span>(lotto) <span class="cmt">// [3 17 24 31 36 47]</span></div>
+        <p style="color:#155724; font-size:0.9rem;">Einheitlich, schleifentauglich, skalierbar.</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Array-Typ = Länge + Element-Typ:</strong> <code>[6]int</code> und <code>[4]int</code> sind <strong>verschiedene Typen</strong> – sie sind nicht kompatibel!
+    </div>
+  </div>
+
+  <!-- KARTE 2: Deklaration & Literale -->
+  <div class="card">
+    <div class="section-label">Syntax</div>
+    <h2>6.1 Deklaration und Array-Literale</h2>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('decl', 'var')">var-Deklaration</button>
+      <button class="tab-btn" onclick="showTab('decl', 'short')">Kurze Deklaration</button>
+      <button class="tab-btn" onclick="showTab('decl', 'ellipsis')">Ellipse ...</button>
+      <button class="tab-btn" onclick="showTab('decl', 'nullwert')">Null-Werte</button>
+      <button class="tab-btn" onclick="showTab('decl', 'explizitidx')">Explizite Indizes</button>
+    </div>
+
+    <div id="decl-var" class="tab-content active">
+      <h3>Vollständige var-Deklaration</h3>
+      <div class="code-block"><span class="kw">var</span> lotto [<span class="num">6</span>]<span class="tp">int</span> = [<span class="num">6</span>]<span class="tp">int</span>{<span class="num">3</span>, <span class="num">17</span>, <span class="num">24</span>, <span class="num">31</span>, <span class="num">36</span>, <span class="num">47</span>}
+<span class="kw">var</span> farben [<span class="num">4</span>]<span class="tp">string</span> = [<span class="num">4</span>]<span class="tp">string</span>{<span class="str">"rot"</span>, <span class="str">"gelb"</span>, <span class="str">"grün"</span>, <span class="str">"blau"</span>}</div>
+    </div>
+
+    <div id="decl-short" class="tab-content">
+      <h3>Kurze Variablendeklaration (idiomatisch)</h3>
+      <div class="code-block">lotto := [<span class="num">6</span>]<span class="tp">int</span>{<span class="num">3</span>, <span class="num">17</span>, <span class="num">24</span>, <span class="num">31</span>, <span class="num">36</span>, <span class="num">47</span>}
+farben := [<span class="num">4</span>]<span class="tp">string</span>{<span class="str">"rot"</span>, <span class="str">"gelb"</span>, <span class="str">"grün"</span>, <span class="str">"blau"</span>}</div>
+      <p>Der Typ wird aus dem Literal abgeleitet – kein expliziter Typ nötig.</p>
+    </div>
+
+    <div id="decl-ellipsis" class="tab-content">
+      <h3>Länge mit Ellipse <code>...</code> ableiten</h3>
+      <div class="code-block"><span class="cmt">// Länge = Anzahl der Elemente (hier 6)</span>
+lotto := [...]<span class="tp">int</span>{<span class="num">3</span>, <span class="num">17</span>, <span class="num">24</span>, <span class="num">31</span>, <span class="num">36</span>, <span class="num">47</span>}
+
+<span class="cmt">// Mehrzeilig – Komma nach letztem Element PFLICHT!</span>
+lotto := [...]<span class="tp">int</span>{
+    <span class="num">3</span>,
+    <span class="num">17</span>, <span class="cmt">// Geburtsjahr von Oma</span>
+    <span class="num">24</span>,
+    <span class="num">31</span>,
+    <span class="num">36</span>, <span class="cmt">// Glückszahl</span>
+    <span class="num">47</span>,
+}</div>
+      <div class="success-box">Das abschließende Komma macht Umstrukturierungen einfacher – kein manuelles Anpassen der Kommasetzung nötig.</div>
+    </div>
+
+    <div id="decl-nullwert" class="tab-content">
+      <h3>Null-Werte: automatische Initialisierung</h3>
+      <div class="code-block"><span class="cmt">// Teilweise initialisiert – Rest = Null-Wert (0)</span>
+q := [<span class="num">5</span>]<span class="tp">float64</span>{<span class="num">12.5</span>, <span class="num">-8.3</span>}
+<span class="fn">fmt.Println</span>(q) <span class="cmt">// [12.5 -8.3 0 0 0]</span>
+
+<span class="cmt">// Alle Elemente = Null-Wert</span>
+jahr := [<span class="num">12</span>]<span class="tp">int</span>{}
+<span class="fn">fmt.Println</span>(jahr) <span class="cmt">// [0 0 0 0 0 0 0 0 0 0 0 0]</span>
+
+<span class="cmt">// Ohne Literal – implizit alle Null-Werte</span>
+<span class="kw">var</span> monat [<span class="num">12</span>]<span class="tp">int</span></div>
+      <table>
+        <tr><th>Typ</th><th>Null-Wert</th></tr>
+        <tr><td><code>int</code>, <code>float64</code></td><td><code>0</code> bzw. <code>0.0</code></td></tr>
+        <tr><td><code>bool</code></td><td><code>false</code></td></tr>
+        <tr><td><code>string</code></td><td><code>""</code> (leerer String)</td></tr>
+      </table>
+    </div>
+
+    <div id="decl-explizitidx" class="tab-content">
+      <h3>Explizite Index-Positionen im Literal</h3>
+      <div class="code-block">b := [<span class="num">8</span>]<span class="tp">int</span>{<span class="num">5</span>, <span class="num">2</span>: <span class="num">8</span>, <span class="num">4</span>: <span class="num">-2</span>}
+<span class="fn">fmt.Println</span>(b) <span class="cmt">// [5 0 8 0 -2 0 0 0]</span>
+
+c := [...]<span class="tp">int</span>{<span class="num">4</span>: <span class="num">6</span>}
+<span class="fn">fmt.Println</span>(c) <span class="cmt">// [0 0 0 0 6]</span></div>
+      <div class="info-box"><strong>Syntax:</strong> <code>index: wert</code> – nicht angegebene Positionen erhalten den Null-Wert. Die Länge ergibt sich aus dem größten angegebenen Index + 1 (bei <code>[...]</code>).</div>
+    </div>
+  </div>
+
+  <!-- KARTE 3: Index-Zugriff -->
+  <div class="card">
+    <div class="section-label">Zugriff</div>
+    <h2>6.1 Index-Zugriff auf Array-Elemente</h2>
+    <p>Arrays sind <strong>null-indiziert</strong>: das erste Element hat Index <code>0</code>, das letzte Index <code>len(a)-1</code>.</p>
+
+    <div class="code-block">lotto := [<span class="num">6</span>]<span class="tp">int</span>{<span class="num">3</span>, <span class="num">17</span>, <span class="num">24</span>, <span class="num">31</span>, <span class="num">36</span>, <span class="num">47</span>}
+<span class="fn">fmt.Println</span>(lotto[<span class="num">0</span>]) <span class="cmt">// erstes Element:  3</span>
+<span class="fn">fmt.Println</span>(lotto[<span class="num">1</span>]) <span class="cmt">// zweites Element: 17</span>
+<span class="fn">fmt.Println</span>(lotto[<span class="num">5</span>]) <span class="cmt">// letztes Element: 47</span>
+<span class="fn">fmt.Println</span>(<span class="fn">len</span>(lotto)) <span class="cmt">// Länge: 6</span>
+<span class="fn">fmt.Println</span>(lotto[<span class="fn">len</span>(lotto)-<span class="num">1</span>]) <span class="cmt">// letztes Element: 47</span>
+
+i := <span class="num">2</span>
+lotto[i] = <span class="num">99</span> <span class="cmt">// indizierte Variable – lese und schreibe!</span></div>
+
+    <h3>Interaktive Array-Visualisierung</h3>
+    <p>Bewege die Maus über die Zellen:</p>
+    <div class="array-vis" id="arrayVis"></div>
+    <p style="color:#888; font-size:0.85rem; margin-top:5px;">Index-Position (oben) und Wert (unten)</p>
+
+    <h3>Fehler bei ungültigem Index</h3>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:#dc3545;">Compile-Zeit-Fehler</h4>
+        <div class="code-block"><span class="fn">fmt.Println</span>(lotto[<span class="num">10</span>])
+<span class="cmt">// invalid argument: index 10 out of bounds</span></div>
+        <p style="color:#155724; font-size:0.9rem;">Tritt auf wenn Index ein Konstante ist.</p>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:#dc3545;">Laufzeit-Fehler (panic)</h4>
+        <div class="code-block">j := <span class="num">8</span>
+<span class="fn">fmt.Println</span>(lotto[j])
+<span class="cmt">// panic: runtime error:</span>
+<span class="cmt">// index out of range [8] with length 6</span></div>
+        <p style="color:#155724; font-size:0.9rem;">Tritt auf wenn Index erst zur Laufzeit bekannt ist.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- KARTE 4: for-Schleifen -->
+  <div class="card">
+    <div class="section-label">Schleifen</div>
+    <h2>6.2 Durchlaufen eines Arrays</h2>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('loop', 'forklausel')">for-Klausel</button>
+      <button class="tab-btn" onclick="showTab('loop', 'forrange')">for-range</button>
+      <button class="tab-btn" onclick="showTab('loop', 'nurwert')">Nur Wert (_)</button>
+      <button class="tab-btn" onclick="showTab('loop', 'nurindex')">Nur Index</button>
+      <button class="tab-btn" onclick="showTab('loop', 'ohnevars')">Ohne Variablen</button>
+      <button class="tab-btn" onclick="showTab('loop', 'integer')">range Integer (1.22)</button>
+    </div>
+
+    <div id="loop-forklausel" class="tab-content active">
+      <h3>Klassische for-Klausel</h3>
+      <div class="code-block">a := [...]<span class="tp">int</span>{<span class="num">8</span>, <span class="num">-5</span>, <span class="num">14</span>, <span class="num">3</span>}
+sum := <span class="num">0</span>
+<span class="kw">for</span> i := <span class="num">0</span>; i < <span class="fn">len</span>(a); i++ {
+    <span class="fn">fmt.Println</span>(<span class="str">"Index:"</span>, i, <span class="str">"Wert:"</span>, a[i])
+    sum += a[i]
+}
+<span class="fn">fmt.Println</span>(<span class="str">"Summe:"</span>, sum) <span class="cmt">// 20</span></div>
+      <table>
+        <tr><th>Teil</th><th>Bedeutung</th></tr>
+        <tr><td><code>i := 0</code></td><td>Init: Laufvariable startet bei Index 0</td></tr>
+        <tr><td><code>i &lt; len(a)</code></td><td>Bedingung: max. Index = len-1</td></tr>
+        <tr><td><code>i++</code></td><td>Post: Index nach jedem Durchlauf erhöhen</td></tr>
+      </table>
+    </div>
+
+    <div id="loop-forrange" class="tab-content">
+      <h3>for-range-Schleife (idiomatisch in Go)</h3>
+      <div class="code-block">a := [...]<span class="tp">int</span>{<span class="num">8</span>, <span class="num">-5</span>, <span class="num">14</span>, <span class="num">3</span>}
+sum := <span class="num">0</span>
+<span class="kw">for</span> i, v := <span class="kw">range</span> a {
+    <span class="fn">fmt.Println</span>(<span class="str">"Index:"</span>, i, <span class="str">"Wert:"</span>, v)
+    sum += v
+}
+<span class="fn">fmt.Println</span>(<span class="str">"Summe:"</span>, sum) <span class="cmt">// 20</span></div>
+      <div class="info-box">
+        <strong>Achtung:</strong> <code>v</code> ist eine <em>Kopie</em> des Elementwerts. Eine Zuweisung wie <code>v = 99</code> ändert das Array <strong>nicht</strong>! Zum Schreiben: <code>a[i] = 99</code> verwenden.
+      </div>
+      <p><strong>Ablauf implizit:</strong> i startet bei 0, wird inkrementiert; vor jedem Rumpf wird <code>v = a[i]</code> ausgeführt.</p>
+    </div>
+
+    <div id="loop-nurwert" class="tab-content">
+      <h3>Nur Wert benötigt → Index als <code>_</code></h3>
+      <div class="code-block">a := [...]<span class="tp">int</span>{<span class="num">8</span>, <span class="num">-5</span>, <span class="num">14</span>, <span class="num">3</span>}
+prod := <span class="num">1</span>
+<span class="kw">for</span> _, v := <span class="kw">range</span> a {
+    prod *= v
+}
+<span class="fn">fmt.Println</span>(<span class="str">"Produkt:"</span>, prod) <span class="cmt">// -1680</span></div>
+      <div class="warn-box">
+        <strong>Pflicht:</strong> Go erlaubt keine ungenutzten Variablen. Da der Index nicht gebraucht wird, muss er mit <code>_</code> (leerem Bezeichner) ersetzt werden – sonst Compile-Fehler!
+      </div>
+    </div>
+
+    <div id="loop-nurindex" class="tab-content">
+      <h3>Nur Index benötigt → Wert-Variable weglassen</h3>
+      <div class="code-block">a := [...]<span class="tp">int</span>{<span class="num">8</span>, <span class="num">-5</span>, <span class="num">14</span>, <span class="num">3</span>}
+<span class="kw">for</span> i := <span class="kw">range</span> a {
+    a[i] = -a[i] <span class="cmt">// Vorzeichen umkehren</span>
+}
+<span class="fn">fmt.Println</span>(a) <span class="cmt">// [-8 5 -14 -3]</span></div>
+      <div class="success-box">Die Wert-Variable kann einfach weggelassen werden – <code>_</code> ist hier <strong>nicht</strong> nötig.</div>
+    </div>
+
+    <div id="loop-ohnevars" class="tab-content">
+      <h3>range ohne Index und Wert</h3>
+      <div class="code-block">a := [...]<span class="tp">int</span>{<span class="num">8</span>, <span class="num">-5</span>, <span class="num">14</span>, <span class="num">3</span>}
+<span class="kw">for</span> <span class="kw">range</span> a {
+    count() <span class="cmt">// wird viermal aufgerufen (je Element einmal)</span>
+}</div>
+      <p>Nützlich wenn nur die <em>Anzahl</em> der Elemente relevant ist, nicht ihr Wert oder Index.</p>
+    </div>
+
+    <div id="loop-integer" class="tab-content">
+      <h3>for-range über Integer (ab Go 1.22)</h3>
+      <div class="code-block"><span class="cmt">// Klassisch:</span>
+<span class="kw">for</span> i := <span class="num">0</span>; i < <span class="num">10</span>; i++ {
+    <span class="fn">fmt.Println</span>(i)
+}
+
+<span class="cmt">// Kompakter ab Go 1.22:</span>
+<span class="kw">for</span> i := <span class="kw">range</span> <span class="num">10</span> {
+    <span class="fn">fmt.Println</span>(i) <span class="cmt">// 0, 1, 2, ..., 9</span>
+}</div>
+      <div class="info-box">Iteriert Integer-Werte von <code>0</code> bis <code>n-1</code>. Kein Array nötig!</div>
+    </div>
+
+    <h3>Vergleich: for-Klausel vs. for-range</h3>
+    <table>
+      <tr><th>Aspekt</th><th>for-Klausel</th><th>for-range</th></tr>
+      <tr><td>Schreibaufwand</td><td>Mehr (3 Teile)</td><td>Weniger (kompakt)</td></tr>
+      <tr><td>Fehleranfälligkeit</td><td>Höher (off-by-one)</td><td>Geringer</td></tr>
+      <tr><td>Element schreiben</td><td>a[i] = …</td><td>a[i] = … (v nur lesen!)</td></tr>
+      <tr><td>Index verfügbar</td><td>Ja</td><td>Ja (i)</td></tr>
+      <tr><td>Wert verfügbar</td><td>a[i]</td><td>v (Kopie)</td></tr>
+    </table>
+  </div>
+
+  <!-- KARTE 5: Mehrdimensionale Arrays -->
+  <div class="card">
+    <div class="section-label">Mehrdimensional</div>
+    <h2>6.3 Höherdimensionale Arrays</h2>
+    <p>Go-Arrays sind formal eindimensional, aber der Elementtyp kann selbst ein Array-Typ sein → <strong>2D-Arrays = Matrizen</strong>.</p>
+
+    <div class="code-block"><span class="cmt">// 3×2-Matrix (3 Zeilen, 2 Spalten)</span>
+a := [<span class="num">3</span>][<span class="num">2</span>]<span class="tp">int</span>{
+    {<span class="num">1</span>, <span class="num">2</span>},
+    {<span class="num">3</span>, <span class="num">4</span>},
+    {<span class="num">5</span>, <span class="num">6</span>},
+}
+<span class="fn">fmt.Println</span>(a) <span class="cmt">// [[1 2] [3 4] [5 6]]</span>
+<span class="fn">fmt.Println</span>(a[<span class="num">1</span>][<span class="num">0</span>]) <span class="cmt">// 3  (Zeile 1, Spalte 0)</span></div>
+
+    <h3>Visualisierung der 3×2-Matrix</h3>
+    <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap; margin:15px 0;">
+      <div>
+        <p style="margin-bottom:8px; color:#555;">Mathematisch:</p>
+        <div style="font-size:1.2rem; color:#4a4a8a; background:#f8f9ff; padding:15px; border-radius:8px; border: 2px solid #e0e0ff;">
+          <table style="border:none; margin:0;">
+            <tr><td style="padding:6px; border:none;">1</td><td style="padding:6px; border:none;">2</td></tr>
+            <tr><td style="padding:6px; border:none;">3</td><td style="padding:6px; border:none;">4</td></tr>
+            <tr><td style="padding:6px; border:none;">5</td><td style="padding:6px; border:none;">6</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p style="margin-bottom:8px; color:#555;">In Go als <code>[3][2]int</code>:</p>
+        <div id="matrixVis" style="display:flex; flex-direction:column; gap:4px;"></div>
+      </div>
+    </div>
+
+    <h3>Durchlaufen mit verschachtelten Schleifen</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('matrix', 'mklausel')">for-Klausel</button>
+      <button class="tab-btn" onclick="showTab('matrix', 'mrange')">for-range</button>
+      <button class="tab-btn" onclick="showTab('matrix', 'mneg')">Beispiel: Negative → 0</button>
+    </div>
+    <div id="matrix-mklausel" class="tab-content active">
+      <div class="code-block"><span class="kw">for</span> i := <span class="num">0</span>; i < <span class="fn">len</span>(a); i++ {
+    <span class="fn">fmt.Printf</span>(<span class="str">"Zeile %v: "</span>, i)
+    <span class="kw">for</span> j := <span class="num">0</span>; j < <span class="fn">len</span>(a[i]); j++ {
+        <span class="fn">fmt.Print</span>(a[i][j], <span class="str">" "</span>)
+    }
+    <span class="fn">fmt.Println</span>()
+}</div>
+    </div>
+    <div id="matrix-mrange" class="tab-content">
+      <div class="code-block"><span class="kw">for</span> i, zeile := <span class="kw">range</span> a {
+    <span class="fn">fmt.Printf</span>(<span class="str">"Zeile %v: "</span>, i)
+    <span class="kw">for</span> _, element := <span class="kw">range</span> zeile {
+        <span class="fn">fmt.Printf</span>(<span class="str">"%v "</span>, element)
+    }
+    <span class="fn">fmt.Println</span>()
+}</div>
+    </div>
+    <div id="matrix-mneg" class="tab-content">
+      <div class="code-block">b := [<span class="num">3</span>][<span class="num">4</span>]<span class="tp">int</span>{
+    {<span class="num">-43</span>, <span class="num">12</span>, <span class="num">5</span>, <span class="num">-63</span>},
+    {<span class="num">-19</span>, <span class="num">-82</span>, <span class="num">91</span>, <span class="num">55</span>},
+    {<span class="num">2</span>, <span class="num">46</span>, <span class="num">-37</span>, <span class="num">28</span>},
+}
+<span class="kw">for</span> i := <span class="kw">range</span> b {
+    <span class="kw">for</span> j := <span class="kw">range</span> b[i] {
+        <span class="kw">if</span> b[i][j] < <span class="num">0</span> {
+            b[i][j] = <span class="num">0</span>
+        }
+        <span class="fn">fmt.Printf</span>(<span class="str">"%3v "</span>, b[i][j])
+    }
+    <span class="fn">fmt.Println</span>()
+}
+<span class="cmt">// Ausgabe:
+//   0 12  5  0
+//   0  0 91 55
+//   2 46  0 28</span></div>
+    </div>
+  </div>
+
+  <!-- KARTE 6: Interaktiver Demo -->
+  <div class="card">
+    <div class="section-label">Interaktiv</div>
+    <h2>🧪 Array-Rechner</h2>
+    <p>Gib Werte ein und berechne Summe, Produkt und finde das Maximum.</p>
+    <div class="demo-row">
+      <div class="demo-input">
+        <label>Array-Elemente (kommagetrennt, z.B. 8,-5,14,3,0)</label>
+        <input type="text" id="arrInput" value="8,-5,14,3,0" placeholder="z.B. 8,-5,14,3">
+      </div>
+      <button class="btn" onclick="calcArray()">Berechnen</button>
+    </div>
+    <div id="arrVisOutput" class="array-vis" style="margin-top:15px;"></div>
+    <div class="output-box" id="arrOutput">Ergebnisse erscheinen hier...</div>
+  </div>
+
+  <!-- KARTE 7: Slices -->
+  <div class="card">
+    <div class="section-label">Ausblick</div>
+    <h2>6.4 Dynamische Arrays: Slices</h2>
+    <table>
+      <tr><th>Eigenschaft</th><th>Array</th><th>Slice</th></tr>
+      <tr><td>Länge</td><td>Fest (zur Compile-Zeit)</td><td>Dynamisch (zur Laufzeit)</td></tr>
+      <tr><td>Syntax Typ</td><td><code>[n]T</code></td><td><code>[]T</code></td></tr>
+      <tr><td>Wachstum</td><td>Nicht möglich</td><td>Mit <code>append()</code></td></tr>
+      <tr><td>Einsatz</td><td>Wenn Länge bekannt</td><td>In der Praxis bevorzugt</td></tr>
+    </table>
+    <div class="info-box">Im Studienbrief (Kurs 01613) werden für didaktische Einfachheit Arrays verwendet. In produktivem Go-Code werden meistens Slices eingesetzt.</div>
+  </div>
+
+  <!-- KARTE 8: Zusammenfassung -->
+  <div class="card" style="border-left-color: #28a745;">
+    <div class="section-label" style="background:#28a745;">Zusammenfassung</div>
+    <h2>📋 Wichtige Regeln auf einen Blick</h2>
+    <div class="compare-grid">
+      <div class="success-box">
+        <strong>✅ Gültig</strong><br>
+        <code>a := [3]int{1,2,3}</code><br>
+        <code>a[0] = 99</code><br>
+        <code>len(a)</code><br>
+        <code>for i, v := range a</code><br>
+        <code>for _, v := range a</code><br>
+        <code>for i := range a</code>
+      </div>
+      <div class="error-box">
+        <strong>❌ Ungültig</strong><br>
+        <code>n := 5; a := [n]int{}</code> (keine Variable als Länge)<br>
+        <code>a := [3]int{1,2,3}; b := [4]int; b = a</code> (verschiedene Typen)<br>
+        <code>for i, v := range a { v = 99 }</code> (ändert Original nicht)<br>
+        <code>a[len(a)]</code> (Index out of range)
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// Tab-System
+function showTab(group, id) {
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
+  document.querySelectorAll(`[onclick*="'${group}'"]`).forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`${group}-${id}`).classList.add('active');
+  document.querySelector(`[onclick="showTab('${group}', '${id}')"]`).classList.add('active');
+}
+
+// Array-Visualisierung
+const lottoData = [3,17,24,31,36,47];
+const vis = document.getElementById('arrayVis');
+lottoData.forEach((val, idx) => {
+  const cell = document.createElement('div');
+  cell.className = 'array-cell';
+  cell.innerHTML = `<span class="idx">[${idx}]</span><span class="val">${val}</span>`;
+  vis.appendChild(cell);
+});
+
+// Matrix-Visualisierung
+const matData = [[1,2],[3,4],[5,6]];
+const matVis = document.getElementById('matrixVis');
+matData.forEach((row, ri) => {
+  const rowDiv = document.createElement('div');
+  rowDiv.style.cssText = 'display:flex; gap:4px;';
+  row.forEach((val, ci) => {
+    const cell = document.createElement('div');
+    cell.className = 'array-cell';
+    cell.style.minWidth = '60px';
+    cell.innerHTML = `<span class="idx">[${ri}][${ci}]</span><span class="val">${val}</span>`;
+    rowDiv.appendChild(cell);
+  });
+  matVis.appendChild(rowDiv);
+});
+
+// Array-Rechner
+function calcArray() {
+  const raw = document.getElementById('arrInput').value;
+  const vals = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+  if (vals.length === 0) { document.getElementById('arrOutput').textContent = 'Keine gültigen Zahlen eingegeben.'; return; }
+
+  const visEl = document.getElementById('arrVisOutput');
+  visEl.innerHTML = '';
+  vals.forEach((val, idx) => {
+    const cell = document.createElement('div');
+    cell.className = 'array-cell';
+    cell.innerHTML = `<span class="idx">[${idx}]</span><span class="val">${val}</span>`;
+    visEl.appendChild(cell);
+  });
+
+  const sum = vals.reduce((a,b) => a+b, 0);
+  const prod = vals.reduce((a,b) => a*b, 1);
+  const max = Math.max(...vals);
+  const min = Math.min(...vals);
+  const maxIdx = vals.indexOf(max);
+  const minIdx = vals.indexOf(min);
+
+  document.getElementById('arrOutput').textContent =
+    `Array: [${vals.join(' ')}]\n` +
+    `len(a):  ${vals.length}\n` +
+    `Summe:   ${sum}\n` +
+    `Produkt: ${prod}\n` +
+    `Maximum: ${max} (Index ${maxIdx})\n` +
+    `Minimum: ${min} (Index ${minIdx})\n` +
+    `Letztes Element: a[len(a)-1] = a[${vals.length-1}] = ${vals[vals.length-1]}`;
+}
+calcArray();
+</script>
+</body>
+</html>

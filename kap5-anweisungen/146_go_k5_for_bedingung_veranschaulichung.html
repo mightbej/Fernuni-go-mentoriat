@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for-Anweisung mit Bedingung in Go</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #50fa7b;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #0c5460;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #0c5460;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #856404;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #856404;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #155724;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #155724;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .comparison-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .flow-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .flow-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 400px;
+            font-weight: bold;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .flow-condition {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 400px;
+            border: 2px solid #ffc107;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .interactive-demo {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .interactive-demo h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .demo-controls input {
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 1em;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .demo-controls button {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .demo-controls button:hover {
+            transform: translateY(-2px);
+        }
+
+        .demo-output {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .concept-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-top: 4px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .concept-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #f1fa8c 0%, #f1fa8c 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🔄 for-Anweisung mit Bedingung in Go</h1>
+            <p>Die einfachste Schleifenart: Wiederholung mit Bedingung (while-Schleife)</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.9;">
+                FernUni Hagen - Kurs 01613 - Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142
+            </p>
+        </div>
+
+        <div class="content">
+            <!-- Grundkonzept -->
+            <div class="section">
+                <h2>📚 Grundkonzept: Schleifen</h2>
+                
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    Eine <strong>Schleife (loop statement)</strong> ist eine Wiederholungsanweisung, die einen 
+                    Block von Anweisungen wiederholt ausführt.
+                </p>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <h4>🎯 Schleifenbedingung</h4>
+                        <p>Bestimmt, ob der Schleifenrumpf (erneut) ausgeführt wird. Wird vor jedem Durchlauf geprüft.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>📦 Schleifenrumpf</h4>
+                        <p>Block mit Anweisungen, die wiederholt ausgeführt werden, solange die Bedingung erfüllt ist.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔁 Schleifendurchlauf</h4>
+                        <p>Einmalige Ausführung aller Anweisungen im Schleifenrumpf.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🛑 Abbruchbedingung</h4>
+                        <p>Negation der Schleifenbedingung. Wenn erfüllt, bricht die Schleife ab.</p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Endlosschleife</h4>
+                    <p>Wenn die Abbruchbedingung nie erfüllt wird, läuft die Schleife endlos weiter!</p>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> <span class="number">true</span> {
+    <span class="comment">// Läuft für immer (Endlosschleife!)</span>
+}</div>
+                </div>
+            </div>
+
+            <!-- for in Go -->
+            <div class="section">
+                <h2>🔑 for-Anweisung in Go</h2>
+                
+                <div class="info-box">
+                    <p><strong>Besonderheit in Go:</strong></p>
+                    <p>In Go werden <em>alle</em> Schleifenarten mit dem Schlüsselwort <span class="highlight">for</span> eingeleitet. 
+                    Es gibt keine unterschiedlichen Schlüsselwörter wie <code>while</code>, <code>do</code> oder <code>repeat</code> 
+                    wie in anderen Sprachen.</p>
+                </div>
+
+                <p style="margin: 20px 0;">
+                    Go bietet drei Arten von Schleifen (alle mit <code>for</code>):
+                </p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>1. for mit Bedingung</h4>
+                        <p>Nur Bedingung + Rumpf<br>(wie while-Schleife)</p>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> bedingung {
+    <span class="comment">// Rumpf</span>
+}</div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>2. for mit Klausel</h4>
+                        <p>Init + Bedingung + Post<br>(klassische for-Schleife)</p>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> i := <span class="number">0</span>; i < <span class="number">10</span>; i++ {
+    <span class="comment">// Rumpf</span>
+}</div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>3. for mit range</h4>
+                        <p>Durchlaufen von Arrays<br>(foreach-Schleife)</p>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> i, v := <span class="keyword">range</span> arr {
+    <span class="comment">// Rumpf</span>
+}</div>
+                    </div>
+                </div>
+
+                <div class="success-box" style="margin-top: 20px;">
+                    <p><strong>📖 In diesem Kapitel:</strong> Wir behandeln die <strong>for-Anweisung mit Bedingung</strong> – 
+                    die einfachste Schleifenart in Go!</p>
+                </div>
+            </div>
+
+            <!-- Syntax und Struktur -->
+            <div class="section">
+                <h2>📝 Syntax: for-Anweisung mit Bedingung</h2>
+
+                <h3>Allgemeine Form</h3>
+                <div class="code-block"><span class="keyword">for</span> schleifenbedingung {
+    <span class="comment">// Anweisungen im Schleifenrumpf</span>
+    <span class="comment">// Werden wiederholt, solange schleifenbedingung == true</span>
+}</div>
+
+                <div class="info-box">
+                    <p><strong>🔍 Wichtige Eigenschaften:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ <strong>Keine Klammern</strong> um die Bedingung (wie bei if und switch)</li>
+                        <li>✅ Geschweifte Klammern <code>{ }</code> sind Pflicht</li>
+                        <li>✅ Bedingung wird <strong>vor</strong> jedem Durchlauf geprüft</li>
+                        <li>✅ Wenn Bedingung vor 1. Durchlauf false: Rumpf wird übersprungen</li>
+                    </ul>
+                </div>
+
+                <h3>Ablaufdiagramm</h3>
+                <div class="flow-diagram">
+                    <div class="flow-step">Start</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-condition">Ist Bedingung erfüllt?</div>
+                    <div style="display: flex; justify-content: space-around; max-width: 600px; margin: 20px auto;">
+                        <div style="flex: 1;">
+                            <div style="color: #28a745; font-weight: bold;">✓ JA (true)</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step" style="max-width: 200px;">Schleifenrumpf ausführen</div>
+                            <div class="flow-arrow">↓</div>
+                            <div style="color: #667eea; font-weight: bold;">⤴ Zurück zur Bedingung</div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="color: #dc3545; font-weight: bold;">✗ NEIN (false)</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step" style="max-width: 200px; background: #dc3545;">Schleife beenden</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beispiel 1: Wurzelberechnung -->
+            <div class="section">
+                <h2>💡 Beispiel 1: Wiederholte Eingabe</h2>
+
+                <p style="margin-bottom: 20px;">
+                    Das Programm fordert wiederholt zur Eingabe einer Zahl auf und berechnet deren Quadratwurzel. 
+                    Die Schleife läuft, bis <code>0</code> eingegeben wird.
+                </p>
+                <p><em>Quelle: Das Programm ist Listing 5.4 <code>for_bedingung_eingabe.go</code> aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.</em></p>
+
+                <div class="code-block"><span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string">"fmt"</span>
+    <span class="string">"math"</span>
+)
+
+<span class="keyword">func</span> <span class="function">main</span>() {
+    <span class="keyword">var</span> eingabe <span class="keyword">float64</span> = <span class="number">1.0</span>
+
+    <span class="keyword">for</span> eingabe != <span class="number">0</span> {
+        fmt.<span class="function">Println</span>(<span class="string">"Bitte eine positive Zahl eingeben (0 zum Beenden):"</span>)
+        fmt.<span class="function">Scan</span>(&eingabe)
+        <span class="keyword">if</span> eingabe > <span class="number">0</span> {
+            fmt.<span class="function">Printf</span>(<span class="string">"Die Wurzel von %v ist %v.\n"</span>, eingabe, math.<span class="function">Sqrt</span>(eingabe))
+        }
+    }
+}</div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(event, 'beispiel1-ablauf')">🔄 Ablauf</button>
+                    <button class="tab" onclick="switchTab(event, 'beispiel1-erklaerung')">💬 Erklärung</button>
+                </div>
+
+                <div id="beispiel1-ablauf" class="tab-content active">
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>Initialisierung</h4>
+                            <p><code>eingabe = 1.0</code></p>
+                            <p style="color: #28a745;">✓ Bedingung erfüllt → Schleife wird betreten</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>1. Durchlauf</h4>
+                            <p>Eingabe: <code>16</code></p>
+                            <p>Ausgabe: <code>Wurzel von 16 ist 4</code></p>
+                            <p style="color: #667eea;">↻ Bedingung prüfen</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>2. Durchlauf</h4>
+                            <p>Eingabe: <code>25</code></p>
+                            <p>Ausgabe: <code>Wurzel von 25 ist 5</code></p>
+                            <p style="color: #667eea;">↻ Bedingung prüfen</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Abbruch</h4>
+                            <p>Eingabe: <code>0</code></p>
+                            <p style="color: #dc3545;">✗ Bedingung nicht erfüllt → Schleife endet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="beispiel1-erklaerung" class="tab-content">
+                    <div class="info-box">
+                        <p><strong>🔍 Wichtige Details:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Initialisierung mit 1.0:</strong> Stellt sicher, dass die Bedingung <code>eingabe != 0</code> 
+                            beim ersten Erreichen der Schleife erfüllt ist</li>
+                            <li><strong>Anzahl Durchläufe unbekannt:</strong> Wir wissen vorher nicht, wie oft der Benutzer Zahlen eingeben will</li>
+                            <li><strong>Prüfung VOR Durchlauf:</strong> Die Bedingung wird vor jedem Durchlauf geprüft</li>
+                            <li><strong>math.Sqrt():</strong> Berechnet die Quadratwurzel (aus dem <code>math</code>-Paket)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beispiel 2: ggT -->
+            <div class="section">
+                <h2>💡 Beispiel 2: ggT-Berechnung (Euklidischer Algorithmus)</h2>
+
+                <p style="margin-bottom: 20px;">
+                    Berechnung des größten gemeinsamen Teilers (ggT) zweier natürlicher Zahlen. 
+                    Die Anzahl der Schleifendurchläufe ergibt sich aus den Berechnungen.
+                </p>
+                <p><em>Quelle: Das Programm ist Listing 5.5 <code>for_ggt.go</code> aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.</em></p>
+
+                <div class="code-block"><span class="keyword">package</span> main
+
+<span class="keyword">import</span> <span class="string">"fmt"</span>
+
+<span class="comment">// ggT von n und m mittels Euklidischen Algorithmus berechnen</span>
+<span class="keyword">func</span> <span class="function">ggT</span>(n, m <span class="keyword">int</span>) <span class="keyword">int</span> {
+    <span class="keyword">for</span> n != m {
+        <span class="keyword">if</span> n > m {
+            n -= m
+        } <span class="keyword">else</span> {
+            m -= n
+        }
+    }
+    <span class="keyword">return</span> n
+}
+
+<span class="keyword">func</span> <span class="function">main</span>() {
+    <span class="keyword">var</span> n, m <span class="keyword">int</span>
+    fmt.<span class="function">Println</span>(<span class="string">"Bitte zwei natürliche Zahlen größer 0 eingeben:"</span>)
+    fmt.<span class="function">Scan</span>(&n)
+    fmt.<span class="function">Scan</span>(&m)
+    <span class="keyword">if</span> n > <span class="number">0</span> && m > <span class="number">0</span> {
+        fmt.<span class="function">Printf</span>(<span class="string">"%v ist der ggT von %v und %v.\n"</span>, <span class="function">ggT</span>(n, m), n, m)
+    } <span class="keyword">else</span> {
+        fmt.<span class="function">Printf</span>(<span class="string">"Die Eingabe %v und %v ist unzulässig.\n"</span>, n, m)
+    }
+}</div>
+
+                <h3>Beispiel-Ablauf: ggT(42, 78)</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>Start</h4>
+                        <p>n = 42, m = 78</p>
+                        <p style="color: #28a745;">✓ n ≠ m</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>1. Durchlauf</h4>
+                        <p>m > n → m = 78 - 42 = 36</p>
+                        <p>n = 42, m = 36</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>2. Durchlauf</h4>
+                        <p>n > m → n = 42 - 36 = 6</p>
+                        <p>n = 6, m = 36</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>3. Durchlauf</h4>
+                        <p>m > n → m = 36 - 6 = 30</p>
+                        <p>n = 6, m = 30</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>4. Durchlauf</h4>
+                        <p>m > n → m = 30 - 6 = 24</p>
+                        <p>n = 6, m = 24</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>5. Durchlauf</h4>
+                        <p>m > n → m = 24 - 6 = 18</p>
+                        <p>n = 6, m = 18</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>6. Durchlauf</h4>
+                        <p>m > n → m = 18 - 6 = 12</p>
+                        <p>n = 6, m = 12</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>7. Durchlauf</h4>
+                        <p>m > n → m = 12 - 6 = 6</p>
+                        <p>n = 6, m = 6</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Ende</h4>
+                        <p style="color: #dc3545;">✗ n == m</p>
+                        <p><strong>Ergebnis: 6</strong></p>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <p><strong>💡 Bemerkung zu Variablennamen:</strong></p>
+                    <p>Die Parameter-Variablen <code>n</code> und <code>m</code> in der Funktion <code>ggT</code> haben den gleichen 
+                    Namen wie die Variablen in <code>main</code>, sind aber völlig unabhängig! Der Gültigkeitsbereich ist auf 
+                    den jeweiligen Funktionsrumpf beschränkt.</p>
+                </div>
+            </div>
+
+            <!-- Wann verwenden -->
+            <div class="section">
+                <h2>🎯 Wann for-Anweisung mit Bedingung verwenden?</h2>
+
+                <div class="success-box">
+                    <h4>✅ Einsatz wenn:</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Anzahl der Durchläufe vor Eintritt unbekannt</strong></li>
+                        <li>Wiederholung hängt von Benutzereingabe ab</li>
+                        <li>Wiederholung hängt von Berechnungen ab</li>
+                        <li>Einlesen unbekannter Datenmenge (z.B. bis 0 oder EOF)</li>
+                    </ul>
+                </div>
+
+                <h3>Typische Anwendungsfälle</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>📥 Dateneingabe</h4>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> eingabe != <span class="number">0</span> {
+    fmt.<span class="function">Scan</span>(&eingabe)
+    <span class="comment">// Verarbeiten...</span>
+}</div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>🔍 Suche</h4>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> !gefunden {
+    <span class="comment">// Suchen...</span>
+    <span class="keyword">if</span> bedingung {
+        gefunden = <span class="keyword">true</span>
+    }
+}</div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>🧮 Algorithmen</h4>
+                        <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> n != m {
+    <span class="comment">// Berechnung...</span>
+    <span class="comment">// n und m ändern sich</span>
+}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprachvergleiche -->
+            <div class="section">
+                <h2>🌍 Sprachvergleiche</h2>
+
+                <h3>while-Schleife</h3>
+                <div class="info-box">
+                    <p><strong>In vielen Sprachen (Java, C++, Python, JavaScript, etc.):</strong></p>
+                    <p>Diese Schleifenart wird mit <code>while</code> eingeleitet und heißt <strong>while-Schleife</strong>.</p>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(event, 'lang-go')">Go</button>
+                    <button class="tab" onclick="switchTab(event, 'lang-java')">Java</button>
+                    <button class="tab" onclick="switchTab(event, 'lang-python')">Python</button>
+                    <button class="tab" onclick="switchTab(event, 'lang-cpp')">C++</button>
+                </div>
+
+                <div id="lang-go" class="tab-content active">
+                    <div class="code-block"><span class="keyword">for</span> i < <span class="number">10</span> {
+    fmt.<span class="function">Println</span>(i)
+    i++
+}</div>
+                    <p style="margin-top: 10px;">✅ Keine Klammern um Bedingung (idiomatisch)</p>
+                </div>
+
+                <div id="lang-java" class="tab-content">
+                    <div class="code-block"><span class="keyword">while</span> (i < <span class="number">10</span>) {
+    System.out.<span class="function">println</span>(i);
+    i++;
+}</div>
+                    <p style="margin-top: 10px;">Schlüsselwort: <code>while</code>, Klammern um Bedingung</p>
+                </div>
+
+                <div id="lang-python" class="tab-content">
+                    <div class="code-block"><span class="keyword">while</span> i < <span class="number">10</span>:
+    <span class="function">print</span>(i)
+    i += <span class="number">1</span></div>
+                    <p style="margin-top: 10px;">Schlüsselwort: <code>while</code>, Doppelpunkt statt Klammern</p>
+                </div>
+
+                <div id="lang-cpp" class="tab-content">
+                    <div class="code-block"><span class="keyword">while</span> (i < <span class="number">10</span>) {
+    cout << i << endl;
+    i++;
+}</div>
+                    <p style="margin-top: 10px;">Schlüsselwort: <code>while</code>, Klammern um Bedingung</p>
+                </div>
+
+                <h3 style="margin-top: 40px;">do-while-Schleife / repeat-until-Schleife</h3>
+                <div class="warning-box">
+                    <h4>⚠️ Gibt es NICHT in Go!</h4>
+                    <p>In Java, C++ gibt es die <strong>do-while-Schleife</strong>, in Pascal die <strong>repeat-until-Schleife</strong>. 
+                    Diese führen den Schleifenrumpf <em>mindestens einmal</em> aus (Prüfung am Ende).</p>
+                    
+                    <h4 style="margin-top: 15px;">Java/C++ - do-while:</h4>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">do</span> {
+    <span class="comment">// Wird mindestens 1x ausgeführt</span>
+    fmt.<span class="function">Println</span>(<span class="string">"Eingabe:"</span>);
+    fmt.<span class="function">Scan</span>(&eingabe);
+} <span class="keyword">while</span> (eingabe != <span class="number">0</span>);</div>
+
+                    <h4 style="margin-top: 15px;">Pascal - repeat-until:</h4>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">repeat</span>
+    <span class="comment">{ Wird mindestens 1x ausgeführt }</span>
+    writeln(<span class="string">'Eingabe:'</span>);
+    readln(eingabe);
+<span class="keyword">until</span> eingabe = <span class="number">0</span>;</div>
+
+                    <p style="margin-top: 15px;"><strong>In Go:</strong> do-while kann mit einer Flag-Variable nachgebildet werden (siehe unten).</p>
+                </div>
+            </div>
+
+            <!-- Flag-Variable -->
+            <div class="section">
+                <h2>🚩 Flag-Variable: Mindestens 1x durchlaufen</h2>
+
+                <p style="margin-bottom: 20px;">
+                    Um sicherzustellen, dass der Schleifenrumpf <strong>mindestens einmal</strong> durchlaufen wird 
+                    (wie bei do-while), verwendet man eine boolesche <strong>Flag-Variable</strong>.
+                </p>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(event, 'flag-original')">Original (ohne Flag)</button>
+                    <button class="tab" onclick="switchTab(event, 'flag-modified')">Mit Flag-Variable</button>
+                </div>
+
+                <div id="flag-original" class="tab-content active">
+                    <div class="code-block"><span class="keyword">var</span> eingabe <span class="keyword">float64</span> = <span class="number">1.0</span>  <span class="comment">// Muss != 0 sein!</span>
+
+<span class="keyword">for</span> eingabe != <span class="number">0</span> {
+    fmt.<span class="function">Println</span>(<span class="string">"Bitte eine Zahl eingeben (0 zum Beenden):"</span>)
+    fmt.<span class="function">Scan</span>(&eingabe)
+    <span class="comment">// Verarbeitung...</span>
+}</div>
+                    <p style="margin-top: 10px; color: #856404;">⚠️ Problem: eingabe muss mit 1.0 initialisiert werden, damit Schleife überhaupt betreten wird</p>
+                </div>
+
+                <div id="flag-modified" class="tab-content">
+                    <div class="code-block"><span class="keyword">var</span> eingabe <span class="keyword">float64</span> = <span class="number">0.0</span>  <span class="comment">// Kann jetzt 0.0 sein!</span>
+<span class="keyword">var</span> ersterLauf <span class="keyword">bool</span> = <span class="keyword">true</span>   <span class="comment">// Flag-Variable</span>
+
+<span class="keyword">for</span> ersterLauf || eingabe != <span class="number">0</span> {
+    fmt.<span class="function">Println</span>(<span class="string">"Bitte eine Zahl eingeben (0 zum Beenden):"</span>)
+    fmt.<span class="function">Scan</span>(&eingabe)
+    <span class="comment">// Verarbeitung...</span>
+    ersterLauf = <span class="keyword">false</span>  <span class="comment">// Ab jetzt keine Wirkung mehr</span>
+}</div>
+                    <p style="margin-top: 10px; color: #155724;">✅ Beim ersten Durchlauf ist ersterLauf == true → Bedingung erfüllt (unabhängig von eingabe)</p>
+                    <p style="color: #155724;">✅ Nach erstem Durchlauf: ersterLauf = false → nur noch eingabe != 0 zählt</p>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <p><strong>💡 Flag-Variable (engl. "flag"):</strong></p>
+                    <p>Eine boolesche Variable, die einen Zustand markiert (hier: "erster Durchlauf"). 
+                    Wird oft für Kontrollfluss verwendet.</p>
+                </div>
+
+                <div class="warning-box" style="margin-top: 20px;">
+                    <h4>❌ Schlechte Alternative: Code-Duplikation</h4>
+                    <p>Man könnte den Code vor die Schleife kopieren, aber das gilt als <strong>schlechter Stil</strong>:</p>
+                    <div class="code-block" style="margin-top: 10px;"><span class="comment">// Code VOR der Schleife (schlecht!)</span>
+fmt.<span class="function">Println</span>(<span class="string">"Bitte eine Zahl eingeben (0 zum Beenden):"</span>)
+fmt.<span class="function">Scan</span>(&eingabe)
+<span class="comment">// Verarbeitung...</span>
+
+<span class="keyword">for</span> eingabe != <span class="number">0</span> {
+    <span class="comment">// GLEICHER Code nochmal (Duplikation!)</span>
+    fmt.<span class="function">Println</span>(<span class="string">"Bitte eine Zahl eingeben (0 zum Beenden):"</span>)
+    fmt.<span class="function">Scan</span>(&eingabe)
+    <span class="comment">// Verarbeitung...</span>
+}</div>
+                    <p style="margin-top: 10px;">⛔ Copy-Paste von Code vermeiden!</p>
+                </div>
+            </div>
+
+            <!-- Interaktive Demo -->
+            <div class="section">
+                <h2>🎮 Interaktive Demo</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Schleifensimulation</h3>
+                    <p>Gib eine Startzahl ein und beobachte, wie die Schleife läuft:</p>
+                    
+                    <div class="demo-controls">
+                        <input type="number" id="startValue" placeholder="Startwert (z.B. 10)" value="10">
+                        <button onclick="runLoopDemo()">▶ Schleife starten</button>
+                        <button onclick="clearDemo()">🗑 Löschen</button>
+                    </div>
+
+                    <div class="code-block" style="margin: 20px 0;"><span class="keyword">for</span> n > <span class="number">0</span> {
+    fmt.<span class="function">Println</span>(n)
+    n--
+}</div>
+
+                    <div class="demo-output" id="demoOutput">
+                        <em>Klicke auf "Schleife starten"...</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card" style="border-color: #28a745;">
+                        <h4 style="color: #28a745;">✅ DO</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Keine Klammern um Bedingung</li>
+                            <li>Bedingung klar formulieren</li>
+                            <li>Abbruchbedingung garantieren</li>
+                            <li>Bei unbekannter Anzahl Durchläufe</li>
+                            <li>Variable richtig initialisieren</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card" style="border-color: #dc3545;">
+                        <h4 style="color: #dc3545;">❌ DON'T</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Klammern um Bedingung (unidiomatisch)</li>
+                            <li>Endlosschleifen (außer absichtlich)</li>
+                            <li>Zu komplexe Bedingungen</li>
+                            <li>Code-Duplikation für do-while</li>
+                            <li>Schleifenvariable falsch initialisieren</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">Häufige Fehler</h3>
+                <div class="warning-box">
+                    <h4>1. Falsche Initialisierung</h4>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">var</span> eingabe <span class="keyword">float64</span> = <span class="number">0.0</span>  <span class="comment">// Problem: Bedingung sofort false!</span>
+<span class="keyword">for</span> eingabe != <span class="number">0</span> {
+    <span class="comment">// Wird NIE ausgeführt!</span>
+}</div>
+
+                    <h4 style="margin-top: 15px;">2. Bedingung wird nie false</h4>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+<span class="keyword">for</span> x > <span class="number">0</span> {
+    fmt.<span class="function">Println</span>(x)
+    <span class="comment">// x wird nicht verändert → Endlosschleife!</span>
+}</div>
+
+                    <h4 style="margin-top: 15px;">3. Klammern um Bedingung (funktioniert, aber unidiomatisch)</h4>
+                    <div class="code-block" style="margin-top: 10px;"><span class="keyword">for</span> (x > <span class="number">0</span>) {  <span class="comment">// Funktioniert, aber nicht idiomatisch!</span>
+    x--
+}</div>
+                </div>
+            </div>
+
+            <!-- Zusammenfassung -->
+            <div class="section" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+                <h2>📋 Zusammenfassung</h2>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <h4>🔄 Schleife</h4>
+                        <p>Wiederholung eines Blocks, solange Bedingung erfüllt</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔑 for in Go</h4>
+                        <p>Alle Schleifen mit <code>for</code> (kein while/do/repeat)</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>⏱ Prüfung VOR</h4>
+                        <p>Bedingung vor jedem Durchlauf geprüft</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>❓ Anzahl unbekannt</h4>
+                        <p>Ideal wenn Durchlauf-Anzahl vorher nicht bekannt</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🚩 Flag-Variable</h4>
+                        <p>Für mindestens 1 Durchlauf (do-while-Ersatz)</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🛑 Abbruch</h4>
+                        <p>Abbruchbedingung muss erfüllbar sein!</p>
+                    </div>
+                </div>
+
+                <div class="success-box" style="margin-top: 30px;">
+                    <h4>🎯 Kernpunkte</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>for bedingung { }</code> ist die einfachste Schleifenart in Go</li>
+                        <li>Entspricht der <strong>while-Schleife</strong> in anderen Sprachen</li>
+                        <li>Keine Klammern um Bedingung (idiomatisch)</li>
+                        <li>Bedingung wird <strong>vor</strong> jedem Durchlauf geprüft</li>
+                        <li>Wenn Bedingung initial false: Rumpf wird übersprungen</li>
+                        <li>Ideal für unbekannte Anzahl von Durchläufen</li>
+                        <li>do-while-Verhalten mit Flag-Variable erreichbar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            const tabButton = event.target;
+            const tabContainer = tabButton.parentElement;
+            const contentContainer = tabContainer.nextElementSibling;
+
+            // Alle Tabs im gleichen Container deaktivieren
+            const allTabsInContainer = tabContainer.querySelectorAll('.tab');
+            allTabsInContainer.forEach(tab => tab.classList.remove('active'));
+            tabButton.classList.add('active');
+
+            // Alle Contents im gleichen Bereich verstecken, dann gewähltes anzeigen
+            let sibling = tabContainer.nextElementSibling;
+            while (sibling && sibling.classList.contains('tab-content')) {
+                sibling.classList.remove('active');
+                if (sibling.id === tabId) {
+                    sibling.classList.add('active');
+                }
+                sibling = sibling.nextElementSibling;
+            }
+        }
+
+        function runLoopDemo() {
+            const startValue = parseInt(document.getElementById('startValue').value);
+            const output = document.getElementById('demoOutput');
+            
+            if (isNaN(startValue)) {
+                output.innerHTML = '<span style="color: #dc3545;">Fehler: Bitte eine Zahl eingeben!</span>';
+                return;
+            }
+
+            let result = '<strong>Schleifendurchläufe:</strong><br><br>';
+            let n = startValue;
+            let iterations = 0;
+            const maxIterations = 100;
+
+            result += `Start: n = ${n}<br>`;
+            result += `Bedingung: n > 0<br><br>`;
+
+            while (n > 0 && iterations < maxIterations) {
+                iterations++;
+                result += `Durchlauf ${iterations}: n = ${n}<br>`;
+                n--;
+            }
+
+            if (iterations >= maxIterations) {
+                result += `<br><span style="color: #dc3545;">Abbruch nach ${maxIterations} Durchläufen (Schutz vor Endlosschleife)</span>`;
+            } else {
+                result += `<br>n = ${n} → Bedingung nicht erfüllt → Schleife endet<br>`;
+                result += `<strong style="color: #28a745;">Gesamt: ${iterations} Durchläufe</strong>`;
+            }
+
+            output.innerHTML = result;
+        }
+
+        function clearDemo() {
+            document.getElementById('demoOutput').innerHTML = '<em>Klicke auf "Schleife starten"...</em>';
+            document.getElementById('startValue').value = '10';
+        }
+    </script>
+</body>
+</html>

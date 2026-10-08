@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selbsttest: Variablendeklaration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15,118,110,0.15);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #0f766e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0f766e;
+        }
+
+        .section h3 {
+            color: #1e40af;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: #e5e7eb;
+            color: #1f2937;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #0f766e;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #d1d5db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #0f766e;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f0fdfa15 0%, #99f6e415 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #0f766e;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .interactive-area {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #0f766e;
+        }
+
+        button {
+            background: #0f766e;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px 10px 0;
+        }
+
+        button:hover {
+            background: #115e59;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .result.success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .result.info {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .result.warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .result.error {
+            background: #fee2e2;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .code-block {
+            background: #1f2937;
+            white-space: pre;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+        .code-block .function { color: #61afef; }
+        .code-block .number { color: #d19a66; }
+        .code-block .type { color: #e5c07b; }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            background: white;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 10px;
+            color: #0f766e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #0f766e;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .scope-visual {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .scope-box {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+
+        .scope-box.global {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .scope-box.local {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            margin-left: 30px;
+        }
+
+        .quiz-container {
+            margin-top: 30px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-question h4 {
+            color: #0f766e;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #f3f4f6;
+            border-color: #0f766e;
+        }
+
+        .quiz-option.selected {
+            background: #f0fdfa;
+            border-color: #0f766e;
+        }
+
+        .quiz-option.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .zero-values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .zero-value-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdfa 0%, #99f6e4 100%);
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #0f766e;
+        }
+
+        .zero-value-card .type {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .zero-value-card .value {
+            font-size: 1.5em;
+            font-family: 'Courier New', monospace;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 Selbsttest: Variablendeklaration</h1>
+            <p>10 Fragen mit je vier Antworten. Kurstext v3.0.6, Abschnitt 5.1, Seiten 113–123.</p>
+        </div>
+
+        <div class="content">
+            <p style="margin-bottom: 30px;">Die Erklärungen zu den Fragen stehen auf der Seite <a href="go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration erklärt</a>.</p>
+
+            <!-- Quiz -->
+            <div class="section">
+                <h2>🎯 Quiz: Variablendeklaration</h2>
+                
+                <div class="quiz-container">
+                    <!-- Frage 1 -->
+                    <div class="quiz-question">
+                        <h4>Frage 1: Was ist der Zero-Value für <code>int</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(1, 0)">
+                                <strong>A)</strong> 0
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 1)">
+                                <strong>B)</strong> null
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 2)">
+                                <strong>C)</strong> nil
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 3)">
+                                <strong>D)</strong> undefined
+                            </div>
+                        </div>
+                        <div id="feedback-1" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 2 -->
+                    <div class="quiz-question">
+                        <h4>Frage 2: Welche Deklaration ist NICHT erlaubt?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(2, 0)">
+                                <strong>A)</strong> <code>var x int = 5</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 1)">
+                                <strong>B)</strong> <code>var x = 5</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 2)">
+                                <strong>C)</strong> <code>x := 5</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 3)">
+                                <strong>D)</strong> <code>x :=</code>
+                            </div>
+                        </div>
+                        <div id="feedback-2" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 3 -->
+                    <div class="quiz-question">
+                        <h4>Frage 3: Was ist der Unterschied zwischen <code>:=</code> und <code>=</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(3, 0)">
+                                <strong>A)</strong> Kein Unterschied
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 1)">
+                                <strong>B)</strong> := deklariert, = weist zu
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 2)">
+                                <strong>C)</strong> := ist schneller
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 3)">
+                                <strong>D)</strong> := nur für Strings
+                            </div>
+                        </div>
+                        <div id="feedback-3" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 4 -->
+                    <div class="quiz-question">
+                        <h4>Frage 4: Wo kann <code>:=</code> NICHT verwendet werden?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(4, 0)">
+                                <strong>A)</strong> In main()
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 1)">
+                                <strong>B)</strong> In anderen Funktionen
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 2)">
+                                <strong>C)</strong> Auf package-level (global)
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 3)">
+                                <strong>D)</strong> Mit Integern
+                            </div>
+                        </div>
+                        <div id="feedback-4" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 5 -->
+                    <div class="quiz-question">
+                        <h4>Frage 5: Was passiert mit ungenutzten lokalen Variablen?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(5, 0)">
+                                <strong>A)</strong> Compiler-Warnung
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 1)">
+                                <strong>B)</strong> Compiler-Fehler
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 2)">
+                                <strong>C)</strong> Nichts, alles OK
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 3)">
+                                <strong>D)</strong> Laufzeitfehler
+                            </div>
+                        </div>
+                        <div id="feedback-5" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 6 -->
+                    <div class="quiz-question">
+                        <h4>Frage 6: Was ist der Zero-Value für <code>string</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(6, 0)">
+                                <strong>A)</strong> ""
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 1)">
+                                <strong>B)</strong> null
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 2)">
+                                <strong>C)</strong> " "
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 3)">
+                                <strong>D)</strong> "0"
+                            </div>
+                        </div>
+                        <div id="feedback-6" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 7 -->
+                    <div class="quiz-question">
+                        <h4>Frage 7: Welcher Typ hat <code>x</code> bei <code>var x = 42</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(7, 0)">
+                                <strong>A)</strong> int
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 1)">
+                                <strong>B)</strong> int64
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 2)">
+                                <strong>C)</strong> float64
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 3)">
+                                <strong>D)</strong> auto
+                            </div>
+                        </div>
+                        <div id="feedback-7" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 8 -->
+                    <div class="quiz-question">
+                        <h4>Frage 8: Können globale Variablen ungenutzt bleiben?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(8, 0)">
+                                <strong>A)</strong> Ja, ohne Fehler
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 1)">
+                                <strong>B)</strong> Nein, Compiler-Fehler
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 2)">
+                                <strong>C)</strong> Nur mit var
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 3)">
+                                <strong>D)</strong> Nur mit :=
+                            </div>
+                        </div>
+                        <div id="feedback-8" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 9 -->
+                    <div class="quiz-question">
+                        <h4>Frage 9: Was ist der Zero-Value für <code>bool</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(9, 0)">
+                                <strong>A)</strong> false
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 1)">
+                                <strong>B)</strong> true
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 2)">
+                                <strong>C)</strong> 0
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 3)">
+                                <strong>D)</strong> null
+                            </div>
+                        </div>
+                        <div id="feedback-9" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 10 -->
+                    <div class="quiz-question">
+                        <h4>Frage 10: Wozu dient der leere Bezeichner <code>_</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(10, 0)">
+                                <strong>A)</strong> Werte verwerfen/ignorieren
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 1)">
+                                <strong>B)</strong> Private Variablen
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 2)">
+                                <strong>C)</strong> Konstanten
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 3)">
+                                <strong>D)</strong> Globale Variablen
+                            </div>
+                        </div>
+                        <div id="feedback-10" class="quiz-feedback"></div>
+                    </div>
+
+                    <button onclick="submitQuiz()" style="background: #10b981; font-size: 1.2em; padding: 15px 40px;">
+                        Quiz auswerten
+                    </button>
+                    
+                    <div id="quiz-score" class="quiz-score"></div>
+                </div>
+            </div>
+
+            <a href="../index.html" class="back-link">← Zurück zur Startseite</a>
+        </div>
+    </div>
+
+    <script>
+        // Quiz-System
+        const quizAnswers = {
+            1: 0,   // A) 0
+            2: 3,   // D) x := (ohne Wert)
+            3: 1,   // B) := deklariert, = weist zu
+            4: 2,   // C) package-level
+            5: 1,   // B) Compiler-Fehler
+            6: 0,   // A) ""
+            7: 0,   // A) int
+            8: 0,   // A) Ja
+            9: 0,   // A) false
+            10: 0   // A) Werte verwerfen
+        };
+
+        const quizExplanations = {
+            1: '✅ Richtig! Der Zero-Value für int ist 0.',
+            2: '✅ Richtig! Bei := muss ein Wert angegeben werden.',
+            3: '✅ Richtig! := deklariert eine neue Variable, = weist einer existierenden Variable einen Wert zu.',
+            4: '✅ Richtig! := kann nur in Funktionen verwendet werden. Auf package-level nur var erlaubt.',
+            5: '✅ Richtig! Ungenutzte lokale Variablen führen zu einem Compiler-Fehler.',
+            6: '✅ Richtig! Der Zero-Value für string ist der leere String "".',
+            7: '✅ Richtig! Der Standardtyp für Integer-Literale ist int.',
+            8: '✅ Richtig! Globale Variablen dürfen ungenutzt bleiben (nur lokale verursachen Fehler).',
+            9: '✅ Richtig! Der Zero-Value für bool ist false.',
+            10: '✅ Richtig! Der leere Bezeichner _ dient dazu, Werte zu verwerfen/ignorieren.'
+        };
+
+        const selectedAnswers = {};
+
+        function selectQuizOption(question, option) {
+            const options = document.querySelectorAll(`.quiz-question:nth-of-type(${question}) .quiz-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[option].classList.add('selected');
+            selectedAnswers[question] = option;
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            const total = Object.keys(quizAnswers).length;
+            
+            for (let q = 1; q <= total; q++) {
+                const userAnswer = selectedAnswers[q];
+                const correctAnswer = quizAnswers[q];
+                const feedback = document.getElementById(`feedback-${q}`);
+                const options = document.querySelectorAll(`.quiz-question:nth-of-type(${q}) .quiz-option`);
+                
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    if (idx === correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (idx === userAnswer && idx !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (userAnswer === correctAnswer) {
+                    correct++;
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#d1fae5';
+                    feedback.style.border = '2px solid #10b981';
+                    feedback.style.color = '#065f46';
+                    feedback.innerHTML = quizExplanations[q];
+                } else if (userAnswer !== undefined) {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fee2e2';
+                    feedback.style.border = '2px solid #ef4444';
+                    feedback.style.color = '#991b1b';
+                    feedback.innerHTML = '❌ Falsch. ' + quizExplanations[q];
+                } else {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fef3c7';
+                    feedback.style.border = '2px solid #f59e0b';
+                    feedback.style.color = '#92400e';
+                    feedback.innerHTML = '⚠️ Keine Antwort gewählt. ' + quizExplanations[q];
+                }
+            }
+            
+            const percentage = (correct / total * 100).toFixed(0);
+            const scoreDiv = document.getElementById('quiz-score');
+            let grade = '';
+            if (percentage >= 90) grade = '🏆 Ausgezeichnet!';
+            else if (percentage >= 75) grade = '🌟 Sehr gut!';
+            else if (percentage >= 60) grade = '✅ Gut!';
+            else if (percentage >= 50) grade = '📖 Noch etwas üben!';
+            else grade = '💪 Weiter lernen!';
+            
+            scoreDiv.className = 'quiz-score show';
+            scoreDiv.innerHTML = `
+                <div style="font-size: 2em; margin-bottom: 15px;">${grade}</div>
+                <div style="font-size: 1.5em;">${correct} von ${total} Fragen richtig</div>
+                <div style="font-size: 1.2em; margin-top: 10px;">${percentage}%</div>
+            `;
+            
+            scoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

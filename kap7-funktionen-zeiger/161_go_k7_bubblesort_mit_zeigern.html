@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmierübung: Bubble Sort mit Zeigerparameter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+        .cross-link {
+            background: #e8eaf6;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .lesson-links {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(102, 126, 234, 0.25);
+        }
+
+        .lesson-links a {
+            color: #3949ab;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong { color: #7b1fa2; }
+
+        .concepts-used {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .concepts-used h4 { margin-bottom: 10px; color: #2e7d32; }
+
+        .concepts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .concept-tag {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #4caf50;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+
+        ul, ol { margin-left: 20px; line-height: 1.8; }
+        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        p { line-height: 1.6; margin: 10px 0; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-button:hover { transform: translateY(-2px); }
+        .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bubble Sort mit Zeigerparameter</h1>
+            <div class="subtitle">Von call-by-value zu call-by-reference: Arrays direkt verändern</div>
+            <div class="cross-link">
+                Fortsetzung: Wir sehen, wie Zeiger als Parameter Funktionen ermöglichen, Original-Daten zu verändern ohne rückgabewerte.
+                <div class="lesson-links">
+                    <strong>Lernpfad:</strong>
+                    <a href="150_go_k7_das_kopier_problem.html">Kopierproblem</a>
+                    <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+                    <a href="162_go_k7_selectionsort_mit_funktionen.html">Selection mit Funktionen</a>
+                    <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+                    <a href="164_go_k7_bubblesort_rekursiv.html">Bubble rekursiv</a>
+                    <a href="169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html">Gesamtübersicht</a>
+                    <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1 Problem</div>
+            <div class="tab" onclick="showStep(2)">2 Zeiger-Grundlagen</div>
+            <div class="tab" onclick="showStep(3)">3 Adressoperator &</div>
+            <div class="tab" onclick="showStep(4)">4 Dereferenzoperator *</div>
+            <div class="tab" onclick="showStep(5)">5 Vergleichsfunktion</div>
+            <div class="tab" onclick="showStep(6)">6 Tauschfunktion neu</div>
+            <div class="tab" onclick="showStep(7)">7 Call-by-reference</div>
+            <div class="tab" onclick="showStep(8)">8 Vollständiger Code</div>
+            <div class="tab" onclick="showStep(9)">9 Meta</div>
+        </div>
+
+        <div class="content-area">
+            <div class="step-content active" id="step-1">
+                <h3>Ausgangspunkt: Bubble Sort mit Funktionen</h3>
+                <p>Das ist der Stand aus dem vorigen Block. Der Bubble-Sort-Algorithmus wurde bereits in Funktionen zerlegt, aber die Tauschfunktion muss das Array zurückgeben:</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func isGreater(a [10]int, i int) bool {
+    return a[i] > a[i+1]
+}
+
+func swap(a [10]int, i int) [10]int {
+    a[i], a[i+1] = a[i+1], a[i]
+    return a
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    for pass := 0; pass < len(a)-1; pass++ {
+        for i := 0; i < len(a)-1-pass; i++ {
+            if isGreater(a, i) {
+                a = swap(a, i)
+            }
+        }
+
+        fmt.Printf("Nach Pass %d: %v\n", pass+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="info-box">
+                    <strong>Das Unbehagen:</strong> Wir tauschen nur zwei benachbarte Elemente, aber die Funktion muss das <strong>gesamte Array kopieren und zurückgeben</strong>:
+                    <div class="code-block" style="margin-top: 10px; margin-bottom: 0;">if isGreater(a, i) {
+    a = swap(a, i)  // Ganzes Array wird kopiert!
+}</div>
+                    <p style="margin-top: 10px;">Dieser Kopieraufwand ist <strong>abhängig von der Array-Größe</strong> – bei 1000 Elementen wird die Funktion 1000 Werte kopieren, obwohl sie nur 2 Positionen verändert. Das ist reine Verschwendung.</p>
+                </div>
+
+                <div class="requirement">
+                    <strong>Neue Frage:</strong> Kann die Funktion das Original-Array direkt verändern, ohne es kopieren und zurückgeben zu müssen?
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>Zurück</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-2">
+                <h3>Was sind Zeiger?</h3>
+                <p>Ein Zeiger ist eine Variable, die die Speicheradresse einer anderen Variable speichert. In Go werden Zeiger mit dem Stern <code>*</code> gekennzeichnet.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Konzept</th>
+                            <th>Beispiel</th>
+                            <th>Bedeutung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Variable</td>
+                            <td><code>x := 42</code></td>
+                            <td>enthält einen Wert</td>
+                        </tr>
+                        <tr>
+                            <td>Zeiger-Typ</td>
+                            <td><code>*int</code></td>
+                            <td>Zeiger auf einen <code>int</code></td>
+                        </tr>
+                        <tr>
+                            <td>Zeiger-Variable</td>
+                            <td><code>p := &x</code></td>
+                            <td>enthält die Adresse von <code>x</code></td>
+                        </tr>
+                        <tr>
+                            <td>Zeigeradresse</td>
+                            <td><code>0xc0000180b0</code></td>
+                            <td>RAM-Adresse im Speicher</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="concepts-used">
+                    <h4>Neue Begriffe dieses Blocks</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Zeiger (Pointer)</div>
+                        <div class="concept-tag">Speicheradresse</div>
+                        <div class="concept-tag">Adressoperator &</div>
+                        <div class="concept-tag">Dereferenzoperator *</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Der Adressoperator: &</h3>
+                <p>Mit <code>&</code> (Adressoperator) erhält man die Speicheradresse einer Variable.</p>
+
+                <div class="code-block">x := 42
+p := &x        // p ist ein Zeiger auf x
+fmt.Println(p) // gibt etwa 0xc0000180b0 aus</div>
+
+                <div class="info-box">
+                    <strong>Was passiert:</strong>
+                    <ul>
+                        <li><code>x</code> speichert den Wert <code>42</code> im Speicher</li>
+                        <li><code>&x</code> gibt die Adresse dieses Speicherplatzes zurück</li>
+                        <li><code>p</code> speichert diese Adresse</li>
+                    </ul>
+                </div>
+
+                <p>Für Arrays funktioniert es genauso:</p>
+
+                <div class="code-block">a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+pa := &a       // pa ist ein Zeiger auf das Array</div>
+
+                <div class="tip">
+                    <strong>Wichtig:</strong> <code>pa</code> zeigt auf das Original-Array, nicht auf eine Kopie. Eine Änderung über <code>pa</code> verändert <code>a</code> direkt.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-4">
+                <h3>Der Dereferenzoperator: *</h3>
+                <p>Mit <code>*</code> (Dereferenzoperator) greift man auf den Wert zu, auf den ein Zeiger zeigt.</p>
+
+                <div class="code-block">x := 42
+p := &x          // p zeigt auf x
+fmt.Println(*p)  // gibt 42 aus</div>
+
+                <div class="info-box">
+                    <strong>Duales System:</strong>
+                    <ul>
+                        <li><code>&x</code>: "Gib mir die Adresse von x"</li>
+                        <li><code>*p</code>: "Gib mir den Wert, auf den p zeigt"</li>
+                    </ul>
+                </div>
+
+                <p>Man kann über einen Zeiger auch Werte ändern:</p>
+
+                <div class="code-block">x := 42
+p := &x
+*p = 100        // x hat jetzt den Wert 100
+fmt.Println(x)  // gibt 100 aus</div>
+
+                <div class="requirement">
+                    <strong>Das ist der Kern der Sache:</strong> Eine Funktion, die einen Zeiger bekommt, kann das Original-Objekt verändern.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-5">
+                <h3>Vergleichsfunktion (bleibt gleich)</h3>
+                <p>Die Vergleichsfunktion ändert nichts am Array. Sie braucht also keinen Zeiger, nur den Wert.</p>
+
+                <div class="code-block">func isGreater(a [10]int, i int) bool {
+    return a[i] > a[i+1]
+}</div>
+
+                <div class="info-box">
+                    <strong>Überlegung:</strong> Wir lesen nur, ändern nicht. Deshalb bleibt diese Funktion wie sie ist.
+                </div>
+
+                <p>Im Code wird sie genauso aufgerufen:</p>
+
+                <div class="code-block">if isGreater(a, i) {
+    // ...
+}</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-6">
+                <h3>Tauschfunktion mit Zeiger-Parameter</h3>
+                <p>Jetzt kommt der eigentliche Unterschied. Die Tauschfunktion bekommt einen Zeiger auf das Array:</p>
+
+                <h3>Alte Version (call-by-value)</h3>
+                <div class="code-block">func swap(a [10]int, i int) [10]int {
+    a[i], a[i+1] = a[i+1], a[i]
+    return a
+}</div>
+
+                <h3>Neue Version (call-by-reference mit Zeiger)</h3>
+                <div class="code-block">func swap(a *[10]int, i int) {
+    a[i], a[i+1] = a[i+1], a[i]
+}</div>
+
+                <div class="requirement">
+                    <strong>Schreibweise:</strong>
+                    <ul>
+                        <li><code>*[10]int</code>: "Zeiger auf ein Array von 10 int"</li>
+                        <li>Der Parameter <code>a</code> ist jetzt ein Zeiger</li>
+                        <li>Keine Rückgabe mehr nötig!</li>
+                    </ul>
+                </div>
+
+                <div class="concepts-used">
+                    <h4>Was ändert sich?</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Zeiger-Parameter</div>
+                        <div class="concept-tag">Keine Rückgabe</div>
+                        <div class="concept-tag">Direktes Verändern</div>
+                        <div class="concept-tag">Go-Syntax: a[i] funktioniert auch auf Zeigern!</div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>Go-Feature:</strong> In Go kann man auf Array-Elementen über einen Zeiger auch ohne explizites Dereferenzieren zugreifen. <code>a[i]</code> funktioniert, als wäre <code>a</code> ein Array (Go dereferenziert automatisch).
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-7">
+                <h3>Call-by-reference in der main()</h3>
+                <p>Der Aufruf ändert sich, weil wir nun einen Zeiger übergeben müssen:</p>
+
+                <h3>Alte Version</h3>
+                <div class="code-block">a = swap(a, i)</div>
+
+                <h3>Neue Version</h3>
+                <div class="code-block">swap(&a, i)</div>
+
+                <div class="info-box">
+                    <strong>Was passiert:</strong>
+                    <ul>
+                        <li><code>&a</code> gibt die Adresse des Arrays an</li>
+                        <li><code>swap</code> erhält diese Adresse</li>
+                        <li><code>swap</code> verändert das Original-Array</li>
+                        <li>Keine Zuweisung nötig!</li>
+                    </ul>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspekt</th>
+                            <th>call-by-value (alt)</th>
+                            <th>call-by-reference (neu)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parameter-Typ</td>
+                            <td><code>[10]int</code></td>
+                            <td><code>*[10]int</code></td>
+                        </tr>
+                        <tr>
+                            <td>Übergabe</td>
+                            <td><code>swap(a, i)</code></td>
+                            <td><code>swap(&a, i)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Rückgabewert</td>
+                            <td><code>[10]int</code></td>
+                            <td>keine</td>
+                        </tr>
+                        <tr>
+                            <td>Zuweisung nach Aufruf</td>
+                            <td><code>a = result</code></td>
+                            <td>nicht nötig</td>
+                        </tr>
+                        <tr>
+                            <td>Original verändern?</td>
+                            <td>Nein (Kopie verändern)</td>
+                            <td>Ja (direkt)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(8)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-8">
+                <h3>Vollständiger Code: Bubble Sort mit Zeigern</h3>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func isGreater(a [10]int, i int) bool {
+    return a[i] > a[i+1]
+}
+
+func swap(a *[10]int, i int) {
+    a[i], a[i+1] = a[i+1], a[i]
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    for pass := 0; pass < len(a)-1; pass++ {
+        for i := 0; i < len(a)-1-pass; i++ {
+            if isGreater(a, i) {
+                swap(&a, i)
+            }
+        }
+
+        fmt.Printf("Nach Pass %d: %v\n", pass+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="tip">
+                    <strong>Vergleich zur alten Lösung:</strong> Der Code liest sich sehr ähnlich. Der große Unterschied liegt in der Technik: Die Funktion arbeitet nun mit einer Referenz zum Original, nicht mit einer Kopie.
+                </div>
+
+                <div class="requirement">
+                    <strong>Didaktischer Gewinn:</strong> Dies ist der Übergang von imperativem zu referentiellem Denken. Funktionen manipulieren nun externe Zustände.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(7)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(9)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-9">
+                <h3>Meta-Seite: Was haben wir gelernt?</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Thema</th>
+                            <th>Erkenntnis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Speicheradresse</td>
+                            <td>Jede Variable hat einen Platz im Speicher mit einer eindeutigen Adresse.</td>
+                        </tr>
+                        <tr>
+                            <td>Adressoperator &</td>
+                            <td>Mit <code>&</code> erhält man die Adresse einer Variable.</td>
+                        </tr>
+                        <tr>
+                            <td>Zeiger</td>
+                            <td>Ein Zeiger ist eine Variable, die eine Speicheradresse speichert.</td>
+                        </tr>
+                        <tr>
+                            <td>Dereferenzoperator *</td>
+                            <td>Mit <code>*</code> greift man auf den Wert zu, auf den ein Zeiger zeigt.</td>
+                        </tr>
+                        <tr>
+                            <td>Call-by-reference</td>
+                            <td>Funktionen können mit Zeigerparametern Original-Objekte direkt verändern.</td>
+                        </tr>
+                        <tr>
+                            <td>Effizienz</td>
+                            <td>Zeiger vermeiden das Kopieren großer Objekte wie Arrays.</td>
+                        </tr>
+                        <tr>
+                            <td>Go-Spezial</td>
+                            <td>In Go kann man auf Array-Elementen über Zeiger ohne explizites Dereferenzieren zugreifen.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="concepts-used">
+                    <h4>Brücke zum nächsten Block</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Slice statt Array</div>
+                        <div class="concept-tag">Warum Slices effizienter sind</div>
+                        <div class="concept-tag">Zeiger in komplexeren Strukturen</div>
+                        <div class="concept-tag">Rekursion mit Zeigern</div>
+                    </div>
+                </div>
+
+                <div class="cross-link" style="margin-top: 15px;">
+                    Nächster sinnvoller Schritt: Bubble Sort mit Slices. Slices sind in Go flexible Array-Views und arbeiten bereits mit Zeigern "unter der Haube".
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(8)">Zurück</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            tabs[stepNumber - 1].classList.add('active');
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

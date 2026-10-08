@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Variablendeklaration - Interaktiv</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15,118,110,0.15);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #0f766e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0f766e;
+        }
+
+        .section h3 {
+            color: #1e40af;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: #e5e7eb;
+            color: #1f2937;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #0f766e;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #d1d5db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #0f766e;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f0fdfa15 0%, #99f6e415 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #0f766e;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .interactive-area {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #0f766e;
+        }
+
+        button {
+            background: #0f766e;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px 10px 0;
+        }
+
+        button:hover {
+            background: #115e59;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .result.success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .result.info {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .result.warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .result.error {
+            background: #fee2e2;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .code-block {
+            background: #1f2937;
+            white-space: pre;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+        .code-block .function { color: #61afef; }
+        .code-block .number { color: #d19a66; }
+        .code-block .type { color: #e5c07b; }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            background: white;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 10px;
+            color: #0f766e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #0f766e;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .scope-visual {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .scope-box {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+
+        .scope-box.global {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .scope-box.local {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            margin-left: 30px;
+        }
+
+        .quiz-container {
+            margin-top: 30px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-question h4 {
+            color: #0f766e;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #f3f4f6;
+            border-color: #0f766e;
+        }
+
+        .quiz-option.selected {
+            background: #f0fdfa;
+            border-color: #0f766e;
+        }
+
+        .quiz-option.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .zero-values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .zero-value-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdfa 0%, #99f6e4 100%);
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #0f766e;
+        }
+
+        .zero-value-card .type {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .zero-value-card .value {
+            font-size: 1.5em;
+            font-family: 'Courier New', monospace;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>📝 Go Variablendeklaration</h1>
+            <p>Ausführliche vs. kurze Deklaration, lokale vs. globale Variablen</p>
+        </div>
+
+        <div class="content">
+            <!-- Ausführliche Variablendeklaration -->
+            <div class="section">
+                <h2>1️⃣ Ausführliche Variablendeklaration (var)</h2>
+                
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('var', 0)">Grundlagen</button>
+                    <button class="tab-button" onclick="switchTab('var', 1)">Typ weglassen</button>
+                    <button class="tab-button" onclick="switchTab('var', 2)">Wert weglassen</button>
+                    <button class="tab-button" onclick="switchTab('var', 3)">Mehrere Variablen</button>
+                </div>
+
+                <div id="var-0" class="tab-content active">
+                    <div class="card">
+                        <h3>Vollständige Deklaration</h3>
+                        <p>Mit Schlüsselwort <code>var</code>, Bezeichner, Typ und Initialwert:</p>
+                        
+                        <div class="code-block"><span class="keyword">var</span> foo <span class="type">int</span> = <span class="number">42</span>    <span class="comment">// explizite Angabe von Typ und Wert</span></div>
+
+                        <div class="highlight-box">
+                            <strong>Bestandteile einer Variablendeklaration:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><code>var</code> – Schlüsselwort</li>
+                                <li><code>foo</code> – Bezeichner (Name der Variable)</li>
+                                <li><code>int</code> – Datentyp</li>
+                                <li><code>= 42</code> – Initialwert</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="var-1" class="tab-content">
+                    <div class="card">
+                        <h3>Typ weglassen</h3>
+                        <p>Der Typ wird automatisch aus dem Initialwert abgeleitet:</p>
+                        
+                        <div class="code-block"><span class="keyword">var</span> foo = <span class="number">42</span>         <span class="comment">// Typ int (Standardtyp für Integer-Literale)</span>
+<span class="keyword">var</span> bar = <span class="number">9.95</span>       <span class="comment">// Typ float64 (Standardtyp für Float-Literale)</span>
+<span class="keyword">var</span> text = <span class="string">"Hallo"</span>   <span class="comment">// Typ string</span>
+<span class="keyword">var</span> ok = <span class="keyword">true</span>        <span class="comment">// Typ bool</span></div>
+
+                        <div class="info-box">
+                            <strong>💡 Standardtypen (Default Types):</strong><br>
+                            • Integer-Literale → <code>int</code><br>
+                            • Float-Literale → <code>float64</code><br>
+                            • String-Literale → <code>string</code><br>
+                            • Boolean-Literale → <code>bool</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="var-2" class="tab-content">
+                    <div class="card">
+                        <h3>Wert weglassen (Zero Value)</h3>
+                        <p>Die Variable wird automatisch mit dem <strong>Null-Wert (zero value)</strong> ihres Typs initialisiert:</p>
+                        
+                        <div class="code-block"><span class="keyword">var</span> bar <span class="type">int</span>      <span class="comment">// implizite Belegung mit 0</span>
+<span class="keyword">var</span> x <span class="type">float64</span>   <span class="comment">// implizite Belegung mit 0.0</span>
+<span class="keyword">var</span> s <span class="type">string</span>    <span class="comment">// implizite Belegung mit ""</span>
+<span class="keyword">var</span> b <span class="type">bool</span>      <span class="comment">// implizite Belegung mit false</span></div>
+
+                        <div class="zero-values-grid">
+                            <div class="zero-value-card">
+                                <div class="type">int, int8, int16, ...</div>
+                                <div class="value">0</div>
+                            </div>
+                            <div class="zero-value-card">
+                                <div class="type">float32, float64</div>
+                                <div class="value">0.0</div>
+                            </div>
+                            <div class="zero-value-card">
+                                <div class="type">bool</div>
+                                <div class="value">false</div>
+                            </div>
+                            <div class="zero-value-card">
+                                <div class="type">string</div>
+                                <div class="value">""</div>
+                            </div>
+                        </div>
+
+                        <div class="success-box">
+                            <strong>✅ Vorteil:</strong> Keine uninitialisierte Variablen wie in C!<br>
+                            Jede Variable hat nach der Deklaration immer einen definierten Wert.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="var-3" class="tab-content">
+                    <div class="card">
+                        <h3>Mehrere Variablen gleichzeitig</h3>
+                        <p>Go erlaubt die Deklaration mehrerer Variablen in einer Anweisung:</p>
+                        
+                        <div class="code-block"><span class="keyword">var</span> tag, monat, jahr <span class="type">int</span> = <span class="number">24</span>, <span class="number">12</span>, <span class="number">2006</span>
+<span class="keyword">var</span> name, note, bestanden = <span class="string">"Peter"</span>, <span class="number">1.7</span>, <span class="keyword">true</span>
+<span class="keyword">var</span> a, b, c <span class="type">int</span>    <span class="comment">// alle drei mit 0 initialisiert</span></div>
+
+                        <h4 style="margin-top: 30px;">Kompakte Block-Notation:</h4>
+                        <div class="code-block"><span class="keyword">var</span> (
+    tag, monat, jahr <span class="type">int</span> = <span class="number">24</span>, <span class="number">12</span>, <span class="number">2006</span>
+    name, note, bestanden = <span class="string">"Peter"</span>, <span class="number">1.7</span>, <span class="keyword">true</span>
+    a, b, c <span class="type">int</span>
+)</div>
+
+                        <div class="highlight-box">
+                            <strong>💡 Tipp:</strong> Block-Notation verwenden, wenn mehrere Zeilen mit Deklarationen aufeinanderfolgen.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>Ausführliche Deklaration Tester</h4>
+                    <div class="input-group">
+                        <label>Variablenname:</label>
+                        <input type="text" id="varName" placeholder="z.B. counter" value="counter">
+                    </div>
+                    <div class="input-group">
+                        <label>Typ:</label>
+                        <select id="varType">
+                            <option value="int">int</option>
+                            <option value="float64">float64</option>
+                            <option value="string">string</option>
+                            <option value="bool">bool</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Wert (leer lassen für Zero Value):</label>
+                        <input type="text" id="varValue" placeholder="z.B. 42 oder leer lassen">
+                    </div>
+                    <button onclick="generateVarDeclaration()">Deklaration generieren</button>
+                    <div id="varResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Kurze Variablendeklaration -->
+            <div class="section">
+                <h2>2️⃣ Kurze Variablendeklaration (:=)</h2>
+                
+                <div class="card">
+                    <h3>Deklarationsoperator :=</h3>
+                    <p>Kompakte Syntax für Variablendeklaration mit Initialwert (nur in Funktionen!):</p>
+                    
+                    <div class="code-block">foo := <span class="number">42</span>    <span class="comment">// entspricht: var foo = 42</span></div>
+
+                    <div class="highlight-box">
+                        <strong>Eigenschaften der kurzen Deklaration:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>✅ Kein <code>var</code> Schlüsselwort nötig</li>
+                            <li>✅ Sehr kompakt und häufig verwendet</li>
+                            <li>✅ Typ wird automatisch abgeleitet</li>
+                            <li>⚠️ Initialwert MUSS angegeben werden</li>
+                            <li>⚠️ Nur in Funktionen erlaubt (nicht global!)</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-block"><span class="comment">// Mehrere Variablen gleichzeitig</span>
+tag, monat, jahr := <span class="number">24</span>, <span class="number">12</span>, <span class="number">2006</span>
+name, note, bestanden := <span class="string">"Peter"</span>, <span class="number">1.7</span>, <span class="keyword">true</span>
+a, b, c := <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>    <span class="comment">// Zero-Werte müssen explizit sein!</span></div>
+                </div>
+
+                <div class="card">
+                    <h3>:= vs. =</h3>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Wichtiger Unterschied!</strong><br><br>
+                        <code>:=</code> – <strong>Deklarationsoperator</strong> (erzeugt NEUE Variable)<br>
+                        <code>=</code> – <strong>Zuweisungsoperator</strong> (ändert existierende Variable)
+                    </div>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>Deklaration (:=)</h4>
+                            <div class="code-block">x := <span class="number">8</span>    <span class="comment">// Neue Variable x</span></div>
+                            <p style="margin-top: 10px;">Erzeugt eine neue Variable <code>x</code> und weist ihr den Wert 8 zu.</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>Zuweisung (=)</h4>
+                            <div class="code-block">x = <span class="number">10</span>   <span class="comment">// x muss existieren!</span></div>
+                            <p style="margin-top: 10px;">Weist der existierenden Variable <code>x</code> den neuen Wert 10 zu.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block">x := <span class="number">8</span>     <span class="comment">// x wird deklariert und mit 8 initialisiert</span>
+x = <span class="number">10</span>    <span class="comment">// x wird mit 10 überschrieben</span>
+x := <span class="number">15</span>    <span class="comment">// ❌ FEHLER: x bereits deklariert!</span></div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>Kurze Deklaration vs. Zuweisung</h4>
+                    <div class="input-group">
+                        <label>Code-Zeile eingeben:</label>
+                        <input type="text" id="shortDeclInput" placeholder='z.B. x := 42 oder x = 10' value="x := 42">
+                    </div>
+                    <button onclick="analyzeShortDecl()">Analysieren</button>
+                    <div id="shortDeclResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Lokale vs. Globale Variablen -->
+            <div class="section">
+                <h2>3️⃣ Lokale vs. Globale Variablen</h2>
+                
+                <div class="card">
+                    <h3>Gültigkeitsbereiche (Scope)</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Eigenschaft</th>
+                                <th>Lokale Variable</th>
+                                <th>Globale Variable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Deklaration</strong></td>
+                                <td>Innerhalb einer Funktion</td>
+                                <td>Außerhalb von Funktionen</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gültigkeitsbereich</strong></td>
+                                <td>Nur in der Funktion</td>
+                                <td>Im gesamten Paket</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Syntax</strong></td>
+                                <td><code>var</code> oder <code>:=</code></td>
+                                <td>Nur <code>var</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ungenutzt</strong></td>
+                                <td>❌ Compiler-Fehler</td>
+                                <td>✅ Erlaubt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block"><span class="keyword">package</span> main
+
+<span class="keyword">import</span> <span class="string">"fmt"</span>
+
+<span class="keyword">var</span> klima <span class="type">string</span>    <span class="comment">// GLOBALE Variable (package-level)</span>
+
+<span class="keyword">func</span> <span class="function">f</span>() {
+    wetter := <span class="string">"Regen"</span>    <span class="comment">// LOKALE Variable in f</span>
+    fmt.Println(klima + <span class="string">", "</span> + wetter)
+    klima = <span class="string">"warm"</span>       <span class="comment">// Globale Variable ändern</span>
+}
+
+<span class="keyword">func</span> <span class="function">main</span>() {
+    wetter := <span class="string">"Sonne"</span>    <span class="comment">// LOKALE Variable in main</span>
+    klima = <span class="string">"kalt"</span>       <span class="comment">// Globale Variable ändern</span>
+    fmt.Println(klima + <span class="string">", "</span> + wetter)
+    <span class="function">f</span>()
+}</div>
+
+                    <div class="scope-visual">
+                        <strong>Visualisierung der Gültigkeitsbereiche:</strong>
+                        <div class="scope-box global">
+                            <strong>Package-Level (global):</strong> <code>klima</code>
+                            <div class="scope-box local">
+                                <strong>Funktion f():</strong> <code>wetter</code> (= "Regen")
+                            </div>
+                            <div class="scope-box local">
+                                <strong>Funktion main():</strong> <code>wetter</code> (= "Sonne")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>💡 Wichtig:</strong><br>
+                        • Beide Funktionen haben ihre eigene lokale Variable <code>wetter</code><br>
+                        • Diese sind unabhängig voneinander!<br>
+                        • Beide teilen sich die globale Variable <code>klima</code>
+                    </div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>Scope-Simulator</h4>
+                    <p>Simuliere die Ausgabe des obigen Programms Schritt für Schritt:</p>
+                    <button onclick="simulateScope()" id="scopeBtn">Simulation starten</button>
+                    <div id="scopeResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Ungenutzte Variablen -->
+            <div class="section">
+                <h2>4️⃣ Ungenutzte Variablen</h2>
+                
+                <div class="card">
+                    <h3>Compiler-Fehlermeldung</h3>
+                    <p>Go verlangt, dass <strong>alle lokalen Variablen</strong> mindestens einmal lesend verwendet werden:</p>
+                    
+                    <div class="code-block"><span class="keyword">func</span> <span class="function">main</span>() {
+    <span class="keyword">var</span> a, b <span class="type">int</span>
+    a = <span class="number">5</span>
+    b = a * <span class="number">100</span>
+    fmt.Println(a)
+}
+<span class="comment">// ❌ Compiler-Fehler: "b declared but not used"</span></div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ "not used" bedeutet:</strong><br>
+                        Die Variable wird nirgendwo <strong>lesend</strong> verwendet.<br>
+                        Zuweisungen allein reichen nicht!
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Workaround: Leerer Bezeichner _</h3>
+                    <p>Bei temporär auskommentiertem Code kann man Werte an <code>_</code> zuweisen:</p>
+                    
+                    <div class="code-block"><span class="keyword">func</span> <span class="function">main</span>() {
+    <span class="keyword">var</span> a, b <span class="type">int</span>
+    a = <span class="number">5</span>
+    b = a * <span class="number">100</span>
+    fmt.Println(a)
+    _ = b    <span class="comment">// ✅ Workaround: Wert wird gelesen und verworfen</span>
+    <span class="comment">//fmt.Println("ausführliche Ausgabe: ", b)</span>
+}</div>
+
+                    <div class="info-box">
+                        <strong>💡 Leerer Bezeichner _:</strong><br>
+                        • Zuweisungen an <code>_</code> werden vom Compiler akzeptiert<br>
+                        • Der Wert wird sofort verworfen<br>
+                        • Nützlich beim Auskommentieren von Code während der Entwicklung<br>
+                        • Mehrere Variablen: <code>_, _ = a, b</code>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ Globale Variablen:</strong><br>
+                        Können ungenutzt bleiben (keine Fehlermeldung!)
+                    </div>
+                </div>
+
+                <div class="interactive-area">
+                    <h4>Ungenutzten-Variablen-Detektor</h4>
+                    <div class="input-group">
+                        <label>Variablenname:</label>
+                        <input type="text" id="unusedVar" placeholder="z.B. myVar" value="myVar">
+                    </div>
+                    <div class="input-group">
+                        <label>Wird gelesen?</label>
+                        <select id="isUsed">
+                            <option value="false">Nein (nur Zuweisung)</option>
+                            <option value="true">Ja (wird ausgelesen)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Bereich:</label>
+                        <select id="varScope">
+                            <option value="local">Lokal (in Funktion)</option>
+                            <option value="global">Global (package-level)</option>
+                        </select>
+                    </div>
+                    <button onclick="checkUnused()">Prüfen</button>
+                    <div id="unusedResult" class="result"></div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>5️⃣ Best Practices</h2>
+                
+                <div class="card">
+                    <h3>Wann welche Deklarationsform?</h3>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>✅ Kurze Form (:=)</h4>
+                            <ul style="margin-left: 20px;">
+                                <li>Am häufigsten verwendet</li>
+                                <li>Kompakt und klar</li>
+                                <li>In Funktionen</li>
+                                <li>Mit Initialwert</li>
+                            </ul>
+                            <div class="code-block" style="margin-top: 10px;">
+count := <span class="number">0</span>
+name := <span class="string">"Max"</span></div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <h4>✅ var ohne Wert</h4>
+                            <ul style="margin-left: 20px;">
+                                <li>Zero-Value gewollt</li>
+                                <li>Wert unwichtig</li>
+                                <li>Später befüllt</li>
+                            </ul>
+                            <div class="code-block" style="margin-top: 10px;">
+<span class="keyword">var</span> sum <span class="type">int</span>
+<span class="keyword">var</span> found <span class="type">bool</span></div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <h4>✅ var mit Typ</h4>
+                            <ul style="margin-left: 20px;">
+                                <li>Typ != Standardtyp</li>
+                                <li>Typ explizit wichtig</li>
+                                <li>Lesbarkeit</li>
+                            </ul>
+                            <div class="code-block" style="margin-top: 10px;">
+<span class="keyword">var</span> pi <span class="type">float64</span> = <span class="number">3.14</span>
+<span class="keyword">var</span> x <span class="type">int64</span> = <span class="number">100</span></div>
+                        </div>
+
+                        <div class="comparison-item">
+                            <h4>✅ Globale Variablen</h4>
+                            <ul style="margin-left: 20px;">
+                                <li>Nur mit var</li>
+                                <li>:= nicht erlaubt!</li>
+                                <li>Am Dateianfang</li>
+                            </ul>
+                            <div class="code-block" style="margin-top: 10px;">
+<span class="keyword">var</span> config <span class="type">string</span>
+<span class="keyword">var</span> debug = <span class="keyword">true</span></div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 30px;">
+                        <strong>📋 Faustregeln:</strong><br><br>
+                        1. <strong>Standardfall:</strong> Kurze Deklaration <code>:=</code><br>
+                        2. <strong>Zero-Value:</strong> <code>var name typ</code><br>
+                        3. <strong>Expliziter Typ:</strong> <code>var name typ = wert</code><br>
+                        4. <strong>Global:</strong> Nur <code>var</code> erlaubt<br>
+                        5. <strong>Mehrere Variablen:</strong> Block-Notation mit <code>var ( ... )</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verweis auf das Quiz -->
+            <div class="section">
+                <h2>🎯 Alles verstanden?</h2>
+                <p>Das Quiz zu dieser Seite steht auf einer eigenen Seite:</p>
+                <ul style="margin: 15px 0 0 25px;">
+                    <li><a href="go_k5_variablen_deklaration_quiz.html">Selbsttest: Variablendeklaration</a>, 10 Fragen mit je vier Antworten</li>
+                </ul>
+            </div>
+
+            <a href="../index.html" class="back-link">← Zurück zur Startseite</a>
+        </div>
+    </div>
+
+    <script>
+        // Tab-Verwaltung
+        function switchTab(group, index) {
+            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}'"]`);
+            const contents = document.querySelectorAll(`[id^="${group}-"]`);
+            
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            contents.forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        // Deklaration generieren
+        function generateVarDeclaration() {
+            const name = document.getElementById('varName').value.trim();
+            const type = document.getElementById('varType').value;
+            const value = document.getElementById('varValue').value.trim();
+            const result = document.getElementById('varResult');
+            
+            if (!name) {
+                result.className = 'result show warning';
+                result.innerHTML = '<strong>Fehler:</strong> Variablenname erforderlich!';
+                return;
+            }
+            
+            const zeroValues = {
+                'int': '0',
+                'float64': '0.0',
+                'string': '""',
+                'bool': 'false'
+            };
+            
+            let decl1, decl2, decl3, actualValue;
+            
+            if (value) {
+                actualValue = value;
+                decl1 = `var ${name} ${type} = ${value}`;
+                decl2 = `var ${name} = ${value}`;
+                decl3 = `${name} := ${value}`;
+            } else {
+                actualValue = zeroValues[type];
+                decl1 = `var ${name} ${type}`;
+                decl2 = `var ${name} ${type} = ${actualValue}`;
+                decl3 = `${name} := ${actualValue}`;
+            }
+            
+            result.className = 'result show info';
+            result.innerHTML = `
+                <strong>Mögliche Deklarationen:</strong><br><br>
+                
+                <strong>1. Vollständig:</strong><br>
+                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${decl1}</code>
+                
+                <strong>2. Ohne expliziten Typ:</strong><br>
+                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${decl2}</code>
+                
+                ${value ? `
+                    <strong>3. Kurze Form (nur in Funktionen):</strong><br>
+                    <code style="display: block; margin: 10px 0; font-size: 1.1em;">${decl3}</code>
+                ` : `
+                    <strong>3. Kurze Form:</strong><br>
+                    <code style="display: block; margin: 10px 0; font-size: 1.1em;">${decl3}</code>
+                    <div style="margin-top: 10px; padding: 10px; background: #fef3c7; border-radius: 6px;">
+                        ⚠️ Bei kurzer Form muss der Zero-Value explizit angegeben werden!
+                    </div>
+                `}
+                
+                <div style="margin-top: 15px; padding: 10px; background: #f0fdfa; border-radius: 6px;">
+                    <strong>Ergebnis:</strong> Variable <code>${name}</code> vom Typ <code>${type}</code> mit Wert <code>${actualValue}</code>
+                </div>
+            `;
+        }
+
+        // Kurze Deklaration analysieren
+        function analyzeShortDecl() {
+            const input = document.getElementById('shortDeclInput').value.trim();
+            const result = document.getElementById('shortDeclResult');
+            
+            if (!input) {
+                result.className = 'result show warning';
+                result.innerHTML = '<strong>Fehler:</strong> Code-Zeile eingeben!';
+                return;
+            }
+            
+            const isDeclaration = input.includes(':=');
+            const isAssignment = input.includes('=') && !input.includes(':=');
+            
+            if (isDeclaration) {
+                const parts = input.split(':=');
+                const varNames = parts[0].trim();
+                const values = parts[1] ? parts[1].trim() : '';
+                
+                result.className = 'result show success';
+                result.innerHTML = `
+                    <strong>✅ Variablendeklaration</strong><br><br>
+                    <strong>Operator:</strong> <code>:=</code> (Deklarationsoperator)<br>
+                    <strong>Variable(n):</strong> <code>${varNames}</code><br>
+                    <strong>Wert(e):</strong> <code>${values || '(fehlt!)'}</code><br><br>
+                    
+                    <div style="padding: 10px; background: #f0fdfa; border-radius: 6px;">
+                        <strong>Bedeutung:</strong><br>
+                        • Erzeugt NEUE Variable(n)<br>
+                        • Typ wird automatisch abgeleitet<br>
+                        • Nur in Funktionen erlaubt<br>
+                        • Variable darf noch nicht existieren
+                    </div>
+                `;
+            } else if (isAssignment) {
+                const parts = input.split('=');
+                const varNames = parts[0].trim();
+                const values = parts[1] ? parts[1].trim() : '';
+                
+                result.className = 'result show info';
+                result.innerHTML = `
+                    <strong>✅ Zuweisung</strong><br><br>
+                    <strong>Operator:</strong> <code>=</code> (Zuweisungsoperator)<br>
+                    <strong>Variable(n):</strong> <code>${varNames}</code><br>
+                    <strong>Wert(e):</strong> <code>${values || '(fehlt!)'}</code><br><br>
+                    
+                    <div style="padding: 10px; background: #dbeafe; border-radius: 6px;">
+                        <strong>Bedeutung:</strong><br>
+                        • Ändert existierende Variable(n)<br>
+                        • Variable muss bereits deklariert sein<br>
+                        • Typ bleibt unverändert
+                    </div>
+                `;
+            } else {
+                result.className = 'result show warning';
+                result.innerHTML = '<strong>Fehler:</strong> Kein Deklarations- oder Zuweisungsoperator gefunden!';
+            }
+        }
+
+        // Scope simulieren
+        let scopeStep = 0;
+        function simulateScope() {
+            const result = document.getElementById('scopeResult');
+            const btn = document.getElementById('scopeBtn');
+            
+            const steps = [
+                {
+                    title: 'Start',
+                    state: { klima: '""', 'wetter(main)': '?', 'wetter(f)': '?' },
+                    output: '',
+                    explanation: 'Globale Variable klima mit Zero-Value "" initialisiert'
+                },
+                {
+                    title: 'main: wetter := "Sonne"',
+                    state: { klima: '""', 'wetter(main)': '"Sonne"', 'wetter(f)': '?' },
+                    output: '',
+                    explanation: 'Lokale Variable wetter in main deklariert'
+                },
+                {
+                    title: 'main: klima = "kalt"',
+                    state: { klima: '"kalt"', 'wetter(main)': '"Sonne"', 'wetter(f)': '?' },
+                    output: '',
+                    explanation: 'Globale Variable klima geändert'
+                },
+                {
+                    title: 'main: Ausgabe',
+                    state: { klima: '"kalt"', 'wetter(main)': '"Sonne"', 'wetter(f)': '?' },
+                    output: 'Ausgabe main: kalt, Sonne',
+                    explanation: 'Ausgabe der Werte in main'
+                },
+                {
+                    title: 'f: wetter := "Regen"',
+                    state: { klima: '"kalt"', 'wetter(main)': '"Sonne"', 'wetter(f)': '"Regen"' },
+                    output: '',
+                    explanation: 'Eigene lokale Variable wetter in f deklariert'
+                },
+                {
+                    title: 'f: Ausgabe',
+                    state: { klima: '"kalt"', 'wetter(main)': '"Sonne"', 'wetter(f)': '"Regen"' },
+                    output: 'Ausgabe f: kalt, Regen',
+                    explanation: 'Ausgabe der Werte in f'
+                },
+                {
+                    title: 'f: klima = "warm"',
+                    state: { klima: '"warm"', 'wetter(main)': '"Sonne"', 'wetter(f)': '"Regen"' },
+                    output: '',
+                    explanation: 'Globale Variable klima in f geändert'
+                },
+                {
+                    title: 'Ende',
+                    state: { klima: '"warm"', 'wetter(main)': '"Sonne"', 'wetter(f)': '?' },
+                    output: '',
+                    explanation: 'Funktion f beendet, lokale Variable wetter(f) nicht mehr gültig'
+                }
+            ];
+            
+            if (scopeStep >= steps.length) {
+                scopeStep = 0;
+            }
+            
+            const step = steps[scopeStep];
+            
+            let stateHTML = '<div style="padding: 15px; background: #f9fafb; border-radius: 8px; margin: 10px 0;">';
+            stateHTML += '<strong>Variablen-Status:</strong><br>';
+            for (const [key, value] of Object.entries(step.state)) {
+                const color = key.startsWith('wetter') ? '#3b82f6' : '#ef4444';
+                stateHTML += `<div style="margin: 5px 0;"><code style="background: ${color}; color: white;">${key}</code> = ${value}</div>`;
+            }
+            stateHTML += '</div>';
+            
+            result.className = 'result show info';
+            result.innerHTML = `
+                <strong>Schritt ${scopeStep + 1}/${steps.length}: ${step.title}</strong><br><br>
+                ${stateHTML}
+                ${step.output ? `<div style="padding: 10px; background: #d1fae5; border-radius: 6px; margin: 10px 0;"><strong>📤 ${step.output}</strong></div>` : ''}
+                <div style="margin-top: 10px; padding: 10px; background: #f0fdfa; border-radius: 6px;">
+                    💡 ${step.explanation}
+                </div>
+            `;
+            
+            scopeStep++;
+            btn.textContent = scopeStep >= steps.length ? 'Neustart' : `Nächster Schritt (${scopeStep + 1}/${steps.length})`;
+        }
+
+        // Ungenutzte Variablen prüfen
+        function checkUnused() {
+            const varName = document.getElementById('unusedVar').value.trim();
+            const isUsed = document.getElementById('isUsed').value === 'true';
+            const scope = document.getElementById('varScope').value;
+            const result = document.getElementById('unusedResult');
+            
+            if (!varName) {
+                result.className = 'result show warning';
+                result.innerHTML = '<strong>Fehler:</strong> Variablenname eingeben!';
+                return;
+            }
+            
+            if (scope === 'local' && !isUsed) {
+                result.className = 'result show error';
+                result.innerHTML = `
+                    <strong>❌ Compiler-Fehler</strong><br><br>
+                    <code>${varName} declared but not used</code><br><br>
+                    
+                    <strong>Problem:</strong><br>
+                    Die lokale Variable <code>${varName}</code> wird nirgendwo lesend verwendet.<br><br>
+                    
+                    <strong>Lösungen:</strong><br>
+                    1. Variable verwenden (z.B. ausgeben)<br>
+                    2. Workaround: <code>_ = ${varName}</code><br>
+                    3. Variable entfernen
+                `;
+            } else if (scope === 'global' && !isUsed) {
+                result.className = 'result show success';
+                result.innerHTML = `
+                    <strong>✅ Kein Fehler</strong><br><br>
+                    Globale Variablen dürfen ungenutzt bleiben.<br><br>
+                    
+                    <div style="padding: 10px; background: #fef3c7; border-radius: 6px;">
+                        ⚠️ <strong>Hinweis:</strong> Ungenutzte globale Variablen sollten dennoch vermieden werden (Code-Qualität).
+                    </div>
+                `;
+            } else {
+                result.className = 'result show success';
+                result.innerHTML = `
+                    <strong>✅ Kein Fehler</strong><br><br>
+                    Die Variable <code>${varName}</code> wird verwendet.<br>
+                    Alles in Ordnung!
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

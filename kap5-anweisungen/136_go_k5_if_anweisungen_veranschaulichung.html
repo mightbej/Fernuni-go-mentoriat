@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>if-Anweisungen in Go - Interaktive Veranschaulichung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            white-space: pre;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #50fa7b;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #856404;
+        }
+
+        .interactive-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #e8f4f8;
+            border-left: 5px solid #667eea;
+            min-height: 60px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .flow-diagram {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .flow-box {
+            display: inline-block;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin: 10px;
+            font-weight: 600;
+        }
+
+        .flow-condition {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+        }
+
+        .flow-action {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🔀 if-Anweisungen in Go</h1>
+            <p>Bedingte Anweisungen und Verzweigungen</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">FernUni Hagen - Kurs 01613 - Kurstext v3.0.6, Abschnitt 5.5.1, Seiten 129–132</p>
+        </div>
+
+        <div class="content">
+            <!-- Grundkonzept -->
+            <div class="section">
+                <h2>🎯 Was sind bedingte Anweisungen?</h2>
+                <p>Eine <strong>bedingte Anweisung</strong> (conditional statement) ermöglicht es, von der rein sequenziellen Befehlsausführung abzuweichen. Die Ausführung eines Codeabschnitts wird von einer <strong>Bedingung</strong> abhängig gemacht, die erst zur <strong>Programmlaufzeit</strong> ausgewertet wird.</p>
+
+                <div class="highlight-box">
+                    <h4>💡 Prinzip:</h4>
+                    <p><strong>WENN</strong> eine Bedingung erfüllt ist, <strong>DANN</strong> führe bestimmten Code aus, <strong>SONST</strong> führe anderen Code aus (oder tue nichts).</p>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-box flow-condition">Bedingung prüfen</div>
+                    <div class="flow-arrow">↓</div>
+                    <div style="display: inline-block;">
+                        <div class="flow-box flow-action" style="margin-right: 50px;">true → Code A</div>
+                        <div class="flow-box flow-action">false → Code B</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grundlegende if-Anweisung -->
+            <div class="section">
+                <h2>📝 Grundlegende if-Anweisung</h2>
+                <p>Die einfachste Form einer if-Anweisung in Go:</p>
+
+                <div class="code-block"><span class="keyword">if</span> bedingung {
+    <span class="comment">// Code wird nur ausgeführt, wenn bedingung true ist</span>
+}</div>
+
+                <h3>Syntaktische Struktur</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Beschreibung</th>
+                            <th>Pflicht?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>if</code></td>
+                            <td>Schlüsselwort</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Ja</td>
+                        </tr>
+                        <tr>
+                            <td>Boolescher Ausdruck</td>
+                            <td>Bedingung, die true oder false ergibt</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Ja</td>
+                        </tr>
+                        <tr>
+                            <td><code>{ }</code> Block</td>
+                            <td>Code in geschweiften Klammern</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Ja (immer!)</td>
+                        </tr>
+                        <tr>
+                            <td>Klammern um Bedingung</td>
+                            <td><code>(bedingung)</code></td>
+                            <td style="color: #dc3545; font-weight: bold;">✗ Nein (nicht idiomatisch)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Praktisches Beispiel</h3>
+                <div class="code-block"><span class="keyword">var</span> alter <span class="keyword">int</span> = <span class="number">17</span>
+
+<span class="keyword">if</span> alter < <span class="number">18</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Du bist minderjährig."</span>)
+}</div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Wichtig in Go:</h4>
+                    <ul>
+                        <li><strong>Block ist PFLICHT:</strong> Auch bei nur einer Anweisung muss <code>{ }</code> verwendet werden!</li>
+                        <li><strong>Öffnende Klammer:</strong> Muss in derselben Zeile wie <code>if</code> stehen!</li>
+                        <li><strong>Keine Klammern:</strong> Bedingung nicht in <code>( )</code> setzen (nicht idiomatisch)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- if-else -->
+            <div class="section">
+                <h2>🔄 if-else: Verzweigung</h2>
+                <p>Mit <code>else</code> kann ein alternativer Code-Pfad definiert werden, der ausgeführt wird, wenn die Bedingung <code>false</code> ist:</p>
+
+                <div class="code-block"><span class="keyword">if</span> bedingung {
+    <span class="comment">// if-Zweig: Code bei true</span>
+} <span class="keyword">else</span> {
+    <span class="comment">// else-Zweig: Code bei false</span>
+}</div>
+
+                <div class="highlight-box">
+                    <h4>📌 Wichtig:</h4>
+                    <p><strong>Genau ein Zweig</strong> wird ausgeführt: Entweder der if-Zweig ODER der else-Zweig.</p>
+                </div>
+
+                <h3>Beispiel: Volljährigkeit prüfen</h3>
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('example1')">Mit else</button>
+                    <button class="tab-button" onclick="switchTab('example2')">Ohne else</button>
+                </div>
+
+                <div id="example1" class="tab-content active">
+                    <div class="code-block"><span class="keyword">var</span> alter <span class="keyword">int</span> = <span class="number">20</span>
+
+<span class="keyword">if</span> alter >= <span class="number">18</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Du bist volljährig."</span>)
+} <span class="keyword">else</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Du bist minderjährig."</span>)
+}</div>
+                    <div class="success-box">
+                        <p><strong>Ergebnis:</strong> Genau eine Ausgabe wird erscheinen (hier: "Du bist volljährig.")</p>
+                    </div>
+                </div>
+
+                <div id="example2" class="tab-content">
+                    <div class="code-block"><span class="keyword">var</span> alter <span class="keyword">int</span> = <span class="number">20</span>
+
+<span class="keyword">if</span> alter >= <span class="number">18</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Du bist volljährig."</span>)
+}
+<span class="comment">// Kein else → bei false passiert nichts</span></div>
+                    <div class="info-box">
+                        <p><strong>Ergebnis:</strong> Entweder eine Ausgabe oder gar keine (hier: "Du bist volljährig.")</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mehrfachverzweigungen -->
+            <div class="section">
+                <h2>🎋 Mehrfachverzweigungen: else if</h2>
+                <p>Durch <code>else if</code> können mehrere Bedingungen nacheinander geprüft werden:</p>
+
+                <div class="code-block"><span class="keyword">if</span> bedingung1 {
+    <span class="comment">// if-Zweig</span>
+} <span class="keyword">else if</span> bedingung2 {
+    <span class="comment">// else-if-Zweig 1</span>
+} <span class="keyword">else if</span> bedingung3 {
+    <span class="comment">// else-if-Zweig 2</span>
+} <span class="keyword">else</span> {
+    <span class="comment">// else-Zweig (optional)</span>
+}</div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Reihenfolge ist wichtig!</h4>
+                    <ul>
+                        <li>Bedingungen werden <strong>von oben nach unten</strong> geprüft</li>
+                        <li><strong>Sobald eine Bedingung true ist</strong>, wird der entsprechende Zweig ausgeführt</li>
+                        <li><strong>Alle nachfolgenden Zweige</strong> werden übersprungen (auch wenn ihre Bedingungen true wären!)</li>
+                        <li><strong>Maximal ein Zweig</strong> wird ausgeführt</li>
+                    </ul>
+                </div>
+
+                <h3>Beispiel: Notenberechnung</h3>
+                <div class="code-block"><span class="keyword">var</span> punkte <span class="keyword">int</span> = <span class="number">85</span>
+
+<span class="keyword">if</span> punkte >= <span class="number">90</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Note: Sehr gut"</span>)
+} <span class="keyword">else if</span> punkte >= <span class="number">75</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Note: Gut"</span>)        <span class="comment">// ← Dieser Zweig wird ausgeführt</span>
+} <span class="keyword">else if</span> punkte >= <span class="number">60</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Note: Befriedigend"</span>)
+} <span class="keyword">else if</span> punkte >= <span class="number">50</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Note: Ausreichend"</span>)
+} <span class="keyword">else</span> {
+    <span class="function">fmt</span>.<span class="function">Println</span>(<span class="string">"Note: Nicht bestanden"</span>)
+}</div>
+
+                <div class="success-box">
+                    <h4>✅ Ausgabe:</h4>
+                    <p><code>Note: Gut</code></p>
+                    <p><em>Erklärung:</em> 85 ist zwar auch ≥ 60 und ≥ 50, aber die erste zutreffende Bedingung ist <code>punkte >= 75</code>, daher wird nur dieser Zweig ausgeführt.</p>
+                </div>
+            </div>
+
+            <!-- Schaltjahr-Beispiel -->
+            <div class="section">
+                <h2>🗓️ Praxisbeispiel: Schaltjahr-Berechnung</h2>
+                <p>Das Programm aus dem Kurstext zeigt eine typische Anwendung von Mehrfachverzweigungen.</p>
+                <p><em>Quelle: Die Schaltjahr-Regel folgt Listing 5.2 <code>schaltjahr.go</code> aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.1.</em></p>
+
+                <div class="info-box">
+                    <h4>📖 Gregorianische Schaltjahrregel:</h4>
+                    <p>Alle durch 4 teilbaren Jahre sind Schaltjahre, <strong>mit der Ausnahme</strong>, dass durch 100 teilbare Jahre keine Schaltjahre sind. Davon sind jedoch wiederum die durch 400 teilbaren Jahre ausgenommen, welche <strong>immer</strong> Schaltjahre sind.</p>
+                </div>
+
+                <div class="code-block"><span class="comment">// Schaltjahr-Regel des Gregorianischen Kalenders</span>
+<span class="keyword">if</span> jahr%<span class="number">400</span> == <span class="number">0</span> {
+    schaltjahr = <span class="keyword">true</span>     <span class="comment">// Durch 400 teilbar → immer Schaltjahr</span>
+} <span class="keyword">else if</span> jahr%<span class="number">100</span> == <span class="number">0</span> {
+    schaltjahr = <span class="keyword">false</span>    <span class="comment">// Durch 100 teilbar → kein Schaltjahr</span>
+} <span class="keyword">else if</span> jahr%<span class="number">4</span> == <span class="number">0</span> {
+    schaltjahr = <span class="keyword">true</span>     <span class="comment">// Durch 4 teilbar → Schaltjahr</span>
+} <span class="keyword">else</span> {
+    schaltjahr = <span class="keyword">false</span>    <span class="comment">// Sonst kein Schaltjahr</span>
+}</div>
+
+                <h3>Warum ist die Reihenfolge wichtig?</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4 style="color: #28a745;">✅ Richtig (wie oben)</h4>
+                        <p><strong>Jahr 1700:</strong></p>
+                        <ol>
+                            <li>1700 % 400 == 0? <strong>Nein</strong></li>
+                            <li>1700 % 100 == 0? <strong>Ja</strong> → schaltjahr = false ✓</li>
+                            <li>Restliche Zweige werden übersprungen</li>
+                        </ol>
+                        <p style="margin-top: 10px;">Ergebnis: <strong>Kein Schaltjahr</strong> (korrekt!)</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ Falsch (andere Reihenfolge)</h4>
+                        <div class="code-block" style="font-size: 0.85em;"><span class="keyword">if</span> jahr%<span class="number">4</span> == <span class="number">0</span> {
+    schaltjahr = <span class="keyword">true</span>
+} <span class="keyword">else if</span> jahr%<span class="number">100</span> == <span class="number">0</span> {
+    schaltjahr = <span class="keyword">false</span>
+}</div>
+                        <p><strong>Jahr 1700:</strong> 1700 % 4 == 0? <strong>Ja</strong> → schaltjahr = true</p>
+                        <p style="color: #dc3545; margin-top: 10px;">Ergebnis: <strong>Schaltjahr</strong> (falsch!)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interaktive Demo -->
+            <div class="section">
+                <h2>🎮 Interaktive Demo: Schaltjahr-Rechner</h2>
+                
+                <div class="interactive-box">
+                    <h3>Teste die Schaltjahr-Berechnung!</h3>
+                    
+                    <div class="input-group">
+                        <label for="jahrInput"><strong>Jahr eingeben:</strong></label>
+                        <input type="number" id="jahrInput" value="2024" min="1582">
+                    </div>
+                    
+                    <button class="btn" onclick="pruefeSchaltjahr()">Prüfen</button>
+                    
+                    <div class="result-box" id="schaltjahrOutput"></div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>💡 Teste diese Jahre:</h4>
+                    <ul>
+                        <li><strong>2024:</strong> Durch 4 teilbar → Schaltjahr</li>
+                        <li><strong>1900:</strong> Durch 100 teilbar (aber nicht durch 400) → Kein Schaltjahr</li>
+                        <li><strong>2000:</strong> Durch 400 teilbar → Schaltjahr</li>
+                        <li><strong>2023:</strong> Nicht durch 4 teilbar → Kein Schaltjahr</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sprachvergleiche -->
+            <div class="section">
+                <h2>🌍 Unterschiede zu anderen Sprachen</h2>
+
+                <h3>1. Block ist Pflicht</h3>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">Java/C++ (Block optional)</h4>
+                        <div class="code-block" style="background: #fff; color: #333; border-left: 4px solid #dc3545;"><span class="keyword">if</span> (alter >= <span class="number">18</span>)
+    System.out.println(<span class="string" style="color: #d63384;">"Volljährig"</span>); <span class="comment">// OK</span></div>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">Go (Block Pflicht!)</h4>
+                        <div class="code-block" style="background: #fff; color: #333; border-left: 4px solid #28a745;"><span class="keyword">if</span> alter >= <span class="number">18</span> {
+    fmt.Println(<span class="string" style="color: #d63384;">"Volljährig"</span>) <span class="comment">// { } Pflicht!</span>
+}</div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Vorteil in Go:</h4>
+                    <p>Vermeidet typische Fehler beim späteren Hinzufügen weiterer Anweisungen. Die Struktur ist immer konsistent.</p>
+                </div>
+
+                <h3>2. Keine Klammern um Bedingung</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Java/C++ (Klammern Pflicht)</h4>
+                        <div class="code-block" style="background: #fff; color: #333;"><span class="keyword">if</span> (x > <span class="number">10</span>) { <span class="comment">// ( ) Pflicht</span>
+    ...
+}</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>Go (Klammern unüblich)</h4>
+                        <div class="code-block" style="background: #fff; color: #333;"><span class="keyword">if</span> x > <span class="number">10</span> { <span class="comment">// Keine ( )</span>
+    ...
+}</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Idiomatic Go:</h4>
+                    <p>Klammern um die Bedingung sind syntaktisch möglich, aber <strong>nicht idiomatisch</strong> und sollten vermieden werden.</p>
+                </div>
+
+                <h3>3. Öffnende Klammer in derselben Zeile</h3>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ Nicht erlaubt in Go</h4>
+                        <div class="code-block" style="background: #fff; color: #333;"><span class="keyword">if</span> x > <span class="number">10</span>
+{                    <span class="comment" style="color: #dc3545;">// Compile-Fehler!</span>
+    fmt.Println(x)
+}</div>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✅ Richtig in Go</h4>
+                        <div class="code-block" style="background: #fff; color: #333;"><span class="keyword">if</span> x > <span class="number">10</span> {     <span class="comment">// { in selber Zeile</span>
+    fmt.Println(x)
+}</div>
+                    </div>
+                </div>
+
+                <h3>4. Begrifflichkeiten</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Sprache</th>
+                            <th>Bezeichnung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Go, Java, C++</td>
+                            <td>if-statement / if-else-statement</td>
+                        </tr>
+                        <tr>
+                            <td>Pascal (historisch)</td>
+                            <td>if-then-else-Anweisung (mit <code>then</code>-Schlüsselwort)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+                
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✓ Empfohlen</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Immer Blöcke <code>{ }</code> verwenden (Pflicht!)</li>
+                            <li>Keine Klammern um Bedingung</li>
+                            <li><code>{</code> in derselben Zeile wie <code>if</code></li>
+                            <li>Bedingungen von spezifisch zu allgemein prüfen</li>
+                            <li>Früh returnen (siehe spätere Kapitel)</li>
+                            <li>Komplexe Bedingungen in Variablen auslagern</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">✗ Vermeiden</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><code>{</code> in neuer Zeile (Compile-Fehler!)</li>
+                            <li>Klammern um Bedingung (nicht idiomatisch)</li>
+                            <li>Verschachtelte if ohne Notwendigkeit</li>
+                            <li>Sehr lange, komplexe Bedingungen</li>
+                            <li>Falsche Reihenfolge bei Mehrfachverzweigungen</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Beispiel: Klare Bedingungen</h3>
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('good')">✅ Gut</button>
+                    <button class="tab-button" onclick="switchTab('bad')">❌ Schlecht</button>
+                </div>
+
+                <div id="good" class="tab-content active">
+                    <div class="code-block"><span class="comment">// Bedingung in Variable auslagern</span>
+<span class="keyword">var</span> istSchaltjahr <span class="keyword">bool</span> = jahr%<span class="number">400</span> == <span class="number">0</span> || (jahr%<span class="number">4</span> == <span class="number">0</span> && jahr%<span class="number">100</span> != <span class="number">0</span>)
+
+<span class="keyword">if</span> istSchaltjahr {
+    fmt.Println(<span class="string">"Schaltjahr"</span>)
+}</div>
+                    <div class="success-box">
+                        <p><strong>Vorteil:</strong> Lesbar und selbsterklärend durch aussagekräftigen Variablennamen.</p>
+                    </div>
+                </div>
+
+                <div id="bad" class="tab-content">
+                    <div class="code-block"><span class="comment">// Komplexe Bedingung direkt im if</span>
+<span class="keyword">if</span> jahr%<span class="number">400</span> == <span class="number">0</span> || (jahr%<span class="number">4</span> == <span class="number">0</span> && jahr%<span class="number">100</span> != <span class="number">0</span>) {
+    fmt.Println(<span class="string">"Schaltjahr"</span>)
+}</div>
+                    <div class="warning-box">
+                        <p><strong>Problem:</strong> Schwerer zu lesen und zu verstehen, besonders bei noch komplexeren Bedingungen.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zusammenfassung -->
+            <div class="section">
+                <h2>📚 Zusammenfassung</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Konzept</th>
+                            <th>Beschreibung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>if-Anweisung</strong></td>
+                            <td>Ermöglicht bedingte Ausführung von Code</td>
+                        </tr>
+                        <tr>
+                            <td><strong>if-Zweig</strong></td>
+                            <td>Wird bei <code>true</code> ausgeführt</td>
+                        </tr>
+                        <tr>
+                            <td><strong>else-Zweig</strong></td>
+                            <td>Wird bei <code>false</code> ausgeführt (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>else-if-Zweig</strong></td>
+                            <td>Weitere Bedingungsprüfung (Mehrfachverzweigung)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ausführung</strong></td>
+                            <td><strong>Maximal ein Zweig</strong> wird ausgeführt</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reihenfolge</strong></td>
+                            <td>Von oben nach unten, erste zutreffende Bedingung gewinnt</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Block</strong></td>
+                            <td>Immer mit <code>{ }</code>, auch bei einer Anweisung!</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Klammern</strong></td>
+                            <td>Keine <code>( )</code> um Bedingung (idiomatisch)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Spezielle Behandlung für gute/schlechte Beispiele
+            if (tabName === 'good' || tabName === 'bad') {
+                const parentSection = event.target.closest('.section');
+                const tabContents = parentSection.querySelectorAll('.tab-content');
+                const tabButtons = parentSection.querySelectorAll('.tab-button');
+                
+                tabContents.forEach(content => {
+                    if (content.id === tabName) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+                
+                tabButtons.forEach(button => {
+                    if (button.textContent.includes(tabName === 'good' ? '✅' : '❌')) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            } else {
+                // Normale Tab-Funktionalität
+                const parentSection = event.target.closest('.section');
+                const tabContents = parentSection.querySelectorAll('.tab-content');
+                const tabButtons = parentSection.querySelectorAll('.tab-button');
+                
+                tabContents.forEach(content => content.classList.remove('active'));
+                tabButtons.forEach(button => button.classList.remove('active'));
+                
+                document.getElementById(tabName).classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+
+        function pruefeSchaltjahr() {
+            const jahr = parseInt(document.getElementById('jahrInput').value);
+            const output = document.getElementById('schaltjahrOutput');
+            
+            if (isNaN(jahr) || jahr < 1582) {
+                output.innerHTML = '<span style="color: red;">Bitte gib ein Jahr ab 1582 ein!</span>';
+                return;
+            }
+
+            let istSchaltjahr;
+            let erklaerung = [];
+
+            // Schritt-für-Schritt-Prüfung
+            erklaerung.push(`<h4 style="color: #667eea; margin-bottom: 15px;">Prüfung für das Jahr ${jahr}:</h4>`);
+            erklaerung.push('<div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0;">');
+
+            // Prüfung: Durch 400 teilbar?
+            if (jahr % 400 === 0) {
+                istSchaltjahr = true;
+                erklaerung.push(`<p>1️⃣ <strong>${jahr} % 400 = ${jahr % 400}</strong> → Durch 400 teilbar</p>`);
+                erklaerung.push(`<p style="color: #28a745; font-weight: bold; margin-top: 10px;">✅ Regel: Durch 400 teilbar → IMMER Schaltjahr!</p>`);
+            } else if (jahr % 100 === 0) {
+                istSchaltjahr = false;
+                erklaerung.push(`<p>1️⃣ <strong>${jahr} % 400 = ${jahr % 400}</strong> → Nicht durch 400 teilbar</p>`);
+                erklaerung.push(`<p>2️⃣ <strong>${jahr} % 100 = ${jahr % 100}</strong> → Durch 100 teilbar</p>`);
+                erklaerung.push(`<p style="color: #dc3545; font-weight: bold; margin-top: 10px;">❌ Regel: Durch 100 (aber nicht durch 400) teilbar → KEIN Schaltjahr!</p>`);
+            } else if (jahr % 4 === 0) {
+                istSchaltjahr = true;
+                erklaerung.push(`<p>1️⃣ <strong>${jahr} % 400 = ${jahr % 400}</strong> → Nicht durch 400 teilbar</p>`);
+                erklaerung.push(`<p>2️⃣ <strong>${jahr} % 100 = ${jahr % 100}</strong> → Nicht durch 100 teilbar</p>`);
+                erklaerung.push(`<p>3️⃣ <strong>${jahr} % 4 = ${jahr % 4}</strong> → Durch 4 teilbar</p>`);
+                erklaerung.push(`<p style="color: #28a745; font-weight: bold; margin-top: 10px;">✅ Regel: Durch 4 (aber nicht durch 100) teilbar → Schaltjahr!</p>`);
+            } else {
+                istSchaltjahr = false;
+                erklaerung.push(`<p>1️⃣ <strong>${jahr} % 400 = ${jahr % 400}</strong> → Nicht durch 400 teilbar</p>`);
+                erklaerung.push(`<p>2️⃣ <strong>${jahr} % 100 = ${jahr % 100}</strong> → Nicht durch 100 teilbar</p>`);
+                erklaerung.push(`<p>3️⃣ <strong>${jahr} % 4 = ${jahr % 4}</strong> → Nicht durch 4 teilbar</p>`);
+                erklaerung.push(`<p style="color: #dc3545; font-weight: bold; margin-top: 10px;">❌ Regel: Nicht durch 4 teilbar → KEIN Schaltjahr!</p>`);
+            }
+
+            erklaerung.push('</div>');
+
+            // Ergebnis
+            const ergebnisColor = istSchaltjahr ? '#28a745' : '#dc3545';
+            const ergebnisIcon = istSchaltjahr ? '🎉' : '📅';
+            const ergebnisText = istSchaltjahr ? 'IST ein Schaltjahr' : 'ist KEIN Schaltjahr';
+
+            output.innerHTML = erklaerung.join('') + `
+                <div style="background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                    <h3 style="margin-bottom: 10px; color: white;">${ergebnisIcon} Ergebnis</h3>
+                    <p style="font-size: 1.5em; font-weight: bold;">${jahr} ${ergebnisText}</p>
+                </div>
+            `;
+        }
+
+        // Initiale Berechnung
+        window.onload = function() {
+            pruefeSchaltjahr();
+        };
+    </script>
+</body>
+</html>

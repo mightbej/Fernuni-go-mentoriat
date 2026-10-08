@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kapitel 7 - Funktionen, Zeiger und Rekursion in Go</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 20px 30px;
+      border-bottom: 2px solid #e0e0e0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+    .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+    .cross-link {
+      background: #e8eaf6;
+      border-left: 4px solid #667eea;
+      padding: 12px 16px;
+      margin-top: 12px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .lesson-links {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(102, 126, 234, 0.25);
+    }
+
+    .lesson-links a {
+      color: #3949ab;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      background: #f5f5f5;
+      padding: 10px 20px;
+      gap: 5px;
+      overflow-x: auto;
+      border-bottom: 2px solid #e0e0e0;
+      flex-wrap: wrap;
+      max-height: 116px;
+      overflow-y: auto;
+    }
+
+    .tab {
+      padding: 10px 12px;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: 0.78em;
+      font-weight: 600;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .tab:hover { background: #f0f0f0; }
+    .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; animation: fadeIn 0.3s; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.9em;
+      line-height: 1.6;
+      margin: 15px 0;
+      white-space: pre;
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+
+    .requirement {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+      color: #856404;
+    }
+
+    .danger {
+      background: #ffebee;
+      border-left: 4px solid #e53935;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+      color: #7f1d1d;
+    }
+
+    .tip {
+      background: #f3e5f5;
+      border-left: 4px solid #9c27b0;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+
+    .concepts-used {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+
+    .concepts-used h4 { margin-bottom: 10px; color: #2e7d32; }
+
+    .concepts-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .concept-tag {
+      background: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #4caf50;
+      text-align: center;
+      font-size: 0.85em;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9em;
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+
+    .comparison-table tr:hover { background: #f5f5f5; }
+
+    ul, ol { margin-left: 20px; line-height: 1.8; }
+    h3 { color: #667eea; margin: 20px 0 10px 0; }
+    h4 { color: #333; margin: 18px 0 8px 0; }
+    p { line-height: 1.65; margin: 10px 0; }
+
+    .flow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .flow-box {
+      background: #eef2ff;
+      border: 1px solid #667eea;
+      border-radius: 8px;
+      padding: 12px 14px;
+      min-width: 150px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .arrow { font-size: 1.6em; color: #667eea; }
+
+    .memory-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .memory-card {
+      border: 2px solid #667eea;
+      border-radius: 10px;
+      padding: 14px;
+      background: #f8f9ff;
+    }
+
+    .memory-card .label {
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 8px;
+    }
+
+    .memory-cell {
+      border: 1px dashed #777;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      background: white;
+      font-family: Consolas, monospace;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column-reverse;
+      max-width: 420px;
+      margin: 15px 0;
+      border: 2px solid #667eea;
+      border-top: none;
+      padding: 8px;
+      background: #f8f9ff;
+    }
+
+    .stack-frame {
+      background: white;
+      border: 1px solid #667eea;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 4px 0;
+      font-family: Consolas, monospace;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #e0e0e0;
+    }
+
+    .nav-button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .nav-button:hover { transform: translateY(-2px); }
+    .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kapitel 7: Funktionen, Zeiger und Rekursion in Go</h1>
+      <div class="subtitle">Veranschaulichung zu Kapitel 7 im Kurstext v3.0.6, Seiten 163–193</div>
+      <div class="cross-link">
+        Ziel: Nicht nur Syntax zeigen, sondern Kontrollfluss, Wertübergabe, Speicherbild, Zeigerzugriff und rekursive Aufrufstruktur sichtbar machen.
+        <div class="lesson-links">
+          <strong>Lernpfad:</strong>
+          <a href="150_go_k7_das_kopier_problem.html">Kopierproblem</a>
+          <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+          <a href="161_go_k7_bubblesort_mit_zeigern.html">Bubble mit Zeigern</a>
+          <a href="162_go_k7_selectionsort_mit_funktionen.html">Selection mit Funktionen</a>
+          <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+          <a href="164_go_k7_bubblesort_rekursiv.html">Bubble rekursiv</a>
+          <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showStep(1)">1 Landkarte</div>
+      <div class="tab" onclick="showStep(2)">2 Funktion lesen</div>
+      <div class="tab" onclick="showStep(3)">3 Mehrere Rückgaben</div>
+      <div class="tab" onclick="showStep(4)">4 Benannte Rückgaben</div>
+      <div class="tab" onclick="showStep(5)">5 Signatur</div>
+      <div class="tab" onclick="showStep(6)">6 Rückgabe-Tupel</div>
+      <div class="tab" onclick="showStep(7)">7 error-Muster</div>
+      <div class="tab" onclick="showStep(8)">8 Call-by-value</div>
+      <div class="tab" onclick="showStep(9)">9 Array-Kopie</div>
+      <div class="tab" onclick="showStep(10)">10 Warum Zeiger?</div>
+      <div class="tab" onclick="showStep(11)">11 Zeiger-Grundbild</div>
+      <div class="tab" onclick="showStep(12)">12 & und *</div>
+      <div class="tab" onclick="showStep(13)">13 Array-Zeiger</div>
+      <div class="tab" onclick="showStep(14)">14 Zeigerparameter</div>
+      <div class="tab" onclick="showStep(15)">15 nil/new/Lebenszeit</div>
+      <div class="tab" onclick="showStep(16)">16 Rekursion Idee</div>
+      <div class="tab" onclick="showStep(17)">17 Call Stack</div>
+      <div class="tab" onclick="showStep(18)">18 Terminierung</div>
+      <div class="tab" onclick="showStep(19)">19 Fibonacci</div>
+      <div class="tab" onclick="showStep(20)">20 Zusammenfassung</div>
+    </div>
+
+    <div class="content-area">
+
+      <div class="step-content active" id="step-1">
+        <h3>1. Landkarte des Kapitels</h3>
+        <p>Kapitel 7 wirkt auf den ersten Blick wie eine Sammlung verschiedener Themen. Didaktisch hängen sie aber eng zusammen. Funktionen erzeugen zunächst die Frage: Was passiert mit den Werten, die wir übergeben? Call-by-value beantwortet diese Frage. Zeiger lösen anschließend das Problem, dass Funktionen sonst nur mit Kopien arbeiten. Rekursion nutzt Funktionen schließlich auf einer neuen Ebene: Eine Funktion ruft sich selbst auf.</p>
+
+        <div class="flow">
+          <div class="flow-box">Funktionen</div><div class="arrow">→</div>
+          <div class="flow-box">Werte übergeben</div><div class="arrow">→</div>
+          <div class="flow-box">Kopien verstehen</div><div class="arrow">→</div>
+          <div class="flow-box">Zeiger nutzen</div><div class="arrow">→</div>
+          <div class="flow-box">Selbstaufrufe verstehen</div>
+        </div>
+
+        <div class="info-box">
+          <strong>Didaktische Leitfrage:</strong> Was passiert beim Funktionsaufruf wirklich: mit den Argumenten, mit den lokalen Variablen, mit Rückgabewerten und später mit Zeigern?
+        </div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Block</th><th>Student muss verstehen</th><th>Typischer Stolperstein</th></tr></thead>
+          <tbody>
+            <tr><td>Funktionen</td><td>Parameter, Rückgabe, Signatur, mehrere Rückgaben</td><td>Parameter und Argument verwechseln</td></tr>
+            <tr><td>Call-by-value</td><td>Funktion erhält Kopien der Argumentwerte</td><td>Originaländerung erwarten</td></tr>
+            <tr><td>Zeiger</td><td>Adresse übergeben, indirekt auf Original zugreifen</td><td><code>&</code> und <code>*</code> verwechseln</td></tr>
+            <tr><td>Rekursion</td><td>Selbstaufruf plus Abbruchbedingung</td><td>keine sichere Terminierung</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" disabled>Zurück</button><button class="nav-button" onclick="showStep(2)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-2">
+        <h3>2. Eine Funktion systematisch lesen</h3>
+        <p>Bevor mehrere Rückgaben, Zeiger oder Rekursion behandelt werden, muss eine Funktionsdeklaration sicher gelesen werden. Eine Funktion ist nicht nur ein Stück Code, sondern ein Vertrag: Welche Werte gehen hinein, welcher Wert oder welche Werte kommen heraus?</p>
+
+        <div class="code-block">func rechteck(seiteA int, seiteB int) int {
+    var flaeche int = seiteA * seiteB
+    return flaeche
+}</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Teil</th><th>Code</th><th>Frage beim Lesen</th></tr></thead>
+          <tbody>
+            <tr><td>Schlüsselwort</td><td><code>func</code></td><td>Hier beginnt eine Funktionsdeklaration.</td></tr>
+            <tr><td>Name</td><td><code>rechteck</code></td><td>Wie wird die Funktion später aufgerufen?</td></tr>
+            <tr><td>Parameter</td><td><code>seiteA int, seiteB int</code></td><td>Welche Eingaben braucht die Funktion?</td></tr>
+            <tr><td>Rückgabetyp</td><td><code>int</code></td><td>Welchen Typ liefert die Funktion zurück?</td></tr>
+            <tr><td>Rumpf</td><td><code>{ ... }</code></td><td>Welche Anweisungen werden beim Aufruf ausgeführt?</td></tr>
+            <tr><td>return</td><td><code>return flaeche</code></td><td>Welcher Wert geht zurück an die Aufrufstelle?</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Parameter vs. Argument</h4>
+        <div class="code-block">var a int = 3
+var b int = 4
+
+fmt.Println(rechteck(a, b))</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Begriff</th><th>Beispiel</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td>Parameter</td><td><code>seiteA</code>, <code>seiteB</code></td><td>Namen in der Funktionsdeklaration</td></tr>
+            <tr><td>Argumente</td><td><code>a</code>, <code>b</code></td><td>Ausdrücke beim Funktionsaufruf</td></tr>
+            <tr><td>übergebene Werte</td><td><code>3</code>, <code>4</code></td><td>konkrete Werte, mit denen die Parameter initialisiert werden</td></tr>
+          </tbody>
+        </table>
+
+        <div class="requirement">
+          <strong>Merksatz:</strong> Parameter gehören zur Deklaration, Argumente gehören zum Aufruf.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(1)">Zurück</button><button class="nav-button" onclick="showStep(3)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-3">
+        <h3>3. Mehrere Rückgabewerte</h3>
+        <p>Go kann mehrere Werte aus einer Funktion zurückgeben. Das ist kein Sondertrick, sondern ein zentrales Sprachmittel. Es wird besonders wichtig beim typischen Muster: Nutzwert plus Fehlerwert.</p>
+
+        <div class="code-block">func divMitRest(x int, y int) (int, int) {
+    return x / y, x % y
+}</div>
+
+        <p>Die Funktion beantwortet zwei Fragen gleichzeitig:</p>
+        <ol>
+          <li>Wie oft passt <code>y</code> ganzzahlig in <code>x</code>?</li>
+          <li>Welcher Rest bleibt übrig?</li>
+        </ol>
+
+        <div class="flow">
+          <div class="flow-box">divMitRest(17, 3)</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">17 / 3 = 5</div>
+          <div class="arrow">+</div>
+          <div class="flow-box">17 % 3 = 2</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">5, 2</div>
+        </div>
+
+        <div class="code-block">fmt.Println(divMitRest(17, 3)) // Ausgabe: 5 2</div>
+
+        <div class="info-box">
+          <strong>Wichtig:</strong> Die Rückgabeliste <code>(int, int)</code> sagt nur, dass zwei Integer-Werte zurückgegeben werden. Sie sagt noch nicht, welcher Wert welche Bedeutung hat.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(2)">Zurück</button><button class="nav-button" onclick="showStep(4)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-4">
+        <h3>4. Benannte Rückgaben</h3>
+        <p>Wenn mehrere Rückgabewerte denselben Typ haben, kann die Bedeutung unklar werden. Benannte Rückgaben helfen, diese Bedeutung sichtbar zu machen.</p>
+
+        <div class="code-block">func divMitRest(x int, y int) (q int, r int) {
+    q = x / y
+    r = x % y
+    return
+}</div>
+
+        <p>Hier erzeugt die Rückgabeliste intern zwei lokale Variablen: <code>q</code> und <code>r</code>. Sie existieren im Funktionsrumpf und werden am Ende zurückgegeben.</p>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">Parameter</div>
+            <div class="memory-cell">x = 17</div>
+            <div class="memory-cell">y = 3</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Benannte Rückgaben</div>
+            <div class="memory-cell">q = 5</div>
+            <div class="memory-cell">r = 2</div>
+          </div>
+        </div>
+
+        <h4>Blankes return</h4>
+        <p>Das einfache <code>return</code> funktioniert hier, weil Go weiß, dass <code>q</code> und <code>r</code> die Rückgabevariablen sind.</p>
+
+        <div class="danger">
+          <strong>Didaktische Warnung:</strong> Blankes <code>return</code> ist kurz, aber nicht immer lesbar. Bei kurzen Funktionen ist es akzeptabel. Bei längeren Funktionen muss man nach oben zur Rückgabeliste schauen, um zu erkennen, was zurückgegeben wird.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(3)">Zurück</button><button class="nav-button" onclick="showStep(5)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-5">
+        <h3>5. Signatur: Der Typ einer Funktion</h3>
+        <p>Die Signatur beschreibt die Typstruktur einer Funktion. Für die Signatur zählen die Typen der Parameter und die Typen der Rückgaben in ihrer Reihenfolge. Namen sind nicht entscheidend.</p>
+
+        <div class="code-block">func add(a, b int) int { return a + b }
+func sub(x int, y int) (int) { return x - y }
+func div(a, b int) float64 { return float64(a) / float64(b) }</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Funktion</th><th>Parameter-Typen</th><th>Rückgabe-Typen</th><th>Signatur</th></tr></thead>
+          <tbody>
+            <tr><td><code>add</code></td><td><code>int, int</code></td><td><code>int</code></td><td><code>int, int → int</code></td></tr>
+            <tr><td><code>sub</code></td><td><code>int, int</code></td><td><code>int</code></td><td><code>int, int → int</code></td></tr>
+            <tr><td><code>div</code></td><td><code>int, int</code></td><td><code>float64</code></td><td><code>int, int → float64</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <strong>Folge:</strong> <code>add</code> und <code>sub</code> haben dieselbe Signatur, obwohl sie unterschiedliche Namen, Parameternamen und Operationen besitzen.
+        </div>
+
+        <div class="tip">
+          <strong>Lesetraining:</strong> Frage bei jeder Funktion zuerst: Welche Typen gehen hinein? Welche Typen kommen heraus?
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(4)">Zurück</button><button class="nav-button" onclick="showStep(6)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-6">
+        <h3>6. Rückgabe-Tupel verarbeiten</h3>
+        <p>Wenn eine Funktion mehrere Werte zurückgibt, müssen diese Werte passend verarbeitet werden. Man kann sie Variablen zuweisen, direkt weiterreichen oder bewusst verwerfen.</p>
+
+        <h4>Fall 1: Beide Rückgaben übernehmen</h4>
+        <div class="code-block">gquot, rest := divMitRest(17, 3)
+fmt.Println(gquot, rest) // 5 2</div>
+
+        <h4>Fall 2: Einen Wert bewusst verwerfen</h4>
+        <div class="code-block">gquot, _ = divMitRest(50, 7)</div>
+
+        <p>Der leere Bezeichner <code>_</code> bedeutet: Dieser Wert wird absichtlich nicht verwendet. Das ist besser als eine Variable anzulegen, die danach nie gebraucht wird.</p>
+
+        <h4>Fall 3: Rückgaben weiterreichen</h4>
+        <div class="code-block">gquot, rest = divMitRest(divMitRest(100, 17)) // 0 5</div>
+
+        <div class="requirement">
+          <strong>Wichtig:</strong> Mehrere Rückgaben müssen in Anzahl und Typ zu der Stelle passen, an der sie verwendet werden.
+        </div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Schreibweise</th><th>Didaktische Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td><code>x, y := f()</code></td><td>beide Rückgaben werden ausgewertet</td></tr>
+            <tr><td><code>x, _ := f()</code></td><td>ein Rückgabewert wird bewusst ignoriert</td></tr>
+            <tr><td><code>g(f())</code></td><td>Rückgaben von <code>f</code> werden direkt Argumente von <code>g</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(5)">Zurück</button><button class="nav-button" onclick="showStep(7)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-7">
+        <h3>7. Das error-Muster in Go</h3>
+        <p>Go verwendet häufig das Muster: erster Rückgabewert = Nutzwert, zweiter Rückgabewert = Fehler. Der Fehlerwert hat den Typ <code>error</code>. Wenn kein Fehler vorliegt, ist dieser Wert <code>nil</code>.</p>
+
+        <div class="code-block">var a, b, c, n int
+var err error
+
+n, err = fmt.Scan(&a, &b, &c)
+
+if err != nil {
+    fmt.Println("Fehler:", err)
+}
+
+fmt.Println("Anzahl gültiger Eingaben:", n)
+fmt.Println("Eingaben:", a, b, c)</div>
+
+        <p>Dieses Beispiel ist für Studenten schwierig, weil hier mehrere Konzepte gleichzeitig auftreten: mehrere Rückgaben, Zuweisung an zwei Variablen, Fehlerprüfung und bereits Zeiger bei <code>&a</code>, <code>&b</code>, <code>&c</code>.</p>
+
+        <table class="comparison-table">
+          <thead><tr><th>Teil</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td><code>n</code></td><td>Anzahl erfolgreich gelesener Eingaben</td></tr>
+            <tr><td><code>err</code></td><td>Fehlerwert; <code>nil</code> bedeutet kein Fehler</td></tr>
+            <tr><td><code>if err != nil</code></td><td>Prüfung, ob ein Fehler aufgetreten ist</td></tr>
+            <tr><td><code>&a</code></td><td>Adresse von <code>a</code>; wird später bei Zeigern erklärt</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <strong>Didaktische Entlastung:</strong> Beim ersten Lesen reicht: <code>fmt.Scan</code> liefert zwei Werte zurück. Einer sagt, wie viel geklappt hat, der andere sagt, ob ein Fehler auftrat.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(6)">Zurück</button><button class="nav-button" onclick="showStep(8)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-8">
+        <h3>8. Call-by-value: Übergabe als Kopie</h3>
+        <p>In Go werden Argumente an Funktionen per Wert übergeben. Das heißt: Der Wert des Arguments wird kopiert und diese Kopie wird dem Parameter zugewiesen.</p>
+
+        <div class="code-block">func setzeAufNull(x int) {
+    x = 0
+}
+
+func main() {
+    zahl := 7
+    setzeAufNull(zahl)
+    fmt.Println(zahl) // 7
+}</div>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">main</div>
+            <div class="memory-cell">zahl = 7</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">setzeAufNull</div>
+            <div class="memory-cell">x = 7</div>
+            <div class="memory-cell">x = 0</div>
+          </div>
+        </div>
+
+        <p>Die Funktion verändert nur ihre lokale Kopie <code>x</code>. Die Variable <code>zahl</code> in <code>main</code> bleibt unverändert.</p>
+
+        <div class="requirement">
+          <strong>Merksatz:</strong> Ein Parameter ist eine neue lokale Variable, die beim Funktionsaufruf mit dem Argumentwert initialisiert wird.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(7)">Zurück</button><button class="nav-button" onclick="showStep(9)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-9">
+        <h3>9. Call-by-value bei Arrays: Die Kopie wird sichtbar teuer</h3>
+        <p>Bei einem einzelnen <code>int</code> ist die Kopie kaum sichtbar. Bei Arrays wird das Prinzip wichtig, weil das ganze Array kopiert wird.</p>
+
+        <div class="code-block">func negToZeroValue(a [10]int) [10]int {
+    for i := range a {
+        if a[i] < 0 {
+            a[i] = 0
+        }
+    }
+    return a
+}
+
+func main() {
+    nums := [10]int{8, -5, 6, -3, -7, 1, -4, 3, -9, 2}
+
+    posNums := negToZeroValue(nums)
+
+    fmt.Println(nums)    // [8 -5 6 -3 -7 1 -4 3 -9 2]
+    fmt.Println(posNums) // [8 0 6 0 0 1 0 3 0 2]
+}</div>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">Original in main</div>
+            <div class="memory-cell">nums = [8 -5 6 -3 -7 1 -4 3 -9 2]</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Kopie in Funktion</div>
+            <div class="memory-cell">a = [8 -5 6 -3 -7 1 -4 3 -9 2]</div>
+            <div class="memory-cell">a = [8 0 6 0 0 1 0 3 0 2]</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Rückgabe</div>
+            <div class="memory-cell">posNums = [8 0 6 0 0 1 0 3 0 2]</div>
+          </div>
+        </div>
+
+        <p>Die Funktion kann das Original nicht verändern, weil sie keinen Zugriff darauf hat. Sie kennt nur ihre lokale Kopie.</p>
+
+        <div class="danger">
+          <strong>Typisches Missverständnis:</strong> Viele erwarten, dass <code>nums</code> verändert wird. Das passiert nicht, weil <code>a</code> nicht dasselbe Array ist, sondern eine Kopie.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(8)">Zurück</button><button class="nav-button" onclick="showStep(10)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-10">
+        <h3>10. Warum braucht man Zeiger?</h3>
+        <p>Das Array-Beispiel erzeugt eine praktische Frage: Was tun, wenn eine Funktion nicht eine Kopie zurückgeben soll, sondern das Original verändern soll?</p>
+
+        <table class="comparison-table">
+          <thead><tr><th>Ziel</th><th>Ohne Zeiger</th><th>Mit Zeiger</th></tr></thead>
+          <tbody>
+            <tr><td>Original verändern</td><td>nicht direkt möglich</td><td>möglich</td></tr>
+            <tr><td>Rückgabewert nötig?</td><td>ja, geänderte Kopie zurückgeben</td><td>nein, Funktion verändert Original</td></tr>
+            <tr><td>Speicher/Rechenaufwand</td><td>Array wird kopiert</td><td>Adresse wird kopiert</td></tr>
+            <tr><td>Lesbarkeit</td><td>einfacher, aber umständlich</td><td>mächtiger, aber konzeptionell schwieriger</td></tr>
+          </tbody>
+        </table>
+
+        <div class="flow">
+          <div class="flow-box">Problem</div><div class="arrow">→</div>
+          <div class="flow-box">Funktion sieht nur Kopie</div><div class="arrow">→</div>
+          <div class="flow-box">Lösung</div><div class="arrow">→</div>
+          <div class="flow-box">Adresse des Originals übergeben</div>
+        </div>
+
+        <div class="info-box">
+          <strong>Didaktischer Übergang:</strong> Zeiger sind nicht „komplizierte Syntax“. Sie sind die Antwort auf ein konkretes Problem: Eine Funktion soll auf eine vorhandene Variable zugreifen können.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(9)">Zurück</button><button class="nav-button" onclick="showStep(11)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-11">
+        <h3>11. Grundbild eines Zeigers</h3>
+        <p>Eine Variable hat einen Wert. Zusätzlich liegt sie irgendwo im Speicher. Ein Zeiger enthält nicht den Wert selbst, sondern eine Adresse, unter der eine Variable gefunden werden kann.</p>
+
+        <div class="code-block">var x int = 42
+var p *int
+
+p = &x</div>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">Variable x</div>
+            <div class="memory-cell">Name: x</div>
+            <div class="memory-cell">Wert: 42</div>
+            <div class="memory-cell">Adresse: z. B. 0xc00000a0a8</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Zeigervariable p</div>
+            <div class="memory-cell">Typ: *int</div>
+            <div class="memory-cell">Wert: Adresse von x</div>
+            <div class="memory-cell">p zeigt auf x</div>
+          </div>
+        </div>
+
+        <p>Die Formulierung „p zeigt auf x“ bedeutet: In <code>p</code> steht die Adresse von <code>x</code>. Über diese Adresse kann man wieder zu <code>x</code> gelangen.</p>
+
+        <div class="requirement">
+          <strong>Merksatz:</strong> Ein Zeiger ist selbst ein Wert. Sein Wert ist eine Adresse.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(10)">Zurück</button><button class="nav-button" onclick="showStep(12)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-12">
+        <h3>12. Die Operatoren & und *</h3>
+        <p>Für Zeiger braucht man zwei Bewegungen: vom Namen zur Adresse und von der Adresse zurück zur Variablen.</p>
+
+        <div class="code-block">var x int = 42
+var p *int = &x
+
+fmt.Println(p)  // Adresse von x
+fmt.Println(*p) // Wert der Variable, auf die p zeigt
+
+*p = 33
+fmt.Println(x)  // 33</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Ausdruck</th><th>Lesart</th><th>Ergebnis</th></tr></thead>
+          <tbody>
+            <tr><td><code>&x</code></td><td>Adresse von x</td><td>Wert vom Typ <code>*int</code></td></tr>
+            <tr><td><code>p</code></td><td>Zeigerwert</td><td>Adresse von x</td></tr>
+            <tr><td><code>*p</code></td><td>Variable, auf die p zeigt</td><td>zugreifbar wie <code>x</code></td></tr>
+            <tr><td><code>*p = 33</code></td><td>indirekte Zuweisung</td><td>x bekommt den Wert 33</td></tr>
+          </tbody>
+        </table>
+
+        <div class="danger">
+          <strong>Der Stern hat drei Rollen:</strong>
+          <ul>
+            <li><code>*int</code>: Bildung eines Zeigertyps</li>
+            <li><code>*p</code>: Dereferenzierung eines Zeigers</li>
+            <li><code>a * b</code>: Multiplikation</li>
+          </ul>
+        </div>
+
+        <div class="info-box">
+          <strong>Einfaches Bild:</strong> <code>&</code> fragt: Wo liegt die Variable? <code>*</code> fragt: Was liegt an dieser Adresse?
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(11)">Zurück</button><button class="nav-button" onclick="showStep(13)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-13">
+        <h3>13. Zeiger auf Arrays</h3>
+        <p>Jetzt kehren wir zum Array-Beispiel zurück. Statt das ganze Array zu kopieren, übergeben wir die Adresse des Arrays.</p>
+
+        <div class="code-block">func negToZeroPointer(pa *[10]int) {
+    for i := range *pa {
+        if (*pa)[i] < 0 {
+            (*pa)[i] = 0
+        }
+    }
+}
+
+func main() {
+    nums := [10]int{8, -5, 6, -3, -7, 1, -4, 3, -9, 2}
+
+    negToZeroPointer(&nums)
+
+    fmt.Println(nums) // [8 0 6 0 0 1 0 3 0 2]
+}</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Code</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td><code>&nums</code></td><td>Adresse des Arrays <code>nums</code></td></tr>
+            <tr><td><code>pa *[10]int</code></td><td>Parameter ist ein Zeiger auf ein Array mit 10 int-Werten</td></tr>
+            <tr><td><code>*pa</code></td><td>das Array, auf das der Zeiger zeigt</td></tr>
+            <tr><td><code>(*pa)[i]</code></td><td>Element <code>i</code> des referenzierten Arrays</td></tr>
+          </tbody>
+        </table>
+
+        <div class="memory-row">
+          <div class="memory-card">
+            <div class="label">main</div>
+            <div class="memory-cell">nums = [8 -5 6 -3 -7 1 -4 3 -9 2]</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Funktionsaufruf</div>
+            <div class="memory-cell">negToZeroPointer(&nums)</div>
+            <div class="memory-cell">pa enthält Adresse von nums</div>
+          </div>
+          <div class="memory-card">
+            <div class="label">Funktion</div>
+            <div class="memory-cell">(*pa)[1] = 0</div>
+            <div class="memory-cell">verändert nums direkt</div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <strong>Kurzschreibweise:</strong> Go erlaubt bei Array-Zeigern oft <code>pa[i]</code> statt <code>(*pa)[i]</code>. Für den Anfang ist die explizite Schreibweise aber didaktisch klarer.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(12)">Zurück</button><button class="nav-button" onclick="showStep(14)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-14">
+        <h3>14. Zeiger als Funktionsparameter</h3>
+        <p>Ein Zeigerparameter erlaubt es einer Funktion, eine vorhandene Variable außerhalb ihres eigenen Rumpfes zu verändern. Das nennt man häufig einen Seiteneffekt.</p>
+
+        <div class="code-block">func incr(p *int) int {
+    *p++
+    return *p
+}
+
+func main() {
+    x := 1
+
+    incr(&x)
+    fmt.Println(x)        // 2
+
+    fmt.Println(incr(&x)) // 3
+    fmt.Println(x)        // 3
+}</div>
+
+        <h4>Schrittfolge</h4>
+        <ol>
+          <li><code>x</code> ist eine Variable in <code>main</code>.</li>
+          <li><code>&x</code> liefert die Adresse von <code>x</code>.</li>
+          <li>Diese Adresse wird dem Parameter <code>p</code> übergeben.</li>
+          <li><code>*p++</code> erhöht die Variable, auf die <code>p</code> zeigt.</li>
+          <li>Da <code>p</code> auf <code>x</code> zeigt, wird <code>x</code> erhöht.</li>
+        </ol>
+
+        <div class="requirement">
+          <strong>Wichtige Unterscheidung:</strong> Auch der Zeigerwert selbst wird per value übergeben. Aber dieser kopierte Zeigerwert zeigt auf dieselbe Originalvariable.
+        </div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Übergabe</th><th>Was wird kopiert?</th><th>Was kann verändert werden?</th></tr></thead>
+          <tbody>
+            <tr><td><code>f(x)</code></td><td>Wert von <code>x</code></td><td>nur lokale Kopie</td></tr>
+            <tr><td><code>f(&x)</code></td><td>Adresse von <code>x</code></td><td>Original über Dereferenzierung</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(13)">Zurück</button><button class="nav-button" onclick="showStep(15)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-15">
+        <h3>15. nil, new und Lebenszeit von Variablen</h3>
+        <p>Der Nullwert eines Zeigertyps ist <code>nil</code>. Ein nil-Zeiger zeigt auf keine Variable. Deshalb darf man ihn nicht dereferenzieren.</p>
+
+        <div class="code-block">var p *int
+fmt.Println(p) // nil
+
+// fmt.Println(*p) // Fehler zur Laufzeit: nil pointer dereference</div>
+
+        <div class="danger">
+          <strong>Regel:</strong> Vor <code>*p</code> muss klar sein, dass <code>p</code> tatsächlich auf eine gültige Variable zeigt.
+        </div>
+
+        <h4>new erzeugt eine anonyme Variable</h4>
+        <div class="code-block">p := new(int)
+*p = 42
+fmt.Println(*p) // 42</div>
+
+        <p><code>new(int)</code> erzeugt eine neue int-Variable ohne Namen und liefert einen Zeiger auf diese Variable zurück.</p>
+
+        <h4>Lebenszeit ist nicht dasselbe wie Sichtbarkeit</h4>
+        <div class="code-block">func erzeugeZahl() *int {
+    x := 42
+    return &x
+}
+
+func main() {
+    p := erzeugeZahl()
+    fmt.Println(*p) // 42
+}</div>
+
+        <p>Der Bezeichner <code>x</code> ist außerhalb der Funktion nicht sichtbar. Die Variable selbst kann aber weiterleben, wenn ein Zeiger auf sie zurückgegeben wird. Go verwaltet das automatisch.</p>
+
+        <div class="info-box">
+          <strong>Didaktisch wichtig:</strong> Sichtbarkeit betrifft Namen im Programmtext. Lebenszeit betrifft, wie lange die Variable im Speicher gültig bleibt.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(14)">Zurück</button><button class="nav-button" onclick="showStep(16)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-16">
+        <h3>16. Rekursion: Grundidee</h3>
+        <p>Rekursion bedeutet: Eine Funktion ruft sich selbst auf. Das ist sinnvoll, wenn sich ein Problem als kleinere Version desselben Problems formulieren lässt.</p>
+
+        <div class="code-block">func fakultaet(n int) int {
+    if n <= 1 {
+        return 1
+    }
+    return n * fakultaet(n-1)
+}</div>
+
+        <p>Die Fakultät ist dafür ein gutes Beispiel:</p>
+
+        <div class="code-block">4! = 4 * 3 * 2 * 1
+4! = 4 * 3!
+3! = 3 * 2!
+2! = 2 * 1!
+1! = 1</div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Teil</th><th>Code</th><th>Funktion</th></tr></thead>
+          <tbody>
+            <tr><td>Abbruchfall</td><td><code>if n <= 1 { return 1 }</code></td><td>beendet die Rekursion</td></tr>
+            <tr><td>rekursiver Fall</td><td><code>return n * fakultaet(n-1)</code></td><td>ruft dieselbe Funktion mit kleinerem Problem auf</td></tr>
+            <tr><td>Fortschritt</td><td><code>n-1</code></td><td>führt schrittweise zum Abbruchfall</td></tr>
+          </tbody>
+        </table>
+
+        <div class="requirement">
+          <strong>Merksatz:</strong> Rekursion braucht immer zwei Dinge: einen Abbruchfall und einen rekursiven Schritt, der dem Abbruchfall näherkommt.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(15)">Zurück</button><button class="nav-button" onclick="showStep(17)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-17">
+        <h3>17. Rekursion als Aufrufstapel</h3>
+        <p>Beim rekursiven Aufruf wird nicht dieselbe Ausführung einfach überschrieben. Jeder Aufruf erhält seinen eigenen Ausführungsrahmen mit eigenen Parametern und lokalen Variablen. Diese Rahmen liegen gedanklich auf einem Stapel.</p>
+
+        <div class="code-block">fakultaet(4)
+= 4 * fakultaet(3)
+= 4 * 3 * fakultaet(2)
+= 4 * 3 * 2 * fakultaet(1)
+= 4 * 3 * 2 * 1
+= 24</div>
+
+        <div class="stack">
+          <div class="stack-frame">fakultaet(4): wartet auf Ergebnis von fakultaet(3)</div>
+          <div class="stack-frame">fakultaet(3): wartet auf Ergebnis von fakultaet(2)</div>
+          <div class="stack-frame">fakultaet(2): wartet auf Ergebnis von fakultaet(1)</div>
+          <div class="stack-frame">fakultaet(1): liefert 1 zurück</div>
+        </div>
+
+        <h4>Rückweg</h4>
+        <table class="comparison-table">
+          <thead><tr><th>Aufruf</th><th>bekommt zurück</th><th>liefert weiter</th></tr></thead>
+          <tbody>
+            <tr><td><code>fakultaet(1)</code></td><td>-</td><td><code>1</code></td></tr>
+            <tr><td><code>fakultaet(2)</code></td><td><code>1</code></td><td><code>2 * 1 = 2</code></td></tr>
+            <tr><td><code>fakultaet(3)</code></td><td><code>2</code></td><td><code>3 * 2 = 6</code></td></tr>
+            <tr><td><code>fakultaet(4)</code></td><td><code>6</code></td><td><code>4 * 6 = 24</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <strong>Didaktischer Kern:</strong> Rekursion hat zwei Bewegungen: erst hinunter bis zum Abbruchfall, dann zurück mit den Ergebnissen.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(16)">Zurück</button><button class="nav-button" onclick="showStep(18)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-18">
+        <h3>18. Terminierung: Wann endet Rekursion?</h3>
+        <p>Eine rekursive Funktion ist gefährlich, wenn nicht klar ist, dass sie den Abbruchfall erreicht. Dann ruft sie sich immer weiter auf, bis der Aufrufstapel erschöpft ist.</p>
+
+        <h4>Korrekt: n wird kleiner</h4>
+        <div class="code-block">func countdown(n int) {
+    if n <= 0 {
+        return
+    }
+    fmt.Println(n)
+    countdown(n-1)
+}</div>
+
+        <h4>Fehlerhaft: kein Fortschritt</h4>
+        <div class="code-block">func countdownFehler(n int) {
+    if n <= 0 {
+        return
+    }
+    fmt.Println(n)
+    countdownFehler(n) // n bleibt gleich
+}</div>
+
+        <div class="danger">
+          <strong>Problem:</strong> Der zweite Code erreicht den Abbruchfall nicht, wenn <code>n</code> positiv ist. Die Funktion ruft sich endlos mit demselben Wert auf.
+        </div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Prüffrage</th><th>Warum wichtig?</th></tr></thead>
+          <tbody>
+            <tr><td>Gibt es einen Abbruchfall?</td><td>Ohne Abbruch kann Rekursion nicht enden.</td></tr>
+            <tr><td>Wird das Problem kleiner?</td><td>Der rekursive Schritt muss dem Abbruchfall näherkommen.</td></tr>
+            <tr><td>Ist der Abbruchfall erreichbar?</td><td>Ein vorhandener Abbruchfall reicht nicht, wenn er nie erreicht wird.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(17)">Zurück</button><button class="nav-button" onclick="showStep(19)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-19">
+        <h3>19. Fibonacci: Warum Rekursion ineffizient werden kann</h3>
+        <p>Rekursion kann elegant aussehen, aber sehr ineffizient sein. Das klassische Beispiel ist die naive Fibonacci-Funktion.</p>
+
+        <div class="code-block">func fib(n int) int {
+    if n <= 1 {
+        return n
+    }
+    return fib(n-1) + fib(n-2)
+}</div>
+
+        <p>Für <code>fib(5)</code> entsteht kein einfacher linearer Stapel, sondern ein verzweigter Aufrufbaum:</p>
+
+        <div class="code-block">fib(5)
+├─ fib(4)
+│  ├─ fib(3)
+│  │  ├─ fib(2)
+│  │  │  ├─ fib(1)
+│  │  │  └─ fib(0)
+│  │  └─ fib(1)
+│  └─ fib(2)
+│     ├─ fib(1)
+│     └─ fib(0)
+└─ fib(3)
+   ├─ fib(2)
+   │  ├─ fib(1)
+   │  └─ fib(0)
+   └─ fib(1)</div>
+
+        <p>Man sieht: <code>fib(3)</code>, <code>fib(2)</code> und <code>fib(1)</code> werden mehrfach berechnet.</p>
+
+        <div class="danger">
+          <strong>Negatives Verhalten:</strong> Die naive Fibonacci-Rekursion wächst kaskadenartig. Der Aufwand steigt sehr schnell, weil dieselben Teilprobleme immer wieder neu berechnet werden.
+        </div>
+
+        <table class="comparison-table">
+          <thead><tr><th>Rekursionsform</th><th>Struktur</th><th>Bewertung</th></tr></thead>
+          <tbody>
+            <tr><td>lineare Rekursion</td><td>ein rekursiver Aufruf pro Schritt</td><td>einfacher zu verstehen</td></tr>
+            <tr><td>kaskadenartige Rekursion</td><td>mehrere rekursive Aufrufe pro Schritt</td><td>kann sehr ineffizient werden</td></tr>
+            <tr><td>Endrekursion</td><td>rekursiver Aufruf ist letzte Aktion</td><td>konzeptionell wichtig, in Go nicht automatisch Optimierungsgarantie</td></tr>
+            <tr><td>indirekte Rekursion</td><td>Funktionen rufen sich über Umwege gegenseitig auf</td><td>schwerer zu erkennen</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <strong>Lehrpunkt:</strong> Rekursion ist kein Selbstzweck. Sie ist gut, wenn die Problemstruktur rekursiv ist und der Aufwand kontrollierbar bleibt.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(18)">Zurück</button><button class="nav-button" onclick="showStep(20)">Weiter</button></div>
+      </div>
+
+      <div class="step-content" id="step-20">
+        <h3>20. Zusammenfassung und Anschluss</h3>
+        <p>Kapitel 7 führt schrittweise von Funktionen zu Zeigern und Rekursion. Die Begriffe sollten nicht isoliert gelernt werden, sondern als Antworten auf konkrete Programmierprobleme.</p>
+
+        <table class="comparison-table">
+          <thead><tr><th>Konzept</th><th>Didaktische Funktion</th><th>Minimaler Merksatz</th></tr></thead>
+          <tbody>
+            <tr><td>Funktion</td><td>benannter Programmbaustein</td><td>Eingaben hinein, Ergebnis heraus</td></tr>
+            <tr><td>mehrere Rückgaben</td><td>mehrere Ergebnisse sauber liefern</td><td>Go kann mehr als einen Wert zurückgeben</td></tr>
+            <tr><td>error</td><td>Fehler explizit behandeln</td><td><code>nil</code> heißt: kein Fehler</td></tr>
+            <tr><td>call-by-value</td><td>Funktionsaufrufe als Kopie verstehen</td><td>Parameter sind lokale Kopien</td></tr>
+            <tr><td>Zeiger</td><td>Originaldaten zugänglich machen</td><td>Adresse übergeben, über <code>*</code> zugreifen</td></tr>
+            <tr><td>Rekursion</td><td>Problem auf kleinere Version zurückführen</td><td>Selbstaufruf braucht Abbruchfall</td></tr>
+          </tbody>
+        </table>
+
+        <div class="concepts-used">
+          <h4>Passende Anschlussübungen</h4>
+          <div class="concepts-list">
+            <div class="concept-tag">Bubble Sort mit Funktionen</div>
+            <div class="concept-tag">Bubble Sort mit Zeigerparameter</div>
+            <div class="concept-tag">Selection Sort mit Funktionen</div>
+            <div class="concept-tag">QuickSort rekursiv</div>
+          </div>
+        </div>
+
+        <div class="cross-link" style="margin-top: 15px;">
+          Didaktische Empfehlung: Funktionen zuerst am Bubble-Sort-Refactoring üben, danach Zeiger am selben Beispiel einführen, danach Rekursion als Vorbereitung auf QuickSort.
+        </div>
+
+        <div class="nav-buttons"><button class="nav-button" onclick="showStep(19)">Zurück</button><button class="nav-button" disabled>Fertig</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function showStep(stepNumber) {
+      const steps = document.querySelectorAll('.step-content');
+      steps.forEach(step => step.classList.remove('active'));
+
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      document.getElementById('step-' + stepNumber).classList.add('active');
+      tabs[stepNumber - 1].classList.add('active');
+      document.querySelector('.content-area').scrollTop = 0;
+    }
+  </script>
+</body>
+</html>

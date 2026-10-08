@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuweisungen in Go - Interaktive Veranschaulichung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            white-space: pre;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .interactive-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #e8f4f8;
+            border-left: 5px solid #667eea;
+            min-height: 60px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .operator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .operator-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .operator-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .operator-card .op {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>📝 Zuweisungen in Go</h1>
+            <p>Interaktive Veranschaulichung von Zuweisungen und Operatoren</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">FernUni Hagen - Kurs 01613 - Kapitel 5.3 & 5.4</p>
+        </div>
+
+        <div class="content">
+            <!-- Grundlegende Zuweisung -->
+            <div class="section">
+                <h2>🎯 Grundlegende Zuweisung</h2>
+                <p>Die einfachste Form der Zuweisung verwendet den <strong>Zuweisungsoperator =</strong></p>
+                
+                <div class="code-block">x = <span class="number">10</span>        <span class="comment">// Einfache Zuweisung</span>
+name = <span class="string">"Peter"</span>  <span class="comment">// Zuweisung eines Strings</span>
+y = x * <span class="number">2</span>     <span class="comment">// Zuweisung mit Berechnung</span></div>
+
+                <div class="highlight-box">
+                    <h4>💡 Grundprinzip:</h4>
+                    <p>Der Ausdruck auf der <strong>rechten Seite</strong> wird ausgewertet und das Ergebnis wird der Variablen auf der <strong>linken Seite</strong> zugewiesen.</p>
+                </div>
+            </div>
+
+            <!-- Unterschied := vs = -->
+            <div class="section">
+                <h2>⚡ Wichtig: Deklaration vs. Zuweisung</h2>
+                <p>In Go gibt es zwei verschiedene Operatoren, die leicht verwechselt werden können:</p>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">:= (Deklaration mit Initialisierung)</h4>
+                        <div class="code-block">x := <span class="number">10</span>  <span class="comment">// Variable erstellen</span></div>
+                        <ul style="margin-top: 15px;">
+                            <li><strong>Erstellt</strong> eine neue Variable</li>
+                            <li>Typ wird automatisch abgeleitet</li>
+                            <li>Nur für lokale Variablen</li>
+                            <li>Variable darf noch nicht existieren</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #667eea;">
+                        <h4 style="color: #667eea;">= (Zuweisung)</h4>
+                        <div class="code-block">x = <span class="number">20</span>  <span class="comment">// Wert ändern</span></div>
+                        <ul style="margin-top: 15px;">
+                            <li><strong>Ändert</strong> eine bestehende Variable</li>
+                            <li>Variable muss bereits existieren</li>
+                            <li>Typ muss kompatibel sein</li>
+                            <li>Thema dieses Kapitels</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box" style="margin-top: 20px;">
+                    <h4>⚠️ Typische Fehler:</h4>
+                    <div class="code-block" style="background: #fff; color: #333; border-left: 4px solid #dc3545;">x := <span class="number">10</span>
+x := <span class="number">20</span>  <span class="comment">// ❌ Fehler: x wurde bereits deklariert!</span></div>
+                    <p style="margin-top: 10px;">Man kann eine Variable nicht zweimal mit <code>:=</code> deklarieren!</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Richtig:</h4>
+                    <div class="code-block" style="background: #fff; color: #333; border-left: 4px solid #28a745;">x := <span class="number">10</span>  <span class="comment">// Deklaration mit Initialisierung</span>
+x = <span class="number">20</span>   <span class="comment">// Zuweisung eines neuen Werts</span></div>
+                    <p style="margin-top: 10px;">Erst deklarieren mit <code>:=</code>, dann zuweisen mit <code>=</code></p>
+                </div>
+
+                <div class="info-box">
+                    <h4>📖 Im Rest dieses Kapitels:</h4>
+                    <p>Wir konzentrieren uns auf <strong>Zuweisungen</strong> (<code>=</code> und Varianten wie <code>+=</code>, <code>*=</code>, etc.) für <strong>bereits existierende</strong> Variablen. Die Deklaration mit <code>:=</code> wurde in früheren Kapiteln behandelt.</p>
+                </div>
+            </div>
+
+            <!-- Kombinierte Zuweisungsoperatoren -->
+            <div class="section">
+                <h2>🔀 Kombinierte Zuweisungsoperatoren</h2>
+                <p>Häufig wird einer Variablen ein neuer Wert zugewiesen, der sich aus einer Operation mit dem alten Wert ergibt. Go bietet dafür kompakte Operatoren:</p>
+
+                <h3>Lange vs. Kurze Schreibweise</h3>
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('mult')">Multiplikation</button>
+                    <button class="tab-button" onclick="switchTab('div')">Division</button>
+                    <button class="tab-button" onclick="switchTab('mod')">Modulo</button>
+                    <button class="tab-button" onclick="switchTab('add')">Addition</button>
+                    <button class="tab-button" onclick="switchTab('sub')">Subtraktion</button>
+                </div>
+
+                <div id="mult" class="tab-content active">
+                    <h4>Multiplikations-Zuweisung (*=)</h4>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Lange Form</h4>
+                            <div class="code-block">x = x * <span class="number">8</span></div>
+                        </div>
+                        <div class="card">
+                            <h4>Kurze Form</h4>
+                            <div class="code-block">x *= <span class="number">8</span></div>
+                        </div>
+                    </div>
+                    <p>Der Operator <code>*=</code> multipliziert die Variable mit dem rechten Wert und weist das Ergebnis wieder der Variablen zu.</p>
+                </div>
+
+                <div id="div" class="tab-content">
+                    <h4>Divisions-Zuweisung (/=)</h4>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Lange Form</h4>
+                            <div class="code-block">x = x / <span class="number">4</span></div>
+                        </div>
+                        <div class="card">
+                            <h4>Kurze Form</h4>
+                            <div class="code-block">x /= <span class="number">4</span></div>
+                        </div>
+                    </div>
+                    <p>Der Operator <code>/=</code> dividiert die Variable durch den rechten Wert.</p>
+                </div>
+
+                <div id="mod" class="tab-content">
+                    <h4>Modulo-Zuweisung (%=)</h4>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Lange Form</h4>
+                            <div class="code-block">x = x % <span class="number">3</span></div>
+                        </div>
+                        <div class="card">
+                            <h4>Kurze Form</h4>
+                            <div class="code-block">x %= <span class="number">3</span></div>
+                        </div>
+                    </div>
+                    <p>Der Operator <code>%=</code> berechnet den Rest der Division und weist ihn zu.</p>
+                </div>
+
+                <div id="add" class="tab-content">
+                    <h4>Additions-Zuweisung (+=)</h4>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Lange Form</h4>
+                            <div class="code-block">y = y + <span class="number">5</span></div>
+                        </div>
+                        <div class="card">
+                            <h4>Kurze Form</h4>
+                            <div class="code-block">y += <span class="number">5</span></div>
+                        </div>
+                    </div>
+                    <p>Der Operator <code>+=</code> addiert den rechten Wert zur Variablen hinzu.</p>
+                </div>
+
+                <div id="sub" class="tab-content">
+                    <h4>Subtraktions-Zuweisung (-=)</h4>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h4>Lange Form</h4>
+                            <div class="code-block">z = z - (<span class="number">2</span> + <span class="number">3</span>)</div>
+                        </div>
+                        <div class="card">
+                            <h4>Kurze Form</h4>
+                            <div class="code-block">z -= <span class="number">2</span> + <span class="number">3</span></div>
+                        </div>
+                    </div>
+                    <p>Der Operator <code>-=</code> subtrahiert den rechten Wert von der Variablen.</p>
+                </div>
+
+                <h3>Übersicht aller kombinierten Operatoren</h3>
+                <div class="operator-grid">
+                    <div class="operator-card">
+                        <div class="op">*=</div>
+                        <p>Multiplikation</p>
+                    </div>
+                    <div class="operator-card">
+                        <div class="op">/=</div>
+                        <p>Division</p>
+                    </div>
+                    <div class="operator-card">
+                        <div class="op">%=</div>
+                        <p>Modulo</p>
+                    </div>
+                    <div class="operator-card">
+                        <div class="op">+=</div>
+                        <p>Addition</p>
+                    </div>
+                    <div class="operator-card">
+                        <div class="op">-=</div>
+                        <p>Subtraktion</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inkrement und Dekrement -->
+            <div class="section">
+                <h2>⬆️⬇️ Inkrement und Dekrement</h2>
+                <p>Die häufigste Operation ist das Erhöhen oder Verringern einer Variablen um 1. Dafür gibt es spezielle Anweisungen:</p>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Inkrementierung (++)</h4>
+                        <div class="code-block">x++  <span class="comment">// x = x + 1</span></div>
+                        <p>Erhöht den Wert der Variablen um 1</p>
+                        <div class="info-box">
+                            <strong>Äquivalent zu:</strong><br>
+                            <code>x += 1</code> oder <code>x = x + 1</code>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>Dekrementierung (--)</h4>
+                        <div class="code-block">y--  <span class="comment">// y = y - 1</span></div>
+                        <p>Verringert den Wert der Variablen um 1</p>
+                        <div class="info-box">
+                            <strong>Äquivalent zu:</strong><br>
+                            <code>y -= 1</code> oder <code>y = y - 1</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Wichtig: Anweisung vs. Ausdruck</h4>
+                    <p>In Go sind <code>++</code> und <code>--</code> <strong>Anweisungen</strong>, keine Ausdrücke!</p>
+                    <ul>
+                        <li>✅ Erlaubt: <code>x++</code> (als eigenständige Anweisung)</li>
+                        <li>❌ Nicht erlaubt: <code>y = x++</code> (kann nicht in Ausdruck verwendet werden)</li>
+                        <li>❌ Nicht erlaubt: <code>y = 5 + x++</code></li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>🌍 Sprachvergleich</h4>
+                    <p>In Sprachen wie Java oder C++ gibt es zusätzlich:</p>
+                    <ul>
+                        <li><strong>Post-Increment:</strong> <code>x++</code> (erst Wert verwenden, dann erhöhen)</li>
+                        <li><strong>Pre-Increment:</strong> <code>++x</code> (erst erhöhen, dann Wert verwenden)</li>
+                    </ul>
+                    <p>In Go existiert nur <strong>Post-Increment/Decrement</strong> als <strong>Anweisung</strong>, nicht als Ausdruck!</p>
+                </div>
+            </div>
+
+            <!-- Interaktive Demo -->
+            <div class="section">
+                <h2>🎮 Interaktive Demo: Zuweisungsoperatoren</h2>
+                
+                <div class="interactive-box">
+                    <h3>Probiere die Operatoren aus!</h3>
+                    
+                    <div class="input-group">
+                        <label for="startValue"><strong>Startwert:</strong></label>
+                        <input type="number" id="startValue" value="10">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="operator"><strong>Operator wählen:</strong></label>
+                        <select id="operator">
+                            <option value="+=">+= (Addition)</option>
+                            <option value="-=">-= (Subtraktion)</option>
+                            <option value="*=">*= (Multiplikation)</option>
+                            <option value="/=">/= (Division)</option>
+                            <option value="%=">%= (Modulo)</option>
+                            <option value="++">++ (Inkrement)</option>
+                            <option value="--">-- (Dekrement)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" id="valueGroup">
+                        <label for="opValue"><strong>Wert:</strong></label>
+                        <input type="number" id="opValue" value="5">
+                    </div>
+                    
+                    <button class="btn" onclick="berechneOperation()">Berechnen</button>
+                    
+                    <div class="result-box" id="operationOutput"></div>
+                </div>
+            </div>
+
+            <!-- Tupel-Zuweisung -->
+            <div class="section">
+                <h2>📦 Tupel-Zuweisung</h2>
+                <p>In Go können mehrere Variablen gleichzeitig Werte zugewiesen bekommen:</p>
+
+                <h3>Grundprinzip</h3>
+                <div class="code-block">x, y, z = <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>  <span class="comment">// Gleichzeitige Zuweisung</span></div>
+
+                <div class="highlight-box">
+                    <h4>🔄 Zwei-Schritt-Prozess:</h4>
+                    <ol>
+                        <li><strong>Schritt 1:</strong> Alle Ausdrücke auf der <strong>rechten Seite</strong> werden ausgewertet</li>
+                        <li><strong>Schritt 2:</strong> Die Werte werden den Variablen auf der <strong>linken Seite</strong> zugewiesen</li>
+                    </ol>
+                </div>
+
+                <h3>Praktischer Nutzen: Werte vertauschen</h3>
+                <p>Die Tupel-Zuweisung ermöglicht das Vertauschen von Werten ohne Hilfsvariable:</p>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Mit Tupel-Zuweisung ✨</h4>
+                        <div class="code-block">a, b = b, a  <span class="comment">// Werte tauschen</span></div>
+                        <div class="success-box">
+                            <strong>Vorteile:</strong>
+                            <ul>
+                                <li>✅ Nur eine Anweisung</li>
+                                <li>✅ Keine Hilfsvariable nötig</li>
+                                <li>✅ Elegant und übersichtlich</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>Ohne Tupel-Zuweisung 📝</h4>
+                        <div class="code-block">tmp := a     <span class="comment">// Hilfsvariable</span>
+a = b
+b = tmp</div>
+                        <div class="info-box">
+                            <strong>Nachteile:</strong>
+                            <ul>
+                                <li>❌ Drei Anweisungen nötig</li>
+                                <li>❌ Hilfsvariable erforderlich</li>
+                                <li>❌ Umständlicher</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Wann Tupel-Zuweisungen verwenden?</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Situation</th>
+                            <th>Empfehlung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Variablen stehen in engem Zusammenhang (z.B. x-y-z-Koordinaten)</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Verwenden</td>
+                        </tr>
+                        <tr>
+                            <td>Einfache Werte (Literale oder Variablen)</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Verwenden</td>
+                        </tr>
+                        <tr>
+                            <td>Vertauschen von Werten</td>
+                            <td style="color: #28a745; font-weight: bold;">✓ Verwenden</td>
+                        </tr>
+                        <tr>
+                            <td>Keine Beziehung zwischen Variablen</td>
+                            <td style="color: #dc3545; font-weight: bold;">✗ Vermeiden</td>
+                        </tr>
+                        <tr>
+                            <td>Komplexe Ausdrücke auf rechter Seite</td>
+                            <td style="color: #dc3545; font-weight: bold;">✗ Vermeiden</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Interaktive Demo Tupel -->
+            <div class="section">
+                <h2>🎮 Interaktive Demo: Werte vertauschen</h2>
+                
+                <div class="interactive-box">
+                    <h3>Vertausche zwei Werte mit Tupel-Zuweisung</h3>
+                    
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label for="valueA"><strong>Variable a:</strong></label>
+                            <input type="number" id="valueA" value="10">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="valueB"><strong>Variable b:</strong></label>
+                            <input type="number" id="valueB" value="20">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="vertauscheWerte()">Werte vertauschen (a, b = b, a)</button>
+                    
+                    <div class="result-box" id="swapOutput"></div>
+                </div>
+            </div>
+
+            <!-- Einfache Anweisungen -->
+            <div class="section">
+                <h2>📋 Einfache Anweisungen (Simple Statements)</h2>
+                <p>In Go werden bestimmte Anweisungen als <strong>"simple statements"</strong> (einfache Anweisungen) bezeichnet. Diese dürfen an speziellen Stellen in Kontrollfluss-Anweisungen stehen.</p>
+
+                <h3>Was sind Simple Statements?</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>1. Kurze Variablendeklarationen</h4>
+                        <div class="code-block">zahl := <span class="number">20</span>
+x, y := <span class="number">1</span>, <span class="number">-1</span></div>
+                    </div>
+
+                    <div class="card">
+                        <h4>2. Zuweisungen</h4>
+                        <div class="code-block">x = <span class="number">3</span> * y
+name = <span class="string">"Peter"</span></div>
+                    </div>
+
+                    <div class="card">
+                        <h4>3. Inkrement/Dekrement</h4>
+                        <div class="code-block">i++
+alter--</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>4. Funktionsaufrufe</h4>
+                        <div class="code-block">f()
+quader(<span class="number">4</span>, <span class="number">7</span>)</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h4>5. Leere Anweisung</h4>
+                    <p>Tatsächlich "nichts" bzw. Leerraum (whitespace)</p>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>📌 Wo werden Simple Statements verwendet?</h4>
+                    <p>Simple Statements werden in speziellen Positionen von Kontrollfluss-Anweisungen verwendet, z.B.:</p>
+                    <ul>
+                        <li>In <code>for</code>-Schleifen (Initialisierung, Post-Statement)</li>
+                        <li>In <code>if</code>-Anweisungen (optionale Initialisierung vor Bedingung)</li>
+                        <li>In <code>switch</code>-Anweisungen</li>
+                    </ul>
+                    <p><em>Details dazu werden in späteren Kapiteln behandelt.</em></p>
+                </div>
+            </div>
+
+            <!-- Kettenzuweisungen -->
+            <div class="section">
+                <h2>⛔ Kettenzuweisungen - Nicht möglich in Go!</h2>
+                <p>In vielen Programmiersprachen (Java, C++, Python, JavaScript) kann man mehrere Variablen in einer Zeile den gleichen Wert zuweisen. <strong>In Go ist das nicht möglich!</strong></p>
+
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ Funktioniert NICHT in Go</h4>
+                        <div class="code-block" style="background: #fff; color: #333;">x = y = z = <span class="number">5</span>  <span class="comment" style="color: #dc3545;">// Compile-Fehler!</span></div>
+                        <p style="margin-top: 15px;">Kettenzuweisungen sind in Go <strong>nicht erlaubt</strong>.</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✅ Richtig in Go</h4>
+                        <div class="code-block" style="background: #fff; color: #333;">x = <span class="number">5</span>
+y = <span class="number">5</span>
+z = <span class="number">5</span></div>
+                        <p style="margin-top: 15px;">Jede Variable muss <strong>separat</strong> zugewiesen werden.</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Alternative: Tupel-Zuweisung</h4>
+                    <p>Wenn man mehreren Variablen gleichzeitig denselben Wert zuweisen möchte:</p>
+                    <div class="code-block" style="background: #fff; color: #333;">x, y, z = <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>  <span class="comment" style="color: #28a745;">// ✅ Das funktioniert!</span></div>
+                    <p>Hier werden aber drei separate Werte zugewiesen, nicht eine Kette.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Für Umsteiger von anderen Sprachen:</h4>
+                    <p>Wenn du von C, Java, JavaScript oder Python kommst: Go erlaubt keine Kettenzuweisungen. Das ist eine bewusste Design-Entscheidung für bessere Lesbarkeit.</p>
+                </div>
+            </div>
+
+            <!-- Konstanten können nicht zugewiesen werden -->
+            <div class="section">
+                <h2>🔒 Konstanten können nicht zugewiesen werden</h2>
+                <p>Variablen, die mit <code>const</code> deklariert wurden, sind <strong>konstant</strong> und können nach der Initialisierung nicht mehr geändert werden.</p>
+
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✅ Erlaubt: Variable</h4>
+                        <div class="code-block"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+x = <span class="number">20</span>  <span class="comment">// ✓ OK: Zuweisung möglich</span>
+x = <span class="number">30</span>  <span class="comment">// ✓ OK: Mehrfach änderbar</span></div>
+                        <p style="margin-top: 15px;">Variablen (<code>var</code>) können beliebig oft geändert werden.</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ Verboten: Konstante</h4>
+                        <div class="code-block"><span class="keyword">const</span> Pi = <span class="number">3.14</span>
+Pi = <span class="number">3.14159</span>  <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span>
+Pi = <span class="number">3.0</span>      <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span></div>
+                        <p style="margin-top: 15px;">Konstanten (<code>const</code>) sind <strong>unveränderlich</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Wann was verwenden?</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Situation</th>
+                                <th>Verwende</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Wert wird sich ändern (Zähler, Summe, Status)</td>
+                                <td><code>var</code> oder <code>:=</code></td>
+                            </tr>
+                            <tr>
+                                <td>Wert bleibt gleich (Pi, Max-Werte, Konfiguration)</td>
+                                <td><code>const</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Fehlermeldung:</h4>
+                    <div class="code-block" style="background: #fff; color: #dc3545; border-left: 4px solid #dc3545;">cannot assign to Pi (declared const)</div>
+                    <p>Diese Fehlermeldung erscheint beim Versuch, eine Konstante zuzuweisen.</p>
+                </div>
+            </div>
+
+            <!-- Typ-Kompatibilität -->
+            <div class="section">
+                <h2>🎨 Typ-Kompatibilität bei Zuweisungen</h2>
+                <p>In Go ist <strong>Typsicherheit</strong> sehr wichtig. Der zugewiesene Wert muss zum Typ der Variablen passen!</p>
+
+                <div class="warning-box">
+                    <h4>⚠️ Wichtige Regel:</h4>
+                    <p>Der Typ der rechten Seite muss mit dem Typ der Variablen auf der linken Seite <strong>kompatibel</strong> sein.</p>
+                </div>
+
+                <h3>Typische Fehler</h3>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ String zu int</h4>
+                        <div class="code-block"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+x = <span class="string">"20"</span>  <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span></div>
+                        <p style="margin-top: 10px; font-size: 0.9em;">String kann nicht zu int zugewiesen werden.</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ float zu int</h4>
+                        <div class="code-block"><span class="keyword">var</span> y <span class="keyword">int</span> = <span class="number">5</span>
+y = <span class="number">3.14</span>  <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span></div>
+                        <p style="margin-top: 10px; font-size: 0.9em;">Fließkommazahl kann nicht zu int zugewiesen werden.</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ int zu bool</h4>
+                        <div class="code-block"><span class="keyword">var</span> fertig <span class="keyword">bool</span> = <span class="keyword">true</span>
+fertig = <span class="number">1</span>  <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span></div>
+                        <p style="margin-top: 10px; font-size: 0.9em;">In Go ist 1 nicht automatisch true!</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">❌ bool zu string</h4>
+                        <div class="code-block"><span class="keyword">var</span> name <span class="keyword">string</span> = <span class="string">"Peter"</span>
+name = <span class="keyword">false</span>  <span class="comment" style="color: #dc3545;">// ❌ Fehler!</span></div>
+                        <p style="margin-top: 10px; font-size: 0.9em;">bool kann nicht zu string zugewiesen werden.</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">Richtige Zuweisungen</h3>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✅ Gleicher Typ</h4>
+                        <div class="code-block"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+x = <span class="number">20</span>       <span class="comment">// ✓ int zu int</span>
+x = <span class="number">5</span> + <span class="number">3</span>     <span class="comment">// ✓ Ergebnis ist int</span></div>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✅ Kompatible Typen</h4>
+                        <div class="code-block"><span class="keyword">var</span> name <span class="keyword">string</span> = <span class="string">"Peter"</span>
+name = <span class="string">"Anna"</span>  <span class="comment">// ✓ string zu string</span>
+name = <span class="string">""</span>      <span class="comment">// ✓ Leerer String</span></div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <h4>💡 Typ-Konvertierung:</h4>
+                    <p>Wenn man verschiedene Typen zuweisen möchte, muss man explizit konvertieren:</p>
+                    <div class="code-block" style="background: #fff; color: #333;"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+<span class="keyword">var</span> y <span class="keyword">float64</span>
+y = <span class="keyword">float64</span>(x)  <span class="comment">// ✓ Explizite Konvertierung</span></div>
+                    <p style="margin-top: 10px;">Go macht <strong>keine automatische Typ-Konvertierung</strong> - das ist Absicht für mehr Sicherheit!</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Vorteile der strikten Typisierung:</h4>
+                    <ul>
+                        <li>Fehler werden beim Kompilieren entdeckt, nicht zur Laufzeit</li>
+                        <li>Code ist eindeutiger und leichter zu verstehen</li>
+                        <li>Weniger unerwartete Bugs durch implizite Konvertierungen</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+                
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✓ Empfohlen</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Kombinierte Operatoren für kürzeren Code verwenden</li>
+                            <li><code>++</code> und <code>--</code> statt <code>+= 1</code> und <code>-= 1</code></li>
+                            <li>Tupel-Zuweisung für zusammenhängende Variablen</li>
+                            <li>Tupel-Zuweisung zum Werte-Vertauschen</li>
+                            <li><code>const</code> für unveränderliche Werte</li>
+                            <li><code>var</code> für Werte, die sich ändern</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">✗ Vermeiden</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><code>++</code> oder <code>--</code> in Ausdrücken verwenden</li>
+                            <li>Kettenzuweisungen (<code>x = y = z = 5</code>) - nicht möglich in Go!</li>
+                            <li>Konstanten nach der Deklaration zuweisen</li>
+                            <li>Inkompatible Typen zuweisen (z.B. String zu int)</li>
+                            <li>Tupel-Zuweisung mit komplexen Ausdrücken</li>
+                            <li>Tupel-Zuweisung für unzusammenhängende Variablen</li>
+                            <li>Lange Form wenn kurze Form existiert</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function berechneOperation() {
+            const startValue = parseFloat(document.getElementById('startValue').value);
+            const operator = document.getElementById('operator').value;
+            const opValue = parseFloat(document.getElementById('opValue').value);
+            const output = document.getElementById('operationOutput');
+            
+            if (isNaN(startValue)) {
+                output.innerHTML = '<span style="color: red;">Bitte geben Sie einen gültigen Startwert ein!</span>';
+                return;
+            }
+
+            let result;
+            let longForm;
+            let shortForm;
+
+            switch(operator) {
+                case '+=':
+                    result = startValue + opValue;
+                    longForm = `x = ${startValue} + ${opValue}`;
+                    shortForm = `x += ${opValue}`;
+                    break;
+                case '-=':
+                    result = startValue - opValue;
+                    longForm = `x = ${startValue} - ${opValue}`;
+                    shortForm = `x -= ${opValue}`;
+                    break;
+                case '*=':
+                    result = startValue * opValue;
+                    longForm = `x = ${startValue} * ${opValue}`;
+                    shortForm = `x *= ${opValue}`;
+                    break;
+                case '/=':
+                    result = startValue / opValue;
+                    longForm = `x = ${startValue} / ${opValue}`;
+                    shortForm = `x /= ${opValue}`;
+                    break;
+                case '%=':
+                    result = startValue % opValue;
+                    longForm = `x = ${startValue} % ${opValue}`;
+                    shortForm = `x %= ${opValue}`;
+                    break;
+                case '++':
+                    result = startValue + 1;
+                    longForm = `x = ${startValue} + 1`;
+                    shortForm = `x++`;
+                    break;
+                case '--':
+                    result = startValue - 1;
+                    longForm = `x = ${startValue} - 1`;
+                    shortForm = `x--`;
+                    break;
+            }
+            
+            output.innerHTML = `
+                <h4 style="color: #667eea; margin-bottom: 15px;">Ergebnis:</h4>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <strong>Startwert:</strong> x = ${startValue}
+                </div>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <strong>Lange Form:</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">${longForm}</pre>
+                </div>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #28a745;">
+                    <strong style="color: #28a745;">Kurze Form:</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">${shortForm}</pre>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                    <h3 style="margin-bottom: 10px; color: white;">Neuer Wert</h3>
+                    <p style="font-size: 2em; font-weight: bold;">x = ${result}</p>
+                </div>
+            `;
+
+            // Zeige/Verstecke Wert-Eingabefeld für ++ und --
+            if (operator === '++' || operator === '--') {
+                document.getElementById('valueGroup').style.display = 'none';
+            } else {
+                document.getElementById('valueGroup').style.display = 'block';
+            }
+        }
+
+        function vertauscheWerte() {
+            let a = parseFloat(document.getElementById('valueA').value);
+            let b = parseFloat(document.getElementById('valueB').value);
+            const output = document.getElementById('swapOutput');
+            
+            if (isNaN(a) || isNaN(b)) {
+                output.innerHTML = '<span style="color: red;">Bitte geben Sie gültige Werte ein!</span>';
+                return;
+            }
+
+            const origA = a;
+            const origB = b;
+
+            // Werte vertauschen
+            [a, b] = [b, a];
+
+            // Ausgabe
+            output.innerHTML = `
+                <h4 style="color: #667eea; margin-bottom: 15px;">Vertauschung durchgeführt!</h4>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <strong>Vorher:</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">a = ${origA}
+b = ${origB}</pre>
+                </div>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #28a745;">
+                    <strong style="color: #28a745;">Tupel-Zuweisung:</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">a, b = b, a</pre>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h3 style="margin-bottom: 10px; color: white;">Nachher:</h3>
+                    <pre style="margin: 10px 0; font-size: 1.3em; font-family: monospace;">a = ${a}
+b = ${b}</pre>
+                    <p style="font-size: 0.95em; opacity: 0.9; margin-top: 10px;">✨ Werte wurden vertauscht!</p>
+                </div>
+            `;
+
+            // Aktualisiere Eingabefelder
+            document.getElementById('valueA').value = a;
+            document.getElementById('valueB').value = b;
+        }
+
+        // Initiale Berechnung
+        window.onload = function() {
+            berechneOperation();
+            
+            // Event Listener für Operator-Änderung
+            document.getElementById('operator').addEventListener('change', function() {
+                const operator = this.value;
+                if (operator === '++' || operator === '--') {
+                    document.getElementById('valueGroup').style.display = 'none';
+                } else {
+                    document.getElementById('valueGroup').style.display = 'block';
+                }
+                berechneOperation();
+            });
+        };
+    </script>
+</body>
+</html>

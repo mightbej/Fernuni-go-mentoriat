@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konstanten in Go - Interaktive Veranschaulichung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            white-space: pre;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .interactive-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #e8f4f8;
+            border-left: 5px solid #667eea;
+            min-height: 60px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .advantage {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .disadvantage {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🔒 Konstanten in Go</h1>
+            <p>Interaktive Veranschaulichung der Deklaration und Verwendung von Konstanten</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">FernUni Hagen - Kurs 01613 - Kapitel 5.2</p>
+        </div>
+
+        <div class="content">
+            <!-- Grundlagen Section -->
+            <div class="section">
+                <h2>🎯 Was sind Konstanten?</h2>
+                <p><strong>Konstanten</strong> sind Bezeichner, die für einen festen, unveränderlichen Wert stehen. Im Gegensatz zu Variablen kann der Wert einer Konstante nach der Deklaration nicht mehr geändert werden.</p>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Wichtig:</strong> Einer Konstanten muss bei der Deklaration <strong>immer</strong> ein Wert zugewiesen werden, da dieser initiale Wert unveränderlich ist.
+                </div>
+
+                <h3>Syntax der Deklaration</h3>
+                <div class="code-block"><span class="keyword">const</span> maxAnzahl <span class="keyword">int</span> = <span class="number">500</span>  <span class="comment">// explizite Typangabe</span>
+<span class="keyword">const</span> maxAnzahl = <span class="number">500</span>        <span class="comment">// Typ wird abgeleitet (int)</span></div>
+            </div>
+
+            <!-- Vergleich Konstante vs Variable -->
+            <div class="section">
+                <h2>⚖️ Konstante vs. Variable</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Merkmal</th>
+                            <th>Konstante</th>
+                            <th>Variable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Schlüsselwort</strong></td>
+                            <td><code>const</code></td>
+                            <td><code>var</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Initialer Wert</strong></td>
+                            <td class="advantage">✓ Pflicht bei Deklaration</td>
+                            <td>Optional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Veränderbarkeit</strong></td>
+                            <td class="advantage">✗ Unveränderlich</td>
+                            <td>✓ Veränderlich</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Typableitung</strong></td>
+                            <td class="advantage">✓ Möglich</td>
+                            <td class="advantage">✓ Möglich</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wann verwenden?</strong></td>
+                            <td>Feste Werte, die sich nicht ändern</td>
+                            <td>Werte, die sich ändern können/sollen</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mehrere Konstanten -->
+            <div class="section">
+                <h2>📦 Mehrere Konstanten deklarieren</h2>
+                <p>Mit der Klammern-Notation können mehrere Konstanten kompakt deklariert werden:</p>
+
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('simple')">Einfaches Beispiel</button>
+                    <button class="tab-button" onclick="switchTab('math')">Math-Paket Beispiel</button>
+                </div>
+
+                <div id="simple" class="tab-content active">
+                    <h4>Einfache Konstanten</h4>
+                    <div class="code-block"><span class="keyword">const</span> (
+    MaxBenutzer = <span class="number">100</span>
+    MinAlter = <span class="number">18</span>
+    StandardSprache = <span class="string">"de"</span>
+    IstAktiv = <span class="keyword">true</span>
+)</div>
+                </div>
+
+                <div id="math" class="tab-content">
+                    <h4>Mathematische Konstanten (wie im math-Paket)</h4>
+                    <div class="code-block"><span class="keyword">const</span> (
+    E      = <span class="number">2.71828182845904523536028747135266249775724709369995957496696763</span>
+    Pi     = <span class="number">3.14159265358979323846264338327950288419716939937510582097494459</span>
+    Phi    = <span class="number">1.61803398874989484820458683436563811772030917980576286213544862</span>
+    Sqrt2  = <span class="number">1.41421356237309504880168872420969807856967187537694807317667974</span>
+    Ln2    = <span class="number">0.693147180559945309417232121458176568075500134360255254120680009</span>
+    Log2E  = <span class="number">1</span> / Ln2  <span class="comment">// Berechnungen sind erlaubt!</span>
+    Ln10   = <span class="number">2.30258509299404568401799145468436420760110148862877297603332790</span>
+    Log10E = <span class="number">1</span> / Ln10 <span class="comment">// base-10 logarithm of E</span>
+)</div>
+                    <div class="info-box">
+                        <strong>💡 Hinweis:</strong> In der Deklaration von Konstanten sind Berechnungen mit anderen Konstanten erlaubt, da das Ergebnis zur Compile-Zeit bekannt ist.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Einsatzzwecke -->
+            <div class="section">
+                <h2>🎯 Wann sollte man Konstanten verwenden?</h2>
+                
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>1️⃣ Verständlichkeit</h4>
+                        <p>Aussagekräftige Namen statt komplizierter Zahlenwerte</p>
+                        <div class="code-block">umfang := <span class="number">2</span> * math.Pi * radius</div>
+                        <p style="margin-top: 10px; font-size: 0.9em;">Besser lesbar als:<br><code>umfang := 2 * 3.14159... * radius</code></p>
+                    </div>
+
+                    <div class="card">
+                        <h4>2️⃣ Performanz</h4>
+                        <p>Häufig benötigte Werte nicht wiederholt berechnen</p>
+                        <div class="code-block"><span class="keyword">const</span> Log10E = <span class="number">1</span> / Ln10
+<span class="comment">// Nur einmal berechnet!</span></div>
+                    </div>
+
+                    <div class="card">
+                        <h4>3️⃣ Zentrale Wartung</h4>
+                        <p>Werte an einer Stelle ändern statt im gesamten Code</p>
+                        <div class="code-block"><span class="keyword">const</span> maxAnzahl = <span class="number">500</span>
+<span class="comment">// Bei Änderung nur hier!</span></div>
+                    </div>
+
+                    <div class="card">
+                        <h4>4️⃣ Bedeutungserkennung</h4>
+                        <p>Gleiche Werte mit unterschiedlicher Bedeutung unterscheiden</p>
+                        <div class="code-block"><span class="keyword">const</span> monateImJahr = <span class="number">12</span>
+<span class="keyword">const</span> stundenAufUhr = <span class="number">12</span></div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🤔 Beispiel zur Bedeutungserkennung</h4>
+                    <p>Angenommen, Sie müssen im Code herausfinden, wo sich die Berechnung ändert, wenn ein Jahr plötzlich 13 Monate hätte (hypothetisch):</p>
+                    <ul>
+                        <li><strong>Ohne Konstante:</strong> Sie müssen <em>jede</em> Stelle mit dem Wert <code>12</code> prüfen und entscheiden, ob es sich um Monate oder etwas anderes handelt.</li>
+                        <li><strong>Mit Konstante:</strong> Sie suchen einfach nach <code>monateImJahr</code> und finden alle relevanten Stellen sofort!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interaktive Demo -->
+            <div class="section">
+                <h2>🎮 Interaktive Demo: Konstanten vs. Magic Numbers</h2>
+                
+                <div class="interactive-box">
+                    <h3>Berechne Jahresgehalt</h3>
+                    <p>Gib ein Monatsgehalt ein und sieh den Unterschied zwischen Code mit und ohne Konstanten:</p>
+                    
+                    <div class="input-group">
+                        <label for="gehalt"><strong>Monatsgehalt (€):</strong></label>
+                        <input type="number" id="gehalt" value="3000" min="0">
+                    </div>
+                    
+                    <button class="btn" onclick="berechneGehalt()">Berechnen</button>
+                    
+                    <div class="result-box" id="output"></div>
+                </div>
+            </div>
+
+            <!-- Untyped Constants -->
+            <div class="section">
+                <h2>🔬 Expertenwissen: Untyped Constants</h2>
+                
+                <div class="info-box">
+                    <strong>📖 Was sind Untyped Constants?</strong>
+                    <p>In Go haben Konstanten und Literale (wie <code>736</code> oder <code>0.6589</code>) zunächst keinen konkreten Typ, sondern den speziellen Typ <code>untyped integer</code> bzw. <code>untyped float</code>. Der konkrete Typ wird erst bei der Verwendung durch den Kontext bestimmt.</p>
+                </div>
+
+                <h3>Typ-Anpassung je nach Kontext</h3>
+                <div class="code-block"><span class="keyword">var</span> a uint8 = <span class="number">20</span>
+<span class="keyword">var</span> b int64 = <span class="number">20</span>
+
+fmt.Println(a + <span class="number">88</span>)  <span class="comment">// 88 wird zu uint8</span>
+fmt.Println(b + <span class="number">88</span>)  <span class="comment">// 88 wird zu int64</span>
+
+fmt.Printf(<span class="string">"Der Typ ist %T.\n"</span>, <span class="number">88</span>)  <span class="comment">// Ausgabe: Der Typ ist int.</span></div>
+
+                <div class="success-box">
+                    <h4>✨ Vorteil: Hohe Präzision bei Konstanten</h4>
+                    <p>Der Go-Compiler führt Berechnungen mit untyped Konstanten mit einer Präzision von <strong>mindestens 256 Bit</strong> durch!</p>
+                    <ul>
+                        <li><code>math.Pi</code> ist mit 65 Dezimalziffern definiert</li>
+                        <li><code>float64</code> kann nur ca. 16 Dezimalziffern repräsentieren</li>
+                        <li>Berechnungen zur Compile-Zeit nutzen die volle Präzision</li>
+                        <li>Erst bei der Verwendung zur Laufzeit wird konvertiert</li>
+                    </ul>
+                </div>
+
+                <h3>Beispiel: Hohe Präzision</h3>
+                <div class="code-block"><span class="keyword">const</span> (
+    Pi = <span class="number">3.14159265358979323846264338327950288419716939937510582097494459</span>
+    <span class="comment">// 65 Dezimalziffern!</span>
+)
+
+<span class="comment">// Berechnung zur Compile-Zeit mit 256 Bit Präzision:</span>
+<span class="keyword">const</span> umfangEinheitskreis = <span class="number">2</span> * Pi * <span class="number">1</span>
+
+<span class="comment">// Erst bei Zuweisung zu float64 wird konvertiert:</span>
+<span class="keyword">var</span> ergebnis float64 = umfangEinheitskreis</div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="section">
+                <h2>✅ Best Practices</h2>
+                
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745;">✓ Empfohlen</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Konstanten für wiederkehrende Werte verwenden</li>
+                            <li>Sprechende Namen wählen (z.B. <code>maxAnzahl</code>)</li>
+                            <li>Verwandte Konstanten gruppieren</li>
+                            <li>Bei Deklaration Typ weglassen, wenn ableitbar</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545;">✗ Vermeiden</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>"Magic Numbers" direkt im Code verwenden</li>
+                            <li>Konstanten ohne Initialisierung (nicht möglich!)</li>
+                            <li>Versuch, Konstanten zu ändern (Compile-Fehler)</li>
+                            <li>Konstanten für Werte, die sich ändern könnten</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Faustregel:</h4>
+                    <p><strong>Wenn ein Wert im Code mehr als einmal vorkommt und eine spezifische Bedeutung hat → Konstante verwenden!</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Deaktiviere alle Tabs
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Aktiviere gewählten Tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function berechneGehalt() {
+            const monatsgehalt = parseFloat(document.getElementById('gehalt').value);
+            const output = document.getElementById('output');
+            
+            if (isNaN(monatsgehalt) || monatsgehalt < 0) {
+                output.innerHTML = '<span style="color: red;">Bitte geben Sie einen gültigen Betrag ein!</span>';
+                return;
+            }
+
+            const monateImJahr = 12;
+            const jahresgehalt = monatsgehalt * monateImJahr;
+            
+            output.innerHTML = `
+                <h4 style="color: #667eea; margin-bottom: 15px;">Vergleich:</h4>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #dc3545;">
+                    <strong style="color: #dc3545;">❌ Ohne Konstante (Magic Number):</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">jahresgehalt := monatsgehalt * 12</pre>
+                    <p style="color: #666; font-size: 0.95em;">→ Was bedeutet die 12? Monate? Stunden? Unklar!</p>
+                </div>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #28a745;">
+                    <strong style="color: #28a745;">✓ Mit Konstante:</strong>
+                    <pre style="margin: 10px 0; color: #666; font-family: monospace;">const monateImJahr = 12
+jahresgehalt := monatsgehalt * monateImJahr</pre>
+                    <p style="color: #666; font-size: 0.95em;">→ Bedeutung ist klar und bei Bedarf zentral änderbar!</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                    <h3 style="margin-bottom: 10px; color: white;">Ergebnis</h3>
+                    <p style="font-size: 1.5em; font-weight: bold;">Jahresgehalt: ${jahresgehalt.toFixed(2)} €</p>
+                    <p style="font-size: 0.95em; opacity: 0.9;">Berechnung: ${monatsgehalt.toFixed(2)} € × ${monateImJahr} Monate</p>
+                </div>
+            `;
+        }
+
+        // Initiale Berechnung
+        window.onload = function() {
+            berechneGehalt();
+        };
+    </script>
+</body>
+</html>

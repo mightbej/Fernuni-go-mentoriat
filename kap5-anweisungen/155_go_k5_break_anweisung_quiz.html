@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: break-Anweisung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .options li {
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .options li:hover {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+        
+        .options li.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .options li.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .options li.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .code-snippet {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .comment { color: #6272a4; }
+        .operator { color: #ff79c6; }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h2 {
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+        
+        .result p {
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+        
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .restart-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .restart-btn:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛑 Quiz: break-Anweisung</h1>
+        <p class="subtitle">Teste dein Wissen über break in Go!</p>
+        
+        <!-- Frage 1 -->
+        <div class="question" data-question="1">
+            <h3>1. Was bewirkt die break-Anweisung?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Sie beendet das gesamte Programm</li>
+                <li data-answer="correct">Sie verlässt die umschließende Schleife sofort und beendet die for-Anweisung</li>
+                <li data-answer="wrong">Sie überspringt nur den aktuellen Durchlauf</li>
+                <li data-answer="wrong">Sie setzt die Laufvariable zurück</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 2 -->
+        <div class="question" data-question="2">
+            <h3>2. Was passiert mit der Post-Anweisung, wenn break aufgerufen wird?</h3>
+            <div class="code-snippet"><code><span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">0</span>; i <span class="operator">&lt;</span> <span class="number">10</span>; i<span class="operator">++</span> {
+    <span class="keyword">if</span> i <span class="operator">==</span> <span class="number">5</span> {
+        <span class="keyword">break</span>
+    }
+}</code></div>
+            <ul class="options">
+                <li data-answer="wrong">i++ wird noch einmal ausgeführt, dann endet die Schleife</li>
+                <li data-answer="correct">i++ wird NICHT mehr ausgeführt - die Schleife endet sofort</li>
+                <li data-answer="wrong">i++ wird zweimal ausgeführt</li>
+                <li data-answer="wrong">i++ wird in eine Warteschlange verschoben</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 3 -->
+        <div class="question" data-question="3">
+            <h3>3. Wo ist die break-Anweisung erlaubt?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Überall im Programm</li>
+                <li data-answer="wrong">Nur in if-Anweisungen</li>
+                <li data-answer="correct">Nur innerhalb von for-Anweisungen und switch-Anweisungen</li>
+                <li data-answer="wrong">Nur in Funktionen</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 4 -->
+        <div class="question" data-question="4">
+            <h3>4. Was ist das Problem mit break in Schleifen?</h3>
+            <ul class="options">
+                <li data-answer="wrong">break ist sehr langsam in der Ausführung</li>
+                <li data-answer="correct">break unterwandert die Schleifenbedingung und macht den Code schwerer nachvollziehbar</li>
+                <li data-answer="wrong">break kann zu Speicherlecks führen</li>
+                <li data-answer="wrong">break ist in Go veraltet</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 5 -->
+        <div class="question" data-question="5">
+            <h3>5. Wozu dient eine Flag-Variable bei Verwendung von break?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Um die Schleife zu beschleunigen</li>
+                <li data-answer="correct">Um nach der Schleife zu wissen, warum sie beendet wurde (regulär oder durch break)</li>
+                <li data-answer="wrong">Um break rückgängig zu machen</li>
+                <li data-answer="wrong">Um die Laufvariable zu speichern</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 6 -->
+        <div class="question" data-question="6">
+            <h3>6. Was ist die bessere Alternative zu break?</h3>
+            <div class="code-snippet"><code><span class="comment">// Variante A: mit break</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">0</span>; i <span class="operator">&lt;</span> <span class="number">10</span>; i<span class="operator">++</span> {
+    <span class="keyword">if</span> problem {
+        <span class="keyword">break</span>
+    }
+}
+
+<span class="comment">// Variante B: ohne break</span>
+problem <span class="operator">:=</span> <span class="keyword">false</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">0</span>; i <span class="operator">&lt;</span> <span class="number">10</span> <span class="operator">&amp;&amp;</span> <span class="operator">!</span>problem; i<span class="operator">++</span> {
+    <span class="comment">// ...</span>
+}</code></div>
+            <ul class="options">
+                <li data-answer="wrong">Variante A ist besser, weil kürzer</li>
+                <li data-answer="correct">Variante B ist besser, weil die Schleifenbedingung allein kontrolliert, wann die Schleife endet</li>
+                <li data-answer="wrong">Beide sind gleich gut</li>
+                <li data-answer="wrong">Variante A ist schneller in der Ausführung</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 7 -->
+        <div class="question" data-question="7">
+            <h3>7. Wie prüft man, ob fak * i zu einem Überlauf führt?</h3>
+            <ul class="options">
+                <li data-answer="wrong">if fak * i > math.MaxInt</li>
+                <li data-answer="correct">if math.MaxInt/fak >= i (dann ist kein Überlauf)</li>
+                <li data-answer="wrong">if i > math.MaxInt</li>
+                <li data-answer="wrong">Man kann Überläufe nicht vorab prüfen</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 8 -->
+        <div class="question" data-question="8">
+            <h3>8. Welchen Wert hat i nach dieser Schleife?</h3>
+            <div class="code-snippet"><code><span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">0</span>; i <span class="operator">&lt;</span> <span class="number">10</span>; i<span class="operator">++</span> {
+    <span class="keyword">if</span> i <span class="operator">==</span> <span class="number">5</span> {
+        <span class="keyword">break</span>
+    }
+}
+fmt.<span class="function">Println</span>(i) <span class="comment">// Was passiert hier?</span></code></div>
+            <ul class="options">
+                <li data-answer="wrong">i hat den Wert 5</li>
+                <li data-answer="wrong">i hat den Wert 10</li>
+                <li data-answer="correct">Compiler-Fehler: i ist außerhalb der Schleife nicht gültig</li>
+                <li data-answer="wrong">i hat den Wert 0</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 9 -->
+        <div class="question" data-question="9">
+            <h3>9. Wann ist break legitim?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Niemals - break sollte komplett vermieden werden</li>
+                <li data-answer="correct">Wenn die Alternative mit Flag-Variablen zu unübersichtlichem Code führen würde und break die pragmatischste Lösung ist</li>
+                <li data-answer="wrong">Immer - break ist der beste Weg, Schleifen zu beenden</li>
+                <li data-answer="wrong">Nur in switch-Anweisungen</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 10 -->
+        <div class="question" data-question="10">
+            <h3>10. Was ist das typische Pattern für break mit Flag?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Flag nach break setzen</li>
+                <li data-answer="correct">Flag vor break auf true setzen, dann break aufrufen, nach Schleife Flag prüfen</li>
+                <li data-answer="wrong">Flag während break setzen</li>
+                <li data-answer="wrong">Flag ist bei break nicht nötig</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 11 -->
+        <div class="question" data-question="11">
+            <h3>11. Was gibt dieses Programm aus?</h3>
+            <div class="code-snippet"><code><span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> <span class="number">5</span>; i<span class="operator">++</span> {
+    <span class="keyword">if</span> i <span class="operator">==</span> <span class="number">3</span> {
+        <span class="keyword">break</span>
+    }
+    fmt.<span class="function">Print</span>(i, <span class="string">" "</span>)
+}</code></div>
+            <ul class="options">
+                <li data-answer="wrong">1 2 3 4 5</li>
+                <li data-answer="correct">1 2</li>
+                <li data-answer="wrong">1 2 3</li>
+                <li data-answer="wrong">3 4 5</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 12 -->
+        <div class="question" data-question="12">
+            <h3>12. Warum ist break hier nicht nötig?</h3>
+            <div class="code-snippet"><code><span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> <span class="number">10</span>; i<span class="operator">++</span> {
+    fmt.<span class="function">Println</span>(i)
+    <span class="comment">// Am Ende des Rumpfes</span>
+}</code></div>
+            <ul class="options">
+                <li data-answer="wrong">Weil die Schleife unendlich läuft</li>
+                <li data-answer="correct">Weil nach dem letzten Statement im Rumpf ohnehin das Ende des Durchlaufs erreicht ist - break würde nichts ändern</li>
+                <li data-answer="wrong">Weil break in dieser Schleife verboten ist</li>
+                <li data-answer="wrong">Weil i++ automatisch break aufruft</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 13 -->
+        <div class="question" data-question="13">
+            <h3>13. Ist dieser Code korrekt?</h3>
+            <div class="code-snippet"><code><span class="keyword">func</span> <span class="function">main</span>() {
+    x <span class="operator">:=</span> <span class="number">10</span>
+    <span class="keyword">if</span> x <span class="operator">&gt;</span> <span class="number">5</span> {
+        <span class="keyword">break</span>
+    }
+}</code></div>
+            <ul class="options">
+                <li data-answer="wrong">Ja, break beendet die if-Anweisung</li>
+                <li data-answer="correct">Nein, break ist nur in Schleifen und switch erlaubt, nicht in if-Anweisungen</li>
+                <li data-answer="wrong">Ja, break beendet die Funktion</li>
+                <li data-answer="wrong">Nein, aber nur weil x falsch initialisiert ist</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <!-- Frage 14 -->
+        <div class="question" data-question="14">
+            <h3>14. Was sollte man tun, wenn man break in einer Schleife verwendet?</h3>
+            <ul class="options">
+                <li data-answer="wrong">Nichts Besonderes</li>
+                <li data-answer="correct">Einen expliziten Kommentar am Schleifenanfang hinzufügen, der darauf hinweist</li>
+                <li data-answer="wrong">break zweimal aufrufen zur Sicherheit</li>
+                <li data-answer="wrong">Eine Warnung in die Konsole ausgeben</li>
+            </ul>
+            <div class="feedback"></div>
+        </div>
+        
+        <button class="submit-btn" onclick="submitQuiz()">Quiz auswerten</button>
+        
+        <div class="result" id="result">
+            <h2>Ergebnis</h2>
+            <div class="score" id="score"></div>
+            <p id="resultText"></p>
+            <button class="restart-btn" onclick="restartQuiz()">Quiz neu starten</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedAnswers = {};
+        
+        // Antwortauswahl
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.closest('.question');
+                const questionNum = question.dataset.question;
+                
+                // Entferne vorherige Auswahl
+                question.querySelectorAll('.options li').forEach(li => {
+                    li.classList.remove('selected');
+                });
+                
+                // Setze neue Auswahl
+                this.classList.add('selected');
+                selectedAnswers[questionNum] = this.dataset.answer;
+            });
+        });
+        
+        function submitQuiz() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            
+            // Prüfe, ob alle Fragen beantwortet wurden
+            if (Object.keys(selectedAnswers).length < totalQuestions) {
+                alert('Bitte beantworte alle Fragen!');
+                return;
+            }
+            
+            let correctCount = 0;
+            
+            // Bewerte jede Frage
+            document.querySelectorAll('.question').forEach(question => {
+                const questionNum = question.dataset.question;
+                const selectedAnswer = selectedAnswers[questionNum];
+                const options = question.querySelectorAll('.options li');
+                const feedback = question.querySelector('.feedback');
+                
+                let correctAnswer = '';
+                
+                options.forEach(option => {
+                    const answer = option.dataset.answer;
+                    
+                    if (answer === 'correct') {
+                        correctAnswer = option.textContent;
+                        option.classList.add('correct');
+                    }
+                    
+                    if (option.classList.contains('selected') && answer === 'wrong') {
+                        option.classList.add('incorrect');
+                    }
+                });
+                
+                if (selectedAnswer === 'correct') {
+                    correctCount++;
+                    feedback.className = 'feedback correct show';
+                    feedback.innerHTML = '<strong>✓ Richtig!</strong>';
+                } else {
+                    feedback.className = 'feedback incorrect show';
+                    feedback.innerHTML = `<strong>✗ Falsch!</strong><br>Richtige Antwort: ${correctAnswer}`;
+                }
+            });
+            
+            // Zeige Ergebnis
+            const percentage = (correctCount / totalQuestions * 100).toFixed(0);
+            const scoreElement = document.getElementById('score');
+            const resultText = document.getElementById('resultText');
+            
+            scoreElement.textContent = `${correctCount} / ${totalQuestions}`;
+            
+            if (percentage >= 90) {
+                resultText.innerHTML = `<strong>🎉 Hervorragend!</strong><br>Du hast ${percentage}% der Fragen richtig beantwortet!<br>Du beherrschst die break-Anweisung perfekt!`;
+            } else if (percentage >= 70) {
+                resultText.innerHTML = `<strong>👍 Gut gemacht!</strong><br>Du hast ${percentage}% der Fragen richtig beantwortet!<br>Du hast ein solides Verständnis von break.`;
+            } else if (percentage >= 50) {
+                resultText.innerHTML = `<strong>📚 Noch Luft nach oben!</strong><br>Du hast ${percentage}% der Fragen richtig beantwortet!<br>Lies dir die Inhalte noch einmal durch.`;
+            } else {
+                resultText.innerHTML = `<strong>💪 Weiter üben!</strong><br>Du hast ${percentage}% der Fragen richtig beantwortet!<br>Nimm dir Zeit, die Veranschaulichung gründlich durchzuarbeiten.`;
+            }
+            
+            document.getElementById('result').classList.add('show');
+            document.querySelector('.submit-btn').disabled = true;
+            
+            // Scrolle zum Ergebnis
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function restartQuiz() {
+            // Setze alle Auswahlen zurück
+            selectedAnswers = {};
+            
+            document.querySelectorAll('.options li').forEach(option => {
+                option.className = '';
+            });
+            
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.className = 'feedback';
+                feedback.innerHTML = '';
+            });
+            
+            document.getElementById('result').classList.remove('show');
+            document.querySelector('.submit-btn').disabled = false;
+            
+            // Scrolle nach oben
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exkurs: Von der Problemstellung zum Go-Programm</title>
+    <style>
+        :root { --bg:#f7f9fc; --card:#fff; --text:#1f2937; --muted:#4b5563; --line:#e5e7eb; --accent:#0f766e; --blau:#1e40af; --gelb:#fef3c7; --gelbrand:#f59e0b; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text); background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%); line-height:1.6; }
+        .container { max-width:1000px; margin:0 auto; padding:24px; }
+        .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%); color:#fff; border-radius:14px; padding:24px; box-shadow:0 10px 24px rgba(15,118,110,.25); margin-bottom:20px; }
+        .hero h1 { margin:0 0 10px; font-size:1.9rem; }
+        .hero p { margin:0; opacity:.96; font-size:1.05rem; }
+        .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:18px; }
+        h2 { margin-top:0; font-size:1.35rem; color:var(--accent); border-bottom:2px solid var(--line); padding-bottom:8px; }
+        h3 { font-size:1.08rem; margin:0 0 8px; color:var(--blau); }
+        p { margin:0 0 10px; }
+        ul, ol { margin:0 0 10px; padding-left:22px; }
+        li { margin:4px 0; }
+        a { color:var(--blau); }
+        code { background:#eef2f7; padding:1px 5px; border-radius:4px; font-family:Consolas,"Courier New",monospace; font-size:.95em; }
+        table { border-collapse:collapse; width:100%; margin:10px 0; }
+        th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+        th { background:#f1f5f9; }
+
+        .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+        .tab { padding:9px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text); font:inherit; font-weight:600; cursor:pointer; }
+        .tab:hover { background:#ecfdf5; }
+        .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .tab:focus-visible, button:focus-visible, a:focus-visible { outline:2px solid var(--blau); outline-offset:2px; }
+        .stufe { display:none; }
+        .stufe.active { display:block; }
+
+        .gefiel-nicht { background:var(--gelb); border-left:4px solid var(--gelbrand); border-radius:8px; padding:14px 16px; margin-bottom:18px; }
+        .gefiel-nicht h3 { color:#92400e; }
+        .festlegen { background:#ecfdf5; border-left:4px solid var(--accent); border-radius:8px; padding:14px 16px; margin-bottom:18px; }
+        .festlegen h3 { color:#065f46; }
+        .ausprobieren { background:#eff6ff; border-left:4px solid var(--blau); border-radius:8px; padding:14px 16px; }
+
+        .spez { background:#1f2937; color:#e5e7eb; border-radius:10px; padding:16px 18px; margin:8px 0 10px; white-space:pre-wrap; font-family:Consolas,"Courier New",monospace; font-size:.95rem; line-height:1.55; }
+        .spez .neu { background:#065f46; color:#fff; border-radius:3px; padding:1px 0; }
+        .legende { color:var(--muted); font-size:.92rem; }
+        .legende .neu { background:#065f46; color:#fff; border-radius:3px; padding:1px 6px; }
+        .knopf { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 16px; font:inherit; font-weight:600; cursor:pointer; }
+        .knopf:hover { background:#115e59; }
+        .knopf.grau { background:#fff; color:var(--text); border:1px solid var(--line); }
+        .knopf.grau:hover { background:#f1f5f9; }
+        .knopf:disabled { opacity:.45; cursor:default; }
+        .nav { display:flex; justify-content:space-between; gap:10px; margin-top:6px; }
+        .rechner { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:10px 0; }
+        .rechner input { width:130px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font:inherit; }
+        .ergebnis { font-weight:600; }
+        footer { color:var(--muted); font-size:.9rem; padding:8px 4px 24px; }
+        @media (max-width:700px) { .hero h1 { font-size:1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="hero">
+        <h1>Exkurs: Von der Problemstellung zum Go-Programm</h1>
+        <p>Wir entwickeln ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war.</p>
+    </header>
+
+    <div class="tabs" id="tabs">
+        <button class="tab active" data-stufe="0">Worum es geht</button>
+        <button class="tab" data-stufe="1">1 Spielidee</button>
+        <button class="tab" data-stufe="2">2 Zahlenbereich</button>
+        <button class="tab" data-stufe="3">3 Versuche</button>
+        <button class="tab" data-stufe="4">4 Runden und Wertung</button>
+        <button class="tab" data-stufe="5">5 Ablauf</button>
+        <button class="tab" data-stufe="6">6 Go-Programm</button>
+    </div>
+
+    <!-- Worum es geht -->
+    <section class="stufe active" id="stufe-0">
+        <div class="card">
+            <h2>Worum es geht</h2>
+            <p>Einen Aufsatz schreibt man von vorn nach hinten. Ein Programm entsteht anders: Man beginnt mit einer Idee und legt Stufe für Stufe genauer fest, was man will.</p>
+            <p>Wir machen das an einem Spiel vor, dem Zahlenraten. Unsere Entwicklungsabteilung ist ein Sprachmodell. Auf jeder Stufe geschieht dasselbe:</p>
+            <ol>
+                <li>Wir schreiben auf, was wir wollen. Das ist unsere <strong>Spezifikation</strong>.</li>
+                <li>Wir geben die Spezifikation in die Entwicklungsabteilung.</li>
+                <li>Wir spielen, was zurückkommt, und prüfen: Ist es das Spiel, das wir wollen?</li>
+                <li>Was uns nicht gefällt, legen wir auf der nächsten Stufe fest.</li>
+            </ol>
+            <p>Alles, was wir nicht festlegen, entscheiden die Entwickler für uns. Auf der letzten Stufe bleibt nichts mehr offen. Diese Spezifikation ist das Go-Programm.</p>
+        </div>
+        <div class="card">
+            <h2>Die sechs Stufen</h2>
+            <table>
+                <tr><th>Stufe</th><th>Was hat uns am Spiel davor nicht gefallen?</th><th>Was legen wir fest?</th></tr>
+                <tr><td>1 Spielidee</td><td>Es gibt noch kein Spiel.</td><td>Wir legen fest, wer rät und welche Rückmeldung er bekommt.</td></tr>
+                <tr><td>2 Zahlenbereich</td><td>Die Zahl stammte bei jedem Spiel aus einem anderen Bereich.</td><td>Wir legen den Bereich 1 bis 100 fest.</td></tr>
+                <tr><td>3 Versuche</td><td>Das Spiel war langweilig, weil man nicht verlieren konnte.</td><td>Wir legen höchstens 7 Versuche fest.</td></tr>
+                <tr><td>4 Runden und Wertung</td><td>Nach einer Runde war Schluss, und eine Runde sagt wenig.</td><td>Wir legen mehrere Runden und eine Wertung fest.</td></tr>
+                <tr><td>5 Ablauf</td><td>Jede Gruppe bekam einen anderen Ablauf und andere Meldungen.</td><td>Wir legen jeden Schritt fest.</td></tr>
+                <tr><td>6 Go-Programm</td><td>Das Spiel lief nur, solange das Sprachmodell mitspielte.</td><td>Wir legen alles fest, in Go.</td></tr>
+            </table>
+            <p>Kurstext v3.0.6: Das Spiel braucht die Anweisungen aus Kapitel 5, Seiten 113–149.</p>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" disabled>Zurück</button>
+            <button class="knopf" data-gehe="1">Weiter zu Stufe 1</button>
+        </div>
+    </section>
+
+    <!-- Stufe 1 -->
+    <section class="stufe" id="stufe-1">
+        <div class="card">
+            <h2>Stufe 1: Die Spielidee</h2>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Wir haben nur eine Idee: Einer denkt sich eine Zahl aus, der andere rät. Nach jedem Tipp erfährt er, in welcher Richtung die Zahl liegt. Mehr sagen wir nicht.</p>
+            </div>
+            <h3>Unsere Spezifikation</h3>
+            <div class="spez" id="spez-1"></div>
+            <p><button class="knopf" data-kopiere="1">Spezifikation kopieren</button> <span class="legende" id="kopiert-1"></span></p>
+            <div class="ausprobieren">
+                <h3>Ausprobieren: Ist es das Spiel, das wir wollen?</h3>
+                <p>Spielt zwei oder drei Spiele, jedes in einem neuen Gespräch. Achtet auf diese Fragen:</p>
+                <ul>
+                    <li>Aus welchem Bereich stammte die Zahl? Hat die Entwicklungsabteilung ihn genannt?</li>
+                    <li>War der Bereich bei allen Gruppen derselbe?</li>
+                    <li>Mit welchem Tipp habt ihr begonnen, und warum?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="0">Zurück</button>
+            <button class="knopf" data-gehe="2">Weiter zu Stufe 2</button>
+        </div>
+    </section>
+
+    <!-- Stufe 2 -->
+    <section class="stufe" id="stufe-2">
+        <div class="card">
+            <h2>Stufe 2: Der Zahlenbereich</h2>
+            <div class="gefiel-nicht">
+                <h3>Was uns am Spiel davor nicht gefallen hat</h3>
+                <ul>
+                    <li>Der Bereich stand nirgends. Einmal lag die Zahl zwischen 1 und 10, einmal zwischen 1 und 10000.</li>
+                    <li>Wer den Bereich nicht kennt, weiß nicht, mit welchem Tipp er anfangen soll.</li>
+                    <li>Zwei Gruppen haben zwei verschiedene Spiele gespielt.</li>
+                </ul>
+            </div>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Die Zahl ist eine ganze Zahl von 1 bis 100. Der Spieler erfährt den Bereich, bevor er rät.</p>
+            </div>
+            <h3>Unsere Spezifikation</h3>
+            <div class="spez" id="spez-2"></div>
+            <p><button class="knopf" data-kopiere="2">Spezifikation kopieren</button> <span class="legende" id="kopiert-2"><span class="neu">grün</span> ist neu auf dieser Stufe</span></p>
+            <div class="ausprobieren">
+                <h3>Ausprobieren: Ist es das Spiel, das wir wollen?</h3>
+                <ul>
+                    <li>Wie viele Tipps habt ihr gebraucht?</li>
+                    <li>Ratet einmal der Reihe nach: 1, 2, 3 und so weiter. Was geschieht?</li>
+                    <li>Kann man dieses Spiel verlieren?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="1">Zurück</button>
+            <button class="knopf" data-gehe="3">Weiter zu Stufe 3</button>
+        </div>
+    </section>
+
+    <!-- Stufe 3 -->
+    <section class="stufe" id="stufe-3">
+        <div class="card">
+            <h2>Stufe 3: Die Zahl der Versuche</h2>
+            <div class="gefiel-nicht">
+                <h3>Was uns am Spiel davor nicht gefallen hat</h3>
+                <ul>
+                    <li>Das Spiel ist langweilig. Man kann nicht verlieren.</li>
+                    <li>Wer der Reihe nach 1, 2, 3 und so weiter rät, trifft die Zahl sicher. Im Mittel braucht er dafür etwa 50 Tipps.</li>
+                    <li>Eine Herausforderung entsteht erst, wenn die Versuche knapp sind.</li>
+                </ul>
+            </div>
+            <h3>Die Überlegung: Wie viele Versuche braucht man eigentlich?</h3>
+            <p>Wer geschickt rät, tippt immer auf die Mitte des Bereichs, der noch möglich ist. Die Antwort „größer“ oder „kleiner“ streicht dann die Hälfte der Zahlen. Die Tabelle zeigt, wie viele Zahlen vor jedem Tipp noch möglich sind, wenn es jedes Mal schlecht läuft.</p>
+            <div class="rechner">
+                <label for="obergrenze">Zahlen von 1 bis</label>
+                <input type="number" id="obergrenze" min="2" max="1000000" value="100">
+                <span class="ergebnis" id="halb-ergebnis"></span>
+            </div>
+            <table id="halb-tabelle"></table>
+            <p id="halb-reihe" class="legende"></p>
+            <p>7 Versuche reichen sicher für jeden Bereich bis 127. Ab 128 Zahlen braucht man einen achten Versuch. Probiert es im Feld oben aus.</p>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Der Spieler hat höchstens 7 Versuche. Wer immer die Mitte tippt, gewinnt damit jede Runde. Wer planlos rät, verliert oft. Nach dem siebten Fehlversuch ist die Runde verloren, und der Spieler erfährt die Zahl.</p>
+            </div>
+            <h3>Unsere Spezifikation</h3>
+            <div class="spez" id="spez-3"></div>
+            <p><button class="knopf" data-kopiere="3">Spezifikation kopieren</button> <span class="legende" id="kopiert-3"><span class="neu">grün</span> ist neu auf dieser Stufe</span></p>
+            <div class="ausprobieren">
+                <h3>Ausprobieren: Ist es das Spiel, das wir wollen?</h3>
+                <ul>
+                    <li>Gewinnt ihr jede Runde, wenn ihr immer die Mitte tippt?</li>
+                    <li>Zählt die Entwicklungsabteilung die Versuche richtig mit?</li>
+                    <li>Was geschieht, wenn die Runde zu Ende ist?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="2">Zurück</button>
+            <button class="knopf" data-gehe="4">Weiter zu Stufe 4</button>
+        </div>
+    </section>
+
+    <!-- Stufe 4 -->
+    <section class="stufe" id="stufe-4">
+        <div class="card">
+            <h2>Stufe 4: Runden und Wertung</h2>
+            <div class="gefiel-nicht">
+                <h3>Was uns am Spiel davor nicht gefallen hat</h3>
+                <ul>
+                    <li>Nach einer Runde ist Schluss. Für die nächste Runde beginnen wir von vorn.</li>
+                    <li>Eine einzelne Runde sagt wenig. Wer mit dem ersten Tipp trifft, hatte Glück.</li>
+                    <li>Wir wollen wissen, wie gut jemand über viele Runden rät.</li>
+                </ul>
+            </div>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Das Spiel läuft über mehrere Runden, bis der Spieler aufhört. Es zählt die gewonnenen Runden, die verlorenen Runden und die Versuche aus den gewonnenen Runden. Aus dem Durchschnitt der Versuche ergibt sich die Wertung:</p>
+                <table>
+                    <tr><th>Durchschnitt der Versuche in gewonnenen Runden</th><th>Wertung</th></tr>
+                    <tr><td>Der Durchschnitt liegt bei höchstens 3,0.</td><td>Meister</td></tr>
+                    <tr><td>Der Durchschnitt liegt bei höchstens 4,0.</td><td>Experte</td></tr>
+                    <tr><td>Der Durchschnitt liegt bei höchstens 5,5.</td><td>Fortgeschritten</td></tr>
+                    <tr><td>Der Durchschnitt liegt über 5,5.</td><td>Anfänger</td></tr>
+                </table>
+            </div>
+            <h3>Unsere Spezifikation</h3>
+            <div class="spez" id="spez-4"></div>
+            <p><button class="knopf" data-kopiere="4">Spezifikation kopieren</button> <span class="legende" id="kopiert-4"><span class="neu">grün</span> ist neu auf dieser Stufe</span></p>
+            <div class="ausprobieren">
+                <h3>Ausprobieren: Ist es das Spiel, das wir wollen?</h3>
+                <ul>
+                    <li>Spielt drei Runden und rechnet den Durchschnitt selbst nach. Stimmt er?</li>
+                    <li>Verliert eine Runde mit Absicht. Stimmen die Zähler danach noch?</li>
+                    <li>Vergleicht mit der Nachbargruppe: Sehen die Meldungen gleich aus? Kommen sie in derselben Reihenfolge?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="3">Zurück</button>
+            <button class="knopf" data-gehe="5">Weiter zu Stufe 5</button>
+        </div>
+    </section>
+
+    <!-- Stufe 5 -->
+    <section class="stufe" id="stufe-5">
+        <div class="card">
+            <h2>Stufe 5: Der Ablauf</h2>
+            <div class="gefiel-nicht">
+                <h3>Was uns am Spiel davor nicht gefallen hat</h3>
+                <ul>
+                    <li>Die Regeln stimmen jetzt. Trotzdem sieht das Spiel bei jeder Gruppe anders aus: andere Meldungen, andere Reihenfolge.</li>
+                    <li>Wir haben gesagt, was herauskommen soll. In welcher Reihenfolge es geschieht, haben die Entwickler entschieden.</li>
+                    <li>Wer das Spiel selbst bauen will, muss den Ablauf kennen.</li>
+                </ul>
+            </div>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Wir schreiben jeden Schritt auf, in der Reihenfolge, in der er geschieht. Jeder Wert, den sich das Spiel merken muss, bekommt einen Namen. Dabei fällt eine Unterscheidung auf: Drei Werte gelten über alle Runden, drei Werte beginnen in jeder Runde neu.</p>
+            </div>
+            <h3>Unsere Spezifikation</h3>
+            <div class="spez" id="spez-5"></div>
+            <p><button class="knopf" data-kopiere="5">Spezifikation kopieren</button> <span class="legende" id="kopiert-5">Die Spezifikation ist auf dieser Stufe neu geschrieben.</span></p>
+            <div class="ausprobieren">
+                <h3>Ausprobieren: Ist es das Spiel, das wir wollen?</h3>
+                <ul>
+                    <li>Vergleicht wieder mit der Nachbargruppe: Sind Meldungen und Reihenfolge jetzt gleich?</li>
+                    <li>Welche Schritte wiederholen sich? Welche Schritte hängen von einer Bedingung ab?</li>
+                    <li>Was haben wir immer noch nicht festgelegt?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="4">Zurück</button>
+            <button class="knopf" data-gehe="6">Weiter zu Stufe 6</button>
+        </div>
+    </section>
+
+    <!-- Stufe 6 -->
+    <section class="stufe" id="stufe-6">
+        <div class="card">
+            <h2>Stufe 6: Das Go-Programm</h2>
+            <div class="gefiel-nicht">
+                <h3>Was uns am Spiel davor nicht gefallen hat</h3>
+                <ul>
+                    <li>Das Spiel läuft nur, solange das Sprachmodell mitspielt.</li>
+                    <li>Das Sprachmodell macht Fehler. Ein Ablauf aus der Vorbereitung: Auf den Tipp 35 kam „Meine Zahl ist größer als 35“. Auf den Tipp 37 kam „Treffer, meine Zahl ist 36“. Das Spiel hat gratuliert, obwohl der Tipp falsch war.</li>
+                    <li>Wir wollen ein Programm, das sich bei jedem Lauf genau an den Ablauf hält.</li>
+                </ul>
+            </div>
+            <div class="festlegen">
+                <h3>Was wir festlegen</h3>
+                <p>Wir schreiben den Ablauf aus Stufe 5 in Go. Jeder Schritt des Ablaufs hat eine Entsprechung im Programm. Der Go-Compiler entscheidet nichts für uns: Was wir nicht hinschreiben, geschieht nicht.</p>
+            </div>
+            <h3>Vom Ablauf zum Programm</h3>
+            <table>
+                <tr><th>Schritt im Ablauf aus Stufe 5</th><th>Anweisung in Go</th><th>Abschnitt im Kurstext</th></tr>
+                <tr><td>Das Spiel kennt die Grenzen 1, 100 und 7.</td><td><code>const ( MAX_VERSUCHE = 7 … )</code></td><td>5.2</td></tr>
+                <tr><td>Das Spiel merkt sich drei Werte über alle Runden.</td><td><code>var ( anzahlSiege int … )</code> außerhalb von <code>main</code></td><td>5.1.3</td></tr>
+                <tr><td>Das Spiel wiederholt die Schritte für jede Runde.</td><td><code>for { … }</code></td><td>5.5.3</td></tr>
+                <tr><td>Das Spiel wählt eine geheime Zufallszahl.</td><td><code>zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL</code></td><td>5.1.2</td></tr>
+                <tr><td>Das Spiel wiederholt, solange <code>versuchsZaehler</code> kleiner als 7 ist.</td><td><code>for versuchsZaehler &lt; MAX_VERSUCHE { … }</code></td><td>5.5.3.1</td></tr>
+                <tr><td>Das Spiel vergleicht den Tipp mit der Zahl.</td><td><code>if … else if … else</code></td><td>5.5.1</td></tr>
+                <tr><td>Das Spiel verlässt die Schleife sofort.</td><td><code>break</code></td><td>5.5.3.3</td></tr>
+                <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>4.7</td></tr>
+                <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>5.5.2</td></tr>
+            </table>
+            <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="156_go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
+        </div>
+        <div class="card">
+            <h2>Was wir gesehen haben</h2>
+            <ul>
+                <li>Auf keiner Stufe haben wir vorn angefangen und hinten aufgehört. Wir haben jedes Mal eine Entscheidung getroffen, die vorher offen war.</li>
+                <li>Was wir offen gelassen haben, hat die Entwicklungsabteilung entschieden, und oft anders, als wir wollten.</li>
+                <li>Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt.</li>
+            </ul>
+            <p>Das Halbieren aus Stufe 3 begegnet uns im Kurstext wieder, wenn ein Programm in einem sortierten Array sucht. Denselben Weg von der Idee zum Programm gehen wir als Nächstes beim Sortieren: <a href="../kap6-arrays/157_go_k6_BubbleSort.html">Sortieren mit Arrays und Indizes</a>.</p>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="5">Zurück</button>
+            <button class="knopf grau" data-gehe="0">Zum Anfang</button>
+        </div>
+    </section>
+
+    <footer>Diese Seite ist ein Exkurs zu Kapitel 5. <a href="../index.html">Zurück zur Startseite</a></footer>
+</div>
+
+<script>
+    // Die Sätze der Spezifikation. "ab" nennt die Stufe, auf der ein Absatz dazukommt.
+    const ABSAETZE = [
+        { ab: 1, text: "Wir spielen Zahlenraten. Du denkst dir eine ganze Zahl aus und verrätst sie mir nicht. Ich rate. Nach jedem Tipp sagst du mir, ob deine Zahl größer oder kleiner ist als mein Tipp. Wenn ich die Zahl treffe, sagst du es mir." },
+        { ab: 2, text: "Die Zahl ist eine ganze Zahl von 1 bis 100. Die 1 und die 100 gehören dazu. Nenne mir den Bereich, bevor ich rate." },
+        { ab: 3, text: "Ich habe höchstens 7 Versuche. Sage mir nach jedem Tipp, der wievielte Versuch es war. Treffe ich die Zahl mit dem siebten Versuch nicht, habe ich die Runde verloren. Dann nennst du mir die Zahl." },
+        { ab: 4, text: "Frage mich nach jeder Runde, ob ich noch eine Runde spielen will. Bei „nein“ endet das Spiel. Für jede neue Runde denkst du dir eine neue Zahl aus." },
+        { ab: 4, text: "Zähle über alle Runden mit: die gewonnenen Runden, die verlorenen Runden und die Summe der Versuche aus den gewonnenen Runden. Nenne mir diese drei Zahlen nach jeder Runde." },
+        { ab: 4, text: "Wenn ich mindestens eine Runde gewonnen habe, berechne den Durchschnitt: Summe der Versuche geteilt durch gewonnene Runden. Bewerte den Durchschnitt so: bis 3,0 Meister, bis 4,0 Experte, bis 5,5 Fortgeschritten, darüber Anfänger." }
+    ];
+
+    const ABLAUF = [
+        "Du leitest ein Zahlenratespiel. Halte dich genau an diesen Ablauf.",
+        "",
+        "Vor der ersten Runde:",
+        "  Merke dir drei Werte, die über alle Runden bestehen bleiben:",
+        "  anzahlSiege = 0, anzahlNiederlagen = 0, gesamtVersuche = 0",
+        "  Melde: „Rate eine Zahl von 1 bis 100. Du hast 7 Versuche je Runde.“",
+        "",
+        "Wiederhole für jede Runde:",
+        "  1. Wähle eine geheime Zufallszahl von 1 bis 100. Sie heißt zielZahl.",
+        "  2. Setze versuchsZaehler auf 0 und gewonnen auf falsch.",
+        "  3. Solange versuchsZaehler kleiner als 7 ist, wiederhole:",
+        "     a. Erhöhe versuchsZaehler um 1.",
+        "     b. Melde „Versuch“ und den Wert von versuchsZaehler. Lies meinen Tipp.",
+        "     c. Ist der Tipp gleich zielZahl:",
+        "        Melde „Richtig“. Erhöhe anzahlSiege um 1.",
+        "        Addiere versuchsZaehler zu gesamtVersuche.",
+        "        Setze gewonnen auf wahr. Verlasse diese Schleife sofort.",
+        "     d. Ist der Tipp kleiner als zielZahl: Melde „Zu klein“.",
+        "     e. Ist der Tipp größer als zielZahl: Melde „Zu groß“.",
+        "  4. Ist gewonnen falsch:",
+        "     Melde „Verloren“ und nenne zielZahl. Erhöhe anzahlNiederlagen um 1.",
+        "  5. Gib anzahlSiege und anzahlNiederlagen aus.",
+        "  6. Ist anzahlSiege größer als 0:",
+        "     Berechne durchschnitt = gesamtVersuche geteilt durch anzahlSiege.",
+        "     Gib durchschnitt aus und dazu die Wertung:",
+        "     bis 3,0 „Meister“, bis 4,0 „Experte“, bis 5,5 „Fortgeschritten“, sonst „Anfänger“.",
+        "     Andernfalls melde: „Noch keine Siege“.",
+        "  7. Frage: „Nochmal spielen? (j/n)“. Bei „n“ beende das Spiel."
+    ].join("\n");
+
+    function sicher(t) {
+        return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function spezifikation(stufe) {
+        if (stufe === 5) return ABLAUF;
+        return ABSAETZE.filter(a => a.ab <= stufe).map(a => a.text).join("\n\n");
+    }
+
+    function zeigeSpezifikationen() {
+        for (let stufe = 1; stufe <= 5; stufe++) {
+            const feld = document.getElementById("spez-" + stufe);
+            if (stufe === 5) { feld.textContent = ABLAUF; continue; }
+            feld.innerHTML = ABSAETZE.filter(a => a.ab <= stufe)
+                .map(a => a.ab === stufe && stufe > 1 ? '<span class="neu">' + sicher(a.text) + "</span>" : sicher(a.text))
+                .join("\n\n");
+        }
+    }
+
+    function kopiere(stufe) {
+        const text = spezifikation(stufe);
+        const hinweis = document.getElementById("kopiert-" + stufe);
+        const fertig = () => { hinweis.textContent = "Die Spezifikation liegt in der Zwischenablage."; };
+        const ersatz = () => {
+            const feld = document.createElement("textarea");
+            feld.value = text;
+            document.body.appendChild(feld);
+            feld.select();
+            document.execCommand("copy");
+            feld.remove();
+            fertig();
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(fertig, ersatz);
+        } else {
+            ersatz();
+        }
+    }
+
+    function zeigeStufe(nummer) {
+        document.querySelectorAll(".stufe").forEach(s => s.classList.toggle("active", s.id === "stufe-" + nummer));
+        document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", Number(t.dataset.stufe) === nummer));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Halbieren: Wie viele Zahlen sind vor jedem Tipp noch möglich, wenn es jedes Mal schlecht läuft?
+    function rechneHalbieren() {
+        const eingabe = document.getElementById("obergrenze");
+        let n = Math.floor(Number(eingabe.value));
+        const tabelle = document.getElementById("halb-tabelle");
+        const ergebnis = document.getElementById("halb-ergebnis");
+        const reihe = document.getElementById("halb-reihe");
+        if (!(n >= 2 && n <= 1000000)) {
+            tabelle.innerHTML = "";
+            reihe.textContent = "";
+            ergebnis.textContent = "Bitte eine ganze Zahl von 2 bis 1000000 eingeben.";
+            return;
+        }
+        const obergrenze = n;
+        let zeilen = "<tr><th>Tipp</th><th>Zahlen, die vor diesem Tipp noch möglich sind</th></tr>";
+        let tipps = 0;
+        while (n >= 1) {
+            tipps++;
+            zeilen += "<tr><td>Tipp " + tipps + "</td><td>" + n + (n === 1 ? ", dieser Tipp trifft sicher" : "") + "</td></tr>";
+            n = Math.floor(n / 2);
+        }
+        tabelle.innerHTML = zeilen;
+        ergebnis.textContent = "Mit Halbieren reichen " + tipps + " Versuche.";
+        const mittel = ((obergrenze + 1) / 2).toLocaleString("de-DE");
+        reihe.textContent = "Zum Vergleich: Wer der Reihe nach rät, braucht im Mittel " + mittel + " Tipps und im schlimmsten Fall " + obergrenze + ".";
+    }
+
+    document.getElementById("tabs").addEventListener("click", e => {
+        if (e.target.dataset.stufe !== undefined) zeigeStufe(Number(e.target.dataset.stufe));
+    });
+    document.querySelectorAll("[data-gehe]").forEach(k => k.addEventListener("click", () => zeigeStufe(Number(k.dataset.gehe))));
+    document.querySelectorAll("[data-kopiere]").forEach(k => k.addEventListener("click", () => kopiere(Number(k.dataset.kopiere))));
+    document.getElementById("obergrenze").addEventListener("input", rechneHalbieren);
+
+    zeigeSpezifikationen();
+    rechneHalbieren();
+</script>
+</body>
+</html>

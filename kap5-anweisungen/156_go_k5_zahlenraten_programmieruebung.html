@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmierübung: Zahlenraten mit Statistik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background: #f0f0f0;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .function { color: #dcdcaa; }
+        .code-block .number { color: #b5cea8; }
+        .code-block .type { color: #4ec9b0; }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .tip strong {
+            color: #7b1fa2;
+        }
+        
+        .concepts-used {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .concepts-used h4 {
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+        
+        .concepts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .concept-tag {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #4caf50;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .cross-link {
+            background: #e8eaf6;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .cross-link a {
+            color: #3949ab;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .cross-link a:hover {
+            text-decoration: underline;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Programmierübung: Zahlenraten mit Statistik</h1>
+            <div class="subtitle">Schrittweise Entwicklung von der Spezifikation zum lauffähigen Code (Kapitel 1-5)</div>
+            <div class="cross-link">
+                📚 Ausgangspunkt: <a href="exkurs_von_problem_zu_code.html">Exkurs – Von der Problemstellung zum Go-Programm</a>
+                (Ebenen 0, a, b1–b4)
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1️⃣ Spezifikation</div>
+            <div class="tab" onclick="showStep(2)">2️⃣ Programmrahmen</div>
+            <div class="tab" onclick="showStep(3)">3️⃣ Strukturierung</div>
+            <div class="tab" onclick="showStep(4)">4️⃣ Konstanten & Variablen</div>
+            <div class="tab" onclick="showStep(5)">5️⃣ Zufallszahl & Init</div>
+            <div class="tab" onclick="showStep(6)">6️⃣ Rateschleife</div>
+            <div class="tab" onclick="showStep(7)">7️⃣ Statistik-Ausgabe</div>
+            <div class="tab" onclick="showStep(8)">8️⃣ Wiederholungsschleife</div>
+            <div class="tab" onclick="showStep(9)">9️⃣ Vollständiger Code</div>
+            <div class="tab" onclick="showStep(10)">🎓 Konzept-Zuordnung</div>
+        </div>
+        
+        <div class="content-area">
+            <!-- Schritt 1: Spezifikation -->
+            <div class="step-content active" id="step-1">
+                <h3>📋 Aufgabenstellung</h3>
+                <p>Entwickle ein <strong>Zahlenraten-Spiel</strong> mit folgenden Funktionalitäten:</p>
+                
+                <div class="requirement">
+                    <strong>Spielablauf:</strong>
+                    <ul>
+                        <li>Das Programm wählt eine Zufallszahl zwischen 1 und 100</li>
+                        <li>Der Spieler hat maximal 7 Versuche zum Raten</li>
+                        <li>Nach jedem Versuch gibt das Programm Hinweise: "zu groß", "zu klein" oder "richtig"</li>
+                        <li>Bei richtiger Zahl: Glückwunsch mit Anzahl der Versuche</li>
+                        <li>Nach dem Spiel: Frage, ob nochmal spielen</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>Statistik-Funktion:</strong>
+                    <ul>
+                        <li>Zähle gewonnene und verlorene Spiele</li>
+                        <li>Berechne die durchschnittliche Anzahl der Versuche bei Gewinn</li>
+                        <li>Kategorisiere die Leistung basierend auf dem Durchschnitt</li>
+                        <li>Zeige Statistik am Ende jedes Spiels an</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <strong>⚠️ Wichtig:</strong> Wir verwenden <strong>keine Funktionen</strong>, da diese erst später im Kurs behandelt werden. Der gesamte Code steht in der <code>main()</code> Funktion!
+                </div>
+                
+                <div class="concepts-used">
+                    <h4>🎓 Verwendete Konzepte aus Kapitel 1-5:</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Variablen (lokal/global)</div>
+                        <div class="concept-tag">Konstanten</div>
+                        <div class="concept-tag">If-Anweisungen</div>
+                        <div class="concept-tag">Switch-Anweisungen</div>
+                        <div class="concept-tag">For-Schleifen</div>
+                        <div class="concept-tag">Break-Anweisungen</div>
+                        <div class="concept-tag">Zuweisungen</div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 2: Programmrahmen -->
+            <div class="step-content" id="step-2">
+                <h3>🏗️ Grundgerüst des Programms</h3>
+                <p>Zuerst legen wir das Grundgerüst mit Package-Deklaration, Imports und der main-Funktion an:</p>
+                
+                <div class="code-block">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    // Hier kommt der Hauptprogrammcode
+}</div>
+
+                <div class="tip">
+                    <strong>💡 Tipp:</strong> Der Import von <code>math/rand</code> wird für Zufallszahlen benötigt, <code>time</code> für die Initialisierung des Zufallsgenerators, und <code>fmt</code> für Ein-/Ausgabe.
+                </div>
+
+                <h3>Benötigte Pakete:</h3>
+                <ul>
+                    <li><span class="highlight">fmt</span> - für formatierte Ausgabe und Eingabe (Kapitel 3.3.7, 4.2)</li>
+                    <li><span class="highlight">math/rand</span> - für Zufallszahlen generieren</li>
+                    <li><span class="highlight">time</span> - für Seed des Zufallsgenerators</li>
+                </ul>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 3: Strukturierung -->
+            <div class="step-content" id="step-3">
+                <h3>📐 Programmstrukturierung (verbal)</h3>
+                <p>Bevor wir Code schreiben, überlegen wir uns die Struktur:</p>
+                
+                <div class="requirement">
+                    <strong>1. Globale Konstanten definieren</strong>
+                    <ul>
+                        <li><strong>MAX_VERSUCHE:</strong> Maximale Anzahl Rateversuche (7)</li>
+                        <li><strong>MIN_ZAHL:</strong> Untere Grenze des Zahlenbereichs (1)</li>
+                        <li><strong>MAX_ZAHL:</strong> Obere Grenze des Zahlenbereichs (100)</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>2. Globale Variablen für Statistik</strong>
+                    <ul>
+                        <li><strong>anzahlSiege:</strong> Zähler für gewonnene Spiele</li>
+                        <li><strong>anzahlNiederlagen:</strong> Zähler für verlorene Spiele</li>
+                        <li><strong>gesamtVersuche:</strong> Summe aller Versuche bei Siegen</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>3. Hauptprogramm in main()</strong>
+                    <ul>
+                        <li>Initialisiere Zufallsgenerator</li>
+                        <li>Zeige Begrüßung</li>
+                        <li><strong>Äußere Schleife:</strong> Wiederhole Spiele
+                            <ul>
+                                <li>Generiere Zufallszahl</li>
+                                <li><strong>Innere Schleife:</strong> Rateversuche (max. 7)
+                                    <ul>
+                                        <li>Lies Eingabe</li>
+                                        <li>Vergleiche mit Zielzahl (if-else)</li>
+                                        <li>Bei Treffer: break aus Schleife</li>
+                                    </ul>
+                                </li>
+                                <li>Aktualisiere Statistik</li>
+                                <li>Zeige Statistik mit switch-Kategorisierung</li>
+                                <li>Frage "Nochmal?" - bei Nein: break</li>
+                            </ul>
+                        </li>
+                        <li>Verabschiedung</li>
+                    </ul>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 Konzepte:</strong> Wir verwenden <strong>verschachtelte Schleifen</strong> (Kapitel 5.5.3) - die äußere für mehrere Spiele, die innere für Rateversuche.
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 4: Konstanten und Variablen -->
+            <div class="step-content" id="step-4">
+                <h3>📦 Konstanten & Globale Variablen definieren</h3>
+                
+                <div class="tip">
+                    <strong>💡 Kapitel 5.1.3:</strong> Globale Variablen werden außerhalb von Funktionen deklariert und sind im gesamten Programm sichtbar.
+                </div>
+                
+                <div class="code-block">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+// Konstanten für Spielparameter (Kapitel 5.2)
+const (
+    MAX_VERSUCHE = 7
+    MIN_ZAHL     = 1
+    MAX_ZAHL     = 100
+)
+
+// Globale Variablen für Spielstatistik (Kapitel 5.1.3)
+var (
+    anzahlSiege       int
+    anzahlNiederlagen int
+    gesamtVersuche    int
+)
+
+func main() {
+    // Hauptprogramm folgt...
+}</div>
+
+                <h3>Erklärung der Konstanten (Kapitel 5.2):</h3>
+                <ul>
+                    <li><span class="highlight">MAX_VERSUCHE</span> = 7: Maximale Anzahl Rateversuche pro Runde</li>
+                    <li><span class="highlight">MIN_ZAHL</span> = 1: Untere Grenze des Zahlenbereichs</li>
+                    <li><span class="highlight">MAX_ZAHL</span> = 100: Obere Grenze des Zahlenbereichs</li>
+                </ul>
+                
+                <h3>Erklärung der globalen Variablen (Kapitel 5.1.3):</h3>
+                <ul>
+                    <li><span class="highlight">anzahlSiege</span>: Zählt gewonnene Spiele (initialisiert mit 0)</li>
+                    <li><span class="highlight">anzahlNiederlagen</span>: Zählt verlorene Spiele (initialisiert mit 0)</li>
+                    <li><span class="highlight">gesamtVersuche</span>: Summe aller Versuche bei gewonnenen Spielen</li>
+                </ul>
+                
+                <div class="info-box">
+                    <strong>⚠️ Warum global?</strong> Diese Variablen müssen über mehrere Spielrunden hinweg bestehen bleiben, daher werden sie global (außerhalb von main) deklariert.
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 5: Initialisierung -->
+            <div class="step-content" id="step-5">
+                <h3>🎲 Zufallszahl-Initialisierung & Begrüßung</h3>
+                
+                <p>Der Beginn der main()-Funktion:</p>
+                
+                <div class="code-block">func main() {
+    // Zufallsgenerator initialisieren mit aktuellem Zeitstempel
+    rand.Seed(time.Now().UnixNano())
+    
+    // Begrüßung und Spielregeln
+    fmt.Println("🎯 Willkommen beim Zahlenraten-Spiel!")
+    fmt.Printf("Rate eine Zahl zwischen %d und %d.\n", MIN_ZAHL, MAX_ZAHL)
+    fmt.Printf("Du hast %d Versuche pro Runde.\n\n", MAX_VERSUCHE)
+    
+    // Hier folgt die Hauptspielschleife...
+}</div>
+
+                <div class="tip">
+                    <strong>💡 Kapitel 3.3.7:</strong> <code>fmt.Printf</code> ermöglicht formatierte Ausgabe. <code>%d</code> wird durch Integer-Werte ersetzt.
+                </div>
+                
+                <h3>Erklärung:</h3>
+                <ul>
+                    <li><span class="highlight">rand.Seed(...)</span>: Initialisiert den Zufallsgenerator mit der aktuellen Zeit, damit bei jedem Programmstart andere Zufallszahlen erzeugt werden</li>
+                    <li><span class="highlight">fmt.Println</span>: Gibt Text mit Zeilenumbruch aus</li>
+                    <li><span class="highlight">fmt.Printf</span>: Formatierte Ausgabe mit Platzhaltern (%d für int-Werte)</li>
+                </ul>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 6: Rateschleife -->
+            <div class="step-content" id="step-6">
+                <h3>🔄 Innere Schleife: Rateversuche</h3>
+                
+                <p>Jetzt kommt die Kernlogik - die Schleife für die Rateversuche:</p>
+
+                <div class="info-box">
+                    <strong>📍 Einordnung im Programm:</strong> Dieser Code steht <em>innerhalb</em> der äußeren
+                    <code>for { ... }</code>-Schleife aus Schritt 8 – einmal pro Spielrunde. Die äußere Schleife
+                    bauen wir erst in Schritt 8 ein; hier fokussieren wir uns auf die Rateversuche.
+                </div>
+                
+                <div class="code-block">    // Generiere Zufallszahl für diese Runde
+    zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL
+    
+    // Lokale Variablen für diese Runde (Kapitel 5.1.3)
+    versuchsZaehler := 0
+    gewonnen := false
+    
+    // For-Schleife mit Bedingung (Kapitel 5.5.3.1)
+    for versuchsZaehler < MAX_VERSUCHE {
+        versuchsZaehler++ // Inkrement (Kapitel 5.3.1)
+        
+        // Eingabe der geratenen Zahl
+        fmt.Printf("Versuch %d/%d - Deine Zahl: ", versuchsZaehler, MAX_VERSUCHE)
+        var geratenZahl int
+        fmt.Scan(&geratenZahl)
+        
+        // If-else-if Kette zur Prüfung (Kapitel 5.5.1)
+        if geratenZahl == zielZahl {
+            fmt.Printf("🎉 Richtig! Die Zahl war %d!\n", zielZahl)
+            fmt.Printf("Du hast %d Versuche gebraucht.\n", versuchsZaehler)
+            
+            // Statistik aktualisieren (Kapitel 5.3)
+            anzahlSiege++
+            gesamtVersuche += versuchsZaehler
+            gewonnen = true
+            break // Verlasse Schleife (Kapitel 5.5.3.3)
+            
+        } else if geratenZahl < zielZahl {
+            fmt.Println("📈 Zu klein! Versuche eine größere Zahl.")
+        } else {
+            fmt.Println("📉 Zu groß! Versuche eine kleinere Zahl.")
+        }
+    }
+    
+    // Falls nicht gewonnen
+    if !gewonnen {
+        fmt.Printf("😞 Leider verloren! Die Zahl war %d.\n", zielZahl)
+        anzahlNiederlagen++
+    }</div>
+
+                <div class="concepts-used">
+                    <h4>🎓 Verwendete Konzepte:</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Kurze Deklaration := (5.1.2)</div>
+                        <div class="concept-tag">For-Schleife (5.5.3.1)</div>
+                        <div class="concept-tag">Inkrement ++ (5.3.1)</div>
+                        <div class="concept-tag">If-else-if (5.5.1)</div>
+                        <div class="concept-tag">Break (5.5.3.3)</div>
+                        <div class="concept-tag">Zuweisungen (5.3)</div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 7: Statistik -->
+            <div class="step-content" id="step-7">
+                <h3>📊 Statistik-Ausgabe mit Switch</h3>
+                
+                <p>Nach jeder Runde zeigen wir die Statistik mit Kategorisierung:</p>
+
+                <div class="info-box">
+                    <strong>📍 Einordnung im Programm:</strong> Auch dieser Block gehört in die äußere
+                    <code>for { ... }</code>-Schleife – direkt <em>nach</em> der Rateschleife aus Schritt 6,
+                    noch <em>vor</em> der Frage „Nochmal spielen?“ aus Schritt 8.
+                </div>
+                
+                <div class="code-block">    // Statistik-Ausgabe
+    gesamtSpiele := anzahlSiege + anzahlNiederlagen
+    
+    fmt.Println("\n╔════════════════════════════╗")
+    fmt.Println("║      📊 STATISTIK 📊       ║")
+    fmt.Println("╚════════════════════════════╝")
+    fmt.Printf("Gesamt gespielt: %d\n", gesamtSpiele)
+    fmt.Printf("Gewonnen: %d\n", anzahlSiege)
+    fmt.Printf("Verloren: %d\n", anzahlNiederlagen)
+    
+    // Berechne Durchschnitt nur wenn Siege vorhanden (Kapitel 4.7)
+    if anzahlSiege > 0 {
+        durchschnitt := float64(gesamtVersuche) / float64(anzahlSiege)
+        fmt.Printf("Durchschn. Versuche: %.2f\n", durchschnitt)
+        
+        // Switch-Anweisung für Kategorisierung (Kapitel 5.5.2)
+        var kategorie string
+        switch {
+        case durchschnitt <= 3.0:
+            kategorie = "🏆 Meister - Hervorragend!"
+        case durchschnitt <= 4.0:
+            kategorie = "⭐ Experte - Sehr gut!"
+        case durchschnitt <= 5.5:
+            kategorie = "👍 Fortgeschritten - Gut gemacht!"
+        default:
+            kategorie = "🌱 Anfänger - Weiter üben!"
+        }
+        fmt.Printf("Kategorie: %s\n", kategorie)
+    } else {
+        fmt.Println("Noch keine Siege!")
+    }</div>
+
+                <div class="tip">
+                    <strong>💡 Kapitel 4.7:</strong> Typkonvertierung von <code>int</code> zu <code>float64</code> mit <code>float64(...)</code> für die Durchschnittsberechnung.
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 Kapitel 5.5.2:</strong> Switch ohne Ausdruck ermöglicht boolesche Bedingungen in den case-Klauseln.
+                </div>
+                
+                <h3>Kategorien-Grenzen:</h3>
+                <ul>
+                    <li>≤ 3.0: 🏆 Meister</li>
+                    <li>≤ 4.0: ⭐ Experte</li>
+                    <li>≤ 5.5: 👍 Fortgeschritten</li>
+                    <li>> 5.5: 🌱 Anfänger</li>
+                </ul>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(8)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 8: Wiederholungsschleife -->
+            <div class="step-content" id="step-8">
+                <h3>🔁 Äußere Schleife: Wiederholung & Abschluss</h3>
+                
+                <p>Damit all diese Teile zusammen funktionieren, umschließen wir sie mit einer Endlosschleife:</p>
+                
+                <div class="code-block">func main() {
+    rand.Seed(time.Now().UnixNano())
+    
+    fmt.Println("🎯 Willkommen beim Zahlenraten-Spiel!")
+    fmt.Printf("Rate eine Zahl zwischen %d und %d.\n", MIN_ZAHL, MAX_ZAHL)
+    fmt.Printf("Du hast %d Versuche pro Runde.\n\n", MAX_VERSUCHE)
+    
+    // Endlosschleife für mehrere Spielrunden (Kapitel 5.5.3)
+    for {
+        // [Hier steht die Rateschleife von Schritt 6]
+        // [Hier steht die Statistik von Schritt 7]
+        
+        // Frage nach erneutem Spiel
+        fmt.Print("\nNochmal spielen? (j/n): ")
+        var antwort string
+        fmt.Scan(&antwort)
+        
+        // If mit logischem ODER (Kapitel 4.5)
+        if antwort == "n" || antwort == "N" {
+            break // Verlasse die Endlosschleife (Kapitel 5.5.3.3)
+        }
+        
+        fmt.Println("\n--- Neue Runde ---\n")
+    }
+    
+    fmt.Println("\n👋 Vielen Dank fürs Spielen! Bis zum nächsten Mal!")
+}</div>
+
+                <div class="tip">
+                    <strong>💡 Kapitel 5.5.3:</strong> <code>for</code> ohne Bedingung erzeugt eine Endlosschleife, die nur durch <code>break</code> verlassen werden kann.
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 Kapitel 4.5:</strong> Der logische ODER-Operator <code>||</code> verknüpft zwei boolesche Ausdrücke. Wenn einer wahr ist, ist das Ergebnis wahr.
+                </div>
+                
+                <h3>Ablauf der Schleifen:</h3>
+                <ol>
+                    <li><strong>Äußere for-Schleife:</strong> Wiederholt Spielrunden, bis Spieler "n" eingibt</li>
+                    <li><strong>Innere for-Schleife:</strong> Wiederholt Rateversuche, max. 7 Mal oder bis richtig geraten</li>
+                    <li><strong>Break-Anweisungen:</strong>
+                        <ul>
+                            <li>Innere Schleife: Bei richtigem Raten</li>
+                            <li>Äußere Schleife: Bei Eingabe "n" oder "N"</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(7)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(9)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 9: Vollständiger Code -->
+            <div class="step-content" id="step-9">
+                <h3>✅ Vollständiger lauffähiger Code</h3>
+                
+                <div class="info-box">
+                    <strong>🎉 Das komplette Programm!</strong><br>
+                    Kopiere diesen Code in eine .go Datei und führe ihn mit <code>go run dateiname.go</code> aus.
+                </div>
+                
+                <div class="code-block">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+// Konstanten für Spielparameter
+const (
+    MAX_VERSUCHE = 7
+    MIN_ZAHL     = 1
+    MAX_ZAHL     = 100
+)
+
+// Globale Variablen für Spielstatistik
+var (
+    anzahlSiege       int
+    anzahlNiederlagen int
+    gesamtVersuche    int
+)
+
+func main() {
+    // Zufallsgenerator initialisieren
+    rand.Seed(time.Now().UnixNano())
+    
+    fmt.Println("🎯 Willkommen beim Zahlenraten-Spiel!")
+    fmt.Printf("Rate eine Zahl zwischen %d und %d.\n", MIN_ZAHL, MAX_ZAHL)
+    fmt.Printf("Du hast %d Versuche pro Runde.\n\n", MAX_VERSUCHE)
+    
+    // Hauptschleife für mehrere Spielrunden
+    for {
+        // Generiere Zufallszahl für diese Runde
+        zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL
+        
+        // Lokale Variablen für diese Runde
+        versuchsZaehler := 0
+        gewonnen := false
+        
+        // Schleife für die Rateversuche
+        for versuchsZaehler < MAX_VERSUCHE {
+            versuchsZaehler++
+            
+            // Eingabe der geratenen Zahl
+            fmt.Printf("Versuch %d/%d - Deine Zahl: ", versuchsZaehler, MAX_VERSUCHE)
+            var geratenZahl int
+            fmt.Scan(&geratenZahl)
+            
+            // Prüfe die geratene Zahl
+            if geratenZahl == zielZahl {
+                fmt.Printf("🎉 Richtig! Die Zahl war %d!\n", zielZahl)
+                fmt.Printf("Du hast %d Versuche gebraucht.\n", versuchsZaehler)
+                
+                // Aktualisiere Statistik
+                anzahlSiege++
+                gesamtVersuche += versuchsZaehler
+                gewonnen = true
+                break
+                
+            } else if geratenZahl < zielZahl {
+                fmt.Println("📈 Zu klein! Versuche eine größere Zahl.")
+            } else {
+                fmt.Println("📉 Zu groß! Versuche eine kleinere Zahl.")
+            }
+        }
+        
+        // Falls nicht gewonnen: Statistik aktualisieren
+        if !gewonnen {
+            fmt.Printf("😞 Leider verloren! Die Zahl war %d.\n", zielZahl)
+            anzahlNiederlagen++
+        }
+        
+        // Statistik-Ausgabe
+        gesamtSpiele := anzahlSiege + anzahlNiederlagen
+        
+        fmt.Println("\n╔════════════════════════════╗")
+        fmt.Println("║      📊 STATISTIK 📊       ║")
+        fmt.Println("╚════════════════════════════╝")
+        fmt.Printf("Gesamt gespielt: %d\n", gesamtSpiele)
+        fmt.Printf("Gewonnen: %d\n", anzahlSiege)
+        fmt.Printf("Verloren: %d\n", anzahlNiederlagen)
+        
+        // Berechne Durchschnitt nur wenn Siege vorhanden
+        if anzahlSiege > 0 {
+            durchschnitt := float64(gesamtVersuche) / float64(anzahlSiege)
+            fmt.Printf("Durchschn. Versuche: %.2f\n", durchschnitt)
+            
+            // Kategorisierung mit Switch
+            var kategorie string
+            switch {
+            case durchschnitt <= 3.0:
+                kategorie = "🏆 Meister - Hervorragend!"
+            case durchschnitt <= 4.0:
+                kategorie = "⭐ Experte - Sehr gut!"
+            case durchschnitt <= 5.5:
+                kategorie = "👍 Fortgeschritten - Gut gemacht!"
+            default:
+                kategorie = "🌱 Anfänger - Weiter üben!"
+            }
+            fmt.Printf("Kategorie: %s\n", kategorie)
+        } else {
+            fmt.Println("Noch keine Siege!")
+        }
+        
+        // Frage nach erneutem Spiel
+        fmt.Print("\nNochmal spielen? (j/n): ")
+        var antwort string
+        fmt.Scan(&antwort)
+        
+        // Beende Schleife bei 'n' oder 'N'
+        if antwort == "n" || antwort == "N" {
+            break
+        }
+        
+        fmt.Println("\n--- Neue Runde ---\n")
+    }
+    
+    fmt.Println("\n👋 Vielen Dank fürs Spielen! Bis zum nächsten Mal!")
+}</div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(8)">◀ Zurück</button>
+                    <button class="nav-button" onclick="showStep(10)">Weiter ▶</button>
+                </div>
+            </div>
+
+            <!-- Schritt 10: Konzept-Zuordnung -->
+            <div class="step-content" id="step-10">
+                <h3>🎓 Konzept-Zuordnung zu Kapiteln</h3>
+
+                <div class="requirement">
+                    <strong>🔗 Ebene b4 (Imperativ) → Go-Code:</strong>
+                    <p style="margin: 10px 0;">Jede Zeile im Programm lässt sich auf den imperative Skill aus dem Exkurs zurückführen:</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Ebene b4 (Imperativ)</th>
+                                <th>Go-Umsetzung</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Siege_Zähler</code>, <code>Niederlagen_Zähler</code>, <code>Erfolgs_Versuche_Summe</code></td>
+                                <td><code>var (anzahlSiege, anzahlNiederlagen, gesamtVersuche)</code> auf Package-Ebene</td>
+                            </tr>
+                            <tr>
+                                <td>Geheime Zufallszahl erzeugen</td>
+                                <td><code>zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Runden_Versuchs_Zähler</code>, <code>Runde_Erfolgreich</code></td>
+                                <td><code>versuchsZaehler</code>, <code>gewonnen</code> (lokal in <code>main</code>)</td>
+                            </tr>
+                            <tr>
+                                <td>Rate-Schleife (max. Versuche)</td>
+                                <td><code>for versuchsZaehler &lt; MAX_VERSUCHE { ... break }</code></td>
+                            </tr>
+                            <tr>
+                                <td>Tipp vergleichen (zu klein / zu groß / richtig)</td>
+                                <td><code>if</code> / <code>else if</code> / <code>else</code>-Kette</td>
+                            </tr>
+                            <tr>
+                                <td>Bewertungs-Engine (Schwellenwerte)</td>
+                                <td>Tagloser <code>switch { case ... }</code></td>
+                            </tr>
+                            <tr>
+                                <td>Hauptprozess / Exit-Gate</td>
+                                <td><code>for { ... }</code> mit <code>break</code> bei „n“</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.1 - Deklaration von Variablen:</strong>
+                    <ul>
+                        <li><strong>5.1.1 Ausführliche Deklaration:</strong> <code>var antwort string</code>, <code>var geratenZahl int</code></li>
+                        <li><strong>5.1.2 Kurze Deklaration:</strong> <code>zielZahl := rand.Intn(...)</code>, <code>versuchsZaehler := 0</code></li>
+                        <li><strong>5.1.3 Lokale Variablen:</strong> innerhalb von main() deklariert</li>
+                        <li><strong>5.1.3 Globale Variablen:</strong> <code>anzahlSiege</code>, <code>anzahlNiederlagen</code>, <code>gesamtVersuche</code></li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.2 - Deklaration von Konstanten:</strong>
+                    <ul>
+                        <li><code>MAX_VERSUCHE</code>, <code>MIN_ZAHL</code>, <code>MAX_ZAHL</code></li>
+                        <li>Verwendung in Berechnungen und formatierten Ausgaben</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.3 - Zuweisungen:</strong>
+                    <ul>
+                        <li><strong>5.3 Einfache Zuweisung:</strong> <code>gewonnen = true</code></li>
+                        <li><strong>5.3.1 Inkrement:</strong> <code>anzahlSiege++</code>, <code>versuchsZaehler++</code></li>
+                        <li><strong>Zusammengesetzte Zuweisung:</strong> <code>gesamtVersuche += versuchsZaehler</code></li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.5.1 - If-Anweisungen:</strong>
+                    <ul>
+                        <li>Einfache if: <code>if anzahlSiege > 0</code></li>
+                        <li>If mit Negation: <code>if !gewonnen</code></li>
+                        <li>If-else-if-Kette: Vergleich der geratenen Zahl</li>
+                        <li>Logischer ODER-Operator: <code>if antwort == "n" || antwort == "N"</code></li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.5.2 - Switch-Anweisungen:</strong>
+                    <ul>
+                        <li>Switch ohne Ausdruck mit booleschen Bedingungen</li>
+                        <li>Verschiedene case-Fälle mit Vergleichsoperatoren (<=)</li>
+                        <li>Default-Fall als Auffangvariante</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 5.5.3 - Schleifen:</strong>
+                    <ul>
+                        <li><strong>5.5.3.1 For mit Bedingung:</strong> <code>for versuchsZaehler < MAX_VERSUCHE</code></li>
+                        <li><strong>5.5.3 Endlosschleife:</strong> <code>for</code> ohne Bedingung in der Hauptschleife</li>
+                        <li><strong>5.5.3.3 Break-Anweisung:</strong> 
+                            <ul>
+                                <li>Verlassen der Rateschleife bei richtigem Ergebnis</li>
+                                <li>Verlassen der Hauptschleife bei "n"</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 4.7 - Typkonvertierung:</strong>
+                    <ul>
+                        <li><code>float64(gesamtVersuche)</code> und <code>float64(anzahlSiege)</code></li>
+                        <li>Notwendig für genaue Durchschnittsberechnung</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement">
+                    <strong>📖 Kapitel 3.3.7 & 4.2 - Ein-/Ausgabe:</strong>
+                    <ul>
+                        <li><code>fmt.Println</code>: Einfache Textausgabe</li>
+                        <li><code>fmt.Printf</code>: Formatierte Ausgabe mit Platzhaltern (%d, %.2f, %s)</li>
+                        <li><code>fmt.Scan</code>: Eingabe von Werten</li>
+                    </ul>
+                </div>
+                
+                <div class="concepts-used">
+                    <h4>🎯 Zusätzlich verwendete Konzepte:</h4>
+                    <ul>
+                        <li><strong>Verschachtelte Schleifen:</strong> Äußere Schleife für Spiele, innere für Versuche</li>
+                        <li><strong>Boolesche Variablen:</strong> <code>gewonnen</code> als Flag</li>
+                        <li><strong>Vergleichsoperatoren:</strong> ==, <, <=, || (Kapitel 4.5)</li>
+                        <li><strong>Arithmetische Operationen:</strong> +, / (Kapitel 4.3.7, 4.4)</li>
+                    </ul>
+                </div>
+                
+                <div class="cross-link" style="margin-top: 20px;">
+                    📚 Zurück zum didaktischen Exkurs:
+                    <a href="exkurs_von_problem_zu_code.html">exkurs_von_problem_zu_code.html</a>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(9)">◀ Zurück</button>
+                    <button class="nav-button" disabled>Fertig! 🎉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            // Hide all steps
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected step
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            
+            // Activate corresponding tab
+            tabs[stepNumber - 1].classList.add('active');
+            
+            // Scroll to top of content area
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

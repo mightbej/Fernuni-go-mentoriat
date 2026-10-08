@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kapitel 7 - Quiz zu Funktionen, Zeigern und Rekursion</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #101b36;
+      --text: #e5eefc;
+      --muted: #b7c5e1;
+      --accent: #667eea;
+      --accent-2: #764ba2;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warn: #ffc107;
+      --border: rgba(255,255,255,0.12);
+      --code-bg: #0b1020;
+      --code-text: #f8f8f2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, rgba(102,126,234,0.22), transparent 36%), linear-gradient(135deg, #08101f 0%, #101b36 55%, #09111f 100%);
+      min-height: 100vh;
+    }
+    header {
+      padding: 48px 20px 28px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.16));
+      border-bottom: 1px solid var(--border);
+    }
+    main { max-width: 940px; margin: 0 auto; padding: 24px 20px 56px; }
+    h1, h2, h3 { margin: 0 0 12px; line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 4vw, 3.1rem); }
+    h2 { font-size: 1.45rem; border-left: 5px solid var(--accent); padding-left: 12px; }
+    p { color: var(--muted); line-height: 1.65; margin: 0 0 12px; }
+    .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(102,126,234,0.16); color: #dce6ff; margin-bottom: 12px; }
+    .lesson-links {
+      margin: 14px auto 0;
+      max-width: 940px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      text-align: left;
+      line-height: 1.7;
+      color: #dce6ff;
+      font-size: 0.95rem;
+    }
+    .lesson-links a {
+      color: #e8edff;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    .panel, .question, .result-box {
+      background: rgba(16,27,54,0.94);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+    .panel, .question { padding: 22px; margin-top: 18px; }
+    .scorebar {
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      padding: 14px 16px; border-radius: 14px; background: rgba(23,37,84,0.85); border: 1px solid var(--border);
+    }
+    .scorebar strong { color: #fff; }
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 14px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.5;
+      font-family: "Courier New", monospace;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .options { display: grid; gap: 10px; margin-top: 12px; }
+    label.option {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    input[type="radio"], input[type="checkbox"] { margin-right: 10px; }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 10px;
+    }
+    button.secondary { background: rgba(255,255,255,0.08); border: 1px solid var(--border); }
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: none;
+    }
+    .feedback.ok { display: block; background: rgba(40,167,69,0.12); color: #c8f3d2; }
+    .feedback.bad { display: block; background: rgba(220,53,69,0.12); color: #ffd0d5; }
+    .result-box {
+      margin-top: 18px;
+      padding: 18px;
+      display: none;
+    }
+    .result-box.show { display: block; }
+    .mini-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .mini-card {
+      background: rgba(23,37,84,0.85);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+    .hint { background: rgba(255,193,7,0.12); border-left: 5px solid var(--warn); padding: 14px 16px; border-radius: 12px; color: #f6e7b3; }
+    footer { padding: 0 20px 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 640px) { main { padding-inline: 14px; } header { padding-inline: 14px; } button { width: 100%; } }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">FernUni Hagen · Kurs 01613 · Kapitel 7</span>
+    <h1>Quiz: Funktionen, Zeiger und Rekursion</h1>
+    <p>10 Fragen mit Sofort-Feedback und Auswertung. Ein Mix aus Theorie, Code-Verständnis und typischen Go-Fallen.</p>
+    <div class="lesson-links">
+      <strong>Lernpfad:</strong>
+      <a href="150_go_k7_das_kopier_problem.html">Kopierproblem</a>
+      <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+      <a href="161_go_k7_bubblesort_mit_zeigern.html">Bubble mit Zeigern</a>
+      <a href="162_go_k7_selectionsort_mit_funktionen.html">Selection mit Funktionen</a>
+      <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+      <a href="164_go_k7_bubblesort_rekursiv.html">Bubble rekursiv</a>
+      <a href="169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html">Gesamtübersicht</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Start</h2>
+      <div class="mini-grid">
+        <div class="mini-card"><strong>Fragen</strong><p>10 Aufgaben aus allen drei Themenbereichen.</p></div>
+        <div class="mini-card"><strong>Feedback</strong><p>Jede Antwort erklärt kurz, warum sie richtig oder falsch ist.</p></div>
+        <div class="mini-card"><strong>Wiederholen</strong><p>Mit einem Klick kannst du das Quiz neu starten.</p></div>
+      </div>
+      <div class="hint" style="margin-top:14px;">FernUni Hagen - Kurs 01613 - Kapitel 7.1 bis 7.5</div>
+    </section>
+
+    <section class="panel">
+      <div class="scorebar">
+        <div><strong>Punkte:</strong> <span id="score">0</span> / 10</div>
+        <div><strong>Beantwortet:</strong> <span id="answered">0</span></div>
+        <div><strong>Status:</strong> <span id="status">bereit</span></div>
+      </div>
+    </section>
+
+    <form id="quizForm">
+      <section class="question" data-answer="0" data-type="single">
+        <h3>1. Was beschreibt die Signatur einer Funktion in Go?</h3>
+        <p>Wähle die richtige Aussage.</p>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="0">Nur den Funktionsnamen</label>
+          <label class="option"><input type="radio" name="q1" value="1">Folge der Parameter- und Rückgabetypen</label>
+          <label class="option"><input type="radio" name="q1" value="0">Nur die Namen der Parameter</label>
+          <label class="option"><input type="radio" name="q1" value="0">Die Anzahl der Anweisungen im Rumpf</label>
+        </div>
+        <div class="feedback" id="fb1"></div>
+      </section>
+
+      <section class="question" data-answer="1" data-type="single">
+        <h3>2. Was liefert die Funktion divMitRest(17, 3) zurück?</h3>
+        <div class="code-block">func divMitRest(x int, y int) (int, int) {
+    return x / y, x % y
+}</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="0">17 und 3</label>
+          <label class="option"><input type="radio" name="q2" value="1">5 und 2</label>
+          <label class="option"><input type="radio" name="q2" value="0">2 und 5</label>
+          <label class="option"><input type="radio" name="q2" value="0">Fehler, weil Go keine zwei Rückgaben erlaubt</label>
+        </div>
+        <div class="feedback" id="fb2"></div>
+      </section>
+
+      <section class="question" data-answer="2" data-type="single">
+        <h3>3. Was bedeutet ein blankes return in einer Funktion mit benannten Rückgaben?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="0">Es ist nur in main erlaubt</label>
+          <label class="option"><input type="radio" name="q3" value="1">Es gibt immer nil zurück</label>
+          <label class="option"><input type="radio" name="q3" value="1">Es gibt die benannten Rückgabe-Variablen zurück</label>
+          <label class="option"><input type="radio" name="q3" value="0">Es bricht die Funktion ohne Rückgabewerte ab</label>
+        </div>
+        <div class="feedback" id="fb3"></div>
+      </section>
+
+      <section class="question" data-answer="0" data-type="single">
+        <h3>4. Was trifft auf call-by-value in Go zu?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="1">Argumente werden als Kopie übergeben</label>
+          <label class="option"><input type="radio" name="q4" value="0">Arrays werden immer als Referenz übergeben</label>
+          <label class="option"><input type="radio" name="q4" value="0">Zeiger werden nie kopiert</label>
+          <label class="option"><input type="radio" name="q4" value="0">Go kennt call-by-reference als Sprachelement</label>
+        </div>
+        <div class="feedback" id="fb4"></div>
+      </section>
+
+      <section class="question" data-answer="1" data-type="single">
+        <h3>5. Welche Zeile verändert das Array nums über einen Zeiger?</h3>
+        <div class="code-block">func negToZeroPointer(pa *[10]int) {
+    for i := range pa {
+        if pa[i] < 0 {
+            pa[i] = 0
+        }
+    }
+}</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q5" value="0">for i := range *pa</label>
+          <label class="option"><input type="radio" name="q5" value="1">pa[i] = 0</label>
+          <label class="option"><input type="radio" name="q5" value="0">fmt.Println(pa)</label>
+          <label class="option"><input type="radio" name="q5" value="0">return pa</label>
+        </div>
+        <div class="feedback" id="fb5"></div>
+      </section>
+
+      <section class="question" data-answer="1,2" data-type="multi">
+        <h3>6. Welche Aussagen über Zeiger in Go sind richtig? Mehrfachauswahl.</h3>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="q6" value="1">Der Nullwert eines Zeiger-Typs ist nil</label>
+          <label class="option"><input type="checkbox" name="q6" value="1">&x liefert die Adresse von x</label>
+          <label class="option"><input type="checkbox" name="q6" value="1">*p dereferenziert einen Zeiger</label>
+          <label class="option"><input type="checkbox" name="q6" value="0">Zeiger-Arithmetik ist in Go erlaubt</label>
+        </div>
+        <div class="feedback" id="fb6"></div>
+      </section>
+
+      <section class="question" data-answer="0" data-type="single">
+        <h3>7. Was ist der Unterschied zwischen fakultätIte und fakultätRek?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q7" value="1">Eine ist iterativ, die andere rekursiv</label>
+          <label class="option"><input type="radio" name="q7" value="0">Beide sind identisch implementiert</label>
+          <label class="option"><input type="radio" name="q7" value="0">Die rekursive Variante braucht keine Abbruchbedingung</label>
+          <label class="option"><input type="radio" name="q7" value="0">Die iterative Variante ruft sich selbst auf</label>
+        </div>
+        <div class="feedback" id="fb7"></div>
+      </section>
+
+      <section class="question" data-answer="1" data-type="single">
+        <h3>8. Warum ist fibonacciRek ineffizient?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q8" value="0">Weil es keine Rückgabe hat</label>
+          <label class="option"><input type="radio" name="q8" value="1">Weil viele Teilprobleme mehrfach berechnet werden</label>
+          <label class="option"><input type="radio" name="q8" value="0">Weil Go keine Rekursion erlaubt</label>
+          <label class="option"><input type="radio" name="q8" value="0">Weil nur gerade Zahlen funktionieren</label>
+        </div>
+        <div class="feedback" id="fb8"></div>
+      </section>
+
+      <section class="question" data-answer="1" data-type="single">
+        <h3>9. Was beschreibt Endrekursion?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q9" value="0">Mehrere rekursive Aufrufe in einer Funktion</label>
+          <label class="option"><input type="radio" name="q9" value="1">Der rekursive Aufruf ist die letzte Operation</label>
+          <label class="option"><input type="radio" name="q9" value="0">Rekursion ohne Abbruchbedingung</label>
+          <label class="option"><input type="radio" name="q9" value="0">Rekursion nur in Schleifen</label>
+        </div>
+        <div class="feedback" id="fb9"></div>
+      </section>
+
+      <section class="question" data-answer="1" data-type="single">
+        <h3>10. Wann ist eine lokale Variable aus der Funktion hinaus „ausgebrochen“?</h3>
+        <div class="options">
+          <label class="option"><input type="radio" name="q10" value="0">Wenn ihr Name global wird</label>
+          <label class="option"><input type="radio" name="q10" value="1">Wenn ein Zeiger auf sie zurückgegeben oder gespeichert wird</label>
+          <label class="option"><input type="radio" name="q10" value="0">Wenn sie mit var statt := deklariert wird</label>
+          <label class="option"><input type="radio" name="q10" value="0">Wenn fmt.Println aufgerufen wird</label>
+        </div>
+        <div class="feedback" id="fb10"></div>
+      </section>
+
+      <section class="panel">
+        <button type="button" onclick="gradeQuiz()">Auswerten</button>
+        <button type="button" class="secondary" onclick="resetQuiz()">Neu starten</button>
+        <div class="result-box" id="resultBox">
+          <h2>Ergebnis</h2>
+          <p id="resultText"></p>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <footer>FernUni Hagen - Kurs 01613 - Kapitel 7 - Quiz</footer>
+
+  <script>
+    const questionData = [
+      { correct: [1], type: 'single', text: 'Die Signatur umfasst die Typen von Parametern und Rückgaben.' },
+      { correct: [1], type: 'single', text: '17 / 3 ergibt 5 mit Rest 2.' },
+      { correct: [2], type: 'single', text: 'Benannte Rückgaben können mit return ohne Werte zurückgegeben werden.' },
+      { correct: [0], type: 'single', text: 'Go übergibt Werte als Kopien; auch Zeigerwerte werden kopiert.' },
+      { correct: [1], type: 'single', text: 'Die Zuweisung an pa[i] schreibt direkt ins referenzierte Array.' },
+      { correct: [0,1,2], type: 'multi', text: 'Alle drei Aussagen sind korrekt; nur Zeiger-Arithmetik ist falsch.' },
+      { correct: [0], type: 'single', text: 'Eine Variante ist iterativ, die andere rekursiv.' },
+      { correct: [1], type: 'single', text: 'Bei Fibonacci werden dieselben Teilprobleme mehrfach berechnet.' },
+      { correct: [1], type: 'single', text: 'Endrekursion heißt: der rekursive Aufruf steht ganz am Ende.' },
+      { correct: [1], type: 'single', text: 'Ein Zeiger verlängert die Lebenszeit der referenzierten Variable.' }
+    ];
+
+    function selectedValues(name, type) {
+      if (type === 'multi') {
+        return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map((item) => Number(item.value));
+      }
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? [Number(checked.value)] : [];
+    }
+
+    function sameSet(a, b) {
+      return a.length === b.length && [...a].sort().every((value, index) => value === [...b].sort()[index]);
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      let answered = 0;
+      questionData.forEach((item, index) => {
+        const values = selectedValues(`q${index + 1}`, item.type);
+        const feedback = document.getElementById(`fb${index + 1}`);
+        if (values.length > 0) answered += 1;
+        const correct = sameSet(values, item.correct);
+        if (correct) score += 1;
+        feedback.className = `feedback ${correct ? 'ok' : 'bad'}`;
+        feedback.textContent = correct ? `Richtig. ${item.text}` : `Nicht ganz. ${item.text}`;
+      });
+      document.getElementById('score').textContent = score;
+      document.getElementById('answered').textContent = answered;
+      document.getElementById('status').textContent = score === 10 ? 'perfekt' : score >= 7 ? 'gut' : 'weiter üben';
+      document.getElementById('resultBox').classList.add('show');
+      document.getElementById('resultText').textContent = `Du hast ${score} von 10 Punkten erreicht. ${score >= 8 ? 'Sehr gut.' : score >= 5 ? 'Solide Grundlage, aber ein paar Punkte solltest du wiederholen.' : 'Die Kapitel solltest du noch einmal gezielt ansehen.'}`;
+    }
+
+    function resetQuiz() {
+      document.getElementById('quizForm').reset();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('answered').textContent = '0';
+      document.getElementById('status').textContent = 'bereit';
+      document.getElementById('resultBox').classList.remove('show');
+      questionData.forEach((_, index) => {
+        const feedback = document.getElementById(`fb${index + 1}`);
+        feedback.className = 'feedback';
+        feedback.textContent = '';
+      });
+    }
+  </script>
+</body>
+</html>

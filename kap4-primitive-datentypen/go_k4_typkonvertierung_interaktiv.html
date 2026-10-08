@@ -79,6 +79,7 @@
         .tab-button {
             padding: 12px 24px;
             background: #e5e7eb;
+            color: #1f2937;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -253,6 +254,7 @@
 
         .code-block {
             background: #1f2937;
+            white-space: pre;
             color: #e5e7eb;
             padding: 20px;
             border-radius: 10px;
@@ -525,8 +527,7 @@
                         </ul>
                     </div>
 
-                    <div class="code-block">
-<span class="comment">// ✅ Implizite Anpassung konstanter Ausdrücke</span>
+                    <div class="code-block"><span class="comment">// ✅ Implizite Anpassung konstanter Ausdrücke</span>
 <span class="keyword">var</span> g <span class="type">float64</span> = <span class="number">9</span>           <span class="comment">// int-Literal → float64</span>
 g = g / <span class="number">2</span>
 fmt.Println(g)                 <span class="comment">// 4.5</span>
@@ -538,8 +539,7 @@ fmt.Println(<span class="number">15.0</span> / <span class="number">2</span>)   
 fmt.Println(<span class="number">15</span> / <span class="number">2.0</span>)           <span class="comment">// 7.5 (15 → 15.0)</span>
 fmt.Println(<span class="number">15</span> / <span class="number">2</span>)             <span class="comment">// 7 (ganzzahlige Division!)</span></div>
 
-                    <div class="code-block">
-<span class="comment">// ✅ Ganzzahlige float-Ausdrücke</span>
+                    <div class="code-block"><span class="comment">// ✅ Ganzzahlige float-Ausdrücke</span>
 <span class="keyword">var</span> i <span class="type">int</span> = <span class="number">5.0</span>              <span class="comment">// zulässig, da ganzzahlig</span>
 i = <span class="number">2.5</span> * <span class="number">2.4</span>                <span class="comment">// zulässig: 2.5 * 2.4 = 6.0</span>
 fmt.Println(i)               <span class="comment">// 6</span></div>
@@ -549,8 +549,7 @@ fmt.Println(i)               <span class="comment">// 6</span></div>
                         Variablen werden <strong>niemals</strong> implizit konvertiert!
                     </div>
 
-                    <div class="code-block">
-<span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
+                    <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
 <span class="keyword">var</span> f <span class="type">float64</span> = <span class="number">1.7</span>
 
 <span class="comment">// ❌ FEHLER: Typ einer Variablen wird nie implizit angepasst</span>
@@ -593,8 +592,7 @@ fmt.Println(i)               <span class="comment">// 6</span></div>
                         • Bei float→int werden <strong>Nachkommastellen abgeschnitten</strong> (nicht gerundet!)
                     </div>
 
-                    <div class="code-block">
-<span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
+                    <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
 <span class="keyword">var</span> f <span class="type">float64</span> = <span class="number">1.7</span>
 
 <span class="comment">// ✅ Explizite Konvertierung von int nach float64</span>
@@ -696,8 +694,7 @@ f = <span class="function">float64</span>(a)                   <span class="comm
                         <h3>Ganzzahlige Division (int / int)</h3>
                         <p>Division zweier <code>int</code>-Werte liefert den <strong>Ganzzahlquotienten</strong>.</p>
                         
-                        <div class="code-block">
-<span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
+                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
 <span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
 
 <span class="comment">// Division zweier Integers → Ganzzahlquotient</span>
@@ -742,8 +739,7 @@ fmt.Println(a / b)    <span class="comment">// 2 (nicht 2.5!)</span></div>
                         <h3>Rationaler Quotient (float64 / float64)</h3>
                         <p>Für den "echten" Quotienten müssen beide Operanden nach <code>float64</code> konvertiert werden.</p>
                         
-                        <div class="code-block">
-<span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
+                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
 <span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
 
 <span class="comment">// ✅ Beide Operanden konvertieren</span>
@@ -813,8 +809,7 @@ fmt.Println(<span class="function">float64</span>(a) / <span class="function">fl
                             </div>
                         </div>
 
-                        <div class="code-block">
-<span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
+                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
 <span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
 
 <span class="comment">// ❌ FALSCH: Erst Division, dann Konvertierung</span>
@@ -840,229 +835,24 @@ fmt.Println(<span class="function">float64</span>(a) / <span class="function">fl
                 </div>
             </div>
 
-            <!-- Quiz -->
+            <!-- Verweis auf das Quiz -->
             <div class="section">
-                <h2>🎯 Quiz: Typkonvertierung</h2>
-                
-                <div class="quiz-container">
-                    <!-- Frage 1 -->
-                    <div class="quiz-question">
-                        <h4>Frage 1: Was ist das Ergebnis von <code>int(3.9)</code>?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(1, 0)">
-                                <strong>A)</strong> 3
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(1, 1)">
-                                <strong>B)</strong> 4
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(1, 2)">
-                                <strong>C)</strong> 3.9
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(1, 3)">
-                                <strong>D)</strong> Compiler-Fehler
-                            </div>
-                        </div>
-                        <div id="feedback-1" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 2 -->
-                    <div class="quiz-question">
-                        <h4>Frage 2: Welcher Code ist NICHT erlaubt?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(2, 0)">
-                                <strong>A)</strong> <code>var i int = 5.0</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(2, 1)">
-                                <strong>B)</strong> <code>var i int = 2.5 * 2.4</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(2, 2)">
-                                <strong>C)</strong> <code>var a int = 5; var f float64 = a</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(2, 3)">
-                                <strong>D)</strong> <code>var g float64 = 9</code>
-                            </div>
-                        </div>
-                        <div id="feedback-2" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 3 -->
-                    <div class="quiz-question">
-                        <h4>Frage 3: Was ist das Ergebnis von <code>15 / 2</code>?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(3, 0)">
-                                <strong>A)</strong> 7.5
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(3, 1)">
-                                <strong>B)</strong> 7
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(3, 2)">
-                                <strong>C)</strong> 8
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(3, 3)">
-                                <strong>D)</strong> Compiler-Fehler
-                            </div>
-                        </div>
-                        <div id="feedback-3" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 4 -->
-                    <div class="quiz-question">
-                        <h4>Frage 4: Was ist das Ergebnis von <code>15.0 / 2</code>?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(4, 0)">
-                                <strong>A)</strong> 7.5
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(4, 1)">
-                                <strong>B)</strong> 7
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(4, 2)">
-                                <strong>C)</strong> 7.0
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(4, 3)">
-                                <strong>D)</strong> Compiler-Fehler
-                            </div>
-                        </div>
-                        <div id="feedback-4" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 5 -->
-                    <div class="quiz-question">
-                        <h4>Frage 5: Gegeben: <code>var a int = 25; var b int = 10</code><br>
-                        Welcher Ausdruck liefert 2.5?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(5, 0)">
-                                <strong>A)</strong> <code>a / b</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(5, 1)">
-                                <strong>B)</strong> <code>float64(a / b)</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(5, 2)">
-                                <strong>C)</strong> <code>float64(a) / float64(b)</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(5, 3)">
-                                <strong>D)</strong> Alle drei
-                            </div>
-                        </div>
-                        <div id="feedback-5" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 6 -->
-                    <div class="quiz-question">
-                        <h4>Frage 6: Was bewirkt <code>int(f)</code> wenn <code>f</code> vom Typ <code>float64</code> ist?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(6, 0)">
-                                <strong>A)</strong> Rundet auf die nächste Ganzzahl
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(6, 1)">
-                                <strong>B)</strong> Schneidet Nachkommastellen ab
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(6, 2)">
-                                <strong>C)</strong> Ändert den Typ der Variable f
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(6, 3)">
-                                <strong>D)</strong> Verursacht Compiler-Fehler
-                            </div>
-                        </div>
-                        <div id="feedback-6" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 7 -->
-                    <div class="quiz-question">
-                        <h4>Frage 7: Was ist das Ergebnis von <code>int(-2.8)</code>?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(7, 0)">
-                                <strong>A)</strong> -2
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(7, 1)">
-                                <strong>B)</strong> -3
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(7, 2)">
-                                <strong>C)</strong> 2
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(7, 3)">
-                                <strong>D)</strong> 3
-                            </div>
-                        </div>
-                        <div id="feedback-7" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 8 -->
-                    <div class="quiz-question">
-                        <h4>Frage 8: Gegeben: <code>var a int = 5; var f float64 = 1.5</code><br>
-                        Welcher Ausdruck ist NICHT erlaubt?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(8, 0)">
-                                <strong>A)</strong> <code>f * float64(a)</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(8, 1)">
-                                <strong>B)</strong> <code>int(f) * a</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(8, 2)">
-                                <strong>C)</strong> <code>f * a</code>
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(8, 3)">
-                                <strong>D)</strong> <code>0.5 * a</code>
-                            </div>
-                        </div>
-                        <div id="feedback-8" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 9 -->
-                    <div class="quiz-question">
-                        <h4>Frage 9: Was ist das Ergebnis von <code>7 / 10</code>?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(9, 0)">
-                                <strong>A)</strong> 0
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(9, 1)">
-                                <strong>B)</strong> 0.7
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(9, 2)">
-                                <strong>C)</strong> 1
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(9, 3)">
-                                <strong>D)</strong> Compiler-Fehler
-                            </div>
-                        </div>
-                        <div id="feedback-9" class="quiz-feedback"></div>
-                    </div>
-
-                    <!-- Frage 10 -->
-                    <div class="quiz-question">
-                        <h4>Frage 10: Ist eine Typkonvertierung eine Anweisung?</h4>
-                        <div class="quiz-options">
-                            <div class="quiz-option" onclick="selectQuizOption(10, 0)">
-                                <strong>A)</strong> Ja, sie führt Code aus
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(10, 1)">
-                                <strong>B)</strong> Nein, sie ist ein Ausdruck
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(10, 2)">
-                                <strong>C)</strong> Kommt auf den Kontext an
-                            </div>
-                            <div class="quiz-option" onclick="selectQuizOption(10, 3)">
-                                <strong>D)</strong> Nur bei int→float64
-                            </div>
-                        </div>
-                        <div id="feedback-10" class="quiz-feedback"></div>
-                    </div>
-
-                    <button onclick="submitQuiz()" style="background: #10b981; font-size: 1.2em; padding: 15px 40px;">
-                        Quiz auswerten
-                    </button>
-                    
-                    <div id="quiz-score" class="quiz-score"></div>
-                </div>
+                <h2>🎯 Alles verstanden?</h2>
+                <p>Das Quiz zu dieser Seite steht auf einer eigenen Seite:</p>
+                <ul style="margin: 15px 0 0 25px;">
+                    <li><a href="go_k4_typkonvertierung_selbsttest_quiz.html">Selbsttest: Typkonvertierung</a>, 10 Fragen mit je vier Antworten</li>
+                    <li><a href="go_k4_typkonvertierung_quiz.html">Quizrunde richtig oder falsch: Typkonvertierung</a></li>
+                </ul>
             </div>
 
-            <a href="go_k4_bool_vergleich_quiz.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
+            <a href="go_k4_quiz_hub.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
         </div>
     </div>
 
     <script>
         // Tab-Verwaltung
         function switchTab(group, index) {
-            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}']`);
+            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}'"]`);
             const contents = document.querySelectorAll(`[id^="${group}-"]`);
             
             buttons.forEach((btn, i) => {
@@ -1231,102 +1021,6 @@ fmt.Println(<span class="function">float64</span>(a) / <span class="function">fl
                     </div>
                 </div>
             `;
-        }
-
-        // Quiz-System
-        const quizAnswers = {
-            1: 0,   // A) 3 (Nachkommastellen abschneiden)
-            2: 2,   // C) var f = a (Variablen nicht implizit)
-            3: 1,   // B) 7 (ganzzahlige Division)
-            4: 0,   // A) 7.5 (2 wird zu 2.0)
-            5: 2,   // C) float64(a) / float64(b)
-            6: 1,   // B) Schneidet ab
-            7: 0,   // A) -2
-            8: 2,   // C) f * a (Variablen nicht implizit)
-            9: 0,   // A) 0
-            10: 1   // B) Nein, Ausdruck
-        };
-
-        const quizExplanations = {
-            1: '✅ Richtig! Bei float→int werden Nachkommastellen abgeschnitten, nicht gerundet. 3.9 → 3',
-            2: '✅ Richtig! Variablen werden NIEMALS implizit konvertiert. Es muss float64(a) verwendet werden.',
-            3: '✅ Richtig! 15 / 2 ist eine ganzzahlige Division, Ergebnis: 7 (7.5 abgeschnitten).',
-            4: '✅ Richtig! 15.0 ist float64, daher wird 2 implizit zu 2.0 konvertiert. Ergebnis: 7.5',
-            5: '✅ Richtig! Beide Operanden müssen konvertiert werden. float64(a/b) würde zuerst ganzzahlig dividieren!',
-            6: '✅ Richtig! Nachkommastellen werden abgeschnitten, nicht gerundet. Die Variable bleibt unverändert.',
-            7: '✅ Richtig! Nachkommastellen werden abgeschnitten: -2.8 → -2 (nicht -3!).',
-            8: '✅ Richtig! f * a ist nicht erlaubt, da Variablen niemals implizit konvertiert werden.',
-            9: '✅ Richtig! 7 / 10 = 0 (ganzzahlige Division, 0.7 wird zu 0 abgeschnitten).',
-            10: '✅ Richtig! Eine Typkonvertierung ist ein Ausdruck, keine Anweisung.'
-        };
-
-        const selectedAnswers = {};
-
-        function selectQuizOption(question, option) {
-            const options = document.querySelectorAll(`.quiz-question:nth-of-type(${question}) .quiz-option`);
-            options.forEach(opt => opt.classList.remove('selected'));
-            options[option].classList.add('selected');
-            selectedAnswers[question] = option;
-        }
-
-        function submitQuiz() {
-            let correct = 0;
-            const total = Object.keys(quizAnswers).length;
-            
-            for (let q = 1; q <= total; q++) {
-                const userAnswer = selectedAnswers[q];
-                const correctAnswer = quizAnswers[q];
-                const feedback = document.getElementById(`feedback-${q}`);
-                const options = document.querySelectorAll(`.quiz-question:nth-of-type(${q}) .quiz-option`);
-                
-                options.forEach((opt, idx) => {
-                    opt.classList.remove('selected');
-                    if (idx === correctAnswer) {
-                        opt.classList.add('correct');
-                    } else if (idx === userAnswer && idx !== correctAnswer) {
-                        opt.classList.add('incorrect');
-                    }
-                });
-                
-                if (userAnswer === correctAnswer) {
-                    correct++;
-                    feedback.className = 'quiz-feedback show';
-                    feedback.style.background = '#d1fae5';
-                    feedback.style.border = '2px solid #10b981';
-                    feedback.style.color = '#065f46';
-                    feedback.innerHTML = quizExplanations[q];
-                } else if (userAnswer !== undefined) {
-                    feedback.className = 'quiz-feedback show';
-                    feedback.style.background = '#fee2e2';
-                    feedback.style.border = '2px solid #ef4444';
-                    feedback.style.color = '#991b1b';
-                    feedback.innerHTML = '❌ Falsch. ' + quizExplanations[q];
-                } else {
-                    feedback.className = 'quiz-feedback show';
-                    feedback.style.background = '#fef3c7';
-                    feedback.style.border = '2px solid #f59e0b';
-                    feedback.style.color = '#92400e';
-                    feedback.innerHTML = '⚠️ Keine Antwort gewählt. ' + quizExplanations[q];
-                }
-            }
-            
-            const percentage = (correct / total * 100).toFixed(0);
-            const scoreDiv = document.getElementById('quiz-score');
-            let grade = '';
-            if (percentage >= 90) grade = '🏆 Ausgezeichnet!';
-            else if (percentage >= 75) grade = '🌟 Sehr gut!';
-            else if (percentage >= 60) grade = '✅ Gut!';
-            else if (percentage >= 50) grade = '📖 Noch etwas üben!';
-            else grade = '💪 Weiter lernen!';
-            
-            scoreDiv.className = 'quiz-score show';
-            scoreDiv.innerHTML = `
-                <div style="font-size: 2em; margin-bottom: 15px;">${grade}</div>
-                <div style="font-size: 1.5em;">${correct} von ${total} Fragen richtig</div>
-                <div style="font-size: 1.2em; margin-top: 10px;">${percentage}%</div>
-            `;
-            
-            scoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     </script>
 </body>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Sort Rekursiv mit Zeigern</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #7f1d1d;
+        }
+
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong { color: #7b1fa2; }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+
+        .recursion-diagram {
+            background: #f9f9f9;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+
+        ul, ol { margin-left: 20px; line-height: 1.8; }
+        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        p { line-height: 1.6; margin: 10px 0; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-button:hover { transform: translateY(-2px); }
+        .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+
+        .memory-block {
+            display: inline-block;
+            background: #e3f2fd;
+            border: 2px solid #667eea;
+            padding: 12px 16px;
+            margin: 8px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .memory-block.original {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+        }
+
+        .memory-block.copy {
+            background: #ffccbc;
+            border-color: #d84315;
+        }
+
+        .visual-flow {
+            background: #f5f5f5;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .lesson-links {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            padding: 10px 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        .lesson-links a {
+            color: #ffffff;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bubble Sort Rekursiv mit Zeigern</h1>
+            <div class="subtitle">Rekursion + Funktionen + Zeiger-Optimierung</div>
+            <div class="lesson-links">
+                <strong>Lernpfad:</strong>
+                <a href="150_go_k7_das_kopier_problem.html">Kopierproblem</a>
+                <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+                <a href="161_go_k7_bubblesort_mit_zeigern.html">Bubble mit Zeigern</a>
+                <a href="162_go_k7_selectionsort_mit_funktionen.html">Selection mit Funktionen</a>
+                <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+                <a href="169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html">Gesamtübersicht</a>
+                <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1 Das Konzept</div>
+            <div class="tab" onclick="showStep(2)">2 Rekursions-Logik</div>
+            <div class="tab" onclick="showStep(3)">3 Basis-Fall</div>
+            <div class="tab" onclick="showStep(4)">4 Rekursiver Fall</div>
+            <div class="tab" onclick="showStep(5)">5 Mit Funktionen</div>
+            <div class="tab" onclick="showStep(6)">6 Mit Zeigern</div>
+            <div class="tab" onclick="showStep(7)">7 Vergleich: Iterativ vs. Rekursiv</div>
+            <div class="tab" onclick="showStep(8)">8 Vollständiger Code</div>
+            <div class="tab" onclick="showStep(9)">9 Zusammenfassung</div>
+        </div>
+
+        <div class="content-area">
+            <div class="step-content active" id="step-1">
+                <h3>Bubble Sort kann auch rekursiv sein</h3>
+                <p>Die iterative Version haben wir bereits gesehen. Aber: Bubble Sort kann auch <strong>rekursiv</strong> implementiert werden!</p>
+
+                <div class="info-box">
+                    <strong>Kernidee:</strong>
+                    <ul>
+                        <li>Ein Durchlauf durch das Array: Die größten Elemente "blasen" nach oben</li>
+                        <li>Dann: Rekursiver Aufruf mit <strong>um 1 kleinerer Größe</strong></li>
+                        <li>Basis-Fall: Wenn nur noch 1 Element übrig ist, sind wir fertig</li>
+                    </ul>
+                </div>
+
+                <div class="requirement">
+                    <strong>Voraussetzung für Rekursion:</strong>
+                    <ul>
+                        <li><strong>Basis-Fall:</strong> Wann stoppt die Rekursion?</li>
+                        <li><strong>Rekursiver Fall:</strong> Wie wird das Problem kleiner?</li>
+                        <li><strong>Fortschritt:</strong> Mit jedem Aufruf wird das Array um 1 Element kleiner</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Vorteil von Rekursion:</strong> Der Code wird oft eleganter und kürzer, weil die Struktur des Algorithmus direkter ausgedrückt wird.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>Zurück</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-2">
+                <h3>Wie funktioniert rekursives Bubble Sort?</h3>
+                <p>Der Gedanke ist einfach: Mache einen Durchlauf, dann rufe dich selbst auf einem kleineren Array auf.</p>
+
+                <div class="recursion-diagram">
+                    <strong>bubbleSort(a, n)</strong> mit n=5:
+                    <br><br>
+                    1. Durchlauf: Größtes Element nach Position 4
+                    <br>2. Rufe bubbleSort(a, 4) auf
+                    <br><br>
+                    &nbsp;&nbsp;<strong>bubbleSort(a, 4)</strong>:
+                    <br>&nbsp;&nbsp;1. Durchlauf: Nächst-größtes nach Position 3
+                    <br>&nbsp;&nbsp;2. Rufe bubbleSort(a, 3) auf
+                    <br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<strong>bubbleSort(a, 3)</strong>:
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;1. Durchlauf: Nächst-größtes nach Position 2
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;2. Rufe bubbleSort(a, 2) auf
+                    <br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>bubbleSort(a, 2)</strong>:
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Durchlauf: Kleinstes und größtes tauschen
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Rufe bubbleSort(a, 1) auf
+                    <br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>bubbleSort(a, 1)</strong>:
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Basis-Fall! Nur 1 Element → STOP
+                </div>
+
+                <div class="info-box">
+                    <strong>Der Stack wächst:</strong>
+                    <ul>
+                        <li>Jeder Aufruf "merkt sich", wo er aufgehört hat</li>
+                        <li>Der Call-Stack wird tiefer und tiefer (5 → 4 → 3 → 2 → 1)</li>
+                        <li>Dann "kehrt" der Stack wieder auf (1 ← 2 ← 3 ← 4 ← 5)</li>
+                        <li>Das Array ist sortiert!</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Der Basis-Fall: Wenn stoppt Rekursion?</h3>
+                <p>Ohne Basis-Fall würde Rekursion ewig laufen (Stack Overflow!). Der Basis-Fall ist entscheidend:</p>
+
+                <div class="code-block">func bubbleSort(a *[10]int, n int) {
+    // BASIS-FALL: Stoppt die Rekursion
+    if n <= 1 {
+        return  // Fertig! Nur 0 oder 1 Element
+    }
+
+    // Rekursiver Fall kommt später...
+}</div>
+
+                <div class="info-box">
+                    <strong>Warum <code>n <= 1</code>?</strong>
+                    <ul>
+                        <li>Ein Array mit 0 oder 1 Element ist bereits sortiert</li>
+                        <li>Da ist nichts zu tauschen</li>
+                        <li>Wir können die Rekursion beenden</li>
+                    </ul>
+                </div>
+
+                <div class="requirement">
+                    <strong>Wichtig:</strong> Der Basis-Fall muss immer erreichbar sein! Mit jedem Aufruf wird <code>n</code> kleiner → irgendwann erreichen wir <code>n = 1</code>.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-4">
+                <h3>Der rekursive Fall: Ein Durchlauf + Aufruf</h3>
+                <p>Nach dem Basis-Fall kommt der Rekursive Fall: Durchlauf + rekursiver Aufruf mit <code>n-1</code></p>
+
+                <div class="code-block">func bubbleSort(a *[10]int, n int) {
+    if n <= 1 {
+        return
+    }
+
+    // REKURSIVER FALL:
+    // 1. Ein Durchlauf: Vergleiche benachbarte Elemente
+    for i := 0; i < n-1; i++ {
+        if a[i] > a[i+1] {
+            a[i], a[i+1] = a[i+1], a[i]  // Tausch
+        }
+    }
+
+    // 2. Rekursiver Aufruf mit kleinerem Array
+    bubbleSort(a, n-1)
+}</div>
+
+                <div class="info-box">
+                    <strong>Was passiert:</strong>
+                    <ul>
+                        <li><strong>Schritt 1:</strong> Der größte Durchlauf sortiert: Das größte Element "blasiert" nach Position n-1</li>
+                        <li><strong>Schritt 2:</strong> Rufe dich selbst auf mit <code>n-1</code></li>
+                        <li><strong>Die Schleife:</strong> <code>i < n-1</code> stellt sicher, dass das bereits sortierte Element ignoriert wird</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Die Eleganz:</strong> Der Code drückt die Struktur des Algorithmus direkt aus:
+                    <ul style="margin-top: 10px;">
+                        <li>"Mache einen Durchlauf"</li>
+                        <li>"Dann sortiere den Rest rekursiv"</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-5">
+                <h3>Mit Funktionen: isGreater und swap</h3>
+                <p>Wie bei der iterativen Version können wir Vergleich und Tausch in Funktionen auslagern:</p>
+
+                <div class="code-block">func isGreater(a *[10]int, i int) bool {
+    return a[i] > a[i+1]
+}
+
+func swap(a *[10]int, i int) {
+    a[i], a[i+1] = a[i+1], a[i]
+}
+
+func bubbleSort(a *[10]int, n int) {
+    if n <= 1 {
+        return
+    }
+
+    for i := 0; i < n-1; i++ {
+        if isGreater(a, i) {
+            swap(a, i)
+        }
+    }
+
+    bubbleSort(a, n-1)
+}</div>
+
+                <div class="info-box">
+                    <strong>Vorteile dieser Zerlegung:</strong>
+                    <ul>
+                        <li>Der Code ist lesbarer</li>
+                        <li>Die Logik ist isoliert und testbar</li>
+                        <li>Mit Zeigern ist alles bereits O(1) Memory-Overhead!</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-6">
+                <h3>Mit Zeigern: Effiziente Parameterübergabe</h3>
+                <p>Mit Zeiger-Parametern (<code>*[10]int</code>) vermeiden wir teure Array-Kopien:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspekt</th>
+                            <th>call-by-value</th>
+                            <th>call-by-reference (Zeiger)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parameter bei Aufruf</td>
+                            <td>ganzes Array kopiert (~800 Byte)</td>
+                            <td>nur Adresse (~8 Byte)</td>
+                        </tr>
+                        <tr>
+                            <td>Was die Funktion ändert</td>
+                            <td>lokale Kopie, Original unverändert</td>
+                            <td>Original direkt verändert</td>
+                        </tr>
+                        <tr>
+                            <td>Speicher-Overhead pro Aufruf</td>
+                            <td>O(n)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Return-Statement nötig?</td>
+                            <td>ja, ganzes Array zurück</td>
+                            <td>nein, Original ist bereits verändert</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>Bei Rekursion ist das kritisch!</strong>
+                    <ul>
+                        <li>Bei jedem rekursiven Aufruf (n Aufrufe insgesamt) würde call-by-value O(n²) Speicher-Overhead erzeugen</li>
+                        <li>Mit Zeigern: Overhead bleibt O(n) gesamt (nur der Call-Stack)</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-7">
+                <h3>Vergleich: Iterativ vs. Rekursiv</h3>
+                <p>Beide Versionen implementieren denselben Bubble-Sort-Algorithmus. Die Unterschiede sind strukturell:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspekt</th>
+                            <th>Iterativ</th>
+                            <th>Rekursiv</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Struktur</td>
+                            <td>Äußere Schleife (Pass), innere Schleife (Vergleiche)</td>
+                            <td>Rekursive Aufrufe; Basis-Fall und rekursiver Fall</td>
+                        </tr>
+                        <tr>
+                            <td>Speicher (Call-Stack)</td>
+                            <td>O(1) – Stack-Tiefe konstant</td>
+                            <td>O(n) – Stack-Tiefe = n (rekursive Aufrufe)</td>
+                        </tr>
+                        <tr>
+                            <td>Lesbarkeit</td>
+                            <td>Explizit, alle Schleifen sichtbar</td>
+                            <td>Eleganter, Struktur direkt ausgedrückt</td>
+                        </tr>
+                        <tr>
+                            <td>Optimierung</td>
+                            <td>Mit <code>len(a)-1-pass</code> werden sortierte Teile übersprungen</td>
+                            <td>Mit <code>n-1</code> wird das gleiche erreicht</td>
+                        </tr>
+                        <tr>
+                            <td>Algorithmen-Komplexität</td>
+                            <td>O(n²) Vergleiche/Tausche</td>
+                            <td>O(n²) Vergleiche/Tausche</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <strong>Wann welche Version?</strong>
+                    <ul>
+                        <li><strong>Iterativ:</strong> Wenn du Speicher sparen willst und Schleifen bevorzugst</li>
+                        <li><strong>Rekursiv:</strong> Wenn du die Struktur betonen willst oder mit anderen rekursiven Algorithmen arbeitest</li>
+                        <li><strong>Praktisch:</strong> Bei großen Arrays ist iterativ meist besser (Stack-Overhead)</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(8)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-8">
+                <h3>Der vollständige rekursive Code</h3>
+                <p>Hier ist die komplette Implementierung mit Funktionen und Zeigern:</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func isGreater(a *[10]int, i int) bool {
+    return a[i] > a[i+1]
+}
+
+func swap(a *[10]int, i int) {
+    a[i], a[i+1] = a[i+1], a[i]
+}
+
+func bubbleSort(a *[10]int, n int) {
+    // Basis-Fall: Array mit 0 oder 1 Element ist sortiert
+    if n <= 1 {
+        return
+    }
+
+    // Ein Durchlauf: Größtes Element "blasiert" nach oben
+    for i := 0; i < n-1; i++ {
+        if isGreater(a, i) {
+            swap(a, i)
+        }
+    }
+
+    // Rekursiver Aufruf mit um 1 kleinerem Array
+    bubbleSort(a, n-1)
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+    bubbleSort(&a, len(a))
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="requirement">
+                    <strong>Aufruf in main:</strong>
+                    <ul>
+                        <li><code>bubbleSort(&a, len(a))</code> – Adresse des Arrays + Größe</li>
+                        <li>Die Funktion ändert das Original direkt</li>
+                        <li>Kein Return-Wert nötig</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Stack-Trace beim Durchlauf:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>bubbleSort(&a, 10) → 1 Durchlauf → bubbleSort(&a, 9)</li>
+                        <li>bubbleSort(&a, 9) → 1 Durchlauf → bubbleSort(&a, 8)</li>
+                        <li>... (weiter bis n=1)</li>
+                        <li>bubbleSort(&a, 1) → Basis-Fall, return</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(7)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(9)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-9">
+                <h3>Zusammenfassung: Rekursives Bubble Sort</h3>
+                <p>Du hast jetzt die dritte Variante von Bubble Sort gesehen – und dabei mehrere Programmiertechniken kombiniert:</p>
+
+                <div class="info-box">
+                    <strong>Gelernte Techniken:</strong>
+                    <ul>
+                        <li>✅ <strong>Funktionen:</strong> Code-Zerlegung mit isGreater() und swap()</li>
+                        <li>✅ <strong>Zeiger:</strong> Effiziente Parameter-Übergabe mit Adresse statt Kopie</li>
+                        <li>✅ <strong>Rekursion:</strong> Basis-Fall + rekursiver Fall</li>
+                        <li>✅ <strong>Komplexität:</strong> O(n²) Algorithmus-Vergleiche, aber O(1) Memory-Overhead pro Aufruf</li>
+                    </ul>
+                </div>
+
+                <div class="requirement">
+                    <strong>Die Progression:</strong>
+                    <ul>
+                        <li><strong>160:</strong> Bubble Sort mit Funktionen (iterativ)</li>
+                        <li><strong>161:</strong> Bubble Sort mit Zeigern (iterativ, optimiert)</li>
+                        <li><strong>164:</strong> Bubble Sort mit Zeigern + Rekursion (diese Datei)</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Wichtige Erkenntnis:</strong> Rekursion ist nicht "langsamer" oder "schlecht" – es ist eine andere Art, eine Struktur auszudrücken. Mit Zeigern ist die Effizienz identisch zur iterativen Version!
+                </div>
+
+                <div class="warning-box">
+                    <strong>Nächste Schritte:</strong>
+                    <ul>
+                        <li>Rekursion mit anderen Sortieralgorithmen (Mergesort, Quicksort) wird noch spannender</li>
+                        <li>Die Techniken (Funktionen, Zeiger, Rekursion) kombinieren sich zu mächtigen Patterns</li>
+                        <li>Das ist die Basis für professionelle Go-Programmierung!</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(8)">Zurück</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            tabs[stepNumber - 1].classList.add('active');
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

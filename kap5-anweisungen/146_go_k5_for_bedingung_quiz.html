@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: for-Anweisung mit Bedingung in Go</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .quiz-info {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 30px;
+        }
+
+        .quiz-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #333;
+            padding-top: 8px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+            line-height: 1.5;
+            font-size: 0.9em;
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #50fa7b;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1em;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            color: #721c24;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-section h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            transition: width 0.5s ease;
+        }
+
+        .multi-select-hint {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .question-number {
+                min-width: 40px;
+                padding: 8px 12px;
+                font-size: 1em;
+            }
+
+            .question-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 Quiz: for-Anweisung mit Bedingung</h1>
+            <p>Teste dein Wissen über Schleifen in Go!</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">FernUni Hagen - Kurs 01613 - Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142</p>
+        </div>
+
+        <div class="content">
+            <div class="quiz-info">
+                <h3>📋 Quiz-Informationen</h3>
+                <p><strong>Anzahl der Fragen:</strong> 14</p>
+                <p><strong>Themen:</strong> Schleifen-Grundkonzept, for mit Bedingung, while-Schleife, do-while, Flag-Variable</p>
+                <p><strong>Hinweis:</strong> Bei einigen Fragen sind mehrere Antworten richtig!</p>
+            </div>
+
+            <!-- Frage 1 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-text">Was sind die beiden Kernelemente einer Schleife?</div>
+                </div>
+                <div class="multi-select-hint">
+                    ⚠️ Mehrfachauswahl: Diese Frage hat mehrere richtige Antworten!
+                </div>
+                <div class="options">
+                    <div class="option" onclick="toggleCheckbox('q1a')">
+                        <input type="checkbox" id="q1a" value="a">
+                        <label for="q1a">Schleifenbedingung</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q1b')">
+                        <input type="checkbox" id="q1b" value="b">
+                        <label for="q1b">Schleifenrumpf</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q1c')">
+                        <input type="checkbox" id="q1c" value="c">
+                        <label for="q1c">Schleifenzähler</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q1d')">
+                        <input type="checkbox" id="q1d" value="d">
+                        <label for="q1d">Schlüsselwort for</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkMultiAnswer(1, ['a', 'b'])">Antwort prüfen</button>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+
+            <!-- Frage 2 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-text">Was ist ein Schleifendurchlauf?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 'a')">
+                        <input type="radio" name="q2" id="q2a" value="a">
+                        <label for="q2a">Die Prüfung der Schleifenbedingung</label>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'b')">
+                        <input type="radio" name="q2" id="q2b" value="b">
+                        <label for="q2b">Die einmalige Ausführung des Schleifenrumpfes</label>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'c')">
+                        <input type="radio" name="q2" id="q2c" value="c">
+                        <label for="q2c">Die Initialisierung der Schleifenvariablen</label>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'd')">
+                        <input type="radio" name="q2" id="q2d" value="d">
+                        <label for="q2d">Das Beenden der Schleife</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(2, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+
+            <!-- Frage 3 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-text">Was ist die Abbruchbedingung?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 'a')">
+                        <input type="radio" name="q3" id="q3a" value="a">
+                        <label for="q3a">Die gleiche wie die Schleifenbedingung</label>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'b')">
+                        <input type="radio" name="q3" id="q3b" value="b">
+                        <label for="q3b">Die Negation der Schleifenbedingung</label>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'c')">
+                        <input type="radio" name="q3" id="q3c" value="c">
+                        <label for="q3c">Eine Variable vom Typ bool</label>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'd')">
+                        <input type="radio" name="q3" id="q3d" value="d">
+                        <label for="q3d">Das Schlüsselwort break</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(3, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+
+            <!-- Frage 4 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-text">Was ist eine Endlosschleife?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(4, 'a')">
+                        <input type="radio" name="q4" id="q4a" value="a">
+                        <label for="q4a">Eine Schleife mit sehr vielen Durchläufen</label>
+                    </div>
+                    <div class="option" onclick="selectOption(4, 'b')">
+                        <input type="radio" name="q4" id="q4b" value="b">
+                        <label for="q4b">Eine Schleife, deren Abbruchbedingung nie erfüllt wird</label>
+                    </div>
+                    <div class="option" onclick="selectOption(4, 'c')">
+                        <input type="radio" name="q4" id="q4c" value="c">
+                        <label for="q4c">Eine Schleife ohne Schleifenrumpf</label>
+                    </div>
+                    <div class="option" onclick="selectOption(4, 'd')">
+                        <input type="radio" name="q4" id="q4d" value="d">
+                        <label for="q4d">Eine Schleife mit dem Schlüsselwort while</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(4, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+
+            <!-- Frage 5 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-text">Mit welchem Schlüsselwort werden ALLE Schleifen in Go eingeleitet?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(5, 'a')">
+                        <input type="radio" name="q5" id="q5a" value="a">
+                        <label for="q5a">while</label>
+                    </div>
+                    <div class="option" onclick="selectOption(5, 'b')">
+                        <input type="radio" name="q5" id="q5b" value="b">
+                        <label for="q5b">for</label>
+                    </div>
+                    <div class="option" onclick="selectOption(5, 'c')">
+                        <input type="radio" name="q5" id="q5c" value="c">
+                        <label for="q5c">loop</label>
+                    </div>
+                    <div class="option" onclick="selectOption(5, 'd')">
+                        <input type="radio" name="q5" id="q5d" value="d">
+                        <label for="q5d">repeat</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(5, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+
+            <!-- Frage 6 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div class="question-text">Wann wird die Schleifenbedingung bei "for bedingung { }" geprüft?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(6, 'a')">
+                        <input type="radio" name="q6" id="q6a" value="a">
+                        <label for="q6a">Nur einmal am Anfang</label>
+                    </div>
+                    <div class="option" onclick="selectOption(6, 'b')">
+                        <input type="radio" name="q6" id="q6b" value="b">
+                        <label for="q6b">Nach jedem Durchlauf</label>
+                    </div>
+                    <div class="option" onclick="selectOption(6, 'c')">
+                        <input type="radio" name="q6" id="q6c" value="c">
+                        <label for="q6c">Vor jedem Durchlauf</label>
+                    </div>
+                    <div class="option" onclick="selectOption(6, 'd')">
+                        <input type="radio" name="q6" id="q6d" value="d">
+                        <label for="q6d">Am Ende der Schleife</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(6, 'c')">Antwort prüfen</button>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+
+            <!-- Frage 7 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div class="question-text">Was passiert, wenn die Bedingung vor dem ersten Durchlauf bereits false ist?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(7, 'a')">
+                        <input type="radio" name="q7" id="q7a" value="a">
+                        <label for="q7a">Der Rumpf wird einmal ausgeführt</label>
+                    </div>
+                    <div class="option" onclick="selectOption(7, 'b')">
+                        <input type="radio" name="q7" id="q7b" value="b">
+                        <label for="q7b">Der Rumpf wird komplett übersprungen</label>
+                    </div>
+                    <div class="option" onclick="selectOption(7, 'c')">
+                        <input type="radio" name="q7" id="q7c" value="c">
+                        <label for="q7c">Das Programm stürzt ab</label>
+                    </div>
+                    <div class="option" onclick="selectOption(7, 'd')">
+                        <input type="radio" name="q7" id="q7d" value="d">
+                        <label for="q7d">Es entsteht eine Endlosschleife</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(7, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+
+            <!-- Frage 8 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">8</div>
+                    <div class="question-text">Welcher Code ist idiomatisches Go?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(8, 'a')">
+                        <input type="radio" name="q8" id="q8a" value="a">
+                        <label for="q8a"><code>for (x > 0) { }</code></label>
+                    </div>
+                    <div class="option" onclick="selectOption(8, 'b')">
+                        <input type="radio" name="q8" id="q8b" value="b">
+                        <label for="q8b"><code>for x > 0 { }</code></label>
+                    </div>
+                    <div class="option" onclick="selectOption(8, 'c')">
+                        <input type="radio" name="q8" id="q8c" value="c">
+                        <label for="q8c"><code>while x > 0 { }</code></label>
+                    </div>
+                    <div class="option" onclick="selectOption(8, 'd')">
+                        <input type="radio" name="q8" id="q8d" value="d">
+                        <label for="q8d"><code>for [x > 0] { }</code></label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(8, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+
+            <!-- Frage 9 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">9</div>
+                    <div class="question-text">Wann sollte die for-Anweisung mit Bedingung verwendet werden?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(9, 'a')">
+                        <input type="radio" name="q9" id="q9a" value="a">
+                        <label for="q9a">Wenn die Anzahl der Durchläufe vor Eintritt bekannt ist</label>
+                    </div>
+                    <div class="option" onclick="selectOption(9, 'b')">
+                        <input type="radio" name="q9" id="q9b" value="b">
+                        <label for="q9b">Wenn die Anzahl der Durchläufe vor Eintritt nicht bekannt ist</label>
+                    </div>
+                    <div class="option" onclick="selectOption(9, 'c')">
+                        <input type="radio" name="q9" id="q9c" value="c">
+                        <label for="q9c">Nur bei ganzzahligen Variablen</label>
+                    </div>
+                    <div class="option" onclick="selectOption(9, 'd')">
+                        <input type="radio" name="q9" id="q9d" value="d">
+                        <label for="q9d">Nur bei Arrays</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(9, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+
+            <!-- Frage 10 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">10</div>
+                    <div class="question-text">Wie wird die for-Anweisung mit Bedingung in anderen Sprachen genannt?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(10, 'a')">
+                        <input type="radio" name="q10" id="q10a" value="a">
+                        <label for="q10a">do-while-Schleife</label>
+                    </div>
+                    <div class="option" onclick="selectOption(10, 'b')">
+                        <input type="radio" name="q10" id="q10b" value="b">
+                        <label for="q10b">while-Schleife</label>
+                    </div>
+                    <div class="option" onclick="selectOption(10, 'c')">
+                        <input type="radio" name="q10" id="q10c" value="c">
+                        <label for="q10c">repeat-until-Schleife</label>
+                    </div>
+                    <div class="option" onclick="selectOption(10, 'd')">
+                        <input type="radio" name="q10" id="q10d" value="d">
+                        <label for="q10d">foreach-Schleife</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(10, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback10"></div>
+            </div>
+
+            <!-- Frage 11 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">11</div>
+                    <div class="question-text">Gibt es in Go eine do-while-Schleife oder repeat-until-Schleife?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(11, 'a')">
+                        <input type="radio" name="q11" id="q11a" value="a">
+                        <label for="q11a">Ja, mit dem Schlüsselwort do</label>
+                    </div>
+                    <div class="option" onclick="selectOption(11, 'b')">
+                        <input type="radio" name="q11" id="q11b" value="b">
+                        <label for="q11b">Ja, mit dem Schlüsselwort repeat</label>
+                    </div>
+                    <div class="option" onclick="selectOption(11, 'c')">
+                        <input type="radio" name="q11" id="q11c" value="c">
+                        <label for="q11c">Nein, gibt es nicht in Go</label>
+                    </div>
+                    <div class="option" onclick="selectOption(11, 'd')">
+                        <input type="radio" name="q11" id="q11d" value="d">
+                        <label for="q11d">Ja, aber nur in älteren Go-Versionen</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(11, 'c')">Antwort prüfen</button>
+                <div class="feedback" id="feedback11"></div>
+            </div>
+
+            <!-- Frage 12 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">12</div>
+                    <div class="question-text">Wofür wird eine Flag-Variable verwendet?</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(12, 'a')">
+                        <input type="radio" name="q12" id="q12a" value="a">
+                        <label for="q12a">Um die Schleife zu beschleunigen</label>
+                    </div>
+                    <div class="option" onclick="selectOption(12, 'b')">
+                        <input type="radio" name="q12" id="q12b" value="b">
+                        <label for="q12b">Um mindestens einen Schleifendurchlauf zu erzwingen (wie do-while)</label>
+                    </div>
+                    <div class="option" onclick="selectOption(12, 'c')">
+                        <input type="radio" name="q12" id="q12c" value="c">
+                        <label for="q12c">Um Endlosschleifen zu vermeiden</label>
+                    </div>
+                    <div class="option" onclick="selectOption(12, 'd')">
+                        <input type="radio" name="q12" id="q12d" value="d">
+                        <label for="q12d">Um die Anzahl der Durchläufe zu zählen</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(12, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback12"></div>
+            </div>
+
+            <!-- Frage 13 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">13</div>
+                    <div class="question-text">Was gibt dieser Code aus?</div>
+                </div>
+                <div class="code-block"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">0</span>
+<span class="keyword">for</span> x > <span class="number">0</span> {
+    fmt.<span class="function">Println</span>(x)
+    x--
+}
+fmt.<span class="function">Println</span>(<span class="string">"Ende"</span>)</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(13, 'a')">
+                        <input type="radio" name="q13" id="q13a" value="a">
+                        <label for="q13a">0 und dann "Ende"</label>
+                    </div>
+                    <div class="option" onclick="selectOption(13, 'b')">
+                        <input type="radio" name="q13" id="q13b" value="b">
+                        <label for="q13b">Nur "Ende"</label>
+                    </div>
+                    <div class="option" onclick="selectOption(13, 'c')">
+                        <input type="radio" name="q13" id="q13c" value="c">
+                        <label for="q13c">Endlosschleife</label>
+                    </div>
+                    <div class="option" onclick="selectOption(13, 'd')">
+                        <input type="radio" name="q13" id="q13d" value="d">
+                        <label for="q13d">Fehler beim Kompilieren</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkAnswer(13, 'b')">Antwort prüfen</button>
+                <div class="feedback" id="feedback13"></div>
+            </div>
+
+            <!-- Frage 14 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">14</div>
+                    <div class="question-text">Welche Aussagen zu Code-Duplikation sind RICHTIG?</div>
+                </div>
+                <div class="multi-select-hint">
+                    ⚠️ Mehrfachauswahl: Diese Frage hat mehrere richtige Antworten!
+                </div>
+                <div class="options">
+                    <div class="option" onclick="toggleCheckbox('q14a')">
+                        <input type="checkbox" id="q14a" value="a">
+                        <label for="q14a">Code-Duplikation via Copy-Paste gilt als schlechter Stil</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q14b')">
+                        <input type="checkbox" id="q14b" value="b">
+                        <label for="q14b">Eine Flag-Variable ist besser als Code-Duplikation</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q14c')">
+                        <input type="checkbox" id="q14c" value="c">
+                        <label for="q14c">Code-Duplikation ist die empfohlene Methode für do-while in Go</label>
+                    </div>
+                    <div class="option" onclick="toggleCheckbox('q14d')">
+                        <input type="checkbox" id="q14d" value="d">
+                        <label for="q14d">Code sollte vor und in der Schleife dupliziert werden</label>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkMultiAnswer(14, ['a', 'b'])">Antwort prüfen</button>
+                <div class="feedback" id="feedback14"></div>
+            </div>
+
+            <!-- Ergebnis-Sektion -->
+            <div class="result-section" id="resultSection">
+                <h2>🎉 Quiz abgeschlossen!</h2>
+                <div class="score" id="finalScore">0/14</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="resultMessage"></p>
+                <button class="btn" onclick="resetQuiz()" style="background: white; color: #667eea; margin-top: 20px;">Nochmal versuchen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let answeredQuestions = new Set();
+
+        function selectOption(questionNum, option) {
+            const radio = document.getElementById(`q${questionNum}${option}`);
+            if (radio && radio.type === 'radio') {
+                radio.checked = true;
+            }
+        }
+
+        function toggleCheckbox(checkboxId) {
+            const checkbox = document.getElementById(checkboxId);
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+            }
+        }
+
+        function checkAnswer(questionNum, correctAnswer) {
+            const selectedOption = document.querySelector(`input[name="q${questionNum}"]:checked`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const options = document.querySelectorAll(`.question-card:nth-child(${questionNum + 1}) .option`);
+
+            if (!selectedOption) {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = '<strong>❌ Fehler:</strong> Bitte wähle eine Antwort aus!';
+                return;
+            }
+
+            if (answeredQuestions.has(questionNum)) {
+                return;
+            }
+
+            const userAnswer = selectedOption.value;
+            const isCorrect = userAnswer === correctAnswer;
+
+            options.forEach(option => {
+                const input = option.querySelector('input');
+                if (input.value === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (input.checked) {
+                    option.classList.add('incorrect');
+                }
+                input.disabled = true;
+            });
+
+            const button = feedback.previousElementSibling;
+            button.disabled = true;
+
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = getFeedbackText(questionNum, true);
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = getFeedbackText(questionNum, false);
+            }
+
+            answeredQuestions.add(questionNum);
+            
+            if (answeredQuestions.size === 14) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function checkMultiAnswer(questionNum, correctAnswers) {
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const checkboxes = document.querySelectorAll(`#q${questionNum}a, #q${questionNum}b, #q${questionNum}c, #q${questionNum}d`);
+            const options = document.querySelectorAll(`.question-card:nth-child(${questionNum + 1}) .option`);
+
+            if (answeredQuestions.has(questionNum)) {
+                return;
+            }
+
+            const selectedAnswers = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            if (selectedAnswers.length === 0) {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = '<strong>❌ Fehler:</strong> Bitte wähle mindestens eine Antwort aus!';
+                return;
+            }
+
+            const isCorrect = correctAnswers.length === selectedAnswers.length &&
+                              correctAnswers.every(ans => selectedAnswers.includes(ans));
+
+            options.forEach(option => {
+                const input = option.querySelector('input');
+                if (correctAnswers.includes(input.value)) {
+                    option.classList.add('correct');
+                } else if (input.checked) {
+                    option.classList.add('incorrect');
+                }
+                input.disabled = true;
+            });
+
+            const button = feedback.previousElementSibling;
+            button.disabled = true;
+
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = getFeedbackText(questionNum, true);
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = getFeedbackText(questionNum, false);
+            }
+
+            answeredQuestions.add(questionNum);
+
+            if (answeredQuestions.size === 14) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function getFeedbackText(questionNum, isCorrect) {
+            const feedbacks = {
+                1: {
+                    correct: '<strong>✅ Richtig!</strong> Die beiden Kernelemente sind: Schleifenbedingung (wann läuft die Schleife?) und Schleifenrumpf (was wird wiederholt?).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Die beiden Kernelemente einer Schleife sind Schleifenbedingung und Schleifenrumpf.'
+                },
+                2: {
+                    correct: '<strong>✅ Richtig!</strong> Ein Schleifendurchlauf ist die einmalige Ausführung aller Anweisungen im Schleifenrumpf.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Ein Schleifendurchlauf ist die einmalige Ausführung des Schleifenrumpfes.'
+                },
+                3: {
+                    correct: '<strong>✅ Richtig!</strong> Die Abbruchbedingung ist die Negation der Schleifenbedingung. Wenn sie erfüllt ist, bricht die Schleife ab.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Die Abbruchbedingung ist die Negation (das Gegenteil) der Schleifenbedingung.'
+                },
+                4: {
+                    correct: '<strong>✅ Richtig!</strong> Eine Endlosschleife entsteht, wenn die Abbruchbedingung nie erfüllt wird und die Schleife daher endlos läuft.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Eine Endlosschleife ist eine Schleife, deren Abbruchbedingung nie erfüllt wird.'
+                },
+                5: {
+                    correct: '<strong>✅ Richtig!</strong> In Go werden ALLE Schleifen mit dem Schlüsselwort <code>for</code> eingeleitet (kein while, do, repeat).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Go verwendet für alle Schleifenarten das Schlüsselwort <code>for</code>.'
+                },
+                6: {
+                    correct: '<strong>✅ Richtig!</strong> Die Schleifenbedingung wird VOR jedem Durchlauf geprüft (kopfgesteuerte Schleife).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Die Bedingung wird VOR jedem Schleifendurchlauf geprüft.'
+                },
+                7: {
+                    correct: '<strong>✅ Richtig!</strong> Wenn die Bedingung vor dem ersten Durchlauf false ist, wird der Schleifenrumpf komplett übersprungen (0 Durchläufe).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Bei false vor dem ersten Durchlauf wird der Rumpf komplett übersprungen.'
+                },
+                8: {
+                    correct: '<strong>✅ Richtig!</strong> In idiomatischem Go schreibt man keine Klammern um die Bedingung: <code>for x > 0 { }</code>',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Idiomatisches Go: <code>for x > 0 { }</code> ohne Klammern um die Bedingung.'
+                },
+                9: {
+                    correct: '<strong>✅ Richtig!</strong> for mit Bedingung wird verwendet, wenn die Anzahl der Durchläufe vor Eintritt nicht bekannt ist.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Diese Schleifenart verwendet man, wenn die Anzahl der Durchläufe NICHT bekannt ist.'
+                },
+                10: {
+                    correct: '<strong>✅ Richtig!</strong> In anderen Sprachen heißt diese Schleife while-Schleife (Java, C++, Python, etc.).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> In anderen Sprachen wird diese Schleifenart while-Schleife genannt.'
+                },
+                11: {
+                    correct: '<strong>✅ Richtig!</strong> Go hat keine do-while oder repeat-until. Alle Schleifen verwenden <code>for</code>.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Go hat KEINE do-while oder repeat-until-Schleife.'
+                },
+                12: {
+                    correct: '<strong>✅ Richtig!</strong> Eine Flag-Variable wird verwendet, um mindestens einen Durchlauf zu erzwingen (Alternative zu do-while).',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Flag-Variablen werden verwendet, um mindestens 1 Durchlauf zu erzwingen (do-while-Verhalten).'
+                },
+                13: {
+                    correct: '<strong>✅ Richtig!</strong> Da x=0 ist, ist die Bedingung x > 0 sofort false → Schleife wird übersprungen → nur "Ende" ausgegeben.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> x=0 → x > 0 ist false → Rumpf wird übersprungen → Ausgabe: nur "Ende"'
+                },
+                14: {
+                    correct: '<strong>✅ Richtig!</strong> Code-Duplikation gilt als schlechter Stil. Eine Flag-Variable ist die bessere Lösung.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Richtig sind: Code-Duplikation ist schlechter Stil, Flag-Variable ist besser.'
+                }
+            };
+
+            return feedbacks[questionNum][isCorrect ? 'correct' : 'incorrect'];
+        }
+
+        function showResults() {
+            const resultSection = document.getElementById('resultSection');
+            const finalScore = document.getElementById('finalScore');
+            const resultMessage = document.getElementById('resultMessage');
+            const progressFill = document.getElementById('progressFill');
+
+            const percentage = (score / 14) * 100;
+            
+            finalScore.textContent = `${score}/14 Punkten`;
+            progressFill.style.width = `${percentage}%`;
+
+            if (score === 14) {
+                resultMessage.innerHTML = '🏆 <strong>Perfekt!</strong> Du hast alle Fragen richtig beantwortet! Meisterhafte Kenntnis der Schleifen!';
+            } else if (score >= 12) {
+                resultMessage.innerHTML = '🌟 <strong>Sehr gut!</strong> Du hast das Konzept der for-Schleife sehr gut verstanden!';
+            } else if (score >= 10) {
+                resultMessage.innerHTML = '👍 <strong>Gut gemacht!</strong> Du hast ein solides Verständnis.';
+            } else if (score >= 7) {
+                resultMessage.innerHTML = '📚 <strong>Nicht schlecht!</strong> Mit etwas mehr Übung wirst du noch besser.';
+            } else {
+                resultMessage.innerHTML = '💪 <strong>Weiter üben!</strong> Schau dir die Veranschaulichungsseite nochmal an.';
+            }
+
+            resultSection.classList.add('show');
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            score = 0;
+            answeredQuestions.clear();
+
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                input.checked = false;
+                input.disabled = false;
+            });
+
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.classList.remove('show');
+            });
+
+            document.querySelectorAll('.btn').forEach(button => {
+                if (button.textContent.includes('prüfen')) {
+                    button.disabled = false;
+                }
+            });
+
+            document.getElementById('resultSection').classList.remove('show');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

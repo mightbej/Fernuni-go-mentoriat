@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>break-Anweisung zum Verlassen einer Schleife</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block code {
+            color: #f8f8f2;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .comparison-item h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .highlight-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .highlight-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #155724;
+        }
+        
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #0c5460;
+        }
+        
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #721c24;
+        }
+        
+        .flow-diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            color: #667eea;
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        
+        .flow-break {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 500px;
+            color: #721c24;
+            font-weight: bold;
+        }
+        
+        .interactive-demo {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .demo-controls label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .demo-controls input {
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 150px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .output-area {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            min-height: 100px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .best-practices {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .best-practices li {
+            padding: 15px;
+            margin: 10px 0;
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+            color: #155724;
+        }
+        
+        .best-practices li:before {
+            content: "✓ ";
+            font-weight: bold;
+            color: #28a745;
+            margin-right: 10px;
+        }
+        
+        .anti-patterns {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .anti-patterns li {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            border-radius: 5px;
+            color: #721c24;
+        }
+        
+        .anti-patterns li:before {
+            content: "✗ ";
+            font-weight: bold;
+            color: #dc3545;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-controls {
+                flex-direction: column;
+            }
+            
+            .demo-controls input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🛑 break-Anweisung</h1>
+        <p>Vorzeitiges Verlassen einer Schleife in Go</p>
+    </div>
+
+    <div class="container">
+        <!-- Einführung -->
+        <div class="section">
+            <h2>📚 Einführung</h2>
+            <p>Die <strong>break-Anweisung</strong> ermöglicht es, eine Schleife <strong>vorzeitig zu verlassen</strong>. Sie wird mit dem Schlüsselwort <code>break</code> aufgerufen und beendet die umschließende Schleife sofort.</p>
+            
+            <h3>Das Problem: Überlauf bei Fakultätsberechnung</h3>
+            <p>Betrachten wir ein praktisches Beispiel: Die Berechnung der Fakultät n! = 1 · 2 · 3 · ... · n</p>
+            
+            <div class="info-box">
+                <strong>💡 Problem:</strong> Die Fakultät wächst extrem schnell! Bereits bei n = 21 übersteigt das Ergebnis den maximalen Wert eines <code>int</code> in Go. Wir müssen die Berechnung abbrechen, bevor ein arithmetischer Überlauf auftritt.
+            </div>
+
+            <p><em>Quelle: Das Programm ist Listing 5.7 <code>for_klausel_fakultaet.go</code> aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.</em></p>
+
+            <div class="code-block"><code><span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string">"fmt"</span>
+    <span class="string">"math"</span>
+)
+
+<span class="keyword">func</span> <span class="function">main</span>() {
+    eingabe <span class="operator">:=</span> <span class="number">0</span>
+    überlauf <span class="operator">:=</span> <span class="keyword">false</span>
+
+    fmt.<span class="function">Println</span>(<span class="string">"Fakultät berechnen (natürliche Zahl eingeben):"</span>)
+    fmt.<span class="function">Scan</span>(<span class="operator">&amp;</span>eingabe)
+
+    <span class="keyword">if</span> eingabe <span class="operator">&lt;</span> <span class="number">0</span> {
+        fmt.<span class="function">Printf</span>(<span class="string">"Eingabe %v ist ungültig.\n"</span>, eingabe)
+    } <span class="keyword">else</span> {
+        fak <span class="operator">:=</span> <span class="number">1</span>
+        <span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> eingabe; i<span class="operator">++</span> {
+            <span class="comment">// Vorab prüfen, ob Multiplikation ohne Überlauf möglich ist</span>
+            <span class="keyword">if</span> math.MaxInt<span class="operator">/</span>fak <span class="operator">&gt;=</span> i {
+                fak <span class="operator">*=</span> i
+            } <span class="keyword">else</span> {
+                fmt.<span class="function">Printf</span>(<span class="string">"Achtung: %v * %v führt zu Überlauf: %v\n"</span>, fak, i, fak<span class="operator">*</span>i)
+                überlauf <span class="operator">=</span> <span class="keyword">true</span>
+                <span class="keyword">break</span> <span class="comment">// Schleife sofort verlassen</span>
+            }
+        }
+        <span class="keyword">if</span> überlauf {
+            fmt.<span class="function">Printf</span>(<span class="string">"Fakultät von %v ist zu groß.\n"</span>, eingabe)
+        } <span class="keyword">else</span> {
+            fmt.<span class="function">Printf</span>(<span class="string">"Fakultät von %v ist %v.\n"</span>, eingabe, fak)
+        }
+    }
+}</code></div>
+
+            <div class="success-box">
+                <strong>✓ Lösung:</strong> Wenn wir erkennen, dass die nächste Multiplikation zu einem Überlauf führen würde, setzen wir das Flag <code>überlauf = true</code> und verlassen die Schleife sofort mit <code>break</code>.
+            </div>
+        </div>
+
+        <!-- Was macht break? -->
+        <div class="section">
+            <h2>⚙️ Was macht die break-Anweisung?</h2>
+            
+            <div class="highlight-box">
+                <strong>📝 Definition:</strong> Die <code>break</code>-Anweisung bewirkt:
+                <ul style="margin-top: 10px;">
+                    <li>Der Schleifenrumpf wird <strong>unmittelbar verlassen</strong></li>
+                    <li>Die for-Anweisung wird <strong>sofort beendet</strong></li>
+                    <li>Eine ggf. vorhandene <strong>Post-Anweisung wird NICHT mehr ausgeführt</strong></li>
+                    <li>Die Programmausführung wird nach der Schleife fortgesetzt</li>
+                </ul>
+            </div>
+
+            <h3>Ablauf mit break</h3>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <strong>Schleifendurchlauf beginnt</strong><br>
+                    <code>for i := 1; i &lt;= n; i++ { ... }</code>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <strong>Code im Schleifenrumpf</strong><br>
+                    <small>Normale Anweisungen werden ausgeführt</small>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-break">
+                    <strong>🛑 break wird aufgerufen</strong><br>
+                    <code>break</code>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; max-width: 500px; margin: 10px auto; color: #856404;">
+                    <strong>⚠️ Post-Anweisung wird ÜBERSPRUNGEN</strong><br>
+                    <small>i++ wird NICHT ausgeführt!</small>
+                </div>
+                
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <strong>Schleife beendet</strong><br>
+                    <small>Fortsetzung nach der for-Anweisung</small>
+                </div>
+            </div>
+
+            <h3>Wo ist break erlaubt?</h3>
+            <div class="info-box">
+                <strong>✓ break ist nur erlaubt innerhalb von:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>for-Anweisungen</strong> (alle Varianten) - verlässt die Schleife</li>
+                    <li><strong>switch-Anweisungen</strong> - verlässt den switch-Block</li>
+                </ul>
+            </div>
+
+            <div class="error-box">
+                <strong>✗ break außerhalb einer Schleife/switch ist ein Fehler:</strong>
+                <div class="code-block" style="margin-top: 10px;"><code><span class="keyword">func</span> <span class="function">main</span>() {
+    x <span class="operator">:=</span> <span class="number">5</span>
+    <span class="keyword">if</span> x <span class="operator">&gt;</span> <span class="number">0</span> {
+        <span class="keyword">break</span> <span class="comment">// ❌ FEHLER: break außerhalb Schleife/switch!</span>
+    }
+}</code></div>
+            </div>
+        </div>
+
+        <!-- Überlauf-Erkennung -->
+        <div class="section">
+            <h2>🔍 Überlauf-Erkennung im Detail</h2>
+            <p>Wie prüfen wir, ob eine Multiplikation zu einem Überlauf führt?</p>
+            
+            <h3>Die Prüfung: math.MaxInt/fak >= i</h3>
+            <div class="code-block"><code><span class="keyword">if</span> math.MaxInt<span class="operator">/</span>fak <span class="operator">&gt;=</span> i {
+    fak <span class="operator">*=</span> i  <span class="comment">// Sicher - kein Überlauf</span>
+} <span class="keyword">else</span> {
+    <span class="comment">// Überlauf würde auftreten!</span>
+    überlauf <span class="operator">=</span> <span class="keyword">true</span>
+    <span class="keyword">break</span>
+}</code></div>
+
+            <div class="highlight-box">
+                <strong>🧮 Mathematische Begründung:</strong><br>
+                Wenn <code>math.MaxInt / fak >= i</code>, dann gilt:<br>
+                <code>fak * i &lt;= math.MaxInt</code><br><br>
+                Das bedeutet: Die Multiplikation <code>fak * i</code> kann sicher durchgeführt werden, ohne den maximal darstellbaren Wert zu überschreiten.
+            </div>
+
+            <h3>Beispiel: Fakultät von 21</h3>
+            <div class="info-box">
+                <strong>Schritt-für-Schritt:</strong><br>
+                • 20! = 2.432.902.008.176.640.000 (passt noch in int)<br>
+                • Nächster Schritt: 20! × 21<br>
+                • Prüfung: math.MaxInt / 2.432.902.008.176.640.000 = 3<br>
+                • Da 3 &lt; 21, würde die Multiplikation zu Überlauf führen!<br>
+                • → break wird ausgeführt, Schleife endet
+            </div>
+        </div>
+
+        <!-- Flag-Variable -->
+        <div class="section">
+            <h2>🚩 Flag-Variable für Schleifenstatus</h2>
+            <p>Um nach der Schleife zu wissen, <strong>warum</strong> sie beendet wurde, verwenden wir eine <strong>Flag-Variable</strong>.</p>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>Ohne Flag - unklar</h4>
+                    <div class="code-block"><code><span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> n; i<span class="operator">++</span> {
+    <span class="keyword">if</span> problem {
+        <span class="keyword">break</span>
+    }
+}
+<span class="comment">// War die Schleife erfolgreich?</span>
+<span class="comment">// Wurde sie mit break beendet?</span>
+<span class="comment">// → Keine Ahnung! ❌</span></code></div>
+                </div>
+                
+                <div class="comparison-item">
+                    <h4>Mit Flag - eindeutig</h4>
+                    <div class="code-block"><code>überlauf <span class="operator">:=</span> <span class="keyword">false</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> n; i<span class="operator">++</span> {
+    <span class="keyword">if</span> problem {
+        überlauf <span class="operator">=</span> <span class="keyword">true</span>
+        <span class="keyword">break</span>
+    }
+}
+<span class="keyword">if</span> überlauf {
+    <span class="comment">// break wurde aufgerufen ✓</span>
+}</code></div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✓ Pattern:</strong>
+                <ol style="margin-top: 10px;">
+                    <li>Flag mit <code>false</code> initialisieren</li>
+                    <li>Bei Abbruchgrund Flag auf <code>true</code> setzen</li>
+                    <li><code>break</code> aufrufen</li>
+                    <li>Nach der Schleife Flag prüfen</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Alternative ohne break -->
+        <div class="section">
+            <h2>🔄 Bessere Alternative: Flag in Schleifenbedingung</h2>
+            <p>In vielen Fällen lässt sich <code>break</code> vermeiden, indem man das Flag direkt in die Schleifenbedingung einbaut.</p>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>Mit break</h4>
+                    <div class="code-block"><code>überlauf <span class="operator">:=</span> <span class="keyword">false</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> eingabe; i<span class="operator">++</span> {
+    <span class="keyword">if</span> math.MaxInt<span class="operator">/</span>fak <span class="operator">&gt;=</span> i {
+        fak <span class="operator">*=</span> i
+    } <span class="keyword">else</span> {
+        überlauf <span class="operator">=</span> <span class="keyword">true</span>
+        <span class="keyword">break</span>
+    }
+}</code></div>
+                    <p style="margin-top: 10px; color: #856404;">⚠️ break unterwandert die Schleifenbedingung</p>
+                </div>
+                
+                <div class="comparison-item">
+                    <h4>Mit Flag in Bedingung (besser!)</h4>
+                    <div class="code-block"><code>überlauf <span class="operator">:=</span> <span class="keyword">false</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">1</span>; i <span class="operator">&lt;=</span> eingabe <span class="operator">&amp;&amp;</span> <span class="operator">!</span>überlauf; i<span class="operator">++</span> {
+    <span class="keyword">if</span> math.MaxInt<span class="operator">/</span>fak <span class="operator">&gt;=</span> i {
+        fak <span class="operator">*=</span> i
+    } <span class="keyword">else</span> {
+        überlauf <span class="operator">=</span> <span class="keyword">true</span>
+    }
+}</code></div>
+                    <p style="margin-top: 10px; color: #155724;">✓ Bedingung kontrolliert vollständig das Schleifenende</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✓ Vorteil der Flag-Lösung:</strong><br>
+                Die Schleifenbedingung <code>i &lt;= eingabe &amp;&amp; !überlauf</code> zeigt auf einen Blick, unter welchen Bedingungen die Schleife weiterläuft. Es gibt keine versteckten Abbrüche durch <code>break</code>.
+            </div>
+        </div>
+
+        <!-- Wann break verwenden? -->
+        <div class="section" style="border-left-color: #ffc107;">
+            <h2>⚖️ Wann sollte man break verwenden?</h2>
+            
+            <h3>❌ break ist häufig kein guter Stil</h3>
+            <div class="warning-box">
+                <strong>⚠️ Probleme mit break:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Unterwandert die Schleifenbedingung:</strong> Die Bedingung allein sagt nicht mehr aus, wann die Schleife endet</li>
+                    <li><strong>Schwerer nachvollziehbar:</strong> Man muss den gesamten Schleifenrumpf lesen, um alle Abbruchbedingungen zu finden</li>
+                    <li><strong>Versteckte Logik:</strong> Ein <code>break</code> kann irgendwo im Code stehen und wird leicht übersehen</li>
+                    <li><strong>Erschwert Wartung:</strong> Bei Änderungen muss man alle <code>break</code>-Stellen berücksichtigen</li>
+                </ul>
+            </div>
+
+            <h3>✓ Legitime Anwendungsfälle für break</h3>
+            <div class="success-box">
+                <strong>break ist akzeptabel, wenn:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Komplexe Schleifenrümpfe:</strong> Nach dem Abbruchgrund folgen noch viele Codezeilen, die übersprungen werden sollen</li>
+                    <li><strong>Mehrere Flag-Variablen nötig:</strong> Die Alternative ohne break würde zu noch unübersichtlicherem Code führen</li>
+                    <li><strong>Pragmatische Lösung:</strong> break ist die einfachste und klarste Lösung für das Problem</li>
+                    <li><strong>Mit Kommentar:</strong> Ein expliziter Hinweis am Schleifenanfang erklärt die Verwendung</li>
+                </ul>
+            </div>
+
+            <h3>Beispiel: Suche in Array</h3>
+            <div class="code-block"><code><span class="comment">// Schleife wird mit break beendet, wenn Element gefunden wurde</span>
+gefunden <span class="operator">:=</span> <span class="keyword">false</span>
+<span class="keyword">for</span> i <span class="operator">:=</span> <span class="number">0</span>; i <span class="operator">&lt;</span> <span class="function">len</span>(array); i<span class="operator">++</span> {
+    <span class="keyword">if</span> array[i] <span class="operator">==</span> suchWert {
+        gefunden <span class="operator">=</span> <span class="keyword">true</span>
+        position <span class="operator">=</span> i
+        <span class="keyword">break</span> <span class="comment">// Gefunden - keine weiteren Durchläufe nötig</span>
+    }
+}</code></div>
+
+            <div class="info-box">
+                <strong>💡 Hier ist break legitim:</strong> Sobald das gesuchte Element gefunden wurde, sind weitere Durchläufe sinnlos. Ein <code>break</code> ist hier die pragmatischste Lösung.
+            </div>
+        </div>
+
+        <!-- Interaktive Demo -->
+        <div class="section">
+            <h2>🎮 Interaktive Demo: Fakultät mit Überlauf-Prüfung</h2>
+            
+            <div class="interactive-demo">
+                <h3>Fakultätsberechnung mit break</h3>
+                <div class="demo-controls">
+                    <label>
+                        Zahl (n):
+                        <input type="number" id="fakultaetInput" value="10" min="0" max="30">
+                    </label>
+                </div>
+                <button onclick="berechneF akultaet()">🔢 Fakultät berechnen</button>
+                
+                <h4 style="margin-top: 20px;">Schritte der Berechnung:</h4>
+                <div id="output" class="output-area">Klicke auf "Fakultät berechnen"...</div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="section">
+            <h2>✅ Best Practices</h2>
+            <ul class="best-practices">
+                <li><strong>Vermeide break wenn möglich</strong> - nutze stattdessen Flag-Variablen in der Schleifenbedingung</li>
+                <li><strong>Verwende aussagekräftige Flag-Namen</strong> wie <code>überlauf</code>, <code>gefunden</code>, <code>fehler</code></li>
+                <li><strong>Dokumentiere break-Verwendung</strong> mit einem Kommentar am Schleifenanfang</li>
+                <li><strong>Setze Flag vor break</strong> um nach der Schleife den Grund zu kennen</li>
+                <li><strong>Prüfe Alternativen</strong> bevor du break einsetzt</li>
+                <li><strong>Bei legitimen Gründen</strong> ist break erlaubt - wähle die klarste Lösung</li>
+            </ul>
+
+            <h3>❌ Anti-Patterns</h3>
+            <ul class="anti-patterns">
+                <li><strong>Mehrere break in einer Schleife</strong> macht den Code sehr unübersichtlich</li>
+                <li><strong>break ohne Flag-Variable</strong> wenn der Grund später wichtig ist</li>
+                <li><strong>break in verschachtelten Schleifen</strong> ohne klare Dokumentation</li>
+                <li><strong>break als Ersatz für richtige Bedingungen</strong> ist fauler Stil</li>
+            </ul>
+        </div>
+
+        <!-- Zusammenfassung -->
+        <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">📋 Zusammenfassung</h2>
+            <ul style="line-height: 2; font-size: 1.1em;">
+                <li>✓ <code style="background: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: 3px;">break</code> verlässt die umschließende Schleife sofort</li>
+                <li>✓ Die <strong>Post-Anweisung wird NICHT mehr ausgeführt</strong> nach break</li>
+                <li>✓ <strong>Flag-Variablen</strong> informieren über den Grund des Schleifenendes</li>
+                <li>✓ <strong>Besser:</strong> Flag in Schleifenbedingung einbauen statt break</li>
+                <li>✓ break ist nur in <strong>Schleifen und switch</strong> erlaubt</li>
+                <li>✓ break <strong>unterwandert die Schleifenbedingung</strong> - vermeiden wenn möglich</li>
+                <li>✓ Bei <strong>komplexen Situationen</strong> kann break pragmatisch sein</li>
+                <li>✓ <strong>Dokumentiere</strong> die Verwendung von break mit Kommentaren</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function berechneFakultaet() {
+            const n = parseInt(document.getElementById('fakultaetInput').value);
+            const output = document.getElementById('output');
+            
+            if (isNaN(n) || n < 0) {
+                output.textContent = 'Fehler: Bitte eine natürliche Zahl (>= 0) eingeben!';
+                return;
+            }
+            
+            let result = 'Berechnung der Fakultät von ' + n + ':\n\n';
+            
+            if (n === 0) {
+                result += '0! = 1 (per Definition)\n';
+                result += '\nSchleife wurde nicht betreten (da i = 1 > 0)';
+                output.textContent = result;
+                return;
+            }
+            
+            const maxInt = 9223372036854775807; // math.MaxInt für 64-bit
+            let fak = 1;
+            let ueberlauf = false;
+            
+            for (let i = 1; i <= n; i++) {
+                result += 'Durchlauf ' + i + ':\n';
+                result += '  Aktueller Wert: fak = ' + fak + '\n';
+                result += '  Prüfung: maxInt / ' + fak + ' = ' + Math.floor(maxInt / fak) + '\n';
+                result += '  Ist ' + Math.floor(maxInt / fak) + ' >= ' + i + '? ';
+                
+                if (maxInt / fak >= i) {
+                    result += 'JA ✓\n';
+                    fak *= i;
+                    result += '  Berechne: fak = fak * ' + i + ' = ' + fak + '\n\n';
+                } else {
+                    result += 'NEIN ✗\n';
+                    result += '  ⚠️ Überlauf würde auftreten!\n';
+                    result += '  Achtung: ' + fak + ' * ' + i + ' = ' + (fak * i) + ' (Überlauf!)\n';
+                    result += '  Flag überlauf = true\n';
+                    result += '  🛑 break - Schleife wird sofort verlassen\n\n';
+                    ueberlauf = true;
+                    break;
+                }
+            }
+            
+            result += '=== Schleife beendet ===\n\n';
+            
+            if (ueberlauf) {
+                result += 'Ergebnis: Fakultät von ' + n + ' ist zu groß für int.\n';
+                result += '(Flag überlauf ist true)';
+            } else {
+                result += 'Ergebnis: ' + n + '! = ' + fak + '\n';
+                result += '(Schleife wurde regulär beendet, Flag überlauf ist false)';
+            }
+            
+            output.textContent = result;
+        }
+    </script>
+</body>
+</html>

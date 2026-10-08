@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das Kopier-Problem visualisiert</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #7f1d1d;
+        }
+
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong { color: #7b1fa2; }
+
+        .memory-diagram {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .memory-block {
+            display: inline-block;
+            background: #e3f2fd;
+            border: 2px solid #667eea;
+            padding: 12px 16px;
+            margin: 8px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .memory-block.original {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+        }
+
+        .memory-block.copy {
+            background: #ffccbc;
+            border-color: #d84315;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+
+        .cost-table {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        ul, ol { margin-left: 20px; line-height: 1.8; }
+        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        p { line-height: 1.6; margin: 10px 0; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-button:hover { transform: translateY(-2px); }
+        .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+
+        .visual-flow {
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .lesson-links {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            padding: 10px 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        .lesson-links a {
+            color: #ffffff;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Das Kopier-Problem visualisiert</h1>
+            <div class="subtitle">Warum call-by-value bei großen Arrays ineffizient ist</div>
+            <div class="lesson-links">
+                <strong>Lernpfad:</strong>
+                <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+                <a href="161_go_k7_bubblesort_mit_zeigern.html">Bubble mit Zeigern</a>
+                <a href="162_go_k7_selectionsort_mit_funktionen.html">Selection mit Funktionen</a>
+                <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+                <a href="164_go_k7_bubblesort_rekursiv.html">Bubble rekursiv</a>
+                <a href="169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html">Gesamtübersicht</a>
+                <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1 Das Problem</div>
+            <div class="tab" onclick="showStep(2)">2 Warum Kopieren teuer ist</div>
+            <div class="tab" onclick="showStep(3)">3 Einfaches Beispiel</div>
+            <div class="tab" onclick="showStep(4)">4 Speicher-Diagramm</div>
+            <div class="tab" onclick="showStep(5)">5 Größe des Arrays</div>
+            <div class="tab" onclick="showStep(6)">6 Praxisbeispiel</div>
+            <div class="tab" onclick="showStep(7)">7 Die Verschwendung</div>
+            <div class="tab" onclick="showStep(8)">8 Lösung: Zeiger</div>
+        </div>
+
+        <div class="content-area">
+            <div class="step-content active" id="step-1">
+                <h3>Das Kernproblem: Zwei teure Kopieroperationen</h3>
+                <p>Wenn wir ein Array an eine Funktion übergeben, geschehen zwei vollständige Kopieroperationen:</p>
+
+                <div class="visual-flow">
+                    <strong>Kopiervorgang 1: main() → swap()</strong>
+                    <div class="memory-block original">
+                        [42, 7, 19, 88, 3, 25, 71, 14, 60, 9]
+                    </div>
+                    <div class="arrow">↓ Komplette Kopie ↓</div>
+                    <div class="memory-block copy">
+                        [42, 7, 19, 88, 3, 25, 71, 14, 60, 9] (in swap)
+                    </div>
+                </div>
+
+                <p style="margin-top: 15px;"><strong>In der Funktion:</strong> Nur zwei Elemente ändern!</p>
+
+                <div class="visual-flow">
+                    <strong>Kopiervorgang 2: swap() → main() (Rückgabe)</strong>
+                    <div class="memory-block copy">
+                        [7, 42, 19, 88, 3, 25, 71, 14, 60, 9] (verändert)
+                    </div>
+                    <div class="arrow">↓ Komplette Kopie zurück ↓</div>
+                    <div class="memory-block original">
+                        [7, 42, 19, 88, 3, 25, 71, 14, 60, 9] (in main)
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>Das Unbehagen:</strong> Wir kopieren das gesamte Array zweimal – aber verändern nur 2 Positionen. Das ist nicht nur verschwendet – das ist sehr teuer!
+                </div>
+
+                <div class="info-box">
+                    <strong>Warum ist Kopieren überhaupt teuer?</strong> Das ist die wichtigere Frage. Wir werden gleich sehen.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>Zurück</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-2">
+                <h3>Warum ist Kopieren so teuer?</h3>
+                <p>Es geht nicht nur um "Bytes zählen". Kopieren ist fundamental teuer wegen mehrerer Gründe:</p>
+
+                <h4 style="margin-top: 20px; color: #667eea;">1. Der Prozessor ist viel schneller als der Speicher</h4>
+                <div class="info-box">
+                    <strong>Asymmetrie:</strong>
+                    <ul>
+                        <li><strong>Prozessor-Geschwindigkeit:</strong> ~3-4 GHz (3-4 Milliarden Operationen/Sekunde)</li>
+                        <li><strong>RAM-Zugriffszeit:</strong> ~100-200 Nanosekunden</li>
+                        <li><strong>Faktor:</strong> Der Prozessor ist ca. <strong>100-1000x schneller</strong> als RAM!</li>
+                    </ul>
+                </div>
+                <p>Das bedeutet: Jedes Mal, wenn der Prozessor Daten aus dem RAM kopieren muss, wartet er. Der schnelle Chip sitzt "untätig" und wartet auf den langsamen Speicher.</p>
+
+                <h4 style="margin-top: 20px; color: #667eea;">2. Das Betriebssystem muss Speicher verwalten</h4>
+                <div class="requirement">
+                    <strong>Speicher-Allokation:</strong>
+                    <ul>
+                        <li>Das OS muss <strong>freien Speicher suchen</strong> für die neue Kopie</li>
+                        <li>Das OS muss diesen Speicher <strong>reservieren und markieren</strong></li>
+                        <li>Viele <strong>Speicher-Management-Operationen</strong> sind nötig (Fragmentierung, Bookkeeping)</li>
+                        <li>Diese Operationen sind <strong>teuer</strong> und verursachen viele RAM-Zugriffe</li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 20px; color: #667eea;">3. Kontext-Wechsel und Betriebssystem-Overhead</h4>
+                <div class="warning-box">
+                    <strong>Was während einer Kopieroperation passiert:</strong>
+                    <ul>
+                        <li>Der Prozessor arbeitet mit Speicher-Lese- und Schreib-Operationen</li>
+                        <li>Das OS kann einen <strong>Kontext-Switch</strong> auslösen (Prozess-Wechsel)</li>
+                        <li>Der Prozessor muss seinen aktuellen Zustand speichern und einen anderen Prozess laden</li>
+                        <li>Das ist extrem teuer: CPU-Caches werden geleert, Speicher-Zuordnungen ändern sich</li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 20px; color: #667eea;">4. Cache-Misses und Memory Stalls</h4>
+                <div class="info-box">
+                    <strong>CPU-Caches:</strong>
+                    <ul>
+                        <li>Der Prozessor hat kleine, schnelle Caches (L1, L2, L3) für häufig verwendete Daten</li>
+                        <li>Wenn Daten nicht im Cache sind → <strong>Cache-Miss</strong></li>
+                        <li>Der Prozessor muss auf den RAM warten → <strong>Memory Stall</strong></li>
+                        <li>Während dieser Zeit macht der Prozessor <strong>nichts</strong> (CPU-Wartezyklen)</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Zusammenfassung: Warum Kopieren so teuer ist</strong>
+                    <ul>
+                        <li>Viele RAM-Zugriffe (teuer wegen Speicher-Latenz)</li>
+                        <li>Speicher-Management durch das OS (teuer)</li>
+                        <li>Mögliche Kontext-Switches (sehr teuer)</li>
+                        <li>Cache-Misses und CPU-Stalls (teuer)</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-weight: 600; color: #7b1fa2;">Das alles addiert sich: <strong>Der Prozessor sitzt wartend herum!</strong></p>
+                    <p style="margin-top: 10px; padding: 12px; background: #fff3cd; border-radius: 5px; border-left: 3px solid #d39e00;">
+                        <strong>Praktische Konsequenz:</strong> Ein schlecht programmierter Sortieralgorithmus kann durch unnötige Kopieren um den Faktor <strong>100-1000x langsamer</strong> sein. Ein Problem, das bei effizienter Programmierung <strong>4 Sekunden</strong> dauert, braucht dann <strong>etwa 1 Stunde</strong>!
+                    </p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Einfaches Beispiel: swap() aufgerufen</h3>
+                <p>Hier ist die ganze Aktion Schritt für Schritt:</p>
+
+                <div class="code-block">func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]  // Nur 2 Elemente ändern
+    return a
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+    a = swap(a, 0, 1)  // Tausche Positionen 0 und 1
+}</div>
+
+                <div class="visual-flow">
+                    <strong>Schritt 1: Aufruf</strong>
+                    <p><code>swap(a, 0, 1)</code></p>
+                    <p>→ Das ganze Array wird zur Funktion kopiert</p>
+                    <br>
+                    <strong>Schritt 2: Änderung in der Funktion</strong>
+                    <p>Nur <code>a[0]</code> und <code>a[1]</code> werden getauscht</p>
+                    <br>
+                    <strong>Schritt 3: Rückgabe</strong>
+                    <p>Das ganze Array wird zurück kopiert</p>
+                    <br>
+                    <strong>Schritt 4: Zuweisung in main()</strong>
+                    <p><code>a = ...</code> speichert die Kopie</p>
+                </div>
+
+                <div class="requirement">
+                    <strong>Bilanz:</strong> Für einen Tausch von 2 Elementen haben wir das Array zweimal vollständig kopiert!
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Speicher-Diagramm: Was passiert im RAM</h3>
+                <p>So sieht es aus, wenn wir swap() aufrufen:</p>
+
+                <div class="memory-diagram">
+                    <strong>MAIN():</strong>
+                    <div class="memory-block original">a = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9]</div>
+                    <p style="margin: 15px 0;">↓ Aufruf: swap(a, 0, 1)</p>
+
+                    <strong>SWAP() - PARAMETER</strong>
+                    <p>(10 Bytes kopieren)</p>
+                    <div class="memory-block copy">a (Kopie) = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9]</div>
+                    <p style="margin: 15px 0;">Ändere a[0] und a[1]:</p>
+                    <div class="memory-block copy">a = [7, 42, 19, 88, 3, 25, 71, 14, 60, 9]</div>
+                    <p style="margin: 15px 0;">↓ return (10 Bytes kopieren)</p>
+
+                    <strong>MAIN() - NACH RÜCKGABE:</strong>
+                    <div class="memory-block original">a = [7, 42, 19, 88, 3, 25, 71, 14, 60, 9]</div>
+                </div>
+
+                <div class="tip">
+                    <strong>Beobachtung:</strong> Die Kopie in swap() existiert nur für einen Moment. Danach wird sie gelöscht. Reine Verschwendung!
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-4">
+                <h3>Wie schlecht ist es? Größe des Arrays</h3>
+                <p>Der Kopier-Aufwand ist proportional zur Array-Größe.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Array-Größe</th>
+                            <th>Speicher pro Element</th>
+                            <th>Beim Aufruf kopiert</th>
+                            <th>Bei Rückgabe kopiert</th>
+                            <th>Gesamt für einen Tausch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>[10]int</td>
+                            <td>8 Byte</td>
+                            <td>80 Byte</td>
+                            <td>80 Byte</td>
+                            <td>160 Byte</td>
+                        </tr>
+                        <tr>
+                            <td>[100]int</td>
+                            <td>8 Byte</td>
+                            <td>800 Byte</td>
+                            <td>800 Byte</td>
+                            <td>1.600 Byte</td>
+                        </tr>
+                        <tr>
+                            <td>[1000]int</td>
+                            <td>8 Byte</td>
+                            <td>8 KB</td>
+                            <td>8 KB</td>
+                            <td>16 KB</td>
+                        </tr>
+                        <tr>
+                            <td>[1.000.000]int</td>
+                            <td>8 Byte</td>
+                            <td>8 MB</td>
+                            <td>8 MB</td>
+                            <td><strong>16 MB</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>Realisierung:</strong> Bei einem Array mit einer Million Elementen kopieren wir 16 MB Speicher – nur um zwei Elemente zu tauschen!
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-5">
+                <h3>Praxisbeispiel: Selection Sort mit 100 Elementen</h3>
+                <p>Selection Sort macht etwa 99 Tausche (einen pro Runde). Jeder Tausch kopiert das komplette Array:</p>
+
+                <div class="cost-table">
+                    <strong>Szenario:</strong> Array mit 100 Elementen
+                    <ul>
+                        <li><strong>Größe eines Elements:</strong> 8 Byte (int64)</li>
+                        <li><strong>Größe des Arrays:</strong> 100 × 8 = 800 Byte</li>
+                        <li><strong>Tausche beim Sortieren:</strong> ≈ 99</li>
+                        <li><strong>Pro Tausch:</strong> 800 Byte hin + 800 Byte zurück = 1.600 Byte</li>
+                        <li><strong>Gesamt für Sortieren:</strong> 99 × 1.600 = <strong>158.400 Byte = 155 KB</strong></li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <strong>Frage:</strong> Aber was ändert sich wirklich?
+                    <ul>
+                        <li>Pro Tausch: 2 Elemente (16 Byte) werden getauscht</li>
+                        <li>Kopier-Overhead: 1.600 Byte</li>
+                        <li>Verbreiteter Faktor: <strong>100:1</strong></li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-6">
+                <h3>Die Bilanz: Der Overhead wächst mit O(n²)</h3>
+                <p>Das Problem wird noch schlimmer: Der Kopier-Overhead ist nicht konstant – er wächst quadratisch mit der Array-Größe!</p>
+
+                <h4 style="margin-top: 20px; color: #667eea;">Analyse für Selection Sort</h4>
+                <div class="info-box">
+                    <strong>Die mathematische Realität:</strong>
+                    <ul>
+                        <li><strong>Algorithmus selbst:</strong> O(n²) – das ist unvermeidbar</li>
+                        <li><strong>Pro Tausch:</strong> Array wird 2× kopiert = 2×O(n)</li>
+                        <li><strong>Anzahl der Tausche:</strong> ~n Tausche</li>
+                        <li><strong>Gesamt-Kopier-Overhead:</strong> n × 2×O(n) = <strong>O(n²)</strong></li>
+                    </ul>
+                    <p style="margin-top: 15px; font-weight: 600;">Erkenntnis: Der Kopier-Overhead ist genauso teuer wie der Algorithmus selbst!</p>
+                </div>
+
+                <h4 style="margin-top: 20px; color: #667eea;">Konkrete Zahlen für Selection Sort</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Array-Größe (n)</th>
+                            <th>Algorithmus-Operationen</th>
+                            <th>Kopier-Overhead</th>
+                            <th>Verhältnis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>100 Elemente</td>
+                            <td>~10.000 Vergleiche</td>
+                            <td>~200 Array-Kopien (je 800 Byte)</td>
+                            <td>1:1 – Kopieren ist genauso teuer!</td>
+                        </tr>
+                        <tr>
+                            <td>1.000 Elemente</td>
+                            <td>~1.000.000 Vergleiche</td>
+                            <td>~2.000 Array-Kopien (je 8 KB)</td>
+                            <td>1:1 – Immer noch genauso teuer!</td>
+                        </tr>
+                        <tr>
+                            <td>10.000 Elemente</td>
+                            <td>~100.000.000 Vergleiche</td>
+                            <td>~20.000 Array-Kopien (je 80 KB)</td>
+                            <td>1:1 – Das Kopieren dominiert!</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>Wichtigste Erkenntnis:</strong>
+                    <p>Der Kopier-Overhead ist nicht einfach ein konstanter Faktor – er wächst <strong>O(n²)</strong> zusammen mit dem Algorithmus!</p>
+                    <p style="margin-top: 10px;">Das bedeutet: Bei großen Arrays wird die Hälfte (oder mehr!) der Rechenzeit für unnötige Kopieroperationen verschwendet.</p>
+                    <p style="margin-top: 10px; font-weight: 600;">Praktisch: Ein Problem, das 1 Stunde dauert, könnte in wenigen Minuten gelöst sein – nur durch effiziente Programmierung ohne extra Kopien!</p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-7">
+                <h3>Die Lösung: Zeiger statt call-by-value</h3>
+                <p>Mit Zeiger-Parametern übergeben wir nicht das Array, sondern nur die Speicher-Adresse. Das ist fundamental effizienter!</p>
+
+                <h4 style="margin-top: 20px; color: #667eea;">Vergleich: call-by-value vs. call-by-reference</h4>
+                <div class="visual-flow">
+                    <strong>Call-by-value (ALT):</strong>
+                    <div class="memory-block copy">
+                        Ganzes Array kopiert (z.B. 100 Elemente = 800 Byte)
+                    </div>
+                    <p style="margin: 15px 0;">× 2 (hin und zurück)</p>
+                    <p style="font-weight: 600; color: #d84315;">= 1.600 Byte pro Tausch!</p>
+                    <br>
+                    <strong>Call-by-reference mit Zeiger (NEU):</strong>
+                    <div class="memory-block original">
+                        Nur Adresse übergeben (8 Byte)
+                    </div>
+                    <p style="margin: 15px 0;">× 2 (hin und zurück)</p>
+                    <p style="font-weight: 600; color: #2e7d32;">= 16 Byte pro Tausch!</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Die Einsparung für ein Array mit 100 Elementen:</strong>
+                    <ul>
+                        <li>call-by-value: 1.600 Byte pro Tausch</li>
+                        <li>call-by-reference: 16 Byte pro Tausch</li>
+                        <li><strong>Faktor: 100× weniger Speicher-Traffic!</strong></li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 20px; color: #667eea;">Der Code-Unterschied</h4>
+                <div class="code-block">// ALT: call-by-value
+func swap(a [100]int, i int, j int) [100]int {
+    a[i], a[j] = a[j], a[i]
+    return a  // Ganzes Array zurück!
+}
+
+// NEU: call-by-reference mit Zeiger
+func swap(a *[100]int, i int, j int) {
+    a[i], a[j] = a[j], a[i]
+    // Nichts zurück, Original wird direkt verändert
+}</div>
+
+                <div class="requirement">
+                    <strong>Was ändert sich:</strong>
+                    <ul>
+                        <li>Parameter: <code>*[100]int</code> statt <code>[100]int</code></li>
+                        <li>Kein <code>return</code> mehr – die Funktion ändert das Original direkt</li>
+                        <li>Aufruf: <code>swap(&a, i, j)</code> statt <code>a = swap(a, i, j)</code></li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 20px; color: #667eea;">Asymptotischer Gewinn</h4>
+                <div class="warning-box">
+                    <strong>Rechenzeit für Selection Sort mit Zeigern:</strong>
+                    <ul>
+                        <li><strong>Ohne Zeiger (call-by-value):</strong> Algorithmus O(n²) + Kopier-Overhead O(n²) = zusammen <strong>O(n²) mit großem Faktor</strong></li>
+                        <li><strong>Mit Zeiger (call-by-reference):</strong> Algorithmus O(n²) + Kopier-Overhead <strong>O(1)</strong> (nur Adressen!) = zusammen <strong>O(n²) mit kleinerem Faktor</strong></li>
+                    </ul>
+                    <p style="margin-top: 15px; font-weight: 600;">Der O(n²) Faktor halbiert sich oder wird noch viel besser!</p>
+                </div>
+
+                <div class="tip">
+                    <strong>Die große Erkenntnis:</strong> Zeiger-Parameter sind nicht nur eine Optimierung – sie sind eine fundamentale Programmier-Technik. Sie trennen:
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Logik</strong> (was der Algorithmus tut)</li>
+                        <li><strong>Speicher-Effizienz</strong> (wie der Code implementiert ist)</li>
+                    </ul>
+                    Mit dieser Trennung können Funktionen eleganter, klarer und 100-1000x schneller sein!
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurück</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-8">
+                <h3>Die Lösung: Zeiger statt call-by-value</h3>
+                <p>Mit Zeiger-Parametern übergeben wir nicht das Array, sondern die Adresse.</p>
+
+                <div class="visual-flow">
+                    <strong>Call-by-value:</strong>
+                    <div class="memory-block copy">
+                        Ganzes Array kopiert (z.B. 100 Elemente = 800 Byte)
+                    </div>
+                    <br>
+                    <strong>Call-by-reference mit Zeiger:</strong>
+                    <div class="memory-block original">
+                        Nur Adresse übergeben (8 Byte)
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Vergleich für Array mit 100 Elementen:</strong>
+                    <ul>
+                        <li><strong>Call-by-value:</strong> 800 Byte pro Tausch → O(n²) Gesamtaufwand</li>
+                        <li><strong>Call-by-reference:</strong> 8 Byte pro Tausch → O(1) konstanter Aufwand</li>
+                        <li><strong>Konsequenz:</strong> Der Speicher-Overhead wächst nicht mehr mit der Array-Größe – er bleibt konstant!</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">// ALT: call-by-value
+func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]
+    return a  // Ganzes Array zurück
+}
+
+// NEU: call-by-reference mit Zeiger
+func swap(a *[10]int, i int, j int) {
+    a[i], a[j] = a[j], a[i]
+    // Nichts zurück, Original wird direkt verändert
+}</div>
+
+                <div class="tip">
+                    <strong>Die große Erkenntnis:</strong> Zeiger erlauben es, Funktionen auf das Original zugreifen zu lassen, ohne es zu kopieren. Das ist nicht nur schneller – es ist fundamental effizienter!
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurück</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            tabs[stepNumber - 1].classList.add('active');
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

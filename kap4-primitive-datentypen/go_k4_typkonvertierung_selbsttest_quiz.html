@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selbsttest: Typkonvertierung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #f59e0b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .section h3 {
+            color: #d97706;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: #e5e7eb;
+            color: #1f2937;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #f59e0b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #d1d5db;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c715 0%, #fbbf2415 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #f59e0b;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .interactive-area {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+
+        button {
+            background: #f59e0b;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px 10px 0;
+        }
+
+        button:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .result.success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .result.info {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .result.warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .result.error {
+            background: #fee2e2;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .code-block {
+            background: #1f2937;
+            white-space: pre;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+        .code-block .function { color: #61afef; }
+        .code-block .number { color: #d19a66; }
+        .code-block .type { color: #e5c07b; }
+
+        .conversion-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .conversion-box {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .conversion-box.int {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .conversion-box.float {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .conversion-arrow {
+            font-size: 2em;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .type-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .value-display {
+            font-size: 1.5em;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .comparison-item.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .comparison-item.incorrect {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f59e0b;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .quiz-container {
+            margin-top: 30px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-question h4 {
+            color: #f59e0b;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #f3f4f6;
+            border-color: #f59e0b;
+        }
+
+        .quiz-option.selected {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .quiz-option.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .example-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .step-by-step {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .step {
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 Selbsttest: Typkonvertierung</h1>
+            <p>10 Fragen mit je vier Antworten. Kurstext v3.0.6, Abschnitt 4.7, Seiten 109–111.</p>
+        </div>
+
+        <div class="content">
+            <p style="margin-bottom: 30px;">Die Erklärungen zu den Fragen stehen auf der Seite <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung erklärt</a>.</p>
+
+            <!-- Quiz -->
+            <div class="section">
+                <h2>🎯 Quiz: Typkonvertierung</h2>
+                
+                <div class="quiz-container">
+                    <!-- Frage 1 -->
+                    <div class="quiz-question">
+                        <h4>Frage 1: Was ist das Ergebnis von <code>int(3.9)</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(1, 0)">
+                                <strong>A)</strong> 3
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 1)">
+                                <strong>B)</strong> 4
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 2)">
+                                <strong>C)</strong> 3.9
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(1, 3)">
+                                <strong>D)</strong> Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-1" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 2 -->
+                    <div class="quiz-question">
+                        <h4>Frage 2: Welcher Code ist NICHT erlaubt?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(2, 0)">
+                                <strong>A)</strong> <code>var i int = 5.0</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 1)">
+                                <strong>B)</strong> <code>var i int = 2.5 * 2.4</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 2)">
+                                <strong>C)</strong> <code>var a int = 5; var f float64 = a</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(2, 3)">
+                                <strong>D)</strong> <code>var g float64 = 9</code>
+                            </div>
+                        </div>
+                        <div id="feedback-2" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 3 -->
+                    <div class="quiz-question">
+                        <h4>Frage 3: Was ist das Ergebnis von <code>15 / 2</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(3, 0)">
+                                <strong>A)</strong> 7.5
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 1)">
+                                <strong>B)</strong> 7
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 2)">
+                                <strong>C)</strong> 8
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(3, 3)">
+                                <strong>D)</strong> Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-3" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 4 -->
+                    <div class="quiz-question">
+                        <h4>Frage 4: Was ist das Ergebnis von <code>15.0 / 2</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(4, 0)">
+                                <strong>A)</strong> 7.5
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 1)">
+                                <strong>B)</strong> 7
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 2)">
+                                <strong>C)</strong> 7.0
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(4, 3)">
+                                <strong>D)</strong> Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-4" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 5 -->
+                    <div class="quiz-question">
+                        <h4>Frage 5: Gegeben: <code>var a int = 25; var b int = 10</code><br>
+                        Welcher Ausdruck liefert 2.5?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(5, 0)">
+                                <strong>A)</strong> <code>a / b</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 1)">
+                                <strong>B)</strong> <code>float64(a / b)</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 2)">
+                                <strong>C)</strong> <code>float64(a) / float64(b)</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(5, 3)">
+                                <strong>D)</strong> Alle drei
+                            </div>
+                        </div>
+                        <div id="feedback-5" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 6 -->
+                    <div class="quiz-question">
+                        <h4>Frage 6: Was bewirkt <code>int(f)</code> wenn <code>f</code> vom Typ <code>float64</code> ist?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(6, 0)">
+                                <strong>A)</strong> Rundet auf die nächste Ganzzahl
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 1)">
+                                <strong>B)</strong> Schneidet Nachkommastellen ab
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 2)">
+                                <strong>C)</strong> Ändert den Typ der Variable f
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(6, 3)">
+                                <strong>D)</strong> Verursacht Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-6" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 7 -->
+                    <div class="quiz-question">
+                        <h4>Frage 7: Was ist das Ergebnis von <code>int(-2.8)</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(7, 0)">
+                                <strong>A)</strong> -2
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 1)">
+                                <strong>B)</strong> -3
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 2)">
+                                <strong>C)</strong> 2
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(7, 3)">
+                                <strong>D)</strong> 3
+                            </div>
+                        </div>
+                        <div id="feedback-7" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 8 -->
+                    <div class="quiz-question">
+                        <h4>Frage 8: Gegeben: <code>var a int = 5; var f float64 = 1.5</code><br>
+                        Welcher Ausdruck ist NICHT erlaubt?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(8, 0)">
+                                <strong>A)</strong> <code>f * float64(a)</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 1)">
+                                <strong>B)</strong> <code>int(f) * a</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 2)">
+                                <strong>C)</strong> <code>f * a</code>
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(8, 3)">
+                                <strong>D)</strong> <code>0.5 * a</code>
+                            </div>
+                        </div>
+                        <div id="feedback-8" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 9 -->
+                    <div class="quiz-question">
+                        <h4>Frage 9: Was ist das Ergebnis von <code>7 / 10</code>?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(9, 0)">
+                                <strong>A)</strong> 0
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 1)">
+                                <strong>B)</strong> 0.7
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 2)">
+                                <strong>C)</strong> 1
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(9, 3)">
+                                <strong>D)</strong> Compiler-Fehler
+                            </div>
+                        </div>
+                        <div id="feedback-9" class="quiz-feedback"></div>
+                    </div>
+
+                    <!-- Frage 10 -->
+                    <div class="quiz-question">
+                        <h4>Frage 10: Ist eine Typkonvertierung eine Anweisung?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectQuizOption(10, 0)">
+                                <strong>A)</strong> Ja, sie führt Code aus
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 1)">
+                                <strong>B)</strong> Nein, sie ist ein Ausdruck
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 2)">
+                                <strong>C)</strong> Kommt auf den Kontext an
+                            </div>
+                            <div class="quiz-option" onclick="selectQuizOption(10, 3)">
+                                <strong>D)</strong> Nur bei int→float64
+                            </div>
+                        </div>
+                        <div id="feedback-10" class="quiz-feedback"></div>
+                    </div>
+
+                    <button onclick="submitQuiz()" style="background: #10b981; font-size: 1.2em; padding: 15px 40px;">
+                        Quiz auswerten
+                    </button>
+                    
+                    <div id="quiz-score" class="quiz-score"></div>
+                </div>
+            </div>
+
+            <a href="go_k4_quiz_hub.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
+        </div>
+    </div>
+
+    <script>
+        // Quiz-System
+        const quizAnswers = {
+            1: 0,   // A) 3 (Nachkommastellen abschneiden)
+            2: 2,   // C) var f = a (Variablen nicht implizit)
+            3: 1,   // B) 7 (ganzzahlige Division)
+            4: 0,   // A) 7.5 (2 wird zu 2.0)
+            5: 2,   // C) float64(a) / float64(b)
+            6: 1,   // B) Schneidet ab
+            7: 0,   // A) -2
+            8: 2,   // C) f * a (Variablen nicht implizit)
+            9: 0,   // A) 0
+            10: 1   // B) Nein, Ausdruck
+        };
+
+        const quizExplanations = {
+            1: '✅ Richtig! Bei float→int werden Nachkommastellen abgeschnitten, nicht gerundet. 3.9 → 3',
+            2: '✅ Richtig! Variablen werden NIEMALS implizit konvertiert. Es muss float64(a) verwendet werden.',
+            3: '✅ Richtig! 15 / 2 ist eine ganzzahlige Division, Ergebnis: 7 (7.5 abgeschnitten).',
+            4: '✅ Richtig! 15.0 ist float64, daher wird 2 implizit zu 2.0 konvertiert. Ergebnis: 7.5',
+            5: '✅ Richtig! Beide Operanden müssen konvertiert werden. float64(a/b) würde zuerst ganzzahlig dividieren!',
+            6: '✅ Richtig! Nachkommastellen werden abgeschnitten, nicht gerundet. Die Variable bleibt unverändert.',
+            7: '✅ Richtig! Nachkommastellen werden abgeschnitten: -2.8 → -2 (nicht -3!).',
+            8: '✅ Richtig! f * a ist nicht erlaubt, da Variablen niemals implizit konvertiert werden.',
+            9: '✅ Richtig! 7 / 10 = 0 (ganzzahlige Division, 0.7 wird zu 0 abgeschnitten).',
+            10: '✅ Richtig! Eine Typkonvertierung ist ein Ausdruck, keine Anweisung.'
+        };
+
+        const selectedAnswers = {};
+
+        function selectQuizOption(question, option) {
+            const options = document.querySelectorAll(`.quiz-question:nth-of-type(${question}) .quiz-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[option].classList.add('selected');
+            selectedAnswers[question] = option;
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            const total = Object.keys(quizAnswers).length;
+            
+            for (let q = 1; q <= total; q++) {
+                const userAnswer = selectedAnswers[q];
+                const correctAnswer = quizAnswers[q];
+                const feedback = document.getElementById(`feedback-${q}`);
+                const options = document.querySelectorAll(`.quiz-question:nth-of-type(${q}) .quiz-option`);
+                
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    if (idx === correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (idx === userAnswer && idx !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (userAnswer === correctAnswer) {
+                    correct++;
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#d1fae5';
+                    feedback.style.border = '2px solid #10b981';
+                    feedback.style.color = '#065f46';
+                    feedback.innerHTML = quizExplanations[q];
+                } else if (userAnswer !== undefined) {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fee2e2';
+                    feedback.style.border = '2px solid #ef4444';
+                    feedback.style.color = '#991b1b';
+                    feedback.innerHTML = '❌ Falsch. ' + quizExplanations[q];
+                } else {
+                    feedback.className = 'quiz-feedback show';
+                    feedback.style.background = '#fef3c7';
+                    feedback.style.border = '2px solid #f59e0b';
+                    feedback.style.color = '#92400e';
+                    feedback.innerHTML = '⚠️ Keine Antwort gewählt. ' + quizExplanations[q];
+                }
+            }
+            
+            const percentage = (correct / total * 100).toFixed(0);
+            const scoreDiv = document.getElementById('quiz-score');
+            let grade = '';
+            if (percentage >= 90) grade = '🏆 Ausgezeichnet!';
+            else if (percentage >= 75) grade = '🌟 Sehr gut!';
+            else if (percentage >= 60) grade = '✅ Gut!';
+            else if (percentage >= 50) grade = '📖 Noch etwas üben!';
+            else grade = '💪 Weiter lernen!';
+            
+            scoreDiv.className = 'quiz-score show';
+            scoreDiv.innerHTML = `
+                <div style="font-size: 2em; margin-bottom: 15px;">${grade}</div>
+                <div style="font-size: 1.5em;">${correct} von ${total} Fragen richtig</div>
+                <div style="font-size: 1.2em; margin-top: 10px;">${percentage}%</div>
+            `;
+            
+            scoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

@@ -24,7 +24,15 @@ KAPITEL = [
     ("exkurse", "Exkurse", "Themen neben dem Kurstext"),
 ]
 
-GRUPPEN = ["Übersicht", "Erklärseiten", "Quiz"]
+GRUPPEN = ["Übersicht", "Erklärseiten", "Quiz", "Exkurse"]
+
+# Seiten, die über den Kurstext hinausgehen. Sie stehen im Kapitel, zu dem sie passen.
+EXKURSE = {
+    "156_go_k5_zahlenraten_programmieruebung.html",
+    "exkurs_von_problem_zu_code.html",
+    "157_go_k6_BubbleSort.html",
+    "159_go_k6_SelectionSort.html",
+}
 
 
 def titel(pfad):
@@ -35,6 +43,8 @@ def titel(pfad):
 
 
 def gruppe(datei):
+    if datei in EXKURSE:
+        return "Exkurse"
     if "quiz_hub" in datei or "quiz_startseite" in datei:
         return "Übersicht"
     if datei.endswith("_quiz.html"):

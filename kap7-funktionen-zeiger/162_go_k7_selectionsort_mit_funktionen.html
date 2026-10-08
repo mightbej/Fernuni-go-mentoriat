@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmierübung: Selection Sort mit Funktionen</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+        .cross-link {
+            background: #e8eaf6;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .lesson-links {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(102, 126, 234, 0.25);
+        }
+
+        .lesson-links a {
+            color: #3949ab;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong { color: #7b1fa2; }
+
+        .concepts-used {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .concepts-used h4 { margin-bottom: 10px; color: #2e7d32; }
+
+        .concepts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .concept-tag {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #4caf50;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+
+        ul, ol { margin-left: 20px; line-height: 1.8; }
+        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        p { line-height: 1.6; margin: 10px 0; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-button:hover { transform: translateY(-2px); }
+        .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Selection Sort mit Funktionen</h1>
+            <div class="subtitle">Vom vollständigen Algorithmus in main() zur funktionalen Zerlegung</div>
+            <div class="cross-link">
+                Ein zweiter klassischer Sortieralgorithmus: Wir zerlegen Selection Sort in Teilaufgaben – Minimum finden und Tauschen.
+                <div class="lesson-links">
+                    <strong>Lernpfad:</strong>
+                    <a href="150_go_k7_das_kopier_problem.html">Kopierproblem</a>
+                    <a href="160_go_k7_bubblesort_mit_funktionen.html">Bubble mit Funktionen</a>
+                    <a href="161_go_k7_bubblesort_mit_zeigern.html">Bubble mit Zeigern</a>
+                    <a href="163_go_k7_selectionsort_mit_zeigern.html">Selection mit Zeigern</a>
+                    <a href="164_go_k7_bubblesort_rekursiv.html">Bubble rekursiv</a>
+                    <a href="169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html">Gesamtübersicht</a>
+                    <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1 Ausgangspunkt</div>
+            <div class="tab" onclick="showStep(2)">2 Wiederholung</div>
+            <div class="tab" onclick="showStep(3)">3 Algo verstehen</div>
+            <div class="tab" onclick="showStep(4)">4 Minimum-Funktion</div>
+            <div class="tab" onclick="showStep(5)">5 Tauschfunktion</div>
+            <div class="tab" onclick="showStep(6)">6 Refactoring</div>
+            <div class="tab" onclick="showStep(7)">7 Signaturen</div>
+            <div class="tab" onclick="showStep(8)">8 Vollständiger Code</div>
+            <div class="tab" onclick="showStep(9)">9 Meta</div>
+        </div>
+
+        <div class="content-area">
+            <div class="step-content active" id="step-1">
+                <h3>Ausgangspunkt: Selection Sort aus dem vorigen Kapitel</h3>
+                <p>Das ist der Code aus Selection Sort (ohne Funktionen). Jetzt zerlegen wir ihn in benannte Funktionen:</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    for pos := 0; pos < len(a)-1; pos++ {
+        min := pos
+
+        for i := pos + 1; i < len(a); i++ {
+            if a[i] < a[min] {
+                min = i
+            }
+        }
+
+        if min != pos {
+            a[pos], a[min] = a[min], a[pos]
+        }
+
+        fmt.Printf("Nach Runde %d: %v\n", pos+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="info-box">
+                    <strong>Neues Ziel:</strong> Wir verändern den Algorithmus nicht. Wir zerlegen ihn nur in benannte Teilaufgaben, genau wie bei Bubble Sort.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>Zurück</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-2">
+                <h3>Wiederholung: Was ist eine Funktion?</h3>
+                <p>Eine Funktion ist ein benannter Programmbaustein. Sie kann Werte übernehmen, etwas berechnen oder ausführen und optional Werte zurückgeben.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Bestandteil</th>
+                            <th>Beispiel</th>
+                            <th>Bedeutung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Funktionsname</td>
+                            <td><code>findMin</code></td>
+                            <td>Benannter Teilschritt des Programms</td>
+                        </tr>
+                        <tr>
+                            <td>Parameter</td>
+                            <td><code>a [10]int, start int</code></td>
+                            <td>Werte, die die Funktion beim Aufruf bekommt</td>
+                        </tr>
+                        <tr>
+                            <td>Rückgabetyp</td>
+                            <td><code>int</code></td>
+                            <td>Typ des Ergebnisses</td>
+                        </tr>
+                        <tr>
+                            <td>return</td>
+                            <td><code>return minIdx</code></td>
+                            <td>liefert das Ergebnis zurück</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="requirement">
+                    <strong>Wichtig:</strong> In diesem Block geht es um Funktionen. Zeiger und Rekursion folgen später.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Selection Sort verstehen: Die innere Schleife</h3>
+                <p>Der Kern von Selection Sort ist: Finde das Minimum-Element ab einer Position (in unserem Code: ab Position <code>pos</code>).</p>
+
+                <div class="code-block">min := pos
+
+for i := pos + 1; i < len(a); i++ {
+    if a[i] < a[min] {
+        min = i
+    }
+}
+// min zeigt jetzt auf das kleinste Element von pos bis zum Ende</div>
+
+                <div class="info-box">
+                    <strong>Dieser Ablauf wiederholt sich:</strong> Die innere Schleife durchsucht den unsortierten Teil und findet das Minimum-Index. Das ist perfekt für eine Funktion.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-4">
+                <h3>Erste Auslagerung: Minimum-Funktion</h3>
+                <p>Wir lagern die Suche nach dem Minimum aus:</p>
+
+                <div class="code-block">func findMin(a [10]int, pos int) int {
+    min := pos
+    for i := pos + 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+    return min
+}</div>
+
+                <div class="concepts-used">
+                    <h4>Was wird hier wiederholt?</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Parameter</div>
+                        <div class="concept-tag">Rückgabewert</div>
+                        <div class="concept-tag">int</div>
+                        <div class="concept-tag">Schleifen in Funktionen</div>
+                    </div>
+                </div>
+
+                <p>Diese Funktion gibt den Index des kleinsten Elements zurück, ab einer Start-Position:</p>
+
+                <div class="code-block">min := findMin(a, pos)</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-5">
+                <h3>Zweite Auslagerung: Tauschfunktion</h3>
+                <p>Das Tauschen zweier Elemente ist auch wiederverwendbar.</p>
+
+                <div class="code-block">a[pos], a[min] = a[min], a[pos]</div>
+
+                <p>Da Arrays in Go als Wert übergeben werden, gibt die Funktion das geänderte Array zurück.</p>
+
+                <div class="code-block">func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]
+    return a
+}</div>
+
+                <div class="requirement">
+                    <strong>Didaktischer Punkt:</strong> Diese Funktion hat zwei Indizes. Sie tauscht zwei beliebige Positionen, nicht nur benachbarte.
+                </div>
+
+                <div class="code-block">a = swap(a, pos, min)</div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-6">
+                <h3>Refactoring: Selection Sort liest sich jetzt klarer</h3>
+                <p>Die Sortierlogik mit Funktionen wird deutlich verständlicher:</p>
+
+                <h3>Vorher</h3>
+                <div class="code-block">min := pos
+for i := pos + 1; i < len(a); i++ {
+    if a[i] < a[min] {
+        min = i
+    }
+}
+a[pos], a[min] = a[min], a[pos]</div>
+
+                <h3>Nachher</h3>
+                <div class="code-block">min := findMin(a, pos)
+a = swap(a, pos, min)</div>
+
+                <div class="info-box">
+                    <strong>Interpretation:</strong> Finde das Minimum ab Position pos, dann tausche es mit Position pos.
+                </div>
+
+                <div class="tip">
+                    <strong>Wichtig:</strong> Der Code ist jetzt viel prägnanter. Wer Selection Sort nicht kennt, versteht die Absicht sofort.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-7">
+                <h3>Signaturen am Selection-Sort-Beispiel</h3>
+                <p>Die Signatur beschreibt, welche Typen eine Funktion als Eingabe bekommt und welche Typen sie zurückliefert.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Funktion</th>
+                            <th>Signatur vereinfacht gelesen</th>
+                            <th>Bedeutung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>findMin(a [10]int, start int) int</code></td>
+                            <td><code>[10]int, int → int</code></td>
+                            <td>Array und Start-Index hinein, Index des Minimums heraus</td>
+                        </tr>
+                        <tr>
+                            <td><code>swap(a [10]int, i int, j int) [10]int</code></td>
+                            <td><code>[10]int, int, int → [10]int</code></td>
+                            <td>Array und zwei Indizes hinein, geändertes Array heraus</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="concepts-used">
+                    <h4>Damit werden Begriffe konkret</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Parameterliste</div>
+                        <div class="concept-tag">Mehrere Parameter</div>
+                        <div class="concept-tag">Rückgabetyp</div>
+                        <div class="concept-tag">Signatur</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(8)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-8">
+                <h3>Vollständiger Code: Selection Sort mit Funktionen</h3>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func findMin(a [10]int, pos int) int {
+    min := pos
+    for i := pos + 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+    return min
+}
+
+func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]
+    return a
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    for pos := 0; pos < len(a)-1; pos++ {
+        min := findMin(a, pos)
+        a = swap(a, pos, min)
+
+        fmt.Printf("Nach Runde %d: %v\n", pos+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="tip">
+                    <strong>Vergleich zu Bubble Sort:</strong> Selection Sort hat eine andere Struktur: statt mehrfach zu vergleichen, suchen wir gezielt das Minimum. Mit Funktionen wird dieser unterschiedliche Algorithmus genauso deutlich wie Bubble Sort.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(7)">Zurück</button>
+                    <button class="nav-button" onclick="showStep(9)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-9">
+                <h3>Meta-Seite: Was haben wir gelernt?</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Thema</th>
+                            <th>Erkenntnis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Funktionen</td>
+                            <td>Sie zerlegen komplexe Algorithmen in verständliche Teile.</td>
+                        </tr>
+                        <tr>
+                            <td>Parameter</td>
+                            <td>Eine Funktion kann mehrere Parameter haben (wie <code>findMin</code> und <code>swap</code>).</td>
+                        </tr>
+                        <tr>
+                            <td>Rückgabewerte</td>
+                            <td>Rückgabewerte können verschiedene Typen sein: int, Array, bool.</td>
+                        </tr>
+                        <tr>
+                            <td>Schleifen in Funktionen</td>
+                            <td>Funktionen können Schleifen enthalten und komplexe Logik kapseln.</td>
+                        </tr>
+                        <tr>
+                            <td>Vergleich Bubble vs. Selection</td>
+                            <td>Verschiedene Algorithmen haben verschiedene Struktur – mit Funktionen wird das sichtbar.</td>
+                        </tr>
+                        <tr>
+                            <td>Grenze dieser Lösung</td>
+                            <td>Auch hier müssen Arrays kopiert und zurückgegeben werden.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="concepts-used">
+                    <h4>Brücke zum nächsten Block</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Das Kopier-Problem verstehen</div>
+                        <div class="concept-tag">Selection Sort mit Zeigern</div>
+                    </div>
+                </div>
+
+                <div class="cross-link" style="margin-top: 15px;">
+                    Nächste Schritte: Erst verstehen wir das Kopier-Problem genauer (warum Arrays ständig kopiert werden). Dann wenden wir Zeiger-Parameter auf Selection Sort an.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(8)">Zurück</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            tabs[stepNumber - 1].classList.add('active');
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

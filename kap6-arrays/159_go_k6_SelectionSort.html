@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmieruebung: Selection Sort mit Arrays und Indizes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        .header .subtitle { font-size: 0.95em; opacity: 0.92; }
+
+        .cross-link {
+            background: #e8eaf6;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            padding: 10px 20px;
+            gap: 5px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .content-area { flex: 1; overflow-y: auto; padding: 30px; }
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .requirement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .warning {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #7f1d1d;
+        }
+
+        .tip {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong { color: #7b1fa2; }
+
+        .concepts-used {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .concepts-used h4 { margin-bottom: 10px; color: #2e7d32; }
+
+        .concepts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .concept-tag {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #4caf50;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+        ul, ol { margin-left: 20px; line-height: 1.8; }
+        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        code { font-family: Consolas, 'Courier New', monospace; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-button:hover { transform: translateY(-2px); }
+        .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Selection Sort mit Arrays und Indizes</h1>
+            <div class="subtitle">Vom Nachbartausch zur gezielten Suche nach dem kleinsten Element</div>
+            <div class="cross-link">
+                Voraussetzung: Arrays, Indizes, for-Schleifen, if-Anweisungen und Mehrfachzuweisung. Keine Funktionen, keine Slices, keine Rekursion.
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showStep(1)">1 Einordnung</div>
+            <div class="tab" onclick="showStep(2)">2 Idee</div>
+            <div class="tab" onclick="showStep(3)">3 Minimum suchen</div>
+            <div class="tab" onclick="showStep(4)">4 Ein Tausch</div>
+            <div class="tab" onclick="showStep(5)">5 Mehrere Runden</div>
+            <div class="tab" onclick="showStep(6)">6 Vollstaendiger Code</div>
+            <div class="tab" onclick="showStep(7)">7 Vergleich</div>
+            <div class="tab" onclick="showStep(8)">8 Metainformation</div>
+        </div>
+
+        <div class="content-area">
+            <div class="step-content active" id="step-1">
+                <h3>Einordnung: Bubble Sort und Selection Sort</h3>
+                <p>Bubble Sort und Selection Sort verwenden dieselben Grundmittel: Array, Indizes, Schleifen, Vergleiche und Tauschen.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Bubble Sort</th>
+                            <th>Selection Sort</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vergleicht benachbarte Werte: <code>a[i]</code> und <code>a[i+1]</code></td>
+                            <td>Sucht im Rest des Arrays den kleinsten Wert</td>
+                        </tr>
+                        <tr>
+                            <td>Viele kleine Tausche innerhalb einer Runde</td>
+                            <td>Hoestens ein gezielter Tausch pro Runde</td>
+                        </tr>
+                        <tr>
+                            <td>Der groesste Wert wandert nach rechts</td>
+                            <td>Der kleinste Wert wird nach links gestellt</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <strong>Didaktischer Zweck:</strong> Selection Sort zeigt eine neue Denkfigur: Nicht sofort tauschen, sondern zuerst den besten Kandidaten suchen und danach gezielt platzieren.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" disabled>Zurueck</button>
+                    <button class="nav-button" onclick="showStep(2)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-2">
+                <h3>Grundidee von Selection Sort</h3>
+                <p>Das Array wird von links nach rechts aufgebaut. Links entsteht der sortierte Bereich, rechts bleibt der noch unsortierte Bereich.</p>
+
+                <div class="requirement">
+                    <strong>Prinzip pro Runde:</strong>
+                    <ol>
+                        <li>Waehle eine Position <code>pos</code>.</li>
+                        <li>Suche im Bereich von <code>pos</code> bis zum Ende das kleinste Element.</li>
+                        <li>Tausche dieses kleinste Element nach <code>pos</code>.</li>
+                    </ol>
+                </div>
+
+                <div class="code-block">Start:     [42 7 19 88 3 25 71 14 60 9]
+Runde 1:   kleinster Wert ist 3  -> nach Position 0
+Ergebnis:  [3 7 19 88 42 25 71 14 60 9]
+
+Runde 2:   kleinster Wert im Rest ist 7 -> bleibt auf Position 1
+Ergebnis:  [3 7 19 88 42 25 71 14 60 9]</div>
+
+                <div class="concepts-used">
+                    <h4>Neue Begriffe</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">pos = Zielposition</div>
+                        <div class="concept-tag">min = Index des Minimums</div>
+                        <div class="concept-tag">unsortierter Rest</div>
+                        <div class="concept-tag">gezielter Tausch</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(1)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(3)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-3">
+                <h3>Stufe 1: Minimum im Array suchen</h3>
+                <p>Zuerst suchen wir nur den Index des kleinsten Werts im gesamten Array.</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    min := 0
+
+    for i := 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+
+    fmt.Println("Array:", a)
+    fmt.Println("Index des kleinsten Werts:", min)
+    fmt.Println("Kleinster Wert:", a[min])
+}</div>
+
+                <div class="info-box">
+                    <strong>Wichtig:</strong> <code>min</code> speichert nicht den kleinsten Wert selbst, sondern den Index, an dem der kleinste Wert steht.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(2)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(4)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-4">
+                <h3>Stufe 2: Kleinsten Wert nach vorne tauschen</h3>
+                <p>Nach der Suche wird das gefundene Minimum an die erste Position getauscht.</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    pos := 0
+    min := pos
+
+    for i := pos + 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+
+    a[pos], a[min] = a[min], a[pos]
+
+    fmt.Println("Nach einem gezielten Tausch:", a)
+}</div>
+
+                <div class="tip">
+                    <strong>Merksatz:</strong> Erst suchen, dann tauschen. Selection Sort trennt Entscheidung und Aktion.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(3)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(5)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-5">
+                <h3>Stufe 3: Mehrere Runden sichtbar machen</h3>
+                <p>Jetzt wiederholen wir dieselbe Logik fuer jede Zielposition. Nach jeder Runde wird der linke Bereich groesser.</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    // Runde 1: kleinsten Wert nach Position 0
+    pos := 0
+    min := pos
+    for i := pos + 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+    a[pos], a[min] = a[min], a[pos]
+    fmt.Println("Nach Runde 1:", a)
+
+    // Runde 2: kleinsten Wert im Rest nach Position 1
+    pos = 1
+    min = pos
+    for i := pos + 1; i < len(a); i++ {
+        if a[i] < a[min] {
+            min = i
+        }
+    }
+    a[pos], a[min] = a[min], a[pos]
+    fmt.Println("Nach Runde 2:", a)
+}</div>
+
+                <div class="info-box">
+                    <strong>Beobachtung:</strong> Die Runden sind fast identisch. Nur <code>pos</code> aendert sich. Genau daraus entsteht die aeussere Schleife.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(4)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(6)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-6">
+                <h3>Vollstaendiger Code: Selection Sort</h3>
+                <p>Die aeussere Schleife legt die Zielposition fest. Die innere Schleife sucht das Minimum im noch unsortierten Rest.</p>
+
+                <div class="code-block">package main
+
+import "fmt"
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+
+    fmt.Println("Start:", a)
+
+    for pos := 0; pos < len(a)-1; pos++ {
+        min := pos
+
+        for i := pos + 1; i < len(a); i++ {
+            if a[i] < a[min] {
+                min = i
+            }
+        }
+
+        if min != pos {
+            a[pos], a[min] = a[min], a[pos]
+        }
+
+        fmt.Printf("Nach Runde %d: %v\n", pos+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</div>
+
+                <div class="concepts-used">
+                    <h4>Verwendete Konzepte</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Array [10]int</div>
+                        <div class="concept-tag">Indexzugriff a[i]</div>
+                        <div class="concept-tag">geschachtelte Schleifen</div>
+                        <div class="concept-tag">Vergleich mit if</div>
+                        <div class="concept-tag">Index des Minimums</div>
+                        <div class="concept-tag">Mehrfachzuweisung</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(5)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(7)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-7">
+                <h3>Vergleich: Bubble Sort vs. Selection Sort</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspekt</th>
+                            <th>Bubble Sort</th>
+                            <th>Selection Sort</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Grundidee</td>
+                            <td>Nachbarn vergleichen und tauschen</td>
+                            <td>Minimum suchen und nach vorne tauschen</td>
+                        </tr>
+                        <tr>
+                            <td>Sortierter Bereich</td>
+                            <td>Waechst von rechts</td>
+                            <td>Waechst von links</td>
+                        </tr>
+                        <tr>
+                            <td>Tauschverhalten</td>
+                            <td>Viele kleine Tausche moeglich</td>
+                            <td>Maximal ein Tausch pro Runde</td>
+                        </tr>
+                        <tr>
+                            <td>Didaktischer Schwerpunkt</td>
+                            <td>Nachbarschaft, Indexgrenzen, Passes</td>
+                            <td>Minimumssuche, Kandidat, gezielte Platzierung</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip">
+                    <strong>Didaktische Reihenfolge:</strong> Erst Bubble Sort, dann Selection Sort. So wird sichtbar, dass Sortieren nicht nur eine Technik ist, sondern eine Familie unterschiedlicher Strategien.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(6)">Zurueck</button>
+                    <button class="nav-button" onclick="showStep(8)">Weiter</button>
+                </div>
+            </div>
+
+            <div class="step-content" id="step-8">
+                <h3>Metainformation: Was man ueber Selection Sort wissen sollte</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Eigenschaft</th>
+                            <th>Einordnung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laufzeit</td>
+                            <td>O(n²), weil fuer viele Positionen der restliche Bereich durchsucht wird.</td>
+                        </tr>
+                        <tr>
+                            <td>Best Case</td>
+                            <td>Auch bei bereits sortiertem Array bleibt die Laufzeit O(n²), weil trotzdem gesucht wird.</td>
+                        </tr>
+                        <tr>
+                            <td>Worst Case</td>
+                            <td>O(n²), zum Beispiel bei umgekehrter Sortierung.</td>
+                        </tr>
+                        <tr>
+                            <td>Speicherbedarf</td>
+                            <td>O(1), weil direkt im Array sortiert wird und kein weiteres Array gebraucht wird.</td>
+                        </tr>
+                        <tr>
+                            <td>Stabilitaet</td>
+                            <td>In der einfachen Form nicht stabil: gleiche Werte koennen ihre relative Reihenfolge verlieren.</td>
+                        </tr>
+                        <tr>
+                            <td>Staerke</td>
+                            <td>Wenige Tausche: maximal ein Tausch pro Runde.</td>
+                        </tr>
+                        <tr>
+                            <td>Schwaeche</td>
+                            <td>Viele Vergleiche, auch wenn das Array schon fast sortiert ist.</td>
+                        </tr>
+                        <tr>
+                            <td>Praxisrelevanz</td>
+                            <td>Fuer grosse Datenmengen ungeeignet. Als Lernalgorithmus aber sehr nuetzlich.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning">
+                    <strong>Nicht beschönigen:</strong> Selection Sort ist einfach zu verstehen, aber algorithmisch schwach. Die Laufzeit wird bei groesseren Arrays schnell schlecht.
+                </div>
+
+                <div class="concepts-used">
+                    <h4>Lerngewinn</h4>
+                    <div class="concepts-list">
+                        <div class="concept-tag">Algorithmische Strategie vergleichen</div>
+                        <div class="concept-tag">Minimumssuche verstehen</div>
+                        <div class="concept-tag">O(n²) einordnen</div>
+                        <div class="concept-tag">Grenzen einfacher Verfahren erkennen</div>
+                    </div>
+                </div>
+
+                <div class="cross-link" style="margin-top: 15px;">
+                    Ausblick: Spaeter koennen effizientere Verfahren wie Merge Sort oder QuickSort eingefuehrt werden. Dafuer sind Funktionen, Parameter und meistens Rekursion hilfreich.
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-button" onclick="showStep(7)">Zurueck</button>
+                    <button class="nav-button" disabled>Fertig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => step.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById('step-' + stepNumber).classList.add('active');
+            tabs[stepNumber - 1].classList.add('active');
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

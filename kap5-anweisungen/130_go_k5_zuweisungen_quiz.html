@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuweisungen in Go - Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .quiz-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .quiz-container {
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .question-card.correct {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question-card.incorrect {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .code-snippet {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.95em;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .comment { color: #6272a4; font-style: italic; }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            padding: 15px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e7f0ff;
+        }
+
+        .option.correct-answer {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.wrong-answer {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+
+        .feedback h4 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .check-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .results .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .results .message {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .reset-button {
+            background: white;
+            color: #667eea;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .reset-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 Quiz: Zuweisungen in Go</h1>
+            <p>Teste dein Wissen über Zuweisungen und Operatoren</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">FernUni Hagen - Kurs 01613 - Kapitel 5.3 & 5.4</p>
+        </div>
+
+        <div class="content">
+            <div class="quiz-info">
+                <h3 style="color: #667eea; margin-bottom: 10px;">📋 Quiz-Informationen</h3>
+                <p><strong>Anzahl der Fragen:</strong> 13</p>
+                <p><strong>Thema:</strong> Zuweisungen in Go (Kapitel 5.3 & 5.4)</p>
+                <p><strong>Schwierigkeit:</strong> Anfänger bis Fortgeschritten</p>
+                <p style="margin-top: 10px;">Wähle die richtige(n) Antwort(en) aus und klicke auf "Überprüfen".</p>
+            </div>
+
+            <div class="quiz-container">
+                <!-- Frage 1 -->
+                <div class="question-card" data-question="1">
+                    <span class="question-number">Frage 1 von 13</span>
+                    <div class="question-text">
+                        Was ist das Ergebnis der folgenden Anweisung?
+                    </div>
+                    <div class="code-snippet">x := <span class="number">10</span>
+x *= <span class="number">3</span></div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="a">
+                            <span>x = 13</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="b">
+                            <span>x = 30</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="c">
+                            <span>x = 10</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="d">
+                            <span>Compile-Fehler</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(1, 'b', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Der Operator <code>*=</code> multipliziert die Variable mit dem rechten Wert. <code>x *= 3</code> ist äquivalent zu <code>x = x * 3</code>, also <code>x = 10 * 3 = 30</code>.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 2 -->
+                <div class="question-card" data-question="2">
+                    <span class="question-number">Frage 2 von 13</span>
+                    <div class="question-text">
+                        Welche der folgenden Aussagen über <code>++</code> und <code>--</code> in Go sind richtig? (Mehrfachauswahl)
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="checkbox" name="q2" value="a">
+                            <span>x++ ist eine Anweisung</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q2" value="b">
+                            <span>x++ kann in Ausdrücken verwendet werden (z.B. y = x++)</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q2" value="c">
+                            <span>x++ ist äquivalent zu x += 1</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q2" value="d">
+                            <span>Go unterstützt sowohl ++x (Pre-Increment) als auch x++ (Post-Increment)</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(2, ['a', 'c'], 'multiple')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>In Go ist <code>x++</code> eine Anweisung (kein Ausdruck!) und äquivalent zu <code>x += 1</code>. Go unterstützt nur Post-Increment/-Decrement und diese können <strong>nicht</strong> in Ausdrücken verwendet werden. Pre-Increment (<code>++x</code>) existiert in Go nicht.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 3 -->
+                <div class="question-card" data-question="3">
+                    <span class="question-number">Frage 3 von 13</span>
+                    <div class="question-text">
+                        Welche kombinierte Zuweisungsoperatoren gibt es in Go? (Mehrfachauswahl)
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="checkbox" name="q3" value="a">
+                            <span>+=, -=, *=, /=, %=</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q3" value="b">
+                            <span>&=, |=, ^=</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q3" value="c">
+                            <span>**= (Potenzierung)</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q3" value="d">
+                            <span>//= (Ganzzahlige Division)</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(3, ['a'], 'multiple')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Go bietet kombinierte Zuweisungsoperatoren für alle binären Operatoren mit multiplikativem oder additivem Charakter: <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>+=</code>, <code>-=</code>. Bitweise Operatoren wie <code>&=</code> existieren auch, aber <code>**=</code> und <code>//=</code> gibt es in Go nicht.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 4 -->
+                <div class="question-card" data-question="4">
+                    <span class="question-number">Frage 4 von 13</span>
+                    <div class="question-text">
+                        Was macht die folgende Tupel-Zuweisung?
+                    </div>
+                    <div class="code-snippet">a, b = b, a</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="a">
+                            <span>Vertauscht die Werte von a und b</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="b">
+                            <span>Beide Variablen erhalten den Wert von b</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="c">
+                            <span>Compile-Fehler</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="d">
+                            <span>Beide Variablen erhalten den Wert von a</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(4, 'a', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Die Tupel-Zuweisung <code>a, b = b, a</code> vertauscht die Werte der beiden Variablen. Zuerst werden alle Werte auf der rechten Seite ausgewertet und zwischengespeichert, dann werden sie zugewiesen. So erhält <code>a</code> den (alten) Wert von <code>b</code> und <code>b</code> den (alten) Wert von <code>a</code>.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 5 -->
+                <div class="question-card" data-question="5">
+                    <span class="question-number">Frage 5 von 13</span>
+                    <div class="question-text">
+                        Welcher Code ist NICHT erlaubt in Go?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="a">
+                            <span>x++</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="b">
+                            <span>y = x++</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="c">
+                            <span>x += 1</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="d">
+                            <span>x = x + 1</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(5, 'b', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p><code>y = x++</code> ist in Go nicht erlaubt, da <code>x++</code> eine Anweisung und kein Ausdruck ist. Ausdrücke können ausgewertet und ihr Wert einer Variablen zugewiesen werden, Anweisungen nicht. Die anderen drei Varianten sind alle gültig.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 6 -->
+                <div class="question-card" data-question="6">
+                    <span class="question-number">Frage 6 von 13</span>
+                    <div class="question-text">
+                        Was ist das Ergebnis nach Ausführung dieses Codes?
+                    </div>
+                    <div class="code-snippet">x := <span class="number">20</span>
+x -= <span class="number">5</span>
+x /= <span class="number">3</span></div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="a">
+                            <span>x = 5</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="b">
+                            <span>x = 6</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="c">
+                            <span>x = 15</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="d">
+                            <span>x = 20</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(6, 'a', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Schritt für Schritt: <code>x := 20</code> → x = 20. Dann <code>x -= 5</code> → x = 20 - 5 = 15. Schließlich <code>x /= 3</code> → x = 15 / 3 = 5.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 7 -->
+                <div class="question-card" data-question="7">
+                    <span class="question-number">Frage 7 von 13</span>
+                    <div class="question-text">
+                        Welche der folgenden sind "Simple Statements" in Go? (Mehrfachauswahl)
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="checkbox" name="q7" value="a">
+                            <span>Kurze Variablendeklarationen (z.B. x := 10)</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q7" value="b">
+                            <span>Zuweisungen (z.B. x = 5)</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q7" value="c">
+                            <span>Inkrement/Dekrement (z.B. i++)</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q7" value="d">
+                            <span>if-Anweisungen</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(7, ['a', 'b', 'c'], 'multiple')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Simple Statements in Go sind: kurze Variablendeklarationen, Zuweisungen, Inkrement/Dekrement, Funktionsaufrufe und die leere Anweisung. <code>if</code>-Anweisungen gehören zu den Kontrollfluss-Anweisungen, nicht zu den Simple Statements.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 8 -->
+                <div class="question-card" data-question="8">
+                    <span class="question-number">Frage 8 von 13</span>
+                    <div class="question-text">
+                        Wann sollte man Tupel-Zuweisungen verwenden?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q8" value="a">
+                            <span>Immer, wenn möglich</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="b">
+                            <span>Wenn die Variablen zusammenhängen und die Ausdrücke einfach sind</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="c">
+                            <span>Nur zum Vertauschen von Werten</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="d">
+                            <span>Nie, sie sind veraltet</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(8, 'b', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Tupel-Zuweisungen sollten verwendet werden, wenn die Variablen in einem inhaltlichen Zusammenhang stehen (z.B. x-y-z-Koordinaten) und die zuzuweisenden Ausdrücke einfach sind. Bei komplexen Ausdrücken oder unzusammenhängenden Variablen ist es aus Lesbarkeitsgründen besser, separate Zuweisungen zu verwenden.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 9 -->
+                <div class="question-card" data-question="9">
+                    <span class="question-number">Frage 9 von 13</span>
+                    <div class="question-text">
+                        Was ist das Ergebnis dieses Codes?
+                    </div>
+                    <div class="code-snippet">x := <span class="number">17</span>
+x %= <span class="number">5</span></div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q9" value="a">
+                            <span>x = 2</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="b">
+                            <span>x = 3</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="c">
+                            <span>x = 3.4</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="d">
+                            <span>x = 12</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(9, 'a', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Der Operator <code>%=</code> berechnet den Rest der Division. <code>x %= 5</code> ist äquivalent zu <code>x = x % 5</code>. 17 geteilt durch 5 ergibt 3 Rest 2, also ist das Ergebnis x = 2.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 10 -->
+                <div class="question-card" data-question="10">
+                    <span class="question-number">Frage 10 von 13</span>
+                    <div class="question-text">
+                        Wie viele Anweisungen sind nötig, um zwei Werte OHNE Tupel-Zuweisung zu vertauschen?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q10" value="a">
+                            <span>1 Anweisung</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="b">
+                            <span>2 Anweisungen</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="c">
+                            <span>3 Anweisungen (mit Hilfsvariable)</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="d">
+                            <span>Es ist nicht möglich ohne Tupel-Zuweisung</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(10, 'c', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Ohne Tupel-Zuweisung werden 3 Anweisungen mit einer Hilfsvariable benötigt: <code>tmp := a</code>, <code>a = b</code>, <code>b = tmp</code>. Mit Tupel-Zuweisung genügt eine einzige Anweisung: <code>a, b = b, a</code>.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 11 - Kettenzuweisungen -->
+                <div class="question-card" data-question="11">
+                    <span class="question-number">Frage 11 von 13</span>
+                    <div class="question-text">
+                        Welche der folgenden Kettenzuweisungen ist in Go erlaubt?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q11" value="a">
+                            <span>x = y = z = 5</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="b">
+                            <span>a = b = 10</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="c">
+                            <span>Keine - Kettenzuweisungen sind in Go nicht erlaubt</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="d">
+                            <span>Alle sind erlaubt</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(11, 'c', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>In Go sind Kettenzuweisungen wie <code>x = y = z = 5</code> nicht erlaubt. Das ist eine bewusste Design-Entscheidung für bessere Lesbarkeit. Jede Variable muss separat zugewiesen werden: <code>x = 5; y = 5; z = 5</code> oder mit Tupel-Zuweisung: <code>x, y, z = 5, 5, 5</code>.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 12 - Konstanten -->
+                <div class="question-card" data-question="12">
+                    <span class="question-number">Frage 12 von 13</span>
+                    <div class="question-text">
+                        Was passiert bei diesem Code?
+                    </div>
+                    <div class="code-snippet"><span class="keyword">const</span> MaxWert = <span class="number">100</span>
+MaxWert = <span class="number">200</span></div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q12" value="a">
+                            <span>MaxWert wird auf 200 geändert</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="b">
+                            <span>Compile-Fehler: Konstanten können nicht zugewiesen werden</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="c">
+                            <span>Warnung, aber Code läuft</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="d">
+                            <span>MaxWert bleibt 100, keine Fehlermeldung</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(12, 'b', 'single')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p>Konstanten (<code>const</code>) können nach der Deklaration nicht mehr geändert werden. Der Versuch, einer Konstante einen neuen Wert zuzuweisen, führt zu einem Compile-Fehler: "cannot assign to MaxWert (declared const)". Verwende <code>var</code> statt <code>const</code>, wenn der Wert änderbar sein soll.</p>
+                    </div>
+                </div>
+
+                <!-- Frage 13 - Typ-Kompatibilität -->
+                <div class="question-card" data-question="13">
+                    <span class="question-number">Frage 13 von 13</span>
+                    <div class="question-text">
+                        Welche Zuweisungen sind in Go erlaubt? (Mehrfachauswahl)
+                    </div>
+                    <div class="code-snippet"><span class="keyword">var</span> x <span class="keyword">int</span> = <span class="number">10</span>
+<span class="keyword">var</span> y <span class="keyword">string</span> = <span class="string">"Hallo"</span>
+<span class="keyword">var</span> z <span class="keyword">bool</span> = <span class="keyword">true</span></div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="a">
+                            <span>x = 20</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="b">
+                            <span>x = "20"</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="c">
+                            <span>y = "Welt"</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="d">
+                            <span>z = 1</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="e">
+                            <span>z = false</span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="q13" value="f">
+                            <span>x = 3.14</span>
+                        </label>
+                    </div>
+                    <button class="check-button" onclick="checkAnswer(13, ['a', 'c', 'e'], 'multiple')">Überprüfen</button>
+                    <div class="feedback">
+                        <h4>Erklärung:</h4>
+                        <p><strong>Erlaubt:</strong> <code>x = 20</code> (int zu int), <code>y = "Welt"</code> (string zu string), <code>z = false</code> (bool zu bool). <strong>Nicht erlaubt:</strong> <code>x = "20"</code> (string zu int), <code>z = 1</code> (int zu bool), <code>x = 3.14</code> (float zu int). Go verlangt exakte Typ-Übereinstimmung - automatische Konvertierungen gibt es nicht!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results">
+                <h2>🎉 Quiz abgeschlossen!</h2>
+                <div class="score"></div>
+                <div class="message"></div>
+                <button class="reset-button" onclick="resetQuiz()">Quiz wiederholen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let answers = {};
+        let totalQuestions = 13;
+
+        // Event Listener für Option-Auswahl
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const input = this.querySelector('input');
+                if (input.type === 'radio') {
+                    // Bei Radio-Buttons alle anderen deselektieren
+                    const name = input.name;
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                        radio.closest('.option').classList.remove('selected');
+                    });
+                }
+                
+                if (input.type === 'checkbox') {
+                    // Bei Checkboxen Toggle
+                    this.classList.toggle('selected');
+                } else {
+                    this.classList.add('selected');
+                }
+                input.checked = !input.checked;
+                if (input.type === 'checkbox') {
+                    input.checked = this.classList.contains('selected');
+                }
+            });
+        });
+
+        function checkAnswer(questionNum, correctAnswer, type) {
+            const card = document.querySelector(`[data-question="${questionNum}"]`);
+            const feedback = card.querySelector('.feedback');
+            const button = card.querySelector('.check-button');
+            const options = card.querySelectorAll('.option');
+            
+            let userAnswer;
+            if (type === 'single') {
+                const selected = card.querySelector('input[type="radio"]:checked');
+                userAnswer = selected ? selected.value : null;
+            } else {
+                const selected = card.querySelectorAll('input[type="checkbox"]:checked');
+                userAnswer = Array.from(selected).map(input => input.value).sort();
+                correctAnswer = correctAnswer.sort();
+            }
+            
+            const isCorrect = type === 'single' 
+                ? userAnswer === correctAnswer 
+                : JSON.stringify(userAnswer) === JSON.stringify(correctAnswer);
+            
+            // Feedback anzeigen
+            feedback.classList.add('show');
+            feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+            feedback.innerHTML = `
+                <h4>${isCorrect ? '✅ Richtig!' : '❌ Leider falsch!'}</h4>
+                ${feedback.innerHTML}
+            `;
+            
+            // Karte einfärben
+            card.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Optionen markieren
+            options.forEach(option => {
+                const input = option.querySelector('input');
+                if (type === 'single') {
+                    if (input.value === correctAnswer) {
+                        option.classList.add('correct-answer');
+                    } else if (input.checked && input.value !== correctAnswer) {
+                        option.classList.add('wrong-answer');
+                    }
+                } else {
+                    if (correctAnswer.includes(input.value)) {
+                        option.classList.add('correct-answer');
+                    } else if (input.checked) {
+                        option.classList.add('wrong-answer');
+                    }
+                }
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Button deaktivieren
+            button.disabled = true;
+            button.textContent = 'Beantwortet';
+            
+            // Antwort speichern
+            answers[questionNum] = isCorrect;
+            
+            // Prüfen ob alle Fragen beantwortet
+            if (Object.keys(answers).length === totalQuestions) {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const correctCount = Object.values(answers).filter(a => a).length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            
+            const results = document.querySelector('.results');
+            const score = results.querySelector('.score');
+            const message = results.querySelector('.message');
+            
+            score.textContent = `${correctCount} / ${totalQuestions} richtig (${percentage}%)`;
+            
+            if (percentage === 100) {
+                message.textContent = '🌟 Perfekt! Du hast alle Fragen richtig beantwortet!';
+            } else if (percentage >= 80) {
+                message.textContent = '👏 Sehr gut! Du hast das Thema Zuweisungen gut verstanden!';
+            } else if (percentage >= 60) {
+                message.textContent = '👍 Gut gemacht! Mit etwas mehr Übung wirst du noch besser!';
+            } else {
+                message.textContent = '📚 Lies den Studienbrief nochmal durch und versuche es erneut!';
+            }
+            
+            results.classList.add('show');
+            results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            answers = {};
+            
+            // Alle Karten zurücksetzen
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('correct', 'incorrect');
+                
+                const feedback = card.querySelector('.feedback');
+                feedback.classList.remove('show', 'correct', 'incorrect');
+                
+                const button = card.querySelector('.check-button');
+                button.disabled = false;
+                button.textContent = 'Überprüfen';
+                
+                card.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected', 'correct-answer', 'wrong-answer');
+                    option.style.pointerEvents = 'auto';
+                    const input = option.querySelector('input');
+                    input.checked = false;
+                });
+            });
+            
+            // Ergebnisse verstecken
+            document.querySelector('.results').classList.remove('show');
+            
+            // Nach oben scrollen
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
