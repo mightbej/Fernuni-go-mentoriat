@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitverschiebung: Schieben, verdoppeln und halbieren in Go</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--an:#0f766e;--an-bg:#d1fae5;--neu:#1e40af;--neu-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1200px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
+    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
+    a { color:#1e40af; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .erklaerung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#f0fdfa;margin:12px 0; }
+    .erklaerung p { margin:0 0 8px; } .erklaerung p:last-child { margin:0; }
+    .ueberlauf { color:var(--rot);font-weight:600; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:96px;background:#fff; }
+    input:focus,button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label,.zeile .name { color:var(--muted);font-size:.95rem; }
+    .zeile .abstand { width:14px; }
+    .zaehler { font-family:Consolas,monospace;font-size:1.3rem;font-weight:700;min-width:52px;text-align:center;padding:5px 10px;background:var(--neu-bg);border:2px solid var(--neu);border-radius:8px; }
+    .rund { min-width:42px;font-size:1.2rem;font-family:Consolas,monospace; }
+    .tabellenrahmen { overflow-x:auto; }
+    table.text { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    table.text th,table.text td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    table.text th { background:#f9fafb;font-weight:600; }
+    table.text td.zahl { font-family:Consolas,monospace;white-space:nowrap; }
+    table.text td.fest { white-space:nowrap; }
+    table.text tr.betont td { background:var(--highlight); }
+    table.text tr.anders td { background:#fef2f2; }
+
+    /* Bit-Tabellen */
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow-x:auto; }
+    table.bits { border-collapse:separate;border-spacing:5px;margin:0 auto;font-family:Consolas,monospace; }
+    table.bits th { font-family:"Segoe UI",sans-serif;font-weight:600;font-size:.92rem;color:var(--muted);text-align:right;padding-right:10px;white-space:nowrap; }
+    table.bits th code { font-size:.95rem; }
+    table.bits td { text-align:center;padding:0; }
+    table.bits td.gewicht { font-size:.82rem;color:var(--muted); }
+    table.bits td.nummer { font-size:.82rem;color:var(--neu);font-weight:700; }
+    table.bits td.dez { text-align:left;padding-left:12px;font-size:1.05rem;white-space:nowrap; }
+    table.bits td.luecke { width:14px; }
+    table.bits td.raus { min-width:108px;font-size:1.3rem;font-weight:700;color:var(--rot);letter-spacing:1px; }
+    table.bits td.raus.links { text-align:right;padding-right:6px; }
+    table.bits td.raus.rechts { text-align:left;padding-left:6px; }
+    .bit { display:flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:1.5rem;font-weight:700;font-family:Consolas,monospace;background:#fff;color:#9ca3af;border:2px solid #cbd5e1;border-radius:8px;padding:0; }
+    .bit.an { background:var(--an-bg);border-color:var(--an);color:#111827; }
+    .bit.neu { border-color:var(--neu);border-style:dashed;border-width:3px;background:var(--neu-bg);color:#111827; }
+    .bit.fest { cursor:default; }
+    button.bit { cursor:pointer; }
+    button.bit:hover { filter:brightness(.96); }
+    tr.strich td,tr.strich th { border-top:3px solid #111827;padding-top:5px; }
+    .legende { color:var(--muted);font-size:.88rem;text-align:center;margin-top:10px; }
+
+    /* Zwei Bytes: Mantisse und Exponent */
+    .zweibyte { display:flex;justify-content:center;gap:12px 36px;flex-wrap:wrap; }
+    table.bits td.komma { font-size:2.4rem;font-weight:700;color:var(--neu);vertical-align:bottom;line-height:1;padding:0 1px; }
+    table.bits td.rand { font-size:1.4rem;font-weight:700;color:#9ca3af;vertical-align:middle;padding:0 2px; }
+    .bytename { text-align:center;font-weight:600;color:var(--muted);margin-bottom:4px; }
+    .bytewert { text-align:center;font-family:Consolas,monospace;font-size:1.1rem;margin-top:6px; }
+    .wertzeile { text-align:center;font-family:Consolas,monospace;font-size:1.6rem;margin-top:16px; }
+    .wertzeile strong { color:var(--accent);font-size:2rem; }
+    .anzeige { display:grid;grid-template-columns:auto 1fr;gap:6px 16px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:1.02rem;margin:10px 0;overflow-wrap:anywhere; }
+    .anzeige .name { color:var(--muted);font-family:"Segoe UI",sans-serif;font-size:.95rem; }
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab { background:#fff; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .nav { display:flex;justify-content:space-between;gap:10px;margin:6px 0 18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Bitverschiebung: Schieben, verdoppeln und halbieren</h1>
+    <p>Die Operatoren <code style="color:#111827">&lt;&lt;</code> und <code style="color:#111827">&gt;&gt;</code> rücken alle Bits einer Ganzzahl nach links oder nach rechts. Die Seite zeigt, was dabei mit den Bits geschieht und was das für den Wert der Zahl bedeutet.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seiten 75–78.</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Schieben</button>
+    <button type="button" class="tab" data-stufe="2">2 Verdoppeln und halbieren</button>
+    <button type="button" class="tab" data-stufe="3">3 Bits setzen</button>
+    <button type="button" class="tab" data-stufe="4">4 Komma schieben</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+    <div class="card">
+      <h2>Was die Seite zeigt</h2>
+      <p>Ein Wert vom Typ <code>uint8</code> besteht aus acht Bits. Jedes Bit hat eine Wertigkeit. Der Wert der Zahl ist die Summe der Wertigkeiten aller Bits, die auf 1 stehen.</p>
+      <div class="feld">
+        <table class="bits" id="tabW"></table>
+        <div class="wertzeile" id="summeW"></div>
+        <div class="legende">Ein Klick auf ein Bit schaltet es um. Schritt 1 und Schritt 2 schieben dieses Bitmuster.</div>
+      </div>
+      <p>Der Ausdruck <code>a &lt;&lt; n</code> rückt alle Bits von <code>a</code> um <code>n</code> Stellen nach links. Jedes Bit landet auf einer Stelle mit der doppelten Wertigkeit, wenn <code>n</code> gleich 1 ist. Deshalb verdoppelt <code>a &lt;&lt; 1</code> den Wert: Aus 13 wird 26. Der Ausdruck <code>a &gt;&gt; n</code> rückt die Bits nach rechts. Jedes Bit landet auf der halben Wertigkeit, und <code>a &gt;&gt; 1</code> halbiert den Wert: Aus 13 wird 6.</p>
+      <p>Die acht Stellen bleiben acht Stellen. Ein Bit, das über den Rand hinausrückt, fällt weg. Auf der anderen Seite rückt für jede Stelle ein neues Bit nach. Welches Bit nachrückt, hängt von der Richtung und vom Typ ab.</p>
+      <p>Die Seite geht in vier Schritten vor: ein Bitmuster schieben, verdoppeln und halbieren, einzelne Bits mit <code>1 &lt;&lt; i</code> setzen, das Komma einer Gleitkommazahl schieben. Jeder Schritt hat oben einen Reiter.</p>
+    </div>
+
+    <div class="card">
+      <h2>Die Bit-Schiebe-Operatoren in Go</h2>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Ausdruck</th><th>Name des Operators</th><th>Was mit den Bits geschieht</th><th>Was mit dem Wert geschieht</th></tr></thead>
+        <tbody>
+          <tr><td><code>a &lt;&lt; n</code></td><td>linker Bit-Schiebe-Operator</td><td>Alle Bits rücken n Stellen nach links. Links fallen n Bits weg, rechts rücken n Nullen nach.</td><td>Der Wert wird mit 2<sup>n</sup> multipliziert. Das stimmt, solange das Ergebnis in den Typ passt.</td></tr>
+          <tr><td><code>a &gt;&gt; n</code></td><td>rechter Bit-Schiebe-Operator</td><td>Alle Bits rücken n Stellen nach rechts. Rechts fallen n Bits weg, links rücken n Bits nach.</td><td>Der Wert wird durch 2<sup>n</sup> geteilt und abgerundet.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Das Ergebnis hat den Typ von <code>a</code>. Der Wert von <code>n</code> darf nicht negativ sein. <code>a</code> und <code>n</code> dürfen verschiedene Ganzzahl-Typen haben. Alle anderen binären Operatoren verlangen zwei Operanden vom selben Typ.</p>
+
+      <h3>Welche Bits beim Schieben nach rechts nachrücken</h3>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Typ von a</th><th>Bits</th><th>Wertebereich</th><th>Was <code>a &gt;&gt; n</code> links nachschiebt</th><th>Name der Verschiebung</th></tr></thead>
+        <tbody>
+          <tr class="betont"><td><code>uint8</code></td><td>8</td><td class="fest">0 bis 255</td><td>Der Operator schiebt Nullen nach.</td><td>logische Verschiebung</td></tr>
+          <tr class="betont"><td><code>int8</code></td><td>8</td><td class="fest">−128 bis 127</td><td>Der Operator schiebt das Vorzeichen-Bit nach: Nullen bei einer positiven Zahl, Einsen bei einer negativen.</td><td>arithmetische Verschiebung</td></tr>
+          <tr><td><code>uint16</code>, <code>uint32</code>, <code>uint64</code>, <code>uint</code></td><td class="fest">16 bis 64</td><td class="fest">0 bis 2<sup>Bits</sup> − 1</td><td>Der Operator schiebt Nullen nach, wie bei <code>uint8</code>.</td><td>logische Verschiebung</td></tr>
+          <tr><td><code>int16</code>, <code>int32</code>, <code>int64</code>, <code>int</code></td><td class="fest">16 bis 64</td><td class="fest">−2<sup>Bits − 1</sup> bis 2<sup>Bits − 1</sup> − 1</td><td>Der Operator schiebt das Vorzeichen-Bit nach, wie bei <code>int8</code>.</td><td>arithmetische Verschiebung</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Die Seite rechnet mit <code>uint8</code> und <code>int8</code>, wie die Beispiele des Kurstexts. Bei der arithmetischen Verschiebung behält eine negative Zahl ihr Vorzeichen. Ein Beispiel: −13 ist als <code>int8</code> 1111 0011. Mit einer nachgeschobenen Eins wird daraus 1111 1001, also −7. Mit einer nachgeschobenen Null wäre es 0111 1001, also 121.</p>
+      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seite 75. Die Regel zu den Typen der Operanden steht in Abschnitt 4.1, Seite 46, Fußnote 4.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" disabled>Zurück</button>
+      <button type="button" class="knopf aktiv" data-gehe="1">Weiter zu Schritt 1</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+    <div class="card">
+      <h2>Schritt 1: Ein Bitmuster schieben</h2>
+      <div class="zeile">
+        <span class="name">Typ von a</span>
+        <button type="button" data-typ="uint8">uint8</button>
+        <button type="button" data-typ="int8">int8</button>
+        <span class="abstand"></span>
+        <label for="za">a</label><input id="za" type="number">
+        <span class="abstand"></span>
+        <span class="name">n</span>
+        <button class="rund" type="button" data-n="-1" aria-label="n um 1 verkleinern">−</button>
+        <span class="zaehler" id="nwert"></span>
+        <button class="rund" type="button" data-n="1" aria-label="n um 1 vergrößern">+</button>
+      </div>
+      <div class="zeile">
+        <span class="name">Beispiele des Kurstexts</span>
+        <button type="button" data-fall="uint8,13,1">13 um 1 Stelle</button>
+        <button type="button" data-fall="int8,243,1">−13 um 1 Stelle</button>
+        <button type="button" data-fall="int8,243,4">−13 um 4 Stellen</button>
+      </div>
+      <div class="feld">
+        <table class="bits" id="tabS"></table>
+        <div class="legende">In der Mitte steht a und bleibt stehen. Darüber steht a nach links geschoben, darunter a nach rechts geschoben. Ein Klick auf ein Bit von a schaltet es um. Blau gestrichelt umrandet sind die Bits, die nachgerückt sind. Rot durchgestrichen stehen am Rand die Bits, die weggefallen sind.</div>
+      </div>
+      <div class="erklaerung" id="erklS"></div>
+      <div id="codeS"></div>
+      <p class="quelle" id="quelleS"></p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="0">Zurück zu „Worum es geht“</button>
+      <button type="button" class="knopf aktiv" data-gehe="2">Weiter zu Schritt 2</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+    <div class="card">
+      <h2>Schritt 2: Verdoppeln und halbieren</h2>
+      <p>In der Mitte steht der Wert von <code>a</code> aus Schritt 1. Jede Zeile darüber schiebt ihn um eine Stelle weiter nach links, und der Wert verdoppelt sich. Jede Zeile darunter schiebt ihn um eine Stelle weiter nach rechts, und der Wert halbiert sich. Für 13 und −13 stehen dieselben Ergebnisse in Tabelle 4.2 des Kurstexts.</p>
+      <div class="zeile">
+        <button type="button" data-fall="uint8,13,1">a = 13 als uint8</button>
+        <button type="button" data-fall="int8,243,1">a = −13 als int8</button>
+      </div>
+      <div class="feld">
+        <table class="bits" id="tabT"></table>
+        <div class="legende">Nach oben verdoppelt jede Zeile den Wert, nach unten halbiert ihn jede Zeile und rundet ab. Rot steht ein Ergebnis, das übergelaufen ist.</div>
+      </div>
+      <p id="doppelt"></p>
+      <p>Wie das Rechenwerk <code>a + a</code> Stelle für Stelle ausrechnet, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>. Was beim Überlauf geschieht, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</p>
+      <div class="hinweis">Bei einer negativen Zahl liefern <code>&gt;&gt;</code> und <code>/</code> verschiedene Ergebnisse, wenn die Division nicht aufgeht. Die Verschiebung rundet ab, also zur kleineren Zahl hin: Aus −6,5 wird −7. Die Division mit <code>/</code> schneidet die Stellen hinter dem Komma ab: Aus −6,5 wird −6.</div>
+      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seiten 75–77, mit Tabelle 4.2 und Fußnote 23.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="1">Zurück zu Schritt 1</button>
+      <button type="button" class="knopf aktiv" data-gehe="3">Weiter zu Schritt 3</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+    <div class="card">
+      <h2>Schritt 3: Einzelne Bits setzen mit 1 &lt;&lt; i</h2>
+      <p>Die Zahl 1 hat nur das Bit ganz rechts gesetzt. Der Ausdruck <code>1 &lt;&lt; i</code> schiebt diese eine Eins um <code>i</code> Stellen nach links. Sie landet auf dem Bit mit der Nummer <code>i</code>, und der Wert ist 2<sup>i</sup>. Die Bits zählt man von rechts und beginnt mit der Nummer 0. Der Operator <code>|</code> fügt mehrere solche Bitmuster zu einem zusammen.</p>
+      <div class="feld">
+        <table class="bits" id="tabM"></table>
+        <div class="legende">Ein Klick auf ein Bit schaltet es um. Der Ausdruck darunter erzeugt genau dieses Bitmuster.</div>
+      </div>
+      <div id="codeM"></div>
+      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seite 78, Expertenwissen 4.13.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="2">Zurück zu Schritt 2</button>
+      <button type="button" class="knopf aktiv" data-gehe="4">Weiter zu Schritt 4</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+    <div class="card">
+      <h2>Schritt 4: Das Komma schieben</h2>
+      <p>Eine Gleitkommazahl besteht aus Vorzeichen, Mantisse und Exponent. Die Mantisse ist eine Binärzahl, die mit 0,1 beginnt. Im Modell des Kurstexts hat sie 8 Bit. Der Exponent sagt, mit welcher Zweierpotenz die Mantisse multipliziert wird. Hier stehen Mantisse und Exponent in je einem Byte, das Vorzeichen lassen wir weg.</p>
+      <p>Mit 2 multiplizieren heißt bei einer Binärzahl: Alle Ziffern rücken eine Stelle nach links. Man kann auch sagen: Das Komma rückt eine Stelle nach rechts. Ein Exponent von 3 schiebt das Komma also um 3 Stellen nach rechts. Das ist dieselbe Bewegung wie bei <code>a &lt;&lt; 3</code>.</p>
+      <div class="zeile">
+        <span class="name">Exponent</span>
+        <button class="rund" type="button" data-e="-1" aria-label="Exponent um 1 verkleinern">−</button>
+                <button class="rund" type="button" data-e="1" aria-label="Exponent um 1 vergrößern">+</button>
+        <span class="abstand"></span>
+        <span class="name">Beispiele des Kurstexts</span>
+        <button type="button" data-mant="170">2/3 im Modell</button>
+        <button type="button" data-mant="171">0,67 im Modell</button>
+      </div>
+      <div class="feld">
+        <div class="zweibyte">
+          <div class="byte"><div class="bytename">Byte 1: Mantisse</div><table class="bits" id="tabMant"></table><div class="bytewert" id="wertMant"></div></div>
+          <div class="byte"><div class="bytename">Byte 2: Exponent</div><table class="bits" id="tabExp"></table><div class="bytewert" id="wertExp"></div></div>
+        </div>
+        <div class="wertzeile" id="wertK"></div>
+        <div class="legende">Über jedem Bit der Mantisse steht seine Wertigkeit. Sie ändert sich mit dem Exponenten: Das Komma wandert, die Bits bleiben stehen. Ein Klick auf ein Bit schaltet es um. Das erste Bit der Mantisse ist immer 1. Die Seite speichert den Exponenten im Zweierkomplement, wie einen Wert vom Typ int8.</div>
+      </div>
+      <div class="anzeige" id="anzeigeK"></div>
+      <div class="erklaerung" id="erklK"></div>
+      <p>Jeder Schritt im Exponenten verdoppelt oder halbiert den Wert, so wie <code>&lt;&lt; 1</code> und <code>&gt;&gt; 1</code> bei einer Ganzzahl. Der Unterschied liegt im Komma. Bei einer Ganzzahl steht es fest hinter dem letzten Bit. Ein Bit, das beim Schieben nach rechts über das Komma rückt, fällt weg. Bei einer Gleitkommazahl wandert das Komma, und die Mantisse behält ihre acht Bits.</p>
+      <p>Der Kurstext beschreibt die Bewegung auch in der anderen Richtung. Nach einer Subtraktion kann die Mantisse mit Nullen beginnen. Dann schiebt der Rechner ihre Ziffern nach links, bis vorn wieder eine Eins steht, und zieht für jede Stelle 1 vom Exponenten ab. Das heißt Normalisieren.</p>
+      <p>Das ganze Modell mit Vorzeichen, Lücken zwischen den Zahlen und Rundungsfehlern zeigt die Seite <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</p>
+      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.4.2, Seite 87, und Abschnitt 4.4.3, Seite 88.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>Zum Quiz</h2>
+    <p>Die Aufgaben zu dieser Seite stehen auf einer eigenen Seite: <a href="go_k4_bitverschiebung_quiz.html">Selbsttest: Bitverschiebung</a>, 12 Fragen mit je vier Antworten.</p>
+  </div>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const z = v => String(v).replace('-', '−').replace('.', ',');
+  const b8 = v => (v & 255).toString(2).padStart(8, '0');
+  const mitLuecke = v => b8(v).slice(0, 4) + ' ' + b8(v).slice(4);
+  const sv = v => (v & 255) > 127 ? (v & 255) - 256 : (v & 255);      // dasselbe Bitmuster als int8 gelesen
+  const bit = (v, j) => (v >> j) & 1;
+  const hoch = n => '2<sup>' + n + '</sup>';
+  const stellen = n => n === 1 ? '1 Stelle' : n + ' Stellen';
+
+  // Zustand: a als Bitmuster 0..255, typ bestimmt die Lesart. muster für 1<<i, mant und e8 sind die zwei Bytes der Gleitkommazahl.
+  const Z = { typ: 'uint8', a: 13, n: 1, muster: 36, mant: 170, e8: 0 };
+
+  const wert = v => Z.typ === 'int8' ? sv(v) : (v & 255);              // Bitmuster im gewählten Typ gelesen
+  const passt = w => Z.typ === 'int8' ? (w >= -128 && w <= 127) : (w >= 0 && w <= 255);
+  const bereich = () => Z.typ === 'int8' ? '−128 … 127' : '0 … 255';
+  const links = (a, n) => (a << n) & 255;
+  const rechts = (a, n) => Z.typ === 'int8' ? (sv(a) >> n) & 255 : (a & 255) >>> n;
+
+  // ---------- Bausteine für die Bit-Tabellen ----------
+  function kopf(name, werte, klasse) {
+    return '<tr><th>' + name + '</th><td></td>' +
+      werte.map((g, i) => (i === 4 ? '<td class="luecke"></td>' : '') + '<td class="' + klasse + '">' + g + '</td>').join('') + '<td></td><td></td></tr>';
+  }
+  const gewichte = () => [Z.typ === 'int8' ? '−128' : '128', 64, 32, 16, 8, 4, 2, 1];
+
+  // o.v: Variable für anklickbare Bits, o.neu(j): Bit j ist nachgerückt, o.rausL/o.rausR: weggefallene Bits, o.dez: Text rechts
+  function reihe(name, w, o) {
+    o = o || {};
+    let s = '<tr' + (o.strich ? ' class="strich"' : '') + '><th>' + name + '</th><td class="raus links">' + (o.rausL ? '<s>' + o.rausL + '</s>' : '') + '</td>';
+    for (let j = 7; j >= 0; j--) {
+      if (j === 3) s += '<td class="luecke"></td>';
+      const b = bit(w, j), kl = 'bit' + (b ? ' an' : '') + (o.neu && o.neu(j) ? ' neu' : '');
+      s += '<td>' + (o.v
+        ? '<button type="button" class="' + kl + '" data-var="' + o.v + '" data-bit="' + j + '" aria-label="Bit mit der Nummer ' + j + ' umschalten">' + b + '</button>'
+        : '<span class="' + kl + '">' + b + '</span>') + '</td>';
+    }
+    return s + '<td class="raus rechts">' + (o.rausR ? '<s>' + o.rausR + '</s>' : '') + '</td><td class="dez">' + (o.dez === undefined ? z(wert(w)) : o.dez) + '</td></tr>';
+  }
+
+  // ---------- Worum es geht ----------
+  function zeigeWert() {
+    const a = Z.a & 255, teile = [128, 64, 32, 16, 8, 4, 2, 1].filter(g => a & g);
+    el('tabW').innerHTML = kopf('Wertigkeit', [128, 64, 32, 16, 8, 4, 2, 1], 'gewicht') + reihe('Bit', a, { v: 'a', dez: '' });
+    el('summeW').innerHTML = 'Wert als uint8: ' + (teile.length > 1 ? teile.join(' + ') + ' = ' : '') + '<strong>' + a + '</strong>';
+  }
+
+  // ---------- Schritt 1 ----------
+  function zeigeSchieben() {
+    const a = Z.a, n = Z.n, w = wert(a), l = links(a, n), r = rechts(a, n), int8 = Z.typ === 'int8';
+    const rausL = b8(a).slice(0, n), rausR = b8(a).slice(8 - n), vz = bit(a, 7);
+    const fuell = int8 ? vz : 0;
+
+    // a steht fest in der Mitte, darüber nach links geschoben, darunter nach rechts geschoben
+    el('tabS').innerHTML = kopf('Wertigkeit', gewichte(), 'gewicht') +
+      reihe('<code>a &lt;&lt; ' + n + '</code>', l, { rausL: rausL, neu: j => j < n }) +
+      reihe('<code>a</code>', a, { v: 'a', strich: true }) +
+      reihe('<code>a &gt;&gt; ' + n + '</code>', r, { strich: true, rausR: rausR, neu: j => j > 7 - n });
+    el('nwert').textContent = n;
+    document.querySelectorAll('[data-n]').forEach(b => { b.disabled = (Number(b.dataset.n) < 0 ? n === 0 : n === 8); });
+    document.querySelectorAll('[data-typ]').forEach(b => b.classList.toggle('aktiv', b.dataset.typ === Z.typ));
+
+    const bits = t => (t.length === 1 ? 'fällt das Bit ' : 'fallen die Bits ') + '<code>' + t + '</code> weg';
+    const nach = (anz, ziffer) => anz === 1 ? 'rückt eine ' + (ziffer ? 'Eins' : 'Null') + ' nach' : 'rücken ' + anz + (ziffer ? ' Einsen' : ' Nullen') + ' nach';
+    let tl, tr;
+    if (n === 0) {
+      tl = tr = 'Bei n = 0 bleibt das Bitmuster stehen.';
+    } else {
+      const soll = w * Math.pow(2, n);
+      tl = 'Alle Bits rücken ' + stellen(n) + ' nach links. Links ' + bits(rausL) + ', rechts ' + nach(n, 0) + '. ' +
+        'Rechnung: ' + z(w) + ' · ' + hoch(n) + ' = ' + z(soll) + '. ' +
+        (passt(soll) ? 'Das Ergebnis ' + z(wert(l)) + ' stimmt.'
+                     : '<span class="ueberlauf">Dieser Wert liegt außerhalb von ' + bereich() + '. Das Ergebnis ' + z(wert(l)) + ' ist übergelaufen.</span>');
+      const genau = w / Math.pow(2, n), ab = Math.floor(genau);
+      tr = 'Alle Bits rücken ' + stellen(n) + ' nach rechts. Rechts ' + bits(rausR) + ', links ' + nach(n, fuell) + '. ' +
+        (int8 ? 'Das Vorzeichen-Bit von a ist ' + vz + ', und <code>int8</code> schiebt das Vorzeichen-Bit nach. Das ist die arithmetische Verschiebung. '
+              : '<code>uint8</code> hat kein Vorzeichen und schiebt immer Nullen nach. Das ist die logische Verschiebung. ') +
+        'Rechnung: ' + z(w) + ' / ' + hoch(n) + ' = ' + z(genau) + (genau === ab ? '.' : ', abgerundet ' + z(ab) + '.');
+    }
+    el('erklS').innerHTML = '<p><code>a &lt;&lt; ' + n + '</code>: ' + tl + '</p><p><code>a &gt;&gt; ' + n + '</code>: ' + tr + '</p>';
+
+    const aus = t => int8 ? 'uint8(' + t + ')' : t;
+    el('codeS').innerHTML = '<pre>' + esc('var a ' + Z.typ + ' = ' + w + '\nn := ' + n + '\n' +
+      [['a<<n', l], ['a>>n', r]].map(q => ('fmt.Printf("%08b %d\\n", ' + aus(q[0]) + ', ' + q[0] + ')').padEnd(int8 ? 43 : 36) + ' // ' + b8(q[1]) + ' ' + wert(q[1])).join('\n')) + '</pre>';
+    el('quelleS').textContent = int8
+      ? 'Der Ausdruck uint8(…) sorgt dafür, dass Printf das Bitmuster im Zweierkomplement ausgibt. Kurstext v3.0.6, Seite 77, Expertenwissen 4.12.'
+      : '';
+  }
+
+  // ---------- Schritt 2 ----------
+  function zeigeTabellen() {
+    const a = Z.a, w = wert(a);
+    let oben = '', unten = '';
+    for (let n = 1; n <= 4; n++) {
+      const p = Math.pow(2, n), l = links(a, n), r = rechts(a, n), soll = w * p, genau = w / p, ab = Math.floor(genau), div = Math.trunc(genau);
+      const tl = passt(soll) ? z(wert(l)) + ' = ' + z(w) + ' · ' + p
+                             : '<span class="ueberlauf">' + z(wert(l)) + ', übergelaufen: ' + z(w) + ' · ' + p + ' = ' + z(soll) + '</span>';
+      const tr = z(wert(r)) + ' = ' + z(w) + ' / ' + p + (genau === ab ? '' : ', abgerundet') + (div === ab ? '' : '. <code>a / ' + p + '</code> liefert ' + z(div));
+      oben = reihe('<code>a &lt;&lt; ' + n + '</code>', l, { rausL: b8(a).slice(0, n), neu: j => j < n, dez: tl }) + oben;
+      unten += reihe('<code>a &gt;&gt; ' + n + '</code>', r, { strich: n === 1, rausR: b8(a).slice(8 - n), neu: j => j > 7 - n, dez: tr });
+    }
+    el('tabT').innerHTML = kopf('Wertigkeit', gewichte(), 'gewicht') + oben + reihe('<code>a</code>', a, { v: 'a', strich: true }) + unten;
+    const summe = (a + a) & 255;
+    el('doppelt').innerHTML = 'Um eine Stelle nach links schieben und die Zahl zu sich selbst addieren ist dasselbe: <code>a &lt;&lt; 1</code> liefert ' + z(wert(links(a, 1))) +
+      ', und <code>a + a</code> liefert ' + z(wert(summe)) + '. Das gilt für jeden Wert von <code>a</code>, auch beim Überlauf.';
+  }
+
+  // ---------- Schritt 3 ----------
+  function zeigeMuster() {
+    const m = Z.muster, teile = [];
+    for (let j = 7; j >= 0; j--) if (bit(m, j)) teile.push('1<<' + j);
+    el('tabM').innerHTML = kopf('Nummer des Bits', [7, 6, 5, 4, 3, 2, 1, 0], 'nummer') + kopf('Wertigkeit', [128, 64, 32, 16, 8, 4, 2, 1], 'gewicht') +
+      reihe('<code>muster</code>', m, { v: 'muster', dez: m });
+    el('codeM').innerHTML = '<pre>' + esc('var muster uint8 = ' + (teile.length ? teile.join(' | ') : '0') + '\nfmt.Printf("%08b %d\\n", muster, muster) // ' + b8(m) + ' ' + m) + '</pre>';
+  }
+
+  // ---------- Schritt 4 ----------
+  // Die Binärzahl 0,b1…b8 mit dem Komma um e Stellen verschoben
+  function verschoben(M, e) {
+    const b = b8(M);
+    if (e <= 0) return '0,' + '0'.repeat(-e) + b;
+    if (e >= 8) return b + '0'.repeat(e - 8);
+    const nach = b.slice(e).replace(/0+$/, '');
+    return b.slice(0, e) + (nach ? ',' + nach : '');
+  }
+  // Sehr große und sehr kleine Werte mit Zehnerpotenz
+  function zahl(v) {
+    if (v >= 1e15 || v < 1e-6) { const q = v.toExponential(4).split('e'); return '≈ ' + q[0].replace('.', ',') + ' · 10<sup>' + z(Number(q[1])) + '</sup>'; }
+    return z(v);
+  }
+  // Ein Byte als Bit-Tabelle. fest: das Bit ganz links lässt sich nicht umschalten
+  function byte(gew, w, v, fest) {
+    let g = '<tr>', b = '<tr>';
+    for (let j = 7; j >= 0; j--) {
+      if (j === 3) { g += '<td class="luecke"></td>'; b += '<td class="luecke"></td>'; }
+      const an = bit(w, j);
+      g += '<td class="gewicht">' + gew[7 - j] + '</td>';
+      b += '<td>' + (fest && j === 7
+        ? '<span class="bit an fest" title="Das erste Bit der Mantisse ist immer 1.">1</span>'
+        : '<button type="button" class="bit' + (an ? ' an' : '') + '" data-var="' + v + '" data-bit="' + j + '" aria-label="Bit mit der Wertigkeit ' + gew[7 - j] + ' umschalten">' + an + '</button>') + '</td>';
+    }
+    return g + '</tr>' + b + '</tr>';
+  }
+
+  // Das Byte der Mantisse: Die Wertigkeit über jedem Bit hängt vom Exponenten ab, und das Komma wandert.
+  function byteMantisse(M, e) {
+    const b = b8(M);
+    const gewicht = ex => ex >= 0 ? (ex <= 7 ? String(1 << ex) : '2<sup>' + ex + '</sup>') : (ex >= -8 ? '1/' + (1 << -ex) : '2<sup>−' + (-ex) + '</sup>');
+    const nullen = k => k <= 4 ? '0'.repeat(k) : '0…0';
+    const rand = (text, k) => ['<td></td>', '<td class="rand"' + (k ? ' title="' + k + ' Nullen"' : '') + '>' + text + '</td>'];
+    const komma = ['<td></td>', '<td class="komma">,</td>'];
+    const zellen = [];
+    if (e <= 0) zellen.push(rand('0'), komma);
+    if (e < 0) zellen.push(rand(nullen(-e), -e));
+    for (let j = 0; j < 8; j++) {
+      if (j === e && e > 0) zellen.push(komma);
+      const an = b[j] === '1';
+      zellen.push(['<td class="gewicht">' + gewicht(e - 1 - j) + '</td>', '<td>' + (j === 0
+        ? '<span class="bit an fest" title="Das erste Bit der Mantisse ist immer 1.">1</span>'
+        : '<button type="button" class="bit' + (an ? ' an' : '') + '" data-var="mant" data-bit="' + (7 - j) + '" aria-label="Bit ' + (j + 1) + ' der Mantisse umschalten">' + b[j] + '</button>') + '</td>']);
+    }
+    if (e > 8) zellen.push(rand(nullen(e - 8), e - 8));
+    if (e >= 8) zellen.push(komma);
+    return '<tr>' + zellen.map(q => q[0]).join('') + '</tr><tr>' + zellen.map(q => q[1]).join('') + '</tr>';
+  }
+
+  function zeigeKomma() {
+    const M = Z.mant, e = sv(Z.e8), b = b8(M), m = M / 256, v = m * Math.pow(2, e);
+    el('tabMant').innerHTML = byteMantisse(M, e);
+    el('tabExp').innerHTML = byte(['−128', 64, 32, 16, 8, 4, 2, 1], Z.e8, 'e8', false);
+    el('wertMant').innerHTML = '0,' + b + ' = ' + z(m);
+    el('wertExp').innerHTML = b8(Z.e8) + ' = ' + z(e);
+    el('wertK').innerHTML = 'Wert: ' + z(m) + ' · ' + hoch(z(e)) + ' = <strong>' + zahl(v) + '</strong>';
+    document.querySelectorAll('[data-e]').forEach(k => { k.disabled = (Number(k.dataset.e) < 0 ? e === -128 : e === 127); });
+
+    const komma = e === 0 ? 'Das Komma bleibt stehen.' : 'Das Komma rückt ' + stellen(Math.abs(e)) + ' nach ' + (e > 0 ? 'rechts' : 'links') + '.';
+    el('anzeigeK').innerHTML =
+      '<span class="name">Exponent ' + z(e) + '</span><span style="font-family:Tahoma,sans-serif">' + komma + '</span>' +
+      (e >= -8 && e <= 16 ? '<span class="name">Binärzahl</span><span>0,' + b + (e === 0 ? ' bleibt stehen' : ' wird zu ' + verschoben(M, e)) + '</span>' : '');
+    const n = 8 - e, weg = b.slice(Math.max(e, 0));
+    el('erklK').innerHTML = e < 0 || e > 8 ? '' :
+      '<p>Dieselben acht Bits der Mantisse als <code>uint8</code> gelesen ergeben ' + M + '. Dort steht das Komma hinter dem letzten Bit, wie hier beim Exponenten 8.</p>' +
+      (n === 0 ? '<p>Beim Exponenten 8 steht kein Bit hinter dem Komma. Der Wert ist die ganze Zahl ' + M + '.</p>'
+               : '<p><code>' + M + ' &gt;&gt; ' + n + '</code> liefert ' + (M >>> n) + '. Die Verschiebung lässt die Bits <code>' + weg + '</code> wegfallen. ' +
+                 'Beim Exponenten ' + e + ' stehen dieselben Bits hinter dem Komma, und der Wert ist ' + z(v) + '.</p>');
+    el('erklK').style.display = e < 0 || e > 8 ? 'none' : '';
+  }
+
+  // ---------- Reiter ----------
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#komma
+  const ANKER = ['worum', 'schieben', 'verdoppeln', 'bits-setzen', 'komma'];
+  function zeigeStufe(nummer, nachOben) {
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Bedienung ----------
+  function zeigeAlles(ausser) {
+    zeigeWert(); zeigeSchieben(); zeigeTabellen(); zeigeMuster(); zeigeKomma();
+    const i = el('za');
+    i.min = Z.typ === 'int8' ? -128 : 0; i.max = Z.typ === 'int8' ? 127 : 255;
+    if (i !== ausser) i.value = wert(Z.a);
+  }
+  document.addEventListener('click', ev => {
+    const t = ev.target;
+    let k;
+    if ((k = t.closest('[data-stufe], [data-gehe]'))) {
+      zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+      return;
+    }
+    if ((k = t.closest('[data-var]'))) {
+      Z[k.dataset.var] ^= 1 << Number(k.dataset.bit);
+      Z.mant |= 128;                                                   // das erste Bit der Mantisse bleibt 1
+    } else if ((k = t.closest('[data-typ]'))) {
+      Z.typ = k.dataset.typ;
+    } else if ((k = t.closest('[data-n]'))) {
+      Z.n = Math.max(0, Math.min(8, Z.n + Number(k.dataset.n)));
+    } else if ((k = t.closest('[data-e]'))) {
+      Z.e8 = Math.max(-128, Math.min(127, sv(Z.e8) + Number(k.dataset.e))) & 255;
+    } else if ((k = t.closest('[data-fall]'))) {
+      const f = k.dataset.fall.split(',');
+      Z.typ = f[0]; Z.a = Number(f[1]); Z.n = Number(f[2]);
+    } else if ((k = t.closest('[data-mant]'))) {
+      Z.mant = Number(k.dataset.mant); Z.e8 = 0;
+    } else return;
+    zeigeAlles();
+  });
+  el('za').addEventListener('input', () => {
+    const i = el('za'), v = Number(i.value);
+    if (i.value === '' || !Number.isInteger(v) || v < Number(i.min) || v > Number(i.max)) return;
+    Z.a = v & 255;
+    zeigeAlles(i);
+  });
+
+  zeigeAlles();
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>

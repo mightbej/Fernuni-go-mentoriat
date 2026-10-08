@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Selbsttest: Bitverschiebung</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--gut:#10b981;--gut-bg:#d1fae5;--rot:#dc2626;--rot-bg:#fee2e2;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1000px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin:0 0 12px;font-size:1.1rem;color:var(--accent); }
+    a { color:#1e40af; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:0 0 12px;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:12px 14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .antworten { display:grid;gap:8px; }
+    .antwort { display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;border:2px solid var(--line);border-radius:8px;padding:10px 14px;font-size:1rem;font-family:inherit;background:#f9fafb;color:#111827;cursor:pointer; }
+    .antwort:hover:not(:disabled) { border-color:var(--accent); }
+    .antwort .buchstabe { font-weight:700;color:var(--muted); }
+    .antwort.gewaehlt { background:#f0fdfa;border-color:var(--accent); }
+    .antwort.richtig { background:var(--gut-bg);border-color:var(--gut); }
+    .antwort.falsch { background:var(--rot-bg);border-color:var(--rot); }
+    .antwort:disabled { cursor:default;color:#111827; }
+    .aufloesung { margin-top:12px;padding:12px 14px;border-radius:8px;border-left:4px solid var(--gut);background:var(--gut-bg); }
+    .aufloesung.falsch { border-left-color:var(--rot);background:var(--rot-bg); }
+    .aufloesung.offen { border-left-color:#f59e0b;background:var(--highlight); }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 18px; }
+    button.knopf { border:1px solid var(--line);border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:1rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button.knopf.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .ergebnis { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:12px;padding:20px;text-align:center;font-size:1.3rem;font-weight:600;margin-bottom:18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Selbsttest: Bitverschiebung</h1>
+    <p>12 Fragen mit je vier Antworten. Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seiten 75–78.</p>
+  </div>
+
+  <p>Die Erklärungen zu den Fragen stehen auf der Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung: Schieben, verdoppeln und halbieren</a>.</p>
+
+  <div id="fragen"></div>
+
+  <div class="zeile">
+    <button class="knopf haupt" id="auswerten" type="button">Quiz auswerten</button>
+    <button class="knopf" id="vonvorn" type="button">von vorn</button>
+  </div>
+  <div id="ergebnis"></div>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+</div>
+
+<script>
+(function () {
+  // f: Frage, c: Go-Code zur Frage, a: vier Antworten, r: Index der richtigen Antwort, l: Auflösung
+  const FRAGEN = [
+    { f: 'Was gibt das Programm aus?',
+      c: 'var a uint8 = 13\nfmt.Println(a << 1)',
+      a: ['14', '26', '6', '27'], r: 1,
+      l: '13 ist 0000 1101. Um eine Stelle nach links geschoben ist das 0001 1010, also 26. Um eine Stelle nach links schieben heißt verdoppeln.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var a uint8 = 13\nfmt.Println(a >> 1)',
+      a: ['6.5', '7', '6', '12'], r: 2,
+      l: '0000 1101 wird zu 0000 0110, also 6. Das Bit ganz rechts fällt weg. 13 / 2 ist 6,5, und die Verschiebung rundet ab.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var c int8 = -13\nfmt.Println(c >> 1)',
+      a: ['-6', '121', '7', '-7'], r: 3,
+      l: '−13 ist 1111 0011. Bei int8 rückt links das Vorzeichen-Bit nach, also eine Eins: 1111 1001, das ist −7. −13 / 2 ist −6,5, abgerundet −7.' },
+    { f: 'c hat den Typ int8 und einen negativen Wert. Welche Bits schiebt c >> 3 links nach?',
+      a: ['Der Operator schiebt drei Einsen nach.', 'Der Operator schiebt drei Nullen nach.', 'Der Operator schiebt die drei Bits nach, die rechts weggefallen sind.', 'Der Operator schiebt abwechselnd Nullen und Einsen nach.'], r: 0,
+      l: 'Bei einem Typ mit Vorzeichen schiebt >> das Vorzeichen-Bit nach. Bei einer negativen Zahl ist es 1. So bleibt die Zahl negativ. Das heißt arithmetische Verschiebung.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var c int8 = -13\nfmt.Println(c << 4)',
+      a: ['-208', '-48', '48', '0'], r: 2,
+      l: '1111 0011 wird zu 0011 0000, also 48. Rechnerisch wäre es −13 · 16 = −208. Dieser Wert liegt außerhalb von −128 … 127, das Ergebnis ist übergelaufen.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var a uint8 = 200\nfmt.Println(a << 1)',
+      a: ['144', '400', '255', '145'], r: 0,
+      l: '200 ist 1100 1000. Links fällt eine Eins weg, übrig bleibt 1001 0000, also 144. Rechnerisch wäre es 400, und 400 − 256 ist 144.' },
+    { f: 'a hat den Typ uint8. Welcher Ausdruck liefert für jeden Wert von a dasselbe wie a << 1?',
+      a: ['a + 1', 'a * a', 'a + a', 'a / 2'], r: 2,
+      l: 'Um eine Stelle nach links schieben heißt verdoppeln, und a + a verdoppelt auch. Beide Ausdrücke laufen bei denselben Werten über und liefern dann dasselbe Ergebnis.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var z uint8 = 1<<5 | 1<<0\nfmt.Println(z)',
+      a: ['6', '32', '50', '33'], r: 3,
+      l: '1 << 5 setzt das Bit mit der Nummer 5, das ist 32. 1 << 0 ist 1. Der Operator | fügt beide zu 0010 0001 zusammen, also 33.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var c int8 = -13\nfmt.Println(c>>1, c/2)',
+      a: ['-7 -6', '-6 -6', '-7 -7', '-6 -7'], r: 0,
+      l: 'Die Verschiebung rundet −6,5 ab, also zur kleineren Zahl hin: −7. Die Division mit / schneidet die Stellen hinter dem Komma ab: −6.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'fmt.Println(1 + 2<<3)',
+      a: ['24', '17', '9', '48'], r: 1,
+      l: 'Der Operator << bindet so stark wie * und damit stärker als +. Go rechnet zuerst 2 << 3, das ist 16, und addiert dann 1. Die Bindungsstärken stehen im Kurstext in Abschnitt 4.1.2, Seite 50.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var a uint8 = 13\nn := 8\nfmt.Println(a << n)',
+      a: ['13', '0', '208', 'Das Programm bricht mit einem Laufzeitfehler ab.'], r: 1,
+      l: 'Nach acht Stellen sind alle acht Bits links weggefallen, und rechts sind acht Nullen nachgerückt.' },
+    { f: 'Im Gleitkomma-Modell des Kurstexts hat die Mantisse 8 Bit. Die Mantisse 0,10101010 mit dem Exponenten 0 hat den Wert 0,6640625. Welchen Wert hat dieselbe Mantisse mit dem Exponenten 1?',
+      a: ['0,33203125', '1,6640625', '0,6640625', '1,328125'], r: 3,
+      l: 'Der Exponent 1 schiebt das Komma um eine Stelle nach rechts: Aus 0,10101010 wird 1,0101010. Das verdoppelt den Wert, so wie << 1 bei einer Ganzzahl.' }
+  ];
+
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const wahl = {};
+  let fertig = false;
+
+  function zeige() {
+    el('fragen').innerHTML = FRAGEN.map((q, i) => {
+      const g = wahl[i];
+      let s = '<div class="card"><h2>Frage ' + (i + 1) + ': ' + esc(q.f) + '</h2>' + (q.c ? '<pre>' + esc(q.c) + '</pre>' : '') + '<div class="antworten">';
+      q.a.forEach((t, k) => {
+        const kl = fertig ? (k === q.r ? ' richtig' : (k === g ? ' falsch' : '')) : (k === g ? ' gewaehlt' : '');
+        s += '<button type="button" class="antwort' + kl + '" data-frage="' + i + '" data-antwort="' + k + '"' + (fertig ? ' disabled' : '') + '><span class="buchstabe">' + 'ABCD'[k] + ')</span><span>' + esc(t) + '</span></button>';
+      });
+      s += '</div>';
+      if (fertig) {
+        const art = g === undefined ? 'offen' : (g === q.r ? '' : 'falsch');
+        const vor = g === undefined ? 'Keine Antwort gewählt. Richtig ist ' + 'ABCD'[q.r] + '. ' : (g === q.r ? 'Richtig. ' : 'Falsch, richtig ist ' + 'ABCD'[q.r] + '. ');
+        s += '<div class="aufloesung ' + art + '">' + vor + esc(q.l) + '</div>';
+      }
+      return s + '</div>';
+    }).join('');
+    if (fertig) {
+      const n = FRAGEN.filter((q, i) => wahl[i] === q.r).length;
+      el('ergebnis').innerHTML = '<div class="ergebnis">' + n + ' von ' + FRAGEN.length + ' Fragen richtig</div>';
+    } else el('ergebnis').innerHTML = '';
+    el('auswerten').disabled = fertig;
+  }
+
+  el('fragen').addEventListener('click', ev => {
+    const k = ev.target.closest('[data-frage]');
+    if (!k || fertig) return;
+    wahl[k.dataset.frage] = Number(k.dataset.antwort);
+    document.querySelectorAll('[data-frage="' + k.dataset.frage + '"]').forEach(b => b.classList.toggle('gewaehlt', b === k));
+  });
+  el('auswerten').onclick = () => { fertig = true; zeige(); el('ergebnis').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  el('vonvorn').onclick = () => { for (const k in wahl) delete wahl[k]; fertig = false; zeige(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  zeige();
+})();
+</script>
+</body>
+</html>
