@@ -4,31 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz: break-Anweisung</title>
+    <link rel="stylesheet" href="../stil.css">
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
         
         h1 {
-            color: #667eea;
+            color: #0f766e;
             text-align: center;
             margin-bottom: 10px;
             font-size: 2.5em;
@@ -46,7 +34,7 @@
             padding: 25px;
             margin: 20px 0;
             border-radius: 10px;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #0f766e;
         }
         
         .question h3 {
@@ -72,13 +60,13 @@
         
         .options li:hover {
             background: #e7f3ff;
-            border-color: #667eea;
+            border-color: #0f766e;
         }
         
         .options li.selected {
-            background: #667eea;
+            background: #0f766e;
             color: white;
-            border-color: #667eea;
+            border-color: #0f766e;
         }
         
         .options li.correct {
@@ -94,15 +82,7 @@
         }
         
         .code-snippet {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 14px;
             line-height: 1.5;
-            white-space: pre;
-            overflow-x: auto;
             margin: 15px 0;
         }
         
@@ -137,7 +117,7 @@
         }
         
         .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             border: none;
             padding: 15px 40px;
@@ -159,7 +139,7 @@
         }
         
         .result {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             padding: 30px;
             border-radius: 10px;
@@ -190,7 +170,7 @@
         
         .restart-btn {
             background: white;
-            color: #667eea;
+            color: #0f766e;
             border: none;
             padding: 12px 30px;
             border-radius: 8px;

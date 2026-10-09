@@ -4,28 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613</title>
+<link rel="stylesheet" href="../stil.css">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * {margin: 0; padding: 0; }
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
   }
-  .container { max-width: 1200px; margin: 0 auto; }
 
   /* Hero */
   .hero {
-    background: rgba(255,255,255,0.15);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 40px;
-    text-align: center;
-    margin-bottom: 30px;
-    color: white;
   }
-  .hero h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-  .hero p { font-size: 1.1rem; opacity: 0.9; }
+  .hero p {opacity: 0.9; }
   .badge {
     display: inline-block;
     background: rgba(255,255,255,0.25);
@@ -37,30 +27,16 @@
 
   /* Cards */
   .card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-left: 5px solid #667eea;
     animation: fadeIn 0.4s ease;
   }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .card h2 { color: #4a4a8a; margin-bottom: 15px; font-size: 1.4rem; }
-  .card h3 { color: #667eea; margin: 18px 0 10px; font-size: 1.1rem; }
+  .card h2 {margin-bottom: 15px;}
+  .card h3 {margin: 18px 0 10px;}
   .card p { color: #555; line-height: 1.7; margin-bottom: 12px; }
 
   /* Code blocks */
   .code-block {
-    background: #2d2d2d;
-    color: #f8f8f2;
-    border-radius: 10px;
-    padding: 20px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    white-space: pre;
     line-height: 1.6;
-    overflow-x: auto;
     margin: 12px 0;
   }
   .kw  { color: #ff79c6; }
@@ -72,16 +48,14 @@
 
   /* Info boxes */
   .info-box {
-    background: #d1ecf1; border-left: 4px solid #17a2b8;
-    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #0c5460;
+margin: 12px 0; color: #0c5460;
   }
   .warn-box {
     background: #fff3cd; border-left: 4px solid #ffc107;
     border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #856404;
   }
   .success-box {
-    background: #d4edda; border-left: 4px solid #28a745;
-    border-radius: 8px; padding: 15px 20px; margin: 12px 0; color: #155724;
+margin: 12px 0; color: #155724;
   }
   .error-box {
     background: #f8d7da; border-left: 4px solid #dc3545;
@@ -95,15 +69,14 @@
     font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
     background: #e9ecef; color: #555;
   }
-  .tab-btn.active { background: #667eea; color: white; }
+  .tab-btn.active { background: #0f766e; color: white; }
   .tab-btn:hover:not(.active) { background: #d0d0f0; }
   .tab-content { display: none; }
   .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 
   /* Table */
-  table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-  th { background: #667eea; color: white; padding: 12px; text-align: left; }
-  td { padding: 11px 12px; border-bottom: 1px solid #e9ecef; color: #444; }
+  table {margin: 15px 0; }
+  td {color: #444; }
   tr:hover td { background: #f0f0ff; }
 
   /* Interactive demo */
@@ -114,13 +87,11 @@
     width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;
     font-size: 0.95rem; transition: border 0.2s;
   }
-  .demo-input input:focus, .demo-input select:focus { outline: none; border-color: #667eea; }
+  .demo-input input:focus, .demo-input select:focus { outline: none; border-color: #0f766e; }
   .btn {
-    padding: 10px 24px; background: #667eea; color: white;
-    border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
-    font-weight: 600; transition: background 0.2s; margin-top: 24px;
+font-size: 0.95rem;
+transition: background 0.2s; margin-top: 24px;
   }
-  .btn:hover { background: #5569d4; }
   .output-box {
     background: #1e1e2e; color: #cdd6f4; border-radius: 8px;
     padding: 15px; font-family: 'Courier New', monospace;
@@ -133,11 +104,11 @@
     display: flex; gap: 4px; flex-wrap: wrap; margin: 15px 0;
   }
   .array-cell {
-    border: 2px solid #667eea; border-radius: 6px;
+    border: 2px solid #0f766e; border-radius: 6px;
     padding: 8px 14px; text-align: center; min-width: 50px;
     background: #f0f0ff; transition: all 0.2s;
   }
-  .array-cell:hover { background: #667eea; color: white; transform: translateY(-2px); }
+  .array-cell:hover { background: #0f766e; color: white; transform: translateY(-2px); }
   .array-cell .idx { font-size: 0.7rem; color: #888; display: block; }
   .array-cell .val { font-size: 1rem; font-weight: 700; color: #4a4a8a; }
   .array-cell:hover .val, .array-cell:hover .idx { color: white; }
@@ -155,12 +126,12 @@
     border-radius: 12px;
     padding: 18px;
   }
-  .compare-card h4 { color: #667eea; margin-bottom: 10px; }
+  .compare-card h4 { color: #0f766e; margin-bottom: 10px; }
 
   /* Section header */
   .section-label {
     display: inline-block;
-    background: #667eea;
+    background: #0f766e;
     color: white;
     padding: 3px 12px;
     border-radius: 12px;
@@ -174,7 +145,7 @@
   /* Matrix */
   .matrix {
     display: inline-block;
-    border: 2px solid #667eea;
+    border: 2px solid #0f766e;
     border-radius: 8px;
     overflow: hidden;
     margin: 10px;
@@ -187,8 +158,8 @@
     font-weight: 600; color: #444;
     transition: background 0.2s;
   }
-  .matrix-cell:hover { background: #667eea; color: white; }
-  .matrix-header { background: #667eea; color: white !important; font-size: 0.8rem; }
+  .matrix-cell:hover { background: #0f766e; color: white; }
+  .matrix-header { background: #0f766e; color: white !important; font-size: 0.8rem; }
 </style>
 </head>
 <body>

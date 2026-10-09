@@ -4,53 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>for-Anweisung mit Bedingung in Go</title>
+    <link rel="stylesheet" href="../stil.css">
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 40px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero p {
-            font-size: 1.2em;
             opacity: 0.95;
             max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .content {
-            padding: 40px;
         }
 
         .section {
@@ -58,30 +25,19 @@
             padding: 30px;
             background: #f8f9fa;
             border-radius: 15px;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #0f766e;
         }
 
         .section h2 {
-            color: #667eea;
             margin-bottom: 20px;
-            font-size: 1.8em;
         }
 
         .section h3 {
-            color: #764ba2;
             margin: 25px 0 15px 0;
-            font-size: 1.3em;
         }
 
         .code-block {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 20px;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
             margin: 20px 0;
-            white-space: pre;
             line-height: 1.5;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
@@ -108,11 +64,7 @@
         }
 
         .info-box {
-            background: #d1ecf1;
-            border-left: 5px solid #0c5460;
-            padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
             color: #0c5460;
         }
 
@@ -126,11 +78,7 @@
         }
 
         .success-box {
-            background: #d4edda;
-            border-left: 5px solid #155724;
-            padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
             color: #155724;
         }
 
@@ -145,11 +93,11 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            border: 2px solid #667eea;
+            border: 2px solid #0f766e;
         }
 
         .comparison-card h4 {
-            color: #667eea;
+            color: #0f766e;
             margin-bottom: 10px;
         }
 
@@ -162,7 +110,7 @@
         }
 
         .flow-step {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             padding: 15px;
             border-radius: 8px;
@@ -173,7 +121,7 @@
 
         .flow-arrow {
             font-size: 2em;
-            color: #667eea;
+            color: #0f766e;
             margin: 10px 0;
         }
 
@@ -196,18 +144,11 @@
 
         .tab {
             padding: 12px 24px;
-            background: #f8f9fa;
-            border: none;
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
             border-radius: 8px 8px 0 0;
             transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
         }
 
         .tab-content {
@@ -227,7 +168,7 @@
         }
 
         .interactive-demo h3 {
-            color: #667eea;
+            color: #0f766e;
             margin-bottom: 20px;
         }
 
@@ -240,7 +181,7 @@
 
         .demo-controls input {
             padding: 10px;
-            border: 2px solid #667eea;
+            border: 2px solid #0f766e;
             border-radius: 5px;
             font-size: 1em;
             flex: 1;
@@ -249,7 +190,7 @@
 
         .demo-controls button {
             padding: 10px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -283,12 +224,12 @@
             background: white;
             padding: 25px;
             border-radius: 12px;
-            border-top: 4px solid #667eea;
+            border-top: 4px solid #0f766e;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .concept-card h4 {
-            color: #667eea;
+            color: #0f766e;
             margin-bottom: 10px;
             font-size: 1.2em;
         }
@@ -302,13 +243,6 @@
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 1.8em;
-            }
-
-            .content {
-                padding: 20px;
-            }
 
             .section {
                 padding: 20px;
@@ -444,7 +378,7 @@
                             <div class="flow-arrow">↓</div>
                             <div class="flow-step" style="max-width: 200px;">Schleifenrumpf ausführen</div>
                             <div class="flow-arrow">↓</div>
-                            <div style="color: #667eea; font-weight: bold;">⤴ Zurück zur Bedingung</div>
+                            <div style="color: #0f766e; font-weight: bold;">⤴ Zurück zur Bedingung</div>
                         </div>
                         <div style="flex: 1;">
                             <div style="color: #dc3545; font-weight: bold;">✗ NEIN (false)</div>
@@ -500,13 +434,13 @@
                             <h4>1. Durchlauf</h4>
                             <p>Eingabe: <code>16</code></p>
                             <p>Ausgabe: <code>Wurzel von 16 ist 4</code></p>
-                            <p style="color: #667eea;">↻ Bedingung prüfen</p>
+                            <p style="color: #0f766e;">↻ Bedingung prüfen</p>
                         </div>
                         <div class="comparison-card">
                             <h4>2. Durchlauf</h4>
                             <p>Eingabe: <code>25</code></p>
                             <p>Ausgabe: <code>Wurzel von 25 ist 5</code></p>
-                            <p style="color: #667eea;">↻ Bedingung prüfen</p>
+                            <p style="color: #0f766e;">↻ Bedingung prüfen</p>
                         </div>
                         <div class="comparison-card">
                             <h4>Abbruch</h4>
@@ -877,7 +811,7 @@ fmt.<span class="function">Scan</span>(&eingabe)
             </div>
 
             <!-- Zusammenfassung -->
-            <div class="section" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+            <div class="section" style="background: linear-gradient(135deg, #0f766e15 0%, #1e40af15 100%);">
                 <h2>📋 Zusammenfassung</h2>
 
                 <div class="key-concepts">

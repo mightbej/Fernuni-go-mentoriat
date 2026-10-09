@@ -4,30 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exkurs: Von der Problemstellung zum Go-Programm</title>
+    <link rel="stylesheet" href="../stil.css">
     <style>
         :root { --bg:#f7f9fc; --card:#fff; --text:#1f2937; --muted:#4b5563; --line:#e5e7eb; --accent:#0f766e; --blau:#1e40af; --gelb:#fef3c7; --gelbrand:#f59e0b; }
-        * { box-sizing: border-box; }
-        body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text); background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%); line-height:1.6; }
-        .container { max-width:1000px; margin:0 auto; padding:24px; }
-        .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%); color:#fff; border-radius:14px; padding:24px; box-shadow:0 10px 24px rgba(15,118,110,.25); margin-bottom:20px; }
-        .hero h1 { margin:0 0 10px; font-size:1.9rem; }
-        .hero p { margin:0; opacity:.96; font-size:1.05rem; }
-        .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:18px; }
-        h2 { margin-top:0; font-size:1.35rem; color:var(--accent); border-bottom:2px solid var(--line); padding-bottom:8px; }
-        h3 { font-size:1.08rem; margin:0 0 8px; color:var(--blau); }
+        .hero p {opacity:.96;}
+        h3 {margin:0 0 8px;}
         p { margin:0 0 10px; }
         ul, ol { margin:0 0 10px; padding-left:22px; }
         li { margin:4px 0; }
-        a { color:var(--blau); }
-        code { background:#eef2f7; padding:1px 5px; border-radius:4px; font-family:Consolas,"Courier New",monospace; font-size:.95em; }
-        table { border-collapse:collapse; width:100%; margin:10px 0; }
-        th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
-        th { background:#f1f5f9; }
+        code {font-family:Consolas,"Courier New",monospace; font-size:.95em; }
+        table {margin:10px 0; }
+        th, td {vertical-align:top; }
 
         .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
-        .tab { padding:9px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text); font:inherit; font-weight:600; cursor:pointer; }
+        .tab { padding:9px 14px;border-radius:8px;font:inherit; font-weight:600; cursor:pointer; }
         .tab:hover { background:#ecfdf5; }
-        .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .tab.active {border-}
         .tab:focus-visible, button:focus-visible, a:focus-visible { outline:2px solid var(--blau); outline-offset:2px; }
         .stufe { display:none; }
         .stufe.active { display:block; }
@@ -52,7 +44,7 @@
         .rechner input { width:130px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font:inherit; }
         .ergebnis { font-weight:600; }
         footer { color:var(--muted); font-size:.9rem; padding:8px 4px 24px; }
-        @media (max-width:700px) { .hero h1 { font-size:1.5rem; } }
+        @media (max-width:700px) { }
     </style>
 </head>
 <body>

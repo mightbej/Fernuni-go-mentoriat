@@ -9,7 +9,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);
             height: 100vh;
             overflow: hidden;
             padding: 20px;
@@ -28,7 +28,7 @@
         .header {
             padding: 20px 30px;
             border-bottom: 2px solid #e0e0e0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
         }
 
@@ -58,7 +58,7 @@
         }
 
         .tab:hover { background: #f0f0f0; }
-        .tab.active { background: #667eea; color: white; border-color: #667eea; }
+        .tab.active { background: #0f766e; color: white; border-color: #0f766e; }
 
         .content-area {
             flex: 1;
@@ -132,7 +132,7 @@
         .memory-block {
             display: inline-block;
             background: #e3f2fd;
-            border: 2px solid #667eea;
+            border: 2px solid #0f766e;
             padding: 12px 16px;
             margin: 8px;
             border-radius: 5px;
@@ -153,7 +153,7 @@
         .arrow {
             display: inline-block;
             margin: 0 10px;
-            color: #667eea;
+            color: #0f766e;
             font-weight: bold;
             font-size: 1.2em;
         }
@@ -166,7 +166,7 @@
         }
 
         .comparison-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             padding: 12px;
             text-align: left;
@@ -189,7 +189,7 @@
         }
 
         ul, ol { margin-left: 20px; line-height: 1.8; }
-        h3 { color: #667eea; margin: 20px 0 10px 0; }
+        h3 { color: #0f766e; margin: 20px 0 10px 0; }
         p { line-height: 1.6; margin: 10px 0; }
 
         .nav-buttons {
@@ -202,7 +202,7 @@
 
         .nav-button {
             padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -323,7 +323,7 @@
                 <h3>Warum ist Kopieren so teuer?</h3>
                 <p>Es geht nicht nur um "Bytes zählen". Kopieren ist fundamental teuer wegen mehrerer Gründe:</p>
 
-                <h4 style="margin-top: 20px; color: #667eea;">1. Der Prozessor ist viel schneller als der Speicher</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">1. Der Prozessor ist viel schneller als der Speicher</h4>
                 <div class="info-box">
                     <strong>Asymmetrie:</strong>
                     <ul>
@@ -334,7 +334,7 @@
                 </div>
                 <p>Das bedeutet: Jedes Mal, wenn der Prozessor Daten aus dem RAM kopieren muss, wartet er. Der schnelle Chip sitzt "untätig" und wartet auf den langsamen Speicher.</p>
 
-                <h4 style="margin-top: 20px; color: #667eea;">2. Das Betriebssystem muss Speicher verwalten</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">2. Das Betriebssystem muss Speicher verwalten</h4>
                 <div class="requirement">
                     <strong>Speicher-Allokation:</strong>
                     <ul>
@@ -345,7 +345,7 @@
                     </ul>
                 </div>
 
-                <h4 style="margin-top: 20px; color: #667eea;">3. Kontext-Wechsel und Betriebssystem-Overhead</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">3. Kontext-Wechsel und Betriebssystem-Overhead</h4>
                 <div class="warning-box">
                     <strong>Was während einer Kopieroperation passiert:</strong>
                     <ul>
@@ -356,7 +356,7 @@
                     </ul>
                 </div>
 
-                <h4 style="margin-top: 20px; color: #667eea;">4. Cache-Misses und Memory Stalls</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">4. Cache-Misses und Memory Stalls</h4>
                 <div class="info-box">
                     <strong>CPU-Caches:</strong>
                     <ul>
@@ -546,7 +546,7 @@ func main() {
                 <h3>Die Bilanz: Der Overhead wächst mit O(n²)</h3>
                 <p>Das Problem wird noch schlimmer: Der Kopier-Overhead ist nicht konstant – er wächst quadratisch mit der Array-Größe!</p>
 
-                <h4 style="margin-top: 20px; color: #667eea;">Analyse für Selection Sort</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">Analyse für Selection Sort</h4>
                 <div class="info-box">
                     <strong>Die mathematische Realität:</strong>
                     <ul>
@@ -558,7 +558,7 @@ func main() {
                     <p style="margin-top: 15px; font-weight: 600;">Erkenntnis: Der Kopier-Overhead ist genauso teuer wie der Algorithmus selbst!</p>
                 </div>
 
-                <h4 style="margin-top: 20px; color: #667eea;">Konkrete Zahlen für Selection Sort</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">Konkrete Zahlen für Selection Sort</h4>
                 <table class="comparison-table">
                     <thead>
                         <tr>
@@ -607,7 +607,7 @@ func main() {
                 <h3>Die Lösung: Zeiger statt call-by-value</h3>
                 <p>Mit Zeiger-Parametern übergeben wir nicht das Array, sondern nur die Speicher-Adresse. Das ist fundamental effizienter!</p>
 
-                <h4 style="margin-top: 20px; color: #667eea;">Vergleich: call-by-value vs. call-by-reference</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">Vergleich: call-by-value vs. call-by-reference</h4>
                 <div class="visual-flow">
                     <strong>Call-by-value (ALT):</strong>
                     <div class="memory-block copy">
@@ -633,7 +633,7 @@ func main() {
                     </ul>
                 </div>
 
-                <h4 style="margin-top: 20px; color: #667eea;">Der Code-Unterschied</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">Der Code-Unterschied</h4>
                 <div class="code-block">// ALT: call-by-value
 func swap(a [100]int, i int, j int) [100]int {
     a[i], a[j] = a[j], a[i]
@@ -655,7 +655,7 @@ func swap(a *[100]int, i int, j int) {
                     </ul>
                 </div>
 
-                <h4 style="margin-top: 20px; color: #667eea;">Asymptotischer Gewinn</h4>
+                <h4 style="margin-top: 20px; color: #0f766e;">Asymptotischer Gewinn</h4>
                 <div class="warning-box">
                     <strong>Rechenzeit für Selection Sort mit Zeigern:</strong>
                     <ul>

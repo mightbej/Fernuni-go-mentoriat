@@ -8,7 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);
       min-height: 100vh;
       padding: 20px;
       color: #1f2937;
@@ -27,14 +27,14 @@
     .header {
       padding: 28px 32px;
       color: white;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
       border-bottom: 2px solid rgba(255,255,255,0.22);
     }
     .header h1 { font-size: 2rem; margin-bottom: 6px; }
     .subtitle { font-size: 1rem; opacity: 0.92; line-height: 1.5; max-width: 900px; }
     .cross-link {
       background: #e8eaf6;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid #0f766e;
       color: #333;
       padding: 14px 16px;
       margin-top: 16px;
@@ -43,7 +43,7 @@
     .lesson-links {
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid rgba(102,126,234,0.25);
+      border-top: 1px solid rgba(15, 118, 110,0.25);
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -69,13 +69,13 @@
       transition: 0.2s ease;
       white-space: nowrap;
     }
-    .tab.active { background: #667eea; border-color: #667eea; color: white; }
+    .tab.active { background: #0f766e; border-color: #0f766e; color: white; }
     .tab:hover { background: #eef2ff; }
     .content-area { flex: 1; overflow-y: auto; padding: 30px; }
     .step-content { display: none; }
     .step-content.active { display: block; animation: fadeIn 0.25s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    h3 { color: #667eea; margin-bottom: 12px; }
+    h3 { color: #0f766e; margin-bottom: 12px; }
     h4 { color: #334155; margin: 18px 0 8px; }
     p { line-height: 1.7; margin: 10px 0; }
     ul, ol { margin: 12px 0 12px 22px; line-height: 1.8; }
@@ -99,7 +99,7 @@
     .info-box { background: #d1ecf1; border-left: 4px solid #17a2b8; color: #0c5460; }
     .requirement { background: #fff3cd; border-left: 4px solid #ffc107; color: #856404; }
     .danger { background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24; }
-    .tip { background: #e8eaf6; border-left: 4px solid #667eea; color: #3949ab; }
+    .tip { background: #e8eaf6; border-left: 4px solid #0f766e; color: #3949ab; }
     .success-box { background: #d4edda; border-left: 4px solid #28a745; color: #155724; }
     .comparison-table {
       width: 100%;
@@ -107,15 +107,15 @@
       margin: 16px 0;
       font-size: 0.94rem;
     }
-    .comparison-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: left; padding: 12px; }
+    .comparison-table th { background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%); color: white; text-align: left; padding: 12px; }
     .comparison-table td { padding: 11px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
     .comparison-table tr:hover { background: #f8fafc; }
     .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0; }
-    .flow-box { background: #eef2ff; border: 1px solid #667eea; border-radius: 8px; padding: 12px 14px; font-weight: 700; min-width: 145px; text-align: center; }
-    .arrow { font-size: 1.5rem; color: #667eea; font-weight: 700; }
+    .flow-box { background: #eef2ff; border: 1px solid #0f766e; border-radius: 8px; padding: 12px 14px; font-weight: 700; min-width: 145px; text-align: center; }
+    .arrow { font-size: 1.5rem; color: #0f766e; font-weight: 700; }
     .memory-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
-    .memory-card { border: 2px solid #667eea; border-radius: 10px; padding: 14px; background: #f8f9ff; }
-    .memory-card .label { color: #667eea; font-weight: 700; margin-bottom: 8px; }
+    .memory-card { border: 2px solid #0f766e; border-radius: 10px; padding: 14px; background: #f8f9ff; }
+    .memory-card .label { color: #0f766e; font-weight: 700; margin-bottom: 8px; }
     .memory-cell { border: 1px dashed #94a3b8; background: white; border-radius: 6px; padding: 9px; margin-top: 8px; font-family: Consolas, monospace; }
     .nav-buttons { display: flex; justify-content: space-between; gap: 12px; border-top: 2px solid #e5e7eb; margin-top: 24px; padding-top: 20px; }
     .nav-button {
@@ -126,7 +126,7 @@
       cursor: pointer;
       font-weight: 700;
       color: white;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
     }
     .nav-button:disabled { opacity: 0.5; cursor: not-allowed; }
     code { background: #f1f5f9; border-radius: 4px; padding: 2px 5px; font-family: Consolas, monospace; }

@@ -1,0 +1,245 @@
+/* Seite: Grundlage für alle Seiten. */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2937;
+    line-height: 1.6;
+    background: radial-gradient(circle at 18% -12%, #d9fbe8 0%, #f7f9fc 46%);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Rahmen: Breite und Abstand der Seite. Die Gegenwerte lösen die weiße Karte älterer Seiten auf. */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+
+/* Kopf: der farbige Balken oben auf der Seite (Klasse hero). */
+.hero {
+    background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    text-align: left;
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.25);
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 1.9rem;
+    margin: 0 0 10px;
+    text-align: left;
+    text-shadow: none;
+}
+
+.hero p {
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+@media (max-width: 700px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Abschnitt: weiße Karte mit Rahmen. */
+.card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: none;
+}
+
+/* Überschriften im Text. */
+h2 {
+    font-size: 1.35rem;
+    color: #0f766e;
+    margin-top: 0;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 8px;
+}
+
+h3 {
+    font-size: 1.08rem;
+    color: #1e40af;
+}
+
+/* Überschriften in farbigen Kästen und im Kopf übernehmen die Schriftfarbe des Kastens. */
+.hero h2, .hero h3, .results h2, .results h3, .result h2, .result h3,
+.result-section h2, .result-section h3, .quiz-score h2, .quiz-score h3 {
+    color: inherit;
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Codeblock: dunkler Kasten für Programmcode. */
+.code-block, .code-snippet, .code {
+    background: #1f2937;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    white-space: pre;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.95rem;
+}
+
+/* Code im Text. */
+code {
+    background: #eef2f7;
+    color: #0f172a;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+/* Code im Codeblock hat keinen eigenen Hintergrund. */
+.code-block code, .code-snippet code, .code code, pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Code im Kopf: heller Schleier statt hellem Kasten. */
+.hero code {
+    background: rgba(255, 255, 255, 0.18);
+    color: inherit;
+}
+
+/* Knopf: Hauptschaltfläche. */
+.btn-primary, .btn, .nav-button {
+    background: #0f766e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover, .btn:hover, .nav-button:hover {
+    background: #115e59;
+}
+
+/* Knopf: zweiter Rang. */
+.btn-secondary {
+    background: #e5e7eb;
+    color: #1f2937;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Reiter: Zustände inaktiv und aktiv. */
+.tab, .tab-button {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #1f2937;
+}
+
+.tab.active, .tab-button.active {
+    background: #0f766e;
+    color: #fff;
+}
+
+/* Bereiche: Leiste, die eine Erklärseite in Grundlagen, Ausprobieren, Vertiefung und Faustregeln teilt.
+   Die Leiste erzeugt bereiche.js aus den Attributen data-bereich. */
+.bereiche {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 18px;
+}
+
+.bereich-knopf {
+    background: #fff;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 9px 16px;
+    margin: 0;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.bereich-knopf:hover {
+    background: #ecfdf5;
+}
+
+.bereich-knopf[aria-pressed="true"] {
+    background: #0f766e;
+    border-color: #0f766e;
+    color: #fff;
+}
+
+[data-bereich][hidden] {
+    display: none;
+}
+
+/* Kasten gelb: Hinweis. */
+.hinweis {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+/* Kasten grün: richtig oder gelöst. */
+.success-box {
+    background: #ecfdf5;
+    border-left: 4px solid #0f766e;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+/* Kasten blau: Information. */
+.info-box {
+    background: #eff6ff;
+    border-left: 4px solid #1e40af;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+/* Tabelle: Gitter mit Kopfzeile. Der Textwert der Kopfzelle ist Gegenwert zum Hintergrund. */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #e5e7eb;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+th {
+    background: #f1f5f9;
+    color: #1f2937;
+}
+
+/* Link. */
+a {
+    color: #1e40af;
+}
+
+/* Fokus: Umrandung beim Weiterschalten mit der Tastatur. */
+:focus-visible {
+    outline: 2px solid #1e40af;
+    outline-offset: 2px;
+}
