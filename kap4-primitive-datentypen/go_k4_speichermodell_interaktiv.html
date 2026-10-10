@@ -104,6 +104,26 @@
     .bitzelle:nth-child(4) { margin-right:12px; }
     .bitsumme { margin-top:12px;min-height:3.2em; }
     .bitsumme .muster { font-family:Consolas,monospace;font-size:1.15rem;display:block;margin-top:4px;overflow-wrap:anywhere; }
+    .lesarten { justify-content:center;margin:14px 0 0; }
+    .lesarten .frage { color:var(--muted);font-size:.95rem; }
+    .lesarten button { font-family:Consolas,monospace; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab { background:#fff; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Schritt 2 und 3: eine einzelne Zelle */
+    .probe { max-width:640px;margin:14px auto; }
+    .gruppentitel { color:var(--muted);font-size:.95rem;margin:14px 0 6px; }
+    .gruppen { display:flex;gap:10px;justify-content:center;flex-wrap:wrap; }
+    .gruppe { border:2px solid var(--neg);background:var(--neg-bg);border-radius:8px;padding:6px 14px;font-family:Consolas,monospace;font-size:1.05rem; }
+    .gruppe.oktal { border-color:#b45309;background:#fef3c7; }
+    .gruppe .ziffer { display:block;font-size:1.7rem;font-weight:700;line-height:1.2; }
   </style>
 </head>
 <body>
@@ -114,6 +134,15 @@
     <p>Eine Variable ist ein Stück Hauptspeicher mit einem Namen. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Kurstext Kapitel 4, Primitive Datentypen.</p>
   </div>
 
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Name, Typ und Adresse</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Wert, mehrere Schreibweisen</button>
+    <button type="button" class="tab" data-stufe="3">3 Ein Bitmuster, mehrere Werte</button>
+    <button type="button" class="tab" data-stufe="4">Aufgaben</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte. Jede Zelle hat eine Nummer, ihre Adresse. Der Rechner findet eine Zelle nur über ihre Adresse.</p>
@@ -124,6 +153,7 @@
       <li>Er liest aus der Zeile den Typ. Der Typ sagt, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten.</li>
     </ol>
     <p>Der Wert einer Variable steht nur im Hauptspeicher. In der Tabelle steht er nicht.</p>
+    <p>Die Seite geht in drei Schritten vor. Schritt 1 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Schritt 2 zeigt einen Wert in vier Schreibweisen: dezimal, binär, oktal und hexadezimal. Schritt 3 liest ein Bitmuster mit verschiedenen Typen. Jeder Schritt hat oben einen Reiter.</p>
     <div class="hinweis">Das Modell vereinfacht. In Go benutzt der Compiler die Tabelle, während er das Programm übersetzt, und setzt die Adressen fest in das Programm ein. Andere Sprachen wie Python schlagen Namen auch dann noch nach, wenn das Programm läuft.</div>
   </div>
 
@@ -143,9 +173,15 @@
       </tbody>
     </table>
     </div>
-    <p class="quelle">Ganzzahl-Typen nach Kurstext, Abschnitt 4.3.4.</p>
+    <p class="quelle">Ganzzahl-Typen nach Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Ausprobieren</h2>
     <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>.</p>
@@ -196,8 +232,92 @@
     </div>
   </div>
 
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Ein Wert, mehrere Schreibweisen</h2>
+    <p>Im Quelltext lässt sich dieselbe Zahl auf mehrere Arten schreiben. Der Kurstext nennt <code>123</code> und <code>0x7b</code>: zwei Literale, ein Wert. Der Compiler rechnet jede Schreibweise in dasselbe Bitmuster um. In der Zelle kommt nur der Wert an.</p>
+    <p>Hier steht eine einzelne Zelle. Ein Klick auf ein Bit schaltet es um. Darunter stehen die vier Schreibweisen des Wertes.</p>
+    <div class="zeile">
+      <span>Beispiel einstellen:</span>
+      <button type="button" data-probe="123">01111011</button>
+      <button type="button" data-probe="65">01000001</button>
+      <button type="button" data-probe="255">11111111</button>
+      <button type="button" data-probe="8">00001000</button>
+    </div>
+    <div class="bitfeld probe">
+      <div class="bitkopf">Über jedem Bit steht seine Wertigkeit.</div>
+      <div class="bitreihe" id="bits2"></div>
+      <div class="gruppentitel">Vier Bits ergeben eine Hexadezimalziffer.</div>
+      <div class="gruppen" id="hexgruppen"></div>
+      <div class="gruppentitel">Drei Bits ergeben eine Oktalziffer. Für die linke Ziffer bleiben zwei Bits.</div>
+      <div class="gruppen" id="oktalgruppen"></div>
+    </div>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Zahlensystem</th><th>Literal im Quelltext</th><th>Formatverb für <code>fmt.Printf</code></th><th>Ausgabe</th></tr></thead>
+      <tbody id="schreibweisen"></tbody>
+    </table>
+    </div>
+    <div class="hinweis">Auch eine führende <code>0</code> ohne Buchstaben leitet eine Oktalzahl ein. Das Literal <code>0173</code> hat den Wert 123, das Literal <code>173</code> den Wert 173. Der Kurstext warnt davor in Abschnitt 4.3.1.</div>
+    <p>Mehr zu den Zahlensystemen steht auf der Seite <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitte 4.3.1 bis 4.3.3, Seiten 59–63.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Ein Bitmuster, mehrere Werte</h2>
+    <p>Eine Zelle enthält 8 Bit. Welcher Wert das ist, steht in der Zelle nicht. Erst der Typ legt fest, wie die Bits zu lesen sind. Stelle ein Bitmuster ein und wechsle mit den Schaltflächen den Typ. Die Bits bleiben stehen, der Wert ändert sich.</p>
+    <div class="zeile">
+      <span>Beispiel einstellen:</span>
+      <button type="button" data-probe="123">01111011</button>
+      <button type="button" data-probe="65">01000001</button>
+      <button type="button" data-probe="255">11111111</button>
+      <button type="button" data-probe="1">00000001</button>
+    </div>
+    <div class="bitfeld probe">
+      <div class="bitkopf">Es ist dieselbe Zelle wie in Schritt 2.</div>
+      <div class="bitreihe" id="bits3"></div>
+      <div class="zeile lesarten" id="lesarten">
+        <span class="frage">Diese Zelle lesen</span>
+        <button type="button" data-lesart="int8">als int8</button>
+        <button type="button" data-lesart="uint8">als uint8</button>
+        <button type="button" data-lesart="zeichen">als Zeichen</button>
+        <button type="button" data-lesart="bool">als bool</button>
+      </div>
+      <div class="bitsumme" id="gelesen"></div>
+    </div>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Bitmuster in der Zelle</th><th>Wert als <code>int8</code></th><th>Wert als <code>uint8</code></th><th>Wert als Zeichen</th></tr></thead>
+      <tbody>
+        <tr><td><code>01000001</code></td><td>Der Wert ist 65.</td><td>Der Wert ist 65.</td><td>Das Zeichen ist <code>A</code>.</td></tr>
+        <tr><td><code>11111111</code></td><td>Der Wert ist −1.</td><td>Der Wert ist 255.</td><td>Das Byte steht nicht allein für ein Zeichen.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="hinweis">Der Kurstext unterscheidet in Abschnitt 4.3.3 auf Seite 63 die syntaktische von der semantischen Ebene. Sein Beispiel sind die Literale <code>123</code> und <code>0x7b</code>: zwei Schreibweisen im Quelltext, ein Wert. Das war Schritt 2. Dieser Schritt dreht die Richtung um: ein Bitmuster im Speicher, mehrere Werte. In einem Go-Programm legt die Deklaration den Typ einer Variable fest, und er bleibt. Nur auf dieser Seite lässt er sich für eine Zelle wechseln.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu den Aufgaben</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
   <div class="card">
     <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <p>Die Aufgaben 1 bis 5 gehören zu Schritt 1, Aufgabe 6 gehört zu Schritt 2, die Aufgaben 7 und 8 gehören zu Schritt 3.</p>
     <ol>
       <li>Führe die ersten zwei Zeilen aus. Wie viele Zellen sind jetzt reserviert?
         <details><summary>Antwort</summary>5 Zellen. <code>int8</code> braucht 1 Zelle, <code>int32</code> braucht 4.</details></li>
@@ -209,6 +329,12 @@
         <details><summary>Antwort</summary>Nein. <code>c</code> hat eine eigene Zelle mit der Adresse 105. Die Zuweisung hat das Bitmuster dorthin kopiert.</details></li>
       <li>Geh zurück bis nach <code>a = 17</code>. Stelle in Zelle 100 das Bitmuster 01111111 ein, das ist 127. Was steht nach <code>a = a + 4</code> in der Zelle?
         <details><summary>Antwort</summary>−125. Die Summe 131 passt nicht in einen <code>int8</code>. Das ist der Überlauf vom Zahlenkreis.</details></li>
+      <li>Stelle in Schritt 2 das Bitmuster 11111111 ein. Wie lautet das Literal hexadezimal, wie oktal?
+        <details><summary>Antwort</summary><code>0xff</code> und <code>0o377</code>. Hexadezimal sind es zwei Gruppen aus vier Einsen, jede ergibt <code>f</code>. Oktal bleiben für die linke Ziffer nur zwei Bits, darum beginnt die Zahl mit 3.</details></li>
+      <li>Stelle in Schritt 3 das Bitmuster 11111111 ein. Welchen Wert hat es als <code>int8</code>, welchen als <code>uint8</code>?
+        <details><summary>Antwort</summary>−1 und 255. Das linke Bit hat bei <code>int8</code> die Wertigkeit −128, bei <code>uint8</code> die Wertigkeit 128. Die übrigen sieben Bits zählen in beiden Typen gleich.</details></li>
+      <li>Welches Bitmuster ergibt als Zeichen gelesen ein kleines <code>a</code>? Geh vom großen <code>A</code> mit 01000001 aus.
+        <details><summary>Antwort</summary>01100001. Das ist die Nummer 97. Zwischen einem großen und dem kleinen Buchstaben liegt immer 32, also genau ein Bit.</details></li>
     </ol>
   </div>
 
@@ -222,6 +348,11 @@
       <li><a href="../kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8)</a></li>
     </ol>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
@@ -243,6 +374,10 @@
   var FLAECHE = ["#d1fae5", "#dbeafe", "#fef3c7", "#fce7f3", "#ede9fe"];
 
   var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
+  // Schritt 2 und 3 teilen sich eine einzelne Zelle.
+  var probe = 123, lesart = "int8";
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#typen
+  var ANKER = ["worum", "speicher", "schreibweisen", "typen", "aufgaben"];
 
   function $(id) { return document.getElementById(id); }
   function bits(b) { return b.toString(2).padStart(8, "0"); }
@@ -676,6 +811,80 @@
     return vz + "2<sup>" + exponent + "</sup>";
   }
 
+  // Der Wert einer einzelnen Zelle unter dem Typ, den der Leser gewählt hat
+  function gelesenAls(wert) {
+    var m = "<span class=\"muster\">" + bits(wert) + " = ";
+    if (lesart === "int8") return "Als " + c("int8") + " gelesen ist das Bitmuster eine ganze Zahl mit Vorzeichen." + m + (wert > 127 ? "−" + (256 - wert) : wert) + "</span>";
+    if (lesart === "uint8") return "Als " + c("uint8") + " gelesen ist das Bitmuster eine ganze Zahl ohne Vorzeichen." + m + wert + "</span>";
+    if (lesart === "bool") {
+      if (wert > 1) return "Der Typ " + c("bool") + " kennt nur zwei Bitmuster: " + c("00000000") + " für " + c("false") + " und " + c("00000001") + " für " + c("true") + ". Dieses Bitmuster kommt in einer Variable vom Typ " + c("bool") + " nicht vor.";
+      return "Als " + c("bool") + " gelesen ist das Bitmuster ein Wahrheitswert." + m + (wert ? "true" : "false") + "</span>";
+    }
+    if (wert >= 128) return "Die Nummer " + wert + " steht in einem Go-String nicht allein für ein Zeichen. Das Byte ist Teil eines Zeichens aus mehreren Bytes, wie beim " + c("ü") + " in " + c("Tür") + ".";
+    if (wert < 32 || wert === 127) return "Die Nummer " + wert + " gehört zu einem Steuerzeichen. Es hat kein Schriftbild.";
+    if (wert === 32) return "Als Zeichen gelesen ist das Bitmuster das Leerzeichen mit der Nummer 32.";
+    var z = String.fromCharCode(wert).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    return "Als Zeichen gelesen ist das Bitmuster das Zeichen mit der Nummer " + wert + "." + m + "<code>" + z + "</code></span>";
+  }
+
+  // Die acht Bits der einzelnen Zelle aus Schritt 2 und 3
+  function zeichneProbeBits(reihe, mitGewicht, minusLinks) {
+    reihe.textContent = "";
+    for (var j = 7; j >= 0; j--) {
+      (function (j) {
+        var an = (probe >> j) & 1, negativ = minusLinks && j === 7;
+        var d = document.createElement("div");
+        d.className = "bitzelle" + (an ? " an" : "") + (negativ ? " minus" : "");
+        var g = document.createElement("span"); g.className = "gewicht"; g.innerHTML = mitGewicht ? gewicht(j, negativ) : "&nbsp;";
+        var b = document.createElement("button"); b.type = "button"; b.textContent = an;
+        b.setAttribute("aria-label", "Bit " + j + ", steht auf " + an);
+        b.addEventListener("click", function () { probe ^= (1 << j); zeichneProbe(); });
+        d.appendChild(g); d.appendChild(b);
+        reihe.appendChild(d);
+      })(j);
+    }
+  }
+
+  function gruppen(teile, basis, klasse) {
+    return teile.map(function (g) {
+      return "<span class=\"gruppe" + klasse + "\">" + g + "<span class=\"ziffer\">" + parseInt(g, 2).toString(basis) + "</span></span>";
+    }).join("");
+  }
+
+  function zeichneProbe() {
+    var b = bits(probe);
+    zeichneProbeBits($("bits2"), true, false);
+    $("hexgruppen").innerHTML = gruppen([b.slice(0, 4), b.slice(4)], 16, "");
+    $("oktalgruppen").innerHTML = gruppen([b.slice(0, 2), b.slice(2, 5), b.slice(5)], 8, " oktal");
+    $("schreibweisen").innerHTML = [
+      ["Dezimalsystem", String(probe), "%d", String(probe)],
+      ["Binärsystem", "0b" + b, "%b", probe.toString(2)],
+      ["Oktalsystem", "0o" + probe.toString(8), "%o", probe.toString(8)],
+      ["Hexadezimalsystem", "0x" + probe.toString(16), "%x", probe.toString(16)]
+    ].map(function (z) {
+      return "<tr><td>" + z[0] + "</td><td>" + c(z[1]) + "</td><td>" + c(z[2]) + "</td><td>" + c(z[3]) + "</td></tr>";
+    }).join("");
+
+    zeichneProbeBits($("bits3"), lesart !== "bool", lesart === "int8");
+    $("gelesen").innerHTML = gelesenAls(probe);
+    Array.prototype.forEach.call($("lesarten").querySelectorAll("button"), function (k) {
+      k.className = k.dataset.lesart === lesart ? "haupt" : "";
+    });
+  }
+
+  // ---- Reiter ----
+
+  function zeigeStufe(nummer, nachOben) {
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    requestAnimationFrame(zeichnePfeile);
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
   function zeichneBits() {
     var tb = teilBei(auswahl), e = tb && tb.e, t = tb && tb.t, wert = zellen[auswahl - START];
     var stelle = t ? auswahl - t.adr : 0, n = t ? t.n : 1;
@@ -748,8 +957,21 @@
   $("weiter").addEventListener("click", weiter);
   $("zurueck").addEventListener("click", zurueck);
   $("vorn").addEventListener("click", vonVorn);
+  $("lesarten").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button");
+    if (b) { lesart = b.dataset.lesart; zeichneProbe(); }
+  });
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-probe]");
+    if (!k) return;
+    if (k.dataset.probe !== undefined) { probe = Number(k.dataset.probe); zeichneProbe(); return; }
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
   window.addEventListener("resize", zeichnePfeile);
   vonVorn();
+  zeichneProbe();
+  zeigeStufe(stufeAusAdresse(), false);
 })();
 </script>
 </body>
