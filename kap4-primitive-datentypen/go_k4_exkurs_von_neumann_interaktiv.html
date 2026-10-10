@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exkurs: Speichern und Rechnen im Rechner nach von Neumann</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Das Bild des Rechners */
+    .rechner { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0; }
+    .rechner .rahmen { grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:12px;border:2px dashed #94a3b8;border-radius:12px;padding:26px 12px 12px;position:relative; }
+    .rechner .rahmen::before { content:"Prozessor";position:absolute;top:4px;left:14px;font-size:.85rem;color:var(--muted);font-weight:600; }
+    .rechner .leitung { grid-column:1 / -1;background:#e2e8f0;border-radius:8px;padding:8px 12px;text-align:center;font-size:.92rem;color:var(--muted);min-height:2.6em; }
+    .rechner .leitung.aktiv { background:var(--aktiv-bg);color:#111827;font-weight:600; }
+    .werk { display:block;width:100%;text-align:left;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 14px;font-weight:400;min-height:118px; }
+    button.werk:hover { background:#f0fdfa; }
+    .werk .name { display:block;font-weight:700;font-size:1.05rem;color:var(--accent); }
+    .werk .aufgabe { display:block;color:var(--muted);font-size:.9rem;margin-bottom:6px; }
+    .werk .inhalt { display:block;font-family:Consolas,"Courier New",monospace;font-size:.98rem;overflow-wrap:anywhere; }
+    .werk.aktiv, .werk.gewaehlt { border-color:#b45309;background:var(--aktiv-bg);box-shadow:0 0 0 3px var(--aktiv); }
+    @media (max-width:640px) { .rechner, .rechner .rahmen { grid-template-columns:minmax(0,1fr); } }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:7em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin:0; }
+
+    /* Programm */
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;list-style:none; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#94a3b8;border-left:4px solid transparent;white-space:pre; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Exkurs: Speichern und Rechnen im Rechner</h1>
+    <p>Ein Rechner hält Werte in einem Speicher und verarbeitet sie in einem Rechenwerk. Die Seite gibt eine Orientierung für Kapitel 4: Sie zeigt, wo die Datentypen in diesem Aufbau ihren Platz haben.</p>
+    <p>Das Modell nach von Neumann steht im Kurstext nicht. Die Seite nennt bei jedem Teil den Abschnitt des Kurstexts v3.0.6, zu dem er führt.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Eine Anweisung läuft durch den Rechner</button>
+    <button type="button" class="tab" data-stufe="2">2 Die vier Werke</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Der Kurstext beginnt Abschnitt 4.1 mit einem Satz über Datentypen: Ein Datentyp zeichnet sich durch seinen Wertebereich aus und durch die Operationen, die auf seinen Werten definiert sind. Zu einem Typ gehören also zwei Dinge.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Teil des Datentyps</th><th>Beispiel für <code>int8</code></th><th>Werk des Rechners, das dafür zuständig ist</th></tr></thead>
+      <tbody>
+        <tr><td>Der Wertebereich sagt, welche Werte der Typ kennt.</td><td>Der Typ kennt die ganzen Zahlen von −128 bis 127.</td><td>Das Speicherwerk hält den Wert als Bitmuster.</td></tr>
+        <tr><td>Die Operationen sagen, was man mit den Werten tun darf.</td><td>Man darf zwei Werte addieren, vergleichen oder den Rest einer Division bilden.</td><td>Das Rechenwerk führt die Operation aus.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Diese Aufteilung in Speichern und Rechnen geht auf John von Neumann zurück. Er hat sie 1945 beschrieben, und fast jeder heutige Rechner ist so gebaut.</p>
+    <p>Die Seite geht in zwei Schritten vor. Schritt 1 schickt die Anweisung <code>a = a + 4</code> durch den Rechner. Schritt 2 zeigt die vier Werke einzeln und nennt zu jedem den Abschnitt des Kurstexts. Jeder Schritt hat oben einen Reiter.</p>
+    <p>Danach folgt Kapitel 4 dieser Aufteilung: erst die Typen und wie ihre Werte gespeichert sind, dann die Operationen auf diesen Werten.</p>
+    <p class="quelle">Der Satz über Datentypen steht im Kurstext v3.0.6, Abschnitt 4.1, Seite 45.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Eine Anweisung läuft durch den Rechner</h2>
+    <p>Ein Rechner nach von Neumann besteht aus vier Werken: Steuerwerk, Rechenwerk, Speicherwerk, Ein- und Ausgabe. Leitungen verbinden sie.</p>
+    <p>Die Variable <code>a</code> hat den Typ <code>int8</code> und den Wert 17. Das Programm besteht aus zwei Anweisungen. Jeder Klick führt einen Schritt aus. Das Werk, das gerade arbeitet, ist gelb unterlegt.</p>
+    <ol class="programm" id="programm">
+      <li>a = a + 4</li>
+      <li>fmt.Println(a)</li>
+    </ol>
+    <div class="zeile">
+      <button id="weiter" class="haupt" type="button">nächster Schritt</button>
+      <button id="zurueck" type="button">einen Schritt zurück</button>
+      <button id="vorn" type="button">von vorn</button>
+    </div>
+    <div class="rechner">
+      <div class="rahmen">
+        <div class="werk" id="w-steuer"><span class="name">Steuerwerk</span><span class="aufgabe">Diese Anweisung ist an der Reihe:</span><span class="inhalt" id="i-steuer"></span></div>
+        <div class="werk" id="w-rechen"><span class="name">Rechenwerk</span><span class="aufgabe">Das rechnet es gerade:</span><span class="inhalt" id="i-rechen"></span></div>
+      </div>
+      <div class="leitung" id="leitung"></div>
+      <div class="werk" id="w-speicher"><span class="name">Speicherwerk</span><span class="aufgabe">Diesen Wert hält es für <code>a</code>:</span><span class="inhalt" id="i-speicher"></span></div>
+      <div class="werk" id="w-ea"><span class="name">Ein- und Ausgabe</span><span class="aufgabe">Das steht auf dem Bildschirm:</span><span class="inhalt" id="i-ea"></span></div>
+    </div>
+    <div class="auskunft" id="ablauf"></div>
+    <div class="hinweis">Das Modell vereinfacht. Der Compiler übersetzt <code>a = a + 4</code> in mehrere Befehle der Maschinensprache: laden, addieren, zurückschreiben. Hier stehen sie zusammen als eine Anweisung. Der Kurstext spricht über Maschinensprache in Abschnitt 2.7, Seiten 17–19.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Die vier Werke</h2>
+    <p>Schritt 1 hat die vier Werke bei der Arbeit gezeigt. Ein Klick auf ein Werk zeigt hier, was es tut und wo es im Kurstext vorkommt.</p>
+    <div class="rechner">
+      <div class="rahmen">
+        <button type="button" class="werk" data-werk="steuer"><span class="name">Steuerwerk</span><span class="aufgabe">Es holt Anweisung für Anweisung und verteilt die Aufträge.</span></button>
+        <button type="button" class="werk" data-werk="rechen"><span class="name">Rechenwerk</span><span class="aufgabe">Es führt die Operationen aus.</span></button>
+      </div>
+      <div class="leitung">Über die Leitungen wandern Bitmuster von einem Werk zum anderen.</div>
+      <button type="button" class="werk" data-werk="speicher"><span class="name">Speicherwerk</span><span class="aufgabe">Es hält Werte und Programm als Bitmuster.</span></button>
+      <button type="button" class="werk" data-werk="ea"><span class="name">Ein- und Ausgabe</span><span class="aufgabe">Sie verbindet den Rechner mit Tastatur und Bildschirm.</span></button>
+    </div>
+    <div class="auskunft" id="auskunft"></div>
+    <div class="hinweis">Auch das Programm liegt als Bitmuster im Speicherwerk. Einem Bitmuster sieht man nicht an, ob es eine Zahl, ein Zeichen oder eine Anweisung bedeutet.</div>
+    <p>So geht es weiter: Die Seite <a href="go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wie das Speicherwerk die Werte der einzelnen Typen ablegt. Danach kommen die Operationen aus Abschnitt 4.1.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function c(s) { return "<code>" + String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</code>"; }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#ablauf
+  var ANKER = ["worum", "ablauf", "werke"];
+
+  function zeigeStufe(nummer, nachOben) {
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 2: Die vier Werke ----
+
+  var WERKE = {
+    speicher: "<p>Das Speicherwerk hält Bitmuster bereit: die Werte der Variablen und das Programm. Es liefert einen Wert, wenn ein anderes Werk ihn braucht, und nimmt ein Ergebnis wieder auf.</p>" +
+      "<p>Im Kurstext: Der Typ einer Variable legt fest, wie viele Bits sie braucht und welche Werte hineinpassen. Das steht für die Ganzzahlen in Abschnitt 4.3.4, Seite 63.</p>" +
+      "<p>Dazu gibt es die Seite <a href=\"go_k4_speichermodell_interaktiv.html\">Speichermodell: Name, Typ und Adresse</a>.</p>",
+    rechen: "<p>Das Rechenwerk bekommt Bitmuster und liefert ein neues Bitmuster. Es rechnet, vergleicht und verknüpft Wahrheitswerte.</p>" +
+      "<p>Im Kurstext: Jede Operation des Rechenwerks hat in Go einen Operator, zum Beispiel " + c("+") + ", " + c("<") + " oder " + c("&&") + ". Die Operatoren stehen in Abschnitt 4.1, Seiten 45–52.</p>" +
+      "<p>Wie die Addition aus einzelnen Bits entsteht, zeigt die Seite <a href=\"go_k4_rechenwerk_interaktiv.html\">Rechenwerk</a>. Sie gehört zu den bitweisen Operatoren in Abschnitt 4.3.7.2.</p>",
+    steuer: "<p>Das Steuerwerk holt die nächste Anweisung aus dem Speicherwerk. Es stellt fest, was sie verlangt, und beauftragt die anderen Werke. Danach holt es die folgende Anweisung.</p>" +
+      "<p>Im Kurstext: Ein Programm ist eine Folge von Anweisungen. Welche Anweisung als nächste an der Reihe ist, regeln " + c("if") + ", " + c("switch") + " und " + c("for") + ". Das ist Kapitel 5, Anweisungen in Go.</p>",
+    ea: "<p>Über die Eingabe kommen Daten in den Rechner, über die Ausgabe verlassen sie ihn. Tastatur und Bildschirm sind die bekanntesten Geräte.</p>" +
+      "<p>Im Kurstext: Die Funktion " + c("fmt.Printf") + " gibt Werte aus und legt mit einem Formatverb fest, wie sie auf dem Bildschirm erscheinen. Das steht in Abschnitt 4.2, Seiten 53–58.</p>"
+  };
+
+  function zeigeWerk(werk) {
+    Array.prototype.forEach.call(document.querySelectorAll("button.werk"), function (b) { b.classList.toggle("gewaehlt", b.dataset.werk === werk); });
+    $("auskunft").innerHTML = werk ? WERKE[werk] : "<p>Noch ist kein Werk gewählt.</p>";
+  }
+
+  // ---- Schritt 1: Eine Anweisung läuft durch den Rechner ----
+
+  var ALT = "00010001", NEU = "00010101";
+  var ABLAUF = [
+    { zeile: -1, aktiv: [], steuer: "", rechen: "", wert: ALT, ausgabe: "", leitung: "",
+      text: "<p>Noch ist kein Schritt ausgeführt. Das Speicherwerk hält für " + c("a") + " das Bitmuster " + c(ALT) + ". Als " + c("int8") + " gelesen ist das der Wert 17.</p>" },
+    { zeile: 0, aktiv: ["steuer", "speicher"], steuer: "a = a + 4", rechen: "", wert: ALT, ausgabe: "",
+      leitung: "Die Anweisung geht vom Speicherwerk zum Steuerwerk.",
+      text: "<p>Das Steuerwerk holt die nächste Anweisung aus dem Speicherwerk. Sie liegt dort als Bitmuster, wie jeder andere Inhalt.</p>" },
+    { zeile: 0, aktiv: ["steuer"], steuer: "a = a + 4\nhole a\naddiere 4\nspeichere a", rechen: "", wert: ALT, ausgabe: "", leitung: "",
+      text: "<p>Das Steuerwerk stellt fest, was die Anweisung verlangt: den Wert von " + c("a") + " holen, 4 addieren, das Ergebnis speichern.</p>" },
+    { zeile: 0, aktiv: ["speicher", "rechen"], steuer: "a = a + 4", rechen: ALT, wert: ALT, ausgabe: "",
+      leitung: "Das Bitmuster " + ALT + " geht vom Speicherwerk zum Rechenwerk.",
+      text: "<p>Das Speicherwerk liefert das Bitmuster von " + c("a") + ". Im Speicherwerk bleibt der Wert stehen, das Rechenwerk bekommt eine Kopie.</p>" },
+    { zeile: 0, aktiv: ["rechen"], steuer: "a = a + 4", rechen: "  " + ALT + "\n+ 00000100\n= " + NEU, wert: ALT, ausgabe: "", leitung: "",
+      text: "<p>Das Rechenwerk addiert die beiden Bitmuster. Als " + c("int8") + " gelesen heißt das: 17 + 4 = 21.</p><p>Welche Operationen es für welchen Typ gibt, ist das Thema von Abschnitt 4.1.</p>" },
+    { zeile: 0, aktiv: ["rechen", "speicher"], steuer: "a = a + 4", rechen: "= " + NEU, wert: NEU, ausgabe: "",
+      leitung: "Das Bitmuster " + NEU + " geht vom Rechenwerk zum Speicherwerk.",
+      text: "<p>Das Ergebnis überschreibt im Speicherwerk den alten Wert. Damit ist die Zuweisung ausgeführt: " + c("a") + " hat den Wert 21.</p>" },
+    { zeile: 1, aktiv: ["steuer", "speicher"], steuer: "fmt.Println(a)", rechen: "", wert: NEU, ausgabe: "",
+      leitung: "Die Anweisung geht vom Speicherwerk zum Steuerwerk.",
+      text: "<p>Das Steuerwerk holt die folgende Anweisung. Sie verlangt, den Wert von " + c("a") + " auszugeben.</p>" },
+    { zeile: 1, aktiv: ["speicher", "ea"], steuer: "fmt.Println(a)", rechen: "", wert: NEU, ausgabe: "21",
+      leitung: "Das Bitmuster " + NEU + " geht vom Speicherwerk zur Ausgabe.",
+      text: "<p>Das Bitmuster wird als " + c("int8") + " gelesen und in die Ziffern 2 und 1 umgewandelt. Auf dem Bildschirm erscheint 21.</p><p>Alle vier Werke haben gearbeitet: Das Steuerwerk hat geführt, das Speicherwerk hat den Wert gehalten, das Rechenwerk hat addiert, die Ausgabe hat das Ergebnis gezeigt.</p>" }
+  ];
+  var schritt = 0;
+
+  function zeigeAblauf() {
+    var s = ABLAUF[schritt];
+    ["steuer", "rechen", "speicher", "ea"].forEach(function (w) { $("w-" + w).classList.toggle("aktiv", s.aktiv.indexOf(w) >= 0); });
+    $("i-steuer").innerHTML = s.steuer.replace(/\n/g, "<br>");
+    $("i-rechen").innerHTML = s.rechen.replace(/ /g, "&nbsp;").replace(/\n/g, "<br>");
+    $("i-speicher").textContent = "a: " + s.wert;
+    $("i-ea").textContent = s.ausgabe;
+    $("leitung").textContent = s.leitung || "Auf den Leitungen ist gerade nichts unterwegs.";
+    $("leitung").classList.toggle("aktiv", !!s.leitung);
+    $("ablauf").innerHTML = s.text;
+    Array.prototype.forEach.call($("programm").children, function (li, i) { li.classList.toggle("aktuell", i === s.zeile); });
+    $("weiter").disabled = schritt === ABLAUF.length - 1;
+    $("zurueck").disabled = schritt === 0;
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-werk]");
+    if (!k) return;
+    if (k.dataset.werk !== undefined) { zeigeWerk(k.dataset.werk); return; }
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("weiter").addEventListener("click", function () { if (schritt < ABLAUF.length - 1) { schritt++; zeigeAblauf(); } });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeAblauf(); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeAblauf(); });
+
+  zeigeWerk(null);
+  zeigeAblauf();
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>

@@ -29,6 +29,7 @@ GRUPPEN = ["Übersicht", "Erklärseiten", "Quiz", "Exkurse"]
 # Seiten, die über den Kurstext hinausgehen. Sie stehen im Kapitel, zu dem sie passen.
 EXKURSE = {
     "156_go_k5_zahlenraten_programmieruebung.html",
+    "go_k4_exkurs_von_neumann_interaktiv.html",
     "exkurs_von_problem_zu_code.html",
     "157_go_k6_BubbleSort.html",
     "159_go_k6_SelectionSort.html",
