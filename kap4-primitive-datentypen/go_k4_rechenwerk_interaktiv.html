@@ -123,6 +123,7 @@
     </table>
     </div>
     <p>Die Operatoren gelten für alle Ganzzahl-Typen. Wer ein Bitmuster meint und keine Zahl, nimmt einen vorzeichenlosen Typ wie <code>uint8</code>.</p>
+    <div class="hinweis"><strong>Wozu das heute gebraucht wird.</strong> Ein Sprachmodell mit 13 Milliarden Gewichten braucht 26 GB Speicher, also eine Grafikkarte für über 2.000 €. Forscher von Samsung haben es 2025 auf unter 1 GB verkleinert. Damit passt es in den Speicher jedes heutigen Smartphones. Sie speichern die Gewichte als einzelne Bits in <code>uint32</code>-Werten und ersetzen die Multiplikation durch XOR. Den Typ <code>uint32</code> zeigt die Tabelle auf der Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>, im Kurstext steht er in Abschnitt 4.3.4. Quelle: Lee u. a., „LittleBit", NeurIPS 2025, <a href="https://arxiv.org/abs/2506.13771">arXiv 2506.13771</a>.</div>
     <p>Was <code>&lt;&lt;</code> und <code>&gt;&gt;</code> mit den Bits tun und warum sie verdoppeln und halbieren, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</p>
     <p class="quelle">Nach Kurstext, Abschnitt 4.3.7.2. Den Addierer führt der Kurstext nicht aus, er ist eine Ergänzung.</p>
   </div>
