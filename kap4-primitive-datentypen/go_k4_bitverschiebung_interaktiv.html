@@ -85,6 +85,40 @@
     .stufe.active { display:block; }
     .nav { display:flex;justify-content:space-between;gap:10px;margin:6px 0 18px; }
     .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+
+    /* Kurslotse: Dialog mit dem Sprachmodell in einer Spalte rechts neben der Seite */
+    .lotse { position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100%;display:flex;flex-direction:column;background:#fff;border-left:1px solid var(--line);box-shadow:-6px 0 18px rgba(15,23,42,.08);z-index:20; }
+    .lotse[hidden],.lotse-auf[hidden] { display:none; }
+    .lotse-kopf { display:flex;align-items:center;gap:8px;padding:12px 16px;background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff; }
+    .lotse-kopf strong { font-size:1.1rem; }
+    .lotse-kopf span { flex:1;font-size:.82rem;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .lotse-kopf button { background:transparent;color:#fff;border-color:rgba(255,255,255,.5);padding:4px 11px;font-size:1.1rem;line-height:1.2; }
+    .lotse-kopf button.wort { font-size:.85rem;padding:6px 11px; }
+    .lotse-kopf button:hover { background:rgba(255,255,255,.18); }
+    .frage-verlauf { flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px 16px; }
+    .lotse-hinweis { color:var(--muted);font-size:.92rem;margin:0; }
+    .beitrag { padding:10px 14px;border-radius:10px;max-width:94%;overflow-wrap:anywhere;font-size:.95rem; }
+    .beitrag.student { align-self:flex-end;background:var(--neu-bg);border:1px solid #bfdbfe;white-space:pre-wrap; }
+    .beitrag.modell { align-self:flex-start;background:#f0fdfa;border:1px solid #99f6e4; }
+    .beitrag.fehler { align-self:flex-start;background:#fef2f2;border:1px solid #fecaca;color:#991b1b; }
+    .beitrag.wartet { align-self:flex-start;color:var(--muted);font-style:italic; }
+    .beitrag .stand { display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px; }
+    .beitrag pre { font-size:.85rem;white-space:pre-wrap; }
+    .beitrag .quellen { margin-top:10px;padding-top:6px;border-top:1px solid #99f6e4;font-size:.82rem;color:var(--muted); }
+    .beitrag ul,.beitrag ol { margin:6px 0;padding-left:20px; }
+    .beitrag li { margin:3px 0; }
+    .beitrag p { margin:0 0 8px; } .beitrag p:last-child { margin:0; }
+    .lotse-fuss { border-top:1px solid var(--line);padding:10px 16px 14px;background:#f8fafc; }
+    .lotse-stand { font-size:.82rem;color:var(--muted);margin-bottom:8px; }
+    .lotse-stand b { color:var(--text);font-weight:600; }
+    .frage-eingabe { display:flex;gap:8px;align-items:flex-end; }
+    .frage-eingabe textarea { flex:1;min-height:72px;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:inherit;font-size:.95rem;resize:vertical; }
+    .frage-eingabe textarea:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    .lotse-auf { position:fixed;right:18px;bottom:18px;z-index:19;background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 6px 16px rgba(15,118,110,.35);padding:11px 16px; }
+    .lotse-auf:hover { background:#115e59; }
+    .frage-status { color:var(--muted);font-size:.88rem;margin:0 0 24px; }
+    /* In einem breiten Fenster rückt die Seite nach links und macht der Spalte Platz. In einem schmalen liegt die Spalte über der Seite. */
+    @media (min-width:1100px) { body.lotse-offen { padding-right:420px; } }
   </style>
 </head>
 <body>
@@ -268,8 +302,30 @@
   </div>
 
   <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+  <p class="frage-status" id="lotseZeile"><a href="#" id="lotseVerbinden">Kurslotsen verbinden</a> <span id="frageStatus"></span></p>
 
 </div>
+
+<aside class="lotse" id="lotse" aria-label="Fragen an den Kurslotsen" hidden>
+  <div class="lotse-kopf">
+    <strong>Kurslotse</strong>
+    <span id="lotseModell"></span>
+    <button type="button" id="lotseKopieren" class="wort" title="Den Dialog in die Zwischenablage kopieren">Kopieren</button>
+    <button type="button" id="lotseLeeren" class="wort" title="Den Dialog leeren und neu beginnen">Leeren</button>
+    <button type="button" id="lotseZu" aria-label="Dialog einklappen" title="Dialog einklappen">×</button>
+  </div>
+  <div class="frage-verlauf" id="frageVerlauf" aria-live="polite">
+    <p class="lotse-hinweis" id="lotseHinweis">Hier stellst du Fragen zu dem Schritt, der links zu sehen ist. Die Frage geht an das Sprachmodell von KI:connect. Die Seite schickt den Stand der Demo mit: Wer links ein Bit umschaltet und danach fragt, bekommt eine Antwort zum neuen Bitmuster. Wer oben den Schritt wechselt, beginnt einen neuen Dialog. „Kopieren“ legt den Dialog vorher in die Zwischenablage.</p>
+  </div>
+  <div class="lotse-fuss">
+    <div class="lotse-stand" id="lotseStand"></div>
+    <div class="frage-eingabe">
+      <textarea id="frageText" aria-label="Frage an das Sprachmodell" placeholder="Zum Beispiel: Warum rückt hier links eine Eins nach?"></textarea>
+      <button type="button" class="aktiv" id="frageSenden">Fragen</button>
+    </div>
+  </div>
+</aside>
+<button type="button" class="lotse-auf" id="lotseAuf" hidden>Kurslotsen fragen</button>
 
 <script>
 (function () {
@@ -464,7 +520,11 @@
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#komma
   const ANKER = ['worum', 'schieben', 'verdoppeln', 'bits-setzen', 'komma'];
+  let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
+    if (nummer !== aktuell) leere();                                   // die Antworten gehören zum Schritt davor
+    aktuell = nummer;
+    zeigeStand();
     document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
     document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
     if (nachOben) {
@@ -481,6 +541,7 @@
     const i = el('za');
     i.min = Z.typ === 'int8' ? -128 : 0; i.max = Z.typ === 'int8' ? 127 : 255;
     if (i !== ausser) i.value = wert(Z.a);
+    zeigeStand();
   }
   document.addEventListener('click', ev => {
     const t = ev.target;
@@ -513,8 +574,204 @@
     zeigeAlles(i);
   });
 
+  // ---------- Fragefeld ----------
+  // Der Kurslotse läuft auf dem Rechner des Studenten. Liefert er die Seite selbst aus, genügt die eigene Adresse.
+  const LOTSE = location.protocol === 'http:' && location.port === '8614' ? '' : 'http://127.0.0.1:8614';
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Bitmuster schieben', 'Schritt 2: Verdoppeln und halbieren', 'Schritt 3: Einzelne Bits setzen mit 1 << i', 'Schritt 4: Das Komma schieben'];
+  const verlauf = [];
+  let lauf = 0;                                                        // zählt die Dialoge: eine Antwort auf einen geleerten Dialog verfällt
+
+  // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
+  function stand() {
+    const a = Z.a, w = wert(a), t = [];
+    const als = v => mitLuecke(v) + ' = ' + wert(v);
+    if (aktuell <= 2) t.push('a hat den Typ ' + Z.typ + ', das Bitmuster ' + mitLuecke(a) + ' und den Wert ' + w + '.');
+    if (aktuell === 1) {
+      t.push('n = ' + Z.n + '.', 'Obere Zeile: a << ' + Z.n + ' liefert ' + als(links(a, Z.n)) + '.', 'Mittlere Zeile: a ist ' + als(a) + '.', 'Untere Zeile: a >> ' + Z.n + ' liefert ' + als(rechts(a, Z.n)) + '.');
+      if (Z.n > 0) t.push('Rot durchgestrichen links neben der oberen Zeile: ' + b8(a).slice(0, Z.n) + '. Rot durchgestrichen rechts neben der unteren Zeile: ' + b8(a).slice(8 - Z.n) + '.',
+        'Blau gestrichelt umrandet: in der oberen Zeile ' + (Z.n === 1 ? 'das Bit' : 'die ' + Z.n + ' Bits') + ' ganz rechts mit ' + '0'.repeat(Z.n) + ', in der unteren Zeile ' + (Z.n === 1 ? 'das Bit' : 'die ' + Z.n + ' Bits') + ' ganz links mit ' + b8(rechts(a, Z.n)).slice(0, Z.n) + '.');
+    } else if (aktuell === 2) {
+      for (let n = 1; n <= 4; n++) t.push('a << ' + n + ' liefert ' + als(links(a, n)) + ', a >> ' + n + ' liefert ' + als(rechts(a, n)) + '.');
+    } else if (aktuell === 3) {
+      const teile = [];
+      for (let j = 7; j >= 0; j--) if (bit(Z.muster, j)) teile.push('1<<' + j);
+      t.push('muster hat den Typ uint8, das Bitmuster ' + mitLuecke(Z.muster) + ' und den Wert ' + Z.muster + '.', 'Der Ausdruck dazu: ' + (teile.join(' | ') || '0') + '.');
+    } else if (aktuell === 4) {
+      const e = sv(Z.e8), m = Z.mant / 256;
+      t.push('Die Mantisse ist 0,' + b8(Z.mant) + ' = ' + m + '.', 'Der Exponent ist ' + e + ', gespeichert als ' + b8(Z.e8) + '.', 'Der Wert der Gleitkommazahl ist ' + m + ' · 2^' + e + ' = ' + m * Math.pow(2, e) + '.');
+    }
+    return t;
+  }
+  // Die Programmzeilen des sichtbaren Schritts, so wie sie auf der Seite stehen
+  const zeilen = () => Array.from(el('stufe-' + aktuell).querySelectorAll('pre'))
+    .flatMap(p => p.textContent.split('\n')).map(t => t.trimEnd()).filter(Boolean);
+  // Die Beschreibung der Seite für den Kurslotsen: eine Datei im Ordner kurslotse des Repositorys,
+  // je Reiter ein Abschnitt mit Aufbau der Darstellung, Handgriffen und Abschnitten des Kurstexts.
+  // Fehlt die Datei, antwortet der Kurslotse nur mit dem sichtbaren Text und dem Stand der Demo.
+  const BESCHREIBUNG = '../kurslotse/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.md';
+  let beschreibung = { seite: '', schritte: {} };
+  async function ladeBeschreibung() {
+    try {
+      const r = await fetch(BESCHREIBUNG);
+      if (!r.ok) return;
+      const teile = (await r.text()).replace(/\r/g, '').split(/^## /m);
+      beschreibung.seite = teile[0].replace(/^# .*$/m, '').trim();
+      teile.slice(1).forEach(t => {
+        const reiter = t.match(/^Reiter:\s*(\S+)\s*$/m);
+        if (reiter) beschreibung.schritte[reiter[1]] = t.replace(/^.*\n/, '').replace(/^Reiter:.*$/m, '').trim();
+      });
+    } catch (fehler) {}
+  }
+  const schrittText = () => beschreibung.schritte[ANKER[aktuell]] || '';
+  // Die Abschnitte des Kurstexts, auf die sich der sichtbare Schritt stützt: die Nummern unter der Überschrift dazu
+  const abschnitte = () => ((schrittText().split(/^### Abschnitte des Kurstexts\s*$/m)[1] || '').split(/^### /m)[0].match(/\d+(\.\d+)+/g)) || [];
+  function kontext() {
+    // Kopie der sichtbaren Stufe neben dem Bildschirm, damit aus der Hochzahl in 2³ der Text 2^3 wird
+    const sichtbar = el('stufe-' + aktuell).cloneNode(true);
+    sichtbar.removeAttribute('id');
+    sichtbar.style.cssText = 'position:absolute;left:-10000px;width:900px';
+    sichtbar.querySelectorAll('sup').forEach(s => s.replaceWith('^' + s.textContent));
+    document.body.appendChild(sichtbar);
+    const text = Array.from(sichtbar.querySelectorAll('.card > p:not(.quelle), .legende, .hinweis, .erklaerung, table.text'))
+      .map(e => e.innerText.trim()).filter(Boolean).join('\n\n');
+    sichtbar.remove();
+    return ['HTML-Seite: Bitverschiebung: Schieben, verdoppeln und halbieren in Go',
+      'Bezug: Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seiten 75–78',
+      'Sichtbarer Schritt: ' + SCHRITTE[aktuell]].concat(
+        beschreibung.seite ? ['', 'Was die HTML-Seite leistet:', beschreibung.seite] : [],
+        schrittText() ? ['', 'Beschreibung des sichtbaren Schritts:', schrittText().replace(/^### /gm, '')] : [],
+        ['', 'Stand der Demo:'], stand(),
+        zeilen().length ? ['', 'Programmzeilen des sichtbaren Schritts, in Go. Hinter // steht die Ausgabe:'].concat(zeilen()) : [],
+        ['', 'Text des sichtbaren Schritts:', text.slice(0, 6000)]).join('\n');
+  }
+
+  // Antwort des Sprachmodells: Codeblöcke, `Code` und **fett** darstellen, alles andere als Text
+  // Text ohne Codeblock: Zeilen mit „- “ oder „1. “ werden zu einer Liste, die übrigen zu Absätzen
+  function absaetze(text) {
+    const fein = z => esc(z).replace(/`([^`\n]+)`/g, '<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    let html = '', liste = '';
+    const schliesse = () => { if (liste) { html += '</' + liste + '>'; liste = ''; } };
+    text.split('\n').forEach(zeile => {
+      const z = zeile.trim(), punkt = z.match(/^[-*•]\s+(.*)$/), nummer = z.match(/^\d+[.)]\s+(.*)$/);
+      if (!z) { schliesse(); return; }
+      const art = punkt ? 'ul' : nummer ? 'ol' : '';
+      if (art !== liste) { schliesse(); if (art) { html += '<' + art + '>'; liste = art; } }
+      html += art ? '<li>' + fein((punkt || nummer)[1]) + '</li>' : '<p>' + fein(z.replace(/^#+\s*/, '')) + '</p>';
+    });
+    schliesse();
+    return html;
+  }
+  function alsHTML(t) {
+    return t.split('```').map((teil, i) => i % 2
+      ? '<pre>' + esc(teil.replace(/^[a-z]*\n/, '').replace(/\n$/, '')) + '</pre>'
+      : absaetze(teil)).join('');
+  }
+  function beitrag(klasse, html) {
+    const d = document.createElement('div');
+    d.className = 'beitrag ' + klasse;
+    d.innerHTML = html;
+    el('lotseHinweis').hidden = true;
+    el('frageVerlauf').appendChild(d);
+    d.scrollIntoView({ block: 'end' });
+    return d;
+  }
+  // Die Zeile über dem Eingabefeld: welchen Stand die nächste Frage mitschickt
+  function zeigeStand() {
+    const a = 'a = ' + z(wert(Z.a)) + ' als ' + Z.typ;
+    const teil = [a, a + ', n = ' + Z.n, a, 'muster = ' + Z.muster, 'Mantisse 0,' + b8(Z.mant) + ', Exponent ' + z(sv(Z.e8))][aktuell];
+    el('lotseStand').innerHTML = 'Die nächste Frage schickt mit: <b>' + esc(SCHRITTE[aktuell].split(':')[0]) + '</b>, ' + esc(teil);
+  }
+  // Die Spalte auf- und zuklappen. Die Wahl merkt sich der Browser für den nächsten Besuch.
+  function klappe(offen, merken) {
+    el('lotse').hidden = !offen;
+    el('lotseAuf').hidden = offen;
+    document.body.classList.toggle('lotse-offen', offen);
+    if (merken) { try { localStorage.setItem('lotseOffen', offen ? '1' : '0'); } catch (fehler) {} }
+    if (offen && merken) el('frageText').focus();
+  }
+  async function frage() {
+    const feld = el('frageText'), text = feld.value.trim();
+    if (!text || el('frageSenden').disabled) return;
+    const k = kontext(), meiner = lauf;
+    verlauf.push({ role: 'user', content: text });
+    beitrag('student', '<span class="stand">' + esc(SCHRITTE[aktuell]) + '</span>' + esc(text));
+    feld.value = '';
+    el('frageSenden').disabled = true;
+    const wartet = beitrag('wartet', 'Das Sprachmodell antwortet …');
+    try {
+      const r = await fetch(LOTSE + '/api/frage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kontext: k, zeilen: zeilen(), abschnitte: abschnitte(), thema: 'Bitverschiebung, ' + SCHRITTE[aktuell], verlauf: verlauf }) });
+      const d = await r.json();
+      if (meiner !== lauf) return;
+      if (!r.ok) throw new Error(d.fehler || 'Status ' + r.status);
+      verlauf.push({ role: 'assistant', content: d.antwort });
+      wartet.className = 'beitrag modell';
+      wartet.innerHTML = alsHTML(d.antwort) + (d.quellen && d.quellen.length
+        ? '<div class="quellen">' + (d.zurFrage ? 'Dazu im Kurstext:' : 'Zu diesem Schritt im Kurstext:') + '<ul>' + d.quellen.map(q => '<li>Abschnitt ' + esc(q.abschnitt + ' ' + q.titel) + ', ' + (/[–-]/.test(q.seiten) ? 'Seiten ' : 'Seite ') + esc(q.seiten) + '</li>').join('') + '</ul></div>' : '');
+      wartet.scrollIntoView({ block: 'nearest' });
+    } catch (fehler) {
+      if (meiner !== lauf) return;
+      verlauf.pop();                                                   // die Frage zählt nicht, der Student stellt sie neu
+      wartet.className = 'beitrag fehler';
+      wartet.textContent = 'Die Frage ist nicht angekommen: ' + fehler.message;
+      feld.value = text;
+    }
+    el('frageSenden').disabled = false;
+    feld.focus();
+  }
+  // Liefert der Kurslotse die Seite selbst aus, sucht die Seite ihn gleich. Von GitHub Pages aus sucht sie ihn erst,
+  // wenn der Student einmal „Kurslotsen verbinden“ gewählt hat: Der Browser kann beim Zugriff auf den eigenen Rechner
+  // nachfragen, und diese Rückfrage soll niemand sehen, der den Kurslotsen nicht eingerichtet hat.
+  async function sucheLotsen(aufWunsch) {
+    try {
+      const d = await (await fetch(LOTSE + '/api/bereit', { signal: AbortSignal.timeout(4000) })).json();
+      if (!d.schluessel) {
+        el('frageStatus').textContent = 'Der Kurslotse läuft, hat aber keinen Schlüssel für KI:connect. Der Schlüssel gehört in die Umgebungsvariable KICONNECT_KEY.';
+        return;
+      }
+      el('lotseZeile').hidden = true;
+      el('lotseModell').textContent = 'Modell: ' + d.modell;
+      let gemerkt = null;
+      try { gemerkt = localStorage.getItem('lotseOffen'); localStorage.setItem('lotseVerbunden', '1'); } catch (fehler) {}
+      klappe(aufWunsch || (gemerkt === null ? window.innerWidth >= 1100 : gemerkt === '1'), false);
+    } catch (fehler) {
+      if (aufWunsch) el('frageStatus').textContent = 'Der Kurslotse antwortet auf diesem Rechner nicht. Er muss laufen, und der Browser muss den Zugriff auf den eigenen Rechner erlauben.';
+    }
+  }
+  el('lotseVerbinden').addEventListener('click', ev => { ev.preventDefault(); el('frageStatus').textContent = ''; sucheLotsen(true); });
+  el('frageSenden').addEventListener('click', frage);
+  el('frageText').addEventListener('keydown', ev => { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); frage(); } });
+  function leere() {
+    lauf++;
+    verlauf.length = 0;
+    el('frageVerlauf').querySelectorAll('.beitrag').forEach(b => b.remove());
+    el('lotseHinweis').hidden = false;
+    el('frageSenden').disabled = false;
+  }
+  // Der Dialog als Text: oben Seite, Schritt und Stand der Demo, darunter Fragen und Antworten
+  async function kopiere() {
+    const knopf = el('lotseKopieren');
+    const melde = wort => { knopf.textContent = wort; setTimeout(() => { knopf.textContent = 'Kopieren'; }, 1600); };
+    if (!verlauf.length) { melde('Noch leer'); return; }
+    const text = ['Bitverschiebung, ' + SCHRITTE[aktuell], el('lotseStand').innerText.replace('Die nächste Frage schickt mit: ', 'Stand der Demo: '), '']
+      .concat(verlauf.map(n => (n.role === 'user' ? 'Frage: ' : 'Kurslotse: ') + n.content + '\n')).join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      melde('Kopiert');
+    } catch (fehler) {
+      melde('Geht hier nicht');
+    }
+  }
+  el('lotseKopieren').addEventListener('click', kopiere);
+  el('lotseLeeren').addEventListener('click', () => { leere(); el('frageText').focus(); });
+  el('lotseZu').addEventListener('click', () => klappe(false, true));
+  el('lotseAuf').addEventListener('click', () => klappe(true, true));
+
   zeigeAlles();
   zeigeStufe(stufeAusAdresse(), false);
+  ladeBeschreibung();
+  let verbunden = null;
+  try { verbunden = localStorage.getItem('lotseVerbunden'); } catch (fehler) {}
+  if (LOTSE === '' || verbunden === '1') sucheLotsen(false);
 })();
 </script>
 </body>
