@@ -9,10 +9,11 @@
     * { box-sizing:border-box; }
     body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ccfbf1 0%,#f7f9fc 46%);line-height:1.6; }
     .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#0f766e 0%,#b45309 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
     .hero h1 { margin:0 0 10px;font-size:1.9rem; }
     .hero p { margin:0;opacity:.96;font-size:1.05rem; }
     .hero a { color:#fff; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
     .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
     h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
     h3 { font-size:1.05rem;margin:0 0 4px;color:#111827; }
@@ -33,6 +34,27 @@
     .stand { font-family:Consolas,monospace;font-weight:700;color:#111827; }
     .ergebnis { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#ecfdf5;margin:14px 0 0;font-size:1.05rem; }
     .legende { color:var(--muted);font-size:.88rem;margin-top:10px; }
+    a { color:#1e40af; }
+    ul.quelle { padding-left:18px; } ul.quelle li { margin:3px 0; }
+    .card > h3 { margin:16px 0 6px;color:var(--muted); }
+    .hinweis details { margin-top:8px; }
+    .verbund { border:2px solid var(--accent);border-radius:12px;padding:14px;margin:14px 0 0; }
+    .verbundname { font-weight:600;color:var(--accent);margin-bottom:10px; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab { background:#fff; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .nav { display:flex;justify-content:space-between;gap:10px;margin:6px 0 18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
 
     /* Diagramme und Rechnung */
     .achse { stroke:#111827;stroke-width:2; }
@@ -75,122 +97,174 @@
   <div class="hero">
     <h1>Gatter aus Schaltern: Das Rechenwerk zum Anfassen</h1>
     <p>Jedes Gatter lässt sich aus Schaltern, einer Batterie und einer Lampe bauen. Diese Seite zeigt die Verdrahtung, vom einzelnen Gatter bis zu einer Stelle des Addierers. Sie gehört zur Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Gatter selbst kommen im Kurstext nicht vor.</p>
   </div>
 
-  <div class="card">
-    <h2>Was die Seite zeigt</h2>
-    <p>Ein Schalter lässt Strom durch oder nicht. Das ist ein Bit. Wie man zwei Schalter verdrahtet, entscheidet darüber, wann die Lampe leuchtet. Schaltet man sie hintereinander, müssen beide geschlossen sein. Schaltet man sie nebeneinander, genügt einer. Das sind schon AND und OR.</p>
-    <p>Für XOR braucht man Wechselschalter. Ein Wechselschalter hat einen Eingang und zwei Ausgänge und verbindet den Eingang immer mit genau einem davon. Zwei solche Schalter ergeben die Wechselschaltung aus dem Treppenhaus: Wer einen der beiden umlegt, wechselt das Licht.</p>
-    <p>In allen Schaltbildern auf dieser Seite gilt: Ein Klick auf einen Schalter legt ihn um. Schalter mit demselben Namen gehören zusammen und schalten gemeinsam.</p>
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Vier Gatter</button>
+    <button type="button" class="tab" data-stufe="2">2 Eine Stelle des Addierers</button>
+    <button type="button" class="tab" data-stufe="3">3 Das Relais</button>
+    <button type="button" class="tab" data-stufe="4">4 Vom Relais zum Prozessor</button>
   </div>
 
-  <div class="card">
-    <h2>Gatter und ihre Verdrahtung</h2>
-    <div class="tabellenrahmen">
-    <table>
-      <thead><tr><th>Gatter</th><th>In Go</th><th>Verdrahtung</th><th>Wo man sie kennt</th></tr></thead>
-      <tbody>
-        <tr><td>AND</td><td><code>a &amp; b</code></td><td>Zwei Schalter hintereinander.</td><td>Maschine mit Hauptschalter und Sicherheitsschalter</td></tr>
-        <tr><td>OR</td><td><code>a | b</code></td><td>Zwei Schalter nebeneinander.</td><td>Türklingel mit zwei Tastern</td></tr>
-        <tr><td>XOR</td><td><code>a ^ b</code></td><td>Zwei Wechselschalter, dazwischen zwei Leitungen.</td><td>Licht im Treppenhaus</td></tr>
-        <tr><td>NOT</td><td><code>^a</code></td><td>Ein Schalter, der in Ruhe geschlossen ist und beim Drücken öffnet.</td><td>Lampe im Kühlschrank</td></tr>
-        <tr><td>XOR mit drei Eingängen</td><td><code>a ^ b ^ c</code></td><td>Zwei Wechselschalter und ein Kreuzschalter dazwischen.</td><td>Flur mit drei Lichtschaltern</td></tr>
-      </tbody>
-    </table>
+  <section class="stufe active" id="stufe-0">
+    <div class="card">
+      <h2>Was die Seite zeigt</h2>
+      <p>Ein Schalter lässt Strom durch oder nicht. Das ist ein Bit. Wie man zwei Schalter verdrahtet, entscheidet darüber, wann die Lampe leuchtet. Schaltet man sie hintereinander, müssen beide geschlossen sein. Schaltet man sie nebeneinander, genügt einer. Das sind schon AND und OR.</p>
+      <p>Für XOR braucht man Wechselschalter. Ein Wechselschalter hat einen Eingang und zwei Ausgänge und verbindet den Eingang immer mit genau einem davon. Zwei solche Schalter ergeben die Wechselschaltung aus dem Treppenhaus: Wer einen der beiden umlegt, wechselt das Licht.</p>
+      <p>In allen Schaltbildern auf dieser Seite gilt: Ein Klick auf einen Schalter legt ihn um. Schalter mit demselben Namen gehören zusammen und schalten gemeinsam.</p>
+      <p>Die Seite geht in vier Schritten vor: vier Gatter aus zwei Schaltern, eine Stelle des Addierers, das Relais, der Weg vom Relais zum Prozessor. Jeder Schritt hat oben einen Reiter.</p>
     </div>
-    <p class="quelle">Dass sich Schaltungen aus Schaltern und die Logik mit AND, OR und NOT genau entsprechen, hat Claude Shannon 1937 gezeigt. Im Kurstext kommt dieses Thema nicht vor.</p>
-  </div>
 
-  <div class="card">
-    <h2>Ausprobieren 1: Vier Gatter aus Schaltern</h2>
-    <p>Alle vier Schaltungen benutzen dieselben Schalter <code>a</code> und <code>b</code>. Nur die Verdrahtung ist verschieden.</p>
-    <div class="raster">
-      <div class="feld"><h3>AND: hintereinander</h3><svg id="sAnd" viewBox="0 0 600 180"></svg><p id="tAnd"></p></div>
-      <div class="feld"><h3>OR: nebeneinander</h3><svg id="sOr" viewBox="0 0 600 240"></svg><p id="tOr"></p></div>
-      <div class="feld"><h3>XOR: die Wechselschaltung</h3><svg id="sXor" viewBox="0 0 600 230"></svg><p id="tXor"></p></div>
-      <div class="feld"><h3>NOT: der Öffner</h3><svg id="sNot" viewBox="0 0 600 180"></svg><p id="tNot"></p></div>
+    <div class="card">
+      <h2>Gatter und ihre Verdrahtung</h2>
+      <p>Go schreibt die Operationen der Gatter mit Zeichen. <code>a</code>, <code>b</code> und <code>c</code> stehen für je ein Bit, also für 0 oder 1:</p>
+      <ul>
+        <li><code>a &amp; b</code>, gelesen „a AND b“: Das Ergebnis ist 1, wenn beide Bits 1 sind.</li>
+        <li><code>a | b</code>, gelesen „a OR b“: Das Ergebnis ist 1, wenn mindestens ein Bit 1 ist.</li>
+        <li><code>a ^ b</code>, gelesen „a XOR b“: Das Ergebnis ist 1, wenn genau ein Bit 1 ist.</li>
+        <li><code>^a</code>, gelesen „NOT a“: Das Zeichen steht hier vor dem Bit und dreht es um. Aus 1 wird 0, aus 0 wird 1.</li>
+        <li><code>a ^ b ^ c</code>, zweimal XOR hintereinander: Erst wird <code>a ^ b</code> ausgerechnet, dann dieses Ergebnis <code>^ c</code>. Heraus kommt 1, wenn eine ungerade Zahl der drei Bits 1 ist, also eines oder alle drei.</li>
+      </ul>
+      <p>Unter jedem Schaltbild der nächsten Schritte steht ein solcher Ausdruck und dahinter sein Wert. <code>a &amp; b</code> = <span class="stand">0</span> heißt: Bei der Stellung der Schalter, die gerade zu sehen ist, ergibt <code>a &amp; b</code> den Wert 0, und die Lampe ist aus.</p>
+      <div class="tabellenrahmen">
+      <table>
+        <thead><tr><th>Gatter</th><th>Schreibweise in Go</th><th>Verdrahtung</th><th>Wo man sie kennt</th></tr></thead>
+        <tbody>
+          <tr><td>AND</td><td><code>a &amp; b</code></td><td>Zwei Schalter hintereinander.</td><td>Maschine mit Hauptschalter und Sicherheitsschalter</td></tr>
+          <tr><td>OR</td><td><code>a | b</code></td><td>Zwei Schalter nebeneinander.</td><td>Türklingel mit zwei Tastern</td></tr>
+          <tr><td>XOR</td><td><code>a ^ b</code></td><td>Zwei Wechselschalter, dazwischen zwei Leitungen.</td><td>Licht im Treppenhaus</td></tr>
+          <tr><td>NOT</td><td><code>^a</code></td><td>Ein Schalter, der in Ruhe geschlossen ist und beim Drücken öffnet.</td><td>Lampe im Kühlschrank</td></tr>
+          <tr><td>XOR mit drei Eingängen</td><td><code>a ^ b ^ c</code></td><td>Zwei Wechselschalter und ein Kreuzschalter dazwischen.</td><td>Flur mit drei Lichtschaltern</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h3>Was davon im Kurstext steht</h3>
+      <ul class="quelle">
+        <li>Abschnitt 4.3.7.2.1, Seiten 72–74, die Operationen: Dort werden AND, OR, XOR und NOT auf den Werten 0 und 1 definiert, mit den Operatoren <code>&amp;</code>, <code>|</code> und <code>^</code>.</li>
+        <li>Abschnitt 2.3, Seiten 10–11, das Rechnen: Dort steht, dass ein Rechner binäre Werte in andere binäre Werte umwandelt.</li>
+        <li>Die Gatter: Wie man AND, OR, XOR und NOT aus Schaltern baut, kommt im Kurstext nicht vor. Dass sich Schaltungen aus Schaltern und die Logik mit AND, OR und NOT genau entsprechen, hat Claude Shannon 1937 gezeigt.</li>
+      </ul>
     </div>
-    <div class="legende">Eine dicke, farbige Leitung führt Strom. Ein Punkt verbindet Leitungen. Leitungen, die sich ohne Punkt kreuzen, berühren sich nicht. Bei einem Wechselschalter steht die Stellung oben für 1.</div>
-  </div>
-
-  <div class="card">
-    <h2>Ausprobieren 2: Eine Stelle des Addierers aus Schaltern</h2>
-    <p>Eine Stelle des Addierers hat drei Eingänge: <code>a</code>, <code>b</code> und den Übertrag von rechts, hier <code>c</code>. Sie hat zwei Ausgänge, also zwei Lampen. Die Summe ist ein XOR mit drei Eingängen. Der Übertrag leuchtet, wenn mindestens zwei der drei Schalter geschlossen sind.</p>
-    <div class="raster">
-      <div class="feld"><h3>Lampe „Summe": die Kreuzschaltung</h3><svg id="sSum" viewBox="0 0 600 230"></svg><p id="tSum"></p></div>
-      <div class="feld"><h3>Lampe „Übertrag nach links"</h3><svg id="sCar" viewBox="0 0 600 280"></svg><p id="tCar"></p></div>
+    <div class="nav">
+      <button type="button" class="knopf" disabled>Zurück</button>
+      <button type="button" class="knopf aktiv" data-gehe="1">Weiter zu Schritt 1</button>
     </div>
-    <div class="ergebnis" id="ergebnis"></div>
-    <div class="legende">Die Schalter a und b kommen in der rechten Schaltung zweimal vor. Dafür nimmt man zweipolige Schalter: ein Hebel, zwei Kontakte.</div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>Ausprobieren 3: Das Relais, Strom schaltet Strom</h2>
-    <p>Bis hierher hat ein Mensch jeden Schalter betätigt. Im Addierer mit acht Stellen muss der Übertrag der einen Stelle den Schalter der nächsten umlegen. Dafür braucht man einen Schalter, den der Strom selbst betätigt. Das ist ein Relais: Fließt Strom durch die Spule, zieht sie den Kontakt an und schließt einen zweiten Stromkreis.</p>
-    <div class="feld"><svg id="sRel" viewBox="0 0 600 240" style="max-width:760px;margin:0 auto"></svg><p id="tRel"></p></div>
-    <p>Mit Relais kann die Lampe der einen Schaltung der Schalter der nächsten werden. Konrad Zuse hat seine Rechenmaschine Z3 im Jahr 1941 so gebaut, aus mehr als 2000 Relais. Ein Transistor ist dasselbe in klein: ein Schalter, den Strom betätigt. In einem heutigen Prozessor sitzen davon Milliarden.</p>
-  </div>
-
-  <div class="card">
-    <h2>Vom Relais zum Prozessor: wie schnell und wie viele</h2>
-    <p>Ein Prozessor ist dieselbe Schaltung wie oben, nur mit zwei Unterschieden: Die Schalter sind sehr viel schneller, und es sind sehr viel mehr. Der Takt sagt, wie oft in der Sekunde der Prozessor einen Schritt macht. Bei 3000 Megahertz, also 3 Gigahertz, sind das 3 Milliarden Schritte in der Sekunde.</p>
-    <div class="raster">
-      <div class="feld"><h3>Takt: Schritte in der Sekunde</h3><svg id="dTakt" viewBox="0 0 600 360"></svg>
-        <p>Bis etwa 2004 stieg der Takt steil an. Seitdem steigt er kaum noch, weil schnelleres Schalten zu viel Wärme erzeugt.</p></div>
-      <div class="feld"><h3>Zahl der Schalter in einem Rechner</h3><svg id="dZahl" viewBox="0 0 600 360"></svg>
-        <p>Die Zahl der Schalter wächst weiter. Seit der Takt nicht mehr steigt, kommt die Leistung aus mehr Schaltern und mehreren Rechenkernen.</p></div>
+  <section class="stufe" id="stufe-1">
+    <div class="card">
+      <h2>Schritt 1: Vier Gatter aus zwei Schaltern</h2>
+      <div class="hinweis"><strong>Erst vorhersagen, dann ausprobieren:</strong> Im Treppenhaus brennt das Licht. Jemand legt unten den Schalter um, dann jemand oben. Brennt das Licht?
+        <details><summary>Auflösung</summary>Ja. Jedes Umlegen wechselt das Licht, zweimal Umlegen stellt den alten Zustand wieder her. Das ist XOR: Es kommt darauf an, ob die beiden Schalter gleich oder verschieden stehen.</details></div>
+      <p>Alle vier Schaltungen benutzen dieselben Schalter <code>a</code> und <code>b</code>. Nur die Verdrahtung ist verschieden. Unter jedem Schaltbild steht der Ausdruck in der Schreibweise von Go und dahinter sein Wert: 1, wenn die Lampe leuchtet, und 0, wenn sie aus ist.</p>
+      <div class="raster">
+        <div class="feld"><h3>AND: hintereinander</h3><svg id="sAnd" viewBox="0 0 600 180"></svg><p id="tAnd"></p></div>
+        <div class="feld"><h3>OR: nebeneinander</h3><svg id="sOr" viewBox="0 0 600 240"></svg><p id="tOr"></p></div>
+        <div class="feld"><h3>XOR: die Wechselschaltung</h3><svg id="sXor" viewBox="0 0 600 230"></svg><p id="tXor"></p></div>
+        <div class="feld"><h3>NOT: der Öffner</h3><svg id="sNot" viewBox="0 0 600 180"></svg><p id="tNot"></p></div>
+      </div>
+      <div class="legende">Eine dicke, farbige Leitung führt Strom. Ein Punkt verbindet Leitungen. Leitungen, die sich ohne Punkt kreuzen, berühren sich nicht. Bei einem Wechselschalter steht die Stellung oben für 1.</div>
     </div>
-    <div class="legende">Beide Achsen nach oben sind logarithmisch: Jeder Strich bedeutet das Tausendfache des Strichs darunter. Die Zahlen sind gerundet.</div>
-    <div class="tabellenrahmen">
-    <table>
-      <thead><tr><th>Jahr</th><th>Rechner oder Prozessor</th><th>Takt</th><th>Schalter</th></tr></thead>
-      <tbody id="daten"></tbody>
-    </table>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="0">Zurück zu „Worum es geht“</button>
+      <button type="button" class="knopf aktiv" data-gehe="2">Weiter zu Schritt 2</button>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>Die Baumarkt-Rechnung</h2>
-    <p>Was würde ein heutiger Prozessor kosten, wenn man ihn aus Schaltern vom Baumarkt bauen müsste? Und wie lange bräuchte ein Mensch, der die Schalter von Hand umlegt? Die Rechnung ist plakativ, aber sie zeigt die Größenordnung. Alle Zahlen lassen sich ändern.</p>
-    <div class="eingaben">
-      <label>Schalter im Prozessor, in Milliarden <input id="rZahl" type="number" value="13.1" step="0.1" min="0.001"></label>
-      <label>Preis des Prozessors in Euro <input id="rPreis" type="number" value="700" step="10" min="1"></label>
-      <label>Preis eines Schalters im Baumarkt in Euro <input id="rSchalter" type="number" value="3" step="0.5" min="0.01"></label>
-      <label>Takt in Gigahertz <input id="rTakt" type="number" value="5.7" step="0.1" min="0.001"></label>
-      <label>Schalter, die ein Mensch pro Sekunde umlegt <input id="rHand" type="number" value="2" step="1" min="1"></label>
+  <section class="stufe" id="stufe-2">
+    <div class="card">
+      <h2>Schritt 2: Eine Stelle des Addierers aus Schaltern</h2>
+      <div class="hinweis"><strong>Erst vorhersagen, dann ausprobieren:</strong>
+        <ul>
+          <li>a und b sind geschlossen, c ist offen. Welche Lampen leuchten?
+            <details><summary>Auflösung</summary>Nur der Übertrag. 1 + 1 + 0 ist im Zweiersystem 10: Summe 0, Übertrag 1.</details></li>
+          <li>Alle drei Schalter sind geschlossen. Welche Lampen leuchten?
+            <details><summary>Auflösung</summary>Beide. 1 + 1 + 1 ist im Zweiersystem 11.</details></li>
+        </ul>
+      </div>
+      <p>Eine Stelle des Addierers zählt drei Bits zusammen: <code>a</code>, <code>b</code> und den Übertrag von rechts, hier <code>c</code>. Drei Bits ergeben zusammen 0, 1, 2 oder 3. Im Zweiersystem sind das 00, 01, 10 und 11, also zwei Ziffern. Für jede Ziffer gibt es eine Lampe:</p>
+      <ul>
+        <li>Lampe „Summe“, die rechte Ziffer: Sie ist das Bit dieser Stelle. Leuchtet sie, steht im Ergebnis an dieser Stelle eine 1. In Go ist das <code>a ^ b ^ c</code>, zweimal XOR hintereinander: Der Wert ist 1, wenn eine ungerade Zahl der drei Schalter geschlossen ist.</li>
+        <li>Lampe „Übertrag“, die linke Ziffer: Sie ist die 1, die an die nächste Stelle links weitergeht. Leuchtet sie, bekommt die nächste Stelle diese 1 als ihr <code>c</code>. Der Wert ist 1, wenn mindestens zwei der drei Schalter geschlossen sind.</li>
+      </ul>
+      <p>In Schritt 1 waren die vier Schaltbilder vier verschiedene Gatter, jedes für sich. Hier gehören die zwei Schaltbilder zusammen: Sie sind die zwei Ausgänge derselben Stelle. Dieselben drei Schalter steuern beide Lampen, und erst beide Lampen zusammen sind das Ergebnis.</p>
+      <div class="verbund">
+        <div class="verbundname">Eine Stelle des Addierers: drei Schalter, zwei Lampen, ein Ergebnis</div>
+        <div class="raster">
+          <div class="feld"><h3>Linke Ziffer: Lampe „Übertrag nach links"</h3><svg id="sCar" viewBox="0 0 600 280"></svg><p id="tCar"></p></div>
+          <div class="feld"><h3>Rechte Ziffer: Lampe „Summe", das Bit dieser Stelle</h3><svg id="sSum" viewBox="0 0 600 230"></svg><p id="tSum"></p></div>
+        </div>
+        <div class="ergebnis" id="ergebnis"></div>
+      </div>
+      <div class="legende">Die Lampe „Summe“ hängt an der Kreuzschaltung: zwei Wechselschalter und ein Kreuzschalter dazwischen. Die Schalter a und b kommen in der linken Schaltung zweimal vor. Dafür nimmt man zweipolige Schalter: ein Hebel, zwei Kontakte.</div>
+      <p>Wie acht solche Stellen zusammen zwei Zahlen addieren, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</p>
     </div>
-    <div class="ergebnis" id="rechnung"></div>
-    <p class="quelle">Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.</p>
-  </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="1">Zurück zu Schritt 1</button>
+      <button type="button" class="knopf aktiv" data-gehe="3">Weiter zu Schritt 3</button>
+    </div>
+  </section>
 
-  <div class="card">
-    <h2>Zum Nachbauen</h2>
-    <ul>
-      <li>eine Flachbatterie mit 4,5 Volt oder ein Batteriehalter</li>
-      <li>zwei kleine Lampen oder Leuchtdioden mit Vorwiderstand</li>
-      <li>zwei Wechselschalter und ein Kreuzschalter für die Summe</li>
-      <li>für den Übertrag zweipolige Schalter für a und b und ein einfacher Schalter für c</li>
-      <li>Litze und Klemmen</li>
-    </ul>
-    <div class="warnung">Nur mit Batterie bauen, nie an der Steckdose. Die Schalter aus dem Baumarkt sind für 230 Volt gebaut, funktionieren aber genauso mit 4,5 Volt.</div>
-  </div>
+  <section class="stufe" id="stufe-3">
+    <div class="card">
+      <h2>Schritt 3: Das Relais, Strom schaltet Strom</h2>
+      <div class="hinweis"><strong>Erst überlegen:</strong> Warum reichen Schalter allein nicht für einen Addierer mit acht Stellen?
+        <details><summary>Auflösung</summary>Der Übertrag einer Stelle ist eine Lampe. Die nächste Stelle braucht ihn als Schalter. Aus Strom muss also wieder eine Schalterstellung werden, und das leistet erst das Relais.</details></div>
+      <p>Bis hierher hat ein Mensch jeden Schalter betätigt. Im Addierer mit acht Stellen muss der Übertrag der einen Stelle den Schalter der nächsten umlegen. Dafür braucht man einen Schalter, den der Strom selbst betätigt. Das ist ein Relais: Fließt Strom durch die Spule, zieht sie den Kontakt an und schließt einen zweiten Stromkreis.</p>
+      <div class="feld"><svg id="sRel" viewBox="0 0 600 240" style="max-width:760px;margin:0 auto"></svg><p id="tRel"></p></div>
+      <p>Mit Relais kann die Lampe der einen Schaltung der Schalter der nächsten werden. Konrad Zuse hat seine Rechenmaschine Z3 im Jahr 1941 so gebaut, aus mehr als 2000 Relais. Ein Transistor ist dasselbe in klein: ein Schalter, den Strom betätigt. In einem heutigen Prozessor sitzen davon Milliarden.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="2">Zurück zu Schritt 2</button>
+      <button type="button" class="knopf aktiv" data-gehe="4">Weiter zu Schritt 4</button>
+    </div>
+  </section>
 
-  <div class="card">
-    <h2>Erst vorhersagen, dann ausprobieren</h2>
-    <ol>
-      <li>Im Treppenhaus brennt das Licht. Jemand legt unten den Schalter um, dann jemand oben. Brennt das Licht?
-        <details><summary>Auflösung</summary>Ja. Jedes Umlegen wechselt das Licht, zweimal Umlegen stellt den alten Zustand wieder her. Das ist XOR: Es kommt darauf an, ob die beiden Schalter gleich oder verschieden stehen.</details></li>
-      <li>Eine Stelle des Addierers: a und b sind geschlossen, c ist offen. Welche Lampen leuchten?
-        <details><summary>Auflösung</summary>Nur der Übertrag. 1 + 1 + 0 ist im Zweiersystem 10: Summe 0, Übertrag 1.</details></li>
-      <li>Alle drei Schalter sind geschlossen. Welche Lampen leuchten?
-        <details><summary>Auflösung</summary>Beide. 1 + 1 + 1 ist im Zweiersystem 11.</details></li>
-      <li>Warum reichen Schalter allein nicht für einen Addierer mit acht Stellen?
-        <details><summary>Auflösung</summary>Der Übertrag einer Stelle ist eine Lampe. Die nächste Stelle braucht ihn als Schalter. Aus Strom muss also wieder eine Schalterstellung werden, und das leistet erst das Relais.</details></li>
-    </ol>
-  </div>
+  <section class="stufe" id="stufe-4">
+    <div class="card">
+      <h2>Schritt 4: Vom Relais zum Prozessor, wie schnell und wie viele</h2>
+      <p>Ein Prozessor ist dieselbe Schaltung wie in den Schritten davor, nur mit zwei Unterschieden: Die Schalter sind sehr viel schneller, und es sind sehr viel mehr. Der Takt sagt, wie oft in der Sekunde der Prozessor einen Schritt macht. Bei 3000 Megahertz, also 3 Gigahertz, sind das 3 Milliarden Schritte in der Sekunde.</p>
+      <div class="raster">
+        <div class="feld"><h3>Takt: Schritte in der Sekunde</h3><svg id="dTakt" viewBox="0 0 600 360"></svg>
+          <p>Bis etwa 2004 stieg der Takt steil an. Seitdem steigt er kaum noch, weil schnelleres Schalten zu viel Wärme erzeugt.</p></div>
+        <div class="feld"><h3>Zahl der Schalter in einem Rechner</h3><svg id="dZahl" viewBox="0 0 600 360"></svg>
+          <p>Die Zahl der Schalter wächst weiter. Seit der Takt nicht mehr steigt, kommt die Leistung aus mehr Schaltern und mehreren Rechenkernen.</p></div>
+      </div>
+      <div class="legende">Beide Achsen nach oben sind logarithmisch: Jeder Strich bedeutet das Tausendfache des Strichs darunter. Die Zahlen sind gerundet.</div>
+      <div class="tabellenrahmen">
+      <table>
+        <thead><tr><th>Jahr</th><th>Rechner oder Prozessor</th><th>Takt</th><th>Schalter</th></tr></thead>
+        <tbody id="daten"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Die Baumarkt-Rechnung</h2>
+      <p>Was würde ein heutiger Prozessor kosten, wenn man ihn aus Schaltern vom Baumarkt bauen müsste? Und wie lange bräuchte ein Mensch, der die Schalter von Hand umlegt? Die Rechnung ist plakativ, aber sie zeigt die Größenordnung. Alle Zahlen lassen sich ändern.</p>
+      <div class="eingaben">
+        <label>Schalter im Prozessor, in Milliarden <input id="rZahl" type="number" value="13.1" step="0.1" min="0.001"></label>
+        <label>Preis des Prozessors in Euro <input id="rPreis" type="number" value="700" step="10" min="1"></label>
+        <label>Preis eines Schalters im Baumarkt in Euro <input id="rSchalter" type="number" value="3" step="0.5" min="0.01"></label>
+        <label>Takt in Gigahertz <input id="rTakt" type="number" value="5.7" step="0.1" min="0.001"></label>
+        <label>Schalter, die ein Mensch pro Sekunde umlegt <input id="rHand" type="number" value="2" step="1" min="1"></label>
+      </div>
+      <div class="ergebnis" id="rechnung"></div>
+      <p class="quelle">Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
+    </div>
+  </section>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   const el = id => document.getElementById(id);
@@ -271,7 +345,8 @@
       w('M160,65 H220', s && a) + w('M160,115 H220', s && !a) +
       w('M290,65 H330 L390,115 H430', s && ab) + w('M290,115 H330 L390,65 H430', s && !ab) +
       wechsel(100, 90, a, s, 'a', 'a = ' + a) + kreuz(220, 90, b, s && a, s && !a, 'b', 'b = ' + b) + wechsel(430, 90, c, s, 'c', 'c = ' + c, true);
-    el('tSum').innerHTML = lampentext(s) + ' Jeder der drei Schalter wechselt das Licht, wenn man ihn umlegt. ' + stand('<code>a ^ b ^ c</code> =', s);
+    el('tSum').innerHTML = (s ? 'Die Lampe leuchtet: Das Bit dieser Stelle ist 1.' : 'Die Lampe ist aus: Das Bit dieser Stelle ist 0.') +
+      ' Jeder der drei Schalter wechselt das Licht, wenn man ihn umlegt. ' + stand('<code>a ^ b ^ c</code> =', s);
 
     const z1 = a & b, z2 = c & (a | b), za = c & a, zb = c & b, u = z1 | z2;
     el('sCar').innerHTML = rahmen(60, 250, u) + w('M40,60 H120', u) + w('M480,60 H560', u) +
@@ -281,11 +356,12 @@
       w('M290,170 V200 H330', zb) + schalter(330, 200, b, zb, 'b', 'b', true) + w('M390,200 H430 V170', zb) +
       w('M430,170 H480 V60', z2) +
       knoten(120, 60, u) + knoten(480, 60, u) + knoten(290, 170, z2) + knoten(430, 170, z2);
-    el('tCar').innerHTML = lampentext(u) + ' Oberer Weg: a und b. Unterer Weg: c und dazu a oder b. ' + stand('Übertrag =', u);
+    el('tCar').innerHTML = (u ? 'Die Lampe leuchtet: Eine 1 geht an die nächste Stelle links.' : 'Die Lampe ist aus: An die nächste Stelle links geht nichts.') +
+      ' Oberer Weg: a und b. Unterer Weg: c und dazu a oder b. ' + stand('Übertrag =', u);
 
     const einsen = a + b + c;
     el('ergebnis').innerHTML = 'Geschlossen ' + (einsen === 1 ? 'ist ein Schalter' : 'sind ' + ['keine', '', 'zwei', 'drei'][einsen] + ' Schalter') + ': ' +
-      a + ' + ' + b + ' + ' + c + ' = <span class="stand">' + u + s + '</span> im Zweiersystem. Links der Übertrag, rechts die Summe.';
+      a + ' + ' + b + ' + ' + c + ' = <span class="stand">' + u + s + '</span> im Zweiersystem, das ist ' + einsen + '. Die linke Ziffer ist die Lampe „Übertrag“, die rechte Ziffer die Lampe „Summe“.';
   }
 
   // ---------- Ausprobieren 3 ----------
@@ -373,15 +449,84 @@
       '<li><strong>Von Hand geschaltet:</strong> Der Prozessor macht in einer Sekunde ' + zahlText(takt) + ' Schritte. Ein Mensch, der ' + de(hand) + ' Schalter pro Sekunde umlegt, bräuchte für ebenso viele Schaltvorgänge ' + dauerText(takt / hand) + ', ohne Pause.</li>' +
       '<li><strong>Platz an der Wand:</strong> Bei 8 mal 8 Zentimetern je Schalter bedecken sie rund ' + de(zahl * 0.0064 / 1e6, 1) + ' Quadratkilometer. Im Prozessor liegen sie auf wenigen Quadratzentimetern.</li></ul>';
   }
-  ['rZahl', 'rPreis', 'rSchalter', 'rTakt', 'rHand'].forEach(id => el(id).addEventListener('input', rechne));
+  ['rZahl', 'rPreis', 'rSchalter', 'rTakt', 'rHand'].forEach(id => el(id).addEventListener('input', () => { rechne(); Kurslotse.standGeaendert(); }));
 
-  function zeigeAlles() { zeigeGatter(); zeigeStelle(); zeigeRelais(); }
+  // ---------- Reiter ----------
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#relais
+  const ANKER = ['worum', 'gatter', 'addierer', 'relais', 'prozessor'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Vier Gatter aus zwei Schaltern', 'Schritt 2: Eine Stelle des Addierers aus Schaltern', 'Schritt 3: Das Relais, Strom schaltet Strom', 'Schritt 4: Vom Relais zum Prozessor'];
+  let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== aktuell;
+    aktuell = nummer;
+    document.querySelectorAll('.stufe').forEach(st => st.classList.toggle('active', st.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (gewechselt) Kurslotse.schrittGewechselt();                     // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Schalter in Sätzen.
+  const lampe01 = on => on ? 'Die Lampe leuchtet' : 'Die Lampe ist aus';
+  const stellung = (nameS, wertS) => 'Schalter ' + nameS + ' steht auf ' + wertS + (wertS ? ' (geschlossen)' : ' (offen)');
+  function standSaetze() {
+    const a = Z.a, b = Z.b, c = Z.c;
+    if (aktuell === 1) return [
+      stellung('a', a) + ', ' + stellung('b', b) + '.',
+      'AND, zwei Schalter hintereinander: ' + lampe01(a & b) + ', a & b = ' + (a & b) + '.',
+      'OR, zwei Schalter nebeneinander: ' + lampe01(a | b) + ', a | b = ' + (a | b) + '.',
+      'XOR, die Wechselschaltung: ' + lampe01(a ^ b) + ', a ^ b = ' + (a ^ b) + '.',
+      'NOT, der Öffner an Schalter a: ' + lampe01(a ^ 1) + ', NOT a = ' + (a ^ 1) + '.'];
+    if (aktuell === 2) {
+      const s = a ^ b ^ c, oben = a & b, unten = c & (a | b), u = oben | unten;
+      return [
+        stellung('a', a) + ', ' + stellung('b', b) + ', ' + stellung('c', c) + '.',
+        'Rechtes Schaltbild, Lampe „Summe“, die rechte Ziffer des Ergebnisses: ' + lampe01(s) + ', das Bit dieser Stelle ist ' + s + ', a ^ b ^ c = ' + s + '.',
+        'Linkes Schaltbild, Lampe „Übertrag nach links“, die linke Ziffer des Ergebnisses: ' + lampe01(u) + ', Übertrag = ' + u + '. ' +
+          (u ? 'Strom fließt über ' + [oben ? 'den oberen Weg mit a und b' : '', unten ? 'den unteren Weg mit c und dazu a oder b' : ''].filter(Boolean).join(' und über ') + '.' : 'Kein Weg führt Strom.'),
+        'Beide Lampen zusammen sind das Ergebnis: ' + a + ' + ' + b + ' + ' + c + ' = ' + u + s + ' im Zweiersystem, das ist ' + (a + b + c) + '. Die linke Ziffer ist der Übertrag, die rechte die Summe.'];
+    }
+    if (aktuell === 3) return [Z.r
+      ? 'Der Schalter im Steuerkreis ist geschlossen. Durch die Spule fließt Strom, der Kontakt ist angezogen, die Lampe im zweiten Stromkreis leuchtet.'
+      : 'Der Schalter im Steuerkreis ist offen. Durch die Spule fließt kein Strom, der Kontakt ist offen, die Lampe im zweiten Stromkreis ist aus.'];
+    if (aktuell === 4) return [
+      'Eingetragen in der Baumarkt-Rechnung: ' + el('rZahl').value + ' Milliarden Schalter im Prozessor, Preis des Prozessors ' + el('rPreis').value + ' Euro, Preis eines Schalters im Baumarkt ' +
+        el('rSchalter').value + ' Euro, Takt ' + el('rTakt').value + ' Gigahertz, ein Mensch legt ' + el('rHand').value + ' Schalter pro Sekunde um.',
+      'Das Ergebnis der Rechnung steht im Text des sichtbaren Schritts.'];
+    return ['Unter „Worum es geht“ gibt es keine Schaltung zum Anklicken.'];
+  }
+  // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
+  const kurz = () => ['', 'a = ' + Z.a + ', b = ' + Z.b, 'a = ' + Z.a + ', b = ' + Z.b + ', c = ' + Z.c, 'Schalter ' + (Z.r ? 'geschlossen' : 'offen'),
+    el('rZahl').value.replace('.', ',') + ' Milliarden Schalter, ' + el('rTakt').value.replace('.', ',') + ' Gigahertz'][aktuell];
+
+  function zeigeAlles() { zeigeGatter(); zeigeStelle(); zeigeRelais(); Kurslotse.standGeaendert(); }
   zeigeDiagramme(); rechne();
   document.addEventListener('click', e => {
+    const k = e.target.closest('[data-stufe], [data-gehe]');
+    if (k) { zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true); return; }
     const t = e.target.closest('[data-var]');
     if (t) { Z[t.dataset.var] ^= 1; zeigeAlles(); }
   });
   zeigeAlles();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Gatter aus Schaltern: Das Rechenwerk zum Anfassen',
+    thema: 'Gatter aus Schaltern',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Gatter aus Schaltern kommen im Kurstext nicht vor.',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_schalter_interaktiv.md',
+    reiter: () => ANKER[aktuell],
+    schritt: () => SCHRITTE[aktuell],
+    sichtbar: () => el('stufe-' + aktuell),
+    text: '.card > p, .card > ul, .hinweis, .feld > h3, .feld > p, .ergebnis, .legende, table',
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: 'Warum leuchtet die Lampe bei XOR nur, wenn die Schalter verschieden stehen?'
+  });
 })();
 </script>
 </body>
