@@ -17,6 +17,9 @@
 //     beispiel: 'Warum rückt hier links eine Eins nach?'
 //   });
 //
+// Dazu nach Bedarf: thema (kurzer Name für die Suche), text (Auswahl der Elemente, deren Text mitgeht),
+// zeilen und zeilenTitel (die Programmzeilen und ihre Überschrift, wenn das Programm nicht in pre steht).
+//
 // Wechselt der Student den Schritt, ruft die Seite Kurslotse.schrittGewechselt() auf: Der Dialog leert sich.
 // Ändert er einen Wert der Demo, ruft sie Kurslotse.standGeaendert() auf.
 (function () {
@@ -67,7 +70,12 @@
     .lotse-eingabe button:disabled { opacity:.5;cursor:default; }
     .lotse-auf { position:fixed;right:18px;bottom:18px;z-index:19;background:#0f766e;color:#fff;border:1px solid #0f766e;border-radius:8px;font-weight:600;font-size:.95rem;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(15,118,110,.35);padding:11px 16px; }
     .lotse-auf:hover { background:#115e59; }
-    .lotse-zeile { color:#4b5563;font-size:.88rem;margin:0 0 24px; }
+    /* Solange der Kurslotse nicht verbunden ist, steht an derselben Stelle der Knopf „Kurslotsen verbinden“, darüber eine Meldung. */
+    .lotse-zeile { position:fixed;right:18px;bottom:18px;z-index:19;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:320px;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; }
+    .lotse-zeile .lotse-auf { position:static;background:#fff;color:#0f766e;box-shadow:0 6px 16px rgba(15,23,42,.12); }
+    .lotse-zeile .lotse-auf:hover { background:#ecfdf5; }
+    .lotse-status { background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:.88rem;line-height:1.5;color:#4b5563;box-shadow:0 6px 16px rgba(15,23,42,.12); }
+    .lotse-status:empty { display:none; }
     /* In einem breiten Fenster rückt die Seite nach links und macht der Spalte Platz. In einem schmalen liegt die Spalte über der Seite. */
     @media (min-width:1100px) { body.lotse-offen { padding-right:420px; } }`;
 
@@ -114,8 +122,9 @@
   const schrittText = () => beschreibung.schritte[seite.reiter()] || '';
   // Die Abschnitte des Kurstexts, auf die sich der sichtbare Schritt stützt: die Nummern unter der Überschrift dazu
   const abschnitte = () => ((schrittText().split(/^### Abschnitte des Kurstexts\s*$/m)[1] || '').split(/^### /m)[0].match(/\d+(\.\d+)+/g)) || [];
-  // Die Programmzeilen des sichtbaren Schritts, so wie sie auf der Seite stehen
-  const zeilen = () => Array.from(seite.sichtbar().querySelectorAll('pre'))
+  // Die Programmzeilen des sichtbaren Schritts, so wie sie auf der Seite stehen.
+  // Eine Seite, deren Programm nicht in pre steht, liefert sie selbst mit zeilen.
+  const zeilen = () => seite.zeilen ? seite.zeilen() : Array.from(seite.sichtbar().querySelectorAll('pre'))
     .flatMap(p => p.textContent.split('\n')).map(t => t.trimEnd()).filter(Boolean);
 
   function kontext() {
@@ -132,7 +141,7 @@
       beschreibung.seite ? ['', 'Was die HTML-Seite leistet:', beschreibung.seite] : [],
       schrittText() ? ['', 'Beschreibung des sichtbaren Schritts:', schrittText().replace(/^### /gm, '')] : [],
       ['', 'Stand der Demo:'], seite.stand(),
-      z.length ? ['', 'Programmzeilen des sichtbaren Schritts, in Go. Hinter // steht die Ausgabe:'].concat(z) : [],
+      z.length ? ['', seite.zeilenTitel || 'Programmzeilen des sichtbaren Schritts, in Go. Hinter // steht die Ausgabe:'].concat(z) : [],
       ['', 'Text des sichtbaren Schritts:', text.slice(0, 6000)]).join('\n');
   }
 
@@ -267,11 +276,11 @@
     stil.textContent = GESTALTUNG;
     document.head.appendChild(stil);
     document.body.insertAdjacentHTML('beforeend', SPALTE);
-    const zeile = document.createElement('p');
+    const zeile = document.createElement('div');
     zeile.className = 'lotse-zeile';
     zeile.id = 'lotseZeile';
-    zeile.innerHTML = '<a href="#" id="lotseVerbinden">Kurslotsen verbinden</a> <span id="lotseStatus"></span>';
-    (document.querySelector('.container') || document.body).appendChild(zeile);
+    zeile.innerHTML = '<div class="lotse-status" id="lotseStatus" aria-live="polite"></div><button type="button" class="lotse-auf" id="lotseVerbinden">Kurslotsen verbinden</button>';
+    document.body.appendChild(zeile);
     el('lotseText').placeholder = 'Zum Beispiel: ' + (seite.beispiel || 'Was sehe ich hier?');
 
     el('lotseSenden').addEventListener('click', frage);
@@ -280,7 +289,7 @@
     el('lotseLeeren').addEventListener('click', () => { leere(); el('lotseText').focus(); });
     el('lotseZu').addEventListener('click', () => klappe(false, true));
     el('lotseAuf').addEventListener('click', () => klappe(true, true));
-    el('lotseVerbinden').addEventListener('click', ev => { ev.preventDefault(); el('lotseStatus').textContent = ''; sucheLotsen(true); });
+    el('lotseVerbinden').addEventListener('click', () => { el('lotseStatus').textContent = ''; sucheLotsen(true); });
 
     zeigeStand();
     ladeBeschreibung();
