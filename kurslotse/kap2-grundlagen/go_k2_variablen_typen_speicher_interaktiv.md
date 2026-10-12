@@ -1,0 +1,163 @@
+# Variablen, Typen und Speicher: was eine Variable im Programm ist
+
+Die Seite erklärt, was eine Variable in einem Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie stellt die Variable der Mathematik neben die Variable im Programm, klärt die Begriffe Typ, Operator, Konstante und Literal, zeigt zusammengesetzte Typen und zeigt die Variable als Speicherplatz aus acht Speicherelementen.
+
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+
+Für alle Schritte gilt:
+
+- Die Seite gehört zu Kapitel 2 des Kurstexts. Dort kommt noch kein Go vor. Die Programmzeilen der Seite gehören zu keiner bestimmten Programmiersprache.
+- Der Pfeil `←` bedeutet: Die Variable links bekommt den Wert, der rechts steht. Go schreibt dafür `=`.
+- Die Seite führt kein Programm aus. Der Student kann die Programmzeilen nicht ändern und nicht starten.
+- Jede Demo behält ihren Stand, wenn der Student den Reiter wechselt.
+
+## Worum es geht
+
+Reiter: worum
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text und einem Bild des Rechners. Eine Demo gibt es hier nicht.
+- Eine Liste ordnet drei Abschnitte des Kurstexts je einem Werk des Rechners zu: Abschnitt 2.1 dem Steuerwerk, Abschnitt 2.2 dem Speicherwerk, Abschnitt 2.3 dem Rechenwerk.
+- Das Bild zeigt vier Kästen. Oben stehen Steuerwerk und Rechenwerk nebeneinander in einem gestrichelten Rahmen mit der Aufschrift „Prozessor“. Darunter stehen Speicherwerk und „Ein- und Ausgabe“ nebeneinander.
+- Der Kasten „Speicherwerk“ ist gelb hervorgehoben, weil die Seite zu Abschnitt 2.2 gehört. Die Kästen lassen sich nicht anklicken.
+- Die Aufteilung in vier Werke geht auf John von Neumann zurück. Der Kurstext nennt den Namen von Neumann nicht.
+- Unter dem Bild steht ein Link auf den Exkurs „Speichern und Rechnen im Rechner“. Dort arbeiten die vier Werke an einer Zuweisung zusammen.
+- Darunter steht, was die vier Schritte der Seite zeigen.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Weiter zu Schritt 1“ zu einem anderen Schritt wechseln.
+- Dem Link zum Exkurs folgen.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.2
+- 2.3
+
+## Schritt 1: Variable in Mathematik und Informatik
+
+Reiter: variable
+
+### Aufbau der Darstellung
+
+- Zu sehen sind zwei Kästen nebeneinander: links „In der Mathematik“, rechts „Im Programm“. Auf einem schmalen Bildschirm stehen sie untereinander.
+- Links oben steht die Gleichung `a · x^2 + b · x + c = 0`. Darunter erklärt eine Liste: a, b und c sind Parameter, x ist die Unbekannte.
+- Links stehen drei Knöpfe „Beispiel 1“, „Beispiel 2“ und „Beispiel 3“. Der gewählte Knopf ist grün.
+- Unter den Knöpfen steht ein Feld mit drei Zeilen: die Parameter, die Gleichung mit eingesetzten Parametern und die Werte für x als Menge.
+- Beispiel 1: a = 1, b = −3, c = 2. Die Menge ist {1, 2}. Beispiel 2: a = 1, b = −2, c = 1. Die Menge ist {1}. Beispiel 3: a = 1, b = 0, c = 1. Die Menge ist leer.
+- Rechts oben steht in einem dunklen Kasten ein Programm mit drei Anweisungen: `x ← 3`, `x ← 7`, `x ← x + 1`.
+- Hell hinterlegt mit einem gelben Strich am linken Rand ist die Anweisung, die zuletzt ausgeführt wurde. Am Anfang ist keine markiert.
+- Unter den Knöpfen rechts steht der Name `x` und daneben ein Kasten mit dem Wert von x. Am Anfang steht dort grau „kein Wert“ in einem gestrichelten Rahmen. Danach steht dort der Wert auf gelbem Grund.
+- Die Zeile „Werte von x bisher“ nennt alle Werte, die x im Lauf schon hatte.
+- Die Werte nach den drei Anweisungen sind 3, dann 7, dann 8.
+- Unter jedem der zwei Kästen steht in einem grünen Kasten ein erklärender Satz.
+- Am Anfang hat x keinen Wert, die Variable ist undefiniert. In Go kommt das nicht vor, dort hat jede Variable von Anfang an einen Wert.
+- Die dritte Anweisung `x ← x + 1` rechnet rechts mit dem bisherigen Wert 7 und beschreibt x dann mit 8. Als Gleichung der Mathematik gelesen hätte x = x + 1 keine Lösung.
+
+### Handgriffe
+
+- Links eines der drei Beispiele wählen. Eigene Parameter lassen sich nicht eingeben.
+- Rechts „nächste Anweisung“ wählen: Das Programm führt eine Anweisung aus. Nach der dritten Anweisung ist der Knopf gesperrt.
+- „eine Anweisung zurück“: Das Programm geht eine Anweisung zurück.
+- „von vorn“: Das Programm beginnt neu, x hat wieder keinen Wert.
+- Die drei Anweisungen lassen sich nicht ändern.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 2.3
+
+## Schritt 2: Typ, Operator, Konstante, Literal
+
+Reiter: begriffe
+
+### Aufbau der Darstellung
+
+- Zu sehen ist oben ein dunkler Kasten mit zwei Programmzeilen. Sie berechnen die Fläche eines Kreises.
+- Zeile 1: `PI ist die Konstante 3,14159265359`. Zeile 2: `flaeche ← PI · r · r`.
+- Anklickbar sind die hellen Teile: `PI`, `3,14159265359`, `flaeche`, der Punkt `·` und `r`. Die Wörter „ist die Konstante“ und der Pfeil `←` sind nicht anklickbar.
+- Der gewählte Teil ist gelb markiert. Kommt er in den zwei Zeilen mehrmals vor, sind alle Stellen gelb.
+- Unter dem Kasten steht in einem grünen Kasten die Auskunft zum gewählten Teil.
+- `PI` ist eine Konstante: eine Variable, deren Wert nie verändert wird.
+- `3,14159265359` ist ein Literal: ein Wert, der wörtlich im Programm steht. Go schreibt einen Punkt an der Stelle des Kommas.
+- `flaeche` und `r` sind Variablen mit dem Typ Gleitkommazahl.
+- Der Punkt `·` ist ein Operator, hier die Multiplikation. Go schreibt dafür `*`.
+- Darunter steht eine Tabelle mit zwei Typen. Ganze Zahl: Die Addition macht aus 17 und 4 die Zahl 21. Zeichenkette: Die Konkatenation macht aus „Haus“ und „tür“ die Zeichenkette „Haustür“.
+- Am Ende steht eine Liste mit den Stellen, an denen Literale, Konstanten und die Konkatenation in Go behandelt werden.
+
+### Handgriffe
+
+- Einen hellen Teil der zwei Programmzeilen anklicken.
+- Dem Link zur Seite „Konstanten“ folgen.
+- Die Programmzeilen lassen sich nicht ändern. Einen Wert für `r` kann der Student nicht eingeben, die Seite rechnet die Fläche nicht aus.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.1
+- 4.6.2.2
+- 5.2
+
+## Schritt 3: Zusammengesetzte Typen
+
+Reiter: typen
+
+### Aufbau der Darstellung
+
+- Zu sehen sind zwei Darstellungen untereinander: oben ein Vektor, darunter ein Datenverbund.
+- Der Vektor ist eine Reihe aus fünf Kästen ohne Lücke. In den Kästen stehen von links nach rechts die Messwerte 12, 15, 11, 18 und 14. Jeder ist eine ganze Zahl.
+- Der Datenverbund ist ein Rahmen mit der Aufschrift „Person“. Im Rahmen stehen untereinander die Felder Vorname mit „Erika“, Nachname mit „Mustermann“, dann ein blauer Rahmen mit der Aufschrift „Adresse“, dann Telefonnummer mit „0351 5550123“.
+- Im blauen Rahmen „Adresse“ stehen vier Felder: Straße mit „Heidestraße“, Hausnummer mit 17, Postleitzahl mit „01067“ und Ort mit „Dresden“.
+- Die Adresse ist selbst ein Datenverbund. Ein Datenverbund kann also einen anderen enthalten.
+- Die Hausnummer ist eine ganze Zahl. Alle anderen Felder sind Zeichenketten. Die Postleitzahl ist eine Zeichenkette, weil sie mit einer 0 beginnen kann. Die Telefonnummer ist eine Zeichenkette, weil niemand mit ihr rechnet.
+- Das gewählte Element oder Feld ist gelb markiert. Es ist immer nur eines gewählt, im Vektor oder im Datenverbund.
+- Unter dem Datenverbund steht in einem grünen Kasten die Auskunft: der Typ des gewählten Elements oder Felds und wozu es gehört.
+- Die Person und ihre Angaben sind erfunden.
+- Am Ende steht eine Liste: Der Vektor heißt in Go Array, der Datenverbund heißt in Go `struct`.
+
+### Handgriffe
+
+- Eines der fünf Elemente des Vektors anklicken.
+- Eines der sieben Felder des Datenverbunds anklicken. Die Rahmen „Person“ und „Adresse“ selbst lassen sich nicht anklicken.
+- Den Links zu den Seiten „Arrays“, „struct in Go“ und „Hierarchische Verbünde“ folgen.
+- Die Werte lassen sich nicht ändern.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 6
+- 8.2
+- 8.3
+
+## Schritt 4: Eine Variable ist Speicherplatz
+
+Reiter: speicher
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Reihe aus acht Kästen. Jeder Kasten ist ein binäres Speicherelement. Zusammen sind sie der Speicherplatz einer Variable.
+- Über jedem Kasten steht seine Wertigkeit, von links nach rechts: 128, 64, 32, 16, 8, 4, 2, 1.
+- Am Anfang steht in jedem Kasten ein graues Fragezeichen in einem gestrichelten Rahmen. Das heißt: Das Speicherelement ist noch nicht beschrieben und hat keinen definierten Wert.
+- Ein beschriebenes Speicherelement zeigt 0 oder 1. Ein Kasten mit 1 ist gelb, ein Kasten mit 0 ist weiß.
+- Unter der Reihe steht ein Feld mit drei Zeilen: das Bitmuster, die Folge als ganze Zahl gelesen und die Folge als Zeichen gelesen.
+- Solange ein Speicherelement nicht beschrieben ist, steht in den Zeilen „als ganze Zahl gelesen“ und „als Zeichen gelesen“ das Wort „undefiniert“.
+- Die ganze Zahl ist die Summe der Wertigkeiten aller Kästen mit 1. Sie liegt zwischen 0 und 255. Negative Zahlen zeigt die Seite nicht.
+- Das Zeichen ist das Zeichen mit dieser Nummer in der Zeichentabelle ASCII. Bei 65 ist es A, bei 97 ist es a. Bei den Zahlen 0 bis 31 und 127 bis 255 steht dort „kein druckbares Zeichen“, bei 32 „das Leerzeichen“.
+- Unter dem Feld steht in einem grünen Kasten ein Satz, der den letzten Handgriff erklärt.
+- Die Zuweisung eines Werts beschreibt alle acht Speicherelemente auf einmal: 65 ergibt 01000001, 97 ergibt 01100001, 17 ergibt 00010001.
+- Dieselbe Folge aus 0 und 1 bedeutet je nach Typ etwas anderes: 01000001 ist als ganze Zahl 65 und als Zeichen A.
+
+### Handgriffe
+
+- „Wert 65 zuweisen“, „Wert 97 zuweisen“ oder „Wert 17 zuweisen“ wählen. Knöpfe für andere Werte gibt es nicht.
+- Einen der acht Kästen anklicken. Ein Kasten mit Fragezeichen wird mit 1 beschrieben. Ein Kasten mit 1 wechselt auf 0, ein Kasten mit 0 wechselt auf 1.
+- Jede ganze Zahl von 0 bis 255 lässt sich so einstellen: erst einen der drei Werte zuweisen, dann einzelne Kästen anklicken. Beispiel: 200 ist 128 + 64 + 8, das Bitmuster ist 11001000.
+- „von vorn“: Alle acht Kästen zeigen wieder das Fragezeichen.
+- Den Links zum Exkurs „Speichern und Rechnen im Rechner“, zum Speichermodell und zum Zahlenkreis folgen.
+- Mehr als acht Speicherelemente zeigt die Seite nicht.
+
+### Abschnitte des Kurstexts
+
+- 2.2
