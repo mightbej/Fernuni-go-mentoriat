@@ -1,6 +1,6 @@
 # Variablen, Typen und Speicher: was eine Variable im Programm ist
 
-Die Seite erklärt, was eine Variable in einem Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie stellt die Variable der Mathematik neben die Variable im Programm, klärt die Begriffe Typ, Operator, Konstante und Literal, zeigt zusammengesetzte Typen und zeigt die Variable als Speicherplatz aus acht Speicherelementen.
+Die Seite erklärt, was eine Variable in einem Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie stellt die Variable der Mathematik neben die Variable im Programm, klärt die Begriffe Typ, Operator, Konstante und Literal, zeigt zusammengesetzte Typen und zeigt die Variable als Speicherplatz aus acht Speicherelementen. Aus Abschnitt 2.4 des Kurstexts nimmt sie die Konversion in Schritt 2 und die Deklaration in Schritt 4 auf.
 
 Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
@@ -85,19 +85,31 @@ Reiter: begriffe
 - `flaeche` und `r` sind Variablen mit dem Typ Gleitkommazahl.
 - Der Punkt `·` ist ein Operator, hier die Multiplikation. Go schreibt dafür `*`.
 - Darunter steht eine Tabelle mit zwei Typen. Ganze Zahl: Die Addition macht aus 17 und 4 die Zahl 21. Zeichenkette: Die Konkatenation macht aus „Haus“ und „tür“ die Zeichenkette „Haustür“.
-- Am Ende steht eine Liste mit den Stellen, an denen Literale, Konstanten und die Konkatenation in Go behandelt werden.
+- Unter der Tabelle steht der Teil „Zwei Typen in einer Rechnung: die Konversion“. Er besteht nur aus Text, eine Demo hat er nicht.
+- Das Beispiel dort: Die Variable `n` hat den Typ ganze Zahl und den Wert 17. Die Variable `y` hat den Typ Gleitkommazahl und den Wert 0,5. Das Programm soll `n + y` ausrechnen.
+- Die Addition verknüpft nur zwei Werte desselben Typs. Der Wert von `n` wird deshalb erst in die Gleitkommazahl 17,0 überführt, danach ergibt die Addition 17,5. Die Variable `n` behält ihren Typ und ihren Wert.
+- Das Beispiel gehört zu keiner bestimmten Programmiersprache. Ob die Konversion implizit oder explizit geschieht, lässt es offen.
+- Konversion heißt: Ein Wert wird in einen anderen Typ überführt.
+- Implizit heißt: Der Rechner nimmt die Konversion von selbst vor, sie steht nicht im Programm. Explizit heißt: Der Programmierer schreibt die Konversion ins Programm.
+- Eine Sprache, die explizite Konversionen verlangt, heißt streng typisiert. Go ist streng typisiert.
+- In Go heißt die Konversion Typkonvertierung und wird als Typname mit runden Klammern geschrieben, zum Beispiel `float64(n)`. Den Typ einer Variable passt Go nie von selbst an. In Go wäre `n + y` deshalb ein Fehler, richtig ist `float64(n) + y`.
+- Die Variablen `n` und `y` kommen in den zwei Programmzeilen oben nicht vor. Der Teil zur Konversion ist reiner Lesetext. Ausprobieren lässt sich die Konversion erst auf der Seite „Typkonvertierung“, zu der der Link am Ende des Schritts führt.
+- Am Ende steht eine Liste mit den Stellen, an denen Literale, Konstanten, die Konkatenation und die Konversion in Go behandelt werden.
 
 ### Handgriffe
 
 - Einen hellen Teil der zwei Programmzeilen anklicken.
-- Dem Link zur Seite „Konstanten“ folgen.
+- Den Links zu den Seiten „Konstanten“ und „Typkonvertierung“ folgen. „Typkonvertierung“ ist eine eigene HTML-Seite zu Kapitel 4 und kein Reiter dieser Seite. Auf dieser Seite lässt sich kein Go-Code ausführen.
+- Zur Konversion gibt es genau einen Handgriff: dem Link zur Seite „Typkonvertierung“ folgen.
 - Die Programmzeilen lassen sich nicht ändern. Einen Wert für `r` kann der Student nicht eingeben, die Seite rechnet die Fläche nicht aus.
 
 ### Abschnitte des Kurstexts
 
 - 2.2
+- 2.4
 - 4.3.1
 - 4.6.2.2
+- 4.7
 - 5.2
 
 ## Schritt 3: Zusammengesetzte Typen
@@ -148,6 +160,12 @@ Reiter: speicher
 - Unter dem Feld steht in einem grünen Kasten ein Satz, der den letzten Handgriff erklärt.
 - Die Zuweisung eines Werts beschreibt alle acht Speicherelemente auf einmal: 65 ergibt 01000001, 97 ergibt 01100001, 17 ergibt 00010001.
 - Dieselbe Folge aus 0 und 1 bedeutet je nach Typ etwas anderes: 01000001 ist als ganze Zahl 65 und als Zeichen A.
+- Unter der Demo steht der Teil „Die Deklaration“. Er besteht nur aus Text.
+- Eine Deklaration legt für eine Variable fest: den Namen, den es nur einmal gibt, den Typ, den Speicherplatz und oft einen Anfangswert.
+- Aus dem Typ ergibt sich, wie viele Speicherelemente die Variable braucht. Der Rechner stellt sie bereit. Das Fachwort dafür ist „allokieren“.
+- Fehlt der Anfangswert, stehen in den Speicherelementen noch die Werte aus ihrer vorherigen Nutzung. Die Variable heißt dann undefiniert. Die Fragezeichen der Demo stehen für diesen Zustand.
+- In Go bekommt jede Variable bei der Deklaration einen Wert. Eine undefinierte Variable gibt es in Go nicht.
+- Die Demo selbst zeigt keine Deklaration. Name und Typ der Variable mit den acht Speicherelementen nennt die Seite nicht.
 
 ### Handgriffe
 
@@ -155,9 +173,11 @@ Reiter: speicher
 - Einen der acht Kästen anklicken. Ein Kasten mit Fragezeichen wird mit 1 beschrieben. Ein Kasten mit 1 wechselt auf 0, ein Kasten mit 0 wechselt auf 1.
 - Jede ganze Zahl von 0 bis 255 lässt sich so einstellen: erst einen der drei Werte zuweisen, dann einzelne Kästen anklicken. Beispiel: 200 ist 128 + 64 + 8, das Bitmuster ist 11001000.
 - „von vorn“: Alle acht Kästen zeigen wieder das Fragezeichen.
-- Den Links zum Exkurs „Speichern und Rechnen im Rechner“, zum Speichermodell und zum Zahlenkreis folgen.
+- Den Links zur Seite „Variablendeklaration“, zum Exkurs „Speichern und Rechnen im Rechner“, zum Speichermodell und zum Zahlenkreis folgen.
 - Mehr als acht Speicherelemente zeigt die Seite nicht.
 
 ### Abschnitte des Kurstexts
 
 - 2.2
+- 2.4
+- 5.1
