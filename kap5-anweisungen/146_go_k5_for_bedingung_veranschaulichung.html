@@ -469,94 +469,18 @@
                 <h2>💡 Beispiel 2: ggT-Berechnung (Euklidischer Algorithmus)</h2>
 
                 <p style="margin-bottom: 20px;">
-                    Berechnung des größten gemeinsamen Teilers (ggT) zweier natürlicher Zahlen. 
-                    Die Anzahl der Schleifendurchläufe ergibt sich aus den Berechnungen.
+                    Das zweite Beispiel im Kurstext ist Listing 5.5 <code>for_ggt.go</code> auf Seite 140. Es berechnet den
+                    größten gemeinsamen Teiler (ggT) zweier natürlicher Zahlen. Die Anzahl der Schleifendurchläufe
+                    ergibt sich hier aus den Berechnungen in der Schleife.
                 </p>
-                <p><em>Quelle: Das Programm ist Listing 5.5 <code>for_ggt.go</code> aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.</em></p>
-
-                <div class="code-block"><span class="keyword">package</span> main
-
-<span class="keyword">import</span> <span class="string">"fmt"</span>
-
-<span class="comment">// ggT von n und m mittels Euklidischen Algorithmus berechnen</span>
-<span class="keyword">func</span> <span class="function">ggT</span>(n, m <span class="keyword">int</span>) <span class="keyword">int</span> {
-    <span class="keyword">for</span> n != m {
-        <span class="keyword">if</span> n > m {
-            n -= m
-        } <span class="keyword">else</span> {
-            m -= n
-        }
-    }
-    <span class="keyword">return</span> n
-}
-
-<span class="keyword">func</span> <span class="function">main</span>() {
-    <span class="keyword">var</span> n, m <span class="keyword">int</span>
-    fmt.<span class="function">Println</span>(<span class="string">"Bitte zwei natürliche Zahlen größer 0 eingeben:"</span>)
-    fmt.<span class="function">Scan</span>(&n)
-    fmt.<span class="function">Scan</span>(&m)
-    <span class="keyword">if</span> n > <span class="number">0</span> && m > <span class="number">0</span> {
-        fmt.<span class="function">Printf</span>(<span class="string">"%v ist der ggT von %v und %v.\n"</span>, <span class="function">ggT</span>(n, m), n, m)
-    } <span class="keyword">else</span> {
-        fmt.<span class="function">Printf</span>(<span class="string">"Die Eingabe %v und %v ist unzulässig.\n"</span>, n, m)
-    }
-}</div>
-
-                <h3>Beispiel-Ablauf: ggT(42, 78)</h3>
-                <div class="comparison-grid">
-                    <div class="comparison-card">
-                        <h4>Start</h4>
-                        <p>n = 42, m = 78</p>
-                        <p style="color: #28a745;">✓ n ≠ m</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>1. Durchlauf</h4>
-                        <p>m > n → m = 78 - 42 = 36</p>
-                        <p>n = 42, m = 36</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>2. Durchlauf</h4>
-                        <p>n > m → n = 42 - 36 = 6</p>
-                        <p>n = 6, m = 36</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>3. Durchlauf</h4>
-                        <p>m > n → m = 36 - 6 = 30</p>
-                        <p>n = 6, m = 30</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>4. Durchlauf</h4>
-                        <p>m > n → m = 30 - 6 = 24</p>
-                        <p>n = 6, m = 24</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>5. Durchlauf</h4>
-                        <p>m > n → m = 24 - 6 = 18</p>
-                        <p>n = 6, m = 18</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>6. Durchlauf</h4>
-                        <p>m > n → m = 18 - 6 = 12</p>
-                        <p>n = 6, m = 12</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>7. Durchlauf</h4>
-                        <p>m > n → m = 12 - 6 = 6</p>
-                        <p>n = 6, m = 6</p>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>Ende</h4>
-                        <p style="color: #dc3545;">✗ n == m</p>
-                        <p><strong>Ergebnis: 6</strong></p>
-                    </div>
-                </div>
-
-                <div class="info-box" style="margin-top: 20px;">
-                    <p><strong>💡 Bemerkung zu Variablennamen:</strong></p>
-                    <p>Die Parameter-Variablen <code>n</code> und <code>m</code> in der Funktion <code>ggT</code> haben den gleichen 
-                    Namen wie die Variablen in <code>main</code>, sind aber völlig unabhängig! Der Gültigkeitsbereich ist auf 
-                    den jeweiligen Funktionsrumpf beschränkt.</p>
-                </div>
+                <p style="margin-bottom: 20px;">
+                    Dasselbe Programm steht schon in Abschnitt 2.5 des Kurstexts, dort als Struktogramm und als Flussdiagramm.
+                    Eine eigene Seite zeigt beide Bilder und lässt das Go-Programm Zeile für Zeile laufen:
+                </p>
+                <p>
+                    <a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#programm">Größter gemeinsamer Teiler: das Go-Programm Schritt für Schritt</a><br>
+                    <a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#uebergang">Größter gemeinsamer Teiler: vom Struktogramm zum Go-Code</a>
+                </p>
             </div>
 
             <!-- Wann verwenden -->
