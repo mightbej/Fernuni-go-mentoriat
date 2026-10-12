@@ -57,7 +57,7 @@
   <div class="hero">
     <h1>Exkurs: Speichern und Rechnen im Rechner</h1>
     <p>Ein Rechner hält Werte in einem Speicher und verarbeitet sie in einem Rechenwerk. Die Seite gibt eine Orientierung für Kapitel 4: Sie zeigt, wo die Datentypen in diesem Aufbau ihren Platz haben.</p>
-    <p>Das Modell nach von Neumann steht im Kurstext nicht. Die Seite nennt bei jedem Teil den Abschnitt des Kurstexts v3.0.6, zu dem er führt.</p>
+    <p>Die Seite ist das Bild zu zwei Abschnitten des Kurstexts v3.0.6: Abschnitt 2.2 über Variablen, Typen und Speicher und Abschnitt 2.3 über Ausdrücke und Zuweisungen, Seiten 8–11. Den Namen von Neumann nennt der Kurstext nicht.</p>
   </div>
 
   <div class="tabs">
@@ -69,20 +69,25 @@
   <section class="stufe active" id="stufe-0">
   <div class="card">
     <h2>Worum es geht</h2>
-    <p>Der Kurstext beginnt Abschnitt 4.1 mit einem Satz über Datentypen: Ein Datentyp zeichnet sich durch seinen Wertebereich aus und durch die Operationen, die auf seinen Werten definiert sind. Zu einem Typ gehören also zwei Dinge.</p>
+    <p>In Kapitel 2 des Kurstexts wurden zwei Dinge besprochen:</p>
+    <ul>
+      <li><strong>Abschnitt 2.2, Speichern:</strong> Eine Variable belegt Speicherplatz. Der Speicherplatz besteht aus Speicherelementen, die 0 oder 1 enthalten.</li>
+      <li><strong>Abschnitt 2.3, Rechnen:</strong> Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Jede Operation ist für bestimmte Datentypen definiert.</li>
+    </ul>
+    <p>In Kapitel 4 kommt beides wieder vor. Abschnitt 4.1 beginnt mit einem Satz über Datentypen: Ein Datentyp zeichnet sich durch seinen Wertebereich aus und durch die Operationen auf seinen Werten. Die Tabelle ordnet beide Teile einem Werk des Rechners zu.</p>
     <div class="tabellenrahmen">
     <table>
       <thead><tr><th>Teil des Datentyps</th><th>Beispiel für <code>int8</code></th><th>Werk des Rechners, das dafür zuständig ist</th></tr></thead>
       <tbody>
-        <tr><td>Der Wertebereich sagt, welche Werte der Typ kennt.</td><td>Der Typ kennt die ganzen Zahlen von −128 bis 127.</td><td>Das Speicherwerk hält den Wert als Bitmuster.</td></tr>
-        <tr><td>Die Operationen sagen, was man mit den Werten tun darf.</td><td>Man darf zwei Werte addieren, vergleichen oder den Rest einer Division bilden.</td><td>Das Rechenwerk führt die Operation aus.</td></tr>
+        <tr><td>Der Wertebereich legt fest, welche Werte der Typ kennt.</td><td>Der Typ kennt die ganzen Zahlen von −128 bis 127.</td><td>Das Speicherwerk hält den Wert als Bitmuster.</td></tr>
+        <tr><td>Die Operationen legen fest, was man mit den Werten tun darf.</td><td>Man darf zwei Werte addieren, vergleichen oder den Rest einer Division bilden.</td><td>Das Rechenwerk führt die Operation aus.</td></tr>
       </tbody>
     </table>
     </div>
     <p>Diese Aufteilung in Speichern und Rechnen geht auf John von Neumann zurück. Er hat sie 1945 beschrieben, und fast jeder heutige Rechner ist so gebaut.</p>
     <p>Die Seite geht in zwei Schritten vor. Schritt 1 schickt die Anweisung <code>a = a + 4</code> durch den Rechner. Schritt 2 zeigt die vier Werke einzeln und nennt zu jedem den Abschnitt des Kurstexts. Jeder Schritt hat oben einen Reiter.</p>
     <p>Danach folgt Kapitel 4 dieser Aufteilung: erst die Typen und wie ihre Werte gespeichert sind, dann die Operationen auf diesen Werten.</p>
-    <p class="quelle">Der Satz über Datentypen steht im Kurstext v3.0.6, Abschnitt 4.1, Seite 45.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, Abschnitt 2.3, Seiten 10–11, und Abschnitt 4.1, Seite 45.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -114,7 +119,7 @@
       <div class="werk" id="w-ea"><span class="name">Ein- und Ausgabe</span><span class="aufgabe">Das steht auf dem Bildschirm:</span><span class="inhalt" id="i-ea"></span></div>
     </div>
     <div class="auskunft" id="ablauf"></div>
-    <div class="hinweis">Das Modell vereinfacht. Der Compiler übersetzt <code>a = a + 4</code> in mehrere Befehle der Maschinensprache: laden, addieren, zurückschreiben. Hier stehen sie zusammen als eine Anweisung. Der Kurstext spricht über Maschinensprache in Abschnitt 2.7, Seiten 17–19.</div>
+    <div class="hinweis">Das Modell vereinfacht. Der Compiler übersetzt <code>a = a + 4</code> in mehrere Befehle der Maschinensprache: laden, addieren, zurückschreiben. Hier stehen sie zusammen als eine Anweisung. Die Maschinensprache wird im Kurstext in Abschnitt 2.7 behandelt, Seiten 17–19.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>

@@ -131,7 +131,7 @@
 
   <div class="hero">
     <h1>Speichermodell: Name, Typ und Adresse</h1>
-    <p>Eine Variable ist ein Stück Hauptspeicher mit einem Namen. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Kurstext Kapitel 4, Primitive Datentypen.</p>
+    <p>Eine Variable ist ein Stück Hauptspeicher mit einem Namen. Der Typ legt fest, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Kurstext Kapitel 4, Primitive Datentypen.</p>
   </div>
 
   <div class="tabs">
@@ -150,7 +150,7 @@
     <ol>
       <li>Er sucht den Namen in der Tabelle.</li>
       <li>Er liest aus der Zeile die Adresse. Dort beginnt die Variable.</li>
-      <li>Er liest aus der Zeile den Typ. Der Typ sagt, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten.</li>
+      <li>Er liest aus der Zeile den Typ. Der Typ legt fest, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten.</li>
     </ol>
     <p>Der Wert einer Variable steht nur im Hauptspeicher. In der Tabelle steht er nicht.</p>
     <p>Die Seite geht in drei Schritten vor. Schritt 1 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Schritt 2 zeigt einen Wert in vier Schreibweisen: dezimal, binär, oktal und hexadezimal. Schritt 3 liest ein Bitmuster mit verschiedenen Typen. Jeder Schritt hat oben einen Reiter.</p>
@@ -306,7 +306,7 @@
       </tbody>
     </table>
     </div>
-    <div class="hinweis">Der Kurstext unterscheidet in Abschnitt 4.3.3 auf Seite 63 die syntaktische von der semantischen Ebene. Sein Beispiel sind die Literale <code>123</code> und <code>0x7b</code>: zwei Schreibweisen im Quelltext, ein Wert. Das war Schritt 2. Dieser Schritt dreht die Richtung um: ein Bitmuster im Speicher, mehrere Werte. In einem Go-Programm legt die Deklaration den Typ einer Variable fest, und er bleibt. Nur auf dieser Seite lässt er sich für eine Zelle wechseln.</div>
+    <div class="hinweis">Der Kurstext unterscheidet in Abschnitt 4.3.3 auf Seite 63 die syntaktische von der semantischen Ebene. Sein Beispiel sind die Literale <code>123</code> und <code>0x7b</code>: zwei Schreibweisen im Quelltext, ein Wert. Das war Schritt 2. Dieser Schritt dreht die Richtung um: ein Bitmuster im Speicher, mehrere Werte. Auch das steht im Kurstext, in Abschnitt 2.2 auf den Seiten 8–10: Wie eine Folge von 0 und 1 als Wert gelesen wird, hängt vom Typ ab. In einem Go-Programm legt die Deklaration den Typ einer Variable fest, und er bleibt. Nur auf dieser Seite lässt er sich für eine Zelle wechseln.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -469,7 +469,7 @@
       o.punkte.push("Im Bauplan von " + c(e.typ) + " steht: Das Feld " + c(m[3]) + " beginnt " + (ab === 0 ? "am Anfang" : zellenWort(ab) + " hinter dem Anfang") + " und hat den Typ " + c(t.typ) + ". Seine Adresse ist " + o.rechnung + ".");
     } else {
       o.adr = e.adr; o.n = e.n; o.typ = e.typ;
-      o.punkte.push(kopf + " Der Typ sagt: " + zellenWort(e.n) + ".");
+      o.punkte.push(kopf + " Der Typ legt fest: " + zellenWort(e.n) + ".");
       o.kurz = c(ausdruck) + " liegt laut Tabelle an der Adresse " + e.adr + ".";
       return o;
     }
@@ -632,7 +632,7 @@
     schreibe(w.adr, w.n, wert);
     var e = eintragBei(w.adr), punkte = [
       w.punkt,
-      "Der Typ " + c(w.z.typ) + " sagt: An der Adresse " + w.adr + " liegen " + w.n + " Zellen, und sie sind als " + c(w.typ) + " zu lesen.",
+      "Der Typ " + c(w.z.typ) + " legt fest: An der Adresse " + w.adr + " liegen " + w.n + " Zellen, und sie sind als " + c(w.typ) + " zu lesen.",
       "Der Rechner schreibt " + wert + " in " + bereich(w.adr, w.n) + ": " + c(muster(w.adr, w.n))
     ];
     if (e && e.name && e.adr === w.adr) punkte.push("Die Zeile nennt den Namen " + c(e.name) + " nicht. Trotzdem hat " + c(e.name) + " jetzt den Wert " + wertVon(e) + ".");
@@ -659,7 +659,7 @@
     schreibe(nach.adr, nach.n, wert);
     return fertig([von.z, nach.z], lesen, adressen(nach.adr, nach.n), [
       von.punkt,
-      "Der Typ " + c(von.z.typ) + " sagt: An der Adresse " + von.adr + " liegen " + von.n + " Zellen, und sie sind als " + c(von.typ) + " zu lesen. Der Rechner liest den Wert " + wert + ".",
+      "Der Typ " + c(von.z.typ) + " legt fest: An der Adresse " + von.adr + " liegen " + von.n + " Zellen, und sie sind als " + c(von.typ) + " zu lesen. Der Rechner liest den Wert " + wert + ".",
       c("*" + nachName) + " heißt: Geh zu der Adresse, die in " + c(nachName) + " steht. Dort steht " + nach.adr + ".",
       "Der Rechner schreibt " + wert + " in " + bereich(nach.adr, nach.n) + ". Einen Namen für diese Zellen brauchte er dafür nicht."
     ]);
