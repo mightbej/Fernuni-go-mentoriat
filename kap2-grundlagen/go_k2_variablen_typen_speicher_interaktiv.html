@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variablen, Typen und Speicher: was eine Variable im Programm ist</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    li { margin:6px 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:5.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Worum es geht: das Bild des Rechners, das Speicherwerk ist hervorgehoben */
+    .rechner { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0; }
+    .rechner .rahmen { grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:12px;border:2px dashed #94a3b8;border-radius:12px;padding:26px 12px 12px;position:relative; }
+    .rechner .rahmen::before { content:"Prozessor";position:absolute;top:4px;left:14px;font-size:.85rem;color:var(--muted);font-weight:600; }
+    .werk { background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 14px; }
+    .werk .name { display:block;font-weight:700;font-size:1.05rem;color:var(--accent); }
+    .werk .aufgabe { display:block;color:var(--muted);font-size:.9rem; }
+    .werk.hier { border-color:#b45309;background:var(--aktiv-bg);box-shadow:0 0 0 3px var(--aktiv); }
+    .werk.hier .aufgabe { color:#111827; }
+
+    /* Schritt 1: Mathematik neben Programm */
+    .zwei { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0; }
+    .zwei > div { border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0; }
+    .zwei h3 { margin:0 0 8px; }
+    .formel { font-family:Cambria,"Times New Roman",serif;font-size:1.35rem;text-align:center;margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600; }
+    .kasten { display:flex;align-items:center;gap:12px;margin:12px 0; }
+    .kasten .etikett { font-family:Consolas,monospace;font-size:1.3rem;font-weight:700; }
+    .kasten .inhalt { min-width:5.5em;text-align:center;border:2px solid #1f2937;border-radius:8px;padding:8px 12px;font-family:Consolas,monospace;font-size:1.5rem;font-weight:700;background:#fff; }
+    .kasten .inhalt.leer { color:#9ca3af;border-style:dashed;font-size:1rem;font-weight:400; }
+    .kasten .inhalt.neu { background:var(--aktiv-bg);border-color:#b45309; }
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;list-style:none; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#94a3b8;border-left:4px solid transparent;white-space:pre; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Schritt 2: Programmzeilen aus anklickbaren Teilen */
+    .teile { background:#1e293b;border-radius:8px;padding:12px 14px;margin:12px 0;font-family:Consolas,monospace;font-size:1.05rem;color:#cbd5e1;line-height:2.3;overflow-x:auto; }
+    .teile .reihe { white-space:nowrap; }
+    .teile button { font-family:inherit;font-size:inherit;background:#334155;color:#fff;border-color:#64748b;padding:3px 9px; }
+    .teile button:hover { background:#475569; }
+    .teile button.gewaehlt { background:var(--aktiv-bg);color:#111827;border-color:var(--aktiv);box-shadow:0 0 0 2px var(--aktiv); }
+
+    /* Schritt 3: Vektor und Datenverbund */
+    .vektor { display:flex;flex-wrap:wrap;gap:0;margin:12px 0; }
+    .vektor button { border-radius:0;border:2px solid #1f2937;margin-left:-2px;min-width:3.4em;font-family:Consolas,monospace;font-size:1.15rem;background:#fff; }
+    .vektor button:first-child { margin-left:0;border-radius:8px 0 0 8px; }
+    .vektor button:last-child { border-radius:0 8px 8px 0; }
+    .verbund { border:2px solid #1f2937;border-radius:10px;padding:26px 12px 12px;position:relative;margin:12px 0;display:grid;gap:8px;max-width:560px; }
+    .verbund::before { content:attr(data-name);position:absolute;top:3px;left:12px;font-size:.85rem;font-weight:700;color:var(--blau); }
+    .verbund .verbund { border-color:var(--blau);margin:0;max-width:none; }
+    .verbund button { display:grid;grid-template-columns:9em 1fr;gap:10px;text-align:left;background:#fff;font-weight:400;width:100%; }
+    .verbund button .fn { font-weight:600; }
+    .verbund button .fw { font-family:Consolas,monospace;overflow-wrap:anywhere; }
+    .vektor button.gewaehlt, .verbund button.gewaehlt { background:var(--aktiv-bg);border-color:#b45309;box-shadow:0 0 0 2px var(--aktiv);position:relative; }
+
+    /* Schritt 4: acht Speicherelemente */
+    .bits { display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;max-width:560px;margin:14px 0 4px; }
+    .bits .wertigkeit { text-align:center;color:var(--muted);font-size:.85rem;font-family:Consolas,monospace; }
+    .bits button { font-family:Consolas,monospace;font-size:1.7rem;padding:10px 0;background:#fff;border:2px solid #1f2937; }
+    .bits button.leer { color:#9ca3af;border-style:dashed;background:#f9fafb; }
+    .bits button.eins { background:var(--aktiv-bg);border-color:#b45309; }
+
+    @media (max-width:640px) { .rechner, .rechner .rahmen, .zwei { grid-template-columns:minmax(0,1fr); } .verbund button { grid-template-columns:1fr; gap:0; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Variablen, Typen und Speicher</h1>
+    <p>Eine Variable im Programm ist ein Stück Speicher mit einem Namen und einem Typ. Die Seite zeigt, wie sich eine solche Variable von einer Variable der Mathematik unterscheidet und was der Rechner für sie bereithält.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Variable in Mathematik und Informatik</button>
+    <button type="button" class="tab" data-stufe="2">2 Typ, Operator, Konstante, Literal</button>
+    <button type="button" class="tab" data-stufe="3">3 Zusammengesetzte Typen</button>
+    <button type="button" class="tab" data-stufe="4">4 Eine Variable ist Speicherplatz</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Rechner besteht aus vier Werken. Diese Aufteilung geht auf John von Neumann zurück, er hat sie 1945 beschrieben. Den Namen von Neumann nennt der Kurstext nicht, die ersten drei Abschnitte von Kapitel 2 lassen sich aber je einem Werk zuordnen:</p>
+    <ul>
+      <li><strong>Abschnitt 2.1, Steuerwerk:</strong> Das Steuerwerk legt fest, welche Anweisung als nächste an der Reihe ist. Verzweigung und Schleife ändern diese Reihenfolge.</li>
+      <li><strong>Abschnitt 2.2, Speicherwerk:</strong> Das Speicherwerk hält die Werte der Variablen. Um diesen Abschnitt geht es auf dieser Seite.</li>
+      <li><strong>Abschnitt 2.3, Rechenwerk:</strong> Das Rechenwerk rechnet aus den gespeicherten Werten neue Werte aus.</li>
+    </ul>
+    <div class="rechner">
+      <div class="rahmen">
+        <div class="werk"><span class="name">Steuerwerk</span><span class="aufgabe">Abschnitt 2.1: Welche Anweisung ist an der Reihe?</span></div>
+        <div class="werk"><span class="name">Rechenwerk</span><span class="aufgabe">Abschnitt 2.3: Welcher neue Wert entsteht?</span></div>
+      </div>
+      <div class="werk hier"><span class="name">Speicherwerk</span><span class="aufgabe">Abschnitt 2.2: Welchen Wert hat eine Variable, und wie liegt er im Speicher?</span></div>
+      <div class="werk"><span class="name">Ein- und Ausgabe</span><span class="aufgabe">Tastatur und Bildschirm</span></div>
+    </div>
+    <p>Wie die vier Werke zusammenarbeiten, zeigt der <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</p>
+    <p>Die Seite geht in vier Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> stellt die Variable der Mathematik neben die Variable im Programm.</li>
+      <li><strong>Schritt 2</strong> klärt vier Begriffe an einer Programmzeile: Typ, Operator, Konstante und Literal.</li>
+      <li><strong>Schritt 3</strong> zeigt, wie aus einfachen Typen zusammengesetzte Typen entstehen: der Vektor und der Datenverbund.</li>
+      <li><strong>Schritt 4</strong> zeigt die Variable als Speicherplatz aus acht Speicherelementen.</li>
+    </ul>
+    <p>Kapitel 2 des Kurstexts kommt ohne Go aus. Die Programmzeilen auf dieser Seite gehören deshalb zu keiner bestimmten Programmiersprache. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts steht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Variable in Mathematik und Informatik</h2>
+    <p>Das Wort „Variable“ bedeutet in der Mathematik und in der Informatik Verschiedenes. Links steht die Gleichung aus dem Kurstext, rechts ein Programm mit drei Anweisungen.</p>
+    <div class="zwei">
+      <div>
+        <h3>In der Mathematik</h3>
+        <p class="formel">a · x² + b · x + c = 0</p>
+        <ul>
+          <li><strong>Parameter:</strong> a, b und c stehen je für eine Zahl. Ist die Zahl festgelegt, bleibt sie in der ganzen Rechnung dieselbe.</li>
+          <li><strong>Unbekannte:</strong> x steht für alle Werte, die die Gleichung erfüllen. Diese Menge ist durch die Gleichung gegeben.</li>
+        </ul>
+        <div class="zeile" id="beispiele">
+          <button type="button" data-beispiel="0">Beispiel 1</button>
+          <button type="button" data-beispiel="1">Beispiel 2</button>
+          <button type="button" data-beispiel="2">Beispiel 3</button>
+        </div>
+        <div class="feld">
+          <span class="was">Parameter</span><span class="wie" id="m-parameter"></span>
+          <span class="was">Gleichung</span><span class="wie" id="m-gleichung"></span>
+          <span class="was">Werte für x</span><span class="wie" id="m-menge"></span>
+        </div>
+        <div class="auskunft"><p id="m-text"></p></div>
+      </div>
+      <div>
+        <h3>Im Programm</h3>
+        <ol class="programm" id="programm">
+          <li>x ← 3</li>
+          <li>x ← 7</li>
+          <li>x ← x + 1</li>
+        </ol>
+        <div class="zeile">
+          <button id="weiter" class="haupt" type="button">nächste Anweisung</button>
+          <button id="zurueck" type="button">eine Anweisung zurück</button>
+          <button id="vorn" type="button">von vorn</button>
+        </div>
+        <div class="kasten"><span class="etikett">x</span><span class="inhalt" id="x-wert"></span></div>
+        <div class="feld">
+          <span class="was">Werte von x bisher</span><span class="wie" id="x-bisher"></span>
+        </div>
+        <div class="auskunft"><p id="x-text"></p></div>
+      </div>
+    </div>
+    <p>Der Unterschied in einem Satz: In der Mathematik ändert sich der Wert einer Variable während einer Rechnung nie, im Programm kann eine Variable erst einen Wert haben und später einen anderen.</p>
+    <div class="hinweis">Die Zuweisung mit dem Pfeil <code>←</code> wird im Kurstext in Abschnitt 2.3 behandelt, Seiten 10–11. Dort steht auch, welche Zeichen die Programmiersprachen dafür verwenden. Go schreibt <code>=</code>.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–9.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Typ, Operator, Konstante, Literal</h2>
+    <p>Die zwei Programmzeilen berechnen die Fläche eines Kreises. Die Zahl Pi ist das Beispiel aus dem Kurstext. Ein Klick auf einen hellen Teil zeigt, wie dieser Teil heißt.</p>
+    <div class="teile" id="teile">
+      <div class="reihe"><button type="button" data-teil="konstante">PI</button> ist die Konstante <button type="button" data-teil="literal">3,14159265359</button></div>
+      <div class="reihe"><button type="button" data-teil="flaeche">flaeche</button> ← <button type="button" data-teil="konstante">PI</button> <button type="button" data-teil="operator">·</button> <button type="button" data-teil="r">r</button> <button type="button" data-teil="operator">·</button> <button type="button" data-teil="r">r</button></div>
+    </div>
+    <div class="auskunft" id="teil-auskunft"></div>
+    <p>Jede Variable hat einen Typ. Der Typ legt zwei Eigenschaften fest:</p>
+    <ul>
+      <li><strong>Werte:</strong> Der Typ sagt, welche Werte die Variable annehmen kann.</li>
+      <li><strong>Operatoren:</strong> Der Typ sagt, mit welchen Operatoren man solche Werte verknüpfen darf.</li>
+    </ul>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Typ</th><th>Beispiele für Werte dieses Typs</th><th>Operation, die es für diesen Typ gibt</th><th>Beispiel für die Operation</th></tr></thead>
+      <tbody>
+        <tr><td>Der Typ ist die ganze Zahl.</td><td>Werte sind −3, 0 und 17.</td><td>Die Addition zählt zwei Zahlen zusammen.</td><td>Aus 17 und 4 wird 21.</td></tr>
+        <tr><td>Der Typ ist die Zeichenkette.</td><td>Werte sind „Haus“ und „tür“.</td><td>Die Konkatenation hängt zwei Zeichenketten aneinander.</td><td>Aus „Haus“ und „tür“ wird „Haustür“.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Eine Zeichenkette lässt sich nicht multiplizieren, und zwei ganze Zahlen lassen sich nicht aneinanderhängen. Welche Operation erlaubt ist, hängt also am Typ.</p>
+    <p>So geht es in Go weiter:</p>
+    <ul>
+      <li><strong>Literale:</strong> Wie Go Zahlen als Literale schreibt, steht in Abschnitt 4.3.1, Seiten 59–61.</li>
+      <li><strong>Konstanten:</strong> Die Deklaration einer Konstante steht in Abschnitt 5.2, Seiten 124–125. Dazu gibt es die Seite <a href="../kap5-anweisungen/127_go_k5_konstanten_veranschaulichung.html">Konstanten</a>.</li>
+      <li><strong>Konkatenation:</strong> Go hängt zwei Zeichenketten mit dem Operator <code>+</code> aneinander. Das steht in Abschnitt 4.6.2.2, Seite 107.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Zusammengesetzte Typen</h2>
+    <p>Aus einfachen Typen lassen sich größere Typen bauen. Im Kurstext werden zwei Arten genannt:</p>
+    <ul>
+      <li><strong>Vektor:</strong> Ein Vektor reiht mehrere Werte desselben Typs aneinander. Beispiel: fünf Messwerte, jeder eine ganze Zahl.</li>
+      <li><strong>Datenverbund:</strong> Ein Datenverbund fasst Werte zusammen, die zusammengehören und verschiedene Typen haben dürfen. Beispiel: die Angaben zu einer Person.</li>
+    </ul>
+    <p>Ein Klick auf ein Element oder auf ein Feld zeigt seinen Typ und wozu es gehört.</p>
+    <h3>Vektor: fünf Messwerte</h3>
+    <div class="vektor" id="vektor">
+      <button type="button" data-element="0">12</button>
+      <button type="button" data-element="1">15</button>
+      <button type="button" data-element="2">11</button>
+      <button type="button" data-element="3">18</button>
+      <button type="button" data-element="4">14</button>
+    </div>
+    <h3>Datenverbund: eine Person</h3>
+    <div class="verbund" data-name="Person" id="verbund">
+      <button type="button" data-feld="vorname"><span class="fn">Vorname</span><span class="fw">„Erika“</span></button>
+      <button type="button" data-feld="nachname"><span class="fn">Nachname</span><span class="fw">„Mustermann“</span></button>
+      <div class="verbund" data-name="Adresse">
+        <button type="button" data-feld="strasse"><span class="fn">Straße</span><span class="fw">„Heidestraße“</span></button>
+        <button type="button" data-feld="hausnummer"><span class="fn">Hausnummer</span><span class="fw">17</span></button>
+        <button type="button" data-feld="plz"><span class="fn">Postleitzahl</span><span class="fw">„01067“</span></button>
+        <button type="button" data-feld="ort"><span class="fn">Ort</span><span class="fw">„Dresden“</span></button>
+      </div>
+      <button type="button" data-feld="telefon"><span class="fn">Telefonnummer</span><span class="fw">„0351 5550123“</span></button>
+    </div>
+    <div class="auskunft" id="typ-auskunft"></div>
+    <p>Die Adresse ist selbst ein Datenverbund aus vier Feldern. Ein Datenverbund kann also einen anderen Datenverbund enthalten.</p>
+    <p>So geht es in Go weiter:</p>
+    <ul>
+      <li><strong>Vektor:</strong> In Go heißt er Array. Arrays werden in Kapitel 6 behandelt, ab Seite 151. Dazu gibt es die Seite <a href="../kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html">Arrays</a>.</li>
+      <li><strong>Datenverbund:</strong> In Go heißt er <code>struct</code>. Verbunde werden in Kapitel 8 behandelt, ab Seite 195. Dazu gibt es die Seite <a href="../kap8-verbund/S207_struct_veranschaulichung.html">struct in Go</a>.</li>
+      <li><strong>Verbund im Verbund:</strong> Hierarchische Verbunde stehen in Abschnitt 8.3, ab Seite 212. Dazu gibt es die Seite <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Eine Variable ist Speicherplatz</h2>
+    <p>Jede Variable belegt im Rechner Speicherplatz. Der Speicherplatz besteht aus binären Speicherelementen. Ein binäres Speicherelement kann genau zwei Werte annehmen: 0 oder 1.</p>
+    <p>Die Variable hier belegt acht Speicherelemente. Über jedem steht seine Wertigkeit: Eine 1 an dieser Stelle zählt so viel, wie darübersteht.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" data-zuweisen="65">Wert 65 zuweisen</button>
+      <button type="button" data-zuweisen="97">Wert 97 zuweisen</button>
+      <button type="button" data-zuweisen="17">Wert 17 zuweisen</button>
+      <button type="button" id="bits-vorn">von vorn</button>
+    </div>
+    <div class="bits" id="bits"></div>
+    <div class="feld">
+      <span class="was">Bitmuster</span><span class="wie" id="b-muster"></span>
+      <span class="was">als ganze Zahl gelesen</span><span class="wie" id="b-zahl"></span>
+      <span class="was">als Zeichen gelesen</span><span class="wie" id="b-zeichen"></span>
+    </div>
+    <div class="auskunft"><p id="b-text"></p></div>
+    <p>Was die Demo zeigt:</p>
+    <ul>
+      <li><strong>Beschreiben:</strong> Ein Speicherelement hat erst einen definierten Wert, wenn es beschrieben wurde. Danach lässt es sich immer wieder neu beschreiben.</li>
+      <li><strong>Zuweisen:</strong> Eine Zuweisung an die Variable beschreibt alle ihre Speicherelemente auf einmal.</li>
+      <li><strong>Lesen:</strong> Dieselbe Folge aus 0 und 1 bedeutet je nach Typ etwas anderes. Der Typ sagt, wie die Folge zu lesen ist.</li>
+    </ul>
+    <div class="hinweis">Bei einem einfachen Typ steht fest, wie viele Speicherelemente eine Variable belegt. Hier sind es acht. Andere Typen belegen 16, 32 oder 64.</div>
+    <p>So geht es weiter:</p>
+    <ul>
+      <li><strong>Rechnen:</strong> Der <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a> schickt eine Zuweisung durch alle vier Werke. Das gehört zu Abschnitt 2.3.</li>
+      <li><strong>Zellen und Adressen:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wo eine Variable in Go im Speicher liegt und wie viele Speicherelemente die Typen von Go belegen.</li>
+      <li><strong>Bitmuster und Zahl:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#bitmuster">Zahlenkreis</a> zeigt, wie aus einem Bitmuster eine ganze Zahl wird, auch eine negative.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 9–10.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function c(s) { return "<code>" + String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
+  var ANKER = ["worum", "variable", "begriffe", "typen", "speicher"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1, links: die Gleichung mit drei Belegungen der Parameter ----
+
+  var BEISPIELE = [
+    { parameter: "a = 1, b = −3, c = 2", gleichung: "x² − 3 · x + 2 = 0", menge: "{1, 2}",
+      text: "Zwei Werte erfüllen die Gleichung: 1 und 2. Die Unbekannte x steht hier für beide." },
+    { parameter: "a = 1, b = −2, c = 1", gleichung: "x² − 2 · x + 1 = 0", menge: "{1}",
+      text: "Genau ein Wert erfüllt die Gleichung: 1." },
+    { parameter: "a = 1, b = 0, c = 1", gleichung: "x² + 1 = 0", menge: "{ }, die Menge ist leer",
+      text: "Keine reelle Zahl erfüllt die Gleichung, denn x² ist nie negativ. Die Menge der Werte für x ist leer." }
+  ];
+  var beispiel = 0;
+
+  function zeigeBeispiel() {
+    var b = BEISPIELE[beispiel];
+    $("m-parameter").textContent = b.parameter;
+    $("m-gleichung").textContent = b.gleichung;
+    $("m-menge").textContent = b.menge;
+    $("m-text").textContent = b.text + " Die Parameter und die Menge der Werte für x bleiben in der ganzen Rechnung dieselben.";
+    jeder("#beispiele button", function (k) { k.classList.toggle("haupt", Number(k.dataset.beispiel) === beispiel); });
+  }
+
+  // ---- Schritt 1, rechts: drei Anweisungen ----
+
+  var LAUF = [
+    { wert: null, text: "Noch ist keine Anweisung ausgeführt. Die Variable " + c("x") + " hat noch keinen Wert, sie ist undefiniert. In Go kommt das nicht vor: Dort hat jede Variable von Anfang an einen Wert." },
+    { wert: 3, text: "Die erste Anweisung beschreibt " + c("x") + " mit dem Wert 3." },
+    { wert: 7, text: "Die zweite Anweisung beschreibt " + c("x") + " neu. Der Wert 3 ist überschrieben, " + c("x") + " hat jetzt den Wert 7." },
+    { wert: 8, text: "Rechts vom Pfeil steht " + c("x + 1") + ". Der Rechner rechnet mit dem bisherigen Wert 7 und erhält 8. Dann beschreibt er " + c("x") + " mit 8. Als Gleichung der Mathematik gelesen hätte x = x + 1 keine Lösung." }
+  ];
+  var lauf = 0;
+
+  function zeigeLauf() {
+    var s = LAUF[lauf];
+    $("x-wert").textContent = s.wert === null ? "kein Wert" : s.wert;
+    $("x-wert").classList.toggle("leer", s.wert === null);
+    $("x-wert").classList.toggle("neu", s.wert !== null);
+    $("x-bisher").textContent = lauf === 0 ? "noch keiner" : LAUF.slice(1, lauf + 1).map(function (l) { return l.wert; }).join(", dann ");
+    $("x-text").innerHTML = s.text;
+    Array.prototype.forEach.call($("programm").children, function (li, i) { li.classList.toggle("aktuell", i === lauf - 1); });
+    $("weiter").disabled = lauf === LAUF.length - 1;
+    $("zurueck").disabled = lauf === 0;
+  }
+
+  // ---- Schritt 2: die Teile der zwei Programmzeilen ----
+
+  var TEILE = {
+    konstante: { name: "PI, eine Konstante",
+      text: "<p>" + c("PI") + " ist eine Konstante: eine Variable, deren Wert nie verändert wird. Sie wird einmal mit einem Wert beschrieben und behält ihn.</p>" +
+        "<p>Der Nutzen: Das Programm braucht die Zahl Pi mehrfach und schreibt jedes Mal nur den Namen.</p>" },
+    literal: { name: "3,14159265359, ein Literal",
+      text: "<p>" + c("3,14159265359") + " ist ein Literal: ein Wert, der wörtlich im Programm steht. Der Typ dieses Literals ist die Gleitkommazahl.</p>" +
+        "<p>Manche nennen auch diese Ziffernfolge „Konstante“. Im Kurstext heißt sie Literal, und „Konstante“ bleibt der Name für " + c("PI") + ".</p>" +
+        "<p>Go schreibt einen Punkt an der Stelle des Kommas.</p>" },
+    flaeche: { name: "flaeche, eine Variable",
+      text: "<p>" + c("flaeche") + " ist eine Variable. Die Zuweisung beschreibt sie mit dem Wert, der rechts vom Pfeil ausgerechnet wird.</p>" +
+        "<p>Ihr Typ ist die Gleitkommazahl, denn das Ergebnis hat Nachkommastellen.</p>" },
+    r: { name: "r, eine Variable",
+      text: "<p>" + c("r") + " ist eine Variable. Sie hält den Radius des Kreises. Ihr Wert kann bei jedem Lauf des Programms ein anderer sein.</p>" +
+        "<p>Ihr Typ ist die Gleitkommazahl. Der Typ legt fest, dass man " + c("r") + " mit " + c("PI") + " multiplizieren darf.</p>" },
+    operator: { name: "·, ein Operator",
+      text: "<p>Der Punkt " + c("·") + " ist ein Operator. Er verknüpft zwei Werte zu einem neuen Wert, hier durch die Multiplikation.</p>" +
+        "<p>Ein Operator ist immer für bestimmte Typen vorgesehen. Die Multiplikation gibt es für Zahlen, für Zeichenketten gibt es sie nicht.</p>" +
+        "<p>Go schreibt für die Multiplikation das Zeichen " + c("*") + ".</p>" }
+  };
+  var teil = null;
+
+  function zeigeTeil() {
+    jeder("#teile button", function (k) { k.classList.toggle("gewaehlt", k.dataset.teil === teil); });
+    $("teil-auskunft").innerHTML = teil ? TEILE[teil].text : "<p>Noch ist kein Teil gewählt.</p>";
+  }
+
+  // ---- Schritt 3: Vektor und Datenverbund ----
+
+  var MESSWERTE = [12, 15, 11, 18, 14];
+  var ORDNUNG = ["erste", "zweite", "dritte", "vierte", "fünfte"];
+  var FELDER = {
+    vorname: { name: "Vorname", typ: "die Zeichenkette", wo: "Das Feld gehört unmittelbar zum Datenverbund Person." },
+    nachname: { name: "Nachname", typ: "die Zeichenkette", wo: "Das Feld gehört unmittelbar zum Datenverbund Person." },
+    strasse: { name: "Straße", typ: "die Zeichenkette", wo: "Das Feld gehört zum Datenverbund Adresse, und die Adresse ist ein Feld des Datenverbunds Person." },
+    hausnummer: { name: "Hausnummer", typ: "die ganze Zahl", wo: "Das Feld gehört zum Datenverbund Adresse, und die Adresse ist ein Feld des Datenverbunds Person." },
+    plz: { name: "Postleitzahl", typ: "die Zeichenkette", wo: "Das Feld gehört zum Datenverbund Adresse, und die Adresse ist ein Feld des Datenverbunds Person. Die Postleitzahl ist hier eine Zeichenkette, weil sie mit einer 0 beginnen kann." },
+    ort: { name: "Ort", typ: "die Zeichenkette", wo: "Das Feld gehört zum Datenverbund Adresse, und die Adresse ist ein Feld des Datenverbunds Person." },
+    telefon: { name: "Telefonnummer", typ: "die Zeichenkette", wo: "Das Feld gehört unmittelbar zum Datenverbund Person. Mit einer Telefonnummer rechnet niemand, deshalb ist sie eine Zeichenkette." }
+  };
+  var gewaehlt = null;   // { art: "element", nr: 2 } oder { art: "feld", feld: "ort" }
+
+  function auskunftTyp() {
+    if (!gewaehlt) return "Noch ist nichts gewählt.";
+    if (gewaehlt.art === "element")
+      return "Das " + ORDNUNG[gewaehlt.nr] + " Element des Vektors hat den Wert " + MESSWERTE[gewaehlt.nr] +
+        ". Sein Typ ist die ganze Zahl, wie bei jedem der fünf Elemente. In einem Vektor haben alle Elemente denselben Typ.";
+    var f = FELDER[gewaehlt.feld];
+    return "Der Typ des Felds „" + f.name + "“ ist " + f.typ + ". " + f.wo;
+  }
+  function zeigeTyp() {
+    jeder("#vektor button", function (k) { k.classList.toggle("gewaehlt", !!gewaehlt && gewaehlt.art === "element" && Number(k.dataset.element) === gewaehlt.nr); });
+    jeder("#verbund button", function (k) { k.classList.toggle("gewaehlt", !!gewaehlt && gewaehlt.art === "feld" && k.dataset.feld === gewaehlt.feld); });
+    $("typ-auskunft").innerHTML = "<p>" + auskunftTyp() + "</p>";
+  }
+
+  // ---- Schritt 4: acht Speicherelemente ----
+
+  var WERTIGKEIT = [128, 64, 32, 16, 8, 4, 2, 1];
+  var bits = [null, null, null, null, null, null, null, null];   // null: noch nicht beschrieben
+  var letzte = "";   // was zuletzt geschehen ist, als Satz
+
+  function offen() { return bits.filter(function (b) { return b === null; }).length; }
+  function muster() { return bits.map(function (b) { return b === null ? "?" : b; }).join(""); }
+  function zahl() { return bits.reduce(function (summe, b, i) { return summe + b * WERTIGKEIT[i]; }, 0); }
+  function zeichen(z) {
+    if (z === 32) return "das Leerzeichen";
+    if (z > 32 && z < 127) return String.fromCharCode(z);
+    return "kein druckbares Zeichen";
+  }
+  function zeigeBits() {
+    var html = WERTIGKEIT.map(function (w) { return "<span class=\"wertigkeit\">" + w + "</span>"; }).join("");
+    html += bits.map(function (b, i) {
+      return "<button type=\"button\" data-bit=\"" + i + "\" class=\"" + (b === null ? "leer" : b === 1 ? "eins" : "") +
+        "\" aria-label=\"Speicherelement mit der Wertigkeit " + WERTIGKEIT[i] + ", " + (b === null ? "noch nicht beschrieben" : "Wert " + b) + "\">" + (b === null ? "?" : b) + "</button>";
+    }).join("");
+    $("bits").innerHTML = html;
+    $("b-muster").textContent = muster();
+    var n = offen();
+    if (n > 0) {
+      $("b-zahl").textContent = "undefiniert";
+      $("b-zeichen").textContent = "undefiniert";
+      $("b-text").textContent = (letzte ? letzte + " " : "") + (n === 8
+        ? "Noch ist kein Speicherelement beschrieben. Die Variable hat keinen definierten Wert."
+        : "Noch " + (n === 1 ? "ist ein Speicherelement" : "sind " + n + " Speicherelemente") + " nicht beschrieben. Die Variable hat deshalb keinen definierten Wert.");
+    } else {
+      var z = zahl();
+      $("b-zahl").textContent = z;
+      $("b-zeichen").textContent = zeichen(z);
+      $("b-text").textContent = (letzte ? letzte + " " : "") + "Alle acht Speicherelemente sind beschrieben. Liest man die Folge als ganze Zahl, zählt man die Wertigkeiten der Einsen zusammen und erhält " + z +
+        ". Liest man dieselbe Folge als Zeichen, steht sie für: " + zeichen(z) + ".";
+    }
+  }
+  function weiseZu(wert) {
+    bits = WERTIGKEIT.map(function (w) { return (wert & w) ? 1 : 0; });
+    letzte = "Die Zuweisung des Werts " + wert + " hat alle acht Speicherelemente beschrieben.";
+    zeigeBits();
+  }
+  function schalteBit(i) {
+    var vorher = bits[i];
+    bits[i] = vorher === 1 ? 0 : 1;
+    letzte = "Das Speicherelement mit der Wertigkeit " + WERTIGKEIT[i] + " ist " + (vorher === null ? "zum ersten Mal" : "neu") + " beschrieben, mit " + bits[i] + ".";
+    zeigeBits();
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-beispiel], [data-teil], [data-element], [data-feld], [data-zuweisen], [data-bit]");
+    if (!k) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.beispiel !== undefined) { beispiel = Number(d.beispiel); zeigeBeispiel(); }
+    else if (d.teil !== undefined) { teil = d.teil; zeigeTeil(); }
+    else if (d.element !== undefined) { gewaehlt = { art: "element", nr: Number(d.element) }; zeigeTyp(); }
+    else if (d.feld !== undefined) { gewaehlt = { art: "feld", feld: d.feld }; zeigeTyp(); }
+    else if (d.zuweisen !== undefined) { weiseZu(Number(d.zuweisen)); }
+    else if (d.bit !== undefined) { schalteBit(Number(d.bit)); }
+    melde(false);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("weiter").addEventListener("click", function () { if (lauf < LAUF.length - 1) { lauf++; zeigeLauf(); melde(false); } });
+  $("zurueck").addEventListener("click", function () { if (lauf > 0) { lauf--; zeigeLauf(); melde(false); } });
+  $("vorn").addEventListener("click", function () { lauf = 0; zeigeLauf(); melde(false); });
+  $("bits-vorn").addEventListener("click", function () { bits = bits.map(function () { return null; }); letzte = ""; zeigeBits(); melde(false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Variable in Mathematik und Informatik", "Schritt 2: Typ, Operator, Konstante, Literal",
+    "Schritt 3: Zusammengesetzte Typen", "Schritt 4: Eine Variable ist Speicherplatz"];
+  var PROGRAMM = ["x ← 3", "x ← 7", "x ← x + 1"];
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo. Im Bild der vier Werke ist das Speicherwerk gelb hervorgehoben."];
+    if (stufe === 1) {
+      var b = BEISPIELE[beispiel];
+      var saetze = ["Links ist Beispiel " + (beispiel + 1) + " gewählt: Parameter " + b.parameter + ", Gleichung " + b.gleichung + ", Werte für x: " + b.menge + "."];
+      if (lauf === 0) saetze.push("Rechts ist noch keine Anweisung ausgeführt. x hat noch keinen Wert.");
+      else {
+        saetze.push("Rechts sind " + lauf + " von 3 Anweisungen ausgeführt. Markiert ist Anweisung " + lauf + ": " + PROGRAMM[lauf - 1] + ".");
+        saetze.push("x hat jetzt den Wert " + LAUF[lauf].wert + ". Werte von x bisher: " + $("x-bisher").textContent + ".");
+      }
+      return saetze;
+    }
+    if (stufe === 2) return [teil ? "Gewählt und gelb markiert ist der Teil: " + TEILE[teil].name + "." : "Noch ist kein Teil der Programmzeilen gewählt."];
+    if (stufe === 3) {
+      if (!gewaehlt) return ["Noch ist kein Element und kein Feld gewählt."];
+      return [gewaehlt.art === "element"
+        ? "Gewählt und gelb markiert ist das " + ORDNUNG[gewaehlt.nr] + " Element des Vektors mit dem Wert " + MESSWERTE[gewaehlt.nr] + "."
+        : "Gewählt und gelb markiert ist das Feld „" + FELDER[gewaehlt.feld].name + "“ des Datenverbunds.", auskunftTyp()];
+    }
+    var n = offen();
+    var liste = ["Die acht Speicherelemente zeigen von links nach rechts: " + muster().split("").join(" ") + ". Ein Fragezeichen heißt: noch nicht beschrieben."];
+    if (letzte) liste.push(letzte);
+    liste.push(n > 0
+      ? n + " von 8 Speicherelementen sind noch nicht beschrieben. Als ganze Zahl und als Zeichen gelesen ist die Folge undefiniert."
+      : "Alle acht sind beschrieben. Als ganze Zahl gelesen ergibt die Folge " + zahl() + ". Als Zeichen gelesen ergibt sie: " + zeichen(zahl()) + ".");
+    return liste;
+  }
+  function kurz() {
+    if (stufe === 0) return "";
+    if (stufe === 1) return "Beispiel " + (beispiel + 1) + ", " + lauf + " von 3 Anweisungen ausgeführt";
+    if (stufe === 2) return teil ? "gewählt: " + TEILE[teil].name : "kein Teil gewählt";
+    if (stufe === 3) return !gewaehlt ? "nichts gewählt" : gewaehlt.art === "element" ? "gewählt: " + ORDNUNG[gewaehlt.nr] + " Element" : "gewählt: Feld „" + FELDER[gewaehlt.feld].name + "“";
+    return "Bitmuster " + muster() + (offen() ? "" : ", als Zahl " + zahl());
+  }
+
+  zeigeBeispiel();
+  zeigeLauf();
+  zeigeTeil();
+  zeigeTyp();
+  zeigeBits();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    thema: "Variable, Typ, Operator, Konstante, Literal, zusammengesetzter Typ und Speicherplatz",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10",
+    beschreibung: "../kurslotse/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p:not(.quelle), .card > ul, .zwei ul, table, .auskunft, .hinweis",
+    zeilen: function () {
+      if (stufe === 1) return PROGRAMM.map(function (z, i) { return (i + 1) + "  " + z; });
+      if (stufe === 2) return ["1  PI ist die Konstante 3,14159265359", "2  flaeche ← PI · r · r"];
+      return [];
+    },
+    zeilenTitel: "Die Programmzeilen des sichtbaren Schritts. Sie gehören zu keiner bestimmten Programmiersprache. Vor jeder Zeile steht ihre Nummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum ist x ← x + 1 erlaubt, obwohl die Gleichung x = x + 1 keine Lösung hat?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
