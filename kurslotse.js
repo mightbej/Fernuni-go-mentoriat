@@ -149,7 +149,13 @@
 
   // Text ohne Codeblock: Zeilen mit „- “ oder „1. “ werden zu einer Liste, die übrigen zu Absätzen
   function absaetze(text) {
-    const fein = z => esc(z).replace(/`([^`\n]+)`/g, '<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    // `Code` kommt zuerst beiseite: Ein Stern darin ist in Go ein Zeiger, zum Beispiel `*auto`, und keine Auszeichnung.
+    const fein = z => {
+      const code = [];
+      return esc(z).replace(/`([^`\n]+)`/g, (ganz, t) => '\u0000' + (code.push(t) - 1) + '\u0000')
+        .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
+        .replace(/\u0000(\d+)\u0000/g, (ganz, i) => '<code>' + code[Number(i)] + '</code>');
+    };
     let html = '', liste = '';
     const schliesse = () => { if (liste) { html += '</' + liste + '>'; liste = ''; } };
     text.split('\n').forEach(zeile => {
