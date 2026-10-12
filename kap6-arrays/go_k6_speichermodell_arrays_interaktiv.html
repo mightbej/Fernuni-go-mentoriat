@@ -4,18 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Speichermodell: Arrays in Go</title>
+  <link rel="stylesheet" href="../stil.css">
   <style>
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
-    * { box-sizing:border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
-    .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
-    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
-    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
-    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
-    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
-    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
-    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    .container { max-width:1200px; }
+    .hero p { opacity:.96; }
+    h3 { margin:18px 0 8px; }
+    code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
     .layout { display:grid;grid-template-columns:minmax(320px,600px) 1fr;gap:24px;align-items:start; }
     .layout > div { min-width:0; }
@@ -30,7 +25,7 @@
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .meldung { padding:14px;border-radius:8px;border-left:4px solid var(--accent);background:var(--pos-bg);margin:12px 0;min-height:120px; }
     .meldung ol { margin:0;padding-left:22px; } .meldung li { margin:6px 0;overflow-wrap:anywhere; }
-    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .hinweis { margin:12px 0; }
     ol { padding-left:22px; } li { margin:8px 0; }
     details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
     .quelle { color:var(--muted);font-size:.88rem;margin:0; }
@@ -39,9 +34,8 @@
 
     /* Tabellen */
     .tabellenrahmen { overflow-x:auto; }
-    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
-    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left; }
-    th { background:#f9fafb;font-weight:600; }
+    table { margin:12px 0;font-size:.95rem; }
+    th { font-weight:600; }
     tr.benutzt td { background:#f0fdfa; }
 
     /* Programm */
@@ -116,7 +110,7 @@
 
   <div class="card">
     <h2>Worum es geht</h2>
-    <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ sagt, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
+    <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
     <p>Ein Array ist eine Reihe gleich großer Elemente, die lückenlos hintereinander liegen. Die Tabelle bekommt für das ganze Array eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Elements.</p>
     <p>Im Typ <code>[4]int16</code> steckt alles, was der Rechner braucht: Das Array hat 4 Elemente, und jedes Element ist ein <code>int16</code> mit 2 Zellen.</p>
   </div>
@@ -198,7 +192,7 @@
       <li>An welcher Adresse beginnt <code>a[3]</code>?
         <details><summary>Antwort</summary>100 + 3 · 2 = 106.</details></li>
       <li>Warum hat das erste Element den Index 0?
-        <details><summary>Antwort</summary>Der Index sagt, wie viele Elemente vor dem gesuchten liegen. Vor dem ersten liegt keines: 100 + 0 · 2 = 100.</details></li>
+        <details><summary>Antwort</summary>Der Index gibt an, wie viele Elemente vor dem gesuchten liegen. Vor dem ersten liegt keines: 100 + 0 · 2 = 100.</details></li>
       <li>Führe das Programm bis <code>i := 3</code> aus. Klicke auf Zelle 115 und schalte das Bit mit der Wertigkeit 4 an. Jetzt hat <code>i</code> den Wert 7. Was geschieht in der nächsten Zeile?
         <details><summary>Antwort</summary>Go prüft den Index und bricht das Programm ab. Ohne die Prüfung käme der Rechner auf die Adresse 100 + 7 · 2 = 114. Diese Zelle gehört zu <code>i</code>.</details></li>
       <li>Ein Array hat 1000 Elemente. Braucht der Rechner für <code>a[999]</code> länger als für <code>a[0]</code>?
@@ -328,7 +322,7 @@
       o.punkte.push("Im Bauplan von " + c(e.typ) + " steht: Das Feld " + c(m[3]) + " beginnt " + (ab === 0 ? "am Anfang" : zellenWort(ab) + " hinter dem Anfang") + " und hat den Typ " + c(t.typ) + ". Seine Adresse ist " + o.rechnung + ".");
     } else {
       o.adr = e.adr; o.n = e.n; o.typ = e.typ;
-      o.punkte.push(kopf + " Der Typ sagt: " + zellenWort(e.n) + ".");
+      o.punkte.push(kopf + " Der Typ legt fest: " + zellenWort(e.n) + ".");
       o.kurz = c(ausdruck) + " liegt laut Tabelle an der Adresse " + e.adr + ".";
       return o;
     }
@@ -491,7 +485,7 @@
     schreibe(w.adr, w.n, wert);
     var e = eintragBei(w.adr), punkte = [
       w.punkt,
-      "Der Typ " + c(w.z.typ) + " sagt: An der Adresse " + w.adr + " liegen " + w.n + " Zellen, und sie sind als " + c(w.typ) + " zu lesen.",
+      "Der Typ " + c(w.z.typ) + " legt fest: An der Adresse " + w.adr + " liegen " + w.n + " Zellen, und sie sind als " + c(w.typ) + " zu lesen.",
       "Der Rechner schreibt " + wert + " in " + bereich(w.adr, w.n) + ": " + c(muster(w.adr, w.n))
     ];
     if (e && e.name && e.adr === w.adr) punkte.push("Die Zeile nennt den Namen " + c(e.name) + " nicht. Trotzdem hat " + c(e.name) + " jetzt den Wert " + wertVon(e) + ".");
@@ -518,7 +512,7 @@
     schreibe(nach.adr, nach.n, wert);
     return fertig([von.z, nach.z], lesen, adressen(nach.adr, nach.n), [
       von.punkt,
-      "Der Typ " + c(von.z.typ) + " sagt: An der Adresse " + von.adr + " liegen " + von.n + " Zellen, und sie sind als " + c(von.typ) + " zu lesen. Der Rechner liest den Wert " + wert + ".",
+      "Der Typ " + c(von.z.typ) + " legt fest: An der Adresse " + von.adr + " liegen " + von.n + " Zellen, und sie sind als " + c(von.typ) + " zu lesen. Der Rechner liest den Wert " + wert + ".",
       c("*" + nachName) + " heißt: Geh zu der Adresse, die in " + c(nachName) + " steht. Dort steht " + nach.adr + ".",
       "Der Rechner schreibt " + wert + " in " + bereich(nach.adr, nach.n) + ". Einen Namen für diese Zellen brauchte er dafür nicht."
     ]);
