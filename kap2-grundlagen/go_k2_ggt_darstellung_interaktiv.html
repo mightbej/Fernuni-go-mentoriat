@@ -33,9 +33,9 @@
     .schritte { justify-content:space-between;margin:0 0 24px; }
 
     /* Durchlauf: Bedienung und Stand wandern in die Stufe, die gerade sichtbar ist */
-    .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:.95rem; }
-    .stand .was { color:var(--muted); }
-    .stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
+    #stand .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:.95rem; }
+    #stand .was { color:var(--muted); }
+    #stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
     .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
     .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
     #meldung { color:#b91c1c;font-size:.92rem; }
@@ -264,6 +264,7 @@ Ausgabe n</div>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -280,6 +281,7 @@ Ausgabe n</div>
   var stufe = 0;
 
   function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
     stufe = nummer;
     jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
     jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
@@ -289,6 +291,7 @@ Ausgabe n</div>
       $(teil).hidden = !platz;
       if (platz) platz.appendChild($(teil));
     });
+    if (gewechselt) Kurslotse.schrittGewechselt();   // die Antworten gehören zum Schritt davor
     zeigeLauf();
     if (nachOben) {
       history.replaceState(null, "", "#" + ANKER[nummer]);
@@ -405,6 +408,7 @@ Ausgabe n</div>
     $("erklaerung").innerHTML = bei ? erklaere(bei, art || "sg") : "Noch ist kein Schritt ausgeführt.";
     $("weiter").disabled = $("ende").disabled = schritt >= spur.length;
     $("zurueck").disabled = $("vorn").disabled = schritt === 0;
+    Kurslotse.standGeaendert();
   }
 
   function uebernimmZahlen() {
@@ -431,6 +435,7 @@ Ausgabe n</div>
     var a = $("antworten");
     a.hidden = !a.hidden;
     $("aufdecken").textContent = a.hidden ? "Antworten zeigen" : "Antworten wieder verdecken";
+    Kurslotse.standGeaendert();
   });
   $("uebernehmen").addEventListener("click", uebernimmZahlen);
   $("weiter").addEventListener("click", function () { if (schritt < spur.length) { schritt++; zeigeLauf(); } });
@@ -438,7 +443,63 @@ Ausgabe n</div>
   $("vorn").addEventListener("click", function () { schritt = 0; zeigeLauf(); });
   $("ende").addEventListener("click", function () { schritt = spur.length; zeigeLauf(); });
 
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand des Durchlaufs in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Das Programm als Struktogramm", "Schritt 2: Das Programm als Flussdiagramm",
+    "Schritt 3: Von der Darstellung zum Go-Code", "Schritt 4: Das Go-Programm"];
+  var KASTEN = {
+    sg: { eingabe: "der Kasten „Eingabe n, m“ ganz oben", test: "der Kasten der Schleife „while n ≠ m“", vergleich: "der Kasten mit der Frage „n > m?“",
+          subN: "der Kasten „n ← n − m“ links unter „ja“", subM: "der Kasten „m ← m − n“ rechts unter „nein“", ausgabe: "der Kasten „Ausgabe n“ ganz unten" },
+    fd: { eingabe: "das Rechteck „Eingabe“ ganz oben", test: "die obere Raute „n = m?“", vergleich: "die untere Raute „n > m?“",
+          subN: "das Rechteck „n ← n − m“ unten rechts", subM: "das Rechteck „m ← m − n“ unter der unteren Raute", ausgabe: "das Rechteck „Ausgabe n“ rechts neben der oberen Raute" }
+  };
+  function standSaetze() {
+    if (stufe === 0) return ["Die Antworten auf die zwei Fragen sind " + ($("antworten").hidden ? "verdeckt." : "aufgedeckt.")];
+    var art = DARSTELLUNG[stufe];
+    if (!art) return ["Dieser Schritt hat keinen Durchlauf. Tabelle, Go-Code und Liste stehen fest."];
+    var bei = schritt === 0 ? null : spur[schritt - 1];
+    var saetze = ["Der Durchlauf rechnet mit den Startwerten n = " + startN + " und m = " + startM + ". Er hat " + spur.length + " Schritte."];
+    if (Number($("zn").value) !== startN || Number($("zm").value) !== startM)
+      saetze.push("In den Feldern stehen " + $("zn").value + " und " + $("zm").value + ". Diese Zahlen gelten erst nach „Zahlen übernehmen“.");
+    if (!bei) {
+      saetze.push("Der Durchlauf steht am Anfang, bei Schritt 0 von " + spur.length + ". Noch ist nichts markiert, n und m sind noch nicht eingelesen.");
+    } else {
+      var zeilen = ZEILEN[bei.kasten];
+      saetze.push("Der Durchlauf steht bei Schritt " + schritt + " von " + spur.length + ".");
+      saetze.push(art === "go"
+        ? "Markiert " + (zeilen.length > 1 ? "sind die Zeilen " + zeilen.join(" und ") : "ist Zeile " + zeilen[0]) + " des Go-Programms."
+        : "Gelb markiert ist " + KASTEN[art][bei.kasten] + ".");
+      saetze.push("Nach diesem Schritt hat n den Wert " + bei.n + " und m den Wert " + bei.m + ".");
+      saetze.push(bei.kasten === "ausgabe" ? "Im Feld „Ausgabe“ steht: " + $("ausgabe").textContent : "Das Feld „Ausgabe“ ist noch leer.");
+    }
+    var paare = spur.filter(function (s) { return s.kasten === "eingabe" || s.kasten === "subN" || s.kasten === "subM"; })
+      .map(function (s) { return "(" + s.n + ", " + s.m + ")"; });
+    saetze.push("Die Werte (n, m) im ganzen Durchlauf, nach der Eingabe und nach jeder Subtraktion: " + paare.join(", ") +
+      ". Der Durchlauf endet mit dem Ergebnis " + spur[spur.length - 1].n + ".");
+    return saetze;
+  }
+  function kurz() {
+    if (stufe === 0) return $("antworten").hidden ? "Antworten verdeckt" : "Antworten aufgedeckt";
+    if (!DARSTELLUNG[stufe]) return "";
+    return "n = " + startN + ", m = " + startM + ", Durchlauf bei Schritt " + schritt + " von " + spur.length;
+  }
+
   zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    thema: "Größter gemeinsamer Teiler als Struktogramm, Flussdiagramm und Go-Programm",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.5, Seiten 13–14, und Abschnitt 5.5.3.1, Listing 5.5 auf Seite 140",
+    beschreibung: "../kurslotse/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p, .card > ul, .code-block, table, .auskunft",
+    zeilen: function () { return stufe === 4 ? GO.map(function (z, i) { return (i + 1) + "  " + z; }) : []; },
+    zeilenTitel: "Das Go-Programm des sichtbaren Schritts. Vor jeder Zeile steht ihre Nummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum springt die Markierung nach der Subtraktion wieder nach oben?"
+  });
 })();
 </script>
 </body>
