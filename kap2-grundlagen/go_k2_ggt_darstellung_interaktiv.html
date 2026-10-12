@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#f59e0b;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile label { color:var(--muted);font-size:.95rem; }
+    .zeile input { width:5em;padding:8px;border:1px solid #9ca3af;border-radius:8px;font:inherit; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { margin:12px 0;font-size:.95rem; }
+    td { vertical-align:top; }
+    li { margin:6px 0; }
+    .code-block { margin:12px 0;line-height:1.5; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Durchlauf: Bedienung und Stand wandern in die Stufe, die gerade sichtbar ist */
+    .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:.95rem; }
+    .stand .was { color:var(--muted); }
+    .stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    #meldung { color:#b91c1c;font-size:.92rem; }
+
+    /* Struktogramm und Flussdiagramm */
+    .bild { display:block;width:100%;max-width:560px;height:auto;margin:14px auto; }
+    .bild .knoten { fill:#fff;stroke:#1f2937;stroke-width:1.5; }
+    .bild .an .knoten { fill:var(--aktiv-bg);stroke:var(--aktiv);stroke-width:3.5; }
+    .bild .strich { fill:none;stroke:#1f2937;stroke-width:1.5; }
+    .bild text { font-family:"Segoe UI",Tahoma,sans-serif;font-size:16px;fill:#111827; }
+    .bild text.klein { font-size:14px;fill:#374151; }
+    .bild .an text { font-weight:700; }
+
+    /* Go-Programm mit Zeilennummern */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:.92rem;line-height:1.5;list-style:none;overflow-x:auto;counter-reset:zeile; }
+    .programm li { margin:0;padding:1px 14px 1px 6px;color:#cbd5e1;border-left:4px solid transparent;white-space:pre;counter-increment:zeile; }
+    .programm li::before { content:counter(zeile);display:inline-block;width:2.2em;margin-right:12px;text-align:right;color:#64748b; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm</h1>
+    <p>Ein kleines Programm in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.5, Seiten 13–14, und Abschnitt 5.5.3.1, Listing 5.5 auf Seite 140.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Struktogramm</button>
+    <button type="button" class="tab" data-stufe="2">2 Flussdiagramm</button>
+    <button type="button" class="tab" data-stufe="3">3 Von der Darstellung zum Go-Code</button>
+    <button type="button" class="tab" data-stufe="4">4 Das Go-Programm</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Programm ist ein Text. An einem Text erkennt man schlecht, welche Anweisungen zusammengehören und in welcher Reihenfolge sie laufen. Ein Bild zeigt das besser. In Abschnitt 2.5 des Kurstexts werden dafür zwei Bilder vorgestellt:</p>
+    <ul>
+      <li><strong>Das Struktogramm</strong> zeigt ein Programm als Kästen, die ineinander stecken. Es passt zur strukturierten Programmierung mit Blöcken.</li>
+      <li><strong>Das Flussdiagramm</strong> zeigt ein Programm als Kästen, die mit Pfeilen verbunden sind. Es passt zur imperativen Programmierung mit Sprüngen.</li>
+    </ul>
+    <p>Beide Bilder zeigen im Kurstext dasselbe Programm:</p>
+    <div class="code-block">Eingabe n, m (positive ganze Zahlen);
+WHILE n ≠ m
+   IF n &gt; m THEN n ← n − m
+   ELSE m ← m − n;
+Ausgabe n</div>
+    <p class="quelle">Quelle: Kurstext v3.0.6, Abschnitt 2.5, Seite 13. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts ausgerechnet wird.</p>
+    <p>Dasselbe Programm steht in Abschnitt 5.5.3.1 noch einmal, dort als Go-Programm. Die Seite führt in vier Schritten vom Bild zum Go-Programm:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> lässt das Programm im Struktogramm laufen.</li>
+      <li><strong>Schritt 2</strong> lässt es mit denselben Zahlen im Flussdiagramm laufen.</li>
+      <li><strong>Schritt 3</strong> stellt jede Zeile ihrer Schreibweise in Go gegenüber.</li>
+      <li><strong>Schritt 4</strong> lässt das Go-Programm aus dem Kurstext laufen.</li>
+    </ul>
+    <p>Im Kurstext stehen zu dem Programm zwei Fragen. Beantworte sie, nachdem du Schritt 1 mit einigen Zahlen ausprobiert hast.</p>
+    <ul>
+      <li><strong>Frage 1:</strong> Was leistet das Programm?</li>
+      <li><strong>Frage 2:</strong> Warum kommt es bei positiven Zahlen immer zu einem Ende?</li>
+    </ul>
+    <div class="zeile"><button type="button" id="aufdecken">Antworten zeigen</button></div>
+    <div class="auskunft" id="antworten" hidden>
+      <p><strong>Antwort 1:</strong> Das Programm berechnet den größten gemeinsamen Teiler der zwei Zahlen, kurz ggT. Der ggT von 42 und 78 ist 6.</p>
+      <p><strong>Antwort 2:</strong> In jedem Durchlauf wird die größere Zahl um die kleinere vermindert. Beide Zahlen bleiben dabei größer als 0, und ihre Summe wird jedes Mal kleiner. Eine Summe positiver ganzer Zahlen kann nicht beliebig oft kleiner werden. Also sind die zwei Zahlen irgendwann gleich.</p>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Das Programm als Struktogramm</h2>
+    <p>Ein Struktogramm liest man von oben nach unten. Jeder Kasten ist eine Anweisung.</p>
+    <ul>
+      <li><strong>Die Schleife:</strong> Der Kasten <code>while n ≠ m</code> umschließt links und oben alles, was wiederholt wird.</li>
+      <li><strong>Die Verzweigung:</strong> Unter der Frage <code>n &gt; m?</code> stehen zwei Kästen nebeneinander. Ausgeführt wird nur einer von beiden.</li>
+    </ul>
+    <p>Gelb ist der Kasten, der gerade an der Reihe ist.</p>
+    <div class="platz-bedienung"></div>
+    <svg class="bild" viewBox="0 0 520 300" role="img" aria-label="Struktogramm des Programms">
+      <g id="sg-eingabe"><rect class="knoten" x="10" y="10" width="500" height="44"/><text x="260" y="38" text-anchor="middle">Eingabe n, m ∈ {1, 2, 3, …}</text></g>
+      <g id="sg-test"><polygon class="knoten" points="10,54 510,54 510,98 50,98 50,246 10,246"/><text x="24" y="82">while n ≠ m</text></g>
+      <g id="sg-vergleich"><rect class="knoten" x="50" y="98" width="460" height="64"/><line class="strich" x1="50" y1="98" x2="280" y2="162"/><line class="strich" x1="510" y1="98" x2="280" y2="162"/><text x="280" y="124" text-anchor="middle">n &gt; m?</text><text class="klein" x="60" y="155">ja</text><text class="klein" x="500" y="155" text-anchor="end">nein</text></g>
+      <g id="sg-subN"><rect class="knoten" x="50" y="162" width="230" height="84"/><text x="165" y="210" text-anchor="middle">n ← n − m</text></g>
+      <g id="sg-subM"><rect class="knoten" x="280" y="162" width="230" height="84"/><text x="395" y="210" text-anchor="middle">m ← m − n</text></g>
+      <g id="sg-ausgabe"><rect class="knoten" x="10" y="246" width="500" height="44"/><text x="260" y="274" text-anchor="middle">Ausgabe n</text></g>
+    </svg>
+    <div class="platz-stand"></div>
+    <p class="quelle">Das Struktogramm nach Kurstext v3.0.6, Abschnitt 2.5, Abbildung 2.3, Seite 14.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Das Programm als Flussdiagramm</h2>
+    <p>Ein Flussdiagramm liest man entlang der Pfeile. Ein Rechteck ist eine Anweisung, eine Raute ist eine Frage mit den Ausgängen ja und nein.</p>
+    <ul>
+      <li><strong>Die Schleife:</strong> Sie hat keinen eigenen Kasten. Sie entsteht durch die zwei Pfeile, die von unten zurück nach oben führen.</li>
+      <li><strong>Die Frage oben:</strong> Sie lautet hier <code>n = m?</code>. Im Struktogramm steht die Bedingung umgekehrt als <code>n ≠ m</code>. Beides bedeutet dasselbe: Solange die Zahlen verschieden sind, geht es in die Schleife.</li>
+    </ul>
+    <p>Der Durchlauf steht an derselben Stelle wie in Schritt 1. Mit „von vorn“ beginnt er neu.</p>
+    <div class="platz-bedienung"></div>
+    <svg class="bild" viewBox="0 0 560 430" role="img" aria-label="Flussdiagramm des Programms">
+      <defs><marker id="spitze" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>
+      <path class="strich" d="M240,56 L240,90" marker-end="url(#spitze)"/>
+      <path class="strich" d="M320,130 L410,130" marker-end="url(#spitze)"/>
+      <path class="strich" d="M240,170 L240,210" marker-end="url(#spitze)"/>
+      <path class="strich" d="M320,250 L450,250 L450,330" marker-end="url(#spitze)"/>
+      <path class="strich" d="M240,290 L240,330" marker-end="url(#spitze)"/>
+      <path class="strich" d="M450,376 L450,405 L60,405 L60,73 L240,73" marker-end="url(#spitze)"/>
+      <path class="strich" d="M240,376 L240,405"/>
+      <text class="klein" x="352" y="122">ja</text>
+      <text class="klein" x="250" y="196">nein</text>
+      <text class="klein" x="352" y="242">ja</text>
+      <text class="klein" x="250" y="316">nein</text>
+      <g id="fd-eingabe"><rect class="knoten" x="140" y="10" width="200" height="46"/><text x="240" y="30" text-anchor="middle">Eingabe</text><text class="klein" x="240" y="48" text-anchor="middle">n, m ∈ {1, 2, 3, …}</text></g>
+      <g id="fd-test"><polygon class="knoten" points="240,90 320,130 240,170 160,130"/><text x="240" y="136" text-anchor="middle">n = m?</text></g>
+      <g id="fd-ausgabe"><rect class="knoten" x="410" y="107" width="130" height="46"/><text x="475" y="136" text-anchor="middle">Ausgabe n</text></g>
+      <g id="fd-vergleich"><polygon class="knoten" points="240,210 320,250 240,290 160,250"/><text x="240" y="256" text-anchor="middle">n &gt; m?</text></g>
+      <g id="fd-subM"><rect class="knoten" x="170" y="330" width="140" height="46"/><text x="240" y="359" text-anchor="middle">m ← m − n</text></g>
+      <g id="fd-subN"><rect class="knoten" x="380" y="330" width="140" height="46"/><text x="450" y="359" text-anchor="middle">n ← n − m</text></g>
+    </svg>
+    <div class="platz-stand"></div>
+    <p>Ein Pfeil zurück nach oben ist ein Sprung. Wie Blöcke den Sprung ersetzen, zeigt die Seite <a href="go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung, Schritt 3</a>.</p>
+    <p class="quelle">Das Flussdiagramm nach Kurstext v3.0.6, Abschnitt 2.5, Abbildung 2.2, Seite 14.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Von der Darstellung zum Go-Code</h2>
+    <p>Das Struktogramm lässt sich Kasten für Kasten in Go abschreiben. Die Schreibweise mit Großbuchstaben und Pfeil gehört zu keiner bestimmten Sprache. In Go sieht jede Zeile so aus:</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Zeile im Programm aus Abschnitt 2.5</th><th>Dieselbe Zeile in Go</th><th>Was sich in Go ändert</th><th>Abschnitt im Kurstext und HTML-Seite dazu</th></tr></thead>
+      <tbody>
+        <tr><td><code>WHILE n ≠ m</code></td><td><code>for n != m {</code></td><td>Go schreibt <code>for</code> statt <code>WHILE</code> und <code>!=</code> statt <code>≠</code>. Der Rumpf der Schleife steht in geschweiften Klammern.</td><td>5.5.3.1, Seiten 138–142: <a href="../kap5-anweisungen/146_go_k5_for_bedingung_veranschaulichung.html">for-Anweisung mit Bedingung</a></td></tr>
+        <tr><td><code>IF n &gt; m THEN</code></td><td><code>if n &gt; m {</code></td><td>Go schreibt <code>if</code> klein und lässt <code>THEN</code> weg. Die geschweifte Klammer öffnet den Block.</td><td>5.5.1, Seiten 129–132: <a href="../kap5-anweisungen/136_go_k5_if_anweisungen_veranschaulichung.html">if-Anweisungen</a></td></tr>
+        <tr><td><code>n ← n − m</code></td><td><code>n -= m</code></td><td>Go schreibt die Zuweisung mit <code>=</code>. Die Kurzform <code>n -= m</code> bedeutet <code>n = n - m</code>.</td><td>5.3, Seiten 126–128: <a href="../kap5-anweisungen/130_go_k5_zuweisungen_veranschaulichung.html">Zuweisungen</a></td></tr>
+        <tr><td><code>ELSE m ← m − n</code></td><td><code>} else {</code><br><code>m -= n</code><br><code>}</code></td><td>Go schließt erst den Block von <code>if</code> und öffnet dann den Block von <code>else</code>.</td><td>5.5.1, Seiten 129–132: <a href="../kap5-anweisungen/136_go_k5_if_anweisungen_veranschaulichung.html">if-Anweisungen</a></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Aus den vier Zeilen wird in Go dieser Kern:</p>
+    <div class="code-block">for n != m {
+    if n &gt; m {
+        n -= m
+    } else {
+        m -= n
+    }
+}</div>
+    <p>Ein vollständiges Go-Programm braucht mehr als diesen Kern. Im Programm des Kurstexts kommt dazu:</p>
+    <ul>
+      <li><strong>Der Rahmen:</strong> Jedes Go-Programm beginnt mit <code>package main</code> und hat eine Funktion <code>main</code>.</li>
+      <li><strong>Die Deklaration:</strong> <code>var n, m int</code> legt die zwei Variablen an und nennt ihren Typ. Dazu gibt es die Seite <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration</a>.</li>
+      <li><strong>Eingabe und Ausgabe:</strong> <code>fmt.Scan</code> liest eine Zahl ein, <code>fmt.Printf</code> gibt das Ergebnis aus.</li>
+      <li><strong>Die Prüfung der Eingabe:</strong> Das Programm aus Abschnitt 2.5 setzt positive Zahlen voraus. Das Go-Programm prüft das mit <code>if n &gt; 0 &amp;&amp; m &gt; 0</code>.</li>
+      <li><strong>Die Funktion:</strong> Die Schleife steht in einer eigenen Funktion <code>ggT</code>. Aus <code>Ausgabe n</code> wird dort <code>return n</code>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Das Go-Programm</h2>
+    <p>Quelle: Das Programm ist Listing 5.5 <code>for_ggt.go</code> aus dem Kurstext v3.0.6, Abschnitt 5.5.3.1, Seite 140. Der Durchlauf zeigt dieselben Schritte wie im Struktogramm, jetzt an den Zeilen des Go-Programms.</p>
+    <div class="platz-bedienung"></div>
+    <ol class="programm" id="programm"></ol>
+    <div class="platz-stand"></div>
+    <ul>
+      <li><strong>Die Zeilen 7 bis 13</strong> sind der Kern aus Schritt 3.</li>
+      <li><strong>Zeile 22</strong> prüft die Voraussetzung aus Abschnitt 2.5. Mit <code>n = 0</code> käme die Schleife nie zu einem Ende, weil <code>m -= n</code> dann nichts ändert.</li>
+      <li><strong>Zeile 23</strong> gibt die eingegebenen Zahlen unverändert aus, obwohl die Funktion <code>ggT</code> ihre Variablen <code>n</code> und <code>m</code> verändert hat. Die Funktion arbeitet mit Kopien. Das ist ein eigenes Thema: Abschnitt 7.2 im Kurstext und die Seite <a href="../kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html">Das Kopier-Problem</a>.</li>
+    </ul>
+    <p>Mehr zur Schleife in Go steht auf der Seite <a href="../kap5-anweisungen/146_go_k5_for_bedingung_veranschaulichung.html">for-Anweisung mit Bedingung</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+  <!-- Bedienung und Stand des Durchlaufs. Das Skript setzt beide in die sichtbare Stufe. -->
+  <div id="bedienung">
+    <div class="zeile">
+      <label for="zn">n =</label><input type="number" id="zn" min="1" max="99" value="42">
+      <label for="zm">m =</label><input type="number" id="zm" min="1" max="99" value="78">
+      <button type="button" id="uebernehmen">Zahlen übernehmen</button>
+      <span id="meldung"></span>
+    </div>
+    <div class="zeile">
+      <button id="weiter" class="haupt" type="button">nächster Schritt</button>
+      <button id="zurueck" type="button">einen Schritt zurück</button>
+      <button id="vorn" type="button">von vorn</button>
+      <button id="ende" type="button">bis zum Ende</button>
+    </div>
+  </div>
+  <div id="stand">
+    <div class="stand">
+      <span class="was">Schritt</span><span class="wie" id="zaehler"></span>
+      <span class="was">Wert von n</span><span class="wie" id="wertn"></span>
+      <span class="was">Wert von m</span><span class="wie" id="wertm"></span>
+      <span class="was">Ausgabe</span><span class="wie" id="ausgabe"></span>
+    </div>
+    <div class="auskunft"><p id="erklaerung"></p></div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function c(s) { return "<code>" + String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#programm
+  var ANKER = ["worum", "struktogramm", "flussdiagramm", "uebergang", "programm"];
+  // Welche Darstellung der Durchlauf in einer Stufe erklärt
+  var DARSTELLUNG = { 1: "sg", 2: "fd", 4: "go" };
+  var stufe = 0;
+
+  function zeigeStufe(nummer, nachOben) {
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    var sichtbar = $("stufe-" + nummer);
+    ["bedienung", "stand"].forEach(function (teil) {
+      var platz = sichtbar.querySelector(".platz-" + teil);
+      $(teil).hidden = !platz;
+      if (platz) platz.appendChild($(teil));
+    });
+    zeigeLauf();
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Das Go-Programm: Listing 5.5 des Kurstexts ----
+  var GO = [
+    "package main",
+    "",
+    "import \"fmt\"",
+    "",
+    "// ggT von n und m mittels Euklidischen Algorithmus berechnen",
+    "func ggT(n, m int) int {",
+    "    for n != m {",
+    "        if n > m {",
+    "            n -= m",
+    "        } else {",
+    "            m -= n",
+    "        }",
+    "    }",
+    "    return n",
+    "}",
+    "",
+    "func main() {",
+    "    var n, m int",
+    "    fmt.Println(\"Bitte zwei natürliche Zahlen größer 0 eingeben:\")",
+    "    fmt.Scan(&n)",
+    "    fmt.Scan(&m)",
+    "    if n > 0 && m > 0 {",
+    "        fmt.Printf(\"%v ist der ggT von %v und %v.\\n\", ggT(n, m), n, m)",
+    "    } else {",
+    "        fmt.Printf(\"Die Eingabe %v und %v ist unzulässig.\\n\", n, m)",
+    "    }",
+    "}"
+  ];
+  // Zeilen des Go-Programms, die zu einem Schritt des Durchlaufs gehören
+  var ZEILEN = { eingabe: [20, 21], test: [7], vergleich: [8], subN: [9], subM: [11], ausgabe: [14, 23] };
+
+  // ---- Der Durchlauf ----
+  // Ein Durchlauf für alle Darstellungen. Jeder Schritt nennt den Kasten und die Werte danach.
+  function durchlauf(n, m) {
+    var spur = [{ kasten: "eingabe", n: n, m: m }];
+    while (n !== m) {
+      spur.push({ kasten: "test", ja: true, n: n, m: m });
+      if (n > m) {
+        spur.push({ kasten: "vergleich", ja: true, n: n, m: m });
+        spur.push({ kasten: "subN", vorher: n, n: n - m, m: m });
+        n -= m;
+      } else {
+        spur.push({ kasten: "vergleich", ja: false, n: n, m: m });
+        spur.push({ kasten: "subM", vorher: m, n: n, m: m - n });
+        m -= n;
+      }
+    }
+    spur.push({ kasten: "test", ja: false, n: n, m: m });
+    spur.push({ kasten: "ausgabe", n: n, m: m });
+    return spur;
+  }
+
+  var startN = 42, startM = 78, spur = durchlauf(startN, startM), schritt = 0;
+
+  function erklaere(s, art) {
+    var zurueck = art === "fd" ? " Der Pfeil führt zurück nach oben zur ersten Raute."
+                               : " Der Rumpf der Schleife ist zu Ende. Als Nächstes wird die Bedingung der Schleife wieder geprüft.";
+    switch (s.kasten) {
+      case "eingabe":
+        return (art === "go" ? "Die Zeilen 20 und 21 lesen die zwei Zahlen ein: " : "Das Programm liest die zwei Zahlen ein: ") +
+          c("n = " + s.n) + " und " + c("m = " + s.m) + "." +
+          (art === "go" ? " Zeile 22 prüft, dass beide größer als 0 sind. Zeile 23 ruft die Funktion " + c("ggT") + " auf." : "");
+      case "test":
+        if (art === "fd") return s.ja
+          ? "Die Antwort auf die Frage " + c("n = m?") + " ist nein, denn " + s.n + " und " + s.m + " sind verschieden. Es geht nach unten weiter."
+          : "Die Antwort auf die Frage " + c("n = m?") + " ist ja, denn beide Zahlen haben den Wert " + s.n + ". Es geht nach rechts zur Ausgabe.";
+        var bedingung = art === "go" ? "Zeile 7: Die Bedingung " + c("n != m") : "Die Bedingung " + c("n ≠ m");
+        return s.ja
+          ? bedingung + " ist erfüllt, denn " + s.n + " und " + s.m + " sind verschieden. Der Rumpf der Schleife wird ausgeführt."
+          : bedingung + " ist nicht mehr erfüllt, denn beide Zahlen haben den Wert " + s.n + ". Die Schleife endet.";
+      case "vergleich":
+        return (art === "go" ? "Zeile 8: " : "") + "Die Antwort auf die Frage " + c("n > m?") + " ist " +
+          (s.ja ? "ja, denn " + s.n + " ist größer als " + s.m + ". Als Nächstes wird " + c("n") + " vermindert."
+                : "nein, denn " + s.n + " ist kleiner als " + s.m + ". Als Nächstes wird " + c("m") + " vermindert.");
+      case "subN":
+        return (art === "go" ? "Zeile 9: " : "") + "Von " + c("n") + " wird " + c("m") + " abgezogen: " + s.vorher + " − " + s.m + " = " + s.n + ". " +
+          c("n") + " hat jetzt den Wert " + s.n + "." + zurueck;
+      case "subM":
+        return (art === "go" ? "Zeile 11: " : "") + "Von " + c("m") + " wird " + c("n") + " abgezogen: " + s.vorher + " − " + s.n + " = " + s.m + ". " +
+          c("m") + " hat jetzt den Wert " + s.m + "." + zurueck;
+      default:
+        return art === "go"
+          ? "Zeile 14 gibt den Wert " + s.n + " an " + c("main") + " zurück. Zeile 23 gibt den Satz mit dem Ergebnis aus. Das Programm ist zu Ende."
+          : "Das Programm gibt den Wert von " + c("n") + " aus: " + s.n + ". Das Programm ist zu Ende.";
+    }
+  }
+
+  function zeigeLauf() {
+    var art = DARSTELLUNG[stufe], bei = schritt === 0 ? null : spur[schritt - 1];
+    ["sg", "fd"].forEach(function (bild) {
+      ["eingabe", "test", "vergleich", "subN", "subM", "ausgabe"].forEach(function (kasten) {
+        $(bild + "-" + kasten).classList.toggle("an", !!bei && bei.kasten === kasten);
+      });
+    });
+    var zeilen = bei ? ZEILEN[bei.kasten] : [];
+    $("programm").innerHTML = GO.map(function (z, i) {
+      return "<li" + (zeilen.indexOf(i + 1) >= 0 ? " class=\"aktuell\"" : "") + ">" + z.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>";
+    }).join("");
+    $("zaehler").textContent = schritt + " von " + spur.length;
+    $("wertn").textContent = bei ? bei.n : "noch nicht eingelesen";
+    $("wertm").textContent = bei ? bei.m : "noch nicht eingelesen";
+    var fertig = bei && bei.kasten === "ausgabe";
+    $("ausgabe").textContent = !fertig ? "" : art === "go" ? bei.n + " ist der ggT von " + startN + " und " + startM + "." : bei.n;
+    $("erklaerung").innerHTML = bei ? erklaere(bei, art || "sg") : "Noch ist kein Schritt ausgeführt.";
+    $("weiter").disabled = $("ende").disabled = schritt >= spur.length;
+    $("zurueck").disabled = $("vorn").disabled = schritt === 0;
+  }
+
+  function uebernimmZahlen() {
+    var n = Number($("zn").value), m = Number($("zm").value);
+    var gueltig = function (z) { return Math.floor(z) === z && z >= 1 && z <= 99; };
+    if (!gueltig(n) || !gueltig(m)) {
+      $("meldung").textContent = "Bitte zwei ganze Zahlen von 1 bis 99 eingeben.";
+      return;
+    }
+    $("meldung").textContent = "";
+    startN = n; startM = m; spur = durchlauf(n, m); schritt = 0;
+    zeigeLauf();
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (!k) return;
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("aufdecken").addEventListener("click", function () {
+    var a = $("antworten");
+    a.hidden = !a.hidden;
+    $("aufdecken").textContent = a.hidden ? "Antworten zeigen" : "Antworten wieder verdecken";
+  });
+  $("uebernehmen").addEventListener("click", uebernimmZahlen);
+  $("weiter").addEventListener("click", function () { if (schritt < spur.length) { schritt++; zeigeLauf(); } });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeLauf(); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeLauf(); });
+  $("ende").addEventListener("click", function () { schritt = spur.length; zeigeLauf(); });
+
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>
