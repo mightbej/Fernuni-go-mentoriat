@@ -261,7 +261,8 @@
     try {
       const d = await (await fetch(LOTSE + '/api/bereit', { signal: AbortSignal.timeout(4000) })).json();
       if (!d.schluessel) {
-        el('lotseStatus').textContent = 'Der Kurslotse läuft, hat aber keinen Schlüssel für KI:connect. Der Schlüssel gehört in die Umgebungsvariable KICONNECT_KEY.';
+        el('lotseStatus').innerHTML = 'Der Kurslotse läuft, hat aber keinen Schlüssel für KI:connect. Der Schlüssel gehört in die Umgebungsvariable KICONNECT_KEY. ' +
+          '<a href="http://localhost:' + PORT + '/" target="_blank" rel="noopener">Anleitung öffnen</a>';
         return;
       }
       el('lotseZeile').hidden = true;
