@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hierarchische Verbünde: ein Verbund als Feld</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
+    .container { max-width:1200px; }
+    .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    h3 { margin:18px 0 8px; }
+    code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .hinweis { margin:12px 0; }
+    .erklaerung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#f0fdfa;margin:12px 0;min-height:96px; }
+    .erklaerung ol { margin:0;padding-left:22px; } .erklaerung li { margin:5px 0;overflow-wrap:anywhere; }
+    .auskunft { padding:12px 14px;border-radius:8px;border-left:4px solid #1e40af;background:#eff6ff;margin:12px 0; }
+    .auskunft ul { margin:6px 0 0;padding-left:22px; } .auskunft li { margin:4px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.aktiv:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zaehler { color:var(--muted);font-size:.95rem;margin-left:6px; }
+    .tabellenrahmen { overflow-x:auto; }
+    table.text { margin:12px 0;font-size:.95rem; }
+    table.text th,table.text td { vertical-align:top; }
+    table.text th { font-weight:600; }
+    ul,ol { padding-left:22px; } li { margin:6px 0; }
+
+    /* Programm: je Anweisung ein Listenpunkt */
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:.88rem;line-height:1.45;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#64748b;display:flex;gap:12px;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { width:1.6em;text-align:right;flex:none; }
+    .programm li.fertig { color:#cbd5e1; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:#fbbf24;font-weight:700; }
+    .layout { display:grid;grid-template-columns:minmax(300px,460px) 1fr;gap:20px;align-items:start; }
+    .layout > div { min-width:0; }
+    @media (max-width:900px) { .layout { grid-template-columns:minmax(0,1fr); } }
+
+    /* Variablen als Kästen */
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0; }
+    .buehne { position:relative;display:flex;flex-wrap:wrap;gap:26px 34px;justify-content:center;align-items:flex-start;padding:6px 0; }
+    .var { background:#fff;border:2px solid #94a3b8;border-radius:10px;min-width:210px;overflow:hidden; }
+    .var.spaeter { visibility:hidden; }
+    .var > .kopf { display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:6px 10px;background:#e2e8f0;font-family:Consolas,monospace; }
+    .var > .kopf .vname { font-weight:700;font-size:1.02rem; }
+    .var > .kopf .vtyp { color:var(--muted);font-size:.88rem; }
+    .var.innen { margin:4px 8px 8px;min-width:0;border-color:#0f766e; }
+    .var.innen > .kopf { background:#d1fae5; }
+    .var.zeigervar { border-color:#1e40af; }
+    .var.zeigervar > .kopf { background:#dbeafe; }
+    .reihe { display:flex;justify-content:space-between;gap:14px;align-items:center;padding:4px 10px;font-family:Consolas,monospace;font-size:.93rem;border:0;border-top:1px solid var(--line);border-radius:0;background:#fff;width:100%;text-align:left;font-weight:400; }
+    .reihe .fname { color:var(--muted); }
+    .reihe .fwert { font-weight:700;text-align:right; }
+    button.reihe:hover,.var.klick > .kopf:hover { background:var(--highlight);cursor:pointer; }
+    .reihe.gewaehlt,.var > .kopf.gewaehlt { background:var(--highlight);box-shadow:inset 4px 0 0 #b45309; }
+    .zeigerwert { display:inline-flex;align-items:center;gap:6px;font-family:"Segoe UI",sans-serif;font-size:.86rem;font-weight:600;color:#1e40af; }
+    .punkt { display:inline-block;width:12px;height:12px;border-radius:50%;background:#1e40af;flex:none; }
+    .gelesen { box-shadow:0 0 0 3px var(--lesen); }
+    .geschrieben { box-shadow:0 0 0 3px var(--schreiben); }
+    .reihe.gelesen { box-shadow:inset 0 0 0 3px var(--lesen); }
+    .reihe.geschrieben { box-shadow:inset 0 0 0 3px var(--schreiben); }
+    svg.pfeile { position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible; }
+    svg.pfeile path.linie { fill:none;stroke:#1e40af;stroke-width:2.5; }
+    .legende { display:flex;gap:6px 18px;flex-wrap:wrap;color:var(--muted);font-size:.88rem;margin-top:12px; }
+    .legende span.l1::before,.legende span.l2::before { content:"";display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:6px;vertical-align:-2px;border:3px solid; }
+    .legende .l1::before { border-color:var(--lesen); }
+    .legende .l2::before { border-color:var(--schreiben); }
+    .ausgabe { background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,monospace;font-size:.9rem;line-height:1.5;min-height:2.6em;overflow-x:auto;white-space:pre; }
+    .ausgabe .leer { color:#94a3b8;font-style:italic; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .nav { display:flex;justify-content:space-between;gap:10px;margin:6px 0 18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Hierarchische Verbünde: ein Verbund als Feld</h1>
+    <p>Ein Feld eines Verbunds darf selbst ein Verbund sein. Die Seite zeigt, was ein solches Feld speichert und was sich ändert, wenn das Feld stattdessen einen Zeiger auf einen Verbund enthält.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.3, Seiten 212–214.</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Verbund als Feld</button>
+    <button type="button" class="tab" data-stufe="2">2 Kopie und Zeiger</button>
+    <button type="button" class="tab" data-stufe="3">3 Zeiger als Feld</button>
+    <button type="button" class="tab" data-stufe="4">4 Wert oder Zeiger</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+    <div class="card">
+      <h2>Was die Seite zeigt</h2>
+      <p>Bei der Deklaration eines Felds kann fast jeder Datentyp stehen, auch ein Verbund-Typ. Ein Verbund, der einen anderen Verbund als Feld enthält, heißt hierarchischer Verbund.</p>
+      <p>Das Beispiel der Seite stammt aus dem Kurstext: Ein Besitzer hat einen Namen, einen Ort und ein Fahrzeug. Das Fahrzeug ist selbst ein Verbund vom Typ <code>auto</code> mit Marke, Kennzeichen, Tachostand und TÜV-Jahr.</p>
+      <p>Für das Feld <code>fahrzeug</code> gibt es zwei Bauweisen:</p>
+      <ul>
+        <li><strong>Verbund als Feld:</strong> Das Feld hat den Typ <code>auto</code>. Es enthält die vier Werte des Autos selbst. So ist der Typ <code>besitzerW</code> gebaut.</li>
+        <li><strong>Zeiger als Feld:</strong> Das Feld hat den Typ <code>*auto</code>. Es enthält die Adresse eines Autos, das in einer anderen Variable gespeichert ist. So ist der Typ <code>besitzerZ</code> gebaut.</li>
+      </ul>
+      <pre>type auto struct {
+    marke       string
+    kennzeichen string
+    tachostand  int
+    tüvJahr     int
+}
+
+type besitzerW struct {
+    name     string
+    ort      string
+    fahrzeug auto  // Feld mit Verbund-Typ
+}
+
+type besitzerZ struct {
+    name     string
+    ort      string
+    fahrzeug *auto // Feld mit Zeiger auf Verbund-Typ
+}</pre>
+      <p class="quelle">Die drei Typen stammen aus dem Kurstext v3.0.6: <code>auto</code> aus Abschnitt 8.2.7, Seite 210, <code>besitzerW</code> und <code>besitzerZ</code> aus Abschnitt 8.3, Seiten 212 und 213.</p>
+      <p>Die Seite geht in vier Schritten vor. Jeder Schritt hat oben einen Reiter.</p>
+      <ul>
+        <li><strong>Schritt 1, Verbund als Feld:</strong> Die Variable <code>mike</code> enthält ein ganzes Auto. Ein Klick auf ein Feld zeigt den Ausdruck, der zu ihm führt.</li>
+        <li><strong>Schritt 2, Kopie und Zeiger:</strong> Ein Programm kopiert das Auto von <code>mike</code> in eine Variable und merkt sich in einer zweiten Variable die Adresse des Felds. Danach bekommt <code>mike</code> ein neues Auto.</li>
+        <li><strong>Schritt 3, Zeiger als Feld:</strong> Zwei Besitzer teilen sich ein Auto. Drei Anweisungen ändern es auf drei Wegen.</li>
+        <li><strong>Schritt 4, Wert oder Zeiger:</strong> Eine Tabelle stellt beide Bauweisen nebeneinander.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Worauf die Seite aufbaut</h2>
+      <ul>
+        <li><strong>Datenverbund in Kapitel 2:</strong> In Abschnitt 2.2, Seite 9, wird eine Person mit Vorname, Nachname, Adresse und Telefonnummer beschrieben. Die Adresse ist dort selbst aus Straße, Hausnummer, Postleitzahl und Ort zusammengesetzt. Das ist ein hierarchischer Verbund ohne Go. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher, Schritt 3</a>.</li>
+        <li><strong>Zuweisung eines Verbunds:</strong> Eine Zuweisung kopiert alle Felder eines Verbunds. Das steht in Abschnitt 8.2.3, Seiten 204–205. Dazu gibt es die Seite <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a>.</li>
+        <li><strong>Zeiger:</strong> Ein Zeiger ist eine Variable, deren Wert eine Adresse ist. Das steht in Abschnitt 7.4, Seiten 173–178. Dazu gibt es die Seite <a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a>.</li>
+        <li><strong>Zeiger auf einen Verbund:</strong> Über einen Zeiger erreicht man ein Feld mit <code>p.feld</code>. Go folgt dem Zeiger dabei von selbst. Das steht in Abschnitt 8.2.4, Seiten 205–207, Hinweis 8.2. Dazu gibt es die Seite <a href="S214_zeiger_auf_verbund_demo_veranschaulichung.html">Zeiger auf Verbünde</a>.</li>
+      </ul>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" disabled>Zurück</button>
+      <button type="button" class="knopf aktiv" data-gehe="1">Weiter zu Schritt 1</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+    <div class="card">
+      <h2>Schritt 1: Ein Verbund als Feld</h2>
+      <p>Das Feld <code>fahrzeug</code> im Typ <code>besitzerW</code> hat den Typ <code>auto</code>. Sein Wert ist ein ganzer Verbund mit vier Feldern. Im Literal steht deshalb an der Stelle des Felds ein zweites Literal: <code>auto{…}</code>.</p>
+      <pre>mike := besitzerW{
+    name: "Mike",
+    ort:  "München",
+    fahrzeug: auto{
+        marke:       "Mercedes",
+        kennzeichen: "M-RT357",
+        tachostand:  133000,
+        tüvJahr:     2024,
+    },
+}
+fmt.Println("Mike mit altem Auto:", mike)
+// Mike mit altem Auto: {Mike München {Mercedes M-RT357 133000 2024}}</pre>
+      <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seite 212.</p>
+      <p>Die Ausgabe zeigt die Hierarchie mit geschweiften Klammern: Die inneren Klammern umschließen die vier Werte des Autos.</p>
+      <div class="feld">
+        <div class="buehne" id="buehne1"></div>
+        <div class="legende"><span>Der äußere Kasten ist die Variable <code>mike</code>. Der grüne Kasten darin ist das Feld <code>fahrzeug</code>. Es liegt in <code>mike</code> selbst. Ein Klick auf ein Feld oder auf den Kopf eines Kastens zeigt den Ausdruck dazu.</span></div>
+      </div>
+      <div class="auskunft" id="auskunft1"></div>
+      <p>Der Punkt hängt die Namen aneinander, von außen nach innen. <code>mike.fahrzeug</code> ist das ganze Auto, <code>mike.fahrzeug.tachostand</code> ist ein Feld dieses Autos.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="0">Zurück zu „Worum es geht“</button>
+      <button type="button" class="knopf aktiv" data-gehe="2">Weiter zu Schritt 2</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+    <div class="card">
+      <h2>Schritt 2: Kopie und Zeiger</h2>
+      <p>Das Programm holt sich das Auto von <code>mike</code> auf zwei Wegen: als Kopie in der Variable <code>altesAuto</code> und als Adresse in der Variable <code>pMikesAuto</code>. Danach bekommt <code>mike</code> ein neues Auto.</p>
+      <div class="hinweis">Erst vorhersagen, dann ausführen: Anweisung 7 gibt <code>altesAuto</code>, <code>*pMikesAuto</code> und <code>mike.fahrzeug</code> aus. Welche der drei Werte zeigen nach Anweisung 6 den BMW?</div>
+      <div class="zeile">
+        <button type="button" class="aktiv" data-lauf="2,1">nächste Anweisung ausführen</button>
+        <button type="button" data-lauf="2,-1">eine Anweisung zurück</button>
+        <button type="button" data-lauf="2,0">von vorn</button>
+        <span class="zaehler" id="zaehler2"></span>
+      </div>
+      <div class="layout">
+        <div>
+          <ol class="programm" id="programm2"></ol>
+          <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seiten 212–213. Die Ausgaben stehen dort als Kommentar, hier im Feld „Ausgabe des Programms“.</p>
+        </div>
+        <div>
+          <div class="feld">
+            <div class="buehne" id="buehne2"></div>
+            <div class="legende">
+              <span class="l1">Das hat die Anweisung gelesen.</span>
+              <span class="l2">Das hat die Anweisung beschrieben.</span>
+              <span>Ein blauer Pfeil führt von einem Zeiger zu dem Verbund, dessen Adresse er enthält.</span>
+            </div>
+          </div>
+          <h3>Was die Anweisung tut</h3>
+          <div class="erklaerung" id="erkl2"></div>
+          <h3>Ausgabe des Programms</h3>
+          <div class="ausgabe" id="ausgabe2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="1">Zurück zu Schritt 1</button>
+      <button type="button" class="knopf aktiv" data-gehe="3">Weiter zu Schritt 3</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+    <div class="card">
+      <h2>Schritt 3: Ein Zeiger als Feld</h2>
+      <p>Zwei Personen sollen sich ein Auto teilen. Mit <code>besitzerW</code> geht das nicht, denn jedes Feld <code>fahrzeug</code> enthält ein eigenes Auto. Im Typ <code>besitzerZ</code> hat das Feld den Typ <code>*auto</code>. Es enthält die Adresse eines Autos, und zwei Felder können dieselbe Adresse enthalten.</p>
+      <div class="hinweis">Erst vorhersagen, dann ausführen: Die Anweisungen 5 und 6 erhöhen den Tachostand über <code>olaf</code> und über <code>olga</code>. Welchen Tachostand gibt Anweisung 7 für <code>audi</code> aus?</div>
+      <div class="zeile">
+        <button type="button" class="aktiv" data-lauf="3,1">nächste Anweisung ausführen</button>
+        <button type="button" data-lauf="3,-1">eine Anweisung zurück</button>
+        <button type="button" data-lauf="3,0">von vorn</button>
+        <span class="zaehler" id="zaehler3"></span>
+      </div>
+      <div class="layout">
+        <div>
+          <ol class="programm" id="programm3"></ol>
+          <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seiten 213–214. Die Ausgabe steht dort als Kommentar, hier im Feld „Ausgabe des Programms“.</p>
+        </div>
+        <div>
+          <div class="feld">
+            <div class="buehne" id="buehne3"></div>
+            <div class="legende">
+              <span class="l1">Das hat die Anweisung gelesen.</span>
+              <span class="l2">Das hat die Anweisung beschrieben.</span>
+              <span>Ein blauer Pfeil führt von einem Zeiger zu dem Verbund, dessen Adresse er enthält.</span>
+            </div>
+          </div>
+          <h3>Was die Anweisung tut</h3>
+          <div class="erklaerung" id="erkl3"></div>
+          <h3>Ausgabe des Programms</h3>
+          <div class="ausgabe" id="ausgabe3"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="2">Zurück zu Schritt 2</button>
+      <button type="button" class="knopf aktiv" data-gehe="4">Weiter zu Schritt 4</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+    <div class="card">
+      <h2>Schritt 4: Wert oder Zeiger</h2>
+      <p>Die Tabelle stellt die zwei Bauweisen des Felds <code>fahrzeug</code> nebeneinander. Die Beispiele stammen aus Schritt 2 und Schritt 3.</p>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Frage</th><th>Feld <code>fahrzeug auto</code> im Typ <code>besitzerW</code></th><th>Feld <code>fahrzeug *auto</code> im Typ <code>besitzerZ</code></th></tr></thead>
+        <tbody>
+          <tr><td>Was speichert das Feld?</td><td>Das Feld speichert die vier Werte des Autos.</td><td>Das Feld speichert die Adresse eines Autos. Die vier Werte stehen in einer anderen Variable.</td></tr>
+          <tr><td>Was geschieht bei einer Zuweisung an das Feld?</td><td><code>mike.fahrzeug = bmw</code> kopiert die vier Werte von <code>bmw</code> in das Feld.</td><td><code>fahrzeug: &amp;audi</code> speichert die Adresse von <code>audi</code> im Feld. Die Werte bleiben, wo sie sind.</td></tr>
+          <tr><td>Können zwei Besitzer dasselbe Auto haben?</td><td>Nein. Jeder Besitzer hat in seinem Feld eine eigene Kopie.</td><td>Ja. Die Felder von <code>olaf</code> und <code>olga</code> enthalten dieselbe Adresse.</td></tr>
+          <tr><td>Wer bemerkt eine Änderung am Auto?</td><td>Nur der Besitzer, in dessen Feld geändert wurde. <code>bmw.tachostand = 8000</code> ändert <code>mike.fahrzeug</code> nicht.</td><td>Alle, die auf das Auto zeigen. <code>olaf.fahrzeug.tachostand += 1000</code> ändert auch den Wert, den <code>olga</code> und <code>audi</code> liefern.</td></tr>
+          <tr><td>Wie lautet der Zugriff auf den Tachostand?</td><td><code>mike.fahrzeug.tachostand</code></td><td><code>olaf.fahrzeug.tachostand</code>. Die Schreibweise ist dieselbe, Go folgt dem Zeiger von selbst.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Im Kurstext steht dazu: Hierarchische Verbünde mit Zeigern als Feldern sind flexibler einsetzbar als solche mit ganzen Verbund-Werten als Feldern. In der Praxis werden deshalb meist Zeiger auf Verbünde als Feld-Typ verwendet.</p>
+      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 8.3, Seite 214.</p>
+      <h3>Wie es im Kurstext weitergeht</h3>
+      <ul>
+        <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum.</li>
+        <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds.</li>
+      </ul>
+      <p>Ein längeres Go-Programm zu dieser Seite liegt im Repository: <a href="go/S220_hierarchische_verbunde_demo.go">S220_hierarchische_verbunde_demo.go</a>.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>Zum Quiz</h2>
+    <p>Die Aufgaben zu dieser Seite stehen auf einer eigenen Seite: <a href="S220_hierarchische_verbunde_demo_quiz.html">Quiz: Hierarchische Verbünde</a>, 10 Fragen.</p>
+  </div>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+
+  // ---------- Typen und Werte ----------
+  // Ein Wert ist ein String, eine Zahl, ein Verbund { typ, w: { feld: wert } } oder ein Zeiger { zeiger: 'pfad' }.
+  const TYPEN = {
+    auto:      [['marke', 'string'], ['kennzeichen', 'string'], ['tachostand', 'int'], ['tüvJahr', 'int']],
+    besitzerW: [['name', 'string'], ['ort', 'string'], ['fahrzeug', 'auto']],
+    besitzerZ: [['name', 'string'], ['ort', 'string'], ['fahrzeug', '*auto']]
+  };
+  const auto = (marke, kennzeichen, tachostand, tuev) => ({ typ: 'auto', w: { marke: marke, kennzeichen: kennzeichen, tachostand: tachostand, 'tüvJahr': tuev } });
+  const besitzer = (typ, name, wohnort, fahrzeug) => ({ typ: typ, w: { name: name, ort: wohnort, fahrzeug: fahrzeug } });
+  const kopie = w => JSON.parse(JSON.stringify(w));
+
+  // Der Weg vom Ausdruck zum Wert. Steht unterwegs ein Zeiger, folgt ort ihm wie Go.
+  function ort(S, pfad) {
+    const teile = pfad.split('.'), v = S.vars.find(x => x.name === teile[0]);
+    let o = { halter: v, schluessel: 'wert', typ: v.typ, pfad: v.name };
+    teile.slice(1).forEach(t => {
+      let w = o.halter[o.schluessel];
+      if (w.zeiger) { o = ort(S, w.zeiger); w = o.halter[o.schluessel]; }
+      o = { halter: w.w, schluessel: t, typ: TYPEN[w.typ].find(f => f[0] === t)[1], pfad: o.pfad + '.' + t };
+    });
+    return o;
+  }
+  const lies = (S, pfad) => { const o = ort(S, pfad); return o.halter[o.schluessel]; };
+  const setze = (S, pfad, wert) => { const o = ort(S, pfad); o.halter[o.schluessel] = wert; };
+  const echt = (S, pfad) => ort(S, pfad).pfad;                         // olaf.fahrzeug.tachostand liegt in audi.tachostand
+  const hinter = (S, pfad) => lies(S, lies(S, pfad).zeiger);           // *p
+  const lege = (S, name, typ, wert) => S.vars.push({ name: name, typ: typ, wert: wert });
+
+  // Ein Wert, wie fmt.Println ihn ausgibt
+  function gedruckt(w) {
+    if (w && w.zeiger) return '0xc000010000';
+    if (w && w.typ) return '{' + TYPEN[w.typ].map(f => gedruckt(w.w[f[0]])).join(' ') + '}';
+    return String(w);
+  }
+  // Ein Wert, wie er im Programm steht
+  const literal = w => typeof w === 'string' ? '"' + w + '"' : String(w);
+  const wertText = w => w && w.zeiger ? 'Adresse von ' + w.zeiger : w && w.typ ? gedruckt(w) : literal(w);
+
+  // ---------- Die zwei Programme ----------
+  // Jede Anweisung ändert den Stand S und liefert, was sie gelesen (l) und beschrieben (s) hat, die Erklärung (t) und die Ausgabe (aus).
+  const PROGRAMME = {
+    2: {
+      folge: ['mike', 'pMikesAuto', 'altesAuto', 'bmw'],
+      zeilen: [
+        { code: 'mike := besitzerW{\n    name: "Mike",\n    ort:  "München",\n    fahrzeug: auto{\n        marke:       "Mercedes",\n        kennzeichen: "M-RT357",\n        tachostand:  133000,\n        tüvJahr:     2024,\n    },\n}',
+          tun: S => {
+            lege(S, 'mike', 'besitzerW', besitzer('besitzerW', 'Mike', 'München', auto('Mercedes', 'M-RT357', 133000, 2024)));
+            return { l: [], s: ['mike'], t: [
+              'Die Anweisung legt die Variable ' + c('mike') + ' vom Typ ' + c('besitzerW') + ' an.',
+              'Das Feld ' + c('fahrzeug') + ' hat den Typ ' + c('auto') + '. Sein Wert ist ein ganzer Verbund mit vier Feldern.',
+              'Die vier Werte des Autos liegen in ' + c('mike') + ' selbst. Im Bild ist das der grüne Kasten im Kasten.'] };
+          } },
+        { code: 'var altesAuto auto = mike.fahrzeug',
+          tun: S => {
+            lege(S, 'altesAuto', 'auto', kopie(lies(S, 'mike.fahrzeug')));
+            return { l: ['mike.fahrzeug'], s: ['altesAuto'], t: [
+              'Die Anweisung legt die Variable ' + c('altesAuto') + ' vom Typ ' + c('auto') + ' an.',
+              'Sie kopiert den Wert des Felds ' + c('mike.fahrzeug') + ' hinein, alle vier Felder.',
+              'Die vier Werte stehen jetzt an zwei Stellen. Was später mit ' + c('mike') + ' geschieht, ändert ' + c('altesAuto') + ' nicht mehr.'] };
+          } },
+        { code: 'var pMikesAuto *auto = &(mike.fahrzeug)',
+          tun: S => {
+            lege(S, 'pMikesAuto', '*auto', { zeiger: 'mike.fahrzeug' });
+            return { l: [], s: ['pMikesAuto'], t: [
+              c('&(mike.fahrzeug)') + ' liefert die Adresse des Felds ' + c('fahrzeug') + ' in ' + c('mike') + '.',
+              'Die Anweisung legt die Variable ' + c('pMikesAuto') + ' vom Typ ' + c('*auto') + ' an und speichert diese Adresse darin. Der blaue Pfeil zeigt, wohin die Adresse führt.',
+              c('pMikesAuto') + ' enthält nur die Adresse. Die vier Werte des Autos stehen weiter nur in ' + c('mike.fahrzeug') + ' und in ' + c('altesAuto') + '.'] };
+          } },
+        { code: 'fmt.Println(altesAuto, *pMikesAuto, mike.fahrzeug)',
+          tun: S => drucke2(S, 'Alle drei Werte sind gleich: dreimal der Mercedes.') },
+        { code: 'bmw := auto{\n    marke:       "BMW",\n    kennzeichen: "M-TS300",\n    tachostand:  0,\n    tüvJahr:     2028,\n}',
+          tun: S => {
+            lege(S, 'bmw', 'auto', auto('BMW', 'M-TS300', 0, 2028));
+            return { l: [], s: ['bmw'], t: [
+              'Die Anweisung legt die Variable ' + c('bmw') + ' vom Typ ' + c('auto') + ' an und füllt ihre vier Felder.',
+              c('mike') + ', ' + c('altesAuto') + ' und ' + c('pMikesAuto') + ' bleiben, wie sie sind.'] };
+          } },
+        { code: 'mike.fahrzeug = bmw',
+          tun: S => {
+            setze(S, 'mike.fahrzeug', kopie(lies(S, 'bmw')));
+            return { l: ['bmw'], s: ['mike.fahrzeug'], t: [
+              'Die Zuweisung kopiert die vier Werte von ' + c('bmw') + ' in das Feld ' + c('mike.fahrzeug') + '. Die alten Werte des Felds sind überschrieben.',
+              c('altesAuto') + ' ist eine eigene Variable und behält den Mercedes.',
+              c('pMikesAuto') + ' enthält weiter die Adresse des Felds ' + c('mike.fahrzeug') + '. An dieser Adresse steht jetzt der BMW.'] };
+          } },
+        { code: 'fmt.Println(altesAuto, *pMikesAuto, mike.fahrzeug)',
+          tun: S => drucke2(S, 'Die Variable ' + c('altesAuto') + ' liefert den alten Wert. Der Zeiger und das Feld liefern den neuen Wert.') },
+        { code: 'bmw.tachostand = 8000',
+          tun: S => {
+            setze(S, 'bmw.tachostand', 8000);
+            return { l: [], s: ['bmw.tachostand'], t: [
+              'Die Anweisung ändert das Feld ' + c('tachostand') + ' der Variable ' + c('bmw') + '.',
+              c('mike.fahrzeug') + ' ist seit Anweisung 6 eine Kopie von ' + c('bmw') + '. Die Kopie behält den Tachostand ' + lies(S, 'mike.fahrzeug.tachostand') + '.'] };
+          } },
+        { code: 'fmt.Println(bmw)',
+          tun: S => ({ l: ['bmw'], s: [], aus: gedruckt(lies(S, 'bmw')), t: [
+            c('fmt.Println') + ' liest die Variable ' + c('bmw') + ' und gibt sie aus.',
+            'Der Tachostand ist ' + lies(S, 'bmw.tachostand') + '.'] }) },
+        { code: 'fmt.Println(mike.fahrzeug)',
+          tun: S => ({ l: ['mike.fahrzeug'], s: [], aus: gedruckt(lies(S, 'mike.fahrzeug')), t: [
+            c('fmt.Println') + ' liest das Feld ' + c('mike.fahrzeug') + ' und gibt es aus.',
+            'Der Tachostand ist ' + lies(S, 'mike.fahrzeug.tachostand') + '. Die Änderung an ' + c('bmw') + ' hat das Feld nicht erreicht.'] }) }
+      ]
+    },
+    3: {
+      folge: ['olaf', 'audi', 'olga'],
+      zeilen: [
+        { code: 'audi := auto{\n    marke:       "Audi",\n    kennzeichen: "IN-CV45",\n    tachostand:  0,\n    tüvJahr:     2026,\n}',
+          tun: S => {
+            lege(S, 'audi', 'auto', auto('Audi', 'IN-CV45', 0, 2026));
+            return { l: [], s: ['audi'], t: [
+              'Die Anweisung legt die Variable ' + c('audi') + ' vom Typ ' + c('auto') + ' an und füllt ihre vier Felder.',
+              'Nur in dieser Variable stehen die Werte des Autos.'] };
+          } },
+        { code: 'olaf := besitzerZ{\n    name:     "Olaf",\n    ort:      "Hannover",\n    fahrzeug: &audi,\n}',
+          tun: S => neuerBesitzer(S, 'olaf', 'Olaf', [
+            'Die vier Werte des Autos stehen weiter nur in ' + c('audi') + '. In ' + c('olaf') + ' steht die Adresse.']) },
+        { code: 'olga := besitzerZ{\n    name:     "Olga",\n    ort:      "Hannover",\n    fahrzeug: &audi,\n}',
+          tun: S => neuerBesitzer(S, 'olga', 'Olga', [
+            'Die Felder ' + c('olaf.fahrzeug') + ' und ' + c('olga.fahrzeug') + ' enthalten dieselbe Adresse. Beide Pfeile führen zu ' + c('audi') + '.']) },
+        { code: 'audi.kennzeichen = "H-OL22"',
+          tun: S => {
+            setze(S, 'audi.kennzeichen', 'H-OL22');
+            return { l: [], s: ['audi.kennzeichen'], t: [
+              'Die Anweisung greift direkt auf die Variable ' + c('audi') + ' zu und ändert ihr Feld ' + c('kennzeichen') + '.',
+              c('olaf') + ' und ' + c('olga') + ' sind unverändert: In ihren Feldern steht dieselbe Adresse wie vorher.',
+              'Wer dem Pfeil von ' + c('olaf') + ' oder ' + c('olga') + ' folgt, findet das neue Kennzeichen.'] };
+          } },
+        { code: 'olaf.fahrzeug.tachostand += 1000', tun: S => fahre(S, 'olaf', 1000) },
+        { code: 'olga.fahrzeug.tachostand += 500', tun: S => fahre(S, 'olga', 500) },
+        { code: 'fmt.Println(audi, *olaf.fahrzeug, *olga.fahrzeug)',
+          tun: S => ({ l: ['audi', 'olaf.fahrzeug', 'olga.fahrzeug'], s: [],
+            aus: [lies(S, 'audi'), hinter(S, 'olaf.fahrzeug'), hinter(S, 'olga.fahrzeug')].map(gedruckt).join(' '), t: [
+            c('*olaf.fahrzeug') + ' heißt: Geh zu der Adresse, die im Feld ' + c('olaf.fahrzeug') + ' steht, und lies dort den Verbund. Dasselbe gilt für ' + c('*olga.fahrzeug') + '.',
+            'Alle drei Ausdrücke liefern dasselbe Auto, denn es gibt nur eines.',
+            'Der Tachostand ist 0 + 1000 + 500 = ' + lies(S, 'audi.tachostand') + '.'] }) }
+      ]
+    }
+  };
+
+  function drucke2(S, schluss) {
+    return { l: ['altesAuto', 'pMikesAuto', 'mike.fahrzeug'], s: [],
+      aus: [lies(S, 'altesAuto'), hinter(S, 'pMikesAuto'), lies(S, 'mike.fahrzeug')].map(gedruckt).join(' '), t: [
+      c('fmt.Println') + ' gibt drei Werte aus.',
+      c('*pMikesAuto') + ' heißt: Geh zu der Adresse, die in ' + c('pMikesAuto') + ' steht, und lies dort den Verbund. Die Adresse führt zum Feld ' + c('mike.fahrzeug') + '.',
+      schluss] };
+  }
+  function neuerBesitzer(S, name, vorname, zusatz) {
+    lege(S, name, 'besitzerZ', besitzer('besitzerZ', vorname, 'Hannover', { zeiger: 'audi' }));
+    return { l: [], s: [name], t: [
+      'Die Anweisung legt die Variable ' + c(name) + ' vom Typ ' + c('besitzerZ') + ' an.',
+      c('&audi') + ' liefert die Adresse der Variable ' + c('audi') + '. Das Feld ' + c('fahrzeug') + ' hat den Typ ' + c('*auto') + ' und speichert diese Adresse.'].concat(zusatz) };
+  }
+  function fahre(S, name, km) {
+    const pfad = name + '.fahrzeug.tachostand', alt = lies(S, pfad);
+    setze(S, pfad, alt + km);
+    return { l: [name + '.fahrzeug'], s: [echt(S, pfad)], t: [
+      'Die Anweisung liest im Feld ' + c(name + '.fahrzeug') + ' die Adresse und folgt ihr zur Variable ' + c('audi') + '. Go folgt dem Zeiger von selbst, ein ' + c('*') + ' ist nicht nötig.',
+      'Dort rechnet sie ' + alt + ' + ' + km + ' = ' + (alt + km) + ' und schreibt das Ergebnis in das Feld ' + c('tachostand') + '.',
+      'Geändert ist die Variable ' + c('audi') + '. ' + c(name) + ' selbst ist unverändert.'] };
+  }
+
+  // Der Stand nach k Anweisungen: Das Programm läuft jedes Mal von vorn.
+  const SCHRITT = { 2: 0, 3: 0 };
+  function lauf(nr, k) {
+    const S = { vars: [], aus: [], l: [], s: [], t: null };
+    PROGRAMME[nr].zeilen.slice(0, k).forEach(z => {
+      const r = z.tun(S);
+      S.l = r.l; S.s = r.s; S.t = r.t;
+      if (r.aus !== undefined) S.aus.push(r.aus);
+    });
+    return S;
+  }
+
+  // ---------- Darstellung ----------
+  // o.klick: Felder sind Knöpfe. o.gewaehlt: Pfad des gewählten Felds. o.l und o.s: Pfade, die die Anweisung gelesen und beschrieben hat.
+  const rand = (pfad, o) => (o.l && o.l.indexOf(pfad) >= 0 ? ' gelesen' : '') + (o.s && o.s.indexOf(pfad) >= 0 ? ' geschrieben' : '');
+  const zeigerHTML = w => '<span class="zeigerwert"><span class="punkt" data-ziel="' + esc(w.zeiger) + '"></span>Adresse von ' + esc(w.zeiger) + '</span>';
+  function kasten(name, typ, w, pfad, o, innen) {
+    const auf = o.klick ? 'button type="button"' : 'div', zu = o.klick ? 'button' : 'div';
+    let h = '<div class="var' + (innen ? ' innen' : '') + (w.zeiger ? ' zeigervar' : '') + (o.klick ? ' klick' : '') + rand(pfad, o) + (o.spaeter ? ' spaeter' : '') + '" data-pfad="' + esc(pfad) + '">' +
+      '<div class="kopf' + (o.gewaehlt === pfad ? ' gewaehlt' : '') + '"' + (o.klick ? ' data-wahl="' + esc(pfad) + '" role="button" tabindex="0"' : '') + '><span class="vname">' + esc(name) + '</span><span class="vtyp">' + esc(typ) + '</span></div>';
+    if (w.zeiger) {
+      h += '<div class="reihe"><span class="fname">Wert</span><span class="fwert">' + zeigerHTML(w) + '</span></div>';
+    } else {
+      TYPEN[w.typ].forEach(f => {
+        const fw = w.w[f[0]], fp = pfad + '.' + f[0];
+        if (fw && fw.typ) h += kasten(f[0], f[1], fw, fp, o, true);
+        else h += '<' + auf + ' class="reihe' + rand(fp, o) + (o.gewaehlt === fp ? ' gewaehlt' : '') + '" data-pfad="' + esc(fp) + '"' + (o.klick ? ' data-wahl="' + esc(fp) + '"' : '') + '><span class="fname">' + esc(f[0]) + '</span><span class="fwert">' + (fw && fw.zeiger ? zeigerHTML(fw) : esc(literal(fw))) + '</span></' + zu + '>';
+      });
+    }
+    return h + '</div>';
+  }
+  const pfeilFeld = id => '<svg class="pfeile" aria-hidden="true"><defs><marker id="spitze-' + id + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:#1e40af;stroke:none"/></marker></defs><g></g></svg>';
+
+  // Ein Pfeil je Zeiger: vom Punkt zum nächsten Rand des Kastens, dessen Adresse der Zeiger enthält
+  function zeichnePfeile() {
+    document.querySelectorAll('.stufe.active .buehne').forEach(b => {
+      const g = b.querySelector('svg.pfeile g');
+      if (!g) return;
+      g.textContent = '';
+      const rahmen = b.getBoundingClientRect();
+      b.querySelectorAll('.var:not(.spaeter) .punkt').forEach(p => {
+        const ziel = b.querySelector('.var:not(.spaeter)[data-pfad="' + p.dataset.ziel + '"]');
+        if (!ziel) return;
+        const a = p.getBoundingClientRect(), z = ziel.getBoundingClientRect();
+        const x1 = a.left + a.width / 2, y1 = a.top + a.height / 2;
+        const x2 = Math.max(z.left, Math.min(z.right, x1)), y2 = Math.max(z.top + 14, Math.min(z.bottom - 8, y1));
+        const linie = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        linie.setAttribute('class', 'linie');
+        linie.setAttribute('d', 'M' + (x1 - rahmen.left) + ',' + (y1 - rahmen.top) + ' L' + (x2 - rahmen.left) + ',' + (y2 - rahmen.top));
+        linie.setAttribute('marker-end', 'url(#spitze-' + b.id + ')');
+        g.appendChild(linie);
+      });
+    });
+  }
+
+  // Schritt 1: die Variable mike, jedes Feld lässt sich wählen
+  const S1 = lauf(2, 1);
+  let wahl = 'mike.fahrzeug.tachostand';
+  function zeigeFeld() {
+    el('buehne1').innerHTML = kasten('mike', 'besitzerW', S1.vars[0].wert, 'mike', { klick: true, gewaehlt: wahl });
+    const teile = wahl.split('.');
+    const weg = teile.map((t, i) => {
+      const typ = ort(S1, teile.slice(0, i + 1).join('.')).typ;
+      return i === 0 ? c(t) + ' ist die Variable. Sie hat den Typ ' + c(typ) + '.'
+                     : c('.' + t) + ' wählt in diesem Verbund das Feld ' + c(t) + '. Es hat den Typ ' + c(typ) + '.';
+    });
+    el('auskunft1').innerHTML = 'Ausdruck ' + c(wahl) + ': Typ ' + c(ort(S1, wahl).typ) + ', Wert ' + c(wertText(lies(S1, wahl))) + '.<ul><li>' + weg.join('</li><li>') + '</li></ul>';
+  }
+
+  // Schritt 2 und Schritt 3: das Programm, die Kästen, die Erklärung und die Ausgabe
+  function zeigeLauf(nr) {
+    const P = PROGRAMME[nr], k = SCHRITT[nr], S = lauf(nr, k), ende = lauf(nr, P.zeilen.length);
+    el('programm' + nr).innerHTML = P.zeilen.map((z, i) =>
+      '<li class="' + (i < k - 1 ? 'fertig' : i === k - 1 ? 'aktuell' : '') + '"><span class="nr">' + (i + 1) + '</span><span>' + esc(z.code) + '</span></li>').join('');
+    // Eine Variable, die es noch nicht gibt, hält ihren Platz unsichtbar frei. So verrutschen die Kästen nicht.
+    el('buehne' + nr).innerHTML = P.folge.map(name => {
+      const v = S.vars.find(x => x.name === name), spaeter = ende.vars.find(x => x.name === name);
+      return v ? kasten(v.name, v.typ, v.wert, v.name, { l: S.l, s: S.s })
+               : kasten(spaeter.name, spaeter.typ, spaeter.wert, spaeter.name, { spaeter: true });
+    }).join('') + pfeilFeld('buehne' + nr);
+    el('erkl' + nr).innerHTML = S.t ? '<ol><li>' + S.t.join('</li><li>') + '</li></ol>'
+      : 'Noch ist keine Anweisung ausgeführt. Es gibt noch keine Variable.';
+    el('ausgabe' + nr).innerHTML = S.aus.length ? esc(S.aus.join('\n')) : '<span class="leer">Das Programm hat noch nichts ausgegeben.</span>';
+    el('zaehler' + nr).textContent = k === 0 ? 'Noch keine von ' + P.zeilen.length + ' Anweisungen ausgeführt.' : 'Anweisung ' + k + ' von ' + P.zeilen.length + ' ausgeführt.';
+    document.querySelectorAll('[data-lauf^="' + nr + ',"]').forEach(b => {
+      b.disabled = Number(b.dataset.lauf.split(',')[1]) > 0 ? k >= P.zeilen.length : k === 0;
+    });
+    requestAnimationFrame(zeichnePfeile);
+  }
+
+  // ---------- Reiter ----------
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#zeiger-feld
+  const ANKER = ['worum', 'wert-feld', 'kopie-zeiger', 'zeiger-feld', 'vergleich'];
+  let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== aktuell;
+    aktuell = nummer;
+    if (gewechselt) Kurslotse.schrittGewechselt();                     // die Antworten gehören zum Schritt davor
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    requestAnimationFrame(zeichnePfeile);                              // die Pfeile brauchen die Lage der sichtbaren Kästen
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Bedienung ----------
+  document.addEventListener('click', ev => {
+    const t = ev.target;
+    let k;
+    if ((k = t.closest('[data-stufe], [data-gehe]'))) {
+      zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+    } else if ((k = t.closest('[data-wahl]'))) {
+      wahl = k.dataset.wahl;
+      zeigeFeld();
+      Kurslotse.standGeaendert();
+    } else if ((k = t.closest('[data-lauf]'))) {
+      const q = k.dataset.lauf.split(','), nr = Number(q[0]), d = Number(q[1]);
+      SCHRITT[nr] = d === 0 ? 0 : Math.max(0, Math.min(PROGRAMME[nr].zeilen.length, SCHRITT[nr] + d));
+      zeigeLauf(nr);
+      Kurslotse.standGeaendert();
+    }
+  });
+  document.addEventListener('keydown', ev => {                         // der Kopf eines Kastens ist kein Knopf
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('.kopf[data-wahl]')) { ev.preventDefault(); ev.target.click(); }
+  });
+  window.addEventListener('resize', zeichnePfeile);
+  if (window.ResizeObserver) {                                         // die Spalte des Kurslotsen verschiebt die Kästen ohne resize
+    const waechter = new ResizeObserver(zeichnePfeile);
+    document.querySelectorAll('.buehne').forEach(b => waechter.observe(b));
+  }
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund als Feld', 'Schritt 2: Kopie und Zeiger', 'Schritt 3: Ein Zeiger als Feld', 'Schritt 4: Wert oder Zeiger'];
+  const ohneMarken = h => h.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+  // Eine Variable in einem Satz
+  function variableSatz(v) {
+    if (v.wert.zeiger) return v.name + ' hat den Typ ' + v.typ + ' und enthält die Adresse von ' + v.wert.zeiger + '. Der Pfeil führt zum Kasten ' + v.wert.zeiger + '.';
+    return v.name + ' hat den Typ ' + v.typ + ' und die Felder ' + TYPEN[v.typ].map(f => f[0] + ' = ' + wertText(v.wert.w[f[0]])).join(', ') + '.';
+  }
+  // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
+  function standSaetze() {
+    if (aktuell === 1) {
+      return [variableSatz(S1.vars[0]), 'Gewählt und gelb hinterlegt ist der Ausdruck ' + wahl + ' mit dem Typ ' + ort(S1, wahl).typ + ' und dem Wert ' + wertText(lies(S1, wahl)) + '.'];
+    }
+    if (aktuell === 2 || aktuell === 3) {
+      const P = PROGRAMME[aktuell], k = SCHRITT[aktuell], S = lauf(aktuell, k);
+      if (k === 0) return ['Noch ist keine der ' + P.zeilen.length + ' Anweisungen ausgeführt. Es gibt noch keine Variable, und das Programm hat nichts ausgegeben.'];
+      const code = P.zeilen[k - 1].code.split('\n');
+      const t = ['Ausgeführt sind die Anweisungen 1 bis ' + k + ' von ' + P.zeilen.length + '. Zuletzt ausgeführt und im Programm hell markiert ist Anweisung ' + k + ': ' + code[0] + (code.length > 1 ? ' …' : '')];
+      S.vars.forEach(v => t.push(variableSatz(v)));
+      const fehlt = P.folge.filter(n => !S.vars.find(v => v.name === n));
+      if (fehlt.length) t.push('Noch nicht angelegt und nicht zu sehen: ' + fehlt.join(', ') + '.');
+      t.push(S.l.length ? 'Blau umrandet, von Anweisung ' + k + ' gelesen: ' + S.l.join(', ') + '.' : 'Blau umrandet ist nichts.');
+      t.push(S.s.length ? 'Rot umrandet, von Anweisung ' + k + ' beschrieben: ' + S.s.join(', ') + '.' : 'Rot umrandet ist nichts.');
+      t.push(S.aus.length ? 'Bisherige Ausgabe des Programms, je Zeile eine Ausgabe:' : 'Das Programm hat noch nichts ausgegeben.');
+      S.aus.forEach(a => t.push('    ' + a));
+      t.push('Unter „Was die Anweisung tut“ steht: ' + S.t.map(ohneMarken).join(' '));
+      return t;
+    }
+    return ['Dieser Schritt hat keine Demo. Zu sehen sind Text, ein Programm und Tabellen.'];
+  }
+  // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
+  function kurz() {
+    if (aktuell === 1) return 'gewählt: ' + wahl;
+    if (aktuell === 2 || aktuell === 3) return SCHRITT[aktuell] === 0 ? 'noch keine Anweisung ausgeführt' : 'Anweisung ' + SCHRITT[aktuell] + ' von ' + PROGRAMME[aktuell].zeilen.length + ' ausgeführt';
+    return '';
+  }
+  // Die Programmzeilen: in Schritt 2 und 3 je Anweisung mit ihrer Nummer, sonst der Inhalt der pre
+  function zeilen() {
+    if (aktuell === 2 || aktuell === 3) {
+      return PROGRAMME[aktuell].zeilen.flatMap((z, i) => z.code.split('\n').map((t, j) => (j === 0 ? 'Anweisung ' + (i + 1) + ': ' : '    ') + t));
+    }
+    return Array.from(el('stufe-' + aktuell).querySelectorAll('pre')).flatMap(p => p.textContent.split('\n')).map(t => t.trimEnd()).filter(Boolean);
+  }
+
+  zeigeFeld(); zeigeLauf(2); zeigeLauf(3);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Hierarchische Verbünde: ein Verbund als Feld',
+    thema: 'Hierarchische Verbünde',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.3, Seiten 212–214',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.md',
+    reiter: () => ANKER[aktuell],
+    schritt: () => SCHRITTE[aktuell],
+    sichtbar: () => el('stufe-' + aktuell),
+    stand: standSaetze,
+    kurz: kurz,
+    zeilen: zeilen,
+    zeilenTitel: 'Programm des sichtbaren Schritts, in Go. In Schritt 2 und 3 stehen die Ausgaben im Stand der Demo:',
+    text: '.card > p:not(.quelle), .card > ul, .legende, .hinweis, .auskunft, table.text',
+    beispiel: 'Warum liefert *pMikesAuto jetzt den BMW?'
+  });
+})();
+</script>
+</body>
+</html>
