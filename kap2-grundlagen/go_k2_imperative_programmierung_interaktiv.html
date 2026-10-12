@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imperative Programmierung: Anweisungen, Blöcke und Schleifen</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt, button.gewaehlt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile .frage { color:var(--muted);font-size:.95rem; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    li { margin:6px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Schritt 1: Balken */
+    .balken { display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin:14px 0; }
+    .balken .name { font-weight:600;white-space:nowrap; }
+    .balken .bahn { background:#f1f5f9;border-radius:6px;height:22px;overflow:hidden; }
+    .balken .fuellung { display:block;height:100%;background:#94a3b8;border-radius:6px; }
+    .balken .wert { font-family:Consolas,monospace;font-size:.92rem;text-align:right; }
+    .balken .go .fuellung, .balken .fuellung.go { background:var(--accent); }
+    .balken .fuellung.anders { background:#b45309; }
+    .balken .name.go { color:var(--accent); }
+    .balken .name.anders { color:#b45309; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child, .auskunft ul:last-child { margin-bottom:0; }
+    .auskunft ul { margin:0;padding-left:22px; }
+
+    /* Schritt 2: Zeitleiste */
+    #zeitleiste td:first-child { white-space:nowrap;font-family:Consolas,monospace; }
+    #zeitleiste tr.betont td { background:var(--aktiv-bg);font-weight:600; }
+    #zeitleiste tr.blass td { color:#9ca3af; }
+
+    /* Schritt 3: zwei Programme nebeneinander */
+    .paar { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0; }
+    @media (max-width:760px) { .paar { grid-template-columns:minmax(0,1fr); } }
+    .paar h3 { margin:0 0 8px;font-size:1.02rem;color:var(--blau); }
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#cbd5e1;border-left:4px solid transparent;white-space:pre; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.95rem; }
+    .stand .was { color:var(--muted); }
+    .stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Imperative Programmierung: Anweisungen, Blöcke und Schleifen</h1>
+    <p>Ein imperatives Programm ist eine Folge von Anweisungen. Die Seite zeigt, welche Sprachen so arbeiten und aus welchen Bausteinen ein solches Programm besteht.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.1, Seiten 5–8.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Welche Sprachen heute benutzt werden</button>
+    <button type="button" class="tab" data-stufe="2">2 Vier Arten zu programmieren</button>
+    <button type="button" class="tab" data-stufe="3">3 Die Bausteine</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Das Modul heißt „Imperative Programmierung“. Das Wort kommt vom lateinischen <em>imperare</em>, befehlen. Ein imperatives Programm gibt dem Rechner Befehle, einen nach dem anderen. In einer Sprache wie Go heißt ein solcher Befehl Anweisung.</p>
+    <p>Zu einem imperativen Programm gehören zwei Dinge:</p>
+    <ul>
+      <li><strong>Die einzelne Anweisung:</strong> Sie weist zum Beispiel einer Variable einen Wert zu oder gibt etwas aus.</li>
+      <li><strong>Die Reihenfolge:</strong> Das Programm legt fest, welche Anweisungen ausgeführt werden und in welcher Folge.</li>
+    </ul>
+    <p>Die Seite geht in drei Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt, welche Programmiersprachen heute am meisten benutzt werden und wo Go steht.</li>
+      <li><strong>Schritt 2</strong> ordnet die vier Arten zu programmieren ein, die der Kurstext nennt.</li>
+      <li><strong>Schritt 3</strong> zeigt die Bausteine eines imperativen Programms zum Durchklicken: Verzweigung und Schleife.</li>
+    </ul>
+    <p>Klausurstoff ist Schritt 3. Schritt 1 und 2 dienen der Einordnung.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Welche Sprachen heute benutzt werden</h2>
+    <p>Die Plattform Stack Overflow fragt jedes Jahr Entwickler, mit welchen Sprachen sie im letzten Jahr gearbeitet haben. Jeder darf mehrere Sprachen nennen, deshalb ergeben die Anteile zusammen mehr als 100 %. Die Balken zeigen die 15 meistgenannten Sprachen im Jahr 2026.</p>
+    <div class="balken" id="balken"></div>
+    <div class="zeile">
+      <button type="button" id="aufdecken">Welche dieser Sprachen sind nicht imperativ?</button>
+    </div>
+    <div class="auskunft" id="rang"></div>
+    <p class="quelle">Quelle: Stack Overflow Developer Survey 2026, Frage nach den benutzten Programmier-, Skript- und Auszeichnungssprachen, alle Befragten, 14.099 Antworten. Die Rangliste steht nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Vier Arten zu programmieren</h2>
+    <p>Im Kurstext zeigt Abbildung 2.1 vier Arten zu programmieren. Sie heißen Programmierparadigmen. Ein Klick auf eine Art zeigt ihren Grundgedanken und hebt ihre Sprachen in der Zeitleiste hervor. In der Zeitleiste steht die jüngste Sprache oben.</p>
+    <div class="zeile" id="arten">
+      <button type="button" data-art="logisch">logisch</button>
+      <button type="button" data-art="funktional">funktional</button>
+      <button type="button" data-art="objekt">objektorientiert</button>
+      <button type="button" data-art="imperativ">imperativ und strukturiert</button>
+    </div>
+    <div class="auskunft" id="art"></div>
+    <div class="tabellenrahmen">
+    <table id="zeitleiste">
+      <thead><tr><th>Jahr</th><th>Sprache oder Ereignis</th><th>Art zu programmieren</th></tr></thead>
+      <tbody id="zeitkoerper"></tbody>
+    </table>
+    </div>
+    <p>Dieses Modul behandelt die strukturierte Programmierung. Die objektorientierte Programmierung baut darauf auf und folgt in späteren Modulen des Studiums.</p>
+    <p class="quelle">Die vier Arten nach Kurstext v3.0.6, Abschnitt 2.1, Abbildung 2.1. Die Jahreszahlen stehen nicht im Kurstext und sind ungefähre Angaben.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Die Bausteine der imperativen Programmierung</h2>
+    <p>Anweisungen stehen hintereinander, und der Rechner führt sie der Reihe nach aus. Soll er eine Anweisung auslassen oder wiederholen, gibt es zwei Schreibweisen:</p>
+    <ul>
+      <li><strong>Mit Sprung:</strong> Der Befehl <code>GOTO</code> nennt die Zeile, bei der es weitergeht. So schrieb man in der frühen imperativen Programmierung.</li>
+      <li><strong>Mit Block:</strong> Die Anweisungen, die zusammengehören, stehen in geschweiften Klammern. So schreibt man in der strukturierten Programmierung, und so schreibt man in Go.</li>
+    </ul>
+    <p>Links steht ein Programm mit Sprung, rechts dasselbe Programm mit Block. Beide laufen im gleichen Takt.</p>
+    <div class="zeile" id="bausteine">
+      <span class="frage">Baustein:</span>
+      <button type="button" data-baustein="0">Verzweigung</button>
+      <button type="button" data-baustein="1">Schleife</button>
+      <button type="button" data-baustein="2">Zwei Schleifen im Vergleich</button>
+    </div>
+    <p id="bausteintext"></p>
+    <div class="zeile" id="startwerte"></div>
+    <div class="zeile">
+      <button id="weiter" class="haupt" type="button">nächster Schritt</button>
+      <button id="zurueck" type="button">einen Schritt zurück</button>
+      <button id="vorn" type="button">von vorn</button>
+    </div>
+    <div class="paar">
+      <div>
+        <h3 id="titel0"></h3>
+        <ol class="programm" id="programm0"></ol>
+        <div class="stand"><span class="was" id="var0"></span><span class="wie" id="wert0"></span><span class="was">Ausgabe</span><span class="wie" id="aus0"></span></div>
+      </div>
+      <div>
+        <h3 id="titel1"></h3>
+        <ol class="programm" id="programm1"></ol>
+        <div class="stand"><span class="was" id="var1"></span><span class="wie" id="wert1"></span><span class="was">Ausgabe</span><span class="wie" id="aus1"></span></div>
+      </div>
+    </div>
+    <div class="auskunft" id="ablauf"></div>
+    <p class="quelle">Die Schreibweisen <code>IF</code>, <code>GOTO</code>, <code>WHILE</code> und <code>REPEAT-UNTIL</code> und die Bedingung <code>a &gt; 3</code> nach Kurstext v3.0.6, Abschnitt 2.1, Seiten 5–8. Die Anweisungen in den Programmen sind eigene Beispiele.</p>
+  </div>
+
+  <div class="card">
+    <h2>Wie Go diese Bausteine schreibt</h2>
+    <p>Die Schreibweise mit Großbuchstaben gehört zu keiner bestimmten Sprache. In Go sehen die Bausteine so aus:</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Baustein im Kurstext, Abschnitt 2.1</th><th>Schreibweise in Go</th><th>Abschnitt im Kurstext, der sie behandelt</th><th>HTML-Seite dazu</th></tr></thead>
+      <tbody>
+        <tr><td>Block mit <code>IF</code>, <code>THEN</code> und <code>ELSE</code></td><td>Go schreibt <code>if</code> und <code>else</code>.</td><td>5.5.1, Seiten 129–132</td><td><a href="../kap5-anweisungen/136_go_k5_if_anweisungen_veranschaulichung.html">if-Anweisungen</a></td></tr>
+        <tr><td><code>WHILE</code>-Schleife</td><td>Go schreibt <code>for</code> mit einer Bedingung.</td><td>5.5.3.1, Seiten 138–142</td><td><a href="../kap5-anweisungen/146_go_k5_for_bedingung_veranschaulichung.html">for-Anweisung mit Bedingung</a></td></tr>
+        <tr><td><code>REPEAT-UNTIL</code>-Schleife</td><td>Go hat dafür keine eigene Schreibweise.</td><td>Es gibt keinen.</td><td>Es gibt keine.</td></tr>
+        <tr><td><code>BREAK</code>, der Sprung aus einer Schleife heraus</td><td>Go schreibt <code>break</code>.</td><td>5.5.3.3, Seiten 146–149</td><td><a href="../kap5-anweisungen/155_go_k5_break_anweisung_veranschaulichung.html">break-Anweisung</a></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function c(s) { return "<code>" + String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#bausteine
+  var ANKER = ["worum", "sprachen", "arten", "bausteine"];
+
+  function zeigeStufe(nummer, nachOben) {
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: Welche Sprachen heute benutzt werden ----
+  // Stack Overflow Developer Survey 2026, alle Befragten, Anteil in Prozent
+  var SPRACHEN = [["JavaScript", 62.0], ["SQL", 58.4], ["HTML/CSS", 58.2], ["Python", 58.0], ["Bash/Shell", 51.3],
+                  ["TypeScript", 43.8], ["Java", 27.6], ["C#", 27.1], ["PowerShell", 24.6], ["C++", 24.3],
+                  ["C", 21.8], ["Rust", 18.0], ["PHP", 17.7], ["Go", 16.5], ["Kotlin", 10.8]];
+  var ANDERS = { "SQL": 1, "HTML/CSS": 1 };
+  var aufgedeckt = false;
+
+  function zeigeBalken() {
+    $("balken").innerHTML = SPRACHEN.map(function (s) {
+      var art = s[0] === "Go" ? " go" : (aufgedeckt && ANDERS[s[0]] ? " anders" : "");
+      return "<span class=\"name" + art + "\">" + s[0] + "</span>" +
+        "<span class=\"bahn\"><span class=\"fuellung" + art + "\" style=\"width:" + (s[1] / 62 * 100).toFixed(1) + "%\"></span></span>" +
+        "<span class=\"wert\">" + s[1].toFixed(1).replace(".", ",") + " %</span>";
+    }).join("");
+    $("rang").innerHTML = aufgedeckt
+      ? "<p>In 13 der 15 Sprachen schreibt man Anweisungen, die der Rechner nacheinander ausführt. Zwei arbeiten anders:</p><ul>" +
+        "<li><strong>SQL</strong> beschreibt, welche Daten man aus einer Datenbank haben will. Wie der Rechner sie findet, steht im Programm nicht.</li>" +
+        "<li><strong>HTML/CSS</strong> beschreibt Aufbau und Aussehen einer Seite. Es gibt dort keine Anweisungen und keine Reihenfolge der Ausführung.</li></ul>" +
+        "<p>Es gibt also mehr als eine Art zu programmieren. Davon handelt Schritt 2.</p>"
+      : "<p>Go steht auf Platz 14. Von 100 Befragten haben etwa 16 im letzten Jahr mit Go gearbeitet.</p>";
+    $("aufdecken").textContent = aufgedeckt ? "Antwort wieder verdecken" : "Welche dieser Sprachen sind nicht imperativ?";
+  }
+
+  // ---- Schritt 2: Vier Arten zu programmieren ----
+
+  var ARTEN = {
+    imperativ: { name: "imperativ und strukturiert", text:
+      "<p><strong>Grundgedanke:</strong> Das Programm ist eine Folge von Anweisungen. Jede Anweisung ändert etwas, zum Beispiel den Wert einer Variable.</p>" +
+      "<p><strong>Strukturiert</strong> heißt die imperative Programmierung, wenn Blöcke und Schleifen den Sprung mit " + c("GOTO") + " ersetzen. Nach dem Kurstext hat sich das in den 70er Jahren durchgesetzt. Go ist eine solche Sprache.</p>" },
+    objekt: { name: "objektorientiert", text:
+      "<p><strong>Grundgedanke:</strong> Daten und die Funktionen, die mit ihnen arbeiten, werden zu Objekten zusammengefasst.</p>" +
+      "<p>Die objektorientierte Programmierung setzt nach dem Kurstext auf der imperativen auf. Auch in einem Objekt stehen Anweisungen.</p>" },
+    funktional: { name: "funktional", text:
+      "<p><strong>Grundgedanke:</strong> Das Programm besteht aus Funktionen, die aus Werten neue Werte berechnen. Eine Variable wird möglichst nicht verändert.</p>" },
+    logisch: { name: "logisch", text:
+      "<p><strong>Grundgedanke:</strong> Das Programm besteht aus Tatsachen und Regeln. Der Rechner sucht selbst nach einer Lösung, die zu ihnen passt.</p>" }
+  };
+  // Jahr, Sprache oder Ereignis, Art. Die jüngste Zeile steht oben.
+  var ZEIT = [[2016, "Zig", "imperativ"], [2015, "Rust", "imperativ"], [2009, "Go", "imperativ"],
+              [1995, "Java", "objekt"], [1990, "Haskell", "funktional"], [1985, "C++", "objekt"],
+              [1972, "Prolog", "logisch"], [1972, "C", "imperativ"], [1970, "Pascal", "imperativ"],
+              [1968, "Kritik am Befehl GOTO", "imperativ"], [1967, "Simula", "objekt"],
+              [1958, "Lisp", "funktional"], [1957, "Fortran", "imperativ"]];
+  var art = "imperativ";
+
+  function zeigeArt() {
+    jeder("#arten button", function (b) { b.className = b.dataset.art === art ? "gewaehlt" : ""; });
+    $("art").innerHTML = ARTEN[art].text;
+    $("zeitkoerper").innerHTML = ZEIT.map(function (z) {
+      return "<tr class=\"" + (z[2] === art ? "betont" : "blass") + "\"><td>ca. " + z[0] + "</td><td>" + z[1] + "</td><td>" + ARTEN[z[2]].name + "</td></tr>";
+    }).join("");
+  }
+
+  // ---- Schritt 3: Die Bausteine ----
+  // Jedes Programm liefert zu einem Startwert seinen Ablauf: Zeile, Erklärung, Wert der Variable, Ausgabe.
+
+  function ablauf(start, schritt) {
+    var spur = [], wert = start, zeile = 0, sicherung = 0;
+    while (zeile !== null && sicherung++ < 60) {
+      var s = schritt(zeile, wert);
+      if (s.wert !== undefined) wert = s.wert;
+      spur.push({ zeile: zeile, text: s.text, wert: wert, ausgabe: s.ausgabe });
+      zeile = s.weiter;
+    }
+    return spur;
+  }
+
+  var BAUSTEINE = [
+    { name: "Verzweigung", variable: "a", starts: [2, 5],
+      text: "Die Anweisungen in der Mitte sollen nur laufen, wenn " + c("a > 3") + " gilt. Stelle einen Wert für " + c("a") + " ein und vergleiche, welche Zeilen links und rechts ausgeführt werden.",
+      programme: [
+        { titel: "Mit Sprung", zeilen: ["1  IF a <= 3 THEN GOTO 4", "2  gib aus: groß", "3  a = a - 3", "4  gib aus: a"],
+          schritt: function (z, a) {
+            if (z === 0) return a <= 3 ? { text: "Die Bedingung " + c("a <= 3") + " ist erfüllt. Der Rechner springt zu Zeile 4 und überspringt die Zeilen 2 und 3.", weiter: 3 }
+                                       : { text: "Die Bedingung " + c("a <= 3") + " ist nicht erfüllt. Der Rechner springt nicht und macht mit Zeile 2 weiter.", weiter: 1 };
+            if (z === 1) return { text: "Der Rechner gibt „groß“ aus.", ausgabe: "groß", weiter: 2 };
+            if (z === 2) return { text: "Der Rechner zieht 3 ab. " + c("a") + " hat jetzt den Wert " + (a - 3) + ".", wert: a - 3, weiter: 3 };
+            return { text: "Der Rechner gibt den Wert von " + c("a") + " aus. Das Programm ist zu Ende.", ausgabe: String(a), weiter: null };
+          } },
+        { titel: "Mit Block", zeilen: ["IF a > 3 THEN {", "    gib aus: groß", "    a = a - 3", "}", "gib aus: a"],
+          schritt: function (z, a) {
+            if (z === 0) return a > 3 ? { text: "Die Bedingung " + c("a > 3") + " ist erfüllt. Der Rechner führt den Block aus.", weiter: 1 }
+                                      : { text: "Die Bedingung " + c("a > 3") + " ist nicht erfüllt. Der Rechner lässt den ganzen Block aus.", weiter: 4 };
+            if (z === 1) return { text: "Der Rechner gibt „groß“ aus.", ausgabe: "groß", weiter: 2 };
+            if (z === 2) return { text: "Der Rechner zieht 3 ab. " + c("a") + " hat jetzt den Wert " + (a - 3) + ".", wert: a - 3, weiter: 4 };
+            return { text: "Der Rechner gibt den Wert von " + c("a") + " aus. Das Programm ist zu Ende.", ausgabe: String(a), weiter: null };
+          } }
+      ] },
+    { name: "Schleife", variable: "n", starts: [0, 2, 3],
+      text: "Die Anweisungen in der Mitte sollen laufen, solange " + c("n > 0") + " gilt. Links springt der Rechner dafür zurück nach oben. Rechts steht eine " + c("WHILE") + "-Schleife: Sie prüft die Bedingung vor jedem Durchlauf.",
+      programme: [
+        { titel: "Mit Sprung", zeilen: ["1  IF n <= 0 THEN GOTO 5", "2  gib aus: n", "3  n = n - 1", "4  GOTO 1", "5  gib aus: fertig"],
+          schritt: function (z, n) {
+            if (z === 0) return n <= 0 ? { text: "Die Bedingung " + c("n <= 0") + " ist erfüllt. Der Rechner springt zu Zeile 5.", weiter: 4 }
+                                       : { text: "Die Bedingung " + c("n <= 0") + " ist nicht erfüllt. Der Rechner macht mit Zeile 2 weiter.", weiter: 1 };
+            if (z === 1) return { text: "Der Rechner gibt " + n + " aus.", ausgabe: String(n), weiter: 2 };
+            if (z === 2) return { text: "Der Rechner zieht 1 ab. " + c("n") + " hat jetzt den Wert " + (n - 1) + ".", wert: n - 1, weiter: 3 };
+            if (z === 3) return { text: "Der Rechner springt zurück zu Zeile 1. Durch diesen Sprung entsteht die Schleife.", weiter: 0 };
+            return { text: "Der Rechner gibt „fertig“ aus. Das Programm ist zu Ende.", ausgabe: "fertig", weiter: null };
+          } },
+        { titel: "Mit Block: WHILE", zeilen: ["WHILE n > 0 {", "    gib aus: n", "    n = n - 1", "}", "gib aus: fertig"],
+          schritt: function (z, n) { return solange(z, n); } }
+      ] },
+    { name: "Zwei Schleifen im Vergleich", variable: "n", starts: [0, 2],
+      text: "Beide Programme sind strukturiert. Links prüft " + c("REPEAT-UNTIL") + " die Bedingung nach dem Durchlauf, rechts prüft " + c("WHILE") + " sie davor. Stelle " + c("n = 0") + " ein und vergleiche die Ausgaben.",
+      programme: [
+        { titel: "REPEAT-UNTIL", zeilen: ["REPEAT {", "    gib aus: n", "    n = n - 1", "} UNTIL n <= 0", "gib aus: fertig"],
+          schritt: function (z, n) {
+            if (z === 0) return { text: "Der Rechner betritt den Block, ohne eine Bedingung zu prüfen.", weiter: 1 };
+            if (z === 1) return { text: "Der Rechner gibt " + n + " aus.", ausgabe: String(n), weiter: 2 };
+            if (z === 2) return { text: "Der Rechner zieht 1 ab. " + c("n") + " hat jetzt den Wert " + (n - 1) + ".", wert: n - 1, weiter: 3 };
+            if (z === 3) return n <= 0 ? { text: "Die Bedingung " + c("n <= 0") + " ist erfüllt. Der Rechner verlässt die Schleife.", weiter: 4 }
+                                       : { text: "Die Bedingung " + c("n <= 0") + " ist nicht erfüllt. Der Rechner führt den Block noch einmal aus.", weiter: 1 };
+            return { text: "Der Rechner gibt „fertig“ aus. Das Programm ist zu Ende.", ausgabe: "fertig", weiter: null };
+          } },
+        { titel: "WHILE", zeilen: ["WHILE n > 0 {", "    gib aus: n", "    n = n - 1", "}", "gib aus: fertig"],
+          schritt: function (z, n) { return solange(z, n); } }
+      ] }
+  ];
+
+  function solange(z, n) {
+    if (z === 0) return n > 0 ? { text: "Die Bedingung " + c("n > 0") + " ist erfüllt. Der Rechner führt den Block aus.", weiter: 1 }
+                              : { text: "Die Bedingung " + c("n > 0") + " ist nicht erfüllt. Der Rechner lässt den Block aus.", weiter: 4 };
+    if (z === 1) return { text: "Der Rechner gibt " + n + " aus.", ausgabe: String(n), weiter: 2 };
+    if (z === 2) return { text: "Der Rechner zieht 1 ab. " + c("n") + " hat jetzt den Wert " + (n - 1) + ".", wert: n - 1, weiter: 3 };
+    if (z === 3) return { text: "Der Block ist zu Ende. Der Rechner geht zurück zur ersten Zeile und prüft die Bedingung erneut.", weiter: 0 };
+    return { text: "Der Rechner gibt „fertig“ aus. Das Programm ist zu Ende.", ausgabe: "fertig", weiter: null };
+  }
+
+  var baustein = 0, start = 2, schritt = 0, spuren = [];
+
+  function waehleBaustein(nummer, wert) {
+    baustein = nummer;
+    start = wert === undefined ? BAUSTEINE[nummer].starts[0] : wert;
+    schritt = 0;
+    spuren = BAUSTEINE[nummer].programme.map(function (p) { return ablauf(start, p.schritt); });
+    zeigeBaustein();
+  }
+
+  function zeigeBaustein() {
+    var b = BAUSTEINE[baustein], laenge = Math.max(spuren[0].length, spuren[1].length);
+    jeder("#bausteine button", function (k) { k.className = Number(k.dataset.baustein) === baustein ? "gewaehlt" : ""; });
+    $("bausteintext").innerHTML = b.text;
+    $("startwerte").innerHTML = "<span class=\"frage\">Startwert:</span>" + b.starts.map(function (w) {
+      return "<button type=\"button\" data-start=\"" + w + "\"" + (w === start ? " class=\"gewaehlt\"" : "") + ">" + b.variable + " = " + w + "</button>";
+    }).join("");
+    var punkte = [];
+    b.programme.forEach(function (p, seite) {
+      var spur = spuren[seite], fertig = schritt > spur.length, bei = schritt === 0 ? null : spur[Math.min(schritt, spur.length) - 1];
+      $("titel" + seite).textContent = p.titel;
+      $("programm" + seite).innerHTML = p.zeilen.map(function (z, i) {
+        return "<li" + (bei && !fertig && bei.zeile === i ? " class=\"aktuell\"" : "") + ">" + z.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>";
+      }).join("");
+      $("var" + seite).textContent = "Wert von " + b.variable;
+      $("wert" + seite).textContent = bei ? bei.wert : start;
+      $("aus" + seite).textContent = spur.slice(0, schritt).filter(function (s) { return s.ausgabe !== undefined; }).map(function (s) { return s.ausgabe; }).join("  ");
+      punkte.push("<li><strong>" + (seite ? "Rechts" : "Links") + ":</strong> " +
+        (schritt === 0 ? "Noch ist kein Schritt ausgeführt." : fertig ? "Das Programm ist schon zu Ende." : bei.text) + "</li>");
+    });
+    $("ablauf").innerHTML = "<ul>" + punkte.join("") + "</ul>";
+    $("weiter").disabled = schritt >= laenge;
+    $("zurueck").disabled = schritt === 0;
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-art], [data-baustein], [data-start]");
+    if (!k) return;
+    if (k.dataset.art !== undefined) { art = k.dataset.art; zeigeArt(); return; }
+    if (k.dataset.baustein !== undefined) { waehleBaustein(Number(k.dataset.baustein)); return; }
+    if (k.dataset.start !== undefined) { waehleBaustein(baustein, Number(k.dataset.start)); return; }
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("aufdecken").addEventListener("click", function () { aufgedeckt = !aufgedeckt; zeigeBalken(); });
+  $("weiter").addEventListener("click", function () { schritt++; zeigeBaustein(); });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeBaustein(); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeBaustein(); });
+
+  zeigeBalken();
+  zeigeArt();
+  waehleBaustein(0);
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>
