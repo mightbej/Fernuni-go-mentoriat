@@ -4,20 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go</title>
+  <link rel="stylesheet" href="../stil.css">
   <style>
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#6d28d9;--pos:#0f766e;--pos-bg:#d1fae5;--exp:#1e40af;--exp-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
-    * { box-sizing:border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#ede9fe 0%,#f7f9fc 46%);line-height:1.6; }
-    .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#6d28d9 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(109,40,217,.25);margin-bottom:20px; }
-    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
-    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
-    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
-    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
-    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
-    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    .container { max-width:1200px; }
+    body { background:radial-gradient(circle at 18% -12%,#ede9fe 0%,#f7f9fc 46%); }
+    .hero { background:linear-gradient(135deg,#6d28d9 0%,#1e40af 100%);box-shadow:0 10px 24px rgba(109,40,217,.25); }
+    h2 { color:var(--accent); }
+    .hero p { opacity:.96; }
+    h3 { margin:18px 0 8px; }
+    code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap;overflow-x:auto; }
-    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .hinweis { margin:12px 0; }
     .quelle { color:var(--muted);font-size:.88rem;margin:0; }
     .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
     button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
@@ -30,9 +28,9 @@
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
     .zeile label { color:var(--muted);font-size:.95rem; }
     .tabellenrahmen { overflow-x:auto; }
-    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
-    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
-    th { background:#f9fafb;font-weight:600; }
+    table { margin:12px 0;font-size:.95rem; }
+    th,td { vertical-align:top; }
+    th { font-weight:600; }
     td.zahl { font-family:Consolas,monospace;white-space:nowrap; }
     tr.betont td { background:var(--highlight);font-weight:700; }
     tr.schlecht td { background:#fef2f2; }
