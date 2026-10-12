@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .container { max-width:1100px; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { background:var(--aktiv-bg);border-color:#b45309; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    input[type="text"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:8em;background:#fff; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile label, .zeile .name { color:var(--muted);font-size:.95rem; }
+    .zaehler { color:var(--muted);font-size:.95rem;margin-left:6px; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { margin:12px 0;font-size:.95rem; }
+    th, td { vertical-align:top; }
+    li { margin:6px 0; }
+    h3 { margin:18px 0 8px; }
+    code { font-family:Consolas,"Courier New",monospace;font-size:.95rem; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.6em; }
+    .hinweis { margin:12px 0; }
+    .meldung { color:#b91c1c;font-size:.92rem;min-height:1.4em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Worum es geht: das Bild des Rechners, das Steuerwerk ist hervorgehoben */
+    .rechner { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0; }
+    .rechner .rahmen { grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:12px;border:2px dashed #94a3b8;border-radius:12px;padding:26px 12px 12px;position:relative; }
+    .rechner .rahmen::before { content:"Prozessor";position:absolute;top:4px;left:14px;font-size:.85rem;color:var(--muted);font-weight:600; }
+    .werk { background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:12px 14px; }
+    .werk .name { display:block;font-weight:700;font-size:1.05rem;color:var(--accent); }
+    .werk .aufgabe { display:block;color:var(--muted);font-size:.9rem; }
+    .werk.hier { border-color:#b45309;background:var(--aktiv-bg);box-shadow:0 0 0 3px var(--aktiv); }
+    .werk.hier .aufgabe { color:#111827; }
+
+    /* Programme mit Zeilennummern */
+    .zwei { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;align-items:start; }
+    .zwei > div { min-width:0; }
+    .progtitel { font-weight:700;color:var(--blau);margin:0 0 6px; }
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#94a3b8;border-left:4px solid transparent;white-space:pre;display:flex;gap:14px; }
+    .programm li .nr { width:1.6em;text-align:right;flex:none;color:#64748b; }
+    .programm li.fertig { color:#cbd5e1; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm li.aktuell .nr { color:#fff; }
+    pre.klein { margin:8px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+
+    /* Variablen als Kästen */
+    .speicher { background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0; }
+    .speicher h4 { margin:0 0 8px;font-size:.92rem;color:var(--muted);font-weight:600; }
+    .kaesten { display:flex;flex-wrap:wrap;gap:10px 18px; }
+    .kasten { display:flex;align-items:center;gap:8px; }
+    .kasten .etikett { font-family:Consolas,monospace;font-size:1.15rem;font-weight:700; }
+    .kasten .inhalt { min-width:3.4em;text-align:center;border:2px solid #1f2937;border-radius:8px;padding:6px 10px;font-family:Consolas,monospace;font-size:1.25rem;font-weight:700;background:#fff; }
+    .kasten .inhalt.leer { color:#9ca3af;border-style:dashed;font-size:.95rem;font-weight:400; }
+    .kasten .inhalt.neu { background:var(--aktiv-bg);border-color:#b45309;box-shadow:0 0 0 2px var(--aktiv); }
+    .kasten .steht { color:var(--blau);font-size:.88rem;font-weight:600; }
+    .rahmenU { border:2px solid var(--blau);border-radius:10px;padding:10px 12px;margin-top:12px;background:#eff6ff; }
+    .rahmenU.weg { border-style:dashed;border-color:#cbd5e1;background:none;color:var(--muted);font-size:.92rem; }
+    .rueck { display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line); }
+    .rueck .inhalt { min-width:3.4em;text-align:center;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;font-family:Consolas,monospace;font-size:1.25rem;font-weight:700;background:#dbeafe; }
+    .rueck .inhalt.leer { color:#9ca3af;border-style:dashed;border-color:#cbd5e1;background:#fff;font-size:.95rem;font-weight:400; }
+    .ausgabe { background:#0f172a;color:#e2e8f0;border-radius:8px;padding:8px 14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;min-height:2.4em;white-space:pre;margin-top:12px; }
+    .ausgabe .leer { color:#94a3b8;font-style:italic;font-family:"Segoe UI",sans-serif; }
+
+    /* Schritt 3: der Ausdruck wird Zeile für Zeile ausgewertet */
+    .kette { background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;font-family:Consolas,monospace;font-size:1.25rem;line-height:2; }
+    .kette div { white-space:nowrap;overflow-x:auto; }
+    .kette .alt { color:#9ca3af; }
+    .kette .ruf { background:var(--aktiv-bg);border:2px solid #b45309;border-radius:6px;padding:1px 6px; }
+    .kette .wert { background:#dbeafe;border:2px solid var(--blau);border-radius:6px;padding:1px 6px; }
+
+    /* Schritt 4: ein Aufruf je Zeile, eingerückt */
+    .aufrufe { background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;font-family:Consolas,monospace;font-size:1.1rem;min-height:3em;overflow-x:auto; }
+    .aufrufe div { padding:4px 10px;margin:4px 0;border-left:4px solid #cbd5e1;border-radius:4px;white-space:nowrap;width:max-content; }
+    .aufrufe div.wartet { color:var(--muted); }
+    .aufrufe div.aktuell { background:var(--aktiv-bg);border-left-color:#b45309;color:#111827;font-weight:700; }
+    .aufrufe div.fertig { border-left-color:var(--accent);color:#111827; }
+    .regel { font-family:Consolas,monospace;font-size:1.05rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:12px 0;overflow-x:auto;white-space:nowrap; }
+
+    @media (max-width:760px) { .rechner, .rechner .rahmen, .zwei { grid-template-columns:minmax(0,1fr); } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Unterprogramme und Funktionen</h1>
+    <p>Ein Unterprogramm ist ein Programmteil mit einem Namen, der von mehreren Stellen aus aufgerufen wird. Die Seite zeigt, wie der Aufruf abläuft, wie ein Unterprogramm seine Werte bekommt und wie eine Funktion einen Wert zurückliefert.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.6, Seiten 15–17.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Aufruf und Rücksprung</button>
+    <button type="button" class="tab" data-stufe="2">2 Parameter und eigene Variable</button>
+    <button type="button" class="tab" data-stufe="3">3 Funktion</button>
+    <button type="button" class="tab" data-stufe="4">4 Rekursion</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Manche Programmteile werden an mehreren Stellen eines Programms gebraucht und haben eine abgrenzbare Aufgabe. Ein solcher Teil bekommt einen Namen und steht nur einmal da. Das ist ein Unterprogramm. Die übrigen Stellen rufen es auf.</p>
+    <p>Im Kurstext werden dafür drei Gründe genannt:</p>
+    <ul>
+      <li><strong>Übersicht:</strong> Das Programm wird kürzer, und der Name sagt, was der Teil leistet.</li>
+      <li><strong>Weniger Fehler:</strong> Wer den Teil ändert, ändert ihn an einer Stelle. Bei mehreren Kopien müsste man jede Kopie ändern und dürfte keine vergessen.</li>
+      <li><strong>Wiederverwendung:</strong> Unterprogramme liegen auch in Bibliotheken bereit. Ein Programm bindet sie ein und spart Programmieraufwand.</li>
+    </ul>
+    <p>Der Aufruf eines Unterprogramms ändert, welche Anweisung als nächste an der Reihe ist. Im Bild des Rechners nach John von Neumann ist das die Aufgabe des Steuerwerks, wie bei Verzweigung und Schleife aus Abschnitt 2.1.</p>
+    <div class="rechner">
+      <div class="rahmen">
+        <div class="werk hier"><span class="name">Steuerwerk</span><span class="aufgabe">Abschnitt 2.6: Der Aufruf ist ein Sprung in das Unterprogramm. Am Ende folgt der Sprung zurück.</span></div>
+        <div class="werk"><span class="name">Rechenwerk</span><span class="aufgabe">Abschnitt 2.3: Welcher neue Wert entsteht?</span></div>
+      </div>
+      <div class="werk"><span class="name">Speicherwerk</span><span class="aufgabe">Abschnitt 2.2: Hier liegen die Variablen, auch die eigenen Variablen eines Unterprogramms.</span></div>
+      <div class="werk"><span class="name">Ein- und Ausgabe</span><span class="aufgabe">Tastatur und Bildschirm</span></div>
+    </div>
+    <p>Wie die vier Werke zusammenarbeiten, zeigt der <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>. Den Sprung und die Blöcke aus Abschnitt 2.1 zeigt die Seite <a href="go_k2_imperative_programmierung_interaktiv.html">Imperative Programmierung</a>.</p>
+    <p>Die Seite geht in vier Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt den Aufruf als Sprung und die Rücksprungadresse.</li>
+      <li><strong>Schritt 2</strong> zeigt Argument und Parameter und die eigene Variable eines Unterprogramms.</li>
+      <li><strong>Schritt 3</strong> zeigt die Funktion: ein Unterprogramm, das einen Wert zurückliefert.</li>
+      <li><strong>Schritt 4</strong> zeigt die Rekursion: ein Unterprogramm, das sich selbst aufruft.</li>
+    </ul>
+    <p>Kapitel 2 des Kurstexts kommt ohne Go aus. Die Programmzeilen auf dieser Seite gehören deshalb zu keiner bestimmten Programmiersprache. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts steht. <code>CALL</code> ruft ein Unterprogramm auf.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Aufruf und Rücksprung</h2>
+    <p>Das Unterprogramm <code>tausche</code> vertauscht die Werte der Variablen n und m. Es braucht dafür eine dritte Variable k. Das Hauptprogramm ruft es an zwei Stellen auf. Beide Programme stehen im Speicher, jede Anweisung hat dort eine Nummer.</p>
+    <p>Der Aufruf ist ein Sprung zur ersten Anweisung des Unterprogramms. Am Ende des Unterprogramms muss es mit der Anweisung weitergehen, die hinter dem Aufruf steht. Der Rechner merkt sich diese Stelle beim Aufruf. Sie heißt Rücksprungadresse.</p>
+    <div class="hinweis">Erst vorhersagen, dann ausführen: Das Unterprogramm endet beide Male mit derselben Anweisung 23. Woher weiß der Rechner, ob es danach bei Anweisung 4 oder bei Anweisung 6 weitergeht?</div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="1,1">nächste Anweisung ausführen</button>
+      <button type="button" data-lauf="1,-1">eine Anweisung zurück</button>
+      <button type="button" data-lauf="1,0">von vorn</button>
+      <span class="zaehler" id="zaehler1"></span>
+    </div>
+    <div class="zwei">
+      <div>
+        <p class="progtitel">Hauptprogramm</p>
+        <ol class="programm" id="haupt1"></ol>
+      </div>
+      <div>
+        <p class="progtitel">Unterprogramm tausche</p>
+        <ol class="programm" id="unter1"></ol>
+      </div>
+    </div>
+    <div class="speicher">
+      <h4>Variablen</h4>
+      <div class="kaesten" id="vars1"></div>
+      <div class="rueck"><span class="name">Gemerkte Rücksprungadresse</span><span class="inhalt" id="rueck1"></span></div>
+      <h4 style="margin-top:12px">Ausgabe</h4>
+      <div class="ausgabe" id="aus1"></div>
+    </div>
+    <div class="auskunft" id="erkl1"></div>
+    <p>In diesem Schritt benutzt das Unterprogramm die Variablen n, m und k des Hauptprogramms. Schritt 2 zeigt, warum das ungeschickt ist.</p>
+    <p class="quelle">Das Unterprogramm mit der dritten Variable k stammt aus dem Kurstext v3.0.6, Abschnitt 2.6, Seite 15. Die Nummern der Anweisungen und das Hauptprogramm sind eigene Zutaten.</p>
+
+    <h3>Zwei andere Wege zu vertauschen</h3>
+    <p>Im Kurstext stehen zwei weitere Fassungen, die ohne dritte Variable auskommen. Mit dem Thema Unterprogramm haben sie nichts zu tun. Sie greifen zwei späteren Themen vor:</p>
+    <ul>
+      <li><strong>Mit Minus und Plus:</strong> <code>n ← n − m; m ← n + m; n ← m − n</code>. Mit n = 5 und m = 3 entstehen nacheinander n = 2, m = 5, n = 3. Bei sehr großen Zahlen passt n − m nicht mehr in den Typ. Das ist der Überlauf aus Abschnitt 4.3.8, Seiten 78–84. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis, Schritt 3</a>.</li>
+      <li><strong>Mit XOR:</strong> <code>n ← n XOR m; m ← n XOR m; n ← n XOR m</code>. XOR vergleicht zwei Bitmuster Stelle für Stelle und liefert eine 1, wo die Bits verschieden sind. Mit n = 101 und m = 011 entstehen nacheinander n = 110, m = 101, n = 011. XOR wird in Abschnitt 4.3.7.2.1 behandelt, Seiten 72–74. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Parameter und eigene Variable</h2>
+    <p>Das Unterprogramm aus Schritt 1 hat zwei Schwächen. Dieser Schritt behebt beide.</p>
+    <ul>
+      <li><strong>Die Variable k:</strong> Das Hauptprogramm hat hier selbst eine Variable k mit dem Wert 100, den es später noch braucht. Das Unterprogramm aus Schritt 1 würde ihn überschreiben. Das Unterprogramm deklariert deshalb eine eigene Variable k. Sie ist nur im Unterprogramm bekannt und hat einen eigenen Speicherplatz.</li>
+      <li><strong>Die Variablen n und m:</strong> Das Unterprogramm aus Schritt 1 kann nur n und m vertauschen. Hier heißen seine zwei Variablen v₁ und v₂. Sie heißen Parameter. Der Aufruf nennt in Klammern, für welche Variablen sie stehen. Das sind die Argumente.</li>
+    </ul>
+    <div class="hinweis">Erst vorhersagen, dann ausführen: Welchen Wert hat die Variable k des Hauptprogramms, wenn Anweisung 8 sie ausgibt?</div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="2,1">nächste Anweisung ausführen</button>
+      <button type="button" data-lauf="2,-1">eine Anweisung zurück</button>
+      <button type="button" data-lauf="2,0">von vorn</button>
+      <span class="zaehler" id="zaehler2"></span>
+    </div>
+    <div class="zwei">
+      <div>
+        <p class="progtitel">Hauptprogramm</p>
+        <ol class="programm" id="haupt2"></ol>
+      </div>
+      <div>
+        <p class="progtitel">Unterprogramm tausche(v₁, v₂)</p>
+        <ol class="programm" id="unter2"></ol>
+      </div>
+    </div>
+    <div class="speicher">
+      <h4>Variablen des Hauptprogramms</h4>
+      <div class="kaesten" id="vars2"></div>
+      <div id="rahmen2"></div>
+      <div class="rueck"><span class="name">Gemerkte Rücksprungadresse</span><span class="inhalt" id="rueck2"></span></div>
+      <h4 style="margin-top:12px">Ausgabe</h4>
+      <div class="ausgabe" id="aus2"></div>
+    </div>
+    <div class="auskunft" id="erkl2"></div>
+    <p>In diesem Beispiel soll das Unterprogramm die Werte seiner Argumente ändern, denn es soll sie vertauschen. In anderen Fällen soll ein Unterprogramm die Werte nur verwenden und nicht verändern. Programmiersprachen kennen deshalb mehrere Arten, Werte zu übergeben.</p>
+    <p>So geht es in Go weiter:</p>
+    <ul>
+      <li><strong>Parameter und Argument:</strong> Sie werden in Abschnitt 3.4 an einem Go-Programm gezeigt, Seiten 37–41. Dazu gibt es das <a href="../kap3-einfuehrung/go_parameter_argument_quiz.html">Quiz: Parameter und Argument</a>.</li>
+      <li><strong>Übergabe der Werte:</strong> In Go bekommt ein Parameter eine Kopie des Arguments. Was das bedeutet, wird in Abschnitt 7.2 behandelt, Seiten 169–170. Dazu gibt es die Seite <a href="../kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html">Das Kopier-Problem</a>.</li>
+      <li><strong>Vertauschen in Go:</strong> Go vertauscht zwei Werte mit der Tupel-Zuweisung <code>n, m = m, n</code>. Sie steht in Abschnitt 5.3.2, Seiten 128–129. Dazu gibt es die Seite <a href="../kap5-anweisungen/130_go_k5_zuweisungen_veranschaulichung.html">Zuweisungen</a>.</li>
+    </ul>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.6, Seiten 15–16. Die Namen v₁ und v₂ stammen aus dem Kurstext. Die Variablen a und b, die Werte und die Nummern der Anweisungen sind eigene Zutaten.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Funktion</h2>
+    <p>Das Beispiel des Kurstexts ist ein Unterprogramm, das den Sinus einer Zahl berechnet. Ein Programm braucht den Wert 2 · sin(x) + 1. Dafür gibt es zwei Schreibweisen.</p>
+    <h3>Als Unterprogramm mit zwei Argumenten</h3>
+    <pre class="klein">CALL sinus(x, y)
+z ← 2 · y + 1</pre>
+    <ul>
+      <li><strong>x ist die Eingabe:</strong> Das Unterprogramm liest x und verändert es nicht.</li>
+      <li><strong>y ist die Ausgabe:</strong> Das Unterprogramm schreibt den berechneten Sinus in y.</li>
+      <li><strong>Der Preis:</strong> Das Programm braucht die Variable y und eine eigene Anweisung für den Aufruf.</li>
+    </ul>
+    <h3>Als Funktion in einem Ausdruck</h3>
+    <pre class="klein">z ← 2 · sin(x) + 1</pre>
+    <p>Ein Unterprogramm, das einen Wert zurückliefert, heißt Funktion. Der Aufruf steht in einem Ausdruck. Wird der Ausdruck ausgewertet, ruft der Rechner die Funktion mit dem Eingabewert auf. Der Rückgabewert tritt an die Stelle des Aufrufs. Er heißt auch Funktionswert.</p>
+    <div class="zeile">
+      <span class="name">x in Grad</span>
+      <button type="button" data-x="0">0</button>
+      <button type="button" data-x="30">30</button>
+      <button type="button" data-x="90">90</button>
+      <button type="button" data-x="270">270</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="3,1">nächster Schritt der Auswertung</button>
+      <button type="button" data-lauf="3,-1">einen Schritt zurück</button>
+      <button type="button" data-lauf="3,0">von vorn</button>
+      <span class="zaehler" id="zaehler3"></span>
+    </div>
+    <div class="kette" id="kette3"></div>
+    <div class="auskunft" id="erkl3"></div>
+    <p>Viele Programmiersprachen unterscheiden die zwei Wörter nicht. Auch Go nennt ein Unterprogramm ohne Rückgabewert eine Funktion.</p>
+    <p>So geht es in Go weiter:</p>
+    <ul>
+      <li><strong>Funktionen im Go-Programm:</strong> Abschnitt 3.4, Seiten 37–41, zeigt Deklaration, Aufruf und <code>return</code>. Dazu gibt es das <a href="../kap3-einfuehrung/go_funktionen_im_programm_quiz.html">Quiz: Funktionen im Go-Programm</a>.</li>
+      <li><strong>Mehr zu Funktionen:</strong> Abschnitt 7.1, Seiten 163–165.</li>
+    </ul>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.6, Seite 16. Der Ausdruck 2 · sin(x) + 1 und die Werte von x sind eigene Zutaten. Die Seite rechnet x in Grad, damit die Sinus-Werte glatt sind.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Rekursion</h2>
+    <p>Ein Unterprogramm kann sich selbst aufrufen. Das heißt Rekursion.</p>
+    <p>Rekursion passt gut, wenn schon die Daten rekursiv beschrieben sind. Das Beispiel des Kurstexts ist die Dezimaldarstellung einer natürlichen Zahl, also ihre Schreibweise mit den Ziffern 0 bis 9.</p>
+
+    <h3>Die Regel aus dem Kurstext</h3>
+    <div class="regel">d = 0 | 1 | 2 | … | 9 | 1d | 2d | … | 9d</div>
+    <p>Eine solche Regel heißt Grammatikregel. Sie legt fest, welche Zeichenfolgen eine Dezimaldarstellung sind. Mit Regeln dieser Art ist auch festgelegt, was ein gültiges Programm in Go ist.</p>
+
+    <h3>Wie man die Regel liest</h3>
+    <ul>
+      <li><strong>Das d links:</strong> Es ist der Name für das, was die Regel beschreibt. Hier steht d für „Dezimaldarstellung“.</li>
+      <li><strong>Das Zeichen =:</strong> Es bedeutet „ist aufgebaut als“. Gerechnet wird hier nicht.</li>
+      <li><strong>Der Strich |:</strong> Er bedeutet „oder“ und trennt die Möglichkeiten. Die Regel hat 19 Möglichkeiten: zehn einzelne Ziffern und neun Möglichkeiten mit d.</li>
+      <li><strong>Das d rechts:</strong> Es ist ein Platzhalter. An seiner Stelle steht irgendeine Dezimaldarstellung. Sie ist kürzer als die ganze Zeichenfolge und meist eine andere als links.</li>
+      <li><strong>1d, 2d bis 9d:</strong> Erst kommt die Ziffer, direkt dahinter eine Dezimaldarstellung. Eine Multiplikation ist das nicht.</li>
+    </ul>
+    <p>In Worten sagt die Regel zwei Dinge:</p>
+    <ul>
+      <li><strong>Erste Art:</strong> Eine einzelne Ziffer von 0 bis 9 ist eine Dezimaldarstellung.</li>
+      <li><strong>Zweite Art:</strong> Eine Ziffer von 1 bis 9, auf die eine Dezimaldarstellung folgt, ist wieder eine Dezimaldarstellung.</li>
+    </ul>
+    <p>Die Regel benutzt also das Wort, das sie erklärt. Das macht sie rekursiv.</p>
+
+    <h3>Die Regel anwenden: Ist 483 eine Dezimaldarstellung?</h3>
+    <p>Man prüft von links nach rechts und nimmt jedes Mal die erste Ziffer weg.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Zeichenfolge</th><th>Welche Möglichkeit der Regel passt</th><th>Was noch zu prüfen bleibt</th></tr></thead>
+      <tbody>
+        <tr><td><code>483</code></td><td>Es passt <code>4d</code>: die Ziffer 4, dahinter <code>83</code>.</td><td>Ist <code>83</code> eine Dezimaldarstellung?</td></tr>
+        <tr><td><code>83</code></td><td>Es passt <code>8d</code>: die Ziffer 8, dahinter <code>3</code>.</td><td>Ist <code>3</code> eine Dezimaldarstellung?</td></tr>
+        <tr><td><code>3</code></td><td>Es passt <code>3</code>: eine einzelne Ziffer.</td><td>Nichts mehr. Die Prüfung ist zu Ende.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>483 ist also eine Dezimaldarstellung. Die Prüfung hat dreimal dieselbe Regel benutzt, jedes Mal für eine kürzere Zeichenfolge.</p>
+    <p>Ein Gegenbeispiel ist <code>04</code>: Für eine einzelne Ziffer ist es zu lang, und <code>0d</code> steht nicht in der Regel. Führende Nullen schließt die Regel damit aus.</p>
+
+    <h3>Die Länge folgt derselben Regel</h3>
+    <p>Die Länge l(d) ist die Zahl der Ziffern. Sie lässt sich mit denselben zwei Arten beschreiben:</p>
+    <ul>
+      <li><strong>Einzelne Ziffer:</strong> Die Länge ist 1.</li>
+      <li><strong>Ziffer, gefolgt von der Dezimaldarstellung d′:</strong> Die Länge ist 1 + l(d′).</li>
+    </ul>
+    <p>Im zweiten Fall ruft die Funktion l sich selbst auf, mit der kürzeren Zeichenfolge d′.</p>
+
+    <h3>Ausprobieren</h3>
+    <p>Jeder Schritt startet einen Aufruf von l oder liefert einen Wert zurück.</p>
+    <div class="zeile">
+      <label for="ziffern">Ziffernfolge d</label><input id="ziffern" type="text" inputmode="numeric" maxlength="6">
+      <button type="button" id="nimm">übernehmen</button>
+      <span class="name">Beispiele</span>
+      <button type="button" data-d="48">48</button>
+      <button type="button" data-d="7">7</button>
+      <button type="button" data-d="1613">1613</button>
+    </div>
+    <div class="meldung" id="meldung4"></div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="4,1">nächster Schritt</button>
+      <button type="button" data-lauf="4,-1">einen Schritt zurück</button>
+      <button type="button" data-lauf="4,0">von vorn</button>
+      <span class="zaehler" id="zaehler4"></span>
+    </div>
+    <div class="aufrufe" id="aufrufe4"></div>
+    <div class="auskunft" id="erkl4"></div>
+    <p>Jeder Aufruf wartet, bis der Aufruf darunter seinen Wert geliefert hat. Der Rechner merkt sich deshalb für jeden wartenden Aufruf eine eigene Rücksprungadresse.</p>
+    <p>Bei der einzelnen Ziffer endet die Kette, denn dort ruft sich die Funktion nicht mehr auf.</p>
+    <p>In Go wird die Rekursion in Abschnitt 7.5 behandelt, ab Seite 185.</p>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.6, Seiten 16–17. Das Beispiel 48 stammt aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="0">Zum Anfang</button>
+  </div>
+  </section>
+
+  <a href="../index.html">← Zurück zur Startseite</a>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const z = v => String(v).replace('-', '−').replace('.', ',');
+
+  // ---------- Schritt 1 und Schritt 2: zwei Programme, ein Ablauf ----------
+  // Ein Ablauf ist eine Liste von Ständen. Jeder Stand gehört zu einer ausgeführten Anweisung:
+  // zeile, Variablen v, gemerkte Rücksprungadresse rueck, Ausgaben aus, geänderte Variablen neu, Erklärung text.
+  // In Schritt 2 kommt u dazu: die Parameter und die eigene Variable des Unterprogramms, solange es läuft.
+  const P = {
+    1: {
+      haupt: [[1, 'n ← 5'], [2, 'm ← 3'], [3, 'CALL tausche'], [4, 'Ausgabe n, m'], [5, 'CALL tausche'], [6, 'Ausgabe n, m'], [7, 'Ende']],
+      unter: [[20, 'k ← n'], [21, 'n ← m'], [22, 'm ← k'], [23, 'Rücksprung']],
+      namen: ['n', 'm', 'k'], vorab: 0
+    },
+    2: {
+      haupt: [[1, 'k ← 100'], [2, 'n ← 5'], [3, 'm ← 3'], [4, 'a ← 7'], [5, 'b ← 9'], [6, 'CALL tausche(n, m)'], [7, 'CALL tausche(a, b)'], [8, 'Ausgabe n, m, a, b, k'], [9, 'Ende']],
+      unter: [[20, 'Variable k'], [21, 'k ← v₁'], [22, 'v₁ ← v₂'], [23, 'v₂ ← k'], [24, 'Rücksprung']],
+      namen: ['k', 'n', 'm', 'a', 'b'], vorab: 5
+    }
+  };
+
+  function ablauf1() {
+    const T = [], v = { n: null, m: null, k: null }, aus = [];
+    let rueck = null;
+    const merke = (zeile, neu, text) => T.push({ zeile: zeile, v: Object.assign({}, v), rueck: rueck, aus: aus.slice(), neu: neu, text: text });
+    v.n = 5; merke(1, ['n'], 'Die Variable n bekommt den Wert 5.');
+    v.m = 3; merke(2, ['m'], 'Die Variable m bekommt den Wert 3.');
+    [4, 6].forEach((zurueck, i) => {
+      rueck = zurueck;
+      merke(zurueck - 1, [], 'Der Aufruf: Der Rechner merkt sich die Rücksprungadresse ' + zurueck + '. Das ist die Anweisung hinter dem Aufruf. Dann springt er zu Anweisung 20, der ersten Anweisung des Unterprogramms.');
+      v.k = v.n; merke(20, ['k'], 'k hebt den Wert von n auf: ' + v.k + '. Sonst ginge er in der nächsten Anweisung verloren.');
+      v.n = v.m; merke(21, ['n'], 'n bekommt den Wert von m: ' + v.n + '. Der alte Wert von n steht noch in k.');
+      v.m = v.k; merke(22, ['m'], 'm bekommt den aufgehobenen Wert aus k: ' + v.m + '. Die Werte von n und m sind vertauscht.');
+      merke(23, [], 'Das Unterprogramm ist zu Ende. Der Rechner liest die gemerkte Rücksprungadresse ' + zurueck + ' und springt dorthin zurück.' + (i ? ' Beim ersten Aufruf stand dort die 4.' : ''));
+      rueck = null; aus.push(v.n + ' ' + v.m);
+      merke(zurueck, [], 'Das Hauptprogramm läuft hinter dem Aufruf weiter und gibt n und m aus: ' + v.n + ' und ' + v.m + '.' + (i ? ' Zweimal vertauscht ergibt wieder die Werte vom Anfang.' : ''));
+    });
+    merke(7, [], 'Das Hauptprogramm ist zu Ende. Das Unterprogramm steht einmal im Speicher und ist zweimal gelaufen.');
+    return T;
+  }
+
+  function ablauf2() {
+    const T = [], v = { k: 100, n: 5, m: 3, a: 7, b: 9 }, aus = [];
+    let rueck = null, u = null;
+    const merke = (zeile, neu, text) => T.push({ zeile: zeile, v: Object.assign({}, v), rueck: rueck, aus: aus.slice(), neu: neu, text: text, u: u ? Object.assign({}, u) : null });
+    [['n', 'm', 6], ['a', 'b', 7]].forEach(q => {
+      const x = q[0], y = q[1], zeile = q[2];
+      rueck = zeile + 1; u = { v1: x, v2: y, k: undefined };
+      merke(zeile, [], 'Der Aufruf nennt die Argumente ' + x + ' und ' + y + '. Im Unterprogramm steht der Parameter v₁ jetzt für ' + x + ' und v₂ für ' + y + '. Der Rechner merkt sich die Rücksprungadresse ' + rueck + ' und springt zu Anweisung 20.');
+      u.k = null;
+      merke(20, ['u.k'], 'Das Unterprogramm deklariert eine eigene Variable k. Sie bekommt einen eigenen Speicherplatz. Die Variable k des Hauptprogramms behält den Wert 100.');
+      u.k = v[x];
+      merke(21, ['u.k'], 'v₁ steht für ' + x + '. Die eigene Variable k hebt den Wert von ' + x + ' auf: ' + u.k + '.');
+      v[x] = v[y];
+      merke(22, [x], 'v₁ steht für ' + x + ', v₂ steht für ' + y + '. Die Anweisung schreibt also in die Variable ' + x + ' des Hauptprogramms: ' + v[x] + '.');
+      v[y] = u.k;
+      merke(23, [y], 'v₂ steht für ' + y + '. Die Variable ' + y + ' des Hauptprogramms bekommt den aufgehobenen Wert ' + v[y] + '.');
+      merke(24, [], 'Das Unterprogramm ist zu Ende. Der Rechner springt zur gemerkten Rücksprungadresse ' + rueck + '. Die eigene Variable k und die Parameter gibt es danach nicht mehr.');
+      u = null; rueck = null;
+    });
+    aus.push(['n', 'm', 'a', 'b', 'k'].map(n => v[n]).join(' '));
+    merke(8, [], 'Die Ausgabe zeigt: n und m sind vertauscht, a und b sind vertauscht, und k hat weiter den Wert 100. Dasselbe Unterprogramm hat zwei verschiedene Paare von Variablen vertauscht.');
+    merke(9, [], 'Das Hauptprogramm ist zu Ende.');
+    return T;
+  }
+  const ABLAUF = { 1: ablauf1(), 2: ablauf2() };
+  const POS = { 1: 0, 2: 0, 3: 0, 4: 0 };                              // Zahl der ausgeführten Schritte je Reiter
+
+  const kasten = (name, wert, neu, zusatz) => '<span class="kasten"><span class="etikett">' + name + '</span>' + (zusatz ? '<span class="steht">' + zusatz + '</span>' : '') +
+    '<span class="inhalt' + (wert === null || wert === undefined ? ' leer' : '') + (neu ? ' neu' : '') + '">' + (wert === null || wert === undefined ? 'kein Wert' : wert) + '</span></span>';
+
+  function zeigeAblauf(nr) {
+    const p = P[nr], T = ABLAUF[nr], k = POS[nr], S = k ? T[k - 1] : null;
+    const gelaufen = T.slice(0, k).map(s => s.zeile);
+    const liste = zeilen => zeilen.map((q, i) => {
+      const vorab = nr === 2 && q[0] <= p.vorab;
+      const klasse = S && S.zeile === q[0] ? 'aktuell' : vorab || gelaufen.indexOf(q[0]) >= 0 ? 'fertig' : '';
+      return '<li class="' + klasse + '"><span class="nr">' + q[0] + '</span><span>' + esc(q[1]) + '</span></li>';
+    }).join('');
+    el('haupt' + nr).innerHTML = liste(p.haupt);
+    el('unter' + nr).innerHTML = liste(p.unter);
+    const v = S ? S.v : (nr === 2 ? T[0].v : { n: null, m: null, k: null });
+    el('vars' + nr).innerHTML = p.namen.map(n => kasten(n, v[n], S && S.neu.indexOf(n) >= 0)).join('');
+    if (nr === 2) {
+      const u = S && S.u;
+      el('rahmen2').innerHTML = u
+        ? '<div class="rahmenU"><h4>Unterprogramm tausche läuft</h4><div class="kaesten">' +
+          kasten('v₁', v[u.v1], S.neu.indexOf(u.v1) >= 0, 'steht für ' + u.v1) + kasten('v₂', v[u.v2], S.neu.indexOf(u.v2) >= 0, 'steht für ' + u.v2) +
+          (u.k === undefined ? '' : kasten('k', u.k, S.neu.indexOf('u.k') >= 0, 'eigene Variable')) + '</div></div>'
+        : '<div class="rahmenU weg">Das Unterprogramm läuft gerade nicht. Seine Parameter und seine eigene Variable k gibt es jetzt nicht.</div>';
+    }
+    const r = el('rueck' + nr);
+    r.textContent = S && S.rueck !== null ? S.rueck : 'leer';
+    r.classList.toggle('leer', !(S && S.rueck !== null));
+    el('aus' + nr).innerHTML = S && S.aus.length ? esc(S.aus.join('\n')) : '<span class="leer">Das Programm hat noch nichts ausgegeben.</span>';
+    el('erkl' + nr).textContent = S ? 'Anweisung ' + S.zeile + ': ' + S.text
+      : nr === 1 ? 'Noch ist keine Anweisung ausgeführt. Die Variablen haben noch keinen Wert.'
+                 : 'Die Anweisungen 1 bis 5 sind schon ausgeführt: Die fünf Variablen des Hauptprogramms haben ihre Werte. Als nächste ist Anweisung 6 an der Reihe.';
+    el('zaehler' + nr).textContent = 'Schritt ' + k + ' von ' + T.length + ' des Ablaufs';
+    knoepfe(nr, k, T.length);
+  }
+  function knoepfe(nr, k, ende) {
+    document.querySelectorAll('[data-lauf^="' + nr + ',"]').forEach(b => {
+      b.disabled = Number(b.dataset.lauf.split(',')[1]) > 0 ? k >= ende : k === 0;
+    });
+  }
+
+  // ---------- Schritt 3: der Ausdruck 2 · sin(x) + 1 ----------
+  const SINUS = { 0: 0, 30: 0.5, 90: 1, 270: -1 };
+  let x = 30;
+  const kl = w => w < 0 ? '(' + z(w) + ')' : z(w);                     // negative Zahl im Ausdruck in Klammern
+  function zeigeFunktion() {
+    const k = POS[3], s = SINUS[x], produkt = 2 * s, wert = produkt + 1;
+    const reihen = [
+      'z ← 2 · sin(x) + 1',
+      'z ← 2 · <span class="ruf">sin(' + x + ')</span> + 1',
+      'z ← 2 · <span class="wert">' + kl(s) + '</span> + 1',
+      'z ← <span class="wert">' + z(wert) + '</span>'
+    ];
+    const texte = [
+      'Die Variable x hat den Wert ' + x + '. Der Ausdruck rechts vom Pfeil ist noch nicht ausgewertet.',
+      'Der Rechner braucht den Wert von sin(x). Er setzt für x den Wert ' + x + ' ein und ruft die Funktion sin mit diesem Eingabewert auf. Die Rücksprungadresse führt mitten in den Ausdruck zurück.',
+      'Die Funktion liefert den Rückgabewert ' + z(s) + '. Er tritt an die Stelle des Aufrufs. Die Variable x ist unverändert.',
+      'Der Rechner rechnet den Ausdruck zu Ende: 2 · ' + kl(s) + ' = ' + z(produkt) + ', und ' + z(produkt) + ' + 1 = ' + z(wert) + '.',
+      'Die Zuweisung schreibt das Ergebnis in die Variable z. z hat jetzt den Wert ' + z(wert) + '.'
+    ];
+    el('kette3').innerHTML = reihen.slice(0, Math.min(k, 3) + 1).map((r, i, alle) => '<div class="' + (i < alle.length - 1 ? 'alt' : '') + '">' + r + '</div>').join('') +
+      (k === 4 ? '<div>z = <span class="wert">' + z(wert) + '</span></div>' : '');
+    el('erkl3').textContent = texte[k];
+    el('zaehler3').textContent = 'Schritt ' + k + ' von 4 der Auswertung, x = ' + x;
+    document.querySelectorAll('[data-x]').forEach(b => b.classList.toggle('gewaehlt', Number(b.dataset.x) === x));
+    knoepfe(3, k, 4);
+  }
+
+  // ---------- Schritt 4: die Länge einer Dezimaldarstellung ----------
+  let d = '48';
+  const endePos = () => 2 * d.length - 1;                              // L Aufrufe, L − 1 Rückgaben an einen wartenden Aufruf
+  function zeigeRekursion() {
+    const L = d.length, k = POS[4], offen = Math.min(k, L), zurueck = Math.max(0, k - L);
+    const fertigAb = k >= L ? L - 1 - zurueck : L;                     // ab dieser Zeile steht das Ergebnis fest
+    const aktuell = k === 0 ? -1 : k <= L ? k - 1 : L - 1 - zurueck;
+    let h = '';
+    for (let i = 0; i < offen; i++) {
+      const s = d.slice(i), rest = d.slice(i + 1), wert = L - i;
+      let t;
+      if (i === L - 1) t = 'l(' + s + ') = 1';
+      else if (i >= fertigAb) t = 'l(' + s + ') = 1 + l(' + rest + ') = 1 + ' + (wert - 1) + ' = ' + wert;
+      else t = 'l(' + s + ') = 1 + l(' + rest + ')';
+      h += '<div class="' + (i === aktuell ? 'aktuell' : i >= fertigAb ? 'fertig' : 'wartet') + '" style="margin-left:' + (i * 26) + 'px">' + t + '</div>';
+    }
+    el('aufrufe4').innerHTML = h || '<span style="font-family:\'Segoe UI\',sans-serif;color:#4b5563;font-size:.95rem">Noch ist kein Aufruf gestartet.</span>';
+    let text;
+    if (k === 0) text = 'Gesucht ist die Länge l(' + d + '). Der nächste Schritt startet den ersten Aufruf.';
+    else if (k < L) {
+      const s = d.slice(k - 1);
+      text = 'Aufruf l(' + s + '): ' + s + ' ist die Ziffer ' + s[0] + ', gefolgt von ' + s.slice(1) + '. Die Länge ist 1 + l(' + s.slice(1) + '). Die Funktion ruft sich selbst mit ' + s.slice(1) + ' auf und wartet auf den Wert.';
+    } else if (k === L) {
+      text = 'Aufruf l(' + d.slice(L - 1) + '): ' + d.slice(L - 1) + ' ist eine einzelne Ziffer. Die Länge ist 1. Hier ruft sich die Funktion nicht mehr auf.' + (L === 1 ? ' Das ist schon das Ergebnis.' : '');
+    } else {
+      const i = L - 1 - zurueck, wert = L - i;
+      text = 'Der Aufruf l(' + d.slice(i + 1) + ') liefert ' + (wert - 1) + ' zurück. Der wartende Aufruf l(' + d.slice(i) + ') rechnet 1 + ' + (wert - 1) + ' = ' + wert + '.' +
+        (i === 0 ? ' Das ist das Ergebnis: Die Dezimaldarstellung ' + d + ' hat die Länge ' + L + '.' : ' Er liefert diesen Wert an den Aufruf darüber.');
+    }
+    el('erkl4').textContent = text;
+    el('zaehler4').textContent = 'Schritt ' + k + ' von ' + endePos() + ', d = ' + d;
+    knoepfe(4, k, endePos());
+  }
+  function nimmZiffern(text) {
+    const t = text.trim();
+    if (!/^[1-9]{0,5}[0-9]$/.test(t)) {                               // nach der Regel folgt nur auf eine Ziffer von 1 bis 9 noch etwas
+      el('meldung4').textContent = 'Erlaubt sind 1 bis 6 Ziffern. Nach der Regel oben darf nur die letzte Ziffer eine 0 sein.';
+      return;
+    }
+    el('meldung4').textContent = '';
+    d = t; POS[4] = 0;
+    el('ziffern').value = d;
+    zeigeRekursion();
+    melde(false);
+  }
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#funktion
+  const ANKER = ['worum', 'aufruf', 'parameter', 'funktion', 'rekursion'];
+  let stufe = 0;
+  let angemeldet = false;                                              // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);                                       // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Bedienung ----------
+  const ZEIGE = { 1: () => zeigeAblauf(1), 2: () => zeigeAblauf(2), 3: zeigeFunktion, 4: zeigeRekursion };
+  const ENDE = { 1: () => ABLAUF[1].length, 2: () => ABLAUF[2].length, 3: () => 4, 4: endePos };
+  document.addEventListener('click', ev => {
+    const t = ev.target;
+    let k;
+    if ((k = t.closest('[data-stufe], [data-gehe]'))) {
+      zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+    } else if ((k = t.closest('[data-lauf]'))) {
+      const q = k.dataset.lauf.split(','), nr = Number(q[0]), schritt = Number(q[1]);
+      POS[nr] = schritt === 0 ? 0 : Math.max(0, Math.min(ENDE[nr](), POS[nr] + schritt));
+      ZEIGE[nr]();
+      melde(false);
+    } else if ((k = t.closest('[data-x]'))) {
+      x = Number(k.dataset.x); POS[3] = 0;
+      zeigeFunktion();
+      melde(false);
+    } else if ((k = t.closest('[data-d]'))) {
+      nimmZiffern(k.dataset.d);
+    } else if (t.id === 'nimm') {
+      nimmZiffern(el('ziffern').value);
+    }
+  });
+  el('ziffern').addEventListener('keydown', ev => { if (ev.key === 'Enter') nimmZiffern(el('ziffern').value); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Aufruf und Rücksprung', 'Schritt 2: Parameter und eigene Variable', 'Schritt 3: Funktion', 'Schritt 4: Rekursion'];
+  const wertSatz = (namen, v) => namen.map(n => n + ' = ' + (v[n] === null ? 'kein Wert' : v[n])).join(', ');
+
+  // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
+  function standSaetze() {
+    if (stufe === 1 || stufe === 2) {
+      const p = P[stufe], T = ABLAUF[stufe], k = POS[stufe], S = k ? T[k - 1] : null, t = [];
+      if (!S) {
+        return stufe === 1 ? ['Noch ist keine Anweisung ausgeführt. Die Variablen n, m und k haben keinen Wert. Es ist keine Rücksprungadresse gemerkt.']
+          : ['Der Ablauf steht am Anfang. Die Anweisungen 1 bis 5 sind schon ausgeführt. Variablen des Hauptprogramms: ' + wertSatz(p.namen, T[0].v) + '. Das Unterprogramm läuft nicht. Es ist keine Rücksprungadresse gemerkt. Als nächste ist Anweisung 6 an der Reihe.'];
+      }
+      const code = p.haupt.concat(p.unter).find(q => q[0] === S.zeile)[1];
+      t.push('Schritt ' + k + ' von ' + T.length + ' des Ablaufs. Zuletzt ausgeführt und hell markiert ist Anweisung ' + S.zeile + ': ' + code);
+      t.push((stufe === 2 ? 'Variablen des Hauptprogramms: ' : 'Variablen: ') + wertSatz(p.namen, S.v) + '.');
+      if (stufe === 2) {
+        t.push(S.u ? 'Das Unterprogramm läuft. Der Parameter v₁ steht für ' + S.u.v1 + ', der Parameter v₂ steht für ' + S.u.v2 + '. ' +
+          (S.u.k === undefined ? 'Die eigene Variable k ist noch nicht deklariert.' : 'Die eigene Variable k des Unterprogramms hat ' + (S.u.k === null ? 'noch keinen Wert' : 'den Wert ' + S.u.k) + '.')
+          : 'Das Unterprogramm läuft nicht. Seine Parameter und seine eigene Variable k gibt es gerade nicht.');
+      }
+      t.push(S.neu.length ? 'Gelb markiert, von dieser Anweisung geändert: ' + S.neu.map(n => n === 'u.k' ? 'die eigene Variable k des Unterprogramms' : n).join(', ') + '.' : 'Diese Anweisung hat keine Variable geändert.');
+      t.push(S.rueck === null ? 'Es ist keine Rücksprungadresse gemerkt.' : 'Gemerkte Rücksprungadresse: ' + S.rueck + '.');
+      t.push(S.aus.length ? 'Bisherige Ausgabe, je Zeile eine Ausgabe: ' + S.aus.join(' | ') : 'Das Programm hat noch nichts ausgegeben.');
+      return t;
+    }
+    if (stufe === 3) {
+      const s = SINUS[x], k = POS[3];
+      return ['x hat den Wert ' + x + ', gemeint sind Grad. sin(' + x + ') ist ' + z(s) + '. Der Ausdruck 2 · sin(x) + 1 hat den Wert ' + z(2 * s + 1) + '.',
+        'Schritt ' + k + ' von 4 der Auswertung. ' + ['Der Ausdruck ist noch nicht ausgewertet.', 'Die Funktion sin ist mit dem Eingabewert ' + x + ' aufgerufen, der Aufruf ist gelb umrandet.', 'Der Rückgabewert ' + z(s) + ' steht blau umrandet an der Stelle des Aufrufs.', 'Der Ausdruck ist zu Ende gerechnet.', 'Die Zuweisung ist ausgeführt, z hat den Wert ' + z(2 * s + 1) + '.'][k]];
+    }
+    if (stufe === 4) {
+      const L = d.length, k = POS[4];
+      return ['Die Ziffernfolge d ist ' + d + '. Sie hat die Länge ' + L + '.',
+        'Schritt ' + k + ' von ' + endePos() + '. ' + (k === 0 ? 'Noch ist kein Aufruf gestartet.' : 'Gestartet sind ' + Math.min(k, L) + ' von ' + L + ' Aufrufen. ' + (k < L ? 'Alle gestarteten Aufrufe warten.' : 'Ihr Ergebnis haben schon: ' + (k - L + 1) + ' Aufrufe, von unten gezählt.')),
+        'Unter den Aufrufen steht: ' + el('erkl4').textContent];
+    }
+    return ['Dieser Schritt hat keine Demo. Zu sehen sind Text und das Bild der vier Werke des Rechners.'];
+  }
+  // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
+  function kurz() {
+    if (stufe === 1 || stufe === 2) return 'Schritt ' + POS[stufe] + ' von ' + ABLAUF[stufe].length + ' des Ablaufs';
+    if (stufe === 3) return 'x = ' + x + ', Schritt ' + POS[3] + ' von 4 der Auswertung';
+    if (stufe === 4) return 'd = ' + d + ', Schritt ' + POS[4] + ' von ' + endePos();
+    return '';
+  }
+  // Die Programmzeilen mit ihren Nummern
+  function zeilen() {
+    if (stufe === 1 || stufe === 2) {
+      const p = P[stufe], reihe = q => String(q[0]).padStart(3) + '  ' + q[1];
+      return ['Hauptprogramm:'].concat(p.haupt.map(reihe), [stufe === 2 ? 'Unterprogramm tausche(v₁, v₂):' : 'Unterprogramm tausche:'], p.unter.map(reihe));
+    }
+    return Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(q => q.textContent.split('\n')).map(t => t.trimEnd()).filter(Boolean);
+  }
+
+  zeigeAblauf(1); zeigeAblauf(2); zeigeFunktion();
+  el('ziffern').value = d; zeigeRekursion();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern',
+    thema: 'Unterprogramme und Funktionen',
+    bezug: 'Kurstext v3.0.6, Abschnitt 2.6, Seiten 15–17',
+    beschreibung: '../kurslotse/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    stand: standSaetze,
+    kurz: kurz,
+    zeilen: zeilen,
+    zeilenTitel: 'Programmzeilen des sichtbaren Schritts mit ihren Nummern. Sie gehören zu keiner bestimmten Programmiersprache:',
+    text: '.card > p:not(.quelle), .card > ul, .hinweis, .auskunft, .regel, table.text',
+    beispiel: 'Woher weiß der Rechner, wohin er zurückspringen muss?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
