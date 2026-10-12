@@ -152,6 +152,7 @@
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -162,10 +163,19 @@
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#ablauf
   var ANKER = ["worum", "ablauf", "werke"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
   function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
     Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
     if (nachOben) {
       history.replaceState(null, "", "#" + ANKER[nummer]);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -188,7 +198,10 @@
       "<p>Im Kurstext: Die Funktion " + c("fmt.Printf") + " gibt Werte aus und legt mit einem Formatverb fest, wie sie auf dem Bildschirm erscheinen. Das steht in Abschnitt 4.2, Seiten 53–58.</p>"
   };
 
+  var gewaehlt = null;
+
   function zeigeWerk(werk) {
+    gewaehlt = werk;
     Array.prototype.forEach.call(document.querySelectorAll("button.werk"), function (b) { b.classList.toggle("gewaehlt", b.dataset.werk === werk); });
     $("auskunft").innerHTML = werk ? WERKE[werk] : "<p>Noch ist kein Werk gewählt.</p>";
   }
@@ -241,17 +254,64 @@
   document.addEventListener("click", function (ev) {
     var k = ev.target.closest("[data-stufe], [data-gehe], [data-werk]");
     if (!k) return;
-    if (k.dataset.werk !== undefined) { zeigeWerk(k.dataset.werk); return; }
+    if (k.dataset.werk !== undefined) { zeigeWerk(k.dataset.werk); melde(false); return; }
     zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
   });
   window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
-  $("weiter").addEventListener("click", function () { if (schritt < ABLAUF.length - 1) { schritt++; zeigeAblauf(); } });
-  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeAblauf(); } });
-  $("vorn").addEventListener("click", function () { schritt = 0; zeigeAblauf(); });
+  $("weiter").addEventListener("click", function () { if (schritt < ABLAUF.length - 1) { schritt++; zeigeAblauf(); melde(false); } });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeAblauf(); melde(false); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeAblauf(); melde(false); });
 
   zeigeWerk(null);
   zeigeAblauf();
   zeigeStufe(stufeAusAdresse(), false);
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Eine Anweisung läuft durch den Rechner", "Schritt 2: Die vier Werke"];
+  var NAMEN = { steuer: "Steuerwerk", rechen: "Rechenwerk", speicher: "Speicherwerk", ea: "Ein- und Ausgabe" };
+  var PROGRAMM = ["a = a + 4", "fmt.Println(a)"];
+  var LETZTER = ABLAUF.length - 1;
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 2) return [gewaehlt ? "Gewählt und gelb unterlegt ist das Werk: " + NAMEN[gewaehlt] + "." : "Noch ist kein Werk gewählt."];
+    var s = ABLAUF[schritt];
+    return [
+      schritt === 0 ? "Der Ablauf steht am Anfang. Noch ist keiner der " + LETZTER + " Schritte ausgeführt." : "Zu sehen ist Schritt " + schritt + " von " + LETZTER + " des Ablaufs.",
+      s.zeile < 0 ? "Im Programm ist keine Anweisung markiert." : "Im Programm ist Anweisung " + (s.zeile + 1) + " markiert: " + PROGRAMM[s.zeile] + ".",
+      s.aktiv.length ? "Gelb unterlegt: " + s.aktiv.map(function (w) { return NAMEN[w]; }).join(" und ") + "." : "Kein Werk ist gelb unterlegt.",
+      s.steuer ? "Im Steuerwerk steht: " + s.steuer.split("\n").join(", darunter ") + "." : "Das Steuerwerk zeigt noch keine Anweisung.",
+      s.rechen ? "Im Rechenwerk steht: " + s.rechen.trim().split("\n").join(", darunter ") + "." : "Das Rechenwerk zeigt nichts.",
+      "Im Speicherwerk steht für a das Bitmuster " + s.wert + ". Als int8 gelesen ist das " + parseInt(s.wert, 2) + ".",
+      s.ausgabe ? "Auf dem Bildschirm steht: " + s.ausgabe + "." : "Auf dem Bildschirm steht noch nichts.",
+      s.leitung ? "Im Balken der Leitungen steht: " + s.leitung : "Auf den Leitungen ist nichts unterwegs."
+    ];
+  }
+  function kurz() {
+    if (stufe === 0) return "";
+    if (stufe === 2) return gewaehlt ? "gewählt: " + NAMEN[gewaehlt] : "kein Werk gewählt";
+    return (schritt === 0 ? "Anfang des Ablaufs" : "Schritt " + schritt + " von " + LETZTER + " des Ablaufs") + ", a = " + parseInt(ABLAUF[schritt].wert, 2);
+  }
+
+  Kurslotse.einrichten({
+    titel: "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    thema: "Rechner nach von Neumann: Steuerwerk, Rechenwerk, Speicherwerk, Ein- und Ausgabe",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitt 2.3, Seiten 10–11",
+    beschreibung: "../kurslotse/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p:not(.quelle), .card > ul, table, .werk, .leitung, .auskunft, .hinweis",
+    zeilen: function () {
+      return stufe === 1 ? PROGRAMM.map(function (z, i) { return (i + 1) + "  " + z; }) : [];
+    },
+    zeilenTitel: "Die zwei Anweisungen des sichtbaren Schritts, in Go. Vor jeder Anweisung steht ihre Nummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum bekommt das Rechenwerk nur eine Kopie von a?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
