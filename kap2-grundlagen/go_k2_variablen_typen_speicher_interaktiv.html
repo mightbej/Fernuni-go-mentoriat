@@ -96,7 +96,7 @@
   <div class="hero">
     <h1>Variablen, Typen und Speicher</h1>
     <p>Eine Variable im Programm ist ein Stück Speicher mit einem Namen und einem Typ. Die Seite zeigt, wie sich eine solche Variable von einer Variable der Mathematik unterscheidet und was der Rechner für sie bereithält.</p>
-    <p>Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitt 2.4, Seiten 11–12.</p>
   </div>
 
   <div class="tabs">
@@ -128,9 +128,9 @@
     <p>Die Seite geht in vier Schritten vor:</p>
     <ul>
       <li><strong>Schritt 1</strong> stellt die Variable der Mathematik neben die Variable im Programm.</li>
-      <li><strong>Schritt 2</strong> klärt vier Begriffe an einer Programmzeile: Typ, Operator, Konstante und Literal.</li>
+      <li><strong>Schritt 2</strong> klärt vier Begriffe an einer Programmzeile: Typ, Operator, Konstante und Literal. Dazu kommt aus Abschnitt 2.4 die Konversion.</li>
       <li><strong>Schritt 3</strong> zeigt, wie aus einfachen Typen zusammengesetzte Typen entstehen: der Vektor und der Datenverbund.</li>
-      <li><strong>Schritt 4</strong> zeigt die Variable als Speicherplatz aus acht Speicherelementen.</li>
+      <li><strong>Schritt 4</strong> zeigt die Variable als Speicherplatz aus acht Speicherelementen. Dazu kommt aus Abschnitt 2.4 die Deklaration.</li>
     </ul>
     <p>Kapitel 2 des Kurstexts kommt ohne Go aus. Die Programmzeilen auf dieser Seite gehören deshalb zu keiner bestimmten Programmiersprache. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts steht.</p>
   </div>
@@ -217,13 +217,23 @@
     </table>
     </div>
     <p>Eine Zeichenkette lässt sich nicht multiplizieren, und zwei ganze Zahlen lassen sich nicht aneinanderhängen. Welche Operation erlaubt ist, hängt also am Typ.</p>
+    <h3>Zwei Typen in einer Rechnung: die Konversion</h3>
+    <p>In einer Rechnung können zwei Typen aufeinandertreffen. Beispiel: Die Variable <code>n</code> hat den Typ ganze Zahl und den Wert 17. Die Variable <code>y</code> hat den Typ Gleitkommazahl und den Wert 0,5. Das Programm soll <code>n + y</code> ausrechnen.</p>
+    <p>Die Addition gibt es für ganze Zahlen und für Gleitkommazahlen, aber jeweils nur für zwei Werte desselben Typs. Der Wert von <code>n</code> wird deshalb erst in den anderen Typ überführt: Aus der ganzen Zahl 17 wird die Gleitkommazahl 17,0. Danach ergibt die Addition 17,5. Die Variable <code>n</code> selbst behält ihren Typ und ihren Wert.</p>
+    <p>Das Überführen eines Werts in einen anderen Typ heißt Konversion.</p>
+    <p>Wer die Konversion vornimmt, hängt von der Programmiersprache ab:</p>
+    <ul>
+      <li><strong>Implizit:</strong> In manchen Sprachen nimmt der Rechner die Konversion von selbst vor, ohne dass sie im Programm steht. Die Programme werden kurz, enthalten aber leicht versteckte Fehler.</li>
+      <li><strong>Explizit:</strong> In einer streng typisierten Sprache schreibt der Programmierer die Konversion ins Programm. Go ist eine streng typisierte Sprache.</li>
+    </ul>
     <p>So geht es in Go weiter:</p>
     <ul>
       <li><strong>Literale:</strong> Wie Go Zahlen als Literale schreibt, steht in Abschnitt 4.3.1, Seiten 59–61.</li>
       <li><strong>Konstanten:</strong> Die Deklaration einer Konstante steht in Abschnitt 5.2, Seiten 124–125. Dazu gibt es die Seite <a href="../kap5-anweisungen/127_go_k5_konstanten_veranschaulichung.html">Konstanten</a>.</li>
       <li><strong>Konkatenation:</strong> Go hängt zwei Zeichenketten mit dem Operator <code>+</code> aneinander. Das steht in Abschnitt 4.6.2.2, Seite 107.</li>
+      <li><strong>Konversion:</strong> In Go heißt sie Typkonvertierung. Go schreibt den Namen des Typs vor den Wert und setzt den Wert in runde Klammern, zum Beispiel <code>float64(n)</code>. Das steht in Abschnitt 4.7, Seiten 109–111. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9, und Abschnitt 2.4, Seiten 11–12.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -301,13 +311,22 @@
       <li><strong>Lesen:</strong> Dieselbe Folge aus 0 und 1 bedeutet je nach Typ etwas anderes. Der Typ sagt, wie die Folge zu lesen ist.</li>
     </ul>
     <div class="hinweis">Bei einem einfachen Typ steht fest, wie viele Speicherelemente eine Variable belegt. Hier sind es acht. Andere Typen belegen 16, 32 oder 64.</div>
+    <h3>Die Deklaration</h3>
+    <p>Bevor ein Programm eine Variable benutzt, deklariert es sie. Die Deklaration legt fest:</p>
+    <ul>
+      <li><strong>Name:</strong> Die Variable bekommt einen Namen. Jeden Namen gibt es nur einmal.</li>
+      <li><strong>Typ:</strong> Die Deklaration nennt den Typ der Variable. Aus dem Typ ergibt sich, wie viele Speicherelemente die Variable braucht.</li>
+      <li><strong>Speicherplatz:</strong> Der Rechner stellt diese Speicherelemente bereit. Das Fachwort dafür ist „allokieren“. Über den Namen spricht das Programm den Speicherplatz an.</li>
+      <li><strong>Anfangswert:</strong> Oft bekommt die Variable gleich einen ersten Wert. Fehlt er, stehen in den Speicherelementen noch die Werte aus ihrer vorherigen Nutzung. Die Variable heißt dann undefiniert. Für diesen Zustand stehen in der Demo die Fragezeichen.</li>
+    </ul>
     <p>So geht es weiter:</p>
     <ul>
+      <li><strong>Deklaration:</strong> Wie Go eine Variable deklariert, steht in Abschnitt 5.1, Seiten 113–123. In Go bekommt jede Variable bei der Deklaration einen Wert. Dazu gibt es die Seite <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration</a>.</li>
       <li><strong>Rechnen:</strong> Der <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a> schickt eine Zuweisung durch alle vier Werke. Das gehört zu Abschnitt 2.3.</li>
       <li><strong>Zellen und Adressen:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wo eine Variable in Go im Speicher liegt und wie viele Speicherelemente die Typen von Go belegen.</li>
       <li><strong>Bitmuster und Zahl:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#bitmuster">Zahlenkreis</a> zeigt, wie aus einem Bitmuster eine ganze Zahl wird, auch eine negative.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 9–10.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 9–10, und Abschnitt 2.4, Seite 12.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -568,13 +587,13 @@
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: "Variablen, Typen und Speicher: was eine Variable im Programm ist",
-    thema: "Variable, Typ, Operator, Konstante, Literal, zusammengesetzter Typ und Speicherplatz",
-    bezug: "Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10",
+    thema: "Variable, Typ, Operator, Konstante, Literal, Konversion, zusammengesetzter Typ, Speicherplatz und Deklaration",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitt 2.4, Seiten 11–12",
     beschreibung: "../kurslotse/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.md",
     reiter: function () { return ANKER[stufe]; },
     schritt: function () { return SCHRITTE[stufe]; },
     sichtbar: function () { return $("stufe-" + stufe); },
-    text: ".card > p:not(.quelle), .card > ul, .zwei ul, table, .auskunft, .hinweis",
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .zwei ul, table, .auskunft, .hinweis",
     zeilen: function () {
       if (stufe === 1) return PROGRAMM.map(function (z, i) { return (i + 1) + "  " + z; });
       if (stufe === 2) return ["1  PI ist die Konstante 3,14159265359", "2  flaeche ← PI · r · r"];
