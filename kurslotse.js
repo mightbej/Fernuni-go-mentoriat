@@ -33,6 +33,8 @@
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   let seite = null;
   let verlauf = [];
+  let standZuletzt = null;   // der Stand der Demo bei der letzten Frage, als ein Text
+  let abHier = 0;            // ab dieser Nachricht gehört der Dialog zum jetzigen Stand der Demo
   let lauf = 0;                                    // zählt die Dialoge: eine Antwort auf einen geleerten Dialog verfällt
   const beschreibung = { seite: '', schritte: {} };
 
@@ -203,7 +205,12 @@
   async function frage() {
     const feld = el('lotseText'), text = feld.value.trim();
     if (!text || el('lotseSenden').disabled) return;
+    const jetzt = seite.stand().join('\n');
     const k = kontext(), meiner = lauf;
+    // Hat der Student die Demo seit der letzten Frage verändert, gehen die früheren Fragen und Antworten nicht mehr mit.
+    // Sonst antwortet das Sprachmodell zum Stand, von dem sie handeln. Auf dem Bildschirm bleiben sie stehen.
+    if (standZuletzt !== null && jetzt !== standZuletzt) abHier = verlauf.length;
+    standZuletzt = jetzt;
     verlauf.push({ role: 'user', content: text });
     beitrag('student', '<span class="stand">' + esc(seite.schritt()) + '</span>' + esc(text));
     feld.value = '';
@@ -211,7 +218,7 @@
     const wartet = beitrag('wartet', 'Das Sprachmodell antwortet …');
     try {
       const r = await fetch(LOTSE + '/api/frage', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kontext: k, zeilen: zeilen(), abschnitte: abschnitte(), thema: (seite.thema || seite.titel) + ', ' + seite.schritt(), verlauf: verlauf }) });
+        body: JSON.stringify({ kontext: k, zeilen: zeilen(), abschnitte: abschnitte(), thema: (seite.thema || seite.titel) + ', ' + seite.schritt(), verlauf: verlauf.slice(abHier) }) });
       const d = await r.json();
       if (meiner !== lauf) return;
       if (!r.ok) throw new Error(d.fehler || 'Status ' + r.status);
@@ -234,6 +241,8 @@
     if (!seite || !el('lotseVerlauf')) return;
     lauf++;
     verlauf = [];
+    standZuletzt = null;
+    abHier = 0;
     el('lotseVerlauf').querySelectorAll('.beitrag').forEach(b => b.remove());
     el('lotseHinweis').hidden = false;
     el('lotseSenden').disabled = false;
