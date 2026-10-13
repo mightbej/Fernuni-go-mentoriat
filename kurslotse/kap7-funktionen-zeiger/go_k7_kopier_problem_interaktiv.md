@@ -12,6 +12,9 @@ Für alle Schritte gilt:
 - Die Funktion `swap` steht nicht im Kurstext. Sie folgt dem Muster von `negToZeroValue` in Listing 7.1 und von `negToZeroPointer` in Listing 7.2.
 - Die Seite zählt kopierte Elemente. Sie misst keine Zeit. Wie lange das Kopieren auf einem bestimmten Rechner dauert, sagt die Seite nicht. Ein Compiler darf eine Kopie einsparen, wenn das Ergebnis das gleiche bleibt.
 - Jede Demo zeigt ein Programm, drei Knöpfe „nächste Anweisung“, „eine Anweisung zurück“ und „von vorn“, darunter Rahmen mit Variablen, die Ausgabe und einen Kasten mit einem Satz zur letzten Anweisung. Jede laufende Funktion hat einen Rahmen. Ein Array steht als Reihe kleiner Felder da, grün ist ein Element, das die letzte Anweisung geändert hat.
+- Unter den Rahmen einer Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger. In ihm steht eine Zahl, die Adresse einer Zelle, und darunter „Adresse der Zelle …“. Ein Block mit gelbem Schein ist neu oder gerade geändert. Die Adressen sind erfunden. Ein `int` belegt im Modell 8 Zellen, ein Zeiger auch. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
+- Die Blöcke in Schritt 1: Das Array `a` von `main` liegt in den Zellen 100 bis 179. Der Parameter `a` von `swap` ist ein zweites Array in den Zellen 180 bis 259, `i` und `j` liegen ab 260 und 268. Die Kopie belegt also 80 Zellen.
+- Die Blöcke in Schritt 3: Das Array `a` liegt in den Zellen 100 bis 179. Der Parameter `pa` liegt in den Zellen 180 bis 187 und enthält die Zahl 100. Der Zeiger belegt 8 Zellen, gleich wie lang das Array ist.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
