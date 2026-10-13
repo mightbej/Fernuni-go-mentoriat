@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>for-Anweisung mit Bedingung in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm .marke { display:inline-block;margin-left:1.2em;padding:0 8px;border-radius:999px;font-size:.82rem;font-weight:700;line-height:1.6;font-family:"Segoe UI",Tahoma,sans-serif; }
+    .programm .marke.wahr { background:#bbf7d0;color:#14532d; }
+    .programm .marke.falsch { background:#fecaca;color:#7f1d1d; }
+    .programm .marke.offen { background:#475569;color:#e2e8f0; }
+
+    /* Was das Programm auf den Bildschirm schreibt */
+    .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
+    .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td { font-family:Consolas,"Courier New",monospace; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>for-Anweisung mit Bedingung in Go</h1>
+    <p>Eine Schleife wiederholt einen Block, solange eine Bedingung erfüllt ist. Die Seite führt drei Programme Anweisung für Anweisung aus, darunter das Programm zur wiederholten Eingabe aus dem Kurstext.</p>
+    <p>Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Bedingung und Rumpf</button>
+    <button type="button" class="tab" data-stufe="2">2 Wiederholte Eingabe</button>
+    <button type="button" class="tab" data-stufe="3">3 while in anderen Sprachen</button>
+    <button type="button" class="tab" data-stufe="4">4 Mindestens ein Durchlauf</button>
+    <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Programm soll oft dasselbe mehrmals tun: Zahlen einlesen, bis der Benutzer aufhört, oder rechnen, bis ein Ergebnis feststeht. Dafür gibt es die Wiederholungsanweisung, kurz Schleife, englisch loop statement.</p>
+    <p>In Go beginnt jede Schleife mit dem Schlüsselwort <code>for</code>. Die einfachste Form besteht aus einer Bedingung und einem Block:</p>
+<pre class="code-block">for n > 0 {
+    fmt.Println(n)
+    n--
+}</pre>
+    <p>Sie heißt for-Anweisung mit Bedingung, englisch for statement with condition.</p>
+
+    <h3>Die drei Arten der for-Anweisung</h3>
+    <ul>
+      <li><strong>Mit Bedingung:</strong> Die Schleife läuft, solange die Bedingung erfüllt ist. Diese Art wird in Abschnitt 5.5.3.1 behandelt und ist das Thema dieser Seite.</li>
+      <li><strong>Mit for-Klausel:</strong> Die Schleife zählt mit einer Laufvariable, zum Beispiel <code>for i := 1; i &lt;= 10; i++</code>. Diese Art wird in Abschnitt 5.5.3.2 behandelt, Seiten 142–146. Dazu gibt es die Seite <a href="151_go_k5_for_klausel_veranschaulichung.html">for-Anweisung mit for-Klausel</a>.</li>
+      <li><strong>Mit <code>range</code>:</strong> Die Schleife geht alle Elemente eines Arrays durch. Diese Art wird erst in Abschnitt 6.2 bei den Arrays behandelt.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, die Schleife ohne Go:</strong> Dort steht die Schleife als Rücksprung mit <code>GOTO</code> und als <code>WHILE b {…}</code> mit der Prüfung am Eingang. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 2.5, Seiten 13–14, die Schleife als Bild:</strong> Das Programm zum größten gemeinsamen Teiler enthält eine <code>WHILE</code>-Schleife, gezeichnet als Flussdiagramm und als Struktogramm. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, Bedingung und Block:</strong> Die Schleife ist gebaut wie die if-Anweisung: Schlüsselwort, boolescher Ausdruck, Block. Dazu gibt es die Seite <a href="go_k5_if_anweisungen_interaktiv.html">if-Anweisung</a>.</li>
+    </ul>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> führt die Begriffe ein: Schleifenbedingung, Schleifenrumpf, Schleifendurchlauf, Abbruchbedingung, Endlosschleife.</li>
+      <li><strong>Schritt 2</strong> führt das Programm zur wiederholten Eingabe aus Listing 5.4 Anweisung für Anweisung aus.</li>
+      <li><strong>Schritt 3</strong> zeigt dieselbe Schleife in Java, Python und C++. Dort heißt sie while-Schleife.</li>
+      <li><strong>Schritt 4</strong> zeigt, wie eine Flag-Variable mindestens einen Durchlauf erzwingt.</li>
+      <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
+    </ul>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3, Seiten 137–138, und Abschnitt 5.5.3.1, Seiten 138–142.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Bedingung und Rumpf</h2>
+    <p>Jede Schleife hat zwei Teile:</p>
+    <ul>
+      <li><strong>Schleifenbedingung:</strong> ein boolescher Ausdruck hinter <code>for</code>, zum Beispiel <code>n &gt; 0</code>.</li>
+      <li><strong>Schleifenrumpf:</strong> der Block zwischen <code>{</code> und <code>}</code>. Er wird wiederholt, solange die Schleifenbedingung erfüllt ist.</li>
+    </ul>
+    <p>Dazu kommen drei Begriffe:</p>
+    <ul>
+      <li><strong>Schleifendurchlauf:</strong> Der Schleifenrumpf wird einmal ganz ausgeführt.</li>
+      <li><strong>Abbruchbedingung:</strong> das Gegenteil der Schleifenbedingung. Zur Schleifenbedingung <code>n &gt; 0</code> gehört die Abbruchbedingung <code>n &lt;= 0</code>. Sobald sie erfüllt ist, endet die Schleife.</li>
+      <li><strong>Endlosschleife:</strong> Die Abbruchbedingung wird nie erfüllt. Die Schleife läuft immer weiter.</li>
+    </ul>
+
+    <h3>Wann die Bedingung geprüft wird</h3>
+    <p>Go wertet die Schleifenbedingung vor jedem Schleifendurchlauf aus, auch vor dem ersten.</p>
+    <ul>
+      <li><strong>Ergebnis <code>true</code>:</strong> Der Schleifenrumpf wird ausgeführt. Danach wertet Go die Bedingung erneut aus.</li>
+      <li><strong>Ergebnis <code>false</code>:</strong> Die Schleife ist zu Ende. Das Programm macht hinter <code>}</code> weiter.</li>
+    </ul>
+    <p>Ergibt die Bedingung schon vor dem ersten Schleifendurchlauf <code>false</code>, wird der Schleifenrumpf kein einziges Mal ausgeführt.</p>
+
+    <h3>Ausprobieren: Anweisung für Anweisung</h3>
+    <div class="zeile" id="s-start">
+      <span>Startwert von <code>n</code>:</span>
+      <button type="button" data-start="0">0</button>
+      <button type="button" data-start="1">1</button>
+      <button type="button" data-start="2">2</button>
+      <button type="button" data-start="3">3</button>
+      <button type="button" data-start="4">4</button>
+      <button type="button" data-start="5">5</button>
+    </div>
+    <div class="zeile" id="s-fassung">
+      <button type="button" data-mit="1">mit n--</button>
+      <button type="button" data-mit="0">ohne n--</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="s-weiter">Nächste Anweisung</button>
+      <button type="button" id="s-ende">Bis zum Ende</button>
+      <button type="button" id="s-vorn">Von vorn</button>
+    </div>
+    <div class="feld">
+      <span class="was">n</span><span class="wie" id="s-n"></span>
+      <span class="was">Prüfungen der Bedingung bisher</span><span class="wie" id="s-pruef"></span>
+      <span class="was">Schleifendurchläufe bisher</span><span class="wie" id="s-durch"></span>
+      <span class="was">Ausgabe bisher</span><span class="wie" id="s-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="s-text"></div>
+    <ol class="programm" id="s-programm"></ol>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Hinter der Schleifenbedingung steht das Ergebnis der letzten Prüfung.</p>
+
+    <h3>Woran man eine Endlosschleife erkennt</h3>
+    <p>In der Fassung „ohne n--“ ändert der Schleifenrumpf den Wert von <code>n</code> nicht. Die Bedingung <code>n &gt; 0</code> ergibt deshalb bei jeder Prüfung dasselbe. Ist sie einmal <code>true</code>, bleibt sie <code>true</code>.</p>
+    <p>Ein Programm in einer Endlosschleife beendet man im Terminal mit den Tasten Strg und C.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3, Seiten 137–138. Das Programm mit <code>n</code> ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Wiederholte Eingabe</h2>
+    <p>Das Programm aus dem Kurstext fordert den Benutzer immer wieder auf, eine Zahl einzugeben, und gibt ihre Quadratwurzel aus. Mit der Eingabe 0 endet es.</p>
+    <p>Wie oft der Benutzer eine Zahl eingibt, weiß beim Schreiben des Programms niemand. Für diesen Fall ist die for-Anweisung mit Bedingung gedacht: Die Zahl der Schleifendurchläufe steht vor dem Eintritt in die Schleife nicht fest.</p>
+
+    <h3>Ausprobieren: du bist der Benutzer</h3>
+    <p>Das Programm hält in Zeile 13 an und wartet auf deine Eingabe. Wähle dann eine der fünf Zahlen.</p>
+    <div class="zeile" id="w-init">
+      <button type="button" data-init="1">Zeile 9 wie im Kurstext: = 1.0</button>
+      <button type="button" data-init="0">Zeile 9 geändert: = 0.0</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="w-weiter">Nächste Anweisung</button>
+      <button type="button" id="w-vorn">Von vorn</button>
+      <span>Eingabe:</span>
+      <span id="w-eingaben">
+        <button type="button" data-eingabe="16">16</button>
+        <button type="button" data-eingabe="25">25</button>
+        <button type="button" data-eingabe="2">2</button>
+        <button type="button" data-eingabe="-4">−4</button>
+        <button type="button" data-eingabe="0">0</button>
+      </span>
+    </div>
+    <div class="feld">
+      <span class="was">eingabe</span><span class="wie" id="w-wert"></span>
+      <span class="was">Schleifendurchläufe bisher</span><span class="wie" id="w-durch"></span>
+      <span class="was">Eingaben bisher</span><span class="wie" id="w-gelesen"></span>
+    </div>
+    <div class="auskunft" id="w-text"></div>
+    <ol class="programm" id="w-programm"></ol>
+    <div class="konsole" id="w-konsole"></div>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde oder an der das Programm wartet. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Hinter einer Bedingung steht das Ergebnis der letzten Prüfung.</p>
+    <p class="quelle">Listing 5.4, <code>for_bedingung_eingabe.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.1. Die Fassung mit <code>0.0</code> in Zeile 9 ist für diese Seite geändert.</p>
+
+    <h3>Warum eingabe mit 1.0 beginnt</h3>
+    <p>Die Schleifenbedingung <code>eingabe != 0</code> wird zum ersten Mal geprüft, bevor der Benutzer etwas eingegeben hat. In diesem Augenblick zählt der Wert aus Zeile 9.</p>
+    <ul>
+      <li><strong>Mit <code>1.0</code>:</strong> <code>1 != 0</code> ergibt <code>true</code>. Das Programm betritt die Schleife und fragt nach der ersten Zahl.</li>
+      <li><strong>Mit <code>0.0</code>:</strong> <code>0 != 0</code> ergibt <code>false</code>. Das Programm überspringt den Schleifenrumpf und endet, ohne ein einziges Mal zu fragen.</li>
+    </ul>
+    <p>Die 1.0 hat sonst keine Bedeutung. Jeder andere Wert ungleich 0 täte dasselbe. Schritt 4 zeigt einen Weg, der ohne diesen Kunstgriff auskommt.</p>
+
+    <h3>Drei Stellen im Programm</h3>
+    <ul>
+      <li><strong><code>if</code> in Zeile 14:</strong> Die Wurzel wird nur für eine positive Zahl ausgegeben. Bei −4 und bei 0 überspringt das Programm Zeile 15.</li>
+      <li><strong><code>math.Sqrt</code> in Zeile 15:</strong> Die Funktion aus dem Paket <code>math</code> berechnet die Quadratwurzel.</li>
+      <li><strong><code>&amp;eingabe</code> in Zeile 13:</strong> <code>fmt.Scan</code> liest eine Eingabe von der Tastatur und legt sie in der Variable <code>eingabe</code> ab. Das Zeichen <code>&amp;</code> wird in Abschnitt 7.4.1, Seiten 178–180, bei den Zeigern erklärt.</li>
+    </ul>
+
+    <h3>Das zweite Beispiel des Kurstexts</h3>
+    <p>Listing 5.5, <code>for_ggt.go</code>, berechnet den größten gemeinsamen Teiler zweier Zahlen. Dort ergibt sich die Zahl der Schleifendurchläufe aus der Rechnung im Schleifenrumpf. Dazu gibt es eine eigene Seite:</p>
+    <ul>
+      <li><a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#programm">Größter gemeinsamer Teiler: das Go-Programm Schritt für Schritt</a></li>
+      <li><a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#uebergang">Größter gemeinsamer Teiler: vom Struktogramm zum Go-Code</a></li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>while in anderen Sprachen</h2>
+    <p>Viele Programmiersprachen haben dieselbe Schleife mit dem Schlüsselwort <code>while</code>. Sie heißt deshalb allgemein while-Schleife. Go hat diese Schleife auch und schreibt nur <code>for</code> statt <code>while</code>.</p>
+
+    <h3>Dieselbe Schleife in vier Sprachen</h3>
+    <div class="zeile" id="l-knoepfe">
+      <button type="button" data-sprache="0">Go</button>
+      <button type="button" data-sprache="1">Java</button>
+      <button type="button" data-sprache="2">Python</button>
+      <button type="button" data-sprache="3">C++</button>
+    </div>
+    <pre class="code-block" id="l-programm"></pre>
+    <div class="auskunft" id="l-text"></div>
+    <p>Alle vier Fassungen geben die Zahlen von <code>i</code> bis 9 aus, wenn <code>i</code> vorher deklariert ist.</p>
+
+    <h3>Was Go bei der Schreibweise verlangt</h3>
+    <p>Jeder Knopf zeigt eine Schreibweise derselben Schleife in Go. Darunter steht, ob Go sie übersetzt.</p>
+    <div class="zeile" id="f-knoepfe">
+      <button type="button" data-form="0">wie üblich</button>
+      <button type="button" data-form="1">mit runden Klammern</button>
+      <button type="button" data-form="2">mit while</button>
+      <button type="button" data-form="3">Zahl als Bedingung</button>
+    </div>
+    <pre class="code-block" id="f-programm"></pre>
+    <div class="feld">
+      <span class="was" id="f-art"></span><span class="wie" id="f-ergebnis"></span>
+    </div>
+    <div class="auskunft" id="f-text"></div>
+    <p>Für die Schreibweise gilt bei der for-Anweisung dasselbe wie bei der if-Anweisung und der switch-Anweisung: Die Bedingung steht ohne runde Klammern, der Block ist Pflicht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142, mit dem Sprachvergleich 5.13. Die Programme mit <code>i</code> sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Mindestens ein Durchlauf</h2>
+    <p>Die for-Anweisung mit Bedingung prüft, bevor sie den Schleifenrumpf ausführt. Manche Sprachen haben dazu eine zweite Schleife, die erst nach dem Schleifenrumpf prüft. Ihr Schleifenrumpf läuft deshalb mindestens einmal.</p>
+    <ul>
+      <li><strong>do-while-Schleife in Java und C++:</strong> Erst kommt der Schleifenrumpf, dann <code>while</code> mit der Schleifenbedingung. Die Schleife endet, wenn die Bedingung nicht mehr zutrifft.</li>
+      <li><strong>repeat-until-Schleife in Pascal:</strong> Erst kommt der Schleifenrumpf, dann <code>until</code> mit der Bedingung. Die Schleife endet, wenn die Bedingung zutrifft. Die Bedingung ist also umgekehrt formuliert.</li>
+    </ul>
+    <p>Die wiederholte Eingabe als do-while-Schleife in Java:</p>
+<pre class="code-block">do {
+    System.out.println("Bitte eine positive Zahl eingeben (0 zum Beenden):");
+    eingabe = scanner.nextDouble();
+} while (eingabe != 0);</pre>
+    <p>Dieselbe Schleife als repeat-until-Schleife in Pascal:</p>
+<pre class="code-block">repeat
+    writeln('Bitte eine positive Zahl eingeben (0 zum Beenden):');
+    readln(eingabe);
+until eingabe = 0;</pre>
+    <p>Go hat keine dieser zwei Schleifen. Sie fehlen mit Absicht: Code in Go soll einheitlich aussehen, und jede do-while-Schleife lässt sich mit einer while-Schleife nachbauen.</p>
+
+    <h3>Der Nachbau mit einer Flag-Variable</h3>
+    <p>Eine zusätzliche Variable vom Typ <code>bool</code> erzwingt den ersten Schleifendurchlauf. Eine boolesche Variable, die so einen Zustand festhält, heißt auf Englisch flag.</p>
+    <ul>
+      <li><strong>Vor der Schleife:</strong> <code>ersterLauf</code> hat den Wert <code>true</code>.</li>
+      <li><strong>In der Schleifenbedingung:</strong> <code>ersterLauf || eingabe != 0</code>. Der Operator <code>||</code> bedeutet „oder“. Solange <code>ersterLauf</code> den Wert <code>true</code> hat, ist die Bedingung erfüllt.</li>
+      <li><strong>Im Schleifenrumpf:</strong> <code>ersterLauf</code> bekommt den Wert <code>false</code>. Ab der zweiten Prüfung entscheidet nur noch <code>eingabe != 0</code>.</li>
+    </ul>
+
+    <h3>Ausprobieren: Anweisung für Anweisung</h3>
+    <p><code>eingabe</code> beginnt hier mit <code>0.0</code>. Das Programm hält in Zeile 6 an und wartet auf deine Eingabe.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" id="m-weiter">Nächste Anweisung</button>
+      <button type="button" id="m-vorn">Von vorn</button>
+      <span>Eingabe:</span>
+      <span id="m-eingaben">
+        <button type="button" data-eingabe2="16">16</button>
+        <button type="button" data-eingabe2="25">25</button>
+        <button type="button" data-eingabe2="2">2</button>
+        <button type="button" data-eingabe2="-4">−4</button>
+        <button type="button" data-eingabe2="0">0</button>
+      </span>
+    </div>
+    <div class="feld">
+      <span class="was">eingabe</span><span class="wie" id="m-wert"></span>
+      <span class="was">ersterLauf</span><span class="wie" id="m-flag"></span>
+      <span class="was">Schleifendurchläufe bisher</span><span class="wie" id="m-durch"></span>
+      <span class="was">Eingaben bisher</span><span class="wie" id="m-gelesen"></span>
+    </div>
+    <div class="auskunft" id="m-text"></div>
+    <ol class="programm" id="m-programm"></ol>
+    <div class="konsole" id="m-konsole"></div>
+    <table class="text" id="m-tabelle"></table>
+    <p class="legende">Die Tabelle bekommt bei jeder Prüfung der Schleifenbedingung in Zeile 4 eine Zeile. „nicht ausgewertet“ bedeutet: Der linke Teil ergab schon <code>true</code>, den rechten Teil wertet Go dann nicht mehr aus.</p>
+    <p>Dass Go den rechten Teil von <code>||</code> überspringt, heißt Kurzschluss-Auswertung. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte: bool und die Kurzschluss-Auswertung</a>.</p>
+    <p class="quelle">Das Programm folgt dem Codeausschnitt in Abschnitt 5.5.3.1 des Kurstexts. An der Stelle der Zeilen 5 bis 9 steht dort ein Kommentar. Die Seite hat die Zeilen aus Listing 5.4 eingesetzt.</p>
+
+    <h3>Der schlechtere Weg: den Rumpf kopieren</h3>
+    <p>Man kann die Anweisungen des Schleifenrumpfs auch einmal vor die Schleife schreiben:</p>
+<pre class="code-block">fmt.Println("Bitte eine positive Zahl eingeben (0 zum Beenden):")
+fmt.Scan(&amp;eingabe)
+
+for eingabe != 0 {
+    fmt.Println("Bitte eine positive Zahl eingeben (0 zum Beenden):")
+    fmt.Scan(&amp;eingabe)
+}</pre>
+    <p>Das Programm läuft richtig. Trotzdem gilt es als schlechter Stil, Code zu kopieren: Wer später die Aufforderung ändert, muss an beide Stellen denken.</p>
+
+    <p>So geht es weiter:</p>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="146_go_k5_for_bedingung_quiz.html">Quiz zur for-Anweisung mit Bedingung</a> fragt den Stoff von Abschnitt 5.5.3.1 ab.</li>
+      <li><strong>Schritt 5:</strong> Dort stehen Faustregeln aus der Praxis.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142, mit dem Sprachvergleich 5.14. Die Codeblöcke in Java und Pascal sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Aus der Praxis</h2>
+    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.3.1 des Kurstexts. Go übersetzt jedes Beispiel, auch die drei mit dem Kommentar „falsch“.</div>
+
+    <h3>1. Der Rumpf ändert, was die Bedingung prüft</h3>
+<pre class="code-block">var x int = 10
+for x > 0 {
+    fmt.Println(x)   // falsch: x bleibt 10, die Schleife endet nie
+}</pre>
+    <p>Die Bedingung <code>x &gt; 0</code> kann nur dann einmal <code>false</code> ergeben, wenn der Schleifenrumpf den Wert von <code>x</code> ändert. Hier fehlt <code>x--</code>.</p>
+    <p>Die Prüffrage beim Schreiben einer Schleife: Welche Anweisung im Schleifenrumpf sorgt dafür, dass die Bedingung irgendwann <code>false</code> ergibt? Gibt es keine, ist es eine Endlosschleife.</p>
+
+    <h3>2. Die Bedingung fängt auch den Wert ab, der das Ziel überspringt</h3>
+<pre class="code-block">n := 5
+for n != 0 {   // falsch: n wird 3, 1, -1, -3 … und nie 0
+    n -= 2
+}</pre>
+<pre class="code-block">n := 5
+for n > 0 {    // endet: n wird 3, 1, -1
+    n -= 2
+}</pre>
+    <p>Die erste Fassung wartet auf genau einen Wert, die 0. Mit Schritten von 2 springt <code>n</code> von 1 auf −1 und trifft die 0 nicht.</p>
+    <p>Die zweite Fassung endet bei jedem Wert, der nicht mehr größer als 0 ist. Wer herunterzählt, vergleicht deshalb mit <code>&gt;</code> und nicht mit <code>!=</code>.</p>
+
+    <h3>3. Eine errechnete Kommazahl nicht mit != prüfen</h3>
+<pre class="code-block">x := 0.0
+for x != 1.0 {   // falsch: x trifft 1.0 nie genau
+    x += 0.1
+}</pre>
+    <p>Zehnmal 0.1 addiert ergibt in Go nicht 1.0. Nach zehn Schleifendurchläufen hat <code>x</code> den Wert 0.9999999999999999, nach elf den Wert 1.0999999999999999. Die Schleife endet nie.</p>
+    <p>Der Grund ist der Rundungsfehler bei Gleitkommazahlen aus Abschnitt 4.4.3, Seiten 87–90: 0.1 lässt sich im Zweiersystem nicht genau darstellen. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</p>
+    <p>Mit <code>for x &lt; 1.0</code> endet die Schleife. Sie läuft dann aber elfmal und nicht zehnmal, weil 0.9999999999999999 noch kleiner als 1.0 ist. Wer genau zehn Schleifendurchläufe will, zählt mit einer ganzen Zahl:</p>
+<pre class="code-block">i := 1
+for i <= 10 {
+    x := float64(i) / 10   // 0.1, 0.2 … 1
+    fmt.Println(x)
+    i++
+}</pre>
+    <p>In Listing 5.4 steht mit <code>eingabe != 0</code> auch ein Vergleich einer Kommazahl mit <code>!=</code>. Dort ist er in Ordnung: Die 0 wird eingegeben und nicht errechnet.</p>
+
+    <h3>Wer zählt, nimmt die for-Klausel</h3>
+    <p>Das letzte Beispiel zählt mit <code>i</code> von 1 bis 10. Für solche Schleifen hat Go die for-Anweisung mit for-Klausel aus Abschnitt 5.5.3.2, Seiten 142–146. Sie schreibt Startwert, Bedingung und <code>i++</code> in eine Zeile. Die for-Anweisung mit Bedingung ist für Schleifen gedacht, bei denen die Zahl der Schleifendurchläufe vorher nicht feststeht.</p>
+
+    <h3>Ausblick auf break</h3>
+    <p>In fremdem Go-Code steht für „mindestens ein Durchlauf“ oft eine Schleife ohne Bedingung, die mitten im Schleifenrumpf mit <code>break</code> verlassen wird:</p>
+<pre class="code-block">for {
+    fmt.Println("Bitte eine positive Zahl eingeben (0 zum Beenden):")
+    fmt.Scan(&amp;eingabe)
+    if eingabe == 0 {
+        break
+    }
+}</pre>
+    <p>Die Schleife ohne Bedingung steht im Kurstext im Expertenwissen 5.16, die Anweisung <code>break</code> in Abschnitt 5.5.3.3, Seiten 146–149. Dort wird auch begründet, warum eine Schleife möglichst ohne <code>break</code> auskommen soll: An der Schleifenbedingung allein ist dann nicht mehr abzulesen, wann die Schleife endet. Im Kurstext wird deshalb die Flag-Variable aus Schritt 4 verwendet. Zu <code>break</code> gibt es die Seite <a href="155_go_k5_break_anweisung_veranschaulichung.html">break-Anweisung</a>.</p>
+
+    <p>Zum Abschluss: Das <a href="146_go_k5_for_bedingung_quiz.html">Quiz zur for-Anweisung mit Bedingung</a> fragt den Stoff von Abschnitt 5.5.3.1 ab.</p>
+    <p class="quelle">Wie lange Bedingungen lesbar bleiben, steht auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5, Faustregel 3.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+  function nummern(liste) { return liste.length < 2 ? String(liste[0]) : liste.slice(0, -1).join(", ") + " und " + liste[liste.length - 1]; }
+  function einmalig(liste) { return liste.filter(function (z, i) { return liste.indexOf(z) === i; }).sort(function (a, b) { return a - b; }); }
+
+  // Ein Programm als nummerierte Liste. Eine Zeile: t Text, k Klasse (war, aktuell), m Marke hinter der Zeile, mk Klasse der Marke
+  function zeigeProgramm(id, zeilen) {
+    $(id).innerHTML = zeilen.map(function (z, i) {
+      return "<li" + (z.k ? " class=\"" + z.k + "\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z.t) +
+        (z.m ? "<span class=\"marke " + z.mk + "\">" + esc(z.m) + "</span>" : "") + "</li>";
+    }).join("");
+  }
+  function mitNummern(texte) { return texte.map(function (t, i) { return (i + 1 < 10 ? " " : "") + (i + 1) + "  " + t; }); }
+  // Die Zeilen eines Laufs bis zum Eintrag ort einfärben. marken: Zeilennummer -> letztes Ergebnis der Bedingung in dieser Zeile
+  function gefaerbt(texte, eintraege, ort) {
+    var e = eintraege[ort], war = eintraege.slice(0, ort + 1).map(function (x) { return x.zeile; });
+    return texte.map(function (t, i) {
+      var nr = i + 1, m = e.marken[nr];
+      return { t: t, k: nr === e.zeile ? "aktuell" : war.indexOf(nr) >= 0 ? "war" : "",
+        m: m === undefined ? "" : String(m), mk: m ? "wahr" : "falsch" };
+    });
+  }
+  function kopie(o) { var k = {}; Object.keys(o).forEach(function (n) { k[n] = o[n]; }); return k; }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#eingabe
+  var ANKER = ["worum", "begriffe", "eingabe", "while", "flag", "praxis"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: Bedingung und Rumpf ----
+
+  var HALT = 5;   // ohne n-- hält die Demo nach so vielen Schleifendurchläufen an
+  var start = 3, mitMinus = true, ort1 = 0;
+
+  function texte1() {
+    return ["var n int = " + start, "", "for n > 0 {", "    fmt.Println(n)", mitMinus ? "    n--" : "    // hier fehlt n--", "}", "fmt.Println(\"Ende\")"];
+  }
+  // Der Lauf: je ausgeführter Anweisung ein Eintrag mit Zeile, Erklärung und Werten danach
+  function lauf1() {
+    var n = start, aus = [], d = 0, k = 0, marken = {}, s = [], endlos = false;
+    function dazu(zeile, text) { s.push({ zeile: zeile, text: text, n: n, d: d, k: k, aus: aus.slice(), marken: kopie(marken), endlos: endlos }); }
+    dazu(1, "Die Variable n wird deklariert und bekommt den Wert " + n + ".");
+    while (true) {
+      k++;
+      var b = n > 0;
+      marken[3] = b;
+      if (!mitMinus && d === HALT) {
+        endlos = true;
+        dazu(3, k + ". Prüfung der Schleifenbedingung: " + n + " > 0 ergibt wieder true. Die Demo hält hier an. n hat immer noch den Wert " + n +
+          ", weil der Schleifenrumpf n nicht ändert. Das Programm selbst liefe endlos weiter und gäbe immer wieder " + n + " aus. Zeile 7 erreicht es nie.");
+        return s;
+      }
+      dazu(3, k + ". Prüfung der Schleifenbedingung: " + n + " > 0 ergibt " + b + "." +
+        (b ? " Der Schleifenrumpf wird ausgeführt." : k === 1 ? " Der Schleifenrumpf wird kein einziges Mal ausgeführt. Das Programm macht hinter } weiter." : " Die Schleife ist zu Ende. Das Programm macht hinter } weiter."));
+      if (!b) break;
+      d++;
+      aus.push(String(n));
+      dazu(4, d + ". Schleifendurchlauf: Das Programm gibt den Wert von n aus, also " + n + "." + (mitMinus ? "" : " Danach ist der Schleifenrumpf zu Ende, weil n-- fehlt. Es geht zurück zur Schleifenbedingung in Zeile 3."));
+      if (mitMinus) {
+        n--;
+        dazu(5, "n-- verkleinert n um 1. n hat jetzt den Wert " + n + ". Der Schleifenrumpf ist zu Ende. Es geht zurück zur Schleifenbedingung in Zeile 3.");
+      }
+    }
+    aus.push("Ende");
+    dazu(7, "Die Anweisung hinter der Schleife gibt „Ende“ aus. Das Programm ist zu Ende. Der Schleifenrumpf wurde " + d + "-mal ausgeführt, die Schleifenbedingung " + k + "-mal geprüft.");
+    return s;
+  }
+  function zeigeSchleife() {
+    var s = lauf1(), e = s[ort1], fertig = ort1 === s.length - 1;
+    zeigeProgramm("s-programm", gefaerbt(texte1(), s, ort1));
+    $("s-n").textContent = e.n;
+    $("s-pruef").textContent = e.k;
+    $("s-durch").textContent = e.d;
+    $("s-ausgabe").textContent = e.aus.length ? e.aus.join("\n") : "noch keine";
+    $("s-text").innerHTML = "<p><strong>Zeile " + e.zeile + ":</strong> " + esc(e.text) + "</p>";
+    $("s-weiter").disabled = fertig;
+    $("s-ende").disabled = fertig;
+    jeder("[data-start]", function (k) { k.classList.toggle("haupt", Number(k.dataset.start) === start); });
+    jeder("#s-fassung button", function (k) { k.classList.toggle("haupt", (k.dataset.mit === "1") === mitMinus); });
+  }
+
+  // ---- Schritt 2 und 4: die wiederholte Eingabe, als Listing 5.4 und mit Flag-Variable ----
+
+  var FRAGE = "Bitte eine positive Zahl eingeben (0 zum Beenden):";
+  var WURZEL = { 16: "4", 25: "5", 2: "1.4142135623730951" };   // aus dem Lauf mit Go 1.26
+  var HOECHSTENS = 6;   // so viele Eingaben nimmt ein Lauf an, die letzte muss 0 sein
+  var LISTING = [
+    "package main", "", "import (", "    \"fmt\"", "    \"math\"", ")", "", "func main() {",
+    "    var eingabe float64 = 1.0", "",
+    "    for eingabe != 0 {",
+    "        fmt.Println(\"" + FRAGE + "\")",
+    "        fmt.Scan(&eingabe)",
+    "        if eingabe > 0 {",
+    "            fmt.Printf(\"Die Wurzel von %v ist %v.\\n\", eingabe, math.Sqrt(eingabe))",
+    "        }", "    }", "}"
+  ];
+  var FLAGPROGRAMM = [
+    "var eingabe float64 = 0.0", "var ersterLauf bool = true", "",
+    "for ersterLauf || eingabe != 0 {",
+    "    fmt.Println(\"" + FRAGE + "\")",
+    "    fmt.Scan(&eingabe)",
+    "    if eingabe > 0 {",
+    "        fmt.Printf(\"Die Wurzel von %v ist %v.\\n\", eingabe, math.Sqrt(eingabe))",
+    "    }",
+    "    ersterLauf = false",
+    "}"
+  ];
+  var w = { anfang: 1, eingaben: [], ort: 0 };   // Schritt 2
+  var m = { eingaben: [], ort: 0 };              // Schritt 4
+
+  function texte2() { var t = LISTING.slice(); t[8] = "    var eingabe float64 = " + (w.anfang ? "1.0" : "0.0"); return t; }
+
+  // Der Lauf mit den bisher gewählten Eingaben. Fehlt eine Eingabe, endet er mit einem Eintrag „wartet“.
+  function wurzelLauf(flag, anfang, eingaben) {
+    var Z = flag ? { dekl: 1, fl: 2, schleife: 4, frage: 5, lies: 6, wenn: 7, druck: 8, setz: 10, ende: 11 }
+                 : { dekl: 9, schleife: 11, frage: 12, lies: 13, wenn: 14, druck: 15, ende: 17 };
+    var e = anfang, erster = true, aus = [], gelesen = [], d = 0, k = 0, i = 0, marken = {}, pr = [], s = [];
+    function dazu(zeile, text, wartet) {
+      s.push({ zeile: zeile, text: text, eingabe: e, erster: erster, aus: aus.slice(), gelesen: gelesen.slice(), d: d, k: k, marken: kopie(marken), pr: pr.slice(), wartet: !!wartet });
+    }
+    dazu(Z.dekl, "Die Variable eingabe wird deklariert und mit " + (anfang ? "1.0" : "0.0") + " initialisiert.");
+    if (flag) dazu(Z.fl, "Die Flag-Variable ersterLauf wird deklariert und mit true initialisiert.");
+    while (true) {
+      k++;
+      var b, text;
+      if (flag) {
+        b = erster || e !== 0;
+        pr.push({ k: k, erster: erster, rechts: erster ? null : e !== 0, b: b });
+        text = k + ". Prüfung der Schleifenbedingung: " + (erster
+          ? "ersterLauf hat den Wert true. Damit ergibt ersterLauf || eingabe != 0 schon true. Den rechten Teil wertet Go nicht mehr aus. Dass eingabe den Wert 0 hat, spielt keine Rolle."
+          : "ersterLauf hat den Wert false. Jetzt entscheidet der rechte Teil: " + e + " != 0 ergibt " + b + ".");
+      } else {
+        b = e !== 0;
+        text = k + ". Prüfung der Schleifenbedingung: " + e + " != 0 ergibt " + b + ".";
+      }
+      marken[Z.schleife] = b;
+      delete marken[Z.wenn];
+      text += b ? " Der Schleifenrumpf wird ausgeführt." : k === 1 ? " Der Schleifenrumpf wird kein einziges Mal ausgeführt." : " Die Schleife ist zu Ende.";
+      dazu(Z.schleife, text);
+      if (!b) break;
+      d++;
+      aus.push(FRAGE);
+      dazu(Z.frage, d + ". Schleifendurchlauf: Das Programm gibt die Aufforderung aus.");
+      if (i >= eingaben.length) {
+        dazu(Z.lies, "fmt.Scan wartet auf die Eingabe. Wähle über dem Programm eine Zahl.", true);
+        return s;
+      }
+      e = eingaben[i++];
+      gelesen.push(e);
+      dazu(Z.lies, "fmt.Scan liest die Eingabe " + e + " und legt sie in der Variable eingabe ab. eingabe hat jetzt den Wert " + e + ".");
+      var positiv = e > 0;
+      marken[Z.wenn] = positiv;
+      dazu(Z.wenn, "if-Anweisung: " + e + " > 0 ergibt " + positiv + "." + (positiv ? " Der if-Zweig wird ausgeführt." : " Der if-Zweig in Zeile " + Z.druck + " wird übersprungen. Für " + e + " gibt das Programm keine Wurzel aus."));
+      if (positiv) {
+        aus.push("Die Wurzel von " + e + " ist " + WURZEL[e] + ".");
+        dazu(Z.druck, "Das Programm gibt die Wurzel aus: math.Sqrt(" + e + ") ergibt " + WURZEL[e] + "." + (flag ? "" : " Der Schleifenrumpf ist zu Ende. Es geht zurück zur Schleifenbedingung in Zeile " + Z.schleife + "."));
+      }
+      if (flag) {
+        erster = false;
+        dazu(Z.setz, "ersterLauf bekommt den Wert false" + (d === 1 ? "" : ", wie schon in jedem Schleifendurchlauf davor") + ". Der Schleifenrumpf ist zu Ende. Es geht zurück zur Schleifenbedingung in Zeile " + Z.schleife + ".");
+      }
+    }
+    dazu(Z.ende, "Das Programm macht hinter der schließenden Klammer der Schleife weiter. Dort folgt keine Anweisung mehr, das Programm ist zu Ende. Der Schleifenrumpf wurde " + d + "-mal ausgeführt, die Schleifenbedingung " + k + "-mal geprüft.");
+    return s;
+  }
+  function lauf2() { return wurzelLauf(false, w.anfang, w.eingaben); }
+  function lauf4() { return wurzelLauf(true, 0, m.eingaben); }
+
+  function konsole(e) {
+    // Was auf dem Bildschirm steht: Ausgaben des Programms und dazwischen die getippten Eingaben
+    var zeilen = [], g = 0;
+    e.aus.forEach(function (a) {
+      zeilen.push(a);
+      if (a === FRAGE && g < e.gelesen.length) zeilen.push("> " + e.gelesen[g++]);
+    });
+    return zeilen.length ? zeilen.join("\n") : "noch keine";
+  }
+  // Die Knöpfe für die Eingabe gelten nur, solange fmt.Scan wartet. Nach fünf Eingaben bleibt nur die 0.
+  function zeigeEingaben(id, attribut, e, anzahl) {
+    jeder("#" + id + " button", function (k) {
+      k.disabled = !e.wartet || (anzahl >= HOECHSTENS - 1 && k.dataset[attribut] !== "0");
+      k.classList.toggle("haupt", e.wartet && !k.disabled);
+    });
+  }
+  function zeigeEingabe() {
+    var s = lauf2(), e = s[w.ort], letzter = w.ort === s.length - 1;
+    zeigeProgramm("w-programm", gefaerbt(texte2(), s, w.ort));
+    $("w-wert").textContent = e.eingabe;
+    $("w-durch").textContent = e.d;
+    $("w-gelesen").textContent = e.gelesen.length ? e.gelesen.join(", ") : "noch keine";
+    $("w-konsole").textContent = konsole(e);
+    $("w-text").innerHTML = "<p><strong>Zeile " + e.zeile + ":</strong> " + esc(e.text) + "</p>";
+    $("w-weiter").disabled = letzter;
+    $("w-weiter").classList.toggle("haupt", !e.wartet);
+    zeigeEingaben("w-eingaben", "eingabe", e, w.eingaben.length);
+    jeder("#w-init button", function (k) { k.classList.toggle("haupt", Number(k.dataset.init) === w.anfang); });
+  }
+  function zeigeFlag() {
+    var s = lauf4(), e = s[m.ort], letzter = m.ort === s.length - 1;
+    zeigeProgramm("m-programm", gefaerbt(FLAGPROGRAMM, s, m.ort));
+    $("m-wert").textContent = e.eingabe;
+    $("m-flag").textContent = m.ort === 0 ? "noch nicht deklariert" : e.erster;
+    $("m-durch").textContent = e.d;
+    $("m-gelesen").textContent = e.gelesen.length ? e.gelesen.join(", ") : "noch keine";
+    $("m-konsole").textContent = konsole(e);
+    $("m-text").innerHTML = "<p><strong>Zeile " + e.zeile + ":</strong> " + esc(e.text) + "</p>";
+    $("m-weiter").disabled = letzter;
+    $("m-weiter").classList.toggle("haupt", !e.wartet);
+    zeigeEingaben("m-eingaben", "eingabe2", e, m.eingaben.length);
+    $("m-tabelle").innerHTML = "<tr><th>Prüfung in Zeile 4</th><th>ersterLauf</th><th>eingabe != 0</th><th>ersterLauf || eingabe != 0</th></tr>" +
+      (e.pr.length ? e.pr.map(function (p) {
+        return "<tr><td>" + p.k + ". Prüfung</td><td>" + p.erster + "</td><td>" + (p.rechts === null ? "nicht ausgewertet" : p.rechts) + "</td><td>" + p.b + "</td></tr>";
+      }).join("") : "<tr><td colspan=\"4\">Die Schleifenbedingung wurde noch nicht geprüft.</td></tr>");
+  }
+
+  // ---- Schritt 3: dieselbe Schleife in vier Sprachen, vier Schreibweisen in Go ----
+
+  var SPRACHE = [
+    { name: "Go", zeilen: ["for i < 10 {", "    fmt.Println(i)", "    i++", "}"],
+      text: "<p>Go schreibt " + c("for") + ". Die Bedingung steht ohne runde Klammern, der Block steht in geschweiften Klammern.</p>" },
+    { name: "Java", zeilen: ["while (i < 10) {", "    System.out.println(i);", "    i++;", "}"],
+      text: "<p>Java schreibt " + c("while") + ". Die runden Klammern um die Bedingung sind Pflicht. Jede Anweisung endet mit einem Semikolon.</p>" },
+    { name: "Python", zeilen: ["while i < 10:", "    print(i)", "    i += 1"],
+      text: "<p>Python schreibt " + c("while") + " und einen Doppelpunkt hinter der Bedingung. Geschweifte Klammern gibt es nicht: Was eingerückt ist, gehört zum Schleifenrumpf.</p><p>Python hat kein " + c("i++") + ", dort steht " + c("i += 1") + ".</p>" },
+    { name: "C++", zeilen: ["while (i < 10) {", "    std::cout << i << std::endl;", "    i++;", "}"],
+      text: "<p>C++ schreibt " + c("while") + " mit runden Klammern um die Bedingung, wie Java. Nur die Ausgabe sieht anders aus.</p>" }
+  ];
+  // Die Meldungen stammen aus Läufen mit Go 1.26.
+  var FORM = [
+    { name: "wie üblich", zeilen: ["for i < 10 {", "    fmt.Println(i)", "    i++", "}"], fehler: false, ergebnis: "Go übersetzt das Programm.",
+      text: "<p>So schreibt man die Schleife in Go: " + c("for") + ", Bedingung ohne runde Klammern, " + c("{") + " in derselben Zeile.</p>" },
+    { name: "mit runden Klammern", zeilen: ["for (i < 10) {", "    fmt.Println(i)", "    i++", "}"], fehler: false, ergebnis: "Go übersetzt das Programm.",
+      text: "<p>Runde Klammern um die Bedingung sind erlaubt, aber überflüssig. Nach Idiomatic Go lässt man sie weg.</p><p>Das Werkzeug " + c("gofmt") + " entfernt sie von selbst.</p>" },
+    { name: "mit while", zeilen: ["while i < 10 {", "    fmt.Println(i)", "    i++", "}"], fehler: true, ergebnis: "syntax error: unexpected name i at end of statement",
+      text: "<p>Go kennt das Schlüsselwort " + c("while") + " nicht. Es übersetzt das Programm nicht.</p><p>Die Meldung heißt auf Deutsch: Syntaxfehler, hier steht unerwartet der Name i, erwartet war das Ende der Anweisung.</p><p>Go hält " + c("while") + " für einen gewöhnlichen Namen, etwa den einer Variable. Damit wäre die Anweisung nach diesem Wort zu Ende. Deshalb nennt die Meldung das " + c("i") + " und nicht das " + c("while") + ".</p>" },
+    { name: "Zahl als Bedingung", zeilen: ["for i {", "    fmt.Println(i)", "    i++", "}"], fehler: true, ergebnis: "non-boolean condition in for statement",
+      text: "<p>" + c("i") + " hat den Typ " + c("int") + ". Go übersetzt das Programm nicht.</p><p>Die Meldung heißt auf Deutsch: Die Bedingung der for-Anweisung ist nicht boolesch.</p><p>Die Schleifenbedingung muss den Typ " + c("bool") + " haben. In C++ gilt eine Zahl ungleich 0 als wahr, in Go nicht.</p>" }
+  ];
+  var sprache = 0, form = 0;
+  function zeigeSprache() {
+    var s = SPRACHE[sprache];
+    $("l-programm").textContent = s.zeilen.join("\n");
+    $("l-text").innerHTML = s.text;
+    jeder("#l-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.sprache) === sprache); });
+  }
+  function zeigeForm() {
+    var f = FORM[form];
+    $("f-programm").textContent = f.zeilen.join("\n");
+    $("f-art").textContent = f.fehler ? "Meldung des Compilers" : "Ergebnis";
+    $("f-ergebnis").textContent = f.ergebnis;
+    $("f-ergebnis").classList.toggle("fehler", f.fehler);
+    $("f-text").innerHTML = f.text;
+    jeder("#f-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.form) === form); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-start], [data-mit], [data-init], [data-eingabe], [data-eingabe2], [data-sprache], [data-form]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.start !== undefined) { start = Number(d.start); ort1 = 0; zeigeSchleife(); }
+    else if (d.mit !== undefined) { mitMinus = d.mit === "1"; ort1 = 0; zeigeSchleife(); }
+    else if (d.init !== undefined) { w.anfang = Number(d.init); w.eingaben = []; w.ort = 0; zeigeEingabe(); }
+    else if (d.eingabe !== undefined) { w.eingaben.push(Number(d.eingabe)); zeigeEingabe(); }
+    else if (d.eingabe2 !== undefined) { m.eingaben.push(Number(d.eingabe2)); zeigeFlag(); }
+    else if (d.sprache !== undefined) { sprache = Number(d.sprache); zeigeSprache(); }
+    else if (d.form !== undefined) { form = Number(d.form); zeigeForm(); }
+    melde(false);
+  });
+  $("s-weiter").addEventListener("click", function () { ort1 = Math.min(ort1 + 1, lauf1().length - 1); zeigeSchleife(); melde(false); });
+  $("s-ende").addEventListener("click", function () { ort1 = lauf1().length - 1; zeigeSchleife(); melde(false); });
+  $("s-vorn").addEventListener("click", function () { ort1 = 0; zeigeSchleife(); melde(false); });
+  $("w-weiter").addEventListener("click", function () { w.ort = Math.min(w.ort + 1, lauf2().length - 1); zeigeEingabe(); melde(false); });
+  $("w-vorn").addEventListener("click", function () { w.eingaben = []; w.ort = 0; zeigeEingabe(); melde(false); });
+  $("m-weiter").addEventListener("click", function () { m.ort = Math.min(m.ort + 1, lauf4().length - 1); zeigeFlag(); melde(false); });
+  $("m-vorn").addEventListener("click", function () { m.eingaben = []; m.ort = 0; zeigeFlag(); melde(false); });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Bedingung und Rumpf", "Schritt 2: Wiederholte Eingabe", "Schritt 3: while in anderen Sprachen", "Schritt 4: Mindestens ein Durchlauf", "Schritt 5: Aus der Praxis"];
+
+  function zeilenBisher(s, ort) { return nummern(einmalig(s.slice(0, ort + 1).map(function (x) { return x.zeile; }))); }
+  function ausgabeSatz(e) { return "Ausgabe bisher: " + (e.aus.length ? e.aus.join(" ; ") : "noch keine"); }
+  // Die Sätze, die Schritt 2 und Schritt 4 gemeinsam haben
+  function standWurzel(s, ort, eingaben) {
+    var e = s[ort], letzter = ort === s.length - 1, saetze = [
+      "Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert. Das ist Anweisung " + (ort + 1) + " dieses Laufs.",
+      "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
+      "Schon gelaufen sind die Zeilen " + zeilenBisher(s, ort) + ".",
+      "Die Schleifenbedingung wurde bisher " + e.k + "-mal geprüft. Begonnen sind " + e.d + " Schleifendurchläufe.",
+      "Eingaben bisher: " + (e.gelesen.length ? e.gelesen.join(", ") : "noch keine") + ".",
+      ausgabeSatz(e)
+    ];
+    if (e.wartet) saetze.push("Das Programm wartet auf eine Eingabe. Der Student wählt sie mit einem der Knöpfe 16, 25, 2, −4 und 0. Ein Eingabefeld gibt es nicht." +
+      (eingaben.length >= HOECHSTENS - 1 ? " Nach fünf Eingaben ist nur noch der Knopf 0 wählbar." : ""));
+    else if (letzter) saetze.push("Der Lauf ist zu Ende.");
+    else saetze.push("Der Lauf ist noch nicht zu Ende. Der Knopf „Nächste Anweisung“ führt die nächste Anweisung aus.");
+    return saetze;
+  }
+  function standSaetze() {
+    if (stufe === 0 || stufe === 5) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 1) {
+      var s = lauf1(), e = s[ort1], fertig = ort1 === s.length - 1, ende = s[s.length - 1];
+      return ["Der Startwert von n ist " + start + ". Wählbar sind nur die Knöpfe 0, 1, 2, 3, 4 und 5. Ein Eingabefeld gibt es nicht.",
+        "Zu sehen ist die Fassung " + (mitMinus ? "mit n-- in Zeile 5." : "ohne n--. In Zeile 5 steht nur ein Kommentar."),
+        "Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert. Das ist Anweisung " + (ort1 + 1) + " von " + s.length + " dieses Laufs.",
+        "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
+        "Werte nach dieser Anweisung: n = " + e.n + ". Die Schleifenbedingung wurde " + e.k + "-mal geprüft. Ausgeführt sind " + e.d + " Schleifendurchläufe.",
+        ausgabeSatz(e),
+        fertig ? (ende.endlos ? "Die Demo hat nach " + HALT + " Schleifendurchläufen angehalten. Das Programm selbst wäre eine Endlosschleife." : "Der Lauf ist zu Ende.")
+               : (ende.endlos ? "Der Lauf ist noch nicht zu Ende. Diese Fassung ist mit dem Startwert " + start + " eine Endlosschleife. Die Demo hält nach " + HALT + " Schleifendurchläufen an."
+                              : "Der Lauf ist noch nicht zu Ende. Am Ende ist der Schleifenrumpf " + ende.d + "-mal ausgeführt und die Schleifenbedingung " + ende.k + "-mal geprüft. Die ganze Ausgabe: " + ende.aus.join(" ; "))];
+    }
+    if (stufe === 2) {
+      var s2 = lauf2(), e2 = s2[w.ort];
+      return ["In Zeile 9 steht " + (w.anfang ? "1.0, wie im Kurstext." : "0.0. Diese Fassung ist für die Seite geändert."),
+        "eingabe hat den Wert " + e2.eingabe + "."].concat(standWurzel(s2, w.ort, w.eingaben));
+    }
+    if (stufe === 3) {
+      var sp = SPRACHE[sprache], f = FORM[form];
+      return ["Obere Auswahl: Zu sehen ist die Schleife in " + sp.name + ". Ihre Zeilen: " + sp.zeilen.join(" ; "),
+        "Untere Auswahl: Gewählt ist die Schreibweise „" + f.name + "“. Ihre Zeilen: " + f.zeilen.join(" ; "),
+        f.fehler ? "Go übersetzt diese Schreibweise nicht. Die Meldung des Compilers: " + f.ergebnis : "Go übersetzt diese Schreibweise."];
+    }
+    var s4 = lauf4(), e4 = s4[m.ort];
+    return ["eingabe hat den Wert " + e4.eingabe + ". ersterLauf " + (m.ort === 0 ? "ist noch nicht deklariert." : "hat den Wert " + e4.erster + "."),
+      "Tabelle der Prüfungen in Zeile 4: " + (e4.pr.length ? e4.pr.map(function (p) {
+        return p.k + ". Prüfung: ersterLauf = " + p.erster + ", eingabe != 0 " + (p.rechts === null ? "nicht ausgewertet" : "ergibt " + p.rechts) + ", ganze Bedingung ergibt " + p.b;
+      }).join(" ; ") : "noch keine Zeile")].concat(standWurzel(s4, m.ort, m.eingaben));
+  }
+  function kurz() {
+    if (stufe === 1) return "n = " + lauf1()[ort1].n + ", Start " + start + (mitMinus ? "" : ", ohne n--") + ", Zeile " + lauf1()[ort1].zeile;
+    if (stufe === 2) { var e = lauf2()[w.ort]; return "eingabe = " + e.eingabe + ", Zeile " + e.zeile + (e.wartet ? ", wartet auf Eingabe" : "") + (w.anfang ? "" : ", Zeile 9 mit 0.0"); }
+    if (stufe === 3) return SPRACHE[sprache].name + ", Schreibweise „" + FORM[form].name + "“";
+    if (stufe === 4) { var e4 = lauf4()[m.ort]; return "eingabe = " + e4.eingabe + ", ersterLauf = " + e4.erster + ", Zeile " + e4.zeile + (e4.wartet ? ", wartet auf Eingabe" : ""); }
+    return "";
+  }
+  // Programmzeilen: die Programme der Demos mit Zeilennummern, dazu jeder Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre")).reduce(function (alle, p) {
+      return alle.concat(alle.length ? ["---"] : [], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    if (stufe === 1) return mitNummern(texte1());
+    if (stufe === 2) return mitNummern(texte2());
+    if (stufe === 4) return mitNummern(FLAGPROGRAMM).concat(["---"], bloecke);
+    return bloecke;
+  }
+
+  zeigeSchleife();
+  zeigeEingabe();
+  zeigeSprache();
+  zeigeForm();
+  zeigeFlag();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "for-Anweisung mit Bedingung in Go",
+    thema: "for-Anweisung mit Bedingung, Schleife, Schleifenbedingung, Schleifenrumpf, while-Schleife, Flag-Variable",
+    bezug: "Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_for_bedingung_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum beginnt eingabe mit 1.0 und nicht mit 0?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
