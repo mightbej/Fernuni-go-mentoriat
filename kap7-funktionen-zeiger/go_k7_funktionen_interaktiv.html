@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funktionen in Go: Rückgaben und Wertübergabe</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Funktionen in Go: Rückgaben und Wertübergabe</h1>
+    <p>Eine Funktion in Go kann mehrere Werte zurückgeben, zum Beispiel ein Ergebnis und einen Fehler. Jedes Argument bekommt sie als Kopie. Die Seite zeigt beides an den Programmen des Kurstexts.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.1 und 7.2, Seiten 163–170.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Mehrere Rückgaben</button>
+    <button type="button" class="tab" data-stufe="2">2 Signatur</button>
+    <button type="button" class="tab" data-stufe="3">3 Rückgabe-Tupel</button>
+    <button type="button" class="tab" data-stufe="4">4 Fehler melden</button>
+    <button type="button" class="tab" data-stufe="5">5 Kopie des Arguments</button>
+  </div>
+
+  <!-- ===================== Worum es geht ===================== -->
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Aus Kapitel 3 kennst du die Funktion mit Parametern und einem Rückgabewert. In Abschnitt 7.1 und 7.2 des Kurstexts kommen drei Stücke dazu:</p>
+    <ul>
+      <li><strong>Mehrere Rückgaben:</strong> Eine Funktion liefert zwei oder mehr Werte zurück, zum Beispiel Quotient und Rest einer Division.</li>
+      <li><strong>Fehler als Rückgabe:</strong> Viele Funktionen der Standardbibliothek liefern ein Ergebnis und dazu einen Wert vom Typ <code>error</code>.</li>
+      <li><strong>Wertübergabe:</strong> Eine Funktion bekommt von jedem Argument eine Kopie. Bei einem Array ist das eine Kopie aller Elemente.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Unterprogramm und Funktion:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html">Unterprogramme und Funktionen</a> zeigt Aufruf, Rücksprung und Parameter ohne Go.</li>
+      <li><strong>Abschnitt 3.4, Funktionen in einem Go-Programm:</strong> Dort stehen Deklaration, Parameter, Argument und die return-Anweisung. Zwei Quizseiten fragen das ab: <a href="../kap3-einfuehrung/go_funktionen_im_programm_quiz.html">Funktionen im Programm</a> und <a href="../kap3-einfuehrung/go_parameter_argument_quiz.html">Parameter und Argument</a>.</li>
+      <li><strong>Abschnitt 5.3.2, Tupel-Zuweisung:</strong> Die Lektion <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a> zeigt <code>a, b = b, a</code>. Mit einer Tupel-Zuweisung nimmt ein Programm mehrere Rückgaben entgegen.</li>
+      <li><strong>Kapitel 6, Arrays:</strong> Schritt 5 übergibt ein Array an eine Funktion. Die Lektion dazu heißt <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Die Funktion <code>divMitRest</code> gibt zwei Werte zurück. Du führst einen Aufruf Anweisung für Anweisung aus.</li>
+      <li><strong>Schritt 2:</strong> Die Signatur ist der Typ einer Funktion. Du vergleichst sieben Funktionen.</li>
+      <li><strong>Schritt 3:</strong> Acht Zeilen verwenden die zwei Rückgaben. Zwei davon übersetzt Go nicht.</li>
+      <li><strong>Schritt 4:</strong> <code>fmt.Scan</code> meldet einen Fehler als zweite Rückgabe. Die Funktion <code>safeAdd</code> tut das Gleiche bei einem Überlauf.</li>
+      <li><strong>Schritt 5:</strong> Listing 7.1 übergibt ein Array. Du siehst, dass die Funktion eine Kopie bearbeitet.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 1 ===================== -->
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Mehrere Rückgaben</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(17 / 3, 17 % 3)</code> aus?
+          <details><summary>Auflösung</summary><code>5 2</code>. Die 3 passt fünfmal in die 17, und es bleibt der Rest 2.</details></li>
+      </ol>
+    </div>
+    <p>Eine Funktionsdeklaration besteht in Go aus vier Teilen:</p>
+    <ul>
+      <li>dem Schlüsselwort <code>func</code>,</li>
+      <li>einem Funktionsnamen,</li>
+      <li>einer Liste mit Parametern in runden Klammern,</li>
+      <li>einer Liste mit Rückgaben in runden Klammern. Diese Liste darf fehlen.</li>
+    </ul>
+    <p>Eine Funktion, die mehrere Werte zurückliefert, heißt <strong>mehrwertige Funktion</strong>. Die Funktion <code>divMitRest</code> liefert den Ganzzahlquotienten und den Divisionsrest:</p>
+    <pre class="code-block">func divMitRest(x int, y int) (int, int) {
+    return x / y, x % y
+}</pre>
+    <p>Die Rückgabeliste <code>(int, int)</code> legt fest: Die Funktion liefert zwei Werte vom Typ <code>int</code>. Die return-Anweisung hat deshalb zwei Ausdrücke, getrennt durch ein Komma.</p>
+
+    <h3>Benannte Rückgaben</h3>
+    <p>Die Rückgaben dürfen Namen tragen wie die Parameter. Für jede benannte Rückgabe legt Go im Rumpf eine Variable an und gibt ihr den Null-Wert ihres Typs. Der Rumpf weist diesen Variablen die Ergebnisse zu.</p>
+    <p>Eine return-Anweisung ohne Ausdrücke heißt <strong>blankes return</strong>. Sie gibt die Werte der benannten Rückgaben zurück. Die Demo führt diese Fassung aus:</p>
+
+    <ol class="programm" id="d-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="d-weiter">nächste Anweisung</button>
+      <button type="button" id="d-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="d-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="d-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="d-ausgabe"></div>
+    <div class="auskunft" id="d-urteil"></div>
+
+    <h3>Kürzer geschrieben</h3>
+    <p>Haben aufeinanderfolgende Parameter oder Rückgaben den gleichen Typ, steht der Typ nur einmal, wie bei einer Variablendeklaration:</p>
+    <pre class="code-block">func divMitRest(x, y int) (q, r int) {
+    // ...
+}</pre>
+    <div class="hinweis"><strong>Hinweis 7.1 des Kurstexts:</strong> Namen für die Rückgaben sagen, was welcher Wert bedeutet. Das hilft, wenn mehrere Rückgaben den gleichen Typ haben. Ein blankes return ist kurz. In einer langen Funktion sieht man ihm aber nicht an, welche Werte zurückgehen. Es soll deshalb selten stehen. Auch mit benannten Rückgaben darf man <code>return q, r</code> schreiben.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1, Seiten 163–164. Die Funktion <code>divMitRest</code> stammt aus dem Kurstext. Die Funktion <code>main</code> der Demo setzt zwei Zeilen aus Abschnitt 7.1.1 ein.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 2 ===================== -->
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Signatur</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktionen <code>add(a, b int) int</code> und <code>sub(x int, y int) (int)</code> rechnen verschieden und nennen ihre Parameter verschieden. Was haben sie gemeinsam?
+          <details><summary>Auflösung</summary>Beide nehmen zwei <code>int</code> und liefern einen <code>int</code>. Sie haben die gleiche Signatur.</details></li>
+      </ol>
+    </div>
+    <p>Die Folge der Parameter-Typen und die Folge der Rückgabe-Typen bilden zusammen die <strong>Signatur</strong> einer Funktion. In Go heißt die Signatur auch <strong>Typ der Funktion</strong>.</p>
+    <p>Für die Signatur zählen nur die Typen und ihre Reihenfolge. Es zählen nicht:</p>
+    <ul>
+      <li>der Name der Funktion,</li>
+      <li>die Namen der Parameter und der Rückgaben,</li>
+      <li>die Schreibweise, zum Beispiel <code>a, b int</code> oder <code>x int, y int</code>.</li>
+    </ul>
+    <p>Wähle eine Funktion. Die Seite zeigt ihre Signatur und nennt die Funktionen mit der gleichen Signatur.</p>
+    <div class="spalte" id="sig-wahl"></div>
+    <div class="auskunft" id="sig-urteil"></div>
+
+    <h3>Zwei Schreibweisen</h3>
+    <ul>
+      <li><strong>Eine Zeile:</strong> Besteht der Rumpf aus einer einzigen Anweisung, darf die ganze Deklaration in einer Zeile stehen. Das ist üblich.</li>
+      <li><strong>Klammern um die Rückgabe:</strong> Hat eine Funktion nur eine Rückgabe ohne Namen, dürfen die Klammern der Rückgabeliste fehlen. Die Klammern in <code>sub(x int, y int) (int)</code> sind überflüssig.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1, Seiten 164–165. Die sieben Funktionen stammen aus dem Kurstext. Die Schreibweise des Typs, zum Beispiel <code>func(int, int) int</code>, steht dort nicht. So gibt <code>fmt.Printf</code> mit <code>%T</code> den Typ einer Funktion aus.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 3 ===================== -->
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Rückgabe-Tupel</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>divMitRest(100, 17)</code> liefert 5 und 15. Was liefert <code>divMitRest(divMitRest(100, 17))</code>?
+          <details><summary>Auflösung</summary>0 und 5. Der äußere Aufruf bekommt 5 und 15 als Argumente. Die 15 passt nullmal in die 5, und es bleibt der Rest 5.</details></li>
+      </ol>
+    </div>
+    <p>Der Aufruf einer mehrwertigen Funktion liefert ein <strong>Tupel</strong> von Werten. <code>divMitRest(17, 3)</code> liefert das Paar aus 5 und 2. Mit diesem Paar kann das Programm vier Arten von Anweisungen bilden:</p>
+    <ul>
+      <li><strong>Weiterreichen:</strong> Das Paar geht als zwei Argumente an eine andere Funktion. Anzahl und Typen müssen passen.</li>
+      <li><strong>Zuweisen:</strong> Eine Tupel-Zuweisung nimmt alle Rückgaben entgegen. Links stehen so viele Variablen, wie die Funktion Werte liefert.</li>
+      <li><strong>Einen Wert verwerfen:</strong> An der Stelle eines Werts, den das Programm nicht braucht, steht der leere Bezeichner <code>_</code>.</li>
+      <li><strong>Alles verwerfen:</strong> Der Aufruf steht allein als Anweisung.</li>
+    </ul>
+    <p>Alle acht Zeilen der Demo verwenden diese Funktion:</p>
+    <pre class="code-block">func divMitRest(x, y int) (q, r int) { q = x / y; r = x % y; return }
+func add(a, b int) int { return a + b }</pre>
+    <p>Wähle eine Zeile. Die Seite zeigt die Ausgabe oder die Meldung des Compilers.</p>
+    <div class="spalte" id="tu-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="tu-ausgabe"></div>
+    <div class="auskunft" id="tu-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1.1, Seite 166. Die Zeilen 1 bis 4 stammen aus dem Kurstext. Dort steht in Zeile 3 und 4 eine Zuweisung mit <code>=</code>, weil die Variablen schon deklariert sind. Die Zeilen 5 bis 8 und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 4 ===================== -->
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Fehler melden</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Programm liest mit <code>fmt.Scan(&amp;a, &amp;b, &amp;c)</code> drei ganze Zahlen. Der Benutzer gibt <code>7</code> und dann <code>ups</code> ein. Welche Werte haben <code>a</code>, <code>b</code> und <code>c</code> danach?
+          <details><summary>Auflösung</summary>7, 0 und 0. Die erste Eingabe ist gelesen. Bei der zweiten bricht <code>fmt.Scan</code> ab, <code>b</code> und <code>c</code> behalten ihren Null-Wert.</details></li>
+      </ol>
+    </div>
+    <p>Viele Funktionen der Standardbibliothek haben zwei Rückgaben und folgen einem Muster:</p>
+    <ul>
+      <li><strong>Erste Rückgabe:</strong> der Nutzwert, zum Beispiel ein berechnetes Ergebnis.</li>
+      <li><strong>Zweite Rückgabe:</strong> ein Wert vom Typ <code>error</code>. Er sagt, ob ein Fehler aufgetreten ist.</li>
+    </ul>
+    <p><code>error</code> ist ein vorgegebener Typ. Der Wert <code>nil</code> bedeutet: Es liegt kein Fehler vor. Jeder andere Wert trägt eine Meldung, die <code>fmt.Println</code> ausgeben kann. Ein <code>error</code> ist dabei kein <code>string</code>.</p>
+
+    <h3>Das Beispiel des Kurstexts: fmt.Scan</h3>
+    <pre class="code-block">var a, b, c, n int
+var err error
+n, err = fmt.Scan(&amp;a, &amp;b, &amp;c)
+if err != nil {
+    fmt.Println("Fehler:", err)
+}
+fmt.Println("Anzahl gültiger Eingaben:", n)
+fmt.Println("Eingaben:", a, b, c)</pre>
+    <p><code>fmt.Scan</code> liefert zwei Werte. Der erste ist ein <code>int</code> und zählt die gelesenen Eingaben. Der zweite ist ein <code>error</code>. Die Tupel-Zuweisung legt die zwei Werte in <code>n</code> und <code>err</code> ab. Was <code>&amp;a</code> bedeutet, zeigt die Lektion <a href="go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</p>
+    <div class="zeile" id="sc-wahl">
+      <button type="button" class="code" data-fall="0">Eingaben: 6, -8, 23</button>
+      <button type="button" class="code" data-fall="1">Eingaben: 7, ups</button>
+    </div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="sc-ausgabe"></div>
+    <div class="auskunft" id="sc-urteil"></div>
+
+    <h3>Eine eigene Funktion mit Fehler: safeAdd</h3>
+    <p>Die Lektion <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a> zeigt: Passt eine Summe nicht in den Typ, rechnet Go ohne Meldung mit dem falschen Wert weiter. Die Funktion <code>safeAdd</code> prüft vor der Addition, ob die Summe in <code>int32</code> passt. Sie folgt dem Muster: erst der Nutzwert, dann der Fehler.</p>
+    <pre class="code-block">// liefert die Summe von a und b
+// und meldet einen Fehler, wenn sie nicht in int32 passt
+func safeAdd(a, b int32) (int32, error) {
+    if b &gt; 0 &amp;&amp; a &gt; math.MaxInt32-b {
+        return 0, errors.New("Summe ist zu groß für int32")
+    }
+    if b &lt; 0 &amp;&amp; a &lt; math.MinInt32-b {
+        return 0, errors.New("Summe ist zu klein für int32")
+    }
+    return a + b, nil
+}</pre>
+    <p>Die Funktion hat drei return-Anweisungen:</p>
+    <ul>
+      <li><strong>Zu groß:</strong> Die Summe läge über <code>math.MaxInt32</code>, also über 2147483647. Die Funktion liefert 0 und einen Fehler.</li>
+      <li><strong>Zu klein:</strong> Die Summe läge unter <code>math.MinInt32</code>, also unter −2147483648. Die Funktion liefert 0 und einen Fehler.</li>
+      <li><strong>Passt:</strong> Die Funktion liefert die Summe und <code>nil</code>.</li>
+    </ul>
+    <p>Die Bedingung fragt nicht <code>a + b &gt; math.MaxInt32</code>. Diese Summe wäre selbst schon übergelaufen. Die Funktion stellt die Ungleichung um und rechnet <code>math.MaxInt32 - b</code>. Diese Differenz passt immer in <code>int32</code>, wenn <code>b</code> positiv ist.</p>
+    <p>So ruft ein Programm die Funktion auf:</p>
+    <pre class="code-block">summe, err := safeAdd(a, b)
+if err != nil {
+    fmt.Println("Fehler:", err)
+} else {
+    fmt.Println("Summe:", summe)
+}</pre>
+    <p>Wähle zwei Werte für <code>a</code> und <code>b</code>:</p>
+    <div class="spalte" id="sa-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="sa-ausgabe"></div>
+    <div class="auskunft" id="sa-urteil"></div>
+    <div class="hinweis"><code>safeAdd</code> steht nicht im Kurstext. Die Funktion ist ein Beispiel des Mentors. Sie braucht die Pakete <code>math</code> und <code>errors</code>. <code>errors.New</code> erzeugt aus einem String einen Wert vom Typ <code>error</code>. Im Kurstext kommt <code>errors.New</code> nicht vor.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1.2, Seiten 166–168. Das Programm mit <code>fmt.Scan</code> und seine zwei Ausgaben stammen aus dem Kurstext. <code>safeAdd</code> ist mit Go 1.26 ausgeführt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 5 ===================== -->
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Kopie des Arguments</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>negToZeroValue</code> setzt in ihrem Parameter <code>a</code> alle negativen Elemente auf 0. <code>main</code> ruft <code>negToZeroValue(nums)</code> auf. Ändert sich das Array <code>nums</code>?
+          <details><summary>Auflösung</summary>Nein. <code>a</code> ist eine Kopie von <code>nums</code>. Die Funktion ändert nur die Kopie.</details></li>
+      </ol>
+    </div>
+    <p>In Go bekommt eine Funktion von jedem Argument eine <strong>Kopie des Werts</strong>. Diese Art der Übergabe heißt <strong>call-by-value</strong>. Go kennt nur diese eine Art.</p>
+    <p>Bei einem <code>int</code> fällt das kaum auf. Bei einem Array hat es zwei Folgen:</p>
+    <ul>
+      <li><strong>Aufwand:</strong> Bei jedem Aufruf kopiert der Rechner das ganze Array. Bei einem Array vom Typ <code>[1000][1000]int</code> sind das 1.000.000 Elemente. Das kostet Rechenzeit und Speicherplatz.</li>
+      <li><strong>Wirkung:</strong> Was die Funktion am Array ändert, ändert sie an ihrer Kopie. Das Array des Aufrufers bleibt, wie es war. Die Funktion hat keinen Zugriff darauf.</li>
+    </ul>
+    <p>Die Demo führt Listing 7.1 aus. Die Funktion gibt ihre geänderte Kopie zurück, und <code>main</code> legt sie in <code>posNums</code> ab.</p>
+
+    <ol class="programm" id="k-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="k-weiter">nächste Anweisung</button>
+      <button type="button" id="k-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="k-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="k-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="k-ausgabe"></div>
+    <div class="auskunft" id="k-urteil"></div>
+
+    <h3>Was daran stört</h3>
+    <p>Die Funktion erfüllt die Aufgabe, aber auf einem Umweg: Das Array wird zweimal kopiert, einmal beim Aufruf und einmal bei der Rückgabe. Praktischer wäre eine Funktion, die das Array des Aufrufers selbst ändert.</p>
+    <p>Sprachen wie Pascal haben dafür eine zweite Art von Parametern, die Referenzparameter. Die Übergabe heißt dort <strong>call-by-reference</strong>. Go hat sie nicht. In Go übergibt man der Funktion einen <strong>Zeiger</strong> auf das Array.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Zeiger:</strong> Die Lektion <a href="go_k7_zeiger_interaktiv.html">Zeiger in Go</a> beginnt mit dem gleichen Array und der Funktion <code>negToZeroPointer</code>.</li>
+      <li><strong>Wie teuer die Kopie ist:</strong> Der Exkurs <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, wie viele Elemente eine Funktion <code>swap</code> beim Sortieren kopiert.</li>
+      <li><strong>Programmieren:</strong> Die Programmierübung <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> zerlegt das Sortierprogramm aus Kapitel 6 in Funktionen.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170. Das Programm ist Listing 7.1, <code>array_per_wert.go</code>, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#tupel
+  const ANKER = ['worum', 'rueckgaben', 'signatur', 'tupel', 'fehler', 'kopie'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Mehrere Rückgaben', 'Schritt 2: Signatur', 'Schritt 3: Rückgabe-Tupel', 'Schritt 4: Fehler melden', 'Schritt 5: Kopie des Arguments'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihre Variablen gibt es nicht mehr' :
+      'Funktion ' + r.name + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v)).join(', ') : 'noch keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + '"><h4>Funktion ' + c(r.name) + (r.weg ? ', beendet' : '') + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+
+  // ---------- Schritt 1: divMitRest(17, 3) ----------
+  const D1 = ablauf('d', [
+    'func divMitRest(x int, y int) (q int, r int) {', '    q = x / y', '    r = x % y', '    return', '}', '',
+    'func main() {', '    gquot, rest := divMitRest(17, 3)', '    fmt.Println(gquot, rest)', '}'
+  ], [
+    { z: 8, satz: 'main ruft divMitRest(17, 3) auf. Die Argumente 17 und 3 gehen an die Parameter x und y. Für die benannten Rückgaben q und r legt Go zwei Variablen an, beide mit dem Null-Wert 0.',
+      rahmen: [{ name: 'main', vars: [] }, { name: 'divMitRest', vars: [V('x', 17, 1), V('y', 3, 1), V('q', 0, 1), V('r', 0, 1)] }], aus: '' },
+    { z: 2, satz: 'q = x / y rechnet 17 / 3. Die Division zweier int schneidet ab: q bekommt den Wert 5.',
+      rahmen: [{ name: 'main', vars: [] }, { name: 'divMitRest', vars: [V('x', 17), V('y', 3), V('q', 5, 1), V('r', 0)] }], aus: '' },
+    { z: 3, satz: 'r = x % y rechnet den Rest von 17 durch 3: r bekommt den Wert 2.',
+      rahmen: [{ name: 'main', vars: [] }, { name: 'divMitRest', vars: [V('x', 17), V('y', 3), V('q', 5), V('r', 2, 1)] }], aus: '' },
+    { z: 4, satz: 'Das blanke return gibt die Werte der benannten Rückgaben zurück: 5 und 2. Welche Werte das sind, steht nicht in dieser Zeile, es steht oben in der Rückgabeliste.',
+      rahmen: [{ name: 'main', vars: [] }, { name: 'divMitRest', vars: [V('x', 17), V('y', 3), V('q', 5, 1), V('r', 2, 1)] }], aus: '' },
+    { z: 8, satz: 'Zurück in main: Die Tupel-Zuweisung legt die zwei Rückgaben in den neuen Variablen gquot und rest ab. Die Funktion divMitRest ist beendet, ihre vier Variablen gibt es nicht mehr.',
+      rahmen: [{ name: 'main', vars: [V('gquot', 5, 1), V('rest', 2, 1)] }, { name: 'divMitRest', weg: true, vars: [] }], aus: '' },
+    { z: 9, satz: 'fmt.Println gibt die zwei Werte aus.',
+      rahmen: [{ name: 'main', vars: [V('gquot', 5), V('rest', 2)] }], aus: '5 2' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 8.');
+
+  // ---------- Schritt 2: Signatur ----------
+  const FUNKTIONEN = [
+    { name: 'add', code: 'func add(a, b int) int { return a + b }', par: 'int, int', rueck: 'int', typ: 'func(int, int) int' },
+    { name: 'sub', code: 'func sub(x int, y int) (int) { return x - y }', par: 'int, int', rueck: 'int', typ: 'func(int, int) int' },
+    { name: 'div', code: 'func div(a, b int) float64 { return float64(a) / float64(b) }', par: 'int, int', rueck: 'float64', typ: 'func(int, int) float64' },
+    { name: 'divMitRest', code: 'func divMitRest(x, y int) (q, r int) { q = x / y; r = x % y; return }', par: 'int, int', rueck: 'int, int', typ: 'func(int, int) (int, int)' },
+    { name: 'zweimal', code: 'func zweimal(s string, i int) (string, int) { return s + s, 2 * i }', par: 'string, int', rueck: 'string, int', typ: 'func(string, int) (string, int)' },
+    { name: 'dreimal', code: 'func dreimal(s string, i int) (string, int) { return s + s + s, 3 * i }', par: 'string, int', rueck: 'string, int', typ: 'func(string, int) (string, int)' },
+    { name: 'wechsel', code: 'func wechsel(s string, i int) (int, string) { return i, s }', par: 'string, int', rueck: 'int, string', typ: 'func(string, int) (int, string)' }
+  ];
+  let sigWahl = 0;
+  function sigSatz() {
+    const f = FUNKTIONEN[sigWahl], gleich = FUNKTIONEN.filter(g => g !== f && g.typ === f.typ).map(g => g.name);
+    const fast = FUNKTIONEN.filter(g => g !== f && g.typ !== f.typ && g.par === f.par).map(g => g.name);
+    return ['Die Funktion ' + f.name + ' hat die Parameter-Typen ' + f.par + ' und ' + (f.rueck.indexOf(',') < 0 ? 'den Rückgabe-Typ ' : 'die Rückgabe-Typen ') + f.rueck + '.',
+      'Ihr Typ ist ' + f.typ + '.',
+      gleich.length ? 'Die gleiche Signatur hat ' + gleich.join(' und ') + '.' : 'Keine andere der sieben Funktionen hat die gleiche Signatur.',
+      fast.length ? 'Die gleichen Parameter-Typen, aber andere Rückgabe-Typen ' + (fast.length === 1 ? 'hat ' : 'haben ') + fast.join(' und ') + '.' : ''].filter(Boolean);
+  }
+  function zeichneSig() {
+    el('sig-wahl').innerHTML = FUNKTIONEN.map((f, i) => '<button type="button" class="code' + (i === sigWahl ? ' gewaehlt' : '') + '" data-i="' + i + '">' + esc(f.code) + '</button>').join('');
+    const s = sigSatz(), f = FUNKTIONEN[sigWahl];
+    el('sig-urteil').innerHTML = '<p>' + esc(s[0]) + '</p><p>Ihr Typ ist ' + c(f.typ) + '.</p>' + s.slice(2).map(t => '<p>' + esc(t) + '</p>').join('') +
+      (f.name === 'wechsel' ? '<p>Die Rückgabe-Typen von ' + c('wechsel') + ' sind die gleichen wie bei ' + c('zweimal') + ', aber in anderer Reihenfolge. Die Reihenfolge gehört zur Signatur.</p>' : '');
+    melde(false);
+  }
+  el('sig-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { sigWahl = Number(k.dataset.i); zeichneSig(); } });
+
+  // ---------- Schritt 3: acht Zeilen mit dem Rückgabe-Tupel ----------
+  const TUPEL = [
+    { code: 'fmt.Println(divMitRest(17, 3))', aus: '5 2', satz: 'Die zwei Rückgaben gehen als zwei Argumente an fmt.Println. Das geht, weil fmt.Println beliebig viele Argumente annimmt.' },
+    { code: 'gquot, rest := divMitRest(17, 3); fmt.Println(gquot, rest)', aus: '5 2', satz: 'Die Tupel-Zuweisung nimmt beide Rückgaben entgegen: gquot bekommt 5, rest bekommt 2.' },
+    { code: 'gquot, _ := divMitRest(50, 7); fmt.Println(gquot)', aus: '7', satz: 'Der leere Bezeichner _ nimmt die zweite Rückgabe auf, den Rest 1. Das Programm verwirft sie.' },
+    { code: 'gquot, rest := divMitRest(divMitRest(100, 17)); fmt.Println(gquot, rest)', aus: '0 5', satz: 'Der innere Aufruf liefert 5 und 15. Diese zwei Werte sind die Argumente des äußeren Aufrufs. divMitRest(5, 15) liefert 0 und 5.' },
+    { code: 'fmt.Println(add(divMitRest(17, 3)))', aus: '7', satz: 'divMitRest liefert 5 und 2. add nimmt zwei int entgegen, Anzahl und Typen passen. add(5, 2) liefert 7.' },
+    { code: 'divMitRest(17, 3)', aus: '', satz: 'Go übersetzt die Zeile. Der Aufruf steht allein als Anweisung, beide Rückgaben sind verworfen. Das Programm gibt nichts aus.' },
+    { code: 'gquot := divMitRest(17, 3)', fehler: true, aus: 'assignment mismatch: 1 variable but divMitRest returns 2 values', satz: 'Go übersetzt die Zeile nicht. Links steht eine Variable, die Funktion liefert zwei Werte. Wer einen Wert nicht braucht, schreibt an seine Stelle den leeren Bezeichner _.' },
+    { code: 'fmt.Println(1 + divMitRest(17, 3))', fehler: true, aus: 'multiple-value divMitRest(17, 3) (value of type (q int, r int)) in single-value context', satz: 'Go übersetzt die Zeile nicht. Der Operator + braucht rechts einen einzelnen Wert. Der Aufruf liefert zwei.' }
+  ];
+  let tuWahl = 0;
+  function zeichneTupel() {
+    el('tu-wahl').innerHTML = TUPEL.map((t, i) => '<button type="button" class="code' + (i === tuWahl ? ' gewaehlt' : '') + '" data-i="' + i + '">' + (i + 1) + '  ' + esc(t.code) + '</button>').join('');
+    const t = TUPEL[tuWahl];
+    el('tu-ausgabe').textContent = t.aus;
+    el('tu-urteil').className = 'auskunft' + (t.fehler ? ' fehler' : '');
+    el('tu-urteil').innerHTML = '<p>' + esc(t.satz) + '</p>';
+    melde(false);
+  }
+  el('tu-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { tuWahl = Number(k.dataset.i); zeichneTupel(); } });
+
+  // ---------- Schritt 4: fmt.Scan und safeAdd ----------
+  const SCAN = [
+    { name: '6, -8, 23', aus: 'Anzahl gültiger Eingaben: 3' + NL + 'Eingaben: 6 -8 23', satz: 'Alle drei Eingaben sind ganze Zahlen. fmt.Scan liefert 3 und nil. Die Bedingung err != nil ist nicht erfüllt, die Zeile mit „Fehler:“ läuft nicht.' },
+    { name: '7, ups', aus: 'Fehler: expected integer' + NL + 'Anzahl gültiger Eingaben: 1' + NL + 'Eingaben: 7 0 0', satz: 'Die zweite Eingabe ist keine ganze Zahl. fmt.Scan bricht ab und fragt die dritte Eingabe nicht mehr ab. Es liefert 1 und einen Fehler mit der Meldung „expected integer“. b und c behalten den Null-Wert 0.' }
+  ];
+  let scWahl = 0;
+  function zeichneScan() {
+    document.querySelectorAll('#sc-wahl button').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.fall) === scWahl));
+    el('sc-ausgabe').textContent = SCAN[scWahl].aus;
+    el('sc-urteil').innerHTML = '<p>' + esc(SCAN[scWahl].satz) + '</p>';
+    melde(false);
+  }
+  el('sc-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { scWahl = Number(k.dataset.fall); zeichneScan(); } });
+
+  const MAX = 2147483647, MIN = -2147483648;
+  const PAARE = [[17, 4], [2000000000, 147483647], [2000000000, 147483648], [2147483647, 1], [-2000000000, -147483649], [-5, 3]];
+  let saWahl = 0;
+  // Rechnet wie safeAdd und sagt, welche Bedingung entschieden hat
+  function safeAdd(a, b) {
+    const s = [];
+    if (b > 0) {
+      s.push('b ist positiv. Die erste Bedingung prüft a > math.MaxInt32 - b, also ' + a + ' > ' + (MAX - b) + '.');
+      if (a > MAX - b) return { fehler: 'Summe ist zu groß für int32', s: s.concat('Das ist erfüllt. Die Funktion liefert 0 und einen Fehler.'), roh: a + b - 4294967296 };
+      s.push('Das ist nicht erfüllt. Die zweite Bedingung scheitert schon an b < 0.');
+    } else if (b < 0) {
+      s.push('b ist negativ. Die erste Bedingung scheitert schon an b > 0. Die zweite prüft a < math.MinInt32 - b, also ' + a + ' < ' + (MIN - b) + '.');
+      if (a < MIN - b) return { fehler: 'Summe ist zu klein für int32', s: s.concat('Das ist erfüllt. Die Funktion liefert 0 und einen Fehler.'), roh: a + b + 4294967296 };
+      s.push('Das ist nicht erfüllt.');
+    }
+    return { summe: a + b, s: s.concat('Die Funktion liefert die Summe ' + (a + b) + ' und nil.') };
+  }
+  function saSaetze() {
+    const p = PAARE[saWahl], e = safeAdd(p[0], p[1]);
+    return ['Aufruf safeAdd(' + p[0] + ', ' + p[1] + ').'].concat(e.s, e.fehler ? ['Ohne die Prüfung ergäbe a + b in int32 den falschen Wert ' + e.roh + '.'] : []);
+  }
+  function zeichneSafe() {
+    el('sa-wahl').innerHTML = PAARE.map((p, i) => '<button type="button" class="code' + (i === saWahl ? ' gewaehlt' : '') + '" data-i="' + i + '">a = ' + p[0] + ', b = ' + p[1] + '</button>').join('');
+    const p = PAARE[saWahl], e = safeAdd(p[0], p[1]);
+    el('sa-ausgabe').textContent = e.fehler ? 'Fehler: ' + e.fehler : 'Summe: ' + e.summe;
+    el('sa-urteil').className = 'auskunft' + (e.fehler ? ' fehler' : '');
+    el('sa-urteil').innerHTML = saSaetze().map(t => '<p>' + esc(t) + '</p>').join('');
+    melde(false);
+  }
+  el('sa-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { saWahl = Number(k.dataset.i); zeichneSafe(); } });
+
+  // ---------- Schritt 5: Listing 7.1 ----------
+  const NUMS = [8, -5, 6, -3, -7, 1, -4, 3, -9, 2];
+  const D5 = (function () {
+    const zeilen = ['func negToZeroValue(a [10]int) [10]int {', '    for i := range a {', '        if a[i] < 0 {', '            a[i] = 0', '        }', '    }', '    return a', '}', '',
+      'func main() {', '    nums := [10]int{8, -5, 6, -3, -7, 1, -4, 3, -9, 2}', '    fmt.Println(nums)', '    posNums := negToZeroValue(nums)', '    fmt.Println(nums)', '    fmt.Println(posNums)', '}'];
+    const lauf = [], a = NUMS.slice(), erste = goArray(NUMS);
+    lauf.push({ z: 11, satz: 'main legt das Array nums mit zehn Elementen an.', rahmen: [{ name: 'main', vars: [V('nums', NUMS, 1)] }], aus: '' });
+    lauf.push({ z: 12, satz: 'fmt.Println gibt nums aus.', rahmen: [{ name: 'main', vars: [V('nums', NUMS)] }], aus: erste });
+    lauf.push({ z: 13, satz: 'main ruft negToZeroValue(nums) auf. Der Parameter a ist eine neue Variable. Der Rechner kopiert alle zehn Elemente von nums nach a. Von hier an gibt es zwei Arrays mit den gleichen Werten.',
+      rahmen: [{ name: 'main', vars: [V('nums', NUMS)] }, { name: 'negToZeroValue', vars: [V('a', a.slice(), 1)] }], aus: erste });
+    let vorher = 0;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] >= 0) continue;
+      const alt = a[i]; a[i] = 0;
+      lauf.push({ z: 4, satz: (i - vorher > 0 ? 'Die Schleife ist bei i gleich ' + i + ' angekommen. ' : '') + 'a[' + i + '] ist ' + alt + ', also kleiner als 0. Die Zuweisung setzt a[' + i + '] auf 0. Das Element nums[' + i + '] in main behält den Wert ' + alt + '.',
+        rahmen: [{ name: 'main', vars: [V('nums', NUMS)] }, { name: 'negToZeroValue', vars: [V('a', a.slice(), 0, [i]), V('i', i)] }], aus: erste });
+      vorher = i + 1;
+    }
+    lauf.push({ z: 7, satz: 'Die Schleife ist zu Ende, das letzte Element 2 ist nicht negativ. return a gibt den Wert von a zurück, also das ganze Array.',
+      rahmen: [{ name: 'main', vars: [V('nums', NUMS)] }, { name: 'negToZeroValue', vars: [V('a', a.slice(), 1)] }], aus: erste });
+    lauf.push({ z: 13, satz: 'Zurück in main: Die Rückgabe wird in die neue Variable posNums kopiert, wieder alle zehn Elemente. Die Funktion negToZeroValue ist beendet, ihr Array a gibt es nicht mehr.',
+      rahmen: [{ name: 'main', vars: [V('nums', NUMS), V('posNums', a.slice(), 1)] }, { name: 'negToZeroValue', weg: true, vars: [] }], aus: erste });
+    lauf.push({ z: 14, satz: 'fmt.Println gibt nums aus. Das Array ist unverändert: Die Funktion hatte keinen Zugriff darauf.',
+      rahmen: [{ name: 'main', vars: [V('nums', NUMS), V('posNums', a.slice())] }], aus: erste + NL + erste });
+    lauf.push({ z: 15, satz: 'fmt.Println gibt posNums aus. Dort stehen fünf Nullen an den Stellen der fünf negativen Werte.',
+      rahmen: [{ name: 'main', vars: [V('nums', NUMS), V('posNums', a.slice())] }], aus: erste + NL + erste + NL + goArray(a) });
+    return ablauf('k', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 11.');
+  })();
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return standAblauf(D1);
+    if (stufe === 2) return ['Gewählt ist: ' + FUNKTIONEN[sigWahl].code, 'Die Seite sagt dazu: ' + sigSatz().join(' '),
+      'Handgriffe: eine der sieben Funktionen wählen. Eine eigene Funktion lässt sich nicht eingeben.'];
+    if (stufe === 3) { const t = TUPEL[tuWahl]; return ['Gewählt ist Zeile ' + (tuWahl + 1) + ': ' + t.code,
+      t.fehler ? 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ' + t.aus : (t.aus ? 'Die Ausgabe: ' + t.aus : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + t.satz, 'Handgriffe: eine der acht Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.']; }
+    if (stufe === 4) { const p = PAARE[saWahl], e = safeAdd(p[0], p[1]); return [
+      'Im Beispiel mit fmt.Scan ist gewählt: Eingaben ' + SCAN[scWahl].name + '. Die Ausgabe: ' + SCAN[scWahl].aus.split(NL).join(' | '),
+      'Die Seite sagt dazu: ' + SCAN[scWahl].satz,
+      'Bei safeAdd ist gewählt: a = ' + p[0] + ', b = ' + p[1] + '. Die Ausgabe: ' + (e.fehler ? 'Fehler: ' + e.fehler : 'Summe: ' + e.summe),
+      'Die Seite sagt dazu: ' + saSaetze().join(' '),
+      'Handgriffe: eine von zwei Eingaben für fmt.Scan wählen, eines von sechs Wertepaaren für safeAdd wählen. Eigene Werte lassen sich nicht eingeben.']; }
+    return standAblauf(D5);
+  }
+  function kurzStand() {
+    if (stufe === 1) return D1.stand ? 'Zeile ' + D1.lauf[D1.stand - 1].z : 'nichts ausgeführt';
+    if (stufe === 2) return FUNKTIONEN[sigWahl].name;
+    if (stufe === 3) return 'Zeile ' + (tuWahl + 1);
+    if (stufe === 4) return 'Scan: ' + SCAN[scWahl].name + '; safeAdd(' + PAARE[saWahl].join(', ') + ')';
+    if (stufe === 5) return D5.stand ? 'Schritt ' + D5.stand + ' von ' + D5.lauf.length : 'nichts ausgeführt';
+    return '';
+  }
+  // Die Programme der zwei Demos stehen in Listen und nicht in pre
+  function programmZeilen() {
+    const D = stufe === 1 ? D1 : stufe === 5 ? D5 : null;
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  D1.zeichne(); zeichneSig(); zeichneTupel(); zeichneScan(); zeichneSafe(); D5.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Funktionen in Go: Rückgaben und Wertübergabe',
+    thema: 'mehrwertige Funktion, benannte Rückgabe, blankes return, Signatur, Rückgabe-Tupel, error, nil, call-by-value',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.1 und 7.2, Seiten 163–170',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Was ist ein blankes return?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
