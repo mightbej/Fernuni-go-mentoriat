@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Das Kopier-Problem: Arrays als Argument</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    .tabellenrahmen td.zahl, .tabellenrahmen th.zahl { text-align:right;font-family:Consolas,"Courier New",monospace;white-space:nowrap; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Das Kopier-Problem: Arrays als Argument</h1>
+    <p>Eine Funktion bekommt ein Array als Kopie. Wer zwei Elemente mit einer Funktion tauschen will, kopiert dafür das ganze Array hin und zurück. Die Seite zählt, wie viele Elemente das beim Sortieren sind.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170, und Abschnitt 7.3, Seiten 171–172.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Ein Tausch, zwei Kopien</button>
+    <button type="button" class="tab" data-stufe="2">2 Wie viel kopiert wird</button>
+    <button type="button" class="tab" data-stufe="3">3 Mit einem Zeiger</button>
+  </div>
+
+  <!-- ===================== Worum es geht ===================== -->
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>In Abschnitt 7.2 des Kurstexts steht: Bei jedem Funktionsaufruf mit einem Array als Argument erstellt der Rechner eine Kopie des ganzen Arrays, und das kostet Rechenzeit und Speicherplatz. Dieser Exkurs rechnet das an einem Beispiel aus.</p>
+    <p>Das Beispiel ist eine Funktion <code>swap</code>. Sie tauscht zwei Elemente eines Arrays. Die Sortierprogramme aus Kapitel 6 tauschen mit einer Tupel-Zuweisung in <code>main</code>. Wer den Tausch in eine Funktion auslagert, stößt auf die Kopie.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 7.2, Wertübergabe:</strong> Die Lektion <a href="go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a> zeigt in Schritt 5 Listing 7.1 mit der Funktion <code>negToZeroValue</code>.</li>
+      <li><strong>Abschnitt 7.3, Zeiger als Parameter:</strong> Die Lektion <a href="go_k7_zeiger_interaktiv.html#adresse">Zeiger in Go</a> zeigt in Schritt 1 Listing 7.2 mit der Funktion <code>negToZeroPointer</code>.</li>
+      <li><strong>Kapitel 6, Sortieren:</strong> Die Programmierübungen <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a> und <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Sortieren mit Selection Sort</a> sortieren das Array dieser Seite.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Du führst einen Aufruf von <code>swap</code> aus und zählst die kopierten Elemente.</li>
+      <li><strong>Schritt 2:</strong> Du wählst die Länge des Arrays und siehst, wie viele Elemente ein ganzes Sortieren kopiert.</li>
+      <li><strong>Schritt 3:</strong> Die Fassung mit einem Zeiger kopiert eine Adresse und kein Element.</li>
+    </ul>
+    <div class="hinweis">Die Seite zählt Elemente, die das Programm nach den Regeln von Go kopiert. Wie lange das auf einem bestimmten Rechner dauert, misst sie nicht. Ein Compiler darf eine Kopie einsparen, wenn das Ergebnis das gleiche bleibt.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 1 ===================== -->
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Ein Tausch, zwei Kopien</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>swap(a [10]int, i int, j int) [10]int</code> tauscht zwei Elemente und gibt das Array zurück. Wie viele Elemente kopiert der Rechner für die Zeile <code>a = swap(a, 0, 1)</code>?
+          <details><summary>Auflösung</summary>20. Beim Aufruf kopiert er zehn Elemente in den Parameter. Bei der Zuweisung der Rückgabe kopiert er zehn Elemente zurück.</details></li>
+        <li>Was gibt <code>fmt.Println(a)</code> aus, wenn in <code>main</code> nur <code>swap(a, 0, 1)</code> steht, ohne <code>a =</code> davor?
+          <details><summary>Auflösung</summary><code>[42 7 19 88 3 25 71 14 60 9]</code>. Die Funktion hat ihre Kopie geändert, und die Rückgabe ist verworfen. Das Array in <code>main</code> ist unverändert.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion bekommt das Array als Kopie. Ihr Tausch ändert die Kopie. Damit <code>main</code> etwas davon hat, gibt die Funktion die geänderte Kopie zurück, und <code>main</code> weist sie der Variable <code>a</code> zu.</p>
+
+    <ol class="programm" id="t-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="t-weiter">nächste Anweisung</button>
+      <button type="button" id="t-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="t-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="t-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="t-ausgabe"></div>
+    <div class="auskunft" id="t-urteil"></div>
+    <p>Die Funktion ändert zwei Elemente. Kopiert hat der Rechner dafür zwanzig.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170. Die Funktion <code>swap</code> ist ein eigenes Beispiel nach dem Muster von <code>negToZeroValue</code> in Listing 7.1.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 2 ===================== -->
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Wie viel kopiert wird</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Array hat 1000 Elemente. Selection Sort tauscht höchstens 999-mal. Wie viele Elemente kopiert <code>swap</code> dafür höchstens?
+          <details><summary>Auflösung</summary>999 · 2000 = 1.998.000. Jeder Aufruf kopiert 1000 Elemente hin und 1000 zurück.</details></li>
+      </ol>
+    </div>
+    <p>Ein Aufruf von <code>swap</code> kopiert das Array zweimal. Bei einem Array der Länge n sind das 2 · n Elemente. Ein Sortierprogramm ruft <code>swap</code> viele Male auf. Lagert es auch den Vergleich oder die Suche nach dem Minimum in eine Funktion aus, kopiert jeder dieser Aufrufe das Array noch einmal.</p>
+    <ul>
+      <li><strong>Selection Sort mit <code>findMin</code> und <code>swap</code>:</strong> n − 1 Runden. In jeder Runde kopiert <code>findMin</code> n Elemente, und <code>swap</code> kopiert höchstens einmal 2 · n Elemente.</li>
+      <li><strong>Bubble Sort mit <code>isGreater</code> und <code>swap</code>:</strong> n · (n − 1) / 2 Vergleiche. Jeder Vergleich kopiert in <code>isGreater</code> n Elemente. Auf jeden Vergleich folgt höchstens ein Tausch mit 2 · n Elementen.</li>
+    </ul>
+    <p>Wähle die Länge des Arrays:</p>
+    <div class="zeile" id="z-wahl"></div>
+    <div class="tabellenrahmen"><table class="text" id="z-tabelle"></table></div>
+    <div class="auskunft" id="z-urteil"></div>
+    <p>Die Zahlen sind Obergrenzen: So viel kopiert das Programm, wenn auf jeden Vergleich und in jeder Runde ein Tausch folgt. Für das Array der Programmierübungen mit zehn Elementen sind es weniger:</p>
+    <ul>
+      <li><strong>Bubble Sort:</strong> 45 Vergleiche und 23 Tausche. Das sind 45 · 10 + 23 · 20 = 910 kopierte Elemente.</li>
+      <li><strong>Selection Sort:</strong> 9 Runden und 7 Tausche. Das sind 9 · 10 + 7 · 20 = 230 kopierte Elemente.</li>
+    </ul>
+    <p>Die Zahl der kopierten Elemente wächst schneller als die Länge des Arrays. Was das bedeutet, zeigt der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Laufzeit und Datenmenge</a>.</p>
+    <p class="quelle">Die Rechnung steht nicht im Kurstext. Dort steht in Abschnitt 7.2 das Beispiel <code>[1000][1000]int</code> mit 1.000.000 Elementen je Aufruf. Die Zahlen 45, 23, 9 und 7 stammen aus den Programmierübungen zu Kapitel 6.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 3 ===================== -->
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Mit einem Zeiger</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>swap(pa *[10]int, i int, j int)</code> bekommt die Adresse des Arrays. Wie viele Elemente kopiert der Rechner für den Aufruf <code>swap(&amp;a, 0, 1)</code>?
+          <details><summary>Auflösung</summary>Keines. Er kopiert eine Adresse und die zwei Indizes.</details></li>
+      </ol>
+    </div>
+    <p>Die Fassung mit einem Zeiger ändert drei Stellen:</p>
+    <ul>
+      <li><strong>Parameter:</strong> <code>pa *[10]int</code> ist ein Zeiger auf ein Array und kein Array.</li>
+      <li><strong>Rückgabe:</strong> Sie entfällt. Die Funktion ändert das Array ihres Aufrufers.</li>
+      <li><strong>Aufruf:</strong> <code>swap(&amp;a, 0, 1)</code> übergibt die Adresse von <code>a</code>. Die Zuweisung <code>a = …</code> entfällt.</li>
+    </ul>
+    <p>Im Rumpf steht <code>pa[i]</code>. Das ist die Kurzschreibweise für <code>(*pa)[i]</code> aus Hinweis 7.4 des Kurstexts.</p>
+
+    <ol class="programm" id="p-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="p-weiter">nächste Anweisung</button>
+      <button type="button" id="p-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="p-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="p-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="p-ausgabe"></div>
+    <div class="auskunft" id="p-urteil"></div>
+
+    <h3>Der Vergleich</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Frage</th><th>swap mit einer Kopie</th><th>swap mit einem Zeiger</th></tr></thead>
+      <tbody>
+        <tr><td>Was bekommt die Funktion?</td><td>Sie bekommt eine Kopie des Arrays.</td><td>Sie bekommt die Adresse des Arrays.</td></tr>
+        <tr><td>Wie viele Elemente kopiert ein Aufruf?</td><td>Er kopiert 2 · n Elemente.</td><td>Er kopiert kein Element.</td></tr>
+        <tr><td>Welches Array ändert die Funktion?</td><td>Sie ändert ihre Kopie.</td><td>Sie ändert das Array des Aufrufers.</td></tr>
+        <tr><td>Was muss der Aufrufer tun?</td><td>Er weist die Rückgabe zu: <code>a = swap(a, 0, 1)</code>.</td><td>Er übergibt die Adresse: <code>swap(&amp;a, 0, 1)</code>.</td></tr>
+        <tr><td>Was geschieht ohne diese Sorgfalt?</td><td>Fehlt <code>a =</code>, bleibt das Array unverändert, und Go meldet nichts.</td><td>Fehlt <code>&amp;</code>, übersetzt Go das Programm nicht.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="hinweis">Auch der Zeiger wird kopiert, denn Go kennt nur call-by-value. Die Kopie einer Adresse ist aber immer gleich groß, gleich wie lang das Array ist.</div>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Mit Kopie:</strong> Die Programmierübungen <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> und <a href="go_k7_selectionsort_funktionen_programmieruebung.html">Selection Sort mit Funktionen</a> zerlegen die Sortierprogramme in Funktionen mit Wertübergabe.</li>
+      <li><strong>Mit Zeiger:</strong> Die Programmierübungen <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a> stellen sie auf Zeiger um.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Hinweis 7.4, Seite 177. Die Funktion <code>swap</code> ist ein eigenes Beispiel nach dem Muster von <code>negToZeroPointer</code> in Listing 7.2. Die Meldung zu einem fehlenden <code>&amp;</code> lautet in Go 1.26: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#tausch
+  const ANKER = ['worum', 'tausch', 'zaehlen', 'zeiger'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Tausch, zwei Kopien', 'Schritt 2: Wie viel kopiert wird', 'Schritt 3: Mit einem Zeiger'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9], NACH = [7, 42, 19, 88, 3, 25, 71, 14, 60, 9];
+
+  // ---------- Schritt 1: swap mit einer Kopie ----------
+  const DT = ablauf('t', ['func swap(a [10]int, i int, j int) [10]int {', '    a[i], a[j] = a[j], a[i]', '    return a', '}', '', 'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    a = swap(a, 0, 1)', '    fmt.Println(a)', '}'], [
+    { z: 7, satz: 'main legt das Array a mit zehn Elementen an. Kopierte Elemente bisher: 0.', rahmen: [R('main', [V('a', START, 1)])], aus: '' },
+    { z: 8, satz: 'main ruft swap(a, 0, 1) auf. Der Parameter a der Funktion ist eine neue Variable. Der Rechner kopiert alle zehn Elemente hinein. Kopierte Elemente bisher: 10.', rahmen: [R('main', [V('a', START)]), R('swap', [V('a', START, 1), V('i', 0, 1), V('j', 1, 1)])], aus: '' },
+    { z: 2, satz: 'Die Tupel-Zuweisung tauscht a[0] und a[1] in der Kopie. Das Array in main ist unverändert. Kopierte Elemente bisher: 10.', rahmen: [R('main', [V('a', START)]), R('swap', [V('a', NACH, 0, [0, 1]), V('i', 0), V('j', 1)])], aus: '' },
+    { z: 3, satz: 'return a gibt die geänderte Kopie zurück.', rahmen: [R('main', [V('a', START)]), R('swap', [V('a', NACH, 1), V('i', 0), V('j', 1)])], aus: '' },
+    { z: 8, satz: 'Zurück in main: Die Zuweisung a = … kopiert alle zehn Elemente der Rückgabe in das Array a. Die Kopie in swap gibt es danach nicht mehr. Kopierte Elemente bisher: 20.', rahmen: [R('main', [V('a', NACH, 1)]), WEG('swap')], aus: '' },
+    { z: 9, satz: 'fmt.Println gibt a aus. Zwei Elemente haben den Platz getauscht. Kopiert wurden dafür 20 Elemente.', rahmen: [R('main', [V('a', NACH)])], aus: goArray(NACH) }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.');
+
+  // ---------- Schritt 2: kopierte Elemente je Länge ----------
+  const LAENGEN = [10, 100, 1000, 1000000];
+  let zWahl = 10;
+  const punkt = n => String(n).replace(/\B(?=(\d{3})+$)/g, '.');
+  // Rechnet mit BigInt, weil die Zahlen für eine Million Elemente sehr groß werden
+  function zahlen(n) {
+    const N = BigInt(n);
+    return { swap: 2n * N, selRunden: N - 1n, sel: (N - 1n) * N + (N - 1n) * 2n * N, bubVergleiche: N * (N - 1n) / 2n, bub: N * (N - 1n) / 2n * 3n * N };
+  }
+  function zSaetze() {
+    const z = zahlen(zWahl);
+    return ['Bei ' + punkt(zWahl) + ' Elementen kopiert ein Aufruf von swap ' + punkt(z.swap) + ' Elemente und ändert 2.',
+      'Selection Sort mit findMin und swap kopiert in ' + punkt(z.selRunden) + ' Runden höchstens ' + punkt(z.sel) + ' Elemente.',
+      'Bubble Sort mit isGreater und swap kopiert bei ' + punkt(z.bubVergleiche) + ' Vergleichen höchstens ' + punkt(z.bub) + ' Elemente.',
+      'Mit Zeigern kopieren beide Programme kein Element.'];
+  }
+  function zeichneZahlen() {
+    el('z-wahl').innerHTML = LAENGEN.map(n => '<button type="button" class="code' + (n === zWahl ? ' gewaehlt' : '') + '" data-n="' + n + '">' + punkt(n) + ' Elemente</button>').join('');
+    const z = zahlen(zWahl);
+    el('z-tabelle').innerHTML = '<thead><tr><th>Was das Programm tut</th><th class="zahl">Kopierte Elemente mit Wertübergabe</th><th class="zahl">Kopierte Elemente mit Zeigern</th></tr></thead><tbody>' +
+      [['Ein Aufruf von swap tauscht zwei Elemente.', z.swap], ['Selection Sort sortiert das Array, mit findMin und swap.', z.sel], ['Bubble Sort sortiert das Array, mit isGreater und swap.', z.bub]]
+        .map(r => '<tr><td>' + r[0] + '</td><td class="zahl">' + (r[1] === z.swap ? '' : 'höchstens ') + punkt(r[1]) + '</td><td class="zahl">0</td></tr>').join('') + '</tbody>';
+    el('z-urteil').innerHTML = '<p>' + esc(zSaetze()[0]) + '</p>' + (zWahl === 1000000 ? '<p>Ein int belegt auf einem 64-Bit-Rechner 8 Byte. Ein Aufruf von swap kopiert dann 16 Megabyte, um zwei Zahlen zu tauschen.</p>' : '');
+    melde(false);
+  }
+  el('z-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { zWahl = Number(k.dataset.n); zeichneZahlen(); } });
+
+  // ---------- Schritt 3: swap mit einem Zeiger ----------
+  const ADR = 'Adresse von a';
+  const DP = ablauf('p', ['func swap(pa *[10]int, i int, j int) {', '    pa[i], pa[j] = pa[j], pa[i]', '}', '', 'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    swap(&a, 0, 1)', '    fmt.Println(a)', '}'], [
+    { z: 6, satz: 'main legt das Array a mit zehn Elementen an. Kopierte Elemente bisher: 0.', rahmen: [R('main', [V('a', START, 1)])], aus: '' },
+    { z: 7, satz: 'main ruft swap(&a, 0, 1) auf. &a ist die Adresse des Arrays. Der Parameter pa bekommt eine Kopie dieser Adresse. Kopierte Elemente bisher: 0.', rahmen: [R('main', [V('a', START)]), R('swap', [V('pa', ADR, 1), V('i', 0, 1), V('j', 1, 1)])], aus: '' },
+    { z: 2, satz: 'pa[0] und pa[1] sind die Elemente a[0] und a[1] in main. Die Tupel-Zuweisung tauscht sie dort. Kopierte Elemente bisher: 0.', rahmen: [R('main', [V('a', NACH, 0, [0, 1])]), R('swap', [V('pa', ADR), V('i', 0), V('j', 1)])], aus: '' },
+    { z: 3, satz: 'Die Funktion ist zu Ende. Sie hat keine Rückgabe, und main muss nichts zuweisen.', rahmen: [R('main', [V('a', NACH)]), WEG('swap')], aus: '' },
+    { z: 8, satz: 'fmt.Println gibt a aus. Zwei Elemente haben den Platz getauscht. Kopiert wurde dafür kein Element.', rahmen: [R('main', [V('a', NACH)])], aus: goArray(NACH) }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 6.');
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return standAblauf(DT);
+    if (stufe === 3) return standAblauf(DP).concat('Der Wert des Zeigers pa steht auf der Seite in Worten: „Adresse von a“.');
+    return ['Gewählt ist die Länge ' + punkt(zWahl) + '.'].concat(zSaetze(), ['Die Zahlen für Selection Sort und Bubble Sort sind Obergrenzen.',
+      'Handgriffe: eine von vier Längen wählen: 10, 100, 1.000 oder 1.000.000 Elemente. Andere Längen lassen sich nicht eingeben.']);
+  }
+  function kurzStand() {
+    if (stufe === 1 || stufe === 3) { const D = stufe === 1 ? DT : DP; return D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt'; }
+    return stufe === 2 ? punkt(zWahl) + ' Elemente' : '';
+  }
+  // Die Programme der zwei Demos stehen in Listen und nicht in pre
+  function programmZeilen() {
+    const D = stufe === 1 ? DT : stufe === 3 ? DP : null;
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DT.zeichne(); zeichneZahlen(); DP.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Das Kopier-Problem: Arrays als Argument',
+    thema: 'call-by-value, Kopie eines Arrays, Funktion swap, Zeiger auf ein Array, Aufwand beim Sortieren',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170, und Abschnitt 7.3, Seiten 171–172',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum kopiert swap das Array zweimal?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
