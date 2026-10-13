@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .container { max-width:1100px; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { background:var(--aktiv-bg);border-color:#b45309; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus { outline:2px solid var(--accent);outline-offset:2px; }
+    input[type="text"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:min(100%,26em);background:#fff; }
+    input[type="range"] { width:9em; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile label, .zeile .name { color:var(--muted);font-size:.95rem; }
+    .zaehler { color:var(--muted);font-size:.95rem;margin-left:6px; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { margin:12px 0;font-size:.95rem; }
+    th, td { vertical-align:top; }
+    li { margin:6px 0; }
+    h3 { margin:18px 0 8px; }
+    code { font-family:Consolas,"Courier New",monospace;font-size:.95rem; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.6em; }
+    .hinweis { margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Worum es geht: der Weg vom Programmtext zum Prozessor */
+    .weg { display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:14px 0; }
+    .weg .station { flex:1 1 150px;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:10px 12px; }
+    .weg .station .name { display:block;font-weight:700;color:var(--accent); }
+    .weg .station .aufgabe { display:block;color:var(--muted);font-size:.9rem; }
+    .weg .station.werkzeug { border-color:#b45309;background:var(--aktiv-bg); }
+    .weg .pfeil { align-self:center;font-size:1.4rem;color:var(--muted); }
+
+    /* Programme mit Zeilennummern */
+    .zwei { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;align-items:start; }
+    .zwei > div { min-width:0; }
+    .progtitel { font-weight:700;color:var(--blau);margin:0 0 6px; }
+    .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:1rem;line-height:1.5;list-style:none;overflow-x:auto;min-height:2.6em; }
+    .programm li { margin:0;padding:3px 14px 3px 10px;color:#94a3b8;border-left:4px solid transparent;white-space:pre;display:flex;gap:14px; }
+    .programm li .nr { width:1.6em;text-align:right;flex:none;color:#64748b; }
+    .programm li .oft { margin-left:auto;padding-left:14px;color:#fcd34d;font-family:"Segoe UI",sans-serif;font-size:.85rem; }
+    .programm li.fertig { color:#cbd5e1; }
+    .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm li.aktuell .nr { color:#fff; }
+    .programm li.keins { color:#94a3b8;font-family:"Segoe UI",sans-serif;font-size:.92rem;white-space:normal; }
+
+    /* Schritt 1: der Speicher als Reihe von Bytes */
+    .bytes { display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;margin:12px 0; }
+    .byte { border:2px solid #cbd5e1;border-radius:8px;background:#fff;text-align:center;padding:4px 2px 6px; }
+    .byte .adr { display:block;color:var(--muted);font-size:.8rem; }
+    .byte .bits { font-family:Consolas,monospace;font-size:1rem;font-weight:700; }
+    .byte.b-alt { background:#f1f5f9;color:#64748b; }
+    .byte.b-code { background:var(--aktiv-bg);border-color:#b45309;box-shadow:0 0 0 2px var(--aktiv); }
+    .byte.b-arg { background:#dbeafe;border-color:var(--blau); }
+    .legende { display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:.9rem;margin:6px 0; }
+    .legende span::before { content:"";display:inline-block;width:.9em;height:.9em;border-radius:3px;margin-right:6px;vertical-align:-1px;border:2px solid #cbd5e1;background:#fff; }
+    .legende .l-code::before { background:var(--aktiv-bg);border-color:#b45309; }
+    .legende .l-arg::before { background:#dbeafe;border-color:var(--blau); }
+    .legende .l-alt::before { background:#f1f5f9; }
+
+    /* Variablen als Kästen */
+    .speicher { background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0; }
+    .speicher h4 { margin:0 0 8px;font-size:.92rem;color:var(--muted);font-weight:600; }
+    .kaesten { display:flex;flex-wrap:wrap;gap:10px 18px; }
+    .kasten { display:flex;align-items:center;gap:8px; }
+    .kasten .etikett { font-family:Consolas,monospace;font-size:1.15rem;font-weight:700; }
+    .kasten .inhalt { min-width:3.4em;text-align:center;border:2px solid #1f2937;border-radius:8px;padding:6px 10px;font-family:Consolas,monospace;font-size:1.25rem;font-weight:700;background:#fff; }
+    .kasten .inhalt.leer { color:#9ca3af;border-style:dashed;font-size:.95rem;font-weight:400; }
+    .kasten .inhalt.neu { background:var(--aktiv-bg);border-color:#b45309;box-shadow:0 0 0 2px var(--aktiv); }
+    .ausgabe { background:#0f172a;color:#e2e8f0;border-radius:8px;padding:8px 14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;min-height:2.4em;white-space:pre-wrap;margin-top:12px; }
+    .ausgabe .leer { color:#94a3b8;font-style:italic;font-family:"Segoe UI",sans-serif; }
+    .ausgabe .fehler { color:#fca5a5; }
+    .verlauf { font-family:Consolas,monospace;font-size:.95rem;margin-top:10px;overflow-wrap:anywhere; }
+
+    /* Schritt 2: Compiler je Paar aus Sprache und Prozessor */
+    .netze { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0; }
+    .netz { background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px; }
+    .netz p { margin:0 0 4px;font-weight:700;color:var(--blau); }
+    .netz .zahl { font-weight:400;color:#111827; }
+    .netz svg { display:block;width:100%;height:auto; }
+    .netz rect { fill:#fff;stroke:#1f2937;stroke-width:1.5; }
+    .netz rect.mitte { fill:var(--aktiv-bg);stroke:#b45309; }
+    .netz line { stroke:var(--accent);stroke-width:2; }
+    .netz text { font-family:"Segoe UI",Tahoma,sans-serif;font-size:12px;fill:#111827; }
+
+    /* Schritt 3: Token als Marken, Aufbau als Kästen ineinander */
+    .marken { display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;min-height:3.6em; }
+    .marke { border:2px solid #cbd5e1;border-radius:8px;padding:4px 10px 6px;text-align:center;background:#fff; }
+    .marke .t { display:block;font-family:Consolas,monospace;font-size:1.2rem;font-weight:700; }
+    .marke .a { display:block;font-size:.8rem;color:var(--muted); }
+    .marke.wort { border-color:#b45309;background:var(--aktiv-bg); }
+    .marke.name { border-color:var(--blau);background:#dbeafe; }
+    .marke.zahl { border-color:var(--accent);background:#ccfbf1; }
+    .aufbau { margin:10px 0;min-height:3em;overflow-x:auto; }
+    .knoten { border:2px solid var(--blau);border-radius:8px;padding:6px 10px 8px;margin:4px 0 0;background:#eff6ff;width:max-content; }
+    .knoten > .teile { display:flex;gap:12px;align-items:flex-start; }
+    .knoten .knoten { background:#fff; }
+    .knoten .knoten .knoten { background:#eff6ff; }
+    .knoten .knoten .knoten .knoten { background:#fff; }
+    .knoten > .titel { display:block;font-weight:700;color:var(--blau);font-size:.92rem; }
+    .knoten .rolle { color:var(--muted);font-size:.88rem;margin-top:4px; }
+    .blatt { font-family:Consolas,monospace;font-size:1.05rem;font-weight:700; }
+    .meldung { border-left:4px solid #b91c1c;background:#fef2f2;border-radius:8px;padding:10px 14px;margin:10px 0;color:#7f1d1d; }
+
+    @media (max-width:760px) { .zwei, .netze { grid-template-columns:minmax(0,1fr); } .weg .pfeil { display:none; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Höhere und niedrigere Programmiersprachen</h1>
+    <p>Der Prozessor führt nur Maschinensprache aus. Die Seite zeigt, wie Maschinensprache aussieht, wie ein Programm aus einer höheren Sprache dorthin kommt und welche Fehler dabei auffallen.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–19.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Maschinensprache</button>
+    <button type="button" class="tab" data-stufe="2">2 Compiler und Interpreter</button>
+    <button type="button" class="tab" data-stufe="3">3 Token und Syntax</button>
+    <button type="button" class="tab" data-stufe="4">4 Fehler</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Die Programme der bisherigen Seiten zu Kapitel 2 sind für Menschen geschrieben, mit Wörtern wie <code>WHILE</code> und <code>IF</code>. Auch Go ist eine solche Sprache. Sie heißen höhere Programmiersprachen.</p>
+    <p>Der Prozessor versteht davon nichts. Er führt nur Befehle seiner Maschinensprache aus. Jeder Prozessortyp hat eine eigene.</p>
+    <p>Ein Programm in einer höheren Sprache muss deshalb erst in Maschinensprache übersetzt werden. Das erledigt ein Übersetzungsprogramm, der Compiler.</p>
+    <div class="weg">
+      <div class="station"><span class="name">Programm in höherer Sprache</span><span class="aufgabe">Ein Mensch schreibt und liest es.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station werkzeug"><span class="name">Compiler</span><span class="aufgabe">Er zerlegt den Text und übersetzt ihn.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station"><span class="name">Programm in Maschinensprache</span><span class="aufgabe">Es besteht aus Bitmustern.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station"><span class="name">Prozessor</span><span class="aufgabe">Er führt Befehl für Befehl aus.</span></div>
+    </div>
+    <p>Die Seite geht in vier Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt ein Programm in Maschinensprache: eine Reihe von Bitmustern mit Sprungbefehlen.</li>
+      <li><strong>Schritt 2</strong> zeigt zwei Wege, ein Programm auszuführen: mit Compiler und mit Interpreter.</li>
+      <li><strong>Schritt 3</strong> zeigt, wie ein Compiler eine Anweisung liest: erst die Token, dann der Aufbau.</li>
+      <li><strong>Schritt 4</strong> zeigt drei Arten von Fehlern und wer sie bemerkt.</li>
+    </ul>
+    <p>Als Beispiel dient in Schritt 1, 2 und 4 das Programm aus Abschnitt 2.5 des Kurstexts. Es berechnet den größten gemeinsamen Teiler von zwei Zahlen:</p>
+    <div class="code-block">Eingabe n, m (positive ganze Zahlen);
+WHILE n ≠ m
+   IF n &gt; m THEN n ← n − m
+   ELSE m ← m − n;
+Ausgabe n</div>
+    <p>Wie dieses Programm abläuft, zeigt die Seite <a href="go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>. Wie der Prozessor einen Befehl holt und ausführt, zeigt der <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</p>
+    <p>Kapitel 2 des Kurstexts kommt ohne Go aus. Die Programmzeilen auf dieser Seite gehören deshalb zu keiner bestimmten Programmiersprache. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts steht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Maschinensprache</h2>
+    <p>Ein Programm in Maschinensprache ist eine Reihe von Bitmustern im Speicher. Ein Befehl beginnt mit einem Bitmuster für die Art des Befehls. Das ist der Befehlscode. Direkt dahinter stehen die Bitmuster für seine Argumente. Direkt dahinter beginnt der nächste Befehl.</p>
+    <p>Wie viele Argumente ein Befehl hat, hängt von der Art des Befehls ab. Die Befehle sind deshalb verschieden lang. Der Prozessor muss bei jedem Befehl neu berechnen, wo der nächste beginnt.</p>
+
+    <h3>Die Maschinensprache dieser Seite</h3>
+    <p>Sie ist für diese Seite erfunden und hat sieben Arten von Befehlen. Jedes Bitmuster ist ein Byte, also 8 Bit. Die Variable n hat die Nummer <code>00000001</code>, die Variable m hat die Nummer <code>00000010</code>.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Befehlscode</th><th>Befehl in lesbarer Schreibweise</th><th>Was der Befehl bewirkt</th><th>Länge des Befehls</th></tr></thead>
+      <tbody>
+        <tr><td><code>00000000</code></td><td><code>HALT</code></td><td>Das Programm endet.</td><td>Der Befehl ist 1 Byte lang.</td></tr>
+        <tr><td><code>00000001</code></td><td><code>LIES x</code></td><td>Der Prozessor liest eine Zahl ein und speichert sie in der Variable x.</td><td>Der Befehl ist 2 Bytes lang.</td></tr>
+        <tr><td><code>00000010</code></td><td><code>GIB AUS x</code></td><td>Der Prozessor gibt den Wert der Variable x aus.</td><td>Der Befehl ist 2 Bytes lang.</td></tr>
+        <tr><td><code>00000011</code></td><td><code>SUB x, y</code></td><td>Die Variable x bekommt den Wert x − y.</td><td>Der Befehl ist 3 Bytes lang.</td></tr>
+        <tr><td><code>00000100</code></td><td><code>SPRINGE ZU a</code></td><td>Der Prozessor macht mit dem Befehl an der Adresse a weiter.</td><td>Der Befehl ist 2 Bytes lang.</td></tr>
+        <tr><td><code>00000101</code></td><td><code>SPRINGE WENN x = y ZU a</code></td><td>Sind x und y gleich, macht der Prozessor an der Adresse a weiter. Sonst folgt der nächste Befehl.</td><td>Der Befehl ist 4 Bytes lang.</td></tr>
+        <tr><td><code>00000110</code></td><td><code>SPRINGE WENN x &gt; y ZU a</code></td><td>Ist x größer als y, macht der Prozessor an der Adresse a weiter. Sonst folgt der nächste Befehl.</td><td>Der Befehl ist 4 Bytes lang.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Das Programm im Speicher</h3>
+    <p>Unten steht das Programm zum größten gemeinsamen Teiler in dieser Maschinensprache. Es belegt 25 Bytes, über jedem Byte steht seine Adresse. Jeder Schritt zerlegt einen Befehl, so wie der Prozessor es tun muss.</p>
+    <div class="hinweis">Erst vorhersagen, dann zerlegen: Die Bytes an den Adressen 0, 1 und 2 haben dasselbe Bitmuster <code>00000001</code>. Welche davon sind Befehlscodes, und welches ist ein Argument?</div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="1,1">nächsten Befehl zerlegen</button>
+      <button type="button" data-lauf="1,-1">einen Befehl zurück</button>
+      <button type="button" data-lauf="1,0">von vorn</button>
+      <span class="zaehler" id="zaehler1"></span>
+    </div>
+    <div class="bytes" id="bytes1"></div>
+    <div class="legende"><span class="l-code">Befehlscode des Befehls, der gerade zerlegt ist</span><span class="l-arg">seine Argumente</span><span class="l-alt">schon zerlegt</span><span>noch nicht zerlegt</span></div>
+    <div class="auskunft" id="erkl1"></div>
+    <div class="zwei">
+      <div>
+        <p class="progtitel">Programm in höherer Sprache</p>
+        <ol class="programm" id="hoch1"></ol>
+      </div>
+      <div>
+        <p class="progtitel">Zerlegte Befehle in lesbarer Schreibweise, vorn die Adresse</p>
+        <ol class="programm" id="masch1"></ol>
+      </div>
+    </div>
+
+    <h3>Was an dem Programm auffällt</h3>
+    <ul>
+      <li><strong>Es ist imperativ:</strong> Jeder Befehl ist eine Anweisung an den Prozessor, und die Befehle laufen der Reihe nach.</li>
+      <li><strong>Es ist nicht strukturiert:</strong> Eine Schleife und einen Block gibt es nicht. Die <code>WHILE</code>-Schleife besteht hier aus drei Sprungbefehlen, an den Adressen 4, 15 und 20.</li>
+      <li><strong>Es ist für Menschen schlecht lesbar:</strong> Ein Bitmuster wie <code>00000001</code> bedeutet an einer Stelle <code>LIES</code> und an einer anderen die Variable n. Was gilt, ergibt sich erst aus der Zerlegung.</li>
+      <li><strong>Es hängt vom Prozessor ab:</strong> Ein anderer Prozessortyp hat andere Befehle und andere Befehlscodes. Dasselbe Programm sieht dort anders aus.</li>
+    </ul>
+    <p>Dieselben Sprünge zeigt das Flussdiagramm auf der Seite <a href="go_k2_ggt_darstellung_interaktiv.html#flussdiagramm">Größter gemeinsamer Teiler, Schritt 2</a>. Wie Blöcke den Sprung ersetzen, zeigt die Seite <a href="go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung, Schritt 3</a>.</p>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–18. Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind eigene Zutaten. Das Programm in höherer Sprache stammt aus Abschnitt 2.5, Seite 13.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Compiler und Interpreter</h2>
+    <p>Es gibt zwei Wege, ein Programm in einer höheren Sprache auszuführen:</p>
+    <ul>
+      <li><strong>Mit Compiler:</strong> Der Compiler übersetzt das ganze Programm in Maschinensprache. Erst danach läuft es, und zwar das übersetzte Programm auf dem Prozessor.</li>
+      <li><strong>Mit Interpreter:</strong> Der Interpreter ist selbst ein Programm. Er liest eine Anweisung, bildet ihre Wirkung nach und liest dann die nächste. Ein Programm in Maschinensprache entsteht dabei nicht.</li>
+    </ul>
+    <div class="hinweis">Erst vorhersagen, dann ausführen: Das Programm läuft mit den Eingaben 6 und 4. Wie oft liest der Interpreter die Zeile 2, und wie oft übersetzt der Compiler sie?</div>
+    <div class="zeile">
+      <span class="name">Weg</span>
+      <button type="button" data-weg="compiler">mit Compiler</button>
+      <button type="button" data-weg="interpreter">mit Interpreter</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="2,1">nächster Schritt</button>
+      <button type="button" data-lauf="2,-1">einen Schritt zurück</button>
+      <button type="button" data-lauf="2,0">von vorn</button>
+      <span class="zaehler" id="zaehler2"></span>
+    </div>
+    <div class="zwei">
+      <div>
+        <p class="progtitel">Programm in höherer Sprache</p>
+        <ol class="programm" id="hoch2"></ol>
+      </div>
+      <div>
+        <p class="progtitel">Programm in Maschinensprache, lesbar geschrieben</p>
+        <ol class="programm" id="masch2"></ol>
+      </div>
+    </div>
+    <div class="speicher">
+      <h4>Variablen</h4>
+      <div class="kaesten" id="vars2"></div>
+      <h4 style="margin-top:12px">Ausgabe</h4>
+      <div class="ausgabe" id="aus2"></div>
+    </div>
+    <div class="auskunft" id="erkl2"></div>
+    <p>Die Maschinensprache ist die aus Schritt 1. Dort steht, was die Befehle bedeuten.</p>
+
+    <h3>Viele Sprachen, viele Prozessoren</h3>
+    <p>Ein Compiler übersetzt aus einer bestimmten Sprache in eine bestimmte Maschinensprache. Bei n höheren Sprachen und m Maschinensprachen wären das n · m Compiler.</p>
+    <p>Eine Zwischensprache senkt die Zahl. Jede höhere Sprache wird in die Zwischensprache übersetzt, und die Zwischensprache wird in jede Maschinensprache übersetzt. Das sind n + m Compiler.</p>
+    <div class="hinweis">Erst vorhersagen, dann einstellen: Bei welchen Werten von n und m spart die Zwischensprache nichts?</div>
+    <div class="zeile">
+      <label for="reglerN">höhere Sprachen n</label><input type="range" id="reglerN" min="1" max="6" value="4">
+      <label for="reglerM">Maschinensprachen m</label><input type="range" id="reglerM" min="1" max="6" value="3">
+    </div>
+    <div class="netze">
+      <div class="netz"><p>Ohne Zwischensprache: <span class="zahl" id="zahlOhne"></span></p><svg id="netzOhne" viewBox="0 0 330 250" role="img" aria-label="Je höherer Sprache und Maschinensprache ein Compiler"></svg></div>
+      <div class="netz"><p>Mit Zwischensprache: <span class="zahl" id="zahlMit"></span></p><svg id="netzMit" viewBox="0 0 330 250" role="img" aria-label="Alle Compiler führen über die Zwischensprache"></svg></div>
+    </div>
+    <div class="auskunft" id="erklNetz" style="min-height:0"></div>
+    <p>Jeder Strich ist ein Compiler. Links stehen die höheren Sprachen, rechts die Maschinensprachen.</p>
+
+    <h3>So geht es in Go weiter</h3>
+    <ul>
+      <li><strong>Go wird übersetzt:</strong> Der Befehl <code>go run</code> übersetzt ein Go-Programm und startet es gleich danach. Er kommt in Abschnitt 3.2 zum ersten Mal vor, Seiten 22–24.</li>
+    </ul>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 18. Die Eingaben 6 und 4 und die Zählung der gelesenen Zeilen sind eigene Zutaten.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Token und Syntax</h2>
+    <p>Im Kurstext wird der Compiler mit einem Übersetzer von Deutsch nach Englisch verglichen. Der Übersetzer zerlegt den deutschen Satz erst nach der deutschen Grammatik in Subjekt, Prädikat und Objekt. Danach baut er einen englischen Satz mit derselben Bedeutung.</p>
+    <p>Bei Programmiersprachen gibt es dafür zwei Wörter:</p>
+    <ul>
+      <li><strong>Syntax:</strong> Die Syntax ist die Grammatik der Sprache. Sie legt fest, welche Zeichenfolgen gültige Anweisungen und gültige Programme sind.</li>
+      <li><strong>Semantik:</strong> Die Semantik ist die Bedeutung, also was ein Programm an den gespeicherten Werten ändert und was es ausgibt. Das übersetzte Programm muss bei gleicher Eingabe dieselbe Ausgabe liefern wie das ursprüngliche.</li>
+    </ul>
+
+    <h3>Zwei Schritte der Zerlegung</h3>
+    <ul>
+      <li><strong>Lexikalische Analyse:</strong> Der Compiler teilt den Programmtext in seine kleinsten Elemente. Sie heißen Token. Ein Token ist zum Beispiel ein Name, eine Zahl, ein Zeichen wie <code>+</code> oder ein Wort mit fester Bedeutung wie <code>IF</code>.</li>
+      <li><strong>Syntaktische Analyse:</strong> Der Compiler erkennt an der Folge der Token, welche Anweisung dasteht und aus welchen Teilen sie besteht.</li>
+    </ul>
+    <div class="hinweis">Erst vorhersagen, dann zerlegen: Warum darf eine Variable nicht <code>a + b</code> heißen? Das Beispiel <code>a + b ← 5</code> zeigt es.</div>
+
+    <h3>Ausprobieren</h3>
+    <div class="zeile">
+      <label for="eingabe3">Anweisung</label><input id="eingabe3" type="text" maxlength="60" spellcheck="false">
+      <button type="button" class="haupt" id="zerlege3">zerlegen</button>
+    </div>
+    <div class="zeile">
+      <span class="name">Beispiele</span>
+      <button type="button" data-bsp="a ← a + b">a ← a + b</button>
+      <button type="button" data-bsp="x ← a + 2 · b">x ← a + 2 · b</button>
+      <button type="button" data-bsp="IF n &gt; m THEN n ← n − m ELSE m ← m − n">IF n &gt; m THEN … ELSE …</button>
+      <button type="button" data-bsp="a + b ← 5">a + b ← 5</button>
+      <button type="button" data-bsp="IF ← 3">IF ← 3</button>
+      <button type="button" data-bsp="preis ← 3 € + 2">preis ← 3 € + 2</button>
+    </div>
+    <p>Diese Seite versteht zwei Arten von Anweisungen: die Zuweisung und die Verzweigung mit <code>IF</code>, <code>THEN</code> und <code>ELSE</code>. Auf der Tastatur geht <code>&lt;-</code> für den Pfeil, <code>-</code> für Minus, <code>*</code> für den Malpunkt und <code>!=</code> für <code>≠</code>.</p>
+    <p class="progtitel">1. Lexikalische Analyse: die Token</p>
+    <div class="marken" id="marken3"></div>
+    <p class="progtitel">2. Syntaktische Analyse: der Aufbau der Anweisung</p>
+    <div class="aufbau" id="aufbau3"></div>
+    <div class="auskunft" id="erkl3"></div>
+
+    <h3>Was die Regeln für Token leisten</h3>
+    <ul>
+      <li><strong>Namen ohne Mehrdeutigkeit:</strong> Ein Name darf kein <code>+</code> enthalten. Sonst könnte <code>a + b</code> ein Name sein oder ein Ausdruck mit den zwei Variablen a und b.</li>
+      <li><strong>Wörter mit fester Bedeutung:</strong> <code>IF</code> ist für die Verzweigung vergeben. Als Name einer Variable ist es deshalb verboten.</li>
+      <li><strong>Punkt vor Strich:</strong> Im Aufbau von <code>x ← a + 2 · b</code> steckt die Multiplikation innen. Sie wird zuerst ausgerechnet.</li>
+    </ul>
+
+    <h3>So geht es in Go weiter</h3>
+    <ul>
+      <li><strong>Namen und Schlüsselwörter:</strong> Abschnitt 3.3.4, Seiten 30–32, nennt die Regeln für Namen in Go und die 25 Schlüsselwörter. Dazu gibt es die Seite <a href="../kap3-einfuehrung/go_bezeichner_arbeitsblatt.html">Richtige und falsche Bezeichner</a> und das <a href="../kap3-einfuehrung/go_bezeichner_schluesselwoerter_quiz.html">Quiz: Bezeichner und Schlüsselwörter</a>.</li>
+      <li><strong>Reihenfolge der Auswertung:</strong> Abschnitt 3.3.6, Seiten 35–36. Dazu gibt es das <a href="../kap3-einfuehrung/go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Quiz: Auswertungsreihenfolge und Bindungsstärken</a>.</li>
+    </ul>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 18. Das Beispiel <code>a + b</code> und das Wort <code>IF</code> stammen aus dem Kurstext. Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen sind eigene Zutaten.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Fehler</h2>
+    <p>Ob ein Programm richtig ist, lässt sich nur an einer Spezifikation messen. Sie legt fest, welche Eingaben gültig sind und welche Ausgabe zu welcher Eingabe richtig ist.</p>
+    <p>Die Spezifikation für das Programm dieser Seite:</p>
+    <ul>
+      <li><strong>Gültige Eingabe:</strong> zwei positive ganze Zahlen n und m.</li>
+      <li><strong>Richtige Ausgabe:</strong> der größte gemeinsame Teiler von n und m. Für 6 und 4 ist das 2, für 4 und 6 ebenfalls.</li>
+    </ul>
+
+    <h3>Drei Arten von Fehlern</h3>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Art des Fehlers</th><th>Was an dem Programm falsch ist</th><th>Wer den Fehler bemerkt und wann</th></tr></thead>
+      <tbody>
+        <tr><td>Syntaxfehler</td><td>Das Programm hält die Syntax der Sprache nicht ein.</td><td>Der Compiler bemerkt ihn beim Übersetzen, also zur Compile-Zeit. Er kann das Programm nicht übersetzen, es läuft nie.</td></tr>
+        <tr><td>Semantischer Fehler mit falscher Ausgabe</td><td>Das Programm lässt sich übersetzen und läuft, liefert aber eine andere Ausgabe als die Spezifikation verlangt.</td><td>Der Compiler bemerkt ihn nicht. Ein Mensch bemerkt ihn, wenn er die Ausgabe mit der Spezifikation vergleicht.</td></tr>
+        <tr><td>Semantischer Fehler ohne Ausgabe: Nichtterminierung</td><td>Das Programm lässt sich übersetzen und läuft, kommt aber nie zu einem Ende. Ein Grund ist eine schlecht gewählte Bedingung einer Schleife.</td><td>Der Compiler bemerkt ihn nicht. Ein Mensch wartet auf die Ausgabe und kann nicht sicher sein, ob das Programm nur sehr lange rechnet.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Ausprobieren</h3>
+    <p>Zur Wahl stehen die richtige Fassung des Programms und drei Fassungen mit je einem Fehler in einer Zeile.</p>
+    <div class="hinweis">Erst vorhersagen, dann ausführen: Welche Fassung hat welche Art von Fehler? Bei einer Fassung fällt der Fehler nur mit einer der zwei Eingaben auf.</div>
+    <div class="zeile">
+      <span class="name">Fassung</span>
+      <button type="button" data-fassung="ok">richtige Fassung</button>
+      <button type="button" data-fassung="A">Fassung A</button>
+      <button type="button" data-fassung="B">Fassung B</button>
+      <button type="button" data-fassung="C">Fassung C</button>
+    </div>
+    <div class="zeile">
+      <span class="name">Eingabe</span>
+      <button type="button" data-eingabe="6,4">6 und 4</button>
+      <button type="button" data-eingabe="4,6">4 und 6</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" data-lauf="4,1">nächster Schritt</button>
+      <button type="button" data-lauf="4,-1">einen Schritt zurück</button>
+      <button type="button" data-lauf="4,0">von vorn</button>
+      <span class="zaehler" id="zaehler4"></span>
+    </div>
+    <ol class="programm" id="prog4"></ol>
+    <div class="speicher">
+      <h4>Meldung des Compilers</h4>
+      <div class="ausgabe" id="comp4"></div>
+      <h4 style="margin-top:12px">Variablen</h4>
+      <div class="kaesten" id="vars4"></div>
+      <div class="verlauf" id="verlauf4"></div>
+      <h4 style="margin-top:12px">Ausgabe des Programms</h4>
+      <div class="ausgabe" id="aus4"></div>
+    </div>
+    <div class="auskunft" id="erkl4"></div>
+
+    <h3>So geht es in Go weiter</h3>
+    <ul>
+      <li><strong>Die erste Meldung des Go-Compilers:</strong> In Abschnitt 3.3.2, Seiten 27–29, steht ein Programm, das der Compiler mit <code>syntax error</code> ablehnt. Dazu gibt es das <a href="../kap3-einfuehrung/go_implizite_semikolons_quiz.html">Quiz: Implizite Semikolons</a>.</li>
+      <li><strong>Fehler in Go-Programmen suchen:</strong> Dazu gibt es die Seiten <a href="../kap3-einfuehrung/go_fehlersuche_programme_einfach.html">Fehlersuche in einfachen Programmen</a> und <a href="../kap3-einfuehrung/go_fehlersuche_programme.html">Fehlersuche in drei Programmen</a>.</li>
+      <li><strong>Schleifen, die nicht enden:</strong> Die Schleife mit Bedingung wird in Abschnitt 5.5.3.1 behandelt, Seiten 138–142. Dazu gibt es die Seite <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a>.</li>
+    </ul>
+    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 19. Die drei fehlerhaften Fassungen und die Eingaben sind eigene Zutaten. Im Kurstext folgt an dieser Stelle noch das Halteproblem. Die Seite lässt es aus.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="0">Zum Anfang</button>
+  </div>
+  </section>
+
+  <a href="../index.html">← Zurück zur Startseite</a>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const bin = v => v.toString(2).padStart(8, '0');
+  const mal = k => k === 1 ? 'einmal' : k === 2 ? 'zweimal' : k === 3 ? 'dreimal' : k + '-mal';
+
+  // ---------- Das Programm in höherer Sprache und in Maschinensprache ----------
+  const HOCH = ['Eingabe n, m', 'WHILE n ≠ m', '   IF n > m THEN n ← n − m', '   ELSE m ← m − n', 'Ausgabe n'];
+  // Ein Befehl ist eine Liste: Befehlscode, danach die Argumente. Variablen haben die Nummern 1 (n) und 2 (m).
+  const VN = { 1: 'n', 2: 'm' };
+  const ARGUMENTE = { 0: [], 1: ['var'], 2: ['var'], 3: ['var', 'var'], 4: ['adr'], 5: ['var', 'var', 'adr'], 6: ['var', 'var', 'adr'] };
+  const NAME = ['HALT', 'LIES', 'GIB AUS', 'SUB', 'SPRINGE ZU', 'SPRINGE WENN GLEICH', 'SPRINGE WENN GRÖSSER'];
+  const BEFEHLE = [[1, 1], [1, 2], [5, 1, 2, 22], [6, 2, 1, 17], [3, 1, 2], [4, 4], [3, 2, 1], [4, 4], [2, 1], [0]];
+  const ZEILE_ZU = [1, 1, 2, 3, 3, 3, 4, 4, 5, 5];                    // zu welcher Zeile des höheren Programms ein Befehl gehört
+  const ADR = [];                                                      // Adresse des ersten Bytes jedes Befehls
+  const BYTES = [];
+  BEFEHLE.forEach(b => { ADR.push(BYTES.length); b.forEach(v => BYTES.push(v)); });
+  function lesbar(b) {
+    switch (b[0]) {
+      case 0: return 'HALT';
+      case 1: return 'LIES ' + VN[b[1]];
+      case 2: return 'GIB AUS ' + VN[b[1]];
+      case 3: return 'SUB ' + VN[b[1]] + ', ' + VN[b[2]];
+      case 4: return 'SPRINGE ZU ' + b[1];
+      case 5: return 'SPRINGE WENN ' + VN[b[1]] + ' = ' + VN[b[2]] + ' ZU ' + b[3];
+      default: return 'SPRINGE WENN ' + VN[b[1]] + ' > ' + VN[b[2]] + ' ZU ' + b[3];
+    }
+  }
+  const POS = { 1: 0, 2: 0, 4: 0 };                                    // Zahl der ausgeführten Schritte je Reiter
+
+  const reihe = (nr, text, klasse, zusatz) => '<li class="' + klasse + '"><span class="nr">' + nr + '</span><span>' + esc(text) + '</span>' + (zusatz || '') + '</li>';
+  const kasten = (name, wert, neu) => '<span class="kasten"><span class="etikett">' + name + '</span><span class="inhalt' + (wert === null ? ' leer' : '') + (neu ? ' neu' : '') + '">' + (wert === null ? 'kein Wert' : String(wert).replace('-', '−')) + '</span></span>';
+  function knoepfe(nr, k, ende) {
+    document.querySelectorAll('[data-lauf^="' + nr + ',"]').forEach(b => {
+      b.disabled = Number(b.dataset.lauf.split(',')[1]) > 0 ? k >= ende : k === 0;
+    });
+  }
+
+  // ---------- Schritt 1: Befehl für Befehl zerlegen ----------
+  function text1(i) {
+    const b = BEFEHLE[i], a = ADR[i], arten = ARGUMENTE[b[0]], L = b.length;
+    let t = 'Adresse ' + a + ': Hier beginnt ein Befehl, also ist ' + bin(b[0]) + ' ein Befehlscode. Er steht für ' + NAME[b[0]] + '. ';
+    t += arten.length === 0 ? 'Dieser Befehl hat kein Argument und ist 1 Byte lang. '
+      : 'Dieser Befehl hat ' + (arten.length === 1 ? 'ein Argument' : arten.length === 2 ? 'zwei Argumente' : 'drei Argumente') + ' und ist ' + L + ' Bytes lang. ';
+    arten.forEach((art, j) => {
+      const v = b[j + 1];
+      t += 'Adresse ' + (a + j + 1) + ': ' + bin(v) + ' ist ' + (art === 'var' ? 'die Nummer der Variable ' + VN[v] : 'die Adresse ' + v) + '. ';
+    });
+    t += 'Lesbar geschrieben: ' + lesbar(b) + '. ';
+    if (b[0] === 0) t += 'Das Programm ist zu Ende. Alle 25 Bytes sind zerlegt.';
+    else t += 'Der nächste Befehl beginnt bei Adresse ' + a + ' + ' + L + ' = ' + (a + L) + '.';
+    if (i === 1) t += ' Von den drei gleichen Bitmustern an den Adressen 0, 1 und 2 sind also zwei Befehlscodes, und eines ist die Variable n.';
+    return t;
+  }
+  function zeige1() {
+    const k = POS[1], i = k - 1;
+    el('bytes1').innerHTML = BYTES.map((v, a) => {
+      let klasse = '';
+      if (k) {
+        if (a === ADR[i]) klasse = ' b-code';
+        else if (a > ADR[i] && a < ADR[i] + BEFEHLE[i].length) klasse = ' b-arg';
+        else if (a < ADR[i]) klasse = ' b-alt';
+      }
+      return '<div class="byte' + klasse + '"><span class="adr">Adresse ' + a + '</span><span class="bits">' + bin(v) + '</span></div>';
+    }).join('');
+    el('hoch1').innerHTML = HOCH.map((z, j) => reihe(j + 1, z, k && ZEILE_ZU[i] === j + 1 ? 'aktuell' : 'fertig')).join('');
+    el('masch1').innerHTML = k ? BEFEHLE.slice(0, k).map((b, j) => reihe(ADR[j], lesbar(b), j === i ? 'aktuell' : 'fertig')).join('')
+      : '<li class="keins">Noch ist kein Befehl zerlegt.</li>';
+    el('erkl1').textContent = k ? text1(i) + ' Der Befehl gehört zu Zeile ' + ZEILE_ZU[i] + ' des Programms in höherer Sprache.'
+      : 'Noch ist kein Befehl zerlegt. Der Prozessor weiß nur: Das Programm beginnt bei Adresse 0. Das Byte dort ist also ein Befehlscode.';
+    el('zaehler1').textContent = k + ' von ' + BEFEHLE.length + ' Befehlen zerlegt';
+    knoepfe(1, k, BEFEHLE.length);
+  }
+
+  // ---------- Schritt 2: zwei Wege, dasselbe Programm auszuführen ----------
+  // Jeder Stand nennt: markierte Zeile hoch, sichtbare Befehle (bis), markierter Befehl masch, Werte, Ausgabe, Zähler gelesen, Text.
+  const EIN = [6, 4];
+  function ablaufInterpreter() {
+    const T = [], gelesen = [0, 0, 0, 0, 0];
+    let n = null, m = null, aus = null;
+    const merke = (zeile, neu, text) => { gelesen[zeile - 1]++; T.push({ hoch: zeile, bis: 0, masch: -1, n: n, m: m, aus: aus, neu: neu, gelesen: gelesen.slice(), text: text }); };
+    const wieder = z => gelesen[z - 1] ? ' Er liest und zerlegt diese Zeile jetzt zum ' + (gelesen[z - 1] + 1) + '. Mal.' : '';
+    n = EIN[0]; m = EIN[1];
+    merke(1, ['n', 'm'], 'Der Interpreter liest Zeile 1, zerlegt sie und bildet ihre Wirkung sofort nach: n bekommt den Wert ' + n + ', m den Wert ' + m + '.');
+    for (;;) {
+      if (n === m) { merke(2, [], 'Der Interpreter liest Zeile 2 und prüft die Bedingung: n und m haben beide den Wert ' + n + '. Die Schleife endet.' + wieder(2)); break; }
+      merke(2, [], 'Der Interpreter liest Zeile 2 und prüft die Bedingung: ' + n + ' und ' + m + ' sind verschieden. Es geht in die Schleife.' + wieder(2));
+      if (n > m) {
+        const alt = n; n -= m;
+        merke(3, ['n'], 'Der Interpreter liest Zeile 3: ' + alt + ' ist größer als ' + m + '. Er rechnet ' + alt + ' − ' + m + ' = ' + n + ' und speichert das Ergebnis in n.' + wieder(3));
+      } else {
+        merke(3, [], 'Der Interpreter liest Zeile 3: ' + n + ' ist nicht größer als ' + m + '. Die Zuweisung hinter THEN fällt aus.' + wieder(3));
+        const alt = m; m -= n;
+        merke(4, ['m'], 'Der Interpreter liest Zeile 4: Er rechnet ' + alt + ' − ' + n + ' = ' + m + ' und speichert das Ergebnis in m.' + wieder(4));
+      }
+    }
+    aus = String(n);
+    merke(5, [], 'Der Interpreter liest Zeile 5 und gibt den Wert von n aus: ' + n + '. Das Programm ist zu Ende. Der Interpreter hat Zeile 2 ' + mal(gelesen[1]) + ' gelesen und zerlegt. Ein Programm in Maschinensprache ist nicht entstanden.');
+    return T;
+  }
+  function ablaufCompiler() {
+    const T = [];
+    const UEB = [
+      [2, 'Der Compiler übersetzt Zeile 1 in zwei Befehle: LIES n und LIES m.'],
+      [3, 'Der Compiler übersetzt Zeile 2 in einen Sprungbefehl. Die Bedingung steht dort umgekehrt: Sind n und m gleich, springt der Prozessor hinter die Schleife zu Adresse 22.'],
+      [6, 'Der Compiler übersetzt Zeile 3 in drei Befehle. Adresse 8: Ist m größer als n, überspringt der Prozessor die Subtraktion. Gleich sind die zwei Zahlen an dieser Stelle nie. Adresse 12: n ← n − m. Adresse 15: der Sprung zurück zur Bedingung der Schleife.'],
+      [8, 'Der Compiler übersetzt Zeile 4 in zwei Befehle: m ← m − n und den Sprung zurück zu Adresse 4.'],
+      [10, 'Der Compiler übersetzt Zeile 5 in GIB AUS n und HALT. Die Übersetzung ist fertig. Bis hierher ist keine Anweisung ausgeführt: n und m haben noch keinen Wert.']
+    ];
+    const gelesen = [0, 0, 0, 0, 0];
+    UEB.forEach((u, j) => { gelesen[j] = 1; T.push({ hoch: j + 1, bis: u[0], masch: -1, n: null, m: null, aus: null, neu: [], gelesen: gelesen.slice(), text: u[1], phase: 'übersetzen' }); });
+    // Der Prozessor führt das übersetzte Programm aus
+    const v = { 1: null, 2: null }, eingabe = EIN.slice();
+    let i = 0, aus = null;
+    for (let schutz = 0; schutz < 60; schutz++) {
+      const b = BEFEHLE[i], a = ADR[i], x = v[b[1]], y = v[b[2]], nx = VN[b[1]], ny = VN[b[2]];
+      let neu = [], text = 'Adresse ' + a + ', ' + lesbar(b) + ': ', weiter = i + 1;
+      if (b[0] === 1) { v[b[1]] = eingabe.shift(); neu = [nx]; text += 'Der Prozessor liest die Zahl ' + v[b[1]] + ' ein und speichert sie in ' + nx + '.'; }
+      else if (b[0] === 2) { aus = String(x); text += 'Der Prozessor gibt den Wert von ' + nx + ' aus: ' + x + '.'; }
+      else if (b[0] === 3) { v[b[1]] = x - y; neu = [nx]; text += 'Der Prozessor rechnet ' + x + ' − ' + y + ' = ' + (x - y) + ' und speichert das Ergebnis in ' + nx + '.'; }
+      else if (b[0] === 4) { weiter = ADR.indexOf(b[1]); text += 'Der Prozessor springt zu Adresse ' + b[1] + '.'; }
+      else if (b[0] === 5 || b[0] === 6) {
+        const ja = b[0] === 5 ? x === y : x > y;
+        text += nx + ' = ' + x + ' und ' + ny + ' = ' + y + '. ' + (b[0] === 5 ? (ja ? 'Die Werte sind gleich.' : 'Die Werte sind verschieden.') : (ja ? x + ' ist größer als ' + y + '.' : x + ' ist nicht größer als ' + y + '.')) +
+          (ja ? ' Der Prozessor springt zu Adresse ' + b[3] + '.' : ' Der Prozessor springt nicht und macht bei Adresse ' + ADR[i + 1] + ' weiter.');
+        if (ja) weiter = ADR.indexOf(b[3]);
+      } else text += 'Das Programm ist zu Ende. Der Compiler hat jede Zeile einmal übersetzt, auch Zeile 2. Der Prozessor hat das Programm in höherer Sprache nie gesehen.';
+      T.push({ hoch: ZEILE_ZU[i], bis: 10, masch: i, n: v[1], m: v[2], aus: aus, neu: neu, gelesen: gelesen.slice(), text: text, phase: 'ausführen' });
+      if (b[0] === 0) break;
+      i = weiter;
+    }
+    return T;
+  }
+  const ABLAUF2 = { compiler: ablaufCompiler(), interpreter: ablaufInterpreter() };
+  let weg = 'compiler';
+  function zeige2() {
+    const T = ABLAUF2[weg], k = POS[2], S = k ? T[k - 1] : null;
+    const leser = weg === 'compiler' ? 'übersetzt' : 'gelesen';
+    el('hoch2').innerHTML = HOCH.map((z, j) => {
+      const oft = S ? S.gelesen[j] : 0;
+      return reihe(j + 1, z, S && S.hoch === j + 1 && S.masch < 0 ? 'aktuell' : oft ? 'fertig' : '', oft ? '<span class="oft">' + mal(oft) + ' ' + leser + '</span>' : '');
+    }).join('');
+    el('masch2').innerHTML = weg === 'interpreter' ? '<li class="keins">Mit Interpreter entsteht kein Programm in Maschinensprache.</li>'
+      : S && S.bis ? BEFEHLE.slice(0, S.bis).map((b, j) => reihe(ADR[j], lesbar(b), S.masch === j ? 'aktuell' : 'fertig')).join('')
+      : '<li class="keins">Noch ist keine Zeile übersetzt.</li>';
+    el('vars2').innerHTML = kasten('n', S ? S.n : null, S && S.neu.indexOf('n') >= 0) + kasten('m', S ? S.m : null, S && S.neu.indexOf('m') >= 0);
+    el('aus2').innerHTML = S && S.aus !== null ? esc(S.aus) : '<span class="leer">Das Programm hat noch nichts ausgegeben.</span>';
+    el('erkl2').textContent = S ? S.text
+      : weg === 'compiler' ? 'Gewählt ist der Weg mit Compiler. Noch ist keine Zeile übersetzt. Erst kommt die Übersetzung aller fünf Zeilen, danach führt der Prozessor das übersetzte Programm aus.'
+                           : 'Gewählt ist der Weg mit Interpreter. Noch ist keine Zeile gelesen. Der Interpreter liest eine Zeile und bildet ihre Wirkung sofort nach.';
+    el('zaehler2').textContent = 'Schritt ' + k + ' von ' + T.length + (S && S.phase ? (S.phase === 'übersetzen' ? ': Der Compiler übersetzt.' : ': Der Prozessor führt aus.') : '');
+    document.querySelectorAll('[data-weg]').forEach(b => b.classList.toggle('gewaehlt', b.dataset.weg === weg));
+    knoepfe(2, k, T.length);
+  }
+
+  // Zwischensprache: n · m Compiler gegen n + m Compiler
+  function zeichneNetz(id, n, m, mitte) {
+    const y = (i, zahl) => zahl === 1 ? 125 : 22 + i * (206 / (zahl - 1));
+    let striche = '', kaestchen = '';
+    for (let i = 0; i < n; i++) kaestchen += '<rect x="6" y="' + (y(i, n) - 12) + '" width="84" height="24" rx="5"/><text x="48" y="' + (y(i, n) + 4) + '" text-anchor="middle">Sprache ' + (i + 1) + '</text>';
+    for (let j = 0; j < m; j++) kaestchen += '<rect x="230" y="' + (y(j, m) - 12) + '" width="94" height="24" rx="5"/><text x="277" y="' + (y(j, m) + 4) + '" text-anchor="middle">Maschine ' + (j + 1) + '</text>';
+    if (mitte) {
+      for (let i = 0; i < n; i++) striche += '<line x1="90" y1="' + y(i, n) + '" x2="126" y2="125"/>';
+      for (let j = 0; j < m; j++) striche += '<line x1="194" y1="125" x2="230" y2="' + y(j, m) + '"/>';
+      kaestchen += '<rect class="mitte" x="126" y="106" width="68" height="38" rx="5"/><text x="160" y="122" text-anchor="middle">Zwischen-</text><text x="160" y="137" text-anchor="middle">sprache</text>';
+    } else {
+      for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) striche += '<line x1="90" y1="' + y(i, n) + '" x2="230" y2="' + y(j, m) + '"/>';
+    }
+    el(id).innerHTML = striche + kaestchen;
+  }
+  let zahlN = 4, zahlM = 3;
+  function zeigeNetz() {
+    zahlN = Number(el('reglerN').value); zahlM = Number(el('reglerM').value);
+    const ohne = zahlN * zahlM, mit = zahlN + zahlM;
+    zeichneNetz('netzOhne', zahlN, zahlM, false);
+    zeichneNetz('netzMit', zahlN, zahlM, true);
+    el('zahlOhne').textContent = 'n · m = ' + zahlN + ' · ' + zahlM + ' = ' + ohne + ' Compiler';
+    el('zahlMit').textContent = 'n + m = ' + zahlN + ' + ' + zahlM + ' = ' + mit + ' Compiler';
+    el('erklNetz').textContent = 'Eingestellt sind n = ' + zahlN + ' höhere Sprachen und m = ' + zahlM + ' Maschinensprachen. ' +
+      (ohne > mit ? 'Die Zwischensprache spart ' + (ohne - mit) + ' Compiler.'
+        : ohne === mit ? 'Beide Wege brauchen gleich viele Compiler. Die Zwischensprache spart hier nichts.'
+        : 'Die Zwischensprache kostet hier ' + (mit - ohne) + ' Compiler mehr. Sie lohnt sich erst, wenn es mehrere Sprachen und mehrere Maschinensprachen gibt.');
+  }
+
+  // ---------- Schritt 3: Token und Aufbau einer Anweisung ----------
+  const WORT = ['IF', 'THEN', 'ELSE', 'WHILE'];
+  const ARTNAME = { wort: 'Schlüsselwort', name: 'Name', zahl: 'Zahl', zeichen: 'Zeichen' };
+  const EINZEL = { '←': '←', '+': '+', '-': '−', '−': '−', '*': '·', '·': '·', '>': '>', '<': '<', '=': '=', '≠': '≠', '(': '(', ')': ')' };
+  // Lexikalische Analyse: aus dem Text wird eine Folge von Token
+  function token(text) {
+    const t = [];
+    let i = 0;
+    while (i < text.length) {
+      const rest = text.slice(i), ch = text[i];
+      let m;
+      if (/\s/.test(ch)) { i++; continue; }
+      if ((m = /^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß0-9]*/.exec(rest))) { t.push({ art: WORT.indexOf(m[0]) >= 0 ? 'wort' : 'name', text: m[0] }); i += m[0].length; continue; }
+      if ((m = /^[0-9]+/.exec(rest))) { t.push({ art: 'zahl', text: m[0] }); i += m[0].length; continue; }
+      if (rest.startsWith('<-')) { t.push({ art: 'zeichen', text: '←' }); i += 2; continue; }
+      if (rest.startsWith('!=')) { t.push({ art: 'zeichen', text: '≠' }); i += 2; continue; }
+      if (EINZEL[ch]) { t.push({ art: 'zeichen', text: EINZEL[ch] }); i++; continue; }
+      return { token: t, fehler: 'Das Zeichen „' + ch + '“ gehört zu keinem Token dieser Sprache. Die Zerlegung bricht an dieser Stelle ab.' };
+    }
+    return { token: t, fehler: null };
+  }
+  // Syntaktische Analyse: aus der Folge der Token wird der Aufbau. Ein Fehler wird als Error geworfen.
+  function aufbau(t) {
+    let p = 0;
+    const ist = (art, text) => p < t.length && t[p].art === art && (text === undefined || t[p].text === text);
+    const zeichen = liste => p < t.length && t[p].art === 'zeichen' && liste.indexOf(t[p].text) >= 0;
+    const da = () => p < t.length ? 'Dort steht „' + t[p].text + '“.' : 'Dort ist die Anweisung schon zu Ende.';
+    function faktor() {
+      if (ist('name')) return { blatt: 'Name ' + t[p++].text };
+      if (ist('zahl')) return { blatt: 'Zahl ' + t[p++].text };
+      if (zeichen(['('])) {
+        p++;
+        const a = ausdruck();
+        if (!zeichen([')'])) throw new Error('Zu der Klammer „(“ fehlt die schließende Klammer „)“. ' + da());
+        p++;
+        return a;
+      }
+      throw new Error('An dieser Stelle muss ein Name, eine Zahl oder eine Klammer stehen. ' + da() + (ist('wort') ? ' ' + t[p].text + ' ist ein Schlüsselwort und kein Name.' : ''));
+    }
+    function produkt() {
+      let links = faktor();
+      while (zeichen(['·'])) { p++; links = { titel: 'Operation ·', teile: [['linker Teil', links], ['rechter Teil', faktor()]] }; }
+      return links;
+    }
+    function ausdruck() {
+      let links = produkt();
+      while (zeichen(['+', '−'])) { const op = t[p++].text; links = { titel: 'Operation ' + op, teile: [['linker Teil', links], ['rechter Teil', produkt()]] }; }
+      return links;
+    }
+    function zuweisung() {
+      if (!ist('name')) throw new Error('Eine Zuweisung beginnt mit dem Namen einer Variable. ' + da() + (ist('wort') ? ' ' + t[p].text + ' ist ein Schlüsselwort und kein Name.' : ''));
+      const ziel = t[p++].text;
+      if (!zeichen(['←'])) {
+        if (WORT.indexOf(ziel.toUpperCase()) >= 0) throw new Error('„' + ziel + '“ ist hier ein Name. Die Schlüsselwörter dieser Seite stehen in Großbuchstaben: ' + ziel.toUpperCase() + '. Hinter einem Namen muss der Pfeil ← stehen.');
+        const pfeil = t.findIndex((x, i) => i >= p && x.art === 'zeichen' && x.text === '←');
+        if (pfeil > 0) throw new Error('Links vom Pfeil ← muss genau ein Name stehen. Dort stehen ' + (pfeil - (p - 1)) + ' Token: ' + t.slice(p - 1, pfeil).map(x => x.text).join(', ') + '. Die Zerlegung in Token hat aus „' + t.slice(p - 1, pfeil).map(x => x.text).join(' ') + '“ keinen einzelnen Namen gemacht.');
+        throw new Error('Hinter dem Namen ' + ziel + ' muss der Pfeil ← stehen. ' + da());
+      }
+      p++;
+      return { titel: 'Zuweisung', teile: [['Ziel', { blatt: 'Name ' + ziel }], ['neuer Wert', ausdruck()]] };
+    }
+    function bedingung() {
+      const links = ausdruck();
+      if (!zeichen(['>', '<', '=', '≠'])) throw new Error('In der Bedingung fehlt ein Vergleich mit >, <, = oder ≠. ' + da());
+      const op = t[p++].text;
+      return { titel: 'Vergleich ' + op, teile: [['linker Teil', links], ['rechter Teil', ausdruck()]] };
+    }
+    function anweisung() {
+      if (ist('wort', 'IF')) {
+        p++;
+        if (zeichen(['←'])) throw new Error('Hinter IF muss eine Bedingung stehen. Dort steht „←“. IF ist ein Schlüsselwort und darf kein Name einer Variable sein.');
+        const b = bedingung();
+        if (!ist('wort', 'THEN')) throw new Error('Hinter der Bedingung muss THEN stehen. ' + da());
+        p++;
+        const teile = [['Bedingung', b], ['Anweisung hinter THEN', zuweisung()]];
+        if (ist('wort', 'ELSE')) { p++; teile.push(['Anweisung hinter ELSE', zuweisung()]); }
+        return { titel: 'Verzweigung', teile: teile };
+      }
+      if (ist('wort', 'WHILE')) throw new Error('WHILE ist ein Schlüsselwort. Den Aufbau einer Schleife zeigt diese Seite nicht, sie kennt nur Zuweisung und Verzweigung.');
+      if (ist('wort')) throw new Error('Eine Anweisung beginnt hier mit einem Namen oder mit IF. Dort steht das Schlüsselwort ' + t[p].text + '.');
+      return zuweisung();
+    }
+    if (!t.length) throw new Error('Es gibt kein Token, also auch keine Anweisung.');
+    const a = anweisung();
+    if (p < t.length) throw new Error('Die Anweisung ist bis hierher vollständig. Dahinter steht aber noch „' + t[p].text + '“.');
+    return a;
+  }
+  const knotenHtml = k => k.blatt ? '<span class="blatt">' + esc(k.blatt) + '</span>'
+    : '<div class="knoten"><span class="titel">' + esc(k.titel) + '</span>' + '<div class="teile">' + k.teile.map(q => '<div><div class="rolle">' + esc(q[0]) + ':</div>' + knotenHtml(q[1]) + '</div>').join('') + '</div></div>';
+  const knotenText = k => k.blatt ? k.blatt : k.titel + ' [' + k.teile.map(q => q[0] + ': ' + knotenText(q[1])).join('; ') + ']';
+  let stand3 = { text: '', token: [], lexFehler: null, baum: null, synFehler: null };
+  function zerlege(text) {
+    const lex = token(text);
+    stand3 = { text: text.trim(), token: lex.token, lexFehler: lex.fehler, baum: null, synFehler: null };
+    if (!lex.fehler) {
+      try { stand3.baum = aufbau(lex.token); } catch (f) { stand3.synFehler = f.message; }
+    }
+    el('eingabe3').value = text;
+    el('marken3').innerHTML = lex.token.map(x => '<span class="marke ' + x.art + '"><span class="t">' + esc(x.text) + '</span><span class="a">' + ARTNAME[x.art] + '</span></span>').join('') +
+      (lex.fehler ? '<div class="meldung" style="margin:0">' + esc(lex.fehler) + '</div>' : '');
+    el('aufbau3').innerHTML = lex.fehler ? '<div class="meldung">Ohne vollständige Folge von Token beginnt die syntaktische Analyse nicht.</div>'
+      : stand3.baum ? knotenHtml(stand3.baum) : '<div class="meldung">' + esc(stand3.synFehler) + '</div>';
+    const zahl = lex.token.length + ' Token';
+    el('erkl3').textContent = !lex.fehler && !lex.token.length ? 'Das Eingabefeld ist leer. Tippe eine Anweisung ein oder wähle ein Beispiel.' : lex.fehler ? 'Der Fehler fällt schon in der lexikalischen Analyse auf. Bis zum Fehler hat sie ' + zahl + ' gefunden.'
+      : stand3.baum ? 'Die lexikalische Analyse findet ' + zahl + '. Die syntaktische Analyse erkennt darin eine ' + stand3.baum.titel + '. Jeder Kasten ist ein Teil der Anweisung, und die Teile stecken ineinander. Die Anweisung hält die Syntax ein.'
+      : 'Die lexikalische Analyse findet ' + zahl + ' und hat nichts zu beanstanden. Erst die syntaktische Analyse scheitert: Die Folge der Token ergibt keine gültige Anweisung. Das ist ein Syntaxfehler.';
+  }
+
+  // ---------- Schritt 4: vier Fassungen des Programms ----------
+  const FASSUNG = {
+    ok: { name: 'richtige Fassung', zeile: null, bed: (n, m) => n !== m, sonst: (n, m) => m - n },
+    A: { name: 'Fassung A', zeile: [3, '   IF n > THEN n ← n − m'], fehler: 'Zeile 3: Hinter dem Zeichen > muss ein Name, eine Zahl oder eine Klammer stehen. Dort steht THEN.' },
+    B: { name: 'Fassung B', zeile: [4, '   ELSE m ← n'], bed: (n, m) => n !== m, sonst: (n, m) => n, sonstText: 'm ← n' },
+    C: { name: 'Fassung C', zeile: [2, 'WHILE n ≠ 0'], bed: (n, m) => n !== 0, sonst: (n, m) => m - n, bedText: 'n ≠ 0' }
+  };
+  const GRENZE = 7;                                                    // so viele Durchläufe der Schleife zeigt die Seite höchstens
+  let fassung = 'ok', eingabe4 = [6, 4];
+  const zeilen4 = () => HOCH.map((z, j) => FASSUNG[fassung].zeile && FASSUNG[fassung].zeile[0] === j + 1 ? FASSUNG[fassung].zeile[1] : z);
+  const ggT = (a, b) => b ? ggT(b, a % b) : a;
+  function ablauf4() {
+    const F = FASSUNG[fassung], T = [], soll = ggT(eingabe4[0], eingabe4[1]);
+    let n = null, m = null, aus = null;
+    const paare = [];
+    const merke = (zeile, neu, text, zusatz) => T.push(Object.assign({ zeile: zeile, n: n, m: m, aus: aus, neu: neu, paare: paare.slice(), text: text, comp: F.fehler ? F.fehler : 'Keine Meldung. Das Programm ist übersetzt.' }, zusatz || {}));
+    if (F.fehler) {
+      merke(3, [], 'Der Compiler kann Zeile 3 nicht zerlegen und bricht ab. Es entsteht kein Programm in Maschinensprache, also läuft auch nichts. Das ist ein Syntaxfehler: Der Compiler bemerkt ihn zur Compile-Zeit.', { ende: 'syntax' });
+      return T;
+    }
+    merke(0, [], 'Der Compiler übersetzt das Programm ohne Meldung. Alle fünf Zeilen halten die Syntax ein. Ob das Programm tut, was die Spezifikation verlangt, prüft der Compiler nicht.');
+    n = eingabe4[0]; m = eingabe4[1]; paare.push('(' + n + ', ' + m + ')');
+    merke(1, ['n', 'm'], 'Das Programm läuft und liest die Eingaben: n = ' + n + ', m = ' + m + '. Laut Spezifikation ist die richtige Ausgabe ' + soll + '.');
+    const bedText = F.bedText || 'n ≠ m';
+    let lauf = 0;
+    while (F.bed(n, m)) {
+      lauf++;
+      if (lauf > GRENZE) {
+        merke(2, [], 'Die Seite bricht hier ab. Das Programm selbst würde nie enden: Die Bedingung ' + bedText + ' bleibt erfüllt, und die Werte ändern sich nicht mehr. Das ist Nichtterminierung. Der Compiler hat nichts gemeldet, und eine Ausgabe kommt nie.', { ende: 'endlos' });
+        return T;
+      }
+      let text = 'Durchlauf ' + lauf + ' der Schleife: Die Bedingung ' + bedText + ' ist erfüllt. ';
+      if (n > m) {
+        const alt = n; n = n - m;
+        text += alt + ' ist größer als ' + m + ', also n ← ' + alt + ' − ' + (m < 0 ? '(' + m + ')' : m) + ' = ' + n + '.';
+        paare.push('(' + n + ', ' + m + ')');
+        merke(3, ['n'], text + (alt === n ? ' Der Wert von n ändert sich dabei nicht.' : ''));
+      } else {
+        const alt = m; m = F.sonst(n, m);
+        text += n + ' ist nicht größer als ' + alt + ', also gilt die Zeile mit ELSE: ' + (F.sonstText ? F.sonstText + ', m bekommt den Wert ' + m + '.' : 'm ← ' + alt + ' − ' + n + ' = ' + m + '.');
+        paare.push('(' + n + ', ' + m + ')');
+        merke(4, ['m'], text);
+      }
+    }
+    aus = String(n);
+    const richtig = n === soll;
+    merke(5, [], 'Die Bedingung ' + bedText + ' ist nicht mehr erfüllt, die Schleife endet. Das Programm gibt ' + n + ' aus. Laut Spezifikation ist ' + soll + ' richtig. ' +
+      (richtig ? (fassung === 'ok' ? 'Die Ausgabe stimmt.' : 'Die Ausgabe stimmt, obwohl diese Fassung einen Fehler hat. Mit dieser Eingabe fällt er nicht auf. Probiere die andere Eingabe.')
+               : 'Die Ausgabe ist falsch. Das ist ein semantischer Fehler: Das Programm ist übersetzbar und läuft, tut aber nicht, was es soll.'),
+      { ende: richtig ? 'richtig' : 'falsch' });
+    return T;
+  }
+  let T4 = ablauf4();
+  function zeige4() {
+    const k = POS[4], S = k ? T4[k - 1] : null;
+    el('prog4').innerHTML = zeilen4().map((z, j) => reihe(j + 1, z, S && S.zeile === j + 1 ? 'aktuell' : 'fertig')).join('');
+    el('comp4').innerHTML = !S ? '<span class="leer">Das Programm ist noch nicht übersetzt.</span>' : '<span class="' + (S.ende === 'syntax' ? 'fehler' : '') + '">' + esc(S.comp) + '</span>';
+    el('vars4').innerHTML = kasten('n', S ? S.n : null, S && S.neu.indexOf('n') >= 0) + kasten('m', S ? S.m : null, S && S.neu.indexOf('m') >= 0);
+    el('verlauf4').textContent = S && S.paare.length ? 'Werte (n, m) bisher: ' + S.paare.join(' → ').replace(/-/g, '−') : '';
+    el('aus4').innerHTML = S && S.aus !== null ? esc(S.aus)
+      : S && S.ende === 'syntax' ? '<span class="leer">Das Programm läuft nicht.</span>'
+      : S && S.ende === 'endlos' ? '<span class="leer">Das Programm läuft weiter und gibt nichts aus.</span>'
+      : '<span class="leer">Das Programm hat noch nichts ausgegeben.</span>';
+    el('erkl4').textContent = S ? S.text : 'Gewählt ist die ' + FASSUNG[fassung].name + ' mit den Eingaben ' + eingabe4[0] + ' und ' + eingabe4[1] + '. Der erste Schritt übersetzt das Programm, die weiteren führen es aus.';
+    el('zaehler4').textContent = 'Schritt ' + k + ' von ' + T4.length;
+    document.querySelectorAll('[data-fassung]').forEach(b => b.classList.toggle('gewaehlt', b.dataset.fassung === fassung));
+    document.querySelectorAll('[data-eingabe]').forEach(b => b.classList.toggle('gewaehlt', b.dataset.eingabe === eingabe4.join(',')));
+    knoepfe(4, k, T4.length);
+  }
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#token
+  const ANKER = ['worum', 'maschine', 'uebersetzen', 'token', 'fehler'];
+  let stufe = 0;
+  let angemeldet = false;                                              // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);                                       // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Bedienung ----------
+  const ZEIGE = { 1: zeige1, 2: zeige2, 4: zeige4 };
+  const ENDE = { 1: () => BEFEHLE.length, 2: () => ABLAUF2[weg].length, 4: () => T4.length };
+  document.addEventListener('click', ev => {
+    const t = ev.target;
+    let k;
+    if ((k = t.closest('[data-stufe], [data-gehe]'))) {
+      zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+    } else if ((k = t.closest('[data-lauf]'))) {
+      const q = k.dataset.lauf.split(','), nr = Number(q[0]), schritt = Number(q[1]);
+      POS[nr] = schritt === 0 ? 0 : Math.max(0, Math.min(ENDE[nr](), POS[nr] + schritt));
+      ZEIGE[nr]();
+      melde(false);
+    } else if ((k = t.closest('[data-weg]'))) {
+      weg = k.dataset.weg; POS[2] = 0;
+      zeige2();
+      melde(false);
+    } else if ((k = t.closest('[data-bsp]'))) {
+      zerlege(k.dataset.bsp);
+      melde(false);
+    } else if (t.id === 'zerlege3') {
+      zerlege(el('eingabe3').value);
+      melde(false);
+    } else if ((k = t.closest('[data-fassung], [data-eingabe]'))) {
+      if (k.dataset.fassung) fassung = k.dataset.fassung; else eingabe4 = k.dataset.eingabe.split(',').map(Number);
+      T4 = ablauf4(); POS[4] = 0;
+      zeige4();
+      melde(false);
+    }
+  });
+  el('eingabe3').addEventListener('keydown', ev => { if (ev.key === 'Enter') { zerlege(el('eingabe3').value); melde(false); } });
+  ['reglerN', 'reglerM'].forEach(id => el(id).addEventListener('input', () => { zeigeNetz(); melde(false); }));
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Maschinensprache', 'Schritt 2: Compiler und Interpreter', 'Schritt 3: Token und Syntax', 'Schritt 4: Fehler'];
+  const wert = v => v === null ? 'kein Wert' : v;
+
+  // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
+  function standSaetze() {
+    if (stufe === 1) {
+      const k = POS[1], t = ['Im Speicher stehen 25 Bytes. Adresse und Bitmuster: ' + BYTES.map((v, a) => a + ': ' + bin(v)).join(', ') + '.'];
+      t.push(k + ' von ' + BEFEHLE.length + ' Befehlen sind zerlegt.');
+      if (!k) t.push('Noch ist kein Byte markiert.');
+      else {
+        const i = k - 1, b = BEFEHLE[i];
+        t.push('Zuletzt zerlegt ist der Befehl an Adresse ' + ADR[i] + ': ' + lesbar(b) + '. Gelb markiert ist sein Befehlscode an Adresse ' + ADR[i] + '.' +
+          (b.length > 1 ? ' Blau markiert sind seine Argumente an den Adressen ' + b.slice(1).map((v, j) => ADR[i] + j + 1).join(', ') + '.' : ' Er hat kein Argument.') +
+          ' Er gehört zu Zeile ' + ZEILE_ZU[i] + ' des Programms in höherer Sprache.');
+        t.push('Grau sind die Bytes der schon zerlegten Befehle davor. ' + (k < BEFEHLE.length ? 'Die Bytes ab Adresse ' + (ADR[i] + b.length) + ' sind noch nicht zerlegt.' : 'Alle Bytes sind zerlegt.'));
+        t.push('Im grünen Feld steht: ' + el('erkl1').textContent);
+      }
+      return t;
+    }
+    if (stufe === 2) {
+      const T = ABLAUF2[weg], k = POS[2], S = k ? T[k - 1] : null;
+      const t = ['Gewählt ist der Weg mit ' + (weg === 'compiler' ? 'Compiler' : 'Interpreter') + '. Die Eingaben sind 6 und 4. Schritt ' + k + ' von ' + T.length + '.'];
+      if (!S) t.push('Noch ist nichts übersetzt, gelesen oder ausgeführt.');
+      else {
+        if (weg === 'compiler') t.push(S.phase === 'übersetzen' ? 'Der Compiler übersetzt gerade. Markiert ist Zeile ' + S.hoch + ' des Programms in höherer Sprache. Übersetzt sind bisher ' + S.bis + ' von 10 Befehlen. Ausgeführt ist noch nichts.'
+          : 'Die Übersetzung ist fertig. Der Prozessor führt das übersetzte Programm aus. Markiert ist der Befehl an Adresse ' + ADR[S.masch] + ': ' + lesbar(BEFEHLE[S.masch]) + '.');
+        else t.push('Markiert ist Zeile ' + S.hoch + ' des Programms in höherer Sprache. Rechts steht kein Programm in Maschinensprache.');
+        t.push('Variablen: n = ' + wert(S.n) + ', m = ' + wert(S.m) + '. ' + (S.aus === null ? 'Das Programm hat noch nichts ausgegeben.' : 'Ausgabe: ' + S.aus + '.'));
+        t.push('Neben den Zeilen 1 bis 5 steht, wie oft sie ' + (weg === 'compiler' ? 'übersetzt' : 'gelesen') + ' sind: ' + S.gelesen.join(', ') + '.');
+        t.push('Im grünen Feld steht: ' + S.text);
+      }
+      t.push('Die Regler unter der Demo stehen auf n = ' + zahlN + ' höhere Sprachen und m = ' + zahlM + ' Maschinensprachen. Ohne Zwischensprache sind das ' + (zahlN * zahlM) + ' Compiler, mit Zwischensprache ' + (zahlN + zahlM) + '.');
+      return t;
+    }
+    if (stufe === 3) {
+      const s = stand3, t = ['Im Eingabefeld steht die Anweisung: ' + s.text];
+      t.push('Token der lexikalischen Analyse, in dieser Reihenfolge: ' + (s.token.length ? s.token.map(x => ARTNAME[x.art] + ' ' + x.text).join(', ') : 'keine') + '.');
+      if (s.lexFehler) t.push('Die lexikalische Analyse meldet einen Fehler: ' + s.lexFehler + ' Die syntaktische Analyse hat nicht begonnen.');
+      else if (s.baum) t.push('Die syntaktische Analyse findet keinen Fehler. Aufbau der Anweisung, Kästen ineinander: ' + knotenText(s.baum));
+      else t.push('Die syntaktische Analyse meldet einen Syntaxfehler: ' + s.synFehler);
+      return t;
+    }
+    if (stufe === 4) {
+      const F = FASSUNG[fassung], k = POS[4], S = k ? T4[k - 1] : null;
+      const t = ['Gewählt ist die ' + F.name + ' mit den Eingaben ' + eingabe4[0] + ' und ' + eingabe4[1] + '. Laut Spezifikation ist die richtige Ausgabe ' + ggT(eingabe4[0], eingabe4[1]) + '.'];
+      t.push(F.zeile ? 'Diese Fassung weicht in Zeile ' + F.zeile[0] + ' von der richtigen Fassung ab. Dort steht: ' + F.zeile[1].trim() + '. In der richtigen Fassung steht: ' + HOCH[F.zeile[0] - 1].trim() + '. Die Seite markiert die abweichende Zeile nicht, der Student soll sie selbst finden.' : 'Das ist die Fassung ohne Fehler.');
+      t.push('Schritt ' + k + ' von ' + T4.length + '.');
+      if (!S) t.push('Das Programm ist noch nicht übersetzt.');
+      else {
+        t.push('Meldung des Compilers: ' + S.comp);
+        t.push('Variablen: n = ' + wert(S.n) + ', m = ' + wert(S.m) + '.' + (S.paare.length ? ' Werte (n, m) bisher: ' + S.paare.join(', ') + '.' : ''));
+        t.push(S.aus !== null ? 'Ausgabe des Programms: ' + S.aus + '.' : 'Das Programm hat nichts ausgegeben.');
+        t.push('Im grünen Feld steht: ' + S.text);
+      }
+      return t;
+    }
+    return ['Dieser Schritt hat keine Demo. Zu sehen sind Text, das Programm aus Abschnitt 2.5 und das Bild mit vier Stationen: Programm in höherer Sprache, Compiler, Programm in Maschinensprache, Prozessor.'];
+  }
+  // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
+  function kurz() {
+    if (stufe === 1) return POS[1] + ' von ' + BEFEHLE.length + ' Befehlen zerlegt';
+    if (stufe === 2) return (weg === 'compiler' ? 'mit Compiler' : 'mit Interpreter') + ', Schritt ' + POS[2] + ' von ' + ABLAUF2[weg].length + '; n = ' + zahlN + ', m = ' + zahlM + ' bei der Zwischensprache';
+    if (stufe === 3) return 'Anweisung: ' + stand3.text;
+    if (stufe === 4) return FASSUNG[fassung].name + ', Eingaben ' + eingabe4.join(' und ') + ', Schritt ' + POS[4] + ' von ' + T4.length;
+    return '';
+  }
+  // Die Programmzeilen mit ihren Nummern
+  function zeilen() {
+    const hoch = z => z.map((x, j) => String(j + 1).padStart(3) + '  ' + x);
+    const masch = bis => BEFEHLE.slice(0, bis).map((b, j) => String(ADR[j]).padStart(3) + '  ' + lesbar(b));
+    if (stufe === 0) return hoch(HOCH);
+    if (stufe === 1) return ['Programm in höherer Sprache, vorn die Nummer der Zeile:'].concat(hoch(HOCH), ['Dasselbe Programm in der Maschinensprache der Seite, lesbar geschrieben, vorn die Adresse. Der Student sieht davon nur die schon zerlegten Befehle:'], masch(10));
+    if (stufe === 2) return ['Programm in höherer Sprache, vorn die Nummer der Zeile:'].concat(hoch(HOCH), ['Programm in Maschinensprache, lesbar geschrieben, vorn die Adresse. Es ist nur beim Weg mit Compiler zu sehen:'], masch(10));
+    if (stufe === 4) return [FASSUNG[fassung].name + ', vorn die Nummer der Zeile:'].concat(hoch(zeilen4()));
+    return [];
+  }
+
+  zeige1(); zeige2(); zeigeNetz(); zerlege('a ← a + b'); zeige4();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl',
+    thema: 'Maschinensprache, Compiler, Interpreter, Syntax und Fehler',
+    bezug: 'Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–19',
+    beschreibung: '../kurslotse/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    stand: standSaetze,
+    kurz: kurz,
+    zeilen: zeilen,
+    zeilenTitel: 'Programmzeilen des sichtbaren Schritts. Sie gehören zu keiner bestimmten Programmiersprache:',
+    text: '.card > p:not(.quelle):not(.progtitel), .card > ul, .hinweis, .auskunft, table.text',
+    beispiel: 'Woher weiß der Prozessor, wo der nächste Befehl beginnt?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
