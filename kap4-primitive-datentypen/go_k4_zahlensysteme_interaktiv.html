@@ -3,996 +3,469 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interaktiv: Zahlensysteme in Go</title>
+  <title>Zahlensysteme in Go</title>
+  <link rel="stylesheet" href="../stil.css">
   <style>
-    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ok:#065f46;--ok-bg:#ecfdf5;--bad:#991b1b;--bad-bg:#fef2f2;--highlight:#fef3c7; }
-    * { box-sizing: border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.5; }
-    .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#0f766e 0%,#155e75 100%);color:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 24px rgba(15,118,110,.22);margin-bottom:18px; }
-    .hero h1 { margin:0 0 8px;font-size:1.7rem; }
-    .hero p { margin:0;opacity:.96; }
-    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px; }
-    h2 { margin-top:0;font-size:1.2rem;color:var(--accent); }
-    h3 { font-size:1.05rem;margin-top:16px;margin-bottom:8px; }
-    ul { margin:8px 0 0;padding-left:20px; }
-    code,pre { font-family:Consolas,"Courier New",monospace; }
-    code { background:#f3f4f6;padding:2px 6px;border-radius:6px;font-size:.92rem; }
-    pre { margin:10px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;white-space:pre-wrap;font-size:.9rem; }
-    table { width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:10px; }
-    th,td { border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:middle; }
-    th { background:#f9fafb;font-weight:600;font-size:.92rem; }
-    tr:last-child td { border-bottom:none; }
-    .number-system-table td:first-child { font-weight:600; }
-    .controls { display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center; }
-    button { border:none;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer;transition:all .2s; }
-    .btn-primary { background:var(--accent);color:#fff; }
-    .btn-primary:hover { background:#0d5c54; }
-    .btn-secondary { background:#e5e7eb;color:#111827; }
-    .btn-secondary:hover { background:#d1d5db; }
-    .btn-small { padding:6px 10px;font-size:.88rem; }
-    input[type="text"],input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:1rem;width:100%;max-width:300px;font-family:Consolas,monospace; }
-    input:focus { outline:2px solid var(--accent);outline-offset:2px; }
-    .result-box { margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#f9fafb;font-weight:600;min-height:42px; }
-    .result-box.success { background:var(--ok-bg);color:var(--ok);border-color:var(--ok); }
-    .result-box.error { background:var(--bad-bg);color:var(--bad);border-color:var(--bad); }
-    .highlight { background:var(--highlight);padding:12px;border-radius:8px;border-left:4px solid #f59e0b;margin:10px 0; }
-    .note { color:var(--muted);font-size:.92rem;margin-top:8px; }
-    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
-    .back:hover { text-decoration:underline; }
-    .grid-2 { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:12px; }
-    .display-box { background:#f8fafc;border:2px solid var(--accent);border-radius:8px;padding:12px;text-align:center; }
-    .display-box .label { font-size:.85rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px; }
-    .display-box .value { font-size:1.3rem;font-family:Consolas,monospace;font-weight:700;color:var(--accent);word-break:break-all; }
-    .tabs { display:flex;gap:4px;margin-bottom:12px;border-bottom:2px solid var(--line); }
-    .tab { background:transparent;border:none;border-bottom:3px solid transparent;padding:10px 16px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s; }
-    .tab.active { color:var(--accent);border-bottom-color:var(--accent); }
-    .tab:hover { color:var(--accent); }
-    .tab-content { display:none; }
-    .tab-content.active { display:block; }
-    .example-list { list-style:none;padding:0; }
-    .example-list li { padding:8px 12px;margin:4px 0;background:#f8fafc;border-radius:6px;font-family:Consolas,monospace;cursor:pointer;transition:all .2s; }
-    .example-list li:hover { background:#e2e8f0;transform:translateX(4px); }
-    .flex-between { display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap; }
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace; }
+    input[type=text] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;width:16em;max-width:100%; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+    table.rechnung { width:auto;font-family:Consolas,"Courier New",monospace; }
+    table.rechnung td, table.rechnung th { padding:5px 14px;text-align:right; }
+    table.rechnung tr.summe td { border-top:2px solid var(--accent);font-weight:700; }
+    .vier { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0; }
+    .vier div { background:#fff;border:2px solid var(--blau);border-radius:8px;padding:8px 12px; }
+    .vier div.quellsystem { border-color:var(--accent);background:#ecfdf5; }
+    .vier span { display:block;color:var(--muted);font-size:.85rem; }
+    .vier b { font-family:Consolas,"Courier New",monospace;font-size:1.05rem;overflow-wrap:anywhere; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
   </style>
 </head>
 <body>
-<main class="container">
-  <a class="back" href="go_k4_quiz_hub.html">← Zurück zur Übersicht</a>
-  <section class="hero">
-    <h1>Interaktiv: Zahlensysteme in Go</h1>
-    <p>Verstehe Binär-, Oktal-, Dezimal- und Hexadezimalzahlen und ihre Notation in Go</p>
+<div class="container">
+
+  <div class="hero">
+    <h1>Zahlensysteme in Go</h1>
+    <p>Eine ganze Zahl lässt sich im Quelltext dezimal, binär, oktal oder hexadezimal schreiben. Die Seite zeigt, wie Go ein solches Literal liest, welche Schreibweisen Go annimmt und wie <code>fmt.Printf</code> einen Wert in jedem der vier Zahlensysteme ausgibt.</p>
+    <p>Kurstext v3.0.6, Abschnitte 4.3.1 und 4.3.2, Seiten 59–63.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Stellenwert</button>
+    <button type="button" class="tab" data-stufe="2">2 Literale in Go</button>
+    <button type="button" class="tab" data-stufe="3">3 Ausgabe mit Printf</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Integer-Literal ist eine ganze Zahl, die im Quelltext steht, zum Beispiel <code>42</code>. Go kennt dafür vier Zahlensysteme. Ein Präfix vor den Ziffern sagt, welches gemeint ist:</p>
+<pre class="code-block">42          // dezimal, ohne Präfix
+0b101010    // binär
+0o52        // oktal
+0x2a        // hexadezimal</pre>
+    <p>Alle vier Literale haben den Wert 42. Im Speicher steht jedes Mal das gleiche Bitmuster. Das Zahlensystem ist nur eine Schreibweise im Quelltext.</p>
+
+    <h3>Wozu vier Schreibweisen</h3>
+    <ul>
+      <li><strong>Dezimal:</strong> So rechnen Menschen. Die meisten Literale in einem Programm sind dezimal.</li>
+      <li><strong>Binär:</strong> Das Literal zeigt jedes einzelne Bit. Man nimmt es, wenn es auf die Bits ankommt und weniger auf den Zahlenwert.</li>
+      <li><strong>Hexadezimal:</strong> Eine Hexadezimalziffer steht für vier Bits, zwei Ziffern stehen für ein Byte. So lassen sich lange Bitfolgen kurz schreiben.</li>
+      <li><strong>Oktal:</strong> Eine Oktalziffer steht für drei Bits. Oktalzahlen sind selten. Auf Unix-Systemen geben sie die Zugriffsrechte einer Datei an.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Bits im Speicher:</strong> Ein Wert steht im Speicher als Folge von 0 und 1. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 3.3.5, Seiten 33–35, Literale:</strong> Dort stehen Integer-Literale zum ersten Mal auf der rechten Seite einer Zuweisung.</li>
+    </ul>
+
+    <h3>Die drei Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, Stellenwert:</strong> Du gibst ein Literal ein. Die Seite zerlegt es in Ziffern und rechnet den Wert aus.</li>
+      <li><strong>Schritt 2, Literale in Go:</strong> Präfix, Unterstrich und führende Null. Du siehst an zwölf Beispielen, welche Schreibweise Go annimmt.</li>
+      <li><strong>Schritt 3, Ausgabe mit Printf:</strong> Die Verben <code>%b</code>, <code>%o</code> und <code>%x</code> geben einen Wert binär, oktal und hexadezimal aus.</li>
+    </ul>
+    <div class="hinweis">Die Beispiele auf dieser Seite sind mit Go 1.26 ausgeführt. Werte, Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go, in Schritt 1 rechnet der Browser.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>📚 Übersicht: Zahlensysteme</h2>
-    <table class="number-system-table">
-      <thead>
-        <tr><th>Zahlensystem</th><th>Basis</th><th>Präfix in Go</th><th>Ziffern</th><th>Beispiel</th></tr>
-      </thead>
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Stellenwert</h2>
+    <p>In jedem der vier Zahlensysteme hängt der Wert einer Ziffer von ihrer Stelle ab. Die Stellen zählen von rechts und beginnen bei 0. Die Basis sagt, um wie viel eine Stelle mehr wert ist als die Stelle rechts von ihr.</p>
+    <table class="text">
+      <thead><tr><th>Zahlensystem</th><th>Basis</th><th>Ziffern</th><th>Wert der Stellen von rechts</th></tr></thead>
       <tbody>
-        <tr>
-          <td>Binärsystem</td><td>2</td><td><code>0b</code> oder <code>0B</code></td><td>0, 1</td><td><code>0b1010</code> = 10</td>
-        </tr>
-        <tr>
-          <td>Oktalsystem</td><td>8</td><td><code>0o</code>, <code>0O</code> oder <code>0</code></td><td>0, 1, ..., 7</td><td><code>0o12</code> = 10</td>
-        </tr>
-        <tr>
-          <td>Dezimalsystem</td><td>10</td><td>ohne Präfix</td><td>0, 1, ..., 9</td><td><code>10</code> = 10</td>
-        </tr>
-        <tr>
-          <td>Hexadezimalsystem</td><td>16</td><td><code>0x</code> oder <code>0X</code></td><td>0-9, a-f, A-F</td><td><code>0xA</code> = 10</td>
-        </tr>
+        <tr><td>Binärsystem</td><td>2</td><td><code>0</code> und <code>1</code></td><td>Die Stellen sind 1, 2, 4, 8 und so weiter wert.</td></tr>
+        <tr><td>Oktalsystem</td><td>8</td><td><code>0</code> bis <code>7</code></td><td>Die Stellen sind 1, 8, 64, 512 und so weiter wert.</td></tr>
+        <tr><td>Dezimalsystem</td><td>10</td><td><code>0</code> bis <code>9</code></td><td>Die Stellen sind 1, 10, 100, 1000 und so weiter wert.</td></tr>
+        <tr><td>Hexadezimalsystem</td><td>16</td><td><code>0</code> bis <code>9</code> und <code>a</code> bis <code>f</code></td><td>Die Stellen sind 1, 16, 256, 4096 und so weiter wert.</td></tr>
       </tbody>
     </table>
-    <div class="highlight">
-      <strong>⚠️ Achtung:</strong> Eine Dezimalzahl darf <strong>nicht</strong> mit führenden Nullen beginnen, da sie sonst als Oktalzahl interpretiert wird! <code>076</code> ist <strong>keine</strong> 76, sondern die Oktalzahl für 62.
+    <p>Im Hexadezimalsystem reichen die zehn Ziffern nicht. Die Buchstaben <code>a</code> bis <code>f</code> stehen für die Werte 10 bis 15.</p>
+
+    <h3>Die Regel</h3>
+    <p>Der Wert eines Literals ist die Summe über alle Stellen:</p>
+    <p><code>Ziffer · Basis<sup>Stelle</sup></code></p>
+    <p>Ein Beispiel: <code>0x7b</code> hat die Basis 16. Die Ziffer <code>b</code> steht an der Stelle 0 und hat den Wert 11. Die Ziffer <code>7</code> steht an der Stelle 1. Der Wert ist 7 · 16 + 11 · 1 = 123.</p>
+
+    <h3>Ausprobieren: ein Literal zerlegen</h3>
+    <div class="zeile">
+      <label for="eingabe">Integer-Literal:</label>
+      <input type="text" id="eingabe" value="0x7b" maxlength="40" spellcheck="false" autocomplete="off">
+      <button type="button" class="haupt" id="zerlegen">zerlegen</button>
     </div>
+    <div class="zeile" id="beispiele">
+      <span>Beispiele aus dem Kurstext:</span>
+      <button type="button" class="code" data-lit="0b1000_1011">0b1000_1011</button>
+      <button type="button" class="code" data-lit="0o14">0o14</button>
+      <button type="button" class="code" data-lit="031">031</button>
+      <button type="button" class="code" data-lit="0x7b">0x7b</button>
+      <button type="button" class="code" data-lit="0X0000_BAFF">0X0000_BAFF</button>
+      <button type="button" class="code" data-lit="1_038_605">1_038_605</button>
+    </div>
+    <div class="zeile" id="gleiche">
+      <span>Gleiche Ziffern, anderes Präfix:</span>
+      <button type="button" class="code" data-lit="0b_10">0b_10</button>
+      <button type="button" class="code" data-lit="0o_10">0o_10</button>
+      <button type="button" class="code" data-lit="10">10</button>
+      <button type="button" class="code" data-lit="0x_10">0x_10</button>
+    </div>
+    <div class="auskunft" id="urteil"></div>
+    <div id="ergebnis">
+      <table class="rechnung" id="rechnung"></table>
+      <h3>Der gleiche Wert in allen vier Schreibweisen</h3>
+      <div class="vier" id="vier"></div>
+      <div id="teilen"></div>
+    </div>
+    <p>Die gleiche Umrechnung an einer einzelnen Speicherzelle, Bit für Bit, zeigt die Seite <a href="go_k4_speichermodell_interaktiv.html#schreibweisen">Speichermodell</a>, Schritt 2.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61. Die Beispiele auf den Knöpfen stehen im Kurstext. Die Zerlegung in Stellen und das Teilen mit Rest werden im Kurstext nicht vorgerechnet.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>🔄 Konverter: Zwischen Zahlensystemen umrechnen</h2>
-    <div class="tabs">
-      <button class="tab active" data-tab="converter">Konverter</button>
-      <button class="tab" data-tab="examples">Beispiele</button>
-    </div>
-
-    <div class="tab-content active" id="converter">
-      <p>Gib eine Zahl in einem beliebigen System ein und sieh die Darstellung in allen Systemen:</p>
-      <div class="flex-between">
-        <div>
-          <label for="inputValue" style="display:block;margin-bottom:6px;font-weight:600;">Eingabe:</label>
-          <input type="text" id="inputValue" placeholder="z.B. 42, 0b101010, 0o52, 0x2a">
-        </div>
-        <button id="convertBtn" class="btn-primary">Umrechnen</button>
-      </div>
-      
-      <div id="convertResult" class="result-box" style="margin-top:16px;">Gib eine Zahl ein und klicke auf "Umrechnen".</div>
-      
-      <div class="grid-2" id="displayBoxes" style="display:none;">
-        <div class="display-box">
-          <div class="label">Binär (0b)</div>
-          <div class="value" id="binOutput">-</div>
-        </div>
-        <div class="display-box">
-          <div class="label">Oktal (0o)</div>
-          <div class="value" id="octOutput">-</div>
-        </div>
-        <div class="display-box">
-          <div class="label">Dezimal</div>
-          <div class="value" id="decOutput">-</div>
-        </div>
-        <div class="display-box">
-          <div class="label">Hexadezimal (0x)</div>
-          <div class="value" id="hexOutput">-</div>
-        </div>
-      </div>
-      
-      <div id="explanationBox" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border:2px solid #0f766e;border-radius:8px;">
-        <h3 style="margin-top:0;color:#0f766e;">💡 Erklärung der Umrechnung</h3>
-        <div id="explanationContent"></div>
-      </div>
-      
-      <p class="note">Hinweis: Unterstriche <code>_</code> zur optischen Trennung sind erlaubt, z.B. <code>0b1000_1011</code></p>
-    </div>
-
-    <div class="tab-content" id="examples">
-      <p>Klicke auf ein Beispiel aus dem Skript, um es automatisch umzurechnen:</p>
-      <h3>Binärzahlen:</h3>
-      <ul class="example-list">
-        <li data-value="0b0011">0b0011 → Dezimal 3</li>
-        <li data-value="0B1101">0B1101 → Dezimal 13</li>
-        <li data-value="0b1000_1011">0b1000_1011 → Dezimal 139</li>
-      </ul>
-      
-      <h3>Oktalzahlen:</h3>
-      <ul class="example-list">
-        <li data-value="0o14">0o14 → Dezimal 12</li>
-        <li data-value="0O31">0O31 → Dezimal 25</li>
-        <li data-value="031">031 → Dezimal 25 (Achtung: Präfix 0!)</li>
-      </ul>
-      
-      <h3>Hexadezimalzahlen:</h3>
-      <ul class="example-list">
-        <li data-value="0x7b">0x7b → Dezimal 123</li>
-        <li data-value="0X0000_BAFF">0X0000_BAFF → Dezimal 47871</li>
-        <li data-value="0x0E7B_A90A">0x0E7B_A90A → Dezimal 242985226</li>
-        <li data-value="0x2B3F_5CD2">0x2B3F_5CD2 → Dezimal 725572818</li>
-      </ul>
-      
-      <h3>Gleiche Präfixe, verschiedene Werte:</h3>
-      <ul class="example-list">
-        <li data-value="0b_10">0b_10 → Dezimal 2</li>
-        <li data-value="0o_10">0o_10 → Dezimal 8</li>
-        <li data-value="0x_10">0x_10 → Dezimal 16</li>
-      </ul>
-      
-      <h3>Zahl 42 in allen Systemen:</h3>
-      <ul class="example-list">
-        <li data-value="0b_101010">0b_101010 → Binär</li>
-        <li data-value="0o_52">0o_52 → Oktal</li>
-        <li data-value="42">42 → Dezimal</li>
-        <li data-value="0x_2a">0x_2a → Hexadezimal</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>🎯 Übung: Finde die Dezimalzahl</h2>
-    <p>Welchen Dezimalwert hat diese Zahl in Go?</p>
-    <div id="quizDisplay" style="background:#f8fafc;padding:16px;border-radius:8px;text-align:center;font-size:1.5rem;font-family:Consolas,monospace;font-weight:700;color:var(--accent);margin:12px 0;">
-      0b1010
-    </div>
-    <div class="flex-between">
-      <input type="number" id="quizAnswer" placeholder="Deine Antwort (Dezimalzahl)">
-      <div class="controls">
-        <button id="checkBtn" class="btn-primary">Prüfen</button>
-        <button id="nextQuizBtn" class="btn-secondary">Neue Aufgabe</button>
-      </div>
-    </div>
-    <div id="quizResult" class="result-box">Gib deine Antwort ein und klicke auf "Prüfen".</div>
-  </section>
-
-  <section class="card">
-    <h2>⚠️ Häufige Fehler</h2>
-    <table>
-      <thead><tr><th>Ungültige Notation</th><th>Problem</th><th>Korrekt</th></tr></thead>
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Literale in Go</h2>
+    <p>Go erkennt das Zahlensystem am Präfix. Ein Präfix beginnt mit der Ziffer <code>0</code>, danach folgt ein Buchstabe.</p>
+    <table class="text">
+      <thead><tr><th>Zahlensystem</th><th>Präfix</th><th>Beispiel</th><th>Wert des Beispiels</th></tr></thead>
       <tbody>
-        <tr><td><code>_42</code></td><td>Unterstrich am Anfang</td><td><code>42</code></td></tr>
-        <tr><td><code>42_</code></td><td>Unterstrich am Ende</td><td><code>42</code></td></tr>
-        <tr><td><code>4__2</code></td><td>Doppelter Unterstrich</td><td><code>4_2</code> oder <code>42</code></td></tr>
-        <tr><td><code>0_x42</code></td><td>Unterstrich im Präfix</td><td><code>0x_42</code> oder <code>0x42</code></td></tr>
-        <tr><td><code>076</code> (als Dezimal gemeint)</td><td>Führende Null → Oktal!</td><td><code>76</code> (ohne führende Null)</td></tr>
-        <tr><td><code>0b102</code></td><td>Ziffer 2 nicht im Binärsystem</td><td><code>0b110</code> (für Dezimal 6)</td></tr>
-        <tr><td><code>0o89</code></td><td>Ziffern 8,9 nicht im Oktalsystem</td><td><code>0o11</code> (für Dezimal 9)</td></tr>
+        <tr><td>Binärsystem</td><td><code>0b</code> oder <code>0B</code></td><td><code>0b1101</code></td><td>Das Literal hat den Wert 13.</td></tr>
+        <tr><td>Oktalsystem</td><td><code>0o</code> oder <code>0O</code> oder nur <code>0</code></td><td><code>0o31</code> und <code>031</code></td><td>Beide Literale haben den Wert 25.</td></tr>
+        <tr><td>Dezimalsystem</td><td>Das Literal hat kein Präfix.</td><td><code>1024</code></td><td>Das Literal hat den Wert 1024.</td></tr>
+        <tr><td>Hexadezimalsystem</td><td><code>0x</code> oder <code>0X</code></td><td><code>0x7b</code></td><td>Das Literal hat den Wert 123.</td></tr>
       </tbody>
     </table>
+
+    <h3>Drei Regeln</h3>
+    <ul>
+      <li><strong>Groß und klein:</strong> Der Buchstabe im Präfix und die Hexadezimalziffern <code>a</code> bis <code>f</code> dürfen groß oder klein sein. <code>0x7b</code> und <code>0X7B</code> haben den gleichen Wert.</li>
+      <li><strong>Unterstrich:</strong> Ein Unterstrich <code>_</code> gliedert lange Ziffernfolgen, zum Beispiel <code>1_038_605</code>. Er steht zwischen zwei Ziffern oder zwischen Präfix und erster Ziffer. Am Wert ändert er nichts.</li>
+      <li><strong>Führende Nullen:</strong> Nach einem Präfix dürfen Nullen stehen, zum Beispiel <code>0X0000_BAFF</code>. Ein Dezimalliteral beginnt nie mit einer Null.</li>
+    </ul>
+
+    <h3>Die führende Null</h3>
+    <p>Auch die Ziffer <code>0</code> allein, ohne Buchstaben, ist ein Präfix für eine Oktalzahl. Eine Ziffernfolge, die mit <code>0</code> beginnt, liest Go deshalb immer als Oktalzahl:</p>
+<pre class="code-block">var a int = 245
+var b int = 123
+var c int = 076
+fmt.Println(a, b, c)    // 245 123 62</pre>
+    <p>Wer die drei Zahlen untereinander gleich breit schreiben wollte, hat aus 76 die Zahl 62 gemacht. Go meldet nichts, denn <code>076</code> ist eine gültige Oktalzahl: 7 · 8 + 6 = 62. Erst bei einer 8 oder 9 fällt der Fehler auf, weil es diese Ziffern im Oktalsystem nicht gibt.</p>
+    <div class="hinweis">Schreibe eine Oktalzahl mit <code>0o</code>. Dann sieht jeder Leser, dass sie so gemeint ist. Die Schreibweise mit der bloßen <code>0</code> kennt Go aus älteren Sprachen wie C.</div>
+
+    <h3>Ausprobieren: was Go annimmt</h3>
+    <p>Wähle ein Literal. Die Seite zeigt, ob Go die Zeile <code>var a int = …</code> übersetzt.</p>
+    <div class="zeile" id="wahl"></div>
+    <pre class="code-block" id="w-zeile"></pre>
+    <div class="auskunft" id="w-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61, mit Hinweis 4.6. Die Literale <code>_42</code>, <code>42_</code>, <code>4__2</code> und <code>0_x42</code> werden im Kurstext als fehlerhaft genannt. Die Meldungen des Compilers, die Literale <code>08</code> und <code>0b102</code> und der Rat, eine Oktalzahl mit <code>0o</code> zu schreiben, stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>🔬 Exkurs: Binäre Codierung und Zweierkomplement</h2>
-    <p>Wie werden Ganzzahlen auf Bit-Ebene dargestellt und wie funktionieren Addition und Subtraktion im Rechenwerk?</p>
-    
-    <div class="tabs">
-      <button class="tab active" data-tab="unsigned-tab">Vorzeichenlos (uint8)</button>
-      <button class="tab" data-tab="signed-tab">Vorzeichenbehaftet (int8)</button>
-      <button class="tab" data-tab="twos-complement-tab">Zweierkomplement bilden</button>
-      <button class="tab" data-tab="arithmetic-tab">Addition & Subtraktion</button>
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Ausgabe mit Printf</h2>
+    <p><code>fmt.Println</code> gibt eine ganze Zahl immer dezimal aus. Wer sie binär, oktal oder hexadezimal sehen will, nimmt <code>fmt.Printf</code> und ein Verb. Ein Verb beginnt mit <code>%</code> und sagt, in welcher Form ein Wert erscheint.</p>
+
+    <h3>Ausprobieren: ein Wert, zehn Verben</h3>
+    <div class="zeile" id="werte">
+      <span>Wert von <code>a</code>:</span>
+      <button type="button" data-wert="78">78</button>
+      <button type="button" data-wert="163">163</button>
+      <button type="button" data-wert="42">42</button>
+      <button type="button" data-wert="255">255</button>
+      <button type="button" data-wert="62">62</button>
     </div>
+    <table class="text">
+      <thead><tr><th>Verb</th><th>Was das Verb ausgibt</th><th>Ausgabe für den gewählten Wert</th></tr></thead>
+      <tbody id="verben"></tbody>
+    </table>
 
-    <!-- Tab 1: Vorzeichenlos -->
-    <div class="tab-content active" id="unsigned-tab">
-      <h3>Vorzeichenlose Ganzzahlen (uint8)</h3>
-      <p>Mit 8 Bit können Zahlen von <strong>0 bis 255</strong> (2⁸ - 1) dargestellt werden. Alle Bits haben positive Wertigkeiten:</p>
-      
-      <div style="background:#f8fafc;padding:14px;border-radius:8px;margin:12px 0;overflow-x:auto;">
-        <table style="margin:0;font-family:Consolas,monospace;font-size:0.9rem;">
-          <tr style="background:#e0f2f1;">
-            <th style="text-align:center;padding:8px;">Bit-Position</th>
-            <th style="text-align:center;padding:4px;">7</th>
-            <th style="text-align:center;padding:4px;">6</th>
-            <th style="text-align:center;padding:4px;">5</th>
-            <th style="text-align:center;padding:4px;">4</th>
-            <th style="text-align:center;padding:4px;">3</th>
-            <th style="text-align:center;padding:4px;">2</th>
-            <th style="text-align:center;padding:4px;">1</th>
-            <th style="text-align:center;padding:4px;">0</th>
-          </tr>
-          <tr>
-            <td style="background:#e0f2f1;font-weight:600;padding:8px;">Wertigkeit</td>
-            <td style="text-align:center;padding:4px;">128</td>
-            <td style="text-align:center;padding:4px;">64</td>
-            <td style="text-align:center;padding:4px;">32</td>
-            <td style="text-align:center;padding:4px;">16</td>
-            <td style="text-align:center;padding:4px;">8</td>
-            <td style="text-align:center;padding:4px;">4</td>
-            <td style="text-align:center;padding:4px;">2</td>
-            <td style="text-align:center;padding:4px;">1</td>
-          </tr>
-        </table>
-      </div>
+    <h3>Drei Bausteine</h3>
+    <ul>
+      <li><strong>Das Verb:</strong> <code>%b</code>, <code>%o</code> und <code>%x</code> geben nur die Ziffern aus, ohne Präfix. <code>%X</code> nimmt Großbuchstaben.</li>
+      <li><strong>Das Flag <code>#</code>:</strong> Es steht zwischen <code>%</code> und dem Buchstaben und setzt das Präfix davor: <code>0b</code>, <code>0</code> oder <code>0x</code>. Bei einer Oktalzahl ist das die bloße <code>0</code>. Das Präfix <code>0o</code> liefert das Verb <code>%O</code>.</li>
+      <li><strong>Die Angabe <code>[1]</code>:</strong> Sie sagt, dass das Verb noch einmal das erste Argument nimmt. Ohne sie nimmt jedes Verb das nächste Argument, und <code>a</code> müsste mehrmals in der Klammer stehen.</li>
+    </ul>
 
-      <div class="flex-between" style="margin:16px 0;">
-        <div>
-          <label style="display:block;margin-bottom:6px;font-weight:600;">Dezimalzahl (0-255):</label>
-          <input type="number" id="uint8Input" min="0" max="255" value="42" style="max-width:150px;">
-        </div>
-        <button id="uint8ConvertBtn" class="btn-primary">Visualisieren</button>
-      </div>
+    <h3>Die drei Zeilen des Kurstexts</h3>
+    <pre class="code-block" id="printf"></pre>
+    <p>Die dritte Zeile gibt im Kurstext die Variable <code>b</code> aus, die mit <code>0b1010_0011</code> den Wert 163 bekommt. An der Ausgabe ist das nicht mehr zu sehen: Go merkt sich nur den Wert und nicht, in welchem Zahlensystem er im Quelltext stand.</p>
 
-      <div id="uint8Visual" style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
-        <div style="display:flex;gap:4px;justify-content:center;margin-bottom:12px;" id="uint8Bits"></div>
-        <div style="text-align:center;font-family:Consolas,monospace;margin-top:12px;">
-          <div style="color:#666;font-size:0.9rem;">Berechnung:</div>
-          <div id="uint8Calc" style="font-size:1.05rem;margin-top:6px;"></div>
-        </div>
-      </div>
-
-      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
-        <strong>Beispiele aus dem Skript:</strong>
-        <table style="margin-top:8px;">
-          <tr><td><code>00000000</code></td><td>= 0</td></tr>
-          <tr><td><code>00000001</code></td><td>= 1</td></tr>
-          <tr><td><code>01111111</code></td><td>= 127</td></tr>
-          <tr><td><code>10000000</code></td><td>= 128</td></tr>
-          <tr><td><code>10000001</code></td><td>= 129</td></tr>
-          <tr><td><code>11111111</code></td><td>= 255</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Tab 2: Vorzeichenbehaftet -->
-    <div class="tab-content" id="signed-tab">
-      <h3>Vorzeichenbehaftete Ganzzahlen (int8) – Zweierkomplement</h3>
-      <p>Mit 8 Bit können Zahlen von <strong>-128 bis 127</strong> dargestellt werden. Das höchstwertige Bit hat <strong>negative</strong> Wertigkeit:</p>
-      
-      <div style="background:#f8fafc;padding:14px;border-radius:8px;margin:12px 0;overflow-x:auto;">
-        <table style="margin:0;font-family:Consolas,monospace;font-size:0.9rem;">
-          <tr style="background:#fef2f2;">
-            <th style="text-align:center;padding:8px;">Bit-Position</th>
-            <th style="text-align:center;padding:4px;background:#ffcdd2;">7</th>
-            <th style="text-align:center;padding:4px;">6</th>
-            <th style="text-align:center;padding:4px;">5</th>
-            <th style="text-align:center;padding:4px;">4</th>
-            <th style="text-align:center;padding:4px;">3</th>
-            <th style="text-align:center;padding:4px;">2</th>
-            <th style="text-align:center;padding:4px;">1</th>
-            <th style="text-align:center;padding:4px;">0</th>
-          </tr>
-          <tr>
-            <td style="background:#fef2f2;font-weight:600;padding:8px;">Wertigkeit</td>
-            <td style="text-align:center;padding:4px;background:#ffcdd2;color:#c62828;font-weight:700;">-128</td>
-            <td style="text-align:center;padding:4px;">64</td>
-            <td style="text-align:center;padding:4px;">32</td>
-            <td style="text-align:center;padding:4px;">16</td>
-            <td style="text-align:center;padding:4px;">8</td>
-            <td style="text-align:center;padding:4px;">4</td>
-            <td style="text-align:center;padding:4px;">2</td>
-            <td style="text-align:center;padding:4px;">1</td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="highlight">
-        <strong>💡 Vorzeichen ablesen:</strong> Wenn Bit 7 = 0 → positive Zahl (0 bis 127)<br>
-        Wenn Bit 7 = 1 → negative Zahl (-128 bis -1)
-      </div>
-
-      <div class="flex-between" style="margin:16px 0;">
-        <div>
-          <label style="display:block;margin-bottom:6px;font-weight:600;">Dezimalzahl (-128 bis 127):</label>
-          <input type="number" id="int8Input" min="-128" max="127" value="42" style="max-width:150px;">
-        </div>
-        <button id="int8ConvertBtn" class="btn-primary">Visualisieren</button>
-      </div>
-
-      <div id="int8Visual" style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
-        <div style="display:flex;gap:4px;justify-content:center;margin-bottom:12px;" id="int8Bits"></div>
-        <div style="text-align:center;font-family:Consolas,monospace;margin-top:12px;">
-          <div style="color:#666;font-size:0.9rem;">Berechnung (Zweierkomplement):</div>
-          <div id="int8Calc" style="font-size:1.05rem;margin-top:6px;"></div>
-        </div>
-      </div>
-
-      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
-        <strong>Beispiele aus dem Skript:</strong>
-        <table style="margin-top:8px;">
-          <tr><td><code>00000000</code></td><td>= -128 + 0 = <strong>0</strong></td></tr>
-          <tr><td><code>00000001</code></td><td>= -128 + 1 = <strong>1</strong></td></tr>
-          <tr><td><code>01111111</code></td><td>= -128 + 127 = <strong>127</strong></td></tr>
-          <tr><td><code>10000000</code></td><td>= -128 + 0 = <strong>-128</strong></td></tr>
-          <tr><td><code>10000001</code></td><td>= -128 + 1 = <strong>-127</strong></td></tr>
-          <tr><td><code>11111111</code></td><td>= -128 + 127 = <strong>-1</strong></td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Tab 3: Zweierkomplement bilden -->
-    <div class="tab-content" id="twos-complement-tab">
-      <h3>Zweierkomplement berechnen</h3>
-      <p>Um eine negative Zahl zu codieren, wird das Zweierkomplement gebildet:</p>
-      
-      <div style="background:#e0f2f1;padding:12px;border-radius:8px;margin:12px 0;">
-        <strong>Methode: Negative Zahl im Zweierkomplement</strong>
-        <ol style="margin:8px 0 0;">
-          <li>Betrag der Zahl als Binärzahl darstellen</li>
-          <li>Alle Bits invertieren (0 → 1, 1 → 0) = <strong>Einerkomplement</strong></li>
-          <li>1 addieren = <strong>Zweierkomplement</strong></li>
-        </ol>
-      </div>
-
-      <div class="flex-between" style="margin:16px 0;">
-        <div>
-          <label style="display:block;margin-bottom:6px;font-weight:600;">Positive Zahl (1-127):</label>
-          <input type="number" id="twosInput" min="1" max="127" value="42" style="max-width:150px;">
-        </div>
-        <button id="twosConvertBtn" class="btn-primary">Negieren</button>
-      </div>
-
-      <div id="twosResult" style="display:none;">
-        <div style="background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
-          <table style="width:100%;font-family:Consolas,monospace;">
-            <tr>
-              <td style="padding:8px;font-weight:600;width:200px;">Original (positiv):</td>
-              <td id="twosOriginal" style="padding:8px;font-size:1.1rem;"></td>
-            </tr>
-            <tr style="background:#f8fafc;">
-              <td style="padding:8px;font-weight:600;">Schritt 1: Invertieren:</td>
-              <td id="twosInverted" style="padding:8px;font-size:1.1rem;"></td>
-            </tr>
-            <tr>
-              <td style="padding:8px;font-weight:600;">Schritt 2: +1 addieren:</td>
-              <td id="twosFinal" style="padding:8px;font-size:1.1rem;color:#0f766e;font-weight:700;"></td>
-            </tr>
-            <tr style="background:#e0f2f1;">
-              <td style="padding:8px;font-weight:600;">Ergebnis (int8):</td>
-              <td id="twosDecimal" style="padding:8px;font-size:1.1rem;color:#c62828;font-weight:700;"></td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;border-left:4px solid #f59e0b;">
-          <strong>🔄 Umkehrung:</strong> Das Zweierkomplement des Zweierkomplements ergibt die ursprüngliche Zahl!<br>
-          <span id="twosReverse" style="font-family:Consolas,monospace;"></span>
-        </div>
-      </div>
-
-      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
-        <strong>Beispiel: -42 codieren</strong>
-        <table style="margin-top:8px;font-family:Consolas,monospace;">
-          <tr><td style="padding:4px 12px;">+42:</td><td><code>00101010</code></td></tr>
-          <tr><td style="padding:4px 12px;">Invertieren:</td><td><code>11010101</code></td></tr>
-          <tr><td style="padding:4px 12px;">+1:</td><td><code>11010110</code></td></tr>
-          <tr style="background:#e0f2f1;"><td style="padding:4px 12px;font-weight:700;">-42:</td><td style="font-weight:700;color:#c62828;"><code>11010110</code></td></tr>
-        </table>
-        <div style="margin-top:8px;font-size:0.9rem;color:#666;">
-          Probe: -128 + 64 + 16 + 4 + 2 = -42 ✓
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab 4: Addition & Subtraktion -->
-    <div class="tab-content" id="arithmetic-tab">
-      <h3>Rechenoperationen auf Bit-Ebene</h3>
-      <p>Der große Vorteil des Zweierkomplements: Subtraktion kann als Addition implementiert werden!</p>
-      
-      <div class="highlight">
-        <strong>💡 Prinzip:</strong> <code>a - b = a + (-b)</code><br>
-        Die Subtraktion wird auf die Addition zurückgeführt, indem der negative Wert (im Zweierkomplement) addiert wird.
-      </div>
-
-      <div style="margin:16px 0;">
-        <h4 style="margin-top:0;">Addition zweier Zahlen (int8):</h4>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
-          <div>
-            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl A:</label>
-            <input type="number" id="addA" min="-128" max="127" value="15" style="max-width:120px;">
-          </div>
-          <div>
-            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl B:</label>
-            <input type="number" id="addB" min="-128" max="127" value="27" style="max-width:120px;">
-          </div>
-          <button id="addBtn" class="btn-primary">Rechnen</button>
-        </div>
-      </div>
-
-      <div id="addResult" style="display:none;background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
-        <h4 style="margin-top:0;color:#0f766e;">Addition im Rechenwerk:</h4>
-        <div id="addVisualization" style="font-family:Consolas,monospace;font-size:1rem;"></div>
-      </div>
-
-      <div style="margin:24px 0 16px;">
-        <h4 style="margin-top:0;">Subtraktion zweier Zahlen (int8):</h4>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
-          <div>
-            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl A:</label>
-            <input type="number" id="subA" min="-128" max="127" value="15" style="max-width:120px;">
-          </div>
-          <div>
-            <label style="display:block;margin-bottom:6px;font-weight:600;">Zahl B:</label>
-            <input type="number" id="subB" min="-128" max="127" value="27" style="max-width:120px;">
-          </div>
-          <button id="subBtn" class="btn-primary">Rechnen</button>
-        </div>
-      </div>
-
-      <div id="subResult" style="display:none;background:#fff;padding:16px;border:2px solid #0f766e;border-radius:8px;margin-top:12px;">
-        <h4 style="margin-top:0;color:#0f766e;">Subtraktion als Addition:</h4>
-        <div id="subVisualization" style="font-family:Consolas,monospace;font-size:1rem;"></div>
-      </div>
-
-      <div style="margin-top:16px;background:#f8fafc;padding:12px;border-radius:8px;">
-        <strong>⚠️ Overflow:</strong> Wenn das Ergebnis den Wertebereich überschreitet (< -128 oder > 127), 
-        tritt ein Überlauf auf. Die überzähligen Bits werden abgeschnitten.
-      </div>
-    </div>
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Üben:</strong> Das <a href="go_k4_zahlensysteme_quiz.html">Quiz „Zahlensysteme umrechnen“</a> stellt dir immer neue Aufgaben: ein Literal lesen oder einen Wert als Literal schreiben.</li>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_integer_literale_quiz.html">Quiz zu den Integer-Literalen</a> fragt den Stoff von Abschnitt 4.3.1 ab.</li>
+      <li><strong>Bitmuster und Typ:</strong> Wie ein Bitmuster als Zahl mit und ohne Vorzeichen gelesen wird, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+      <li><strong>Negative Zahlen:</strong> Wie Go eine negative Zahl als Bitmuster ablegt, zeigt die Seite <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a>.</li>
+      <li><strong>Rechnen mit Bits:</strong> Wie der Rechner zwei Bitmuster addiert und subtrahiert, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.2, Seiten 62–63. Die Werte 78 und 163 und die drei Zeilen mit <code>fmt.Printf</code> stammen aus dem Kurstext. Die Werte 42, 255 und 62 sind eigene Beispiele. <code>fmt.Printf</code> selbst wird in Abschnitt 4.2 ab Seite 53 eingeführt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
   </section>
 
-  <p class="note">Kapitel 4 – Primitive Datentypen in Go | Stand: 28.05.2026</p>
-</main>
+</div>
 
+<script src="../kurslotse.js"></script>
 <script>
-(function() {
-  // Tab-System
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-tab');
-      tabs.forEach(t => t.classList.remove('active'));
-      tabContents.forEach(tc => tc.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(target).classList.add('active');
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const c = t => '<code>' + String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</code>';
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#literale
+  const ANKER = ['worum', 'stellenwert', 'literale', 'printf'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Schritt 1: ein Literal lesen, wie Go es liest ----------
+  const SYSTEME = {
+    2: { name: 'Binärsystem', kurz: 'binär', ziffern: /^[01]$/ },
+    8: { name: 'Oktalsystem', kurz: 'oktal', ziffern: /^[0-7]$/ },
+    10: { name: 'Dezimalsystem', kurz: 'dezimal', ziffern: /^[0-9]$/ },
+    16: { name: 'Hexadezimalsystem', kurz: 'hexadezimal', ziffern: /^[0-9a-fA-F]$/ }
+  };
+  const MAX_INT = 9223372036854775807n;
+
+  // Liefert { ok, basis, praefix, ziffern, wert, nurNull } oder { ok: false, grund }
+  function lies(text) {
+    const t = text.trim();
+    if (!t) return { ok: false, grund: 'Das Feld ist leer.' };
+    if (t[0] === '-' || t[0] === '+') return { ok: false, grund: 'Das Vorzeichen gehört nicht zum Literal. In ' + c('-42') + ' ist ' + c('-') + ' ein Operator und ' + c('42') + ' das Literal. Gib das Literal ohne Vorzeichen ein.' };
+    if (!/^[0-9a-zA-Z_]+$/.test(t)) return { ok: false, grund: 'Ein Integer-Literal besteht nur aus Ziffern, einem Präfix und Unterstrichen. Ein Punkt, ein Komma oder ein Leerzeichen kommt darin nicht vor.' };
+    if (/^[_a-zA-Z]/.test(t)) return { ok: false, grund: 'Die Zeichenfolge beginnt nicht mit einer Ziffer. Go liest sie als Namen und sucht eine Variable, die so heißt.' };
+    let basis = 10, praefix = '', rest = t;
+    const m = /^0([bBoOxX])/.exec(t);
+    if (m) { basis = { b: 2, o: 8, x: 16 }[m[1].toLowerCase()]; praefix = t.slice(0, 2); rest = t.slice(2); }
+    else if (/^0_[bBoOxX]/.test(t)) return { ok: false, grund: 'Der Unterstrich steht mitten im Präfix. Das Präfix ' + c('0' + t[2]) + ' gehört zusammen.' };
+    else if (t.length > 1 && t[0] === '0') { basis = 8; praefix = '0'; rest = t.slice(1); }
+    if (rest === '' || rest === '_') return { ok: false, grund: 'Nach dem Präfix ' + c(praefix) + ' fehlen die Ziffern.' };
+    if (rest.endsWith('_') || rest.includes('__')) return { ok: false, grund: 'Ein Unterstrich steht nur zwischen zwei Ziffern oder zwischen Präfix und erster Ziffer. Am Ende und doppelt nimmt Go ihn nicht an.' };
+    const ziffern = rest.replace(/_/g, '');
+    const falsch = ziffern.split('').find(z => !SYSTEME[basis].ziffern.test(z));
+    if (falsch !== undefined) {
+      const istZiffer = /[0-9]/.test(falsch);
+      return { ok: false, grund: (istZiffer ? 'Die Ziffer ' : 'Das Zeichen ') + c(falsch) + ' gibt es im ' + SYSTEME[basis].name + ' nicht.' +
+        (praefix === '0' ? ' Die führende ' + c('0') + ' macht aus der Ziffernfolge eine Oktalzahl.' : '') };
+    }
+    if (ziffern.length > 20 && basis !== 2 || ziffern.length > 64) return { ok: false, grund: 'So viele Ziffern zerlegt die Seite nicht.' };
+    let wert = 0n;
+    for (const z of ziffern) wert = wert * BigInt(basis) + BigInt(parseInt(z, 16));
+    return { ok: true, text: t, basis: basis, praefix: praefix, ziffern: ziffern, wert: wert };
+  }
+  const gruppiert = (s, n) => { const teile = []; for (let i = s.length; i > 0; i -= n) teile.unshift(s.slice(Math.max(0, i - n), i)); return teile.join('_'); };
+  const schreibweisen = w => ({ 2: '0b' + gruppiert(w.toString(2), 4), 8: '0o' + w.toString(8), 10: w.toString(10), 16: '0x' + gruppiert(w.toString(16), 4) });
+
+  const s1 = { text: '0x7b', gelesen: null, stellen: [], teilen: [] };
+  function zerlege(text) {
+    s1.text = text;
+    const g = s1.gelesen = lies(text);
+    s1.stellen = []; s1.teilen = [];
+    el('eingabe').value = text;
+    el('ergebnis').hidden = !g.ok;
+    el('urteil').classList.toggle('fehler', !g.ok);
+    if (!g.ok) { el('urteil').innerHTML = '<p>' + c(text.trim() || ' ') + ' ist in Go kein Integer-Literal.</p><p>' + g.grund + '</p>'; melde(false); return; }
+
+    const sys = SYSTEME[g.basis];
+    let urteil = '<p>' + c(g.text) + ' ist ein Integer-Literal im ' + sys.name + ', Basis ' + g.basis + '. ' +
+      (g.praefix ? 'Das Präfix ist ' + c(g.praefix) + '.' : 'Es hat kein Präfix.') + ' Der Wert ist ' + g.wert + '.</p>';
+    if (g.praefix === '0') urteil += '<p>Achtung: Die führende ' + c('0') + ' ohne Buchstaben macht das Literal zu einer Oktalzahl. Als Dezimalzahl gelesen wäre es ' + BigInt(g.ziffern) + '.</p>';
+    if (g.text.includes('_')) urteil += '<p>Die Unterstriche gliedern nur. Am Wert ändern sie nichts.</p>';
+    if (g.wert > MAX_INT) urteil += '<p>Der Wert ist größer als 9223372036854775807 und passt nicht in eine Variable vom Typ ' + c('int') + '.</p>';
+    el('urteil').innerHTML = urteil;
+
+    // Ziffer für Ziffer: Ziffer · Basis^Stelle
+    let zeilen = '<tr><th>Ziffer</th><th>Wert der Ziffer</th><th>Stelle</th><th>Wert der Stelle</th><th>Beitrag</th></tr>';
+    const n = g.ziffern.length;
+    g.ziffern.split('').forEach((z, i) => {
+      const stelle = n - 1 - i, zw = BigInt(parseInt(z, 16)), sw = BigInt(g.basis) ** BigInt(stelle);
+      s1.stellen.push({ ziffer: z, wert: zw, stelle: stelle, stellenwert: sw, beitrag: zw * sw });
+      zeilen += '<tr><td>' + z + '</td><td>' + zw + '</td><td>' + stelle + '</td><td>' + g.basis + '<sup>' + stelle + '</sup> = ' + sw + '</td><td>' + zw + ' · ' + sw + ' = ' + (zw * sw) + '</td></tr>';
     });
+    zeilen += '<tr class="summe"><td colspan="4">Summe der Beiträge</td><td>' + g.wert + '</td></tr>';
+    el('rechnung').innerHTML = zeilen;
+
+    const sw = schreibweisen(g.wert);
+    el('vier').innerHTML = [2, 8, 10, 16].map(b => '<div' + (b === g.basis ? ' class="quellsystem"' : '') + '><span>' + SYSTEME[b].kurz + ', Basis ' + b + '</span><b>' + sw[b] + '</b></div>').join('');
+
+    // Rückweg: vom Wert zu den Binärziffern durch Teilen mit Rest
+    if (g.wert > 0n && g.wert <= 65535n) {
+      let w = g.wert, html = '<h3>Der Rückweg: vom Wert zu den Binärziffern</h3><p>Teile den Wert immer wieder durch 2 und schreibe den Rest auf. Die Reste, von unten nach oben gelesen, sind die Binärziffern.</p><table class="rechnung"><tr><th>Rechnung</th><th>Ergebnis</th><th>Rest</th></tr>';
+      while (w > 0n) { s1.teilen.push(w + ' : 2 = ' + (w / 2n) + ' Rest ' + (w % 2n)); html += '<tr><td>' + w + ' : 2</td><td>' + (w / 2n) + '</td><td>' + (w % 2n) + '</td></tr>'; w /= 2n; }
+      html += '</table><p>Von unten nach oben gelesen: ' + c(g.wert.toString(2)) + '. Für eine Oktalzahl teilt man durch 8, für eine Hexadezimalzahl durch 16.</p>';
+      el('teilen').innerHTML = html;
+    } else el('teilen').innerHTML = '';
+    melde(false);
+  }
+  el('zerlegen').addEventListener('click', () => zerlege(el('eingabe').value));
+  el('eingabe').addEventListener('keydown', e => { if (e.key === 'Enter') zerlege(el('eingabe').value); });
+  document.querySelectorAll('[data-lit]').forEach(k => k.addEventListener('click', () => zerlege(k.dataset.lit)));
+
+  // ---------- Schritt 2: zwölf Literale. Urteil und Meldung stammen aus Läufen mit Go 1.26. ----------
+  const UNTERSTRICH = "'_' must separate successive digits";
+  const WAHL = [
+    { lit: '1_038_605', wert: 1038605, warum: 'Die Unterstriche stehen zwischen Ziffern und gliedern die Zahl in Dreiergruppen. Der Wert ist der gleiche wie bei ' + c('1038605') + '.' },
+    { lit: '0b1000_1011', wert: 139, warum: 'Das Präfix ' + c('0b') + ' leitet eine Binärzahl ein. Der Unterstrich trennt zwei Gruppen aus vier Bits.' },
+    { lit: '0X0000_BAFF', wert: 47871, warum: 'Das Präfix und die Hexadezimalziffern dürfen groß geschrieben sein. Die Nullen nach dem Präfix ändern den Wert nicht.' },
+    { lit: '0x_2a', wert: 42, warum: 'Zwischen Präfix und erster Ziffer darf ein Unterstrich stehen.' },
+    { lit: '031', wert: 25, warum: 'Die führende ' + c('0') + ' ohne Buchstaben ist ein Präfix für eine Oktalzahl: 3 · 8 + 1 = 25. Wer 31 meint, schreibt ' + c('31') + '.' },
+    { lit: '076', wert: 62, warum: 'Auch das ist eine Oktalzahl: 7 · 8 + 6 = 62. Go meldet nichts, obwohl vermutlich 76 gemeint war.' },
+    { lit: '08', meldung: "invalid digit '8' in octal literal", warum: 'Die führende ' + c('0') + ' macht daraus eine Oktalzahl, und die Ziffer 8 gibt es im Oktalsystem nicht. Hier fällt die führende Null auf.' },
+    { lit: '0b102', meldung: "invalid digit '2' in binary literal", warum: 'Im Binärsystem gibt es nur die Ziffern 0 und 1.' },
+    { lit: '_42', meldung: 'undefined: _42', warum: 'Eine Zeichenfolge, die mit einem Unterstrich beginnt, ist ein Name. Go sucht eine Variable mit dem Namen ' + c('_42') + ' und findet keine.' },
+    { lit: '42_', meldung: UNTERSTRICH, warum: 'Der Unterstrich steht am Ende. Er muss zwischen zwei Ziffern stehen.' },
+    { lit: '4__2', meldung: UNTERSTRICH, warum: 'Zwei Unterstriche stehen hintereinander. Zwischen zwei Ziffern steht höchstens einer.' },
+    { lit: '0_x42', meldung: UNTERSTRICH, warum: 'Der Unterstrich steht mitten im Präfix. Erlaubt ist ' + c('0x_42') + '.' }
+  ];
+  let wahl = 5;
+  el('wahl').innerHTML = WAHL.map((w, i) => '<button type="button" class="code" data-wahl="' + i + '">' + w.lit + '</button>').join('');
+  function zeigeWahl(i) {
+    wahl = i;
+    const w = WAHL[i];
+    document.querySelectorAll('[data-wahl]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.wahl) === i));
+    el('w-zeile').textContent = 'var a int = ' + w.lit + (w.meldung ? '' : '\nfmt.Println(a)    // ' + w.wert);
+    el('w-urteil').classList.toggle('fehler', !!w.meldung);
+    el('w-urteil').innerHTML = (w.meldung ? '<p>Go übersetzt die Zeile nicht. Der Compiler meldet: ' + c(w.meldung) + '</p>' : '<p>Go übersetzt die Zeile. Der Wert ist ' + w.wert + '.</p>') + '<p>' + w.warum + '</p>';
+    melde(false);
+  }
+  el('wahl').addEventListener('click', e => { const k = e.target.closest('[data-wahl]'); if (k) zeigeWahl(Number(k.dataset.wahl)); });
+
+  // ---------- Schritt 3: ein Wert, zehn Verben ----------
+  const VERBEN = [
+    ['%v', 'Das Verb gibt den Wert im Standardformat seines Typs aus. Für int ist das die Dezimalzahl.', a => String(a)],
+    ['%d', 'Das Verb gibt den Wert als Dezimalzahl aus.', a => String(a)],
+    ['%b', 'Das Verb gibt den Wert als Binärzahl aus, ohne Präfix.', a => a.toString(2)],
+    ['%o', 'Das Verb gibt den Wert als Oktalzahl aus, ohne Präfix.', a => a.toString(8)],
+    ['%x', 'Das Verb gibt den Wert als Hexadezimalzahl aus, ohne Präfix.', a => a.toString(16)],
+    ['%X', 'Das Verb gibt den Wert als Hexadezimalzahl mit Großbuchstaben aus.', a => a.toString(16).toUpperCase()],
+    ['%#b', 'Das Flag # setzt das Präfix 0b vor die Binärzahl.', a => '0b' + a.toString(2)],
+    ['%#o', 'Das Flag # setzt das Präfix 0 vor die Oktalzahl.', a => '0' + a.toString(8)],
+    ['%#x', 'Das Flag # setzt das Präfix 0x vor die Hexadezimalzahl.', a => '0x' + a.toString(16)],
+    ['%O', 'Das Verb gibt den Wert als Oktalzahl mit dem Präfix 0o aus.', a => '0o' + a.toString(8)]
+  ];
+  let wert = 78;
+  const printfZeilen = a => [
+    'var a int = ' + a,
+    'fmt.Printf("%v:  %[1]b  %[1]o  %[1]x\\n", a)     // ' + a + ':  ' + a.toString(2) + '  ' + a.toString(8) + '  ' + a.toString(16),
+    'fmt.Printf("%d:  %#[1]b %#[1]o %#[1]x\\n", a)  // ' + a + ':  0b' + a.toString(2) + ' 0' + a.toString(8) + ' 0x' + a.toString(16),
+    'fmt.Printf("%v:  %[1]b  %[1]O  %[1]X\\n", a)     // ' + a + ':  ' + a.toString(2) + '  0o' + a.toString(8) + '  ' + a.toString(16).toUpperCase()
+  ];
+  function zeigeWert(a) {
+    wert = a;
+    document.querySelectorAll('[data-wert]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.wert) === a));
+    el('verben').innerHTML = VERBEN.map(v => '<tr><td>' + c(v[0]) + '</td><td>' + v[1] + '</td><td>' + c(v[2](a)) + '</td></tr>').join('');
+    el('printf').textContent = printfZeilen(a).join('\n');
+    melde(false);
+  }
+  el('werte').addEventListener('click', e => { const k = e.target.closest('[data-wert]'); if (k) zeigeWert(Number(k.dataset.wert)); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Stellenwert', 'Schritt 2: Literale in Go', 'Schritt 3: Ausgabe mit Printf'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) {
+      const g = s1.gelesen, kopf = 'Im Eingabefeld steht ' + s1.text.trim() + '.';
+      const griffe = 'Handgriffe: ein Literal mit höchstens 40 Zeichen eintragen und „zerlegen“ wählen oder die Eingabetaste drücken, einen der Knöpfe 0b1000_1011, 0o14, 031, 0x7b, 0X0000_BAFF, 1_038_605, 0b_10, 0o_10, 10 und 0x_10 wählen. Ein Vorzeichen und einen Typ nimmt das Feld nicht an.';
+      if (!g.ok) return [kopf, 'Die Seite sagt: Das ist in Go kein Integer-Literal. ' + glatt(el('urteil').innerText), 'Eine Zerlegung zeigt die Seite deshalb nicht.', griffe];
+      const sw = schreibweisen(g.wert);
+      return [kopf,
+        'Die Seite sagt: ' + glatt(el('urteil').innerText),
+        'Die Zerlegung Ziffer für Ziffer, von links nach rechts: ' + s1.stellen.map(s => 'Ziffer ' + s.ziffer + ' an der Stelle ' + s.stelle + ': ' + s.wert + ' · ' + s.stellenwert + ' = ' + s.beitrag).join(' ; ') + '. Die Summe ist ' + g.wert + '.',
+        'Der gleiche Wert in allen vier Schreibweisen: binär ' + sw[2] + ', oktal ' + sw[8] + ', dezimal ' + sw[10] + ', hexadezimal ' + sw[16] + '.',
+        s1.teilen.length ? 'Der Rückweg durch Teilen mit Rest: ' + s1.teilen.join(' ; ') + '. Die Reste von unten nach oben gelesen ergeben ' + g.wert.toString(2) + '.' : 'Den Rückweg durch Teilen mit Rest zeigt die Seite nur für Werte von 1 bis 65535.',
+        griffe];
+    }
+    if (stufe === 2) {
+      const w = WAHL[wahl];
+      return ['Gewählt ist das Literal ' + w.lit + '. Die Zeile lautet: var a int = ' + w.lit,
+        w.meldung ? 'Go übersetzt die Zeile nicht. Der Compiler meldet: ' + w.meldung : 'Go übersetzt die Zeile. Der Wert ist ' + w.wert + '.',
+        'Die Seite sagt dazu: ' + glatt(el('w-urteil').innerText),
+        'Die zwölf Literale zur Wahl: ' + WAHL.map(x => x.lit + (x.meldung ? ' (Go übersetzt es nicht: ' + x.meldung + ')' : ' (Wert ' + x.wert + ')')).join(', ') + '.',
+        'Handgriffe: eines der zwölf Literale wählen. Ein eigenes Literal lässt sich hier nicht eingeben, das geht in Schritt 1.'];
+    }
+    return ['Gewählt ist der Wert a = ' + wert + '.',
+      'Die Ausgaben der zehn Verben: ' + VERBEN.map(v => v[0] + ' liefert ' + v[2](wert)).join(', ') + '.',
+      'Handgriffe: einen der fünf Werte 78, 163, 42, 255 und 62 wählen. Ein eigener Wert und ein eigenes Verb lassen sich nicht eingeben.'];
+  }
+  const kurzStand = () => stufe === 1 ? s1.text.trim() : stufe === 2 ? WAHL[wahl].lit : stufe === 3 ? 'a = ' + wert : '';
+
+  zerlege('0x7b');
+  zeigeWahl(5);
+  zeigeWert(78);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Zahlensysteme in Go',
+    thema: 'Integer-Literal, Binärsystem, Oktalsystem, Hexadezimalsystem, Präfix, Stellenwert, fmt.Printf',
+    bezug: 'Kurstext v3.0.6, Abschnitte 4.3.1 und 4.3.2, Seiten 59–63',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis, table.text',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ist 076 nicht 76?'
   });
-
-  // Konverter
-  const inputValue = document.getElementById('inputValue');
-  const convertBtn = document.getElementById('convertBtn');
-  const convertResult = document.getElementById('convertResult');
-  const displayBoxes = document.getElementById('displayBoxes');
-  const binOutput = document.getElementById('binOutput');
-  const octOutput = document.getElementById('octOutput');
-  const decOutput = document.getElementById('decOutput');
-  const hexOutput = document.getElementById('hexOutput');
-
-  function parseGoNumber(str) {
-    str = str.trim().replace(/_/g, ''); // Unterstriche entfernen
-    
-    if (str.startsWith('0b') || str.startsWith('0B')) {
-      return parseInt(str.slice(2), 2);
-    } else if (str.startsWith('0o') || str.startsWith('0O')) {
-      return parseInt(str.slice(2), 8);
-    } else if (str.startsWith('0x') || str.startsWith('0X')) {
-      return parseInt(str.slice(2), 16);
-    } else if (str.startsWith('0') && str.length > 1 && /^[0-7]+$/.test(str.slice(1))) {
-      // Oktal mit 0-Präfix
-      return parseInt(str, 8);
-    } else {
-      return parseInt(str, 10);
-    }
-  }
-
-  function formatWithUnderscores(str, groupSize) {
-    const parts = [];
-    for (let i = str.length; i > 0; i -= groupSize) {
-      parts.unshift(str.slice(Math.max(0, i - groupSize), i));
-    }
-    return parts.join('_');
-  }
-
-  function convert() {
-    const input = inputValue.value.trim();
-    if (!input) {
-      convertResult.textContent = 'Bitte gib eine Zahl ein.';
-      convertResult.className = 'result-box';
-      displayBoxes.style.display = 'none';
-      document.getElementById('explanationBox').style.display = 'none';
-      return;
-    }
-
-    try {
-      const decValue = parseGoNumber(input);
-      if (isNaN(decValue) || decValue < 0) {
-        throw new Error('Ungültige Zahl');
-      }
-
-      const binStr = formatWithUnderscores(decValue.toString(2), 4);
-      const octStr = decValue.toString(8);
-      const hexStr = formatWithUnderscores(decValue.toString(16).toUpperCase(), 4);
-
-      binOutput.textContent = '0b' + binStr;
-      octOutput.textContent = '0o' + octStr;
-      decOutput.textContent = decValue;
-      hexOutput.textContent = '0x' + hexStr;
-
-      convertResult.textContent = '✓ Erfolgreich umgerechnet!';
-      convertResult.className = 'result-box success';
-      displayBoxes.style.display = 'grid';
-      
-      // Erklärung generieren
-      generateExplanation(input, decValue);
-    } catch (e) {
-      convertResult.textContent = '✗ Ungültige Eingabe. Bitte überprüfe die Syntax.';
-      convertResult.className = 'result-box error';
-      displayBoxes.style.display = 'none';
-      document.getElementById('explanationBox').style.display = 'none';
-    }
-  }
-
-  function generateExplanation(input, decValue) {
-    const explanationBox = document.getElementById('explanationBox');
-    const explanationContent = document.getElementById('explanationContent');
-    const cleanInput = input.replace(/_/g, '');
-    
-    let html = '';
-    let sourceBase = 10;
-    let sourceSystem = 'Dezimal';
-    let digits = cleanInput;
-    
-    // Bestimme Quellsystem
-    if (cleanInput.startsWith('0b') || cleanInput.startsWith('0B')) {
-      sourceBase = 2;
-      sourceSystem = 'Binär';
-      digits = cleanInput.slice(2);
-    } else if (cleanInput.startsWith('0o') || cleanInput.startsWith('0O')) {
-      sourceBase = 8;
-      sourceSystem = 'Oktal';
-      digits = cleanInput.slice(2);
-    } else if (cleanInput.startsWith('0x') || cleanInput.startsWith('0X')) {
-      sourceBase = 16;
-      sourceSystem = 'Hexadezimal';
-      digits = cleanInput.slice(2);
-    } else if (cleanInput.startsWith('0') && cleanInput.length > 1) {
-      sourceBase = 8;
-      sourceSystem = 'Oktal (mit 0-Präfix)';
-      digits = cleanInput;
-    }
-    
-    html += '<div style="margin-bottom:16px;"><strong>Eingabe:</strong> <code>' + input + '</code> (' + sourceSystem + ')</div>';
-    
-    // Schritt 1: Von Quellsystem nach Dezimal (wenn nicht schon Dezimal)
-    if (sourceBase !== 10) {
-      html += '<div style="margin-bottom:16px;"><strong>Schritt 1: ' + sourceSystem + ' → Dezimal</strong><br>';
-      html += 'Jede Ziffer wird mit der entsprechenden Potenz der Basis multipliziert:<br>';
-      html += '<div style="background:#fff;padding:12px;margin-top:8px;border-radius:6px;font-family:Consolas,monospace;font-size:0.95rem;">';
-      
-      const digitArray = digits.split('').reverse();
-      const calculations = [];
-      let sum = 0;
-      
-      for (let i = 0; i < digitArray.length; i++) {
-        const digit = digitArray[i];
-        const digitValue = parseInt(digit, sourceBase);
-        const posValue = digitValue * Math.pow(sourceBase, i);
-        sum += posValue;
-        
-        let displayDigit = digit.toUpperCase();
-        if (sourceBase === 16 && isNaN(parseInt(digit))) {
-          displayDigit = digit.toUpperCase() + ' (=' + digitValue + ')';
-        }
-        
-        calculations.push(displayDigit + ' × ' + sourceBase + '<sup>' + i + '</sup> = ' + digitValue + ' × ' + Math.pow(sourceBase, i) + ' = ' + posValue);
-      }
-      
-      html += calculations.reverse().join('<br>');
-      html += '<br><br><strong>Summe:</strong> ' + calculations.map((_, i) => {
-        const digit = digitArray[digitArray.length - 1 - i];
-        return parseInt(digit, sourceBase) * Math.pow(sourceBase, digitArray.length - 1 - i);
-      }).join(' + ') + ' = <strong style="color:#0f766e;">' + decValue + '</strong>';
-      html += '</div></div>';
-    } else {
-      html += '<div style="margin-bottom:16px;">Die Eingabe ist bereits im Dezimalsystem: <strong style="color:#0f766e;">' + decValue + '</strong></div>';
-    }
-    
-    // Schritt 2: Von Dezimal in andere Systeme
-    html += '<div><strong>Schritt 2: Dezimal → Andere Systeme</strong><br>';
-    html += 'Die Dezimalzahl <strong>' + decValue + '</strong> wird durch wiederholte Division umgewandelt:<br>';
-    
-    // Beispiel für ein System (Binär)
-    html += '<div style="background:#fff;padding:12px;margin-top:8px;border-radius:6px;">';
-    html += '<strong style="color:#0f766e;">Beispiel Binär (Basis 2):</strong><br>';
-    html += '<div style="font-family:Consolas,monospace;font-size:0.9rem;margin-top:8px;">';
-    
-    let num = decValue;
-    const binarySteps = [];
-    if (num === 0) {
-      binarySteps.push('0 ÷ 2 = 0 Rest <strong>0</strong>');
-    } else {
-      while (num > 0) {
-        const remainder = num % 2;
-        const quotient = Math.floor(num / 2);
-        binarySteps.push(num + ' ÷ 2 = ' + quotient + ' Rest <strong>' + remainder + '</strong>');
-        num = quotient;
-      }
-    }
-    
-    html += binarySteps.join('<br>');
-    html += '<br><br>Die Reste von unten nach oben gelesen ergeben: <strong style="color:#0f766e;">0b' + decValue.toString(2) + '</strong>';
-    html += '</div></div>';
-    
-    html += '<div style="margin-top:12px;padding:10px;background:#e0f2f1;border-radius:6px;font-size:0.92rem;">';
-    html += '<strong>💡 Prinzip:</strong> Das gleiche Verfahren (wiederholte Division) funktioniert für alle Zahlensysteme:<br>';
-    html += '• <strong>Binär:</strong> Dividiere durch 2<br>';
-    html += '• <strong>Oktal:</strong> Dividiere durch 8<br>';
-    html += '• <strong>Hexadezimal:</strong> Dividiere durch 16 (Reste 10-15 werden zu A-F)';
-    html += '</div></div>';
-    
-    explanationContent.innerHTML = html;
-    explanationBox.style.display = 'block';
-  }
-
-  convertBtn.addEventListener('click', convert);
-  inputValue.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') convert();
-  });
-
-  // Beispiele klickbar machen
-  document.querySelectorAll('.example-list li').forEach(item => {
-    item.addEventListener('click', () => {
-      const value = item.getAttribute('data-value');
-      inputValue.value = value;
-      // Zum Konverter-Tab wechseln
-      tabs[0].click();
-      convert();
-    });
-  });
-
-  // Quiz
-  let currentQuizValue = 10;
-  const quizDisplay = document.getElementById('quizDisplay');
-  const quizAnswer = document.getElementById('quizAnswer');
-  const quizResult = document.getElementById('quizResult');
-  const checkBtn = document.getElementById('checkBtn');
-  const nextQuizBtn = document.getElementById('nextQuizBtn');
-
-  function generateQuiz() {
-    const value = Math.floor(Math.random() * 256); // 0-255
-    const formats = [
-      { prefix: '0b', base: 2, name: 'Binär' },
-      { prefix: '0o', base: 8, name: 'Oktal' },
-      { prefix: '0x', base: 16, name: 'Hex' }
-    ];
-    const format = formats[Math.floor(Math.random() * formats.length)];
-    
-    let str = value.toString(format.base).toUpperCase();
-    if (format.base === 2) {
-      str = formatWithUnderscores(str, 4);
-    } else if (format.base === 16 && str.length > 4) {
-      str = formatWithUnderscores(str, 4);
-    }
-    
-    currentQuizValue = value;
-    quizDisplay.textContent = format.prefix + str;
-    quizAnswer.value = '';
-    quizResult.textContent = 'Gib deine Antwort ein und klicke auf "Prüfen".';
-    quizResult.className = 'result-box';
-  }
-
-  checkBtn.addEventListener('click', () => {
-    const answer = parseInt(quizAnswer.value);
-    if (isNaN(answer)) {
-      quizResult.textContent = 'Bitte gib eine Zahl ein.';
-      quizResult.className = 'result-box';
-      return;
-    }
-    
-    if (answer === currentQuizValue) {
-      quizResult.textContent = '✓ Richtig! Die Dezimalzahl ist ' + currentQuizValue + '.';
-      quizResult.className = 'result-box success';
-    } else {
-      quizResult.textContent = '✗ Leider falsch. Die richtige Antwort ist ' + currentQuizValue + '.';
-      quizResult.className = 'result-box error';
-    }
-  });
-
-  nextQuizBtn.addEventListener('click', generateQuiz);
-  quizAnswer.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') checkBtn.click();
-  });
-
-  // Initiale Quiz-Aufgabe
-  generateQuiz();
-
-  // === BINÄRE CODIERUNG & ZWEIERKOMPLEMENT ===
-  
-  // uint8 Visualisierer
-  const uint8Input = document.getElementById('uint8Input');
-  const uint8ConvertBtn = document.getElementById('uint8ConvertBtn');
-  const uint8Bits = document.getElementById('uint8Bits');
-  const uint8Calc = document.getElementById('uint8Calc');
-
-  function visualizeUint8() {
-    const value = parseInt(uint8Input.value);
-    if (isNaN(value) || value < 0 || value > 255) {
-      alert('Bitte eine Zahl zwischen 0 und 255 eingeben.');
-      return;
-    }
-
-    const binary = value.toString(2).padStart(8, '0');
-    uint8Bits.innerHTML = '';
-    const calculations = [];
-
-    for (let i = 0; i < 8; i++) {
-      const bit = binary[i];
-      const position = 7 - i;
-      const weight = Math.pow(2, position);
-      const contribution = bit === '1' ? weight : 0;
-      
-      const bitBox = document.createElement('div');
-      bitBox.style.cssText = 'width:50px;height:60px;border:2px solid #0f766e;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:' + (bit === '1' ? '#0f766e' : '#fff') + ';color:' + (bit === '1' ? '#fff' : '#0f766e');
-      bitBox.innerHTML = '<div style="font-size:1.4rem;font-weight:700;">' + bit + '</div><div style="font-size:0.7rem;margin-top:2px;">' + weight + '</div>';
-      uint8Bits.appendChild(bitBox);
-
-      if (bit === '1') {
-        calculations.push(weight);
-      }
-    }
-
-    uint8Calc.innerHTML = calculations.length > 0 
-      ? calculations.join(' + ') + ' = <strong style="color:#0f766e;">' + value + '</strong>'
-      : '<strong style="color:#0f766e;">0</strong>';
-  }
-
-  uint8ConvertBtn.addEventListener('click', visualizeUint8);
-  uint8Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') visualizeUint8(); });
-  visualizeUint8(); // Initial
-
-  // int8 Visualisierer (Zweierkomplement)
-  const int8Input = document.getElementById('int8Input');
-  const int8ConvertBtn = document.getElementById('int8ConvertBtn');
-  const int8Bits = document.getElementById('int8Bits');
-  const int8Calc = document.getElementById('int8Calc');
-
-  function visualizeInt8() {
-    const value = parseInt(int8Input.value);
-    if (isNaN(value) || value < -128 || value > 127) {
-      alert('Bitte eine Zahl zwischen -128 und 127 eingeben.');
-      return;
-    }
-
-    // Zweierkomplement berechnen
-    let binary;
-    if (value >= 0) {
-      binary = value.toString(2).padStart(8, '0');
-    } else {
-      binary = (256 + value).toString(2);
-    }
-
-    int8Bits.innerHTML = '';
-    const calculations = [];
-
-    for (let i = 0; i < 8; i++) {
-      const bit = binary[i];
-      const position = 7 - i;
-      const weight = position === 7 ? -128 : Math.pow(2, position);
-      const contribution = bit === '1' ? weight : 0;
-      
-      const bitBox = document.createElement('div');
-      const isSignBit = position === 7;
-      bitBox.style.cssText = 'width:50px;height:60px;border:2px solid ' + (isSignBit ? '#c62828' : '#0f766e') + ';border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:' + (bit === '1' ? (isSignBit ? '#ffcdd2' : '#0f766e') : '#fff') + ';color:' + (bit === '1' && !isSignBit ? '#fff' : (isSignBit ? '#c62828' : '#0f766e'));
-      bitBox.innerHTML = '<div style="font-size:1.4rem;font-weight:700;">' + bit + '</div><div style="font-size:0.7rem;margin-top:2px;">' + weight + '</div>';
-      int8Bits.appendChild(bitBox);
-
-      if (bit === '1') {
-        calculations.push((weight < 0 ? '' : '+') + weight);
-      }
-    }
-
-    int8Calc.innerHTML = calculations.length > 0 
-      ? calculations.join(' ') + ' = <strong style="color:' + (value < 0 ? '#c62828' : '#0f766e') + ';">' + value + '</strong>'
-      : '<strong style="color:#0f766e;">0</strong>';
-  }
-
-  int8ConvertBtn.addEventListener('click', visualizeInt8);
-  int8Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') visualizeInt8(); });
-  visualizeInt8(); // Initial
-
-  // Zweierkomplement bilden
-  const twosInput = document.getElementById('twosInput');
-  const twosConvertBtn = document.getElementById('twosConvertBtn');
-  const twosResult = document.getElementById('twosResult');
-
-  function calculateTwosComplement() {
-    const value = parseInt(twosInput.value);
-    if (isNaN(value) || value < 1 || value > 127) {
-      alert('Bitte eine positive Zahl zwischen 1 und 127 eingeben.');
-      return;
-    }
-
-    const original = value.toString(2).padStart(8, '0');
-    let inverted = '';
-    for (let i = 0; i < original.length; i++) {
-      inverted += original[i] === '0' ? '1' : '0';
-    }
-    
-    // +1 addieren
-    let carry = 1;
-    let twosComp = '';
-    for (let i = 7; i >= 0; i--) {
-      const sum = parseInt(inverted[i]) + carry;
-      twosComp = (sum % 2) + twosComp;
-      carry = Math.floor(sum / 2);
-    }
-
-    const negValue = -value;
-
-    document.getElementById('twosOriginal').textContent = '+' + value + ' = ' + original;
-    document.getElementById('twosInverted').textContent = inverted;
-    document.getElementById('twosFinal').textContent = twosComp;
-    document.getElementById('twosDecimal').textContent = negValue;
-    document.getElementById('twosReverse').textContent = 
-      'Wenn du das Zweierkomplement von ' + twosComp + ' bildest, erhältst du wieder ' + original + ' (= +' + value + ')';
-
-    twosResult.style.display = 'block';
-  }
-
-  twosConvertBtn.addEventListener('click', calculateTwosComplement);
-  twosInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') calculateTwosComplement(); });
-
-  // Addition visualisieren
-  const addBtn = document.getElementById('addBtn');
-  const addResult = document.getElementById('addResult');
-  const addVisualization = document.getElementById('addVisualization');
-
-  function visualizeAddition() {
-    const a = parseInt(document.getElementById('addA').value);
-    const b = parseInt(document.getElementById('addB').value);
-    
-    if (isNaN(a) || isNaN(b) || a < -128 || a > 127 || b < -128 || b > 127) {
-      alert('Bitte Zahlen zwischen -128 und 127 eingeben.');
-      return;
-    }
-
-    const result = a + b;
-    const resultInRange = ((result + 128) % 256) - 128; // Overflow handling
-    
-    const binA = (a >= 0 ? a : 256 + a).toString(2).padStart(8, '0');
-    const binB = (b >= 0 ? b : 256 + b).toString(2).padStart(8, '0');
-    const binResult = (resultInRange >= 0 ? resultInRange : 256 + resultInRange).toString(2).padStart(8, '0');
-
-    let html = '<div style="background:#f8fafc;padding:12px;border-radius:6px;margin-bottom:12px;">';
-    html += '<div style="margin-bottom:8px;">A = ' + a + ' = <code>' + binA + '</code></div>';
-    html += '<div style="margin-bottom:8px;">B = ' + b + ' = <code>' + binB + '</code></div>';
-    html += '<div style="border-top:2px solid #0f766e;margin:8px 0;padding-top:8px;font-weight:700;color:#0f766e;">';
-    html += 'Summe = <code>' + binResult + '</code> = ' + resultInRange;
-    
-    if (result !== resultInRange) {
-      html += ' <span style="color:#c62828;">(Overflow! Erwartet: ' + result + ')</span>';
-    }
-    html += '</div></div>';
-
-    // Bit-by-bit Addition
-    html += '<div style="background:#fff;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">';
-    html += '<strong>Bit-by-bit Addition (von rechts nach links mit Übertrag):</strong><br>';
-    html += '<pre style="margin:8px 0;line-height:1.8;">';
-    
-    let carry = 0;
-    let addSteps = '  ' + binA + '  (A)\n+ ' + binB + '  (B)\n' + '-'.repeat(20) + '\n';
-    let resultBits = '';
-    
-    for (let i = 7; i >= 0; i--) {
-      const bitA = parseInt(binA[i]);
-      const bitB = parseInt(binB[i]);
-      const sum = bitA + bitB + carry;
-      resultBits = (sum % 2) + resultBits;
-      carry = Math.floor(sum / 2);
-    }
-    
-    addSteps += '  ' + resultBits + '  (Ergebnis)';
-    html += addSteps + '</pre></div>';
-
-    addVisualization.innerHTML = html;
-    addResult.style.display = 'block';
-  }
-
-  addBtn.addEventListener('click', visualizeAddition);
-
-  // Subtraktion visualisieren
-  const subBtn = document.getElementById('subBtn');
-  const subResult = document.getElementById('subResult');
-  const subVisualization = document.getElementById('subVisualization');
-
-  function visualizeSubtraction() {
-    const a = parseInt(document.getElementById('subA').value);
-    const b = parseInt(document.getElementById('subB').value);
-    
-    if (isNaN(a) || isNaN(b) || a < -128 || a > 127 || b < -128 || b > 127) {
-      alert('Bitte Zahlen zwischen -128 und 127 eingeben.');
-      return;
-    }
-
-    const result = a - b;
-    const resultInRange = ((result + 128) % 256) - 128;
-    
-    const binA = (a >= 0 ? a : 256 + a).toString(2).padStart(8, '0');
-    const binB = (b >= 0 ? b : 256 + b).toString(2).padStart(8, '0');
-    const binNegB = ((-b) >= 0 ? (-b) : 256 + (-b)).toString(2).padStart(8, '0');
-    const binResult = (resultInRange >= 0 ? resultInRange : 256 + resultInRange).toString(2).padStart(8, '0');
-
-    let html = '<div style="background:#fef3c7;padding:12px;border-radius:6px;border-left:4px solid #f59e0b;margin-bottom:12px;">';
-    html += '<strong>Idee:</strong> ' + a + ' - ' + b + ' = ' + a + ' + (' + (-b) + ')';
-    html += '</div>';
-
-    html += '<div style="background:#f8fafc;padding:12px;border-radius:6px;margin-bottom:12px;">';
-    html += '<div style="margin-bottom:8px;">A = ' + a + ' = <code>' + binA + '</code></div>';
-    html += '<div style="margin-bottom:8px;">B = ' + b + ' = <code>' + binB + '</code></div>';
-    html += '<div style="margin-bottom:8px;padding:10px;background:#fff;border-radius:4px;">';
-    html += '−B = ' + (-b) + ' = <code>' + binNegB + '</code> (Zweierkomplement von B)';
-    html += '</div>';
-    html += '<div style="border-top:2px solid #0f766e;margin:8px 0;padding-top:8px;font-weight:700;color:#0f766e;">';
-    html += 'A + (−B) = <code>' + binResult + '</code> = ' + resultInRange;
-    
-    if (result !== resultInRange) {
-      html += ' <span style="color:#c62828;">(Overflow! Erwartet: ' + result + ')</span>';
-    }
-    html += '</div></div>';
-
-    // Bit-by-bit Addition
-    html += '<div style="background:#fff;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">';
-    html += '<strong>Addition A + (−B) im Rechenwerk:</strong><br>';
-    html += '<pre style="margin:8px 0;line-height:1.8;">';
-    
-    let carry = 0;
-    let addSteps = '  ' + binA + '  (A)\n+ ' + binNegB + '  (−B)\n' + '-'.repeat(20) + '\n';
-    let resultBits = '';
-    
-    for (let i = 7; i >= 0; i--) {
-      const bitA = parseInt(binA[i]);
-      const bitB = parseInt(binNegB[i]);
-      const sum = bitA + bitB + carry;
-      resultBits = (sum % 2) + resultBits;
-      carry = Math.floor(sum / 2);
-    }
-    
-    addSteps += '  ' + resultBits + '  (Ergebnis)';
-    html += addSteps + '</pre></div>';
-
-    subVisualization.innerHTML = html;
-    subResult.style.display = 'block';
-  }
-
-  subBtn.addEventListener('click', visualizeSubtraction);
+  angemeldet = true;
 })();
 </script>
 </body>
