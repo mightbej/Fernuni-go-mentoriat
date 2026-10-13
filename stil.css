@@ -97,6 +97,11 @@ h3 {
     font-size: 0.95rem;
 }
 
+/* Ein Knopf mit Code ist dunkel wie ein Codeblock. Der gewählte Knopf ist hell, seine Schrift deshalb dunkel. */
+button.code.gewaehlt {
+    color: #111827;
+}
+
 /* Code im Text. */
 code {
     background: #eef2f7;
