@@ -1,0 +1,1886 @@
+{
+ "stand": "2026-10-13T14:25",
+ "abschnitte": {
+  "2.1": [
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.2": [
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Speichermodell: Name, Typ und Adresse in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zahlensysteme in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.3": [
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Gatter aus Schaltern: Das Rechenwerk zum Anfassen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_schalter_interaktiv.html",
+    "beschreibung": "Die Seite baut jedes Gatter aus Schaltern, Batterie und Lampe und führt bis zu einer Stelle des Addierers, zum Relais und zum Prozessor. Sie ist eine Zugabe für die Sitzung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.4": [
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.5": [
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.6": [
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.7": [
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "2.8": [
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.2": [
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.2": [
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.3": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.4": [
+   {
+    "titel": "Go: Richtige und falsche Bezeichner",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_bezeichner_arbeitsblatt.html",
+    "beschreibung": "Die Seite zeigt eine Liste richtiger und falscher Bezeichner, über die der Kurs erst abstimmt und die sie dann auflöst.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.5": [
+   {
+    "titel": "Zahlensysteme in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.6": [
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.3.7": [
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Strings: Bytes und Zeichen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und warum „Tür“ drei Zeichen und die Länge 4 hat. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt `[]rune`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.4": [
+   {
+    "titel": "Go Fehlersuche - 3 Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme.html",
+    "beschreibung": "Die Seite zeigt drei Programme mit eingebauten Fehlern zu Funktionsaufrufen, Gültigkeitsbereich und Rückgabewert.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Go Fehlersuche - Einfache Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme_einfach.html",
+    "beschreibung": "Die Seite zeigt drei kurze Programme mit wenigen Fehlern für den Einstieg in die Fehlersuche.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.1": [
+   {
+    "titel": "Bitverschiebung: Schieben, verdoppeln und halbieren in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was die Operatoren << und >> mit den Bits einer Ganzzahl tun und was das für den Wert bedeutet.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.1.2": [
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.2": [
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zahlensysteme in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.1": [
+   {
+    "titel": "Speichermodell: Name, Typ und Adresse in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Zahlensysteme in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.2": [
+   {
+    "titel": "Speichermodell: Name, Typ und Adresse in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Zahlensysteme in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "4.3.3": [
+   {
+    "titel": "Speichermodell: Name, Typ und Adresse in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "4.3.4": [
+   {
+    "titel": "Speichermodell: Name, Typ und Adresse in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Zahlenkreis: Ganzzahlen und Überlauf in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html",
+    "beschreibung": "Die Seite stellt die Bitmuster eines Ganzzahl-Typs auf einen Kreis und zeigt, dass Zählen über das letzte Bitmuster hinaus beim ersten ankommt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Strings: Bytes und Zeichen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und warum „Tür“ drei Zeichen und die Länge 4 hat. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt `[]rune`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.5": [
+   {
+    "titel": "Zahlenkreis: Ganzzahlen und Überlauf in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html",
+    "beschreibung": "Die Seite stellt die Bitmuster eines Ganzzahl-Typs auf einen Kreis und zeigt, dass Zählen über das letzte Bitmuster hinaus beim ersten ankommt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.6": [
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.7": [
+   {
+    "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.7.1": [
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.7.2.1": [
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Gatter aus Schaltern: Das Rechenwerk zum Anfassen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_schalter_interaktiv.html",
+    "beschreibung": "Die Seite baut jedes Gatter aus Schaltern, Batterie und Lampe und führt bis zu einer Stelle des Addierers, zum Relais und zum Prozessor. Sie ist eine Zugabe für die Sitzung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.7.2.2": [
+   {
+    "titel": "Bitverschiebung: Schieben, verdoppeln und halbieren in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was die Operatoren << und >> mit den Bits einer Ganzzahl tun und was das für den Wert bedeutet.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.3.8": [
+   {
+    "titel": "Zahlenkreis: Ganzzahlen und Überlauf in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html",
+    "beschreibung": "Die Seite stellt die Bitmuster eines Ganzzahl-Typs auf einen Kreis und zeigt, dass Zählen über das letzte Bitmuster hinaus beim ersten ankommt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "break-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_break_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.3 des Kurstexts. Sie erklärt die Prüfung auf Überlauf bei der Fakultät, führt Listing 5.7 Anweisung für Anweisung aus, zeigt die Schleife ohne `break` mit der Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt und was es verlässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.4.2": [
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Bitverschiebung: Schieben, verdoppeln und halbieren in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was die Operatoren << und >> mit den Bits einer Ganzzahl tun und was das für den Wert bedeutet.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.4.3": [
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Bitverschiebung: Schieben, verdoppeln und halbieren in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was die Operatoren << und >> mit den Bits einer Ganzzahl tun und was das für den Wert bedeutet.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.4.4": [
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "4.5": [
+   {
+    "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.5.1": [
+   {
+    "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.5.2": [
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.6": [
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.6.1": [
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Strings: Bytes und Zeichen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und warum „Tür“ drei Zeichen und die Länge 4 hat. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt `[]rune`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.6.2": [
+   {
+    "titel": "Strings: Bytes und Zeichen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und warum „Tür“ drei Zeichen und die Länge 4 hat. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt `[]rune`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Logische Operatoren und Vergleiche in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
+    "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.6.2.1": [
+   {
+    "titel": "Strings: Bytes und Zeichen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und warum „Tür“ drei Zeichen und die Länge 4 hat. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt `[]rune`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.6.2.2": [
+   {
+    "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "4.7": [
+   {
+    "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.1": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.1.1": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.1.2": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.1.3": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.1.4": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "5.1.5": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "5.2": [
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.3": [
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.3.2": [
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.4": [
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.1": [
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Go Fehlersuche - Einfache Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme_einfach.html",
+    "beschreibung": "Die Seite zeigt drei kurze Programme mit wenigen Fehlern für den Einstieg in die Fehlersuche.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Überlauf bei Ganzzahlen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
+    "beschreibung": "Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Sie rechnet die Beispiele aus Abschnitt 4.3.8 des Kurstexts mit `uint8` und `int8` nach.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.2": [
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.3": [
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.3.1": [
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "break-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_break_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.3 des Kurstexts. Sie erklärt die Prüfung auf Überlauf bei der Fakultät, führt Listing 5.7 Anweisung für Anweisung aus, zeigt die Schleife ohne `break` mit der Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt und was es verlässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.3.2": [
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "break-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_break_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.3 des Kurstexts. Sie erklärt die Prüfung auf Überlauf bei der Fakultät, führt Listing 5.7 Anweisung für Anweisung aus, zeigt die Schleife ohne `break` mit der Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt und was es verlässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.5.3.3": [
+   {
+    "titel": "break-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_break_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.3 des Kurstexts. Sie erklärt die Prüfung auf Überlauf bei der Fakultät, führt Listing 5.7 Anweisung für Anweisung aus, zeigt die Schleife ohne `break` mit der Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt und was es verlässt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Zahlenraten mit Statistik",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
+    "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "6": [
+   {
+    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
+    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "6.1": [
+   {
+    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
+    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Speichermodell: Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "6.2": [
+   {
+    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
+    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "6.3": [
+   {
+    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
+    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "6.4": [
+   {
+    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
+    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "7.1": [
+   {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/160_go_k7_bubblesort_mit_funktionen.html",
+    "beschreibung": "Die Seite zerlegt Bubble Sort in benannte Funktionen.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/162_go_k7_selectionsort_mit_funktionen.html",
+    "beschreibung": "Die Seite zerlegt Selection Sort in benannte Funktionen.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.1.2": [
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.2": [
+   {
+    "titel": "Das Kopier-Problem visualisiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array bei der Übergabe an eine Funktion und bei der Rückgabe vollständig kopiert wird.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.3": [
+   {
+    "titel": "Das Kopier-Problem visualisiert",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array bei der Übergabe an eine Funktion und bei der Rückgabe vollständig kopiert wird.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "7.4": [
+   {
+    "titel": "Speichermodell: Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Zeiger eine Variable ist, in deren Zellen eine Adresse steht.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.4.1": [
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigerparameter",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/161_go_k7_bubblesort_mit_zeigern.html",
+    "beschreibung": "Die Seite ersetzt in Bubble Sort die Rückgabe des Arrays durch einen Zeigerparameter.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Zeigerparameter",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/163_go_k7_selectionsort_mit_zeigern.html",
+    "beschreibung": "Die Seite ersetzt in Selection Sort die Übergabe als Kopie durch einen Zeigerparameter.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.4.5": [
+   {
+    "titel": "Speichermodell: Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Zeiger eine Variable ist, in deren Zellen eine Adresse steht.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "7.5": [
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.5.1": [
+   {
+    "titel": "Bubble Sort Rekursiv mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/164_go_k7_bubblesort_rekursiv.html",
+    "beschreibung": "Die Seite schreibt Bubble Sort als rekursive Funktion: ein Durchlauf, dann der Aufruf für ein kleineres Array.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "8.2": [
+   {
+    "titel": "S207 struct in Go - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S207_struct_veranschaulichung.html",
+    "beschreibung": "Die Seite führt den Verbund als Antwort auf ein Modellierungsproblem ein und zeigt die Schreibweise mit struct.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Speichermodell: Verbund-Datentyp in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Verbund Felder verschiedener Typen unter einem Namen zusammenfasst und dass der Bauplan des Typs sagt, wo ein Feld liegt.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "8.2.3": [
+   {
+    "titel": "S212 Verbund-Variablen und Feld-Variablen - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S212_verbund_felder_demo_veranschaulichung.html",
+    "beschreibung": "Die Seite zeigt die Verbund-Variable und den Zugriff auf ihre Felder mit der Punktnotation.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Speichermodell: Verbund-Datentyp in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Verbund Felder verschiedener Typen unter einem Namen zusammenfasst und dass der Bauplan des Typs sagt, wo ein Feld liegt.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.2.4": [
+   {
+    "titel": "S214 Zeiger auf Verbünde - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S214_zeiger_auf_verbund_demo_veranschaulichung.html",
+    "beschreibung": "Die Seite zeigt den Zeiger auf einen ganzen Verbund und den Zugriff auf Felder über diesen Zeiger.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.2.5": [
+   {
+    "titel": "S216 Vergleich von Verbünden - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S216_verbund_vergleich_demo_veranschaulichung.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde mit == und != verglichen werden können.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "8.2.6": [
+   {
+    "titel": "S219 Verbund-Parameter - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S219_verbund_parameter_demo_veranschaulichung.html",
+    "beschreibung": "Die Seite zeigt Verbünde als Parameter einer Funktion und einen Verbund-Zeiger als Rückgabewert.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "8.2.7": [
+   {
+    "titel": "S219 Verbund-Parameter - Veranschaulichung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S219_verbund_parameter_demo_veranschaulichung.html",
+    "beschreibung": "Die Seite zeigt Verbünde als Parameter einer Funktion und einen Verbund-Zeiger als Rückgabewert.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.3": [
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.3.1": [
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.3.2": [
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.4.1": [
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "8.4.2": [
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "S234 Bubblesort Demo - Erklaerung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S234_bubblesort_demo_erklaerung.html",
+    "beschreibung": "Die Seite erklärt ein Programm, das ein Array von Personen mit Bubblesort nach dem Namen sortiert.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
+    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "9.1": [
+   {
+    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
+    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "9.2": [
+   {
+    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
+    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/Blockchain_Analogie_Go_Mentoriat.html",
+    "beschreibung": "Die Seite führt vom Eisenbahnzug des Kurstexts über die verkettete Liste zur Hashkette und zum Stablecoin Tether.",
+    "geprueft": false,
+    "art": "nennt"
+   }
+  ],
+  "9.3": [
+   {
+    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
+    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "Kapitel 5": [
+   {
+    "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
+    "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "Kapitel 6": [
+   {
+    "titel": "Programmieruebung: Selection Sort mit Arrays und Indizes",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/159_go_k6_SelectionSort.html",
+    "beschreibung": "Die Seite sortiert ein Array mit Selection Sort und vergleicht das Verfahren mit Bubble Sort.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmieruebung: Sortieren mit Arrays und Indizes",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/157_go_k6_BubbleSort.html",
+    "beschreibung": "Die Seite sortiert zehn Zahlen mit Bubble Sort und zeigt dabei, warum man dafür ein Array braucht.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "Kapitel 7": [
+   {
+    "titel": "Kapitel 7 - Funktionen, Zeiger und Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html",
+    "beschreibung": "Die Seite geht durch das ganze Kapitel 7 und zeigt, wie Funktionen, Zeiger und Rekursion zusammenhängen.",
+    "geprueft": false,
+    "art": "erklaert"
+   }
+  ],
+  "Kapitel 8": [
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ]
+ }
+}
