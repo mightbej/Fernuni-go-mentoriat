@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zuweisungen in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Schritt 4: die Variablen als Kästen */
+    .speicher { display:flex;flex-wrap:wrap;gap:10px;margin:12px 0; }
+    .speicher .kasten { min-width:120px;display:flex;justify-content:space-between;gap:14px;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:8px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem; }
+    .speicher .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .speicher .kasten.merk { border-style:dashed;border-color:var(--muted); }
+    .speicher .kasten b { font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Zuweisungen in Go</h1>
+    <p>Eine Zuweisung gibt einer Variable einen neuen Wert. Die Seite zeigt die Zuweisung mit <code>=</code>, die kombinierten Operatoren wie <code>+=</code>, die Anweisungen <code>++</code> und <code>--</code>, die Tupel-Zuweisung und die einfachen Anweisungen.</p>
+    <p>Kurstext v3.0.6, Abschnitte 5.3 und 5.4, Seiten 126–129.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Zuweisung mit =</button>
+    <button type="button" class="tab" data-stufe="2">2 Kombinierte Operatoren</button>
+    <button type="button" class="tab" data-stufe="3">3 ++ und --</button>
+    <button type="button" class="tab" data-stufe="4">4 Tupel-Zuweisung</button>
+    <button type="button" class="tab" data-stufe="5">5 Einfache Anweisungen</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Eine Variable behält ihren Wert, bis das Programm ihr einen neuen gibt. Das tut die Zuweisung, englisch assignment statement:</p>
+<pre class="code-block">x = 10       // x bekommt den Wert 10
+x = x + 12   // x bekommt den Wert 22</pre>
+    <p>Die Zuweisung ist ein Kennzeichen der imperativen Programmierung: Das Programm ändert Schritt für Schritt die Werte seiner Variablen.</p>
+    <p>Go hat neben der Zuweisung mit <code>=</code> kürzere Schreibweisen für Zuweisungen, die oft vorkommen. Sie lassen sich alle auf die Zuweisung mit <code>=</code> zurückführen.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Ausdruck und Zuweisung ohne Go:</strong> Dort steht die Zuweisung mit dem Pfeil <code>←</code>. Dazu gibt es den <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>. Er schickt eine Zuweisung durch den Rechner.</li>
+      <li><strong>Abschnitt 3.3.5, Seiten 33–35, die erste Zuweisung in Go:</strong> In Listing 3.2 stehen <code>tempC = 10</code> und <code>tempC = tempC + 12</code>. Dort wird auch der Ausdruck erklärt.</li>
+      <li><strong>Abschnitt 5.1.2, Seiten 116–118, Deklaration und Zuweisung:</strong> <code>x := 10</code> erzeugt eine neue Variable, <code>x = 10</code> ändert eine vorhandene. Dazu gibt es die Seite <a href="go_k5_variablen_deklaration_interaktiv.html#kurz">Variablendeklaration</a>, Schritt 2.</li>
+    </ul>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> wiederholt die Zuweisung mit <code>=</code> und zeigt, was Go links und rechts davon annimmt.</li>
+      <li><strong>Schritt 2</strong> zeigt die kombinierten Operatoren <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>+=</code> und <code>-=</code>.</li>
+      <li><strong>Schritt 3</strong> zeigt die Anweisungen <code>++</code> und <code>--</code>.</li>
+      <li><strong>Schritt 4</strong> zeigt die Tupel-Zuweisung und vertauscht damit zwei Werte.</li>
+      <li><strong>Schritt 5</strong> sagt, welche Anweisungen in Go einfache Anweisungen heißen und wozu man den Begriff braucht.</li>
+    </ul>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ergebnisse und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3, Seiten 126–128, und Abschnitt 3.3.5, Seiten 33–35.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Zuweisung mit =</h2>
+    <p>Die einfachste Zuweisung hat drei Teile:</p>
+<pre class="code-block">x = x + 5</pre>
+    <ul>
+      <li><strong>Links steht eine Variable.</strong> Sie bekommt den neuen Wert. Hier ist es <code>x</code>.</li>
+      <li><strong>In der Mitte steht der Zuweisungsoperator <code>=</code>.</strong></li>
+      <li><strong>Rechts steht ein Ausdruck.</strong> Hier ist es <code>x + 5</code>. Der Typ seines Werts muss zum Typ der Variable passen.</li>
+    </ul>
+
+    <h3>Was Go bei einer Zuweisung tut</h3>
+    <ul>
+      <li><strong>Erst auswerten:</strong> Go rechnet den Ausdruck auf der rechten Seite aus. Hat <code>x</code> den Wert 10, ergibt <code>x + 5</code> den Wert 15.</li>
+      <li><strong>Dann ablegen:</strong> Go legt diesen Wert in der Variable auf der linken Seite ab. Der alte Wert 10 ist überschrieben und verloren.</li>
+    </ul>
+
+    <h3>= ist kein Gleichheitszeichen</h3>
+    <p>In der Mathematik wäre <code>x = x + 5</code> eine Gleichung ohne Lösung. In Go ist es eine Anweisung und wird gelesen als: Der Variable <code>x</code> wird der Wert von <code>x + 5</code> zugewiesen.</p>
+    <p>Der Zuweisungsoperator hat eine Richtung: von rechts nach links. Andere Schreibweisen betonen das:</p>
+    <ul>
+      <li><strong>Pseudocode:</strong> oft <code>x ← x + 5</code>, mit einem Pfeil nach links.</li>
+      <li><strong>Pascal:</strong> <code>x := x + 5</code>. In Go bedeutet <code>:=</code> etwas anderes, nämlich die kurze Variablendeklaration.</li>
+    </ul>
+    <p>Ob zwei Werte gleich sind, prüft in Go der Gleichheitsoperator <code>==</code> aus Abschnitt 4.5.2, Seiten 96–98.</p>
+
+    <h3>Ausprobieren: was Go annimmt</h3>
+    <p>Zeile 1 und 2 stehen fest. Wähle Zeile 3. Darunter steht, was Go dazu sagt.</p>
+    <div class="zeile" id="z-knoepfe">
+      <button type="button" class="code" data-zu="0">x = 20</button>
+      <button type="button" class="code" data-zu="1">x = x + 5</button>
+      <button type="button" class="code" data-zu="2">x = y</button>
+      <button type="button" class="code" data-zu="3">x = 3.14</button>
+      <button type="button" class="code" data-zu="4">x = "20"</button>
+      <button type="button" class="code" data-zu="5">20 = x</button>
+      <button type="button" class="code" data-zu="6">x = y = 5</button>
+    </div>
+    <ol class="programm" id="z-programm"></ol>
+    <div class="feld">
+      <span class="was" id="z-art"></span><span class="wie" id="z-ergebnis"></span>
+      <span class="was">Werte nach Zeile 3</span><span class="wie" id="z-werte"></span>
+    </div>
+    <div class="auskunft" id="z-text"></div>
+
+    <h3>Wenn der Typ nicht passt</h3>
+    <p>Go wandelt bei einer Zuweisung keinen Wert stillschweigend in einen anderen Typ um. Wer einer Variable vom Typ <code>float64</code> den Wert einer Variable vom Typ <code>int</code> zuweisen will, schreibt die Konversion hin: <code>f = float64(x)</code>. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</p>
+    <p>Einer Konstante lässt sich nichts zuweisen. Dazu gibt es die Seite <a href="go_k5_konstanten_interaktiv.html">Konstanten</a>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.5, Seiten 33–35, mit Hinweis 3.6. Die sieben Zeilen der Demo und die Meldungen des Compilers stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Kombinierte Operatoren</h2>
+    <p>Oft hängt der neue Wert einer Variable von ihrem alten Wert ab: Die Variable steht links vom <code>=</code> und noch einmal als linker Operand auf der rechten Seite.</p>
+<pre class="code-block">x = x * 8
+y = y + 5
+z = z - (2 + 3)</pre>
+    <p>Für diese Zuweisungen hat Go eine kürzere Schreibweise:</p>
+<pre class="code-block">x *= 8       // entspricht x = x * 8
+y += 5       // entspricht y = y + 5
+z -= 2 + 3   // entspricht z = z - (2 + 3)</pre>
+    <p>Der Operator <code>*=</code> verbindet den Zuweisungsoperator <code>=</code> mit dem Multiplikationsoperator <code>*</code>. Die Variable links ist zugleich der linke Operand der Multiplikation. Der Ausdruck rechts ist der rechte Operand.</p>
+    <table class="text">
+      <tr><th>Kurze Schreibweise</th><th>Lange Schreibweise</th><th>Was die Zuweisung tut</th></tr>
+      <tr><td><code>x *= 8</code></td><td><code>x = x * 8</code></td><td>Sie multipliziert <code>x</code> mit 8.</td></tr>
+      <tr><td><code>x /= 8</code></td><td><code>x = x / 8</code></td><td>Sie teilt <code>x</code> durch 8.</td></tr>
+      <tr><td><code>x %= 8</code></td><td><code>x = x % 8</code></td><td>Sie ersetzt <code>x</code> durch den Rest der Division durch 8.</td></tr>
+      <tr><td><code>x += 8</code></td><td><code>x = x + 8</code></td><td>Sie erhöht <code>x</code> um 8.</td></tr>
+      <tr><td><code>x -= 8</code></td><td><code>x = x - 8</code></td><td>Sie verringert <code>x</code> um 8.</td></tr>
+    </table>
+
+    <h3>Die rechte Seite gehört zusammen</h3>
+    <p>Die dritte Zeile oben verdient einen zweiten Blick. <code>z -= 2 + 3</code> entspricht <code>z = z - (2 + 3)</code>, mit Klammern. Go wertet erst den ganzen Ausdruck rechts aus, hier zu 5, und zieht dann 5 von <code>z</code> ab.</p>
+    <p>Wer die Klammern vergisst und <code>z = z - 2 + 3</code> liest, rechnet falsch: Das ergäbe <code>z + 1</code>.</p>
+
+    <h3>Ausprobieren: kurz und lang</h3>
+    <p><code>x</code> hat den Typ <code>int</code>.</p>
+    <div class="zeile" id="o-start">
+      <span>Wert von <code>x</code> vorher:</span>
+      <button type="button" data-ostart="20">20</button>
+      <button type="button" data-ostart="7">7</button>
+      <button type="button" data-ostart="-9">−9</button>
+    </div>
+    <div class="zeile" id="o-op">
+      <span>Operator:</span>
+      <button type="button" class="code" data-oop="0">*=</button>
+      <button type="button" class="code" data-oop="1">/=</button>
+      <button type="button" class="code" data-oop="2">%=</button>
+      <button type="button" class="code" data-oop="3">+=</button>
+      <button type="button" class="code" data-oop="4">-=</button>
+    </div>
+    <div class="zeile" id="o-rechts">
+      <span>Rechte Seite:</span>
+      <button type="button" class="code" data-orechts="0">3</button>
+      <button type="button" class="code" data-orechts="1">4</button>
+      <button type="button" class="code" data-orechts="2">2 + 3</button>
+    </div>
+    <div class="feld">
+      <span class="was">Kurze Schreibweise</span><span class="wie" id="o-kurz"></span>
+      <span class="was">Lange Schreibweise</span><span class="wie" id="o-lang"></span>
+      <span class="was">Rechnung</span><span class="wie" id="o-rechnung"></span>
+      <span class="was">Wert von x danach</span><span class="wie" id="o-wert"></span>
+    </div>
+    <div class="auskunft" id="o-text"></div>
+
+    <h3>Welche kombinierten Operatoren es gibt</h3>
+    <p>Einen kombinierten Operator gibt es zu jedem binären Operator, der multipliziert oder addiert oder ihnen in der Bindungsstärke gleichsteht. Das sind die Operatoren der Bindungsstärken 5 und 4 aus der Tabelle in Abschnitt 4.1.2, Seite 50.</p>
+    <ul>
+      <li><strong>Rechnen:</strong> <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>+=</code>, <code>-=</code>.</li>
+      <li><strong>Bits:</strong> zum Beispiel <code>&lt;&lt;=</code> und <code>&gt;&gt;=</code> für die Bitverschiebung. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</li>
+      <li><strong>Strings:</strong> <code>+</code> verkettet zwei Strings, also hängt <code>+=</code> einen String an. Hat <code>wetter</code> den Wert <code>"Regen"</code>, ergibt <code>wetter += "schauer"</code> den Wert <code>"Regenschauer"</code>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3, Seiten 126–127. Die Werte der Demo und das Beispiel mit <code>wetter</code> sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>++ und --</h2>
+    <p>Am häufigsten ändert ein Programm eine Variable um genau 1, zum Beispiel beim Zählen. Dafür gibt es zwei eigene Anweisungen:</p>
+    <ul>
+      <li><strong>Inkrementierungs-Anweisung <code>x++</code>:</strong> Sie erhöht <code>x</code> um 1. Sie entspricht <code>x += 1</code> und <code>x = x + 1</code>.</li>
+      <li><strong>Dekrementierungs-Anweisung <code>y--</code>:</strong> Sie verringert <code>y</code> um 1. Sie entspricht <code>y -= 1</code> und <code>y = y - 1</code>.</li>
+    </ul>
+
+    <h3>Anweisung und kein Ausdruck</h3>
+    <p><code>++</code> und <code>--</code> sehen aus wie Operatoren, sind aber keine.</p>
+    <ul>
+      <li><strong><code>+</code> und <code>-</code> sind Operatoren.</strong> Mit ihnen bildet man Ausdrücke, und ein Ausdruck hat einen Wert: <code>x + 1</code> ergibt 11, wenn <code>x</code> den Wert 10 hat.</li>
+      <li><strong><code>x++</code> ist eine Anweisung.</strong> Sie tut etwas, hat aber keinen Wert. Deshalb kann <code>x++</code> nicht dort stehen, wo Go einen Ausdruck erwartet.</li>
+    </ul>
+
+    <h3>Ausprobieren: was Go annimmt</h3>
+    <p>Zeile 1 und 2 stehen fest. Wähle Zeile 3.</p>
+    <div class="zeile" id="i-knoepfe">
+      <button type="button" class="code" data-ink="0">x++</button>
+      <button type="button" class="code" data-ink="1">x--</button>
+      <button type="button" class="code" data-ink="2">y = x++</button>
+      <button type="button" class="code" data-ink="3">y = 5 + x++</button>
+      <button type="button" class="code" data-ink="4">++x</button>
+    </div>
+    <ol class="programm" id="i-programm"></ol>
+    <div class="feld">
+      <span class="was" id="i-art"></span><span class="wie" id="i-ergebnis"></span>
+      <span class="was">Werte nach Zeile 3</span><span class="wie" id="i-werte"></span>
+    </div>
+    <div class="auskunft" id="i-text"></div>
+
+    <h3>In anderen Sprachen</h3>
+    <p>In Java und einigen anderen Sprachen ist <code>x++</code> zugleich Anweisung und Ausdruck. Dort gibt es zwei Formen:</p>
+    <ul>
+      <li><strong>Post-Increment <code>x++</code>:</strong> Der Ausdruck liefert den alten Wert von <code>x</code>, danach wird <code>x</code> erhöht.</li>
+      <li><strong>Pre-Increment <code>++x</code>:</strong> Erst wird <code>x</code> erhöht, der Ausdruck liefert den neuen Wert.</li>
+    </ul>
+    <p>Hat <code>x</code> den Wert 10, bekommt <code>y</code> in Java durch <code>y = x++</code> den Wert 10 und durch <code>y = ++x</code> den Wert 11. In beiden Fällen hat <code>x</code> danach den Wert 11.</p>
+    <p>Go kennt diese Unterscheidung nicht. In Go schreibt man zwei Anweisungen untereinander, und jeder sieht die Reihenfolge:</p>
+<pre class="code-block">y = x
+x++</pre>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3.1, Seiten 127–128, mit dem Sprachvergleich 5.7. Die Meldungen des Compilers und die Werte zum Beispiel in Java stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Tupel-Zuweisung</h2>
+    <p>Eine Deklaration kann mehrere Variablen auf einmal anlegen. Genauso kann eine Zuweisung mehreren Variablen auf einmal Werte geben. Sie heißt Tupel-Zuweisung, englisch tuple assignment:</p>
+<pre class="code-block">x, y, z := 10, 8, -5    // Deklaration von drei Variablen
+x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
+    <p>Links und rechts vom <code>=</code> stehen gleich viele Einträge. Die erste Variable bekommt den ersten Wert, die zweite den zweiten und so weiter. Stimmt die Anzahl nicht, übersetzt Go das Programm nicht. Zu <code>x, y = 22, 33, 44</code> meldet der Compiler <code>assignment mismatch: 2 variables but 3 values</code>.</p>
+
+    <h3>Zwei Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, auswerten:</strong> Go wertet alle Ausdrücke auf der rechten Seite aus und merkt sich die Werte.</li>
+      <li><strong>Schritt 2, zuweisen:</strong> Go weist die gemerkten Werte den Variablen auf der linken Seite zu.</li>
+    </ul>
+    <p>Weil Go sich die Werte merkt, bevor es die erste Variable überschreibt, lassen sich zwei Werte mit einer einzigen Anweisung vertauschen: <code>a, b = b, a</code>.</p>
+
+    <h3>Ausprobieren: zwei Werte vertauschen</h3>
+    <p><code>a</code> beginnt mit 3, <code>b</code> mit 8. Am Ende soll <code>a</code> den Wert 8 und <code>b</code> den Wert 3 haben.</p>
+    <div class="zeile" id="t-fassung">
+      <button type="button" data-tausch="0">mit Tupel-Zuweisung</button>
+      <button type="button" data-tausch="1">mit Hilfsvariable tmp</button>
+      <button type="button" data-tausch="2">ohne Hilfsvariable</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="t-weiter">Nächster Schritt</button>
+      <button type="button" id="t-vorn">Von vorn</button>
+    </div>
+    <div class="speicher" id="t-speicher"></div>
+    <div class="auskunft" id="t-text"></div>
+    <ol class="programm" id="t-programm"></ol>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wird oder wurde. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Ein gelb unterlegter Kasten hat sich mit dem letzten Schritt geändert. Ein gestrichelter Kasten zeigt einen Wert, den Go sich nur für diese Anweisung merkt.</p>
+
+    <h3>Wann man die Tupel-Zuweisung nimmt</h3>
+    <ul>
+      <li><strong>Passend:</strong> Die Variablen gehören inhaltlich zusammen, zum Beispiel die Koordinaten <code>x</code>, <code>y</code> und <code>z</code>, und rechts stehen einfache Ausdrücke wie Literale.</li>
+      <li><strong>Passend:</strong> Zwei Werte werden vertauscht.</li>
+      <li><strong>Unpassend:</strong> Die Variablen haben nichts miteinander zu tun, oder rechts stehen längere Ausdrücke. Dann liest sich eine Zuweisung je Zeile besser.</li>
+    </ul>
+    <p>Das Vertauschen mit einer dritten Variable steht schon in Abschnitt 2.6 des Kurstexts, dort heißt sie k. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#aufruf">Unterprogramme und Funktionen</a>, Schritt 1.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3.2, Seiten 128–129. Die Fassung „ohne Hilfsvariable“ und die Meldung des Compilers stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Einfache Anweisungen</h2>
+    <p>Go fasst fünf Arten von Anweisungen unter dem Namen einfache Anweisung zusammen, englisch simple statement:</p>
+    <ul>
+      <li><strong>Kurze Variablendeklaration:</strong> zum Beispiel <code>zahl := 20</code> oder <code>x, y := 1, -1</code>.</li>
+      <li><strong>Zuweisung:</strong> zum Beispiel <code>x = 3 * y</code> oder <code>name = "Peter"</code>.</li>
+      <li><strong>Inkrementierungs- und Dekrementierungs-Anweisung:</strong> zum Beispiel <code>i++</code> oder <code>alter--</code>.</li>
+      <li><strong>Funktionsaufruf:</strong> zum Beispiel <code>f()</code> oder <code>quader(4, 7)</code>.</li>
+      <li><strong>Leere Anweisung:</strong> nichts, also nur Leerraum.</li>
+    </ul>
+
+    <h3>Wozu man den Begriff braucht</h3>
+    <p>An manchen Stellen einer Kontrollfluss-Anweisung erlaubt Go nur eine einfache Anweisung. Kontrollfluss-Anweisungen sind die Anweisungen, die den Ablauf steuern, zum Beispiel <code>if</code> und <code>for</code>.</p>
+    <p>Das erste Beispiel im Kurstext ist die for-Anweisung mit for-Klausel aus Abschnitt 5.5.3.2, Seiten 142–146:</p>
+<pre class="code-block">for i := 1; i &lt;= 10; i++ {
+    fmt.Println(i)
+}</pre>
+    <ul>
+      <li><strong>Vor dem ersten Semikolon</strong> steht die Init-Anweisung, hier <code>i := 1</code>. Sie muss eine einfache Anweisung sein.</li>
+      <li><strong>Hinter dem zweiten Semikolon</strong> steht die Post-Anweisung, hier <code>i++</code>. Auch sie muss eine einfache Anweisung sein.</li>
+    </ul>
+    <p>Dazu gibt es die Seite <a href="go_k5_for_klausel_interaktiv.html">for-Anweisung mit for-Klausel</a>.</p>
+
+    <h3>Ausprobieren: einfach oder nicht</h3>
+    <div class="zeile" id="e-knoepfe">
+      <button type="button" class="code" data-einfach="0">zahl := 20</button>
+      <button type="button" class="code" data-einfach="1">x = 3 * y</button>
+      <button type="button" class="code" data-einfach="2">x += 5</button>
+      <button type="button" class="code" data-einfach="3">a, b = b, a</button>
+      <button type="button" class="code" data-einfach="4">i++</button>
+      <button type="button" class="code" data-einfach="5">quader(4, 7)</button>
+      <button type="button" class="code" data-einfach="6">var zahl int = 20</button>
+      <button type="button" class="code" data-einfach="7">if x &gt; 0 { x-- }</button>
+    </div>
+    <pre class="code-block" id="e-programm"></pre>
+    <div class="feld">
+      <span class="was">Einfache Anweisung</span><span class="wie" id="e-ja"></span>
+      <span class="was">Art der Anweisung</span><span class="wie" id="e-art"></span>
+    </div>
+    <div class="auskunft" id="e-text"></div>
+
+    <p>Zum Abschluss: Das <a href="130_go_k5_zuweisungen_quiz.html">Quiz zu den Zuweisungen</a> fragt den Stoff der Abschnitte 5.3 und 5.4 ab.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.4, Seite 129, und Abschnitt 5.5.3.2, Seiten 142–146. Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // Ein Programm als nummerierte Liste. Eine Zeile: t Text, k Klasse (war, aktuell)
+  function zeigeProgramm(id, zeilen) {
+    $(id).innerHTML = zeilen.map(function (z, i) {
+      return "<li" + (z.k ? " class=\"" + z.k + "\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z.t) + "</li>";
+    }).join("");
+  }
+  function mitNummern(texte) { return texte.map(function (t, i) { return (i + 1) + "  " + t; }); }
+  function mitDrei(kopf, dritte) { return kopf.map(function (t) { return { t: t, k: "war" }; }).concat([{ t: dritte, k: "aktuell" }]); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#tupel
+  var ANKER = ["worum", "zuweisung", "kombiniert", "inkrement", "tupel", "einfach"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: was Go bei einer Zuweisung annimmt ----
+  // Ergebnisse und Meldungen stammen aus Läufen mit Go 1.26.
+
+  var KOPF1 = ["var x int = 10", "var y int = 3"];
+  var ZU = [
+    { zeile: "x = 20", fehler: false, werte: "x = 20, y = 3",
+      text: "Rechts steht das Integer-Literal 20. Es passt zum Typ int von x. x bekommt den Wert 20, der alte Wert 10 ist überschrieben." },
+    { zeile: "x = x + 5", fehler: false, werte: "x = 15, y = 3",
+      text: "Go wertet erst die rechte Seite aus: x hat den Wert 10, also ergibt x + 5 den Wert 15. Dann legt es 15 in x ab. Dass x auf beiden Seiten steht, stört nicht: Rechts ist der alte Wert gemeint, links die Variable." },
+    { zeile: "x = y", fehler: false, werte: "x = 3, y = 3",
+      text: "Rechts steht die Variable y. Go liest ihren Wert 3 und legt ihn in x ab. y behält den Wert 3. Die Zuweisung kopiert den Wert, die zwei Variablen bleiben getrennt." },
+    { zeile: "x = 3.14", fehler: true, meldung: "cannot use 3.14 (untyped float constant) as int value in assignment (truncated)", werte: "x = 10, y = 3",
+      text: "x hat den Typ int, 3.14 ist keine ganze Zahl. Go übersetzt das Programm nicht. Die Meldung heißt auf Deutsch: 3.14 lässt sich in der Zuweisung nicht als Wert vom Typ int verwenden, die Nachkommastellen gingen verloren." },
+    { zeile: "x = \"20\"", fehler: true, meldung: "cannot use \"20\" (untyped string constant) as int value in assignment", werte: "x = 10, y = 3",
+      text: "\"20\" mit Anführungszeichen ist ein String und keine Zahl. Go übersetzt das Programm nicht. Die Meldung heißt auf Deutsch: \"20\" lässt sich in der Zuweisung nicht als Wert vom Typ int verwenden." },
+    { zeile: "20 = x", fehler: true, meldung: "cannot assign to 20 (neither addressable nor a map index expression)", werte: "x = 10, y = 3",
+      text: "Links muss etwas stehen, das einen Wert aufnehmen kann, also eine Variable. Die Zahl 20 ist kein Speicherort. Go übersetzt das Programm nicht. Die Meldung beginnt mit: An 20 lässt sich nichts zuweisen. Die Zuweisung hat eine Richtung, die Seiten lassen sich nicht tauschen." },
+    { zeile: "x = y = 5", fehler: true, meldung: "syntax error: unexpected = at end of statement", werte: "x = 10, y = 3",
+      text: "In C, Java und Python setzt eine solche Kette beide Variablen auf 5. In Go ist die Zuweisung eine Anweisung und kein Ausdruck: y = 5 hat keinen Wert, den man x zuweisen könnte. Die Meldung heißt auf Deutsch: Syntaxfehler, hier steht unerwartet ein =, erwartet war das Ende der Anweisung. In Go schreibt man zwei Zuweisungen oder die Tupel-Zuweisung x, y = 5, 5 aus Schritt 4." }
+  ];
+  var zuWahl = 0;
+  function zeigeZu() {
+    var z = ZU[zuWahl];
+    zeigeProgramm("z-programm", mitDrei(KOPF1, z.zeile));
+    $("z-art").textContent = z.fehler ? "Meldung des Compilers" : "Ergebnis";
+    $("z-ergebnis").textContent = z.fehler ? z.meldung : "Go übersetzt die drei Zeilen.";
+    $("z-ergebnis").classList.toggle("fehler", z.fehler);
+    $("z-werte").textContent = z.fehler ? "Das Programm läuft nicht. Nach Zeile 2 gälte: " + z.werte : z.werte;
+    $("z-text").innerHTML = "<p><strong>Zeile 3:</strong> " + esc(z.text) + "</p>";
+    jeder("#z-knoepfe button", function (b) { b.classList.toggle("haupt", Number(b.dataset.zu) === zuWahl); });
+  }
+
+  // ---- Schritt 2: kombinierte Operatoren ----
+  // Go teilt ganze Zahlen ohne Rest und rundet dabei zur Null hin. Die Werte sind mit Go 1.26 nachgerechnet.
+
+  var OPS = [
+    { zeichen: "*", wort: "multipliziert x mit", rechne: function (a, b) { return a * b; } },
+    { zeichen: "/", wort: "teilt x durch", rechne: function (a, b) { return Math.trunc(a / b); } },
+    { zeichen: "%", wort: "ersetzt x durch den Rest der Division durch", rechne: function (a, b) { return a % b; } },
+    { zeichen: "+", wort: "erhöht x um", rechne: function (a, b) { return a + b; } },
+    { zeichen: "-", wort: "verringert x um", rechne: function (a, b) { return a - b; } }
+  ];
+  var RECHTS = [{ text: "3", wert: 3 }, { text: "4", wert: 4 }, { text: "2 + 3", wert: 5 }];
+  var oStart = 20, oOp = 0, oRechts = 0;
+
+  function kombiniert() {
+    var op = OPS[oOp], r = RECHTS[oRechts], klammer = oRechts === 2;
+    var neu = op.rechne(oStart, r.wert);
+    // Wer bei 2 + 3 die Klammern vergisst, rechnet nach den Bindungsstärken: erst x op 2, dann + 3
+    var ohne = klammer ? op.rechne(oStart, 2) + 3 : neu;
+    return { kurz: "x " + op.zeichen + "= " + r.text, lang: "x = x " + op.zeichen + " " + (klammer ? "(" + r.text + ")" : r.text),
+      rechnung: (oStart < 0 ? "(" + oStart + ")" : oStart) + " " + op.zeichen + " " + r.wert + " = " + neu, neu: neu, klammer: klammer, ohne: ohne, op: op, r: r };
+  }
+  function text2(k) {
+    var saetze = ["Die Zuweisung " + k.op.wort + " " + k.r.wert + "."];
+    if (k.klammer) saetze.push("Go wertet erst die rechte Seite 2 + 3 aus, das ergibt 5. Deshalb stehen in der langen Schreibweise Klammern." +
+      (k.ohne !== k.neu ? " Ohne die Klammern hieße die Zeile x = x " + k.op.zeichen + " 2 + 3, und x hätte danach den Wert " + k.ohne + " statt " + k.neu + "."
+                        : " Bei der Addition kommt mit und ohne Klammern das Gleiche heraus."));
+    if (k.op.zeichen === "/") saetze.push("x hat den Typ int. Go teilt ganze Zahlen ohne Rest und lässt die Nachkommastellen weg" + (oStart % k.r.wert !== 0 ? ": " + oStart + " geteilt durch " + k.r.wert + " ergibt " + k.neu + ", Rest " + (oStart % k.r.wert) + "." : ". Hier geht die Division auf."));
+    if (k.op.zeichen === "%") saetze.push(oStart + " geteilt durch " + k.r.wert + " ergibt " + Math.trunc(oStart / k.r.wert) + ", Rest " + k.neu + "." + (oStart < 0 && k.neu !== 0 ? " Bei einer negativen Zahl links ist auch der Rest negativ." : ""));
+    return saetze;
+  }
+  function zeigeKombiniert() {
+    var k = kombiniert();
+    $("o-kurz").textContent = k.kurz;
+    $("o-lang").textContent = k.lang;
+    $("o-rechnung").textContent = k.rechnung;
+    $("o-wert").textContent = k.neu;
+    $("o-text").innerHTML = text2(k).map(function (s) { return "<p>" + esc(s) + "</p>"; }).join("");
+    jeder("#o-start button", function (b) { b.classList.toggle("haupt", Number(b.dataset.ostart) === oStart); });
+    jeder("#o-op button", function (b) { b.classList.toggle("haupt", Number(b.dataset.oop) === oOp); });
+    jeder("#o-rechts button", function (b) { b.classList.toggle("haupt", Number(b.dataset.orechts) === oRechts); });
+  }
+
+  // ---- Schritt 3: ++ und -- ----
+  // Die Meldungen stammen aus Läufen mit Go 1.26.
+
+  var KOPF3 = ["x := 10", "y := 0"];
+  var INK = [
+    { zeile: "x++", fehler: false, werte: "x = 11, y = 0",
+      text: "Die Inkrementierungs-Anweisung erhöht x um 1. Sie steht allein in ihrer Zeile, so ist sie erlaubt." },
+    { zeile: "x--", fehler: false, werte: "x = 9, y = 0",
+      text: "Die Dekrementierungs-Anweisung verringert x um 1." },
+    { zeile: "y = x++", fehler: true, meldung: "syntax error: unexpected ++ at end of statement", werte: "x = 10, y = 0",
+      text: "Rechts vom = erwartet Go einen Ausdruck. x++ ist eine Anweisung und hat keinen Wert. Go übersetzt das Programm nicht. Die Meldung heißt auf Deutsch: Syntaxfehler, hier steht unerwartet ++, erwartet war das Ende der Anweisung. Für Go ist die Zuweisung nach y = x zu Ende." },
+    { zeile: "y = 5 + x++", fehler: true, meldung: "syntax error: unexpected ++ at end of statement", werte: "x = 10, y = 0",
+      text: "Auch mitten in einer Rechnung darf x++ nicht stehen. Go liest y = 5 + x als vollständige Zuweisung und stößt dann auf das ++. Die Meldung ist die gleiche wie bei y = x++." },
+    { zeile: "++x", fehler: true, meldung: "syntax error: unexpected ++, expected }", werte: "x = 10, y = 0",
+      text: "Die Form mit ++ vor der Variable gibt es in Go nicht. Go übersetzt das Programm nicht. Die Meldung heißt auf Deutsch: Syntaxfehler, hier steht unerwartet ++, erwartet war }. Mit ++ kann in Go keine Anweisung beginnen. Go erwartet deshalb an dieser Stelle das Ende des Blocks." }
+  ];
+  var inkWahl = 0;
+  function zeigeInk() {
+    var z = INK[inkWahl];
+    zeigeProgramm("i-programm", mitDrei(KOPF3, z.zeile));
+    $("i-art").textContent = z.fehler ? "Meldung des Compilers" : "Ergebnis";
+    $("i-ergebnis").textContent = z.fehler ? z.meldung : "Go übersetzt die drei Zeilen.";
+    $("i-ergebnis").classList.toggle("fehler", z.fehler);
+    $("i-werte").textContent = z.fehler ? "Das Programm läuft nicht. Nach Zeile 2 gälte: " + z.werte : z.werte;
+    $("i-text").innerHTML = "<p><strong>Zeile 3:</strong> " + esc(z.text) + "</p>";
+    jeder("#i-knoepfe button", function (b) { b.classList.toggle("haupt", Number(b.dataset.ink) === inkWahl); });
+  }
+
+  // ---- Schritt 4: zwei Werte vertauschen, in drei Fassungen ----
+  // Ein Schritt: zeile, Werte von a und b, dazu tmp oder die gemerkten Werte, neu nennt die geänderten Kästen.
+
+  var TAUSCH = [
+    { name: "mit Tupel-Zuweisung", zeilen: ["a, b := 3, 8", "a, b = b, a"], schritte: [
+      { zeile: 1, a: 3, b: 8, neu: ["a", "b"], text: "Die kurze Deklaration erzeugt a mit dem Wert 3 und b mit dem Wert 8." },
+      { zeile: 2, a: 3, b: 8, merk: [8, 3], neu: ["merk"], text: "Schritt 1 der Tupel-Zuweisung, auswerten: Go wertet die rechte Seite b, a aus und merkt sich die zwei Werte 8 und 3. a und b sind noch unverändert." },
+      { zeile: 2, a: 8, b: 3, merk: [8, 3], neu: ["a", "b"], text: "Schritt 2 der Tupel-Zuweisung, zuweisen: a bekommt den ersten gemerkten Wert 8, b bekommt den zweiten gemerkten Wert 3. Die Werte sind vertauscht. Die gemerkten Werte braucht Go danach nicht mehr." }
+    ] },
+    { name: "mit Hilfsvariable tmp", zeilen: ["a, b := 3, 8", "tmp := a", "a = b", "b = tmp"], schritte: [
+      { zeile: 1, a: 3, b: 8, neu: ["a", "b"], text: "Die kurze Deklaration erzeugt a mit dem Wert 3 und b mit dem Wert 8." },
+      { zeile: 2, a: 3, b: 8, tmp: 3, neu: ["tmp"], text: "Die Hilfsvariable tmp hebt den Wert von a auf. Sonst ginge er in der nächsten Zeile verloren." },
+      { zeile: 3, a: 8, b: 8, tmp: 3, neu: ["a"], text: "a wird mit dem Wert von b überschrieben. Jetzt haben a und b beide den Wert 8. Die 3 steht nur noch in tmp." },
+      { zeile: 4, a: 8, b: 3, tmp: 3, neu: ["b"], text: "b bekommt den alten Wert von a aus tmp. Die Werte sind vertauscht. Das hat drei Anweisungen und eine zusätzliche Variable gebraucht." }
+    ] },
+    { name: "ohne Hilfsvariable", zeilen: ["a, b := 3, 8", "a = b", "b = a"], schritte: [
+      { zeile: 1, a: 3, b: 8, neu: ["a", "b"], text: "Die kurze Deklaration erzeugt a mit dem Wert 3 und b mit dem Wert 8." },
+      { zeile: 2, a: 8, b: 8, neu: ["a"], text: "a wird mit dem Wert von b überschrieben. Der alte Wert 3 von a ist verloren, niemand hat ihn aufgehoben." },
+      { zeile: 3, a: 8, b: 8, neu: ["b"], text: "b bekommt den Wert von a. a hat aber schon den Wert 8. Am Ende haben beide Variablen den Wert 8. Diese Fassung vertauscht nicht. Go übersetzt sie trotzdem, der Fehler steckt in der Logik." }
+    ] }
+  ];
+  var tFassung = 0, tOrt = 0;
+  function zeigeTausch() {
+    var f = TAUSCH[tFassung], s = f.schritte[tOrt], war = f.schritte.slice(0, tOrt + 1).map(function (x) { return x.zeile; });
+    zeigeProgramm("t-programm", f.zeilen.map(function (t, i) { return { t: t, k: i + 1 === s.zeile ? "aktuell" : war.indexOf(i + 1) >= 0 ? "war" : "" }; }));
+    function kasten(name, wert, schluessel, merk) {
+      return "<div class=\"kasten" + (merk ? " merk" : "") + (s.neu.indexOf(schluessel) >= 0 ? " neu" : "") + "\"><span>" + name + "</span><b>" + wert + "</b></div>";
+    }
+    $("t-speicher").innerHTML = kasten("a", s.a, "a") + kasten("b", s.b, "b") +
+      (s.tmp !== undefined ? kasten("tmp", s.tmp, "tmp") : "") +
+      (s.merk ? kasten("gemerkt", s.merk.join(", "), "merk", true) : "");
+    $("t-text").innerHTML = "<p><strong>Zeile " + s.zeile + ":</strong> " + esc(s.text) + "</p>";
+    $("t-weiter").disabled = tOrt === f.schritte.length - 1;
+    jeder("#t-fassung button", function (b) { b.classList.toggle("haupt", Number(b.dataset.tausch) === tFassung); });
+  }
+
+  // ---- Schritt 5: einfache Anweisung oder nicht ----
+
+  var EINFACH = [
+    { zeile: "zahl := 20", ja: true, art: "kurze Variablendeklaration",
+      text: "<p>Die kurze Variablendeklaration ist eine einfache Anweisung. In einer for-Klausel steht sie oft als Init-Anweisung, zum Beispiel " + c("i := 1") + ".</p>" },
+    { zeile: "x = 3 * y", ja: true, art: "Zuweisung",
+      text: "<p>Jede Zuweisung ist eine einfache Anweisung. Wie lang der Ausdruck auf der rechten Seite ist, spielt dafür keine Rolle.</p>" },
+    { zeile: "x += 5", ja: true, art: "Zuweisung",
+      text: "<p>Auch die Zuweisung mit einem kombinierten Operator ist eine Zuweisung und damit eine einfache Anweisung.</p>" },
+    { zeile: "a, b = b, a", ja: true, art: "Zuweisung",
+      text: "<p>Die Tupel-Zuweisung ist eine einzige Zuweisung und damit eine einzige einfache Anweisung, auch wenn sie mehrere Variablen ändert.</p>" },
+    { zeile: "i++", ja: true, art: "Inkrementierungs-Anweisung",
+      text: "<p>" + c("i++") + " ist eine einfache Anweisung. In einer for-Klausel steht sie oft als Post-Anweisung.</p>" },
+    { zeile: "quader(4, 7)", ja: true, art: "Funktionsaufruf",
+      text: "<p>Ein Funktionsaufruf, der allein als Anweisung steht, ist eine einfache Anweisung. Was die Funktion in ihrem Rumpf tut, spielt dafür keine Rolle.</p>" },
+    { zeile: "var zahl int = 20", ja: false, art: "ausführliche Variablendeklaration",
+      text: "<p>Von den zwei Formen der Deklaration zählt nur die kurze zu den einfachen Anweisungen.</p><p>In einer for-Klausel ist die ausführliche Form deshalb nicht erlaubt. Zu " + c("for var i int = 1; i <= 10; i++ {") + " meldet der Compiler: " + c("syntax error: var declaration not allowed in for initializer") + "</p>" },
+    { zeile: "if x > 0 { x-- }", ja: false, art: "bedingte Anweisung",
+      text: "<p>" + c("if") + " ist eine Kontrollfluss-Anweisung. Sie enthält einen Block mit weiteren Anweisungen und ist keine einfache Anweisung.</p><p>Die Anweisung " + c("x--") + " in ihrem Block ist für sich genommen eine einfache Anweisung.</p>" }
+  ];
+  var einfachWahl = 0;
+  function zeigeEinfach() {
+    var e = EINFACH[einfachWahl];
+    $("e-programm").textContent = e.zeile;
+    $("e-ja").textContent = e.ja ? "ja" : "nein";
+    $("e-ja").classList.toggle("fehler", !e.ja);
+    $("e-art").textContent = e.art;
+    $("e-text").innerHTML = e.text;
+    jeder("#e-knoepfe button", function (b) { b.classList.toggle("haupt", Number(b.dataset.einfach) === einfachWahl); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-zu], [data-ostart], [data-oop], [data-orechts], [data-ink], [data-tausch], [data-einfach]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.zu !== undefined) { zuWahl = Number(d.zu); zeigeZu(); }
+    else if (d.ostart !== undefined) { oStart = Number(d.ostart); zeigeKombiniert(); }
+    else if (d.oop !== undefined) { oOp = Number(d.oop); zeigeKombiniert(); }
+    else if (d.orechts !== undefined) { oRechts = Number(d.orechts); zeigeKombiniert(); }
+    else if (d.ink !== undefined) { inkWahl = Number(d.ink); zeigeInk(); }
+    else if (d.tausch !== undefined) { tFassung = Number(d.tausch); tOrt = 0; zeigeTausch(); }
+    else if (d.einfach !== undefined) { einfachWahl = Number(d.einfach); zeigeEinfach(); }
+    melde(false);
+  });
+  $("t-weiter").addEventListener("click", function () { tOrt = Math.min(tOrt + 1, TAUSCH[tFassung].schritte.length - 1); zeigeTausch(); melde(false); });
+  $("t-vorn").addEventListener("click", function () { tOrt = 0; zeigeTausch(); melde(false); });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Zuweisung mit =", "Schritt 2: Kombinierte Operatoren", "Schritt 3: ++ und --", "Schritt 4: Tupel-Zuweisung", "Schritt 5: Einfache Anweisungen"];
+
+  // Die Sätze, die Schritt 1 und Schritt 3 gemeinsam haben: zwei feste Zeilen, eine gewählte dritte
+  function standDrei(kopf, liste, wahl) {
+    var z = liste[wahl];
+    return ["Zeile 1 und 2 der Demo stehen fest: " + kopf.join(" ; ") + ". Als Zeile 3 ist gewählt: " + z.zeile,
+      z.fehler ? "Go übersetzt die drei Zeilen nicht. Die Meldung des Compilers: " + z.meldung : "Go übersetzt die drei Zeilen. Danach gilt: " + z.werte + ".",
+      "Dazu sagt die HTML-Seite: " + z.text,
+      "Als Zeile 3 wählbar sind nur die Knöpfe: " + liste.map(function (x) { return x.zeile; }).join(" ; ") + ". Ein Eingabefeld gibt es nicht."];
+  }
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 1) return standDrei(KOPF1, ZU, zuWahl);
+    if (stufe === 2) {
+      var k = kombiniert();
+      return ["x hat den Typ int und vorher den Wert " + oStart + ". Gewählt sind der Operator " + k.op.zeichen + "= und die rechte Seite " + k.r.text + ".",
+        "Kurze Schreibweise: " + k.kurz + ". Lange Schreibweise: " + k.lang + ". Rechnung: " + k.rechnung + ". x hat danach den Wert " + k.neu + "."].concat(
+        text2(k).map(function (s) { return "Dazu sagt die HTML-Seite: " + s; }),
+        ["Wählbar sind nur die Startwerte 20, 7 und −9, die Operatoren *=, /=, %=, += und -= und die rechten Seiten 3, 4 und 2 + 3. Ein Eingabefeld gibt es nicht."]);
+    }
+    if (stufe === 3) return standDrei(KOPF3, INK, inkWahl);
+    if (stufe === 4) {
+      var f = TAUSCH[tFassung], s = f.schritte[tOrt], ende = f.schritte[f.schritte.length - 1];
+      return ["Gewählt ist die Fassung „" + f.name + "“. Wählbar sind nur die drei Fassungen „mit Tupel-Zuweisung“, „mit Hilfsvariable tmp“ und „ohne Hilfsvariable“.",
+        "Der Lauf steht bei Zeile " + s.zeile + ", gelb markiert. Das ist Schritt " + (tOrt + 1) + " von " + f.schritte.length + " dieser Fassung.",
+        "Zu diesem Schritt sagt die HTML-Seite: " + s.text,
+        "Die Kästen zeigen: a = " + s.a + ", b = " + s.b + (s.tmp !== undefined ? ", tmp = " + s.tmp : "") + (s.merk ? ". Im gestrichelten Kasten „gemerkt“ stehen die Werte " + s.merk.join(" und ") : "") + ".",
+        tOrt === f.schritte.length - 1 ? "Der Lauf ist zu Ende." : "Der Lauf ist noch nicht zu Ende. Am Ende dieser Fassung gilt: a = " + ende.a + ", b = " + ende.b + ".",
+        "Die Anfangswerte 3 und 8 stehen fest."];
+    }
+    var e = EINFACH[einfachWahl];
+    return ["Gewählt ist die Zeile: " + e.zeile,
+      "Die HTML-Seite ordnet die Zeile so ein: einfache Anweisung " + (e.ja ? "ja" : "nein") + ", Art der Anweisung: " + e.art + ". Das ist eine Einordnung der Seite und keine Meldung des Compilers.",
+      "Die Demo führt die Zeile nicht aus und zeigt keine Werte.",
+      "Wählbar sind nur die acht Knöpfe: " + EINFACH.map(function (x) { return x.zeile; }).join(" ; ") + ". Ein Eingabefeld gibt es nicht."];
+  }
+  function kurz() {
+    if (stufe === 1) return "Zeile 3: " + ZU[zuWahl].zeile;
+    if (stufe === 2) return "x = " + oStart + ", " + kombiniert().kurz;
+    if (stufe === 3) return "Zeile 3: " + INK[inkWahl].zeile;
+    if (stufe === 4) { var s = TAUSCH[tFassung].schritte[tOrt]; return TAUSCH[tFassung].name + ", Zeile " + s.zeile + ", a = " + s.a + ", b = " + s.b; }
+    if (stufe === 5) return EINFACH[einfachWahl].zeile;
+    return "";
+  }
+  // Programmzeilen: die Programme der Demos mit Zeilennummern, dazu jeder feste Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre:not([id])")).reduce(function (alle, p) {
+      return alle.concat(["---"], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    var demo = stufe === 1 ? mitNummern(KOPF1.concat([ZU[zuWahl].zeile]))
+      : stufe === 2 ? ["Zeile der Demo: " + kombiniert().kurz]
+      : stufe === 3 ? mitNummern(KOPF3.concat([INK[inkWahl].zeile]))
+      : stufe === 4 ? mitNummern(TAUSCH[tFassung].zeilen)
+      : stufe === 5 ? ["Zeile der Demo: " + EINFACH[einfachWahl].zeile] : [];
+    return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
+  }
+
+  zeigeZu();
+  zeigeKombiniert();
+  zeigeInk();
+  zeigeTausch();
+  zeigeEinfach();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Zuweisungen in Go",
+    thema: "Zuweisung, Zuweisungsoperator, kombinierte Zuweisungsoperatoren, Inkrementierungs-Anweisung, Tupel-Zuweisung, einfache Anweisungen",
+    bezug: "Kurstext v3.0.6, Abschnitte 5.3 und 5.4, Seiten 126–129",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_zuweisungen_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis, table.text",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum darf ich nicht y = x++ schreiben?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
