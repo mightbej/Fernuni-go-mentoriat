@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zweierkomplement: negative Zahlen als Bitmuster in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace; }
+    input[type=number] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;width:7em; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+    table.rechnung { width:auto;font-family:Consolas,"Courier New",monospace; }
+    table.rechnung td, table.rechnung th { padding:6px 14px;text-align:left; }
+    table.rechnung td.muster { font-size:1.2rem;font-weight:700;letter-spacing:1px; }
+    table.rechnung tr.ergebnis td { border-top:2px solid var(--accent); }
+
+    /* Ein Byte: acht Bits groß und anklickbar, über jedem Bit seine Wertigkeit */
+    .bitfeld { border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#f8fafc; }
+    .bitkopf { color:var(--muted);font-size:.92rem;margin-bottom:8px;text-align:center; }
+    .bitreihe { display:flex;justify-content:center;gap:6px;flex-wrap:nowrap; }
+    .bitzelle { display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 1 58px;min-width:0; }
+    .bitzelle .gewicht { font-family:Consolas,monospace;font-size:.95rem;color:var(--muted); }
+    .bitzelle.an .gewicht { color:#111827;font-weight:700; }
+    .bitzelle button { width:100%;padding:6px 0;font-family:Consolas,monospace;font-size:2rem;line-height:1.2;font-weight:700;background:#fff;color:#9ca3af;border:2px solid #cbd5e1; }
+    .bitzelle.an button { background:var(--pos-bg);color:#111827;border-color:var(--pos); }
+    .bitzelle.an.minus button { background:var(--neg-bg);border-color:var(--neg); }
+    .bitzelle:nth-child(4):not(:last-child) { margin-right:12px; }
+    .lesarten { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:12px 0 0; }
+    .lesarten div { background:#fff;border:2px solid var(--pos);border-radius:8px;padding:8px 12px; }
+    .lesarten div.int8 { border-color:var(--neg); }
+    .lesarten span { display:block;color:var(--muted);font-size:.85rem; }
+    .lesarten b { font-family:Consolas,"Courier New",monospace;font-size:1rem;overflow-wrap:anywhere; }
+    @media (max-width:640px) { .bitzelle button { font-size:1.4rem; } .bitzelle .gewicht { font-size:.7rem; } }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Zweierkomplement: negative Zahlen als Bitmuster</h1>
+    <p>Im Speicher stehen nur Bits, ein Minuszeichen gibt es dort nicht. Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Die Wertigkeit −128</button>
+    <button type="button" class="tab" data-stufe="2">2 Eine Zahl negieren</button>
+    <button type="button" class="tab" data-stufe="3">3 Literal und Bitmuster</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Jeder Wert steht im Rechner als Folge von Bits. Für die Zahlen ab 0 ist das einfach: Das Bitmuster ist die Binärzahl. Für eine negative Zahl braucht es eine Vereinbarung, denn ein Bit kann nur 0 oder 1 sein.</p>
+    <p>Die Vereinbarung, die Go und fast alle anderen Sprachen verwenden, heißt Zweierkomplement. Sie besteht aus einer einzigen Änderung:</p>
+    <div class="hinweis">Bei einem Typ mit Vorzeichen hat das linke Bit eine negative Wertigkeit. Beim Typ <code>int8</code> ist sie −128 statt 128. Alle anderen Bits behalten ihre Wertigkeit.</div>
+
+    <h3>Was das Zweierkomplement bringt</h3>
+    <ul>
+      <li><strong>Subtraktion als Addition:</strong> Der Rechner braucht kein eigenes Werk zum Subtrahieren. Für <code>a - b</code> addiert er zu <code>a</code> das Negative von <code>b</code>. Das zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#subtraktion">Rechenwerk</a>, Schritt 5.</li>
+      <li><strong>Einfache Negation:</strong> Aus einer Zahl wird ihr Negatives mit zwei Handgriffen. Das ist Schritt 2 dieser Seite.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Typ und Bits:</strong> Der Typ legt fest, wie die Bits eines Speicherplatzes zu lesen sind. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 4.3.1, Seiten 59–61, binäre Literale:</strong> Dazu gibt es die Seite <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</li>
+      <li><strong>Abschnitt 4.3.4, Seite 63, die Typen:</strong> <code>uint8</code> reicht von 0 bis 255, <code>int8</code> von −128 bis 127. Alle Typen mit ihren Wertebereichen zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#typen">Zahlenkreis</a>, Schritt 4.</li>
+    </ul>
+
+    <h3>Die drei Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, die Wertigkeit −128:</strong> Du stellst ein Bitmuster ein und liest es als <code>uint8</code> und als <code>int8</code>.</li>
+      <li><strong>Schritt 2, eine Zahl negieren:</strong> Alle Bits umkehren und 1 addieren.</li>
+      <li><strong>Schritt 3, Literal und Bitmuster:</strong> Warum <code>-9</code> im Quelltext <code>-0b1001</code> heißt und nicht <code>0b11110111</code>.</li>
+    </ul>
+    <div class="hinweis">Die Seite rechnet mit 8 Bit, also mit <code>uint8</code> und <code>int8</code>. Die größeren Typen arbeiten genauso, nur mit mehr Bits. Die Programmzeilen in Schritt 2 und 3 sind mit Go 1.26 ausgeführt.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Die formale Definition des Zweierkomplements gehört nach dem Kurstext in das Modul Computersysteme.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Die Wertigkeit −128</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Welchen Wert hat das Bitmuster 1000 0001 als <code>uint8</code>, welchen als <code>int8</code>?
+          <details><summary>Auflösung</summary>129 und −127. Als <code>uint8</code>: 128 + 1. Als <code>int8</code>: −128 + 1.</details></li>
+        <li>Welches Bitmuster hat die Zahl −1 als <code>int8</code>?
+          <details><summary>Auflösung</summary>1111 1111. Die sieben rechten Bits ergeben zusammen 127, und −128 + 127 = −1.</details></li>
+      </ol>
+    </div>
+    <p>Die Bits eines Bytes werden von rechts gezählt, das rechte Bit ist das Bit 0, das linke das Bit 7. Jedes Bit hat eine Wertigkeit. Der Wert des Bytes ist die Summe der Wertigkeiten aller Bits, die auf 1 stehen.</p>
+    <table class="text">
+      <thead><tr><th>Typ</th><th>Wertigkeit von Bit 7</th><th>Wertigkeit von Bit 6 bis Bit 0</th><th>Wertebereich</th></tr></thead>
+      <tbody>
+        <tr><td><code>uint8</code>, ohne Vorzeichen</td><td>Das linke Bit zählt 128.</td><td>Die Bits zählen 64, 32, 16, 8, 4, 2 und 1.</td><td>Der Typ reicht von 0 bis 255.</td></tr>
+        <tr><td><code>int8</code>, mit Vorzeichen</td><td>Das linke Bit zählt −128.</td><td>Die Bits zählen 64, 32, 16, 8, 4, 2 und 1.</td><td>Der Typ reicht von −128 bis 127.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ausprobieren: ein Bitmuster, zwei Werte</h3>
+    <div class="zeile" id="muster">
+      <span>Beispiele aus dem Kurstext:</span>
+      <button type="button" class="code" data-bits="0">0000 0000</button>
+      <button type="button" class="code" data-bits="1">0000 0001</button>
+      <button type="button" class="code" data-bits="127">0111 1111</button>
+      <button type="button" class="code" data-bits="128">1000 0000</button>
+      <button type="button" class="code" data-bits="129">1000 0001</button>
+      <button type="button" class="code" data-bits="255">1111 1111</button>
+    </div>
+    <div class="bitfeld">
+      <div class="bitkopf">Ein Klick auf ein Bit schaltet es um. Über jedem Bit steht seine Wertigkeit beim Typ <code>int8</code>.</div>
+      <div class="bitreihe" id="bits1"></div>
+      <div class="lesarten">
+        <div><span>Als <code>uint8</code> gelesen: das linke Bit zählt 128</span><b id="als-uint8"></b></div>
+        <div class="int8"><span>Als <code>int8</code> gelesen: Wert des linken Bits + Wert der rechten Bits</span><b id="als-int8"></b></div>
+      </div>
+    </div>
+
+    <h3>Was daraus folgt</h3>
+    <ul>
+      <li><strong>Das Vorzeichen steht am linken Bit:</strong> Steht das linke Bit auf 0, ist der Wert 0 bis 127. Steht es auf 1, ist der Wert negativ, denn die rechten Bits bringen zusammen höchstens 127 und kommen gegen −128 nicht an.</li>
+      <li><strong>Das linke Bit ist kein Minuszeichen:</strong> Es zählt wie jedes andere Bit mit, nur mit negativer Wertigkeit. Wer bei 0000 1001 für die 9 nur das linke Bit auf 1 setzt, bekommt −128 + 9 = −119 und nicht −9.</li>
+      <li><strong>Bis 0111 1111 lesen beide Typen das Gleiche:</strong> Die Bitmuster von 0 bis 127 haben als <code>uint8</code> und als <code>int8</code> den gleichen Wert.</li>
+      <li><strong>Allgemein für n Bit:</strong> Ein Typ ohne Vorzeichen reicht von 0 bis 2<sup>n</sup> − 1. Ein Typ mit Vorzeichen reicht von −2<sup>n−1</sup> bis 2<sup>n−1</sup> − 1.</li>
+    </ul>
+    <p>Wie die 256 Bitmuster eines Bytes auf einem Kreis liegen und wo die Naht zwischen 127 und −128 sitzt, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#vorzeichen">Zahlenkreis</a>, Schritt 2.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Die sechs Bitmuster auf den Knöpfen und die Zerlegung in den Wert des linken Bits und den Wert der rechten Bits stammen aus dem Kurstext. Das Beispiel mit −119 ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Eine Zahl negieren</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die 9 hat das Bitmuster 0000 1001. Welches Bitmuster hat −9?
+          <details><summary>Auflösung</summary>1111 0111. Alle Bits umkehren ergibt 1111 0110, plus 1 ergibt 1111 0111. Probe: −128 + 64 + 32 + 16 + 4 + 2 + 1 = −9.</details></li>
+        <li>Was kommt heraus, wenn man −128 negiert?
+          <details><summary>Auflösung</summary>Wieder −128. Die Zahl +128 passt nicht in einen <code>int8</code>. Stelle −128 ein und sieh nach.</details></li>
+      </ol>
+    </div>
+    <p>Aus einer Zahl wird ihr Negatives in zwei Handgriffen:</p>
+    <ol>
+      <li><strong>Alle Bits umkehren.</strong> Aus jeder 0 wird eine 1, aus jeder 1 eine 0. In Go macht das der Operator <code>^</code> vor einem Wert.</li>
+      <li><strong>1 addieren.</strong></li>
+    </ol>
+    <p>In Go ist <code>^x + 1</code> deshalb das Gleiche wie <code>-x</code>.</p>
+
+    <h3>Warum das stimmt</h3>
+    <p>Kehrt man alle Bits von <code>x</code> um und addiert das Ergebnis zu <code>x</code>, steht an jeder Stelle genau eine 1. Die Summe ist das Bitmuster 1111 1111, und das ist als <code>int8</code> die Zahl −1.</p>
+    <p>Also gilt <code>x + ^x = -1</code>. Daraus folgt <code>^x + 1 = -x</code>.</p>
+
+    <h3>Ausprobieren: negieren</h3>
+    <div class="zeile">
+      <label for="zahl">Zahl von −128 bis 127:</label>
+      <input type="number" id="zahl" min="-128" max="127" value="42">
+      <button type="button" class="haupt" id="negieren">negieren</button>
+      <button type="button" id="nochmal">das Ergebnis negieren</button>
+    </div>
+    <div class="zeile" id="zahlen">
+      <span>Beispiele:</span>
+      <button type="button" data-zahl="42">42</button>
+      <button type="button" data-zahl="9">9</button>
+      <button type="button" data-zahl="1">1</button>
+      <button type="button" data-zahl="-9">−9</button>
+      <button type="button" data-zahl="0">0</button>
+      <button type="button" data-zahl="-128">−128</button>
+    </div>
+    <div class="auskunft fehler" id="n-fehler" hidden></div>
+    <table class="rechnung" id="n-rechnung"></table>
+    <div class="auskunft" id="n-urteil"></div>
+
+    <h3>Zwei Sonderfälle</h3>
+    <ul>
+      <li><strong>Die 0:</strong> Umkehren ergibt 1111 1111. Plus 1 ergibt eine 1 mit acht Nullen. Die vordere 1 hat in 8 Bit keinen Platz und fällt weg, es bleibt 0000 0000. Die Null gibt es deshalb nur einmal.</li>
+      <li><strong>Die −128:</strong> Der Typ <code>int8</code> hat 128 negative Werte und nur 127 positive. Zu −128 fehlt das Gegenstück. In Go ist <code>-m</code> für ein <code>m</code> vom Typ <code>int8</code> mit dem Wert −128 wieder −128, ohne Meldung.</li>
+    </ul>
+    <p>Was Go tut, wenn ein Ergebnis nicht in den Typ passt, zeigt die Seite <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</p>
+    <p class="quelle">Im Kurstext steht in Abschnitt 4.3.5 auf Seite 64 nur, dass die Negation technisch sehr einfach ist. Die zwei Handgriffe, die Begründung und die Sonderfälle stehen dort nicht. Der Operator <code>^</code> wird in Abschnitt 4.3.7.2.1 behandelt, Seiten 72–74.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Literal und Bitmuster</h2>
+    <p>Das Zweierkomplement ist Sache des Compilers. Es beschreibt, wie ein Wert im Speicher steht. Im Quelltext kommt es nicht vor. Diese zwei Ebenen darf man nicht verwechseln:</p>
+    <ul>
+      <li><strong>Im Quelltext, das Literal:</strong> Ein binäres Literal wie <code>0b1001</code> ist immer eine Zahl ab 0. Go liest es als gewöhnliche Binärzahl. Eine negative Zahl schreibt man als Betrag mit einem Minus davor: <code>-0b1001</code> ist −9.</li>
+      <li><strong>Im Speicher, das Bitmuster:</strong> Dort steht −9 in einer Variable vom Typ <code>int8</code> als 1111 0111. Dieses Bitmuster rechnet der Compiler aus.</li>
+    </ul>
+    <p>Das Literal <code>0b11110111</code> ist deshalb nicht −9. Es ist die Zahl 247, und die passt nicht in einen <code>int8</code>.</p>
+
+    <h3>Ausprobieren: was Go annimmt</h3>
+    <p>Wähle eine Zeile. Die Seite zeigt, ob Go sie übersetzt und was im Speicher steht.</p>
+    <div class="zeile" id="wahl"></div>
+    <pre class="code-block" id="w-zeile"></pre>
+    <div class="auskunft" id="w-urteil"></div>
+
+    <h3>Das Bitmuster sichtbar machen</h3>
+    <p>Das Verb <code>%b</code> gibt eine Zahl binär aus. Bei einer negativen Zahl zeigt es aber den Betrag mit einem Minus und nicht das Bitmuster im Speicher. Wer das Bitmuster sehen will, wandelt den Wert vorher in <code>uint8</code> um:</p>
+<pre class="code-block">var b int8 = -9
+fmt.Printf("%b\n", b)             // -1001
+fmt.Printf("%08b\n", uint8(b))    // 11110111</pre>
+    <p>Die <code>08</code> im Verb füllt die Ausgabe links mit Nullen auf acht Stellen auf. Die Umwandlung <code>uint8(b)</code> lässt die Bits stehen und liest sie ohne Vorzeichen. Mehr dazu steht auf der Seite <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen</a> fragt nach den Grenzen der Ganzzahl-Typen.</li>
+      <li><strong>Rechnen:</strong> Wie der Rechner mit dem Zweierkomplement subtrahiert, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#subtraktion">Rechenwerk</a>, Schritt 5.</li>
+      <li><strong>Überlauf:</strong> Was geschieht, wenn eine Rechnung über 127 hinausgeht, zeigen die Seiten <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3, und <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seite 66: Unterschied zwischen System-Ebene und Quellcode-Ebene, mit dem Beispiel <code>-0b1001</code>. Die sechs Zeilen der Demo, die Meldung des Compilers und die Ausgabe mit <code>%08b</code> stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const c = t => '<code>' + String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</code>';
+  const minus = n => n < 0 ? '−' + (-n) : String(n);                         // −9 mit echtem Minuszeichen
+  const bits = w => w.toString(2).padStart(8, '0');
+  const bits44 = w => bits(w).slice(0, 4) + ' ' + bits(w).slice(4);            // 1111 0111
+  const alsInt8 = w => w > 127 ? w - 256 : w;
+  const alsByte = z => z < 0 ? z + 256 : z;
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#negieren
+  const ANKER = ['worum', 'wertigkeit', 'negieren', 'literal'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Schritt 1: ein Bitmuster, zwei Werte ----------
+  let byte1 = 0b11110111;
+  const summe = (w, linkesBit) => {
+    const teile = [];
+    for (let j = 7; j >= 0; j--) if ((w >> j) & 1) teile.push(j === 7 ? linkesBit : 1 << j);
+    return teile;
+  };
+  function lesarten(w) {
+    const u = summe(w, 128), rechts = w & 127, links = w > 127 ? -128 : 0;
+    return {
+      uint8: (u.length > 1 ? u.join(' + ') + ' = ' : '') + w,
+      int8: minus(links) + ' + ' + rechts + ' = ' + minus(links + rechts)
+    };
+  }
+  function zeichneBits1() {
+    const reihe = el('bits1');
+    reihe.textContent = '';
+    for (let j = 7; j >= 0; j--) {
+      const an = (byte1 >> j) & 1, d = document.createElement('div');
+      d.className = 'bitzelle' + (an ? ' an' : '') + (j === 7 ? ' minus' : '');
+      const g = document.createElement('span'); g.className = 'gewicht'; g.textContent = j === 7 ? '−128' : String(1 << j);
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = an;
+      b.setAttribute('aria-label', 'Bit ' + j + ', steht auf ' + an);
+      b.addEventListener('click', () => { byte1 ^= (1 << j); zeichneBits1(); });
+      d.appendChild(g); d.appendChild(b); reihe.appendChild(d);
+    }
+    const l = lesarten(byte1);
+    el('als-uint8').textContent = l.uint8;
+    el('als-int8').textContent = l.int8;
+    melde(false);
+  }
+  el('muster').addEventListener('click', e => { const k = e.target.closest('[data-bits]'); if (k) { byte1 = Number(k.dataset.bits); zeichneBits1(); } });
+
+  // ---------- Schritt 2: negieren ----------
+  const s2 = { zahl: 42, fehler: '' };
+  const probe = w => {                                   // −128 + 64 + … = Wert, gelesen als int8
+    const t = summe(w, -128).map(minus);
+    return t.length ? t.join(' + ') + ' = ' + minus(alsInt8(w)) : 'Kein Bit steht auf 1, der Wert ist 0.';
+  };
+  function negiere(zahl) {
+    if (!Number.isInteger(zahl) || zahl < -128 || zahl > 127) {
+      s2.fehler = 'Die Demo rechnet mit dem Typ int8. Gib eine ganze Zahl von −128 bis 127 ein.';
+      el('n-fehler').textContent = s2.fehler; el('n-fehler').hidden = false;
+      melde(false); return;
+    }
+    s2.fehler = ''; el('n-fehler').hidden = true;
+    s2.zahl = zahl; el('zahl').value = zahl;
+    const x = alsByte(zahl), um = x ^ 255, erg = (um + 1) & 255, wert = alsInt8(erg);
+    s2.x = x; s2.um = um; s2.erg = erg; s2.wert = wert;
+    el('n-rechnung').innerHTML =
+      '<tr><td>Die Zahl ' + minus(zahl) + ' als <code>int8</code></td><td class="muster">' + bits44(x) + '</td><td>' + probe(x) + '</td></tr>' +
+      '<tr><td>1. Alle Bits umkehren</td><td class="muster">' + bits44(um) + '</td><td>Das ist als <code>int8</code> die Zahl ' + minus(alsInt8(um)) + '.</td></tr>' +
+      '<tr class="ergebnis"><td>2. Eins addieren</td><td class="muster">' + bits44(erg) + '</td><td>' + probe(erg) + '</td></tr>';
+    let urteil;
+    if (zahl === -128) urteil = '<p>Das Ergebnis ist wieder −128. Die Zahl 128 passt nicht in einen ' + c('int8') + ', der bei 127 endet.</p>';
+    else if (zahl === 0) urteil = '<p>Das Ergebnis ist wieder 0. Beim Addieren der 1 entsteht ein Übertrag aus der vordersten Stelle. Er hat in 8 Bit keinen Platz und fällt weg.</p>';
+    else urteil = '<p>Aus ' + minus(zahl) + ' ist ' + minus(wert) + ' geworden. Wer das Ergebnis noch einmal negiert, bekommt wieder ' + minus(zahl) + '.</p>';
+    el('n-urteil').innerHTML = urteil + '<p>In Go: Für ' + c('var x int8 = ' + zahl) + ' liefern ' + c('-x') + ' und ' + c('^x + 1') + ' beide den Wert ' + c(wert) + '.</p>';
+    melde(false);
+  }
+  el('negieren').addEventListener('click', () => negiere(Number(el('zahl').value)));
+  el('zahl').addEventListener('keydown', e => { if (e.key === 'Enter') negiere(Number(el('zahl').value)); });
+  el('nochmal').addEventListener('click', () => negiere(s2.wert));
+  el('zahlen').addEventListener('click', e => { const k = e.target.closest('[data-zahl]'); if (k) negiere(Number(k.dataset.zahl)); });
+
+  // ---------- Schritt 3: sechs Zeilen. Urteil, Werte und Meldung stammen aus Läufen mit Go 1.26. ----------
+  const WAHL = [
+    { knopf: 'var a int8 = 0b00001001', zeilen: ['var a int8 = 0b00001001', 'fmt.Println(a)    // 9'], wert: '9', muster: '0000 1001',
+      warum: 'Das Literal ist die Binärzahl 9. Sie passt in einen ' + c('int8') + '. Bei einer Zahl von 0 bis 127 sind Literal und Bitmuster gleich.' },
+    { knopf: 'var b int8 = -0b00001001', zeilen: ['var b int8 = -0b00001001', 'fmt.Println(b)    // -9'], wert: '−9', muster: '1111 0111',
+      warum: 'Das Literal ist die 9, das Minus davor macht daraus −9. Das Bitmuster 1111 0111 rechnet der Compiler aus. Im Quelltext steht es nirgends.' },
+    { knopf: 'var c int8 = 0b11110111', zeilen: ['var c int8 = 0b11110111'], meldung: 'cannot use 0b11110111 (untyped int constant 247) as int8 value in variable declaration (overflows)',
+      warum: 'Go liest das Literal als gewöhnliche Binärzahl, und das ist 247. Der Typ ' + c('int8') + ' endet bei 127. Wer −9 meint, schreibt ' + c('-9') + ' oder ' + c('-0b1001') + '.' },
+    { knopf: 'var d uint8 = 0b11110111', zeilen: ['var d uint8 = 0b11110111', 'fmt.Println(d)    // 247'], wert: '247', muster: '1111 0111',
+      warum: 'In einen ' + c('uint8') + ' passt 247. Im Speicher steht das gleiche Bitmuster wie bei −9 in einem ' + c('int8') + '. Der Typ entscheidet, wie es gelesen wird.' },
+    { knopf: 'var e int8 = int8(d)', zeilen: ['var d uint8 = 0b11110111', 'var e int8 = int8(d)', 'fmt.Println(e)    // -9'], wert: '−9', muster: '1111 0111',
+      warum: 'Die Konvertierung einer Variable von ' + c('uint8') + ' nach ' + c('int8') + ' lässt die Bits stehen. Sie werden jetzt mit der Wertigkeit −128 für das linke Bit gelesen: aus 247 wird −9.' },
+    { knopf: 'var m int8 = -0b10000000', zeilen: ['var m int8 = -0b10000000', 'fmt.Println(m)    // -128'], wert: '−128', muster: '1000 0000',
+      warum: 'Das Literal ist 128, das Minus davor macht daraus −128, und −128 passt in einen ' + c('int8') + '. Ohne das Minus würde Go die Zeile nicht übersetzen.' }
+  ];
+  let wahl = 1;
+  el('wahl').innerHTML = WAHL.map((w, i) => '<button type="button" class="code" data-wahl="' + i + '">' + w.knopf + '</button>').join('');
+  function zeigeWahl(i) {
+    wahl = i;
+    const w = WAHL[i];
+    document.querySelectorAll('[data-wahl]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.wahl) === i));
+    el('w-zeile').textContent = w.zeilen.join('\n');
+    el('w-urteil').classList.toggle('fehler', !!w.meldung);
+    el('w-urteil').innerHTML = (w.meldung ? '<p>Go übersetzt die Zeile nicht. Der Compiler meldet: ' + c(w.meldung) + '</p>'
+      : '<p>Go übersetzt die Zeile. Der Wert ist ' + w.wert + ', im Speicher steht das Bitmuster ' + w.muster + '.</p>') + '<p>' + w.warum + '</p>';
+    melde(false);
+  }
+  el('wahl').addEventListener('click', e => { const k = e.target.closest('[data-wahl]'); if (k) zeigeWahl(Number(k.dataset.wahl)); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Wertigkeit −128', 'Schritt 2: Eine Zahl negieren', 'Schritt 3: Literal und Bitmuster'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) {
+      const l = lesarten(byte1);
+      return ['Eingestellt ist das Bitmuster ' + bits44(byte1) + '.',
+        'Als uint8 gelesen: ' + l.uint8 + '.',
+        'Als int8 gelesen, Wert des linken Bits plus Wert der rechten Bits: ' + l.int8 + '.',
+        'Über den Bits stehen die Wertigkeiten für int8: −128, 64, 32, 16, 8, 4, 2 und 1.',
+        'Handgriffe: ein Bit anklicken und damit umschalten, einen der sechs Knöpfe 0000 0000, 0000 0001, 0111 1111, 1000 0000, 1000 0001 und 1111 1111 wählen. Eine Dezimalzahl lässt sich in diesem Schritt nicht eingeben.'];
+    }
+    if (stufe === 2) {
+      return [s2.fehler ? 'Die Seite meldet: ' + s2.fehler + ' Die Rechnung darunter gehört noch zur Zahl ' + minus(s2.zahl) + '.' : 'Eingegeben ist die Zahl ' + minus(s2.zahl) + '.',
+        'Die Rechnung: ' + minus(s2.zahl) + ' hat als int8 das Bitmuster ' + bits44(s2.x) + '. Alle Bits umkehren ergibt ' + bits44(s2.um) + ', das ist als int8 die Zahl ' + minus(alsInt8(s2.um)) + '. Eins addieren ergibt ' + bits44(s2.erg) + ', das ist ' + minus(s2.wert) + '.',
+        'Probe über die Wertigkeiten: ' + probe(s2.erg),
+        'Die Seite sagt dazu: ' + glatt(el('n-urteil').innerText),
+        'Handgriffe: eine ganze Zahl von −128 bis 127 eintragen und „negieren“ wählen, „das Ergebnis negieren“ wählen, einen der Knöpfe 42, 9, 1, −9, 0 und −128 wählen.'];
+    }
+    const w = WAHL[wahl];
+    return ['Gewählt ist: ' + w.zeilen.join(' ; '),
+      w.meldung ? 'Go übersetzt die Zeile nicht. Der Compiler meldet: ' + w.meldung : 'Go übersetzt die Zeile. Der Wert ist ' + w.wert + ', im Speicher steht das Bitmuster ' + w.muster + '.',
+      'Die Seite sagt dazu: ' + glatt(el('w-urteil').innerText),
+      'Handgriffe: eine der sechs Zeilen wählen. Eigener Code lässt sich nicht eingeben.'];
+  }
+  const kurzStand = () => stufe === 1 ? bits44(byte1) : stufe === 2 ? minus(s2.zahl) + ' negieren' : stufe === 3 ? WAHL[wahl].knopf : '';
+
+  zeichneBits1();
+  negiere(42);
+  zeigeWahl(1);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Zweierkomplement: negative Zahlen als Bitmuster in Go',
+    thema: 'Zweierkomplement, binäre Codierung, int8, uint8, Wertigkeit, Negation, Integer-Literal',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol, .card > .frage, .hinweis, table.text',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ist 1111 1111 die Zahl −1?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
