@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-13T18:28",
+ "stand": "2026-10-13T19:32",
  "abschnitte": {
   "2.1": [
    {
@@ -927,6 +927,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
     "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
@@ -942,6 +949,13 @@
    }
   ],
   "4.6": [
+   {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
@@ -1296,6 +1310,13 @@
     "titel": "Programmierübung: Bubble Sort mit Zeigern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1685,6 +1706,13 @@
     "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "6.1": [
@@ -1987,6 +2015,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Das Kopier-Problem: Arrays als Argument",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
     "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
@@ -2015,6 +2050,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Selection Sort mit Zeigern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
@@ -2039,6 +2081,13 @@
     "titel": "Vergleich von Verbünden in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2174,6 +2223,13 @@
     "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Programmierübung: Bubble Sort rekursiv",
@@ -2350,9 +2406,23 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2392,6 +2462,13 @@
     "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "8.2.5": [
@@ -2401,6 +2478,13 @@
     "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Zeiger auf Verbünde in Go",
@@ -2474,9 +2558,23 @@
     "art": "erklaert"
    },
    {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -2499,6 +2597,13 @@
   ],
   "8.4": [
    {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Anonyme Felder und eingebettete Verbünde in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
     "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
@@ -2520,21 +2625,42 @@
     "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "8.4.2": [
+   {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
     "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
     "geprueft": true,
-    "art": "erklaert"
-   },
-   {
-    "titel": "S234 Bubblesort Demo - Erklaerung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S234_bubblesort_demo_erklaerung.html",
-    "beschreibung": "Die Seite erklärt ein Programm, das ein Array von Personen mit Bubblesort nach dem Namen sortiert.",
-    "geprueft": false,
     "art": "erklaert"
    },
    {
@@ -2559,6 +2685,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
@@ -2571,31 +2704,47 @@
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
     "geprueft": true,
     "art": "nennt"
-   },
+   }
+  ],
+  "9": [
    {
-    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
-    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
-    "geprueft": false,
-    "art": "nennt"
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "erklaert"
    }
   ],
   "9.1": [
    {
-    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
-    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
-    "geprueft": false,
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
     "art": "erklaert"
    }
   ],
   "9.2": [
    {
-    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
-    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
-    "geprueft": false,
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Rekursive Verbund-Typen in Go",
@@ -2614,10 +2763,35 @@
   ],
   "9.3": [
    {
-    "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
-    "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
-    "geprueft": false,
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "9.3.1": [
+   {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "9.3.2": [
+   {
+    "titel": "Binäre Suchbäume in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html",
+    "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
+    "geprueft": true,
     "art": "erklaert"
    }
   ],
