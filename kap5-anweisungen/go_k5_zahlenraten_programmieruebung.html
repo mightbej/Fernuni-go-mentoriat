@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programmierübung: Zahlenraten mit Statistik</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    table.text td, table.text th { font-size:.95rem;vertical-align:top; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Das ganze Programm mit Zeilennummern */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:3em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.teil { border-left-color:var(--aktiv);background:#334155; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Zahlenraten mit Statistik</h1>
+    <p>Aus dem Ablauf des Zahlenratespiels wird Schritt für Schritt ein Go-Programm. Es braucht fast alle Anweisungen aus Kapitel 5: Konstanten, Variablen, Zuweisungen, <code>if</code>, <code>switch</code>, <code>for</code> und <code>break</code>.</p>
+    <p>Kurstext v3.0.6, Kapitel 5, Seiten 113–149.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Rahmen und Aufbau</button>
+    <button type="button" class="tab" data-stufe="2">2 Konstanten und Variablen</button>
+    <button type="button" class="tab" data-stufe="3">3 Rateschleife</button>
+    <button type="button" class="tab" data-stufe="4">4 Statistik und Wertung</button>
+    <button type="button" class="tab" data-stufe="5">5 Mehrere Runden</button>
+    <button type="button" class="tab" data-stufe="6">6 Das ganze Programm</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Diese Übung setzt den Exkurs <a href="exkurs_von_problem_zu_code.html">Von der Problemstellung zum Go-Programm</a> fort. Dort wurde das Zahlenraten in fünf Stufen immer genauer festgelegt. Am Ende stand ein Ablauf, der jeden Schritt nennt. Hier wird dieser Ablauf zum Go-Programm.</p>
+
+    <h3>Was das Programm tun soll</h3>
+    <ul>
+      <li><strong>Zahl wählen:</strong> Das Programm wählt in jeder Runde eine Zufallszahl von 1 bis 100.</li>
+      <li><strong>Raten lassen:</strong> Der Spieler hat höchstens 7 Versuche. Nach jedem Tipp meldet das Programm „zu klein“, „zu groß“ oder „richtig“.</li>
+      <li><strong>Runde beenden:</strong> Nach einem Treffer nennt das Programm die Zahl der Versuche. Nach sieben Fehlversuchen nennt es die gesuchte Zahl.</li>
+      <li><strong>Mitzählen:</strong> Über alle Runden zählt das Programm die gewonnenen Runden, die verlorenen Runden und die Versuche aus den gewonnenen Runden.</li>
+      <li><strong>Bewerten:</strong> Aus dem Durchschnitt der Versuche ergibt sich eine Wertung: Meister, Experte, Fortgeschritten oder Anfänger.</li>
+      <li><strong>Weiterspielen:</strong> Nach jeder Runde fragt das Programm, ob der Spieler noch eine Runde will.</li>
+    </ul>
+
+    <h3>Womit das Programm auskommt</h3>
+    <p>Das ganze Programm steht in der Funktion <code>main</code>. Eigene Funktionen kommen nicht vor, sie werden erst in Kapitel 7 behandelt.</p>
+
+    <h3>Die sieben Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> legt den Rahmen an und plant den Aufbau in Worten.</li>
+      <li><strong>Schritt 2</strong> deklariert die Konstanten und die Variablen, die über alle Runden gelten.</li>
+      <li><strong>Schritt 3</strong> schreibt die Rateschleife für eine Runde.</li>
+      <li><strong>Schritt 4</strong> gibt die Statistik aus und bewertet den Durchschnitt.</li>
+      <li><strong>Schritt 5</strong> legt die Schleife für mehrere Runden um alles herum.</li>
+      <li><strong>Schritt 6</strong> zeigt das ganze Programm zum Kopieren.</li>
+      <li><strong>Schritt 7</strong> ordnet jeden Teil des Programms einem Abschnitt des Kurstexts zu.</li>
+    </ul>
+    <div class="hinweis">Das Programm ist mit Go 1.26 übersetzt und gespielt. Auf dieser Seite läuft kein Go. Wer spielen will, kopiert das Programm aus Schritt 6 in eine Datei und startet es selbst.</div>
+    <p class="quelle">Kurstext v3.0.6, Kapitel 5, Seiten 113–149. Das Programm ist ein eigenes Beispiel des Mentoriats und steht nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Rahmen und Aufbau</h2>
+    <p>Jedes Go-Programm beginnt mit dem gleichen Rahmen: der Paketklausel, den Importen und der Funktion <code>main</code>.</p>
+<pre class="code-block">package main
+
+import (
+    "fmt"
+    "math/rand"
+)
+
+func main() {
+    // hier entsteht das Programm
+}</pre>
+    <ul>
+      <li><strong><code>fmt</code>:</strong> das Paket für Ausgabe und Eingabe. Es wird in Abschnitt 3.3.7, Seite 36, und in Abschnitt 4.2, Seiten 53–58, behandelt.</li>
+      <li><strong><code>math/rand</code>:</strong> das Paket für Zufallszahlen. Es steht nicht im Kurstext. Das Programm braucht daraus eine einzige Funktion, sie wird in Schritt 3 erklärt.</li>
+    </ul>
+
+    <h3>Der Aufbau in Worten</h3>
+    <p>Bevor die erste Anweisung dasteht, lohnt sich ein Plan. Er folgt dem Ablauf aus Stufe 5 des Exkurses:</p>
+    <ol>
+      <li>Die festen Werte bekommen Namen: 7 Versuche, Zahlen von 1 bis 100.</li>
+      <li>Drei Zähler gelten über alle Runden: Siege, Niederlagen, Summe der Versuche.</li>
+      <li>Das Programm begrüßt den Spieler.</li>
+      <li>Für jede Runde wiederholt das Programm:
+        <ul>
+          <li>eine Zufallszahl wählen,</li>
+          <li>höchstens siebenmal einen Tipp lesen und vergleichen,</li>
+          <li>die Zähler nachführen,</li>
+          <li>die Statistik und die Wertung ausgeben,</li>
+          <li>fragen, ob noch eine Runde folgen soll.</li>
+        </ul>
+      </li>
+      <li>Das Programm verabschiedet sich.</li>
+    </ol>
+
+    <h3>Zwei Schleifen ineinander</h3>
+    <p>Im Plan stecken zwei Wiederholungen:</p>
+    <ul>
+      <li><strong>Äußere Schleife:</strong> Sie wiederholt die Runden, bis der Spieler aufhört.</li>
+      <li><strong>Innere Schleife:</strong> Sie wiederholt die Tipps einer Runde, höchstens siebenmal.</li>
+    </ul>
+    <p>Die innere Schleife steht im Schleifenrumpf der äußeren. Die Übung baut erst die innere Schleife und legt die äußere in Schritt 5 darum.</p>
+    <p class="quelle">Der Plan folgt dem Ablauf in Stufe 5 des Exkurses <a href="exkurs_von_problem_zu_code.html">Von der Problemstellung zum Go-Programm</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Konstanten und Variablen</h2>
+    <p>Zwischen den Importen und der Funktion <code>main</code> stehen die Deklarationen, die für das ganze Programm gelten:</p>
+<pre class="code-block">// Konstanten für Spielparameter
+const (
+    MAX_VERSUCHE = 7
+    MIN_ZAHL     = 1
+    MAX_ZAHL     = 100
+)
+
+// Globale Variablen für Spielstatistik
+var (
+    anzahlSiege       int
+    anzahlNiederlagen int
+    gesamtVersuche    int
+)</pre>
+
+    <h3>Die drei Konstanten</h3>
+    <ul>
+      <li><strong><code>MAX_VERSUCHE = 7</code>:</strong> so viele Tipps hat der Spieler in einer Runde.</li>
+      <li><strong><code>MIN_ZAHL = 1</code> und <code>MAX_ZAHL = 100</code>:</strong> die Grenzen des Zahlenbereichs.</li>
+    </ul>
+    <p>Die Zahlen 7, 1 und 100 kommen im Programm an mehreren Stellen vor. Mit Konstanten steht jeder Wert nur einmal da. Wer das Spiel auf zehn Versuche umstellen will, ändert eine Zeile. Dazu gibt es die Seite <a href="go_k5_konstanten_interaktiv.html">Konstanten</a>.</p>
+
+    <h3>Die drei Zähler</h3>
+    <ul>
+      <li><strong><code>anzahlSiege</code>:</strong> die Zahl der gewonnenen Runden.</li>
+      <li><strong><code>anzahlNiederlagen</code>:</strong> die Zahl der verlorenen Runden.</li>
+      <li><strong><code>gesamtVersuche</code>:</strong> die Summe der Versuche aus den gewonnenen Runden.</li>
+    </ul>
+    <p>Bei keiner der drei Variablen steht ein Wert. Jede bekommt deshalb den Null-Wert 0. Genau dort soll ein Zähler anfangen.</p>
+
+    <h3>Warum die Zähler nicht in der Schleife stehen</h3>
+    <p>Die drei Zähler müssen ihren Wert von Runde zu Runde behalten. Stünden ihre Deklarationen im Schleifenrumpf der äußeren Schleife, begännen sie in jeder Runde wieder bei 0.</p>
+    <p>Hier sind sie als globale Variablen deklariert, also außerhalb von <code>main</code>. So zeigt die Übung auch diese Art der Deklaration. Nötig wäre das nicht: Die drei Deklarationen könnten ebenso in <code>main</code> vor der äußeren Schleife stehen. Zu lokalen und globalen Variablen gibt es die Seite <a href="go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration</a>, Schritt 3.</p>
+
+    <h3>Die Begrüßung</h3>
+    <p>Die ersten Anweisungen in <code>main</code> nennen dem Spieler die Regeln:</p>
+<pre class="code-block">fmt.Println("🎯 Willkommen beim Zahlenraten-Spiel!")
+fmt.Printf("Rate eine Zahl zwischen %d und %d.\n", MIN_ZAHL, MAX_ZAHL)
+fmt.Printf("Du hast %d Versuche pro Runde.\n\n", MAX_VERSUCHE)</pre>
+    <p><code>fmt.Printf</code> setzt an jeder Stelle mit <code>%d</code> einen ganzzahligen Wert ein, der Reihe nach aus den Argumenten hinter dem Text. In der zweiten Zeile sind das die Konstanten <code>MIN_ZAHL</code> und <code>MAX_ZAHL</code>. <code>\n</code> steht für einen Zeilenumbruch.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.2, Seiten 124–126, Abschnitt 5.1.3, Seiten 119–120, und Abschnitt 4.2, Seiten 53–58.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Rateschleife</h2>
+    <p>Dieser Teil ist eine Runde des Spiels. Im fertigen Programm steht er im Schleifenrumpf der äußeren Schleife und ist dort um zwei Stufen eingerückt.</p>
+<pre class="code-block">// Generiere Zufallszahl für diese Runde
+zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL
+
+// Lokale Variablen für diese Runde
+versuchsZaehler := 0
+gewonnen := false
+
+// Schleife für die Rateversuche
+for versuchsZaehler &lt; MAX_VERSUCHE {
+    versuchsZaehler++
+
+    // Eingabe der geratenen Zahl
+    fmt.Printf("Versuch %d/%d - Deine Zahl: ", versuchsZaehler, MAX_VERSUCHE)
+    var geratenZahl int
+    fmt.Scan(&amp;geratenZahl)
+
+    // Prüfe die geratene Zahl
+    if geratenZahl == zielZahl {
+        fmt.Printf("🎉 Richtig! Die Zahl war %d!\n", zielZahl)
+        fmt.Printf("Du hast %d Versuche gebraucht.\n", versuchsZaehler)
+
+        // Aktualisiere Statistik
+        anzahlSiege++
+        gesamtVersuche += versuchsZaehler
+        gewonnen = true
+        break
+
+    } else if geratenZahl &lt; zielZahl {
+        fmt.Println("📈 Zu klein! Versuche eine größere Zahl.")
+    } else {
+        fmt.Println("📉 Zu groß! Versuche eine kleinere Zahl.")
+    }
+}
+
+// Falls nicht gewonnen: Statistik aktualisieren
+if !gewonnen {
+    fmt.Printf("😞 Leider verloren! Die Zahl war %d.\n", zielZahl)
+    anzahlNiederlagen++
+}</pre>
+
+    <h3>Die Zufallszahl</h3>
+    <p><code>rand.Intn(n)</code> liefert eine zufällige ganze Zahl von 0 bis n − 1. Das Programm braucht eine Zahl von 1 bis 100:</p>
+    <ul>
+      <li><strong><code>MAX_ZAHL-MIN_ZAHL+1</code></strong> ergibt 100. So viele Zahlen liegen im Bereich.</li>
+      <li><strong><code>rand.Intn(100)</code></strong> liefert eine Zahl von 0 bis 99.</li>
+      <li><strong><code>+ MIN_ZAHL</code></strong> schiebt den Bereich um 1 nach oben: 1 bis 100.</li>
+    </ul>
+
+    <h3>Zwei Variablen für die Runde</h3>
+    <ul>
+      <li><strong><code>versuchsZaehler</code>:</strong> zählt die Tipps dieser Runde und beginnt mit 0.</li>
+      <li><strong><code>gewonnen</code>:</strong> eine Flag-Variable. Sie beginnt mit <code>false</code> und hält fest, ob der Spieler getroffen hat.</li>
+    </ul>
+    <p>Beide sind mit <code>:=</code> im Schleifenrumpf der äußeren Schleife deklariert. Sie entstehen deshalb in jeder Runde neu, anders als die drei Zähler aus Schritt 2.</p>
+
+    <h3>Die Schleife</h3>
+    <ul>
+      <li><strong>Schleifenbedingung:</strong> <code>versuchsZaehler &lt; MAX_VERSUCHE</code>. Die Schleife läuft, solange weniger als 7 Tipps abgegeben sind.</li>
+      <li><strong>Erste Anweisung im Schleifenrumpf:</strong> <code>versuchsZaehler++</code>. Der Zähler steht damit auf der Nummer des Versuchs, der jetzt beginnt.</li>
+      <li><strong>Eingabe:</strong> <code>fmt.Scan(&amp;geratenZahl)</code> liest den Tipp.</li>
+    </ul>
+
+    <h3>Der Vergleich</h3>
+    <p>Eine if-Anweisung mit drei Zweigen vergleicht den Tipp mit der gesuchten Zahl:</p>
+    <ul>
+      <li><strong>Gleich:</strong> Das Programm gratuliert, erhöht <code>anzahlSiege</code>, addiert die Versuche dieser Runde zu <code>gesamtVersuche</code> und setzt <code>gewonnen</code> auf <code>true</code>. Dann verlässt <code>break</code> die Rateschleife.</li>
+      <li><strong>Kleiner:</strong> Das Programm meldet „Zu klein“.</li>
+      <li><strong>Sonst:</strong> Der Tipp ist größer. Das Programm meldet „Zu groß“.</li>
+    </ul>
+
+    <h3>Nach der Schleife</h3>
+    <p>Hinter der Schleife ist offen, wie sie geendet hat: durch <code>break</code> nach einem Treffer oder regulär nach dem siebten Fehlversuch. Die Flag-Variable <code>gewonnen</code> entscheidet es. <code>if !gewonnen</code> heißt: wenn nicht gewonnen. Dann nennt das Programm die Zahl und erhöht <code>anzahlNiederlagen</code>.</p>
+    <p>Das gleiche Muster aus Flag-Variable und <code>break</code> steht im Kurstext in Listing 5.7. Dazu gibt es die Seite <a href="go_k5_break_interaktiv.html#lauf">break-Anweisung</a>, Schritt 2.</p>
+
+    <h3>Zum Weiterdenken</h3>
+    <p>Im Kurstext steht, dass eine Schleife möglichst ohne <code>break</code> auskommen soll. Wie müsste der Kopf der Rateschleife lauten, damit das <code>break</code> entfallen kann? Die Antwort steht auf der Seite <a href="go_k5_break_interaktiv.html#flag">break-Anweisung</a>, Schritt 3.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.2, Seiten 116–118, Abschnitt 5.3, Seiten 126–128, Abschnitt 5.5.1, Seiten 129–132, Abschnitt 5.5.3.1, Seiten 138–142, und Abschnitt 5.5.3.3, Seiten 146–149.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Statistik und Wertung</h2>
+    <p>Nach jeder Runde gibt das Programm den Stand über alle Runden aus. Auch dieser Teil steht im fertigen Programm im Schleifenrumpf der äußeren Schleife, gleich hinter der Rateschleife.</p>
+<pre class="code-block">// Statistik-Ausgabe
+gesamtSpiele := anzahlSiege + anzahlNiederlagen
+
+fmt.Println("\n╔════════════════════════════╗")
+fmt.Println("║      📊 STATISTIK 📊       ║")
+fmt.Println("╚════════════════════════════╝")
+fmt.Printf("Gesamt gespielt: %d\n", gesamtSpiele)
+fmt.Printf("Gewonnen: %d\n", anzahlSiege)
+fmt.Printf("Verloren: %d\n", anzahlNiederlagen)
+
+// Berechne Durchschnitt nur wenn Siege vorhanden
+if anzahlSiege &gt; 0 {
+    durchschnitt := float64(gesamtVersuche) / float64(anzahlSiege)
+    fmt.Printf("Durchschn. Versuche: %.2f\n", durchschnitt)
+
+    // Kategorisierung mit Switch
+    var kategorie string
+    switch {
+    case durchschnitt &lt;= 3.0:
+        kategorie = "🏆 Meister - Hervorragend!"
+    case durchschnitt &lt;= 4.0:
+        kategorie = "⭐ Experte - Sehr gut!"
+    case durchschnitt &lt;= 5.5:
+        kategorie = "👍 Fortgeschritten - Gut gemacht!"
+    default:
+        kategorie = "🌱 Anfänger - Weiter üben!"
+    }
+    fmt.Printf("Kategorie: %s\n", kategorie)
+} else {
+    fmt.Println("Noch keine Siege!")
+}</pre>
+
+    <h3>Der Durchschnitt</h3>
+    <ul>
+      <li><strong>Nur mit Siegen:</strong> Der Durchschnitt ist die Summe der Versuche geteilt durch die Zahl der Siege. Ohne Sieg gibt es nichts zu teilen. Die if-Anweisung <code>if anzahlSiege &gt; 0</code> fängt diesen Fall ab, der else-Zweig meldet „Noch keine Siege!“.</li>
+      <li><strong>Mit Konversion:</strong> <code>gesamtVersuche</code> und <code>anzahlSiege</code> haben den Typ <code>int</code>. Go teilt ganze Zahlen ohne Rest: 7 Versuche in 2 gewonnenen Runden ergäben 3. Erst <code>float64(…)</code> macht aus beiden Werten Gleitkommazahlen, und die Division ergibt 3,5.</li>
+      <li><strong>Mit zwei Nachkommastellen:</strong> <code>%.2f</code> gibt eine Gleitkommazahl mit zwei Stellen hinter dem Punkt aus.</li>
+    </ul>
+    <p>Zur Division ganzer Zahlen gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung</a>, Schritt 4.</p>
+
+    <h3>Die Wertung</h3>
+    <p>Eine switch-Anweisung ohne switch-Ausdruck bewertet den Durchschnitt. Go nimmt den ersten case-Ausdruck, der <code>true</code> ergibt:</p>
+    <table class="text">
+      <tr><th>Durchschnitt der Versuche</th><th>Wertung</th></tr>
+      <tr><td>Der Durchschnitt liegt bei höchstens 3,0.</td><td>Meister</td></tr>
+      <tr><td>Der Durchschnitt liegt über 3,0 und bei höchstens 4,0.</td><td>Experte</td></tr>
+      <tr><td>Der Durchschnitt liegt über 4,0 und bei höchstens 5,5.</td><td>Fortgeschritten</td></tr>
+      <tr><td>Der Durchschnitt liegt über 5,5.</td><td>Anfänger</td></tr>
+    </table>
+    <p>Die Reihenfolge der case-Abschnitte ist hier entscheidend. Ein Durchschnitt von 2,5 erfüllt alle drei Bedingungen. Weil <code>durchschnitt &lt;= 3.0</code> zuerst geprüft wird, lautet die Wertung „Meister“. Dazu gibt es die Seite <a href="go_k5_switch_interaktiv.html#tagless">switch-Anweisung</a>, Schritt 3.</p>
+
+    <h3>Zwei Einzelheiten</h3>
+    <ul>
+      <li><strong><code>var kategorie string</code>:</strong> Die Variable ist ausführlich und ohne Wert deklariert. Ihren Wert bekommt sie erst in der switch-Anweisung.</li>
+      <li><strong><code>gesamtSpiele</code>:</strong> Die Zahl der gespielten Runden wird nicht eigens mitgezählt. Sie ist die Summe aus Siegen und Niederlagen.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.7, Seiten 109–111, Abschnitt 5.5.1, Seiten 129–132, und Abschnitt 5.5.2, Seiten 133–137.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Mehrere Runden</h2>
+    <p>Jetzt kommt die äußere Schleife um die Teile aus Schritt 3 und Schritt 4. Sie steht in <code>main</code> hinter der Begrüßung:</p>
+<pre class="code-block">for {
+    // hier steht die Rateschleife aus Schritt 3
+    // hier steht die Statistik aus Schritt 4
+
+    fmt.Print("\nNochmal spielen? (j/n): ")
+    var antwort string
+    fmt.Scan(&amp;antwort)
+
+    if antwort == "n" || antwort == "N" {
+        break
+    }
+
+    fmt.Print("\n--- Neue Runde ---\n")
+}
+
+fmt.Println("\n👋 Vielen Dank fürs Spielen! Bis zum nächsten Mal!")</pre>
+
+    <h3>Eine Schleife ohne Bedingung</h3>
+    <p>Wie viele Runden gespielt werden, entscheidet der Spieler am Ende jeder Runde. Am Anfang der Schleife gibt es deshalb nichts zu prüfen. <code>for {</code> ohne Schleifenbedingung wiederholt den Schleifenrumpf, bis ein <code>break</code> die Schleife verlässt. Dazu gibt es die Seite <a href="go_k5_for_klausel_interaktiv.html#varianten">for-Anweisung mit for-Klausel</a>, Schritt 4.</p>
+
+    <h3>Die Frage am Ende der Runde</h3>
+    <ul>
+      <li><strong><code>var antwort string</code>:</strong> nimmt die Antwort des Spielers auf.</li>
+      <li><strong><code>antwort == "n" || antwort == "N"</code>:</strong> Die Bedingung ist erfüllt, wenn der Spieler ein kleines oder ein großes n eingibt. Der Operator <code>||</code> bedeutet „oder“.</li>
+      <li><strong><code>break</code>:</strong> verlässt die äußere Schleife. Das Programm macht mit der Verabschiedung weiter.</li>
+    </ul>
+    <p>Jede andere Eingabe startet eine neue Runde, auch ein Tippfehler.</p>
+
+    <h3>Zwei break, zwei Schleifen</h3>
+    <p>Das Programm enthält zwei <code>break</code>. Jedes verlässt nur die Schleife, in der es unmittelbar steht:</p>
+    <ul>
+      <li><strong>Das <code>break</code> nach dem Treffer</strong> steht in der Rateschleife und beendet die Runde. Die äußere Schleife läuft weiter.</li>
+      <li><strong>Das <code>break</code> nach der Antwort „n“</strong> steht nur in der äußeren Schleife und beendet das Spiel.</li>
+    </ul>
+    <p>Dazu gibt es die Seite <a href="go_k5_break_interaktiv.html#wann">break-Anweisung</a>, Schritt 4.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 142–146, mit dem Expertenwissen 5.16, Abschnitt 5.5.3.3, Seiten 146–149, und Abschnitt 4.5, Seite 93.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Das ganze Programm</h2>
+    <p>Die Knöpfe markieren, wo die Teile aus den Schritten 2 bis 5 im Programm stehen.</p>
+    <div class="zeile" id="p-teile">
+      <button type="button" data-teil="0">nichts markieren</button>
+      <button type="button" data-teil="1">Konstanten und Variablen</button>
+      <button type="button" data-teil="2">Rateschleife</button>
+      <button type="button" data-teil="3">Statistik und Wertung</button>
+      <button type="button" data-teil="4">äußere Schleife</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="p-kopieren">Programm kopieren</button>
+      <span class="legende" id="p-kopiert"></span>
+    </div>
+    <ol class="programm" id="p-programm"></ol>
+
+    <h3>So startest du das Programm</h3>
+    <ol>
+      <li>Lege einen leeren Ordner an und darin eine Datei <code>zahlenraten.go</code>.</li>
+      <li>Kopiere das Programm in die Datei und speichere sie.</li>
+      <li>Öffne ein Terminal in diesem Ordner und gib ein: <code>go run zahlenraten.go</code></li>
+    </ol>
+    <p>Das Programm fragt dann nach dem ersten Tipp.</p>
+
+    <h3>Zum Ausprobieren</h3>
+    <ul>
+      <li>Tippe immer auf die Mitte des Bereichs, der noch möglich ist. Gewinnst du jede Runde?</li>
+      <li>Ändere <code>MAX_VERSUCHE</code> auf 5. An wie vielen Stellen musst du etwas ändern?</li>
+      <li>Verliere eine Runde mit Absicht. Stimmen die Zähler danach?</li>
+    </ul>
+    <p class="quelle">Das Programm ist ein eigenes Beispiel des Mentoriats. Es ist mit Go 1.26 übersetzt und gespielt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Jeder Teil des Programms gehört zu einem Abschnitt des Kurstexts. Zu den meisten gibt es eine eigene Seite.</p>
+    <table class="text">
+      <tr><th>Stelle im Programm</th><th>Was dort steht</th><th>Abschnitt im Kurstext</th><th>Seite dazu</th></tr>
+      <tr><td><code>const ( MAX_VERSUCHE = 7 … )</code></td><td>Dort stehen drei Konstanten in einer Deklaration.</td><td>5.2, Seiten 124–126</td><td><a href="go_k5_konstanten_interaktiv.html">Konstanten</a></td></tr>
+      <tr><td><code>var ( anzahlSiege int … )</code></td><td>Dort stehen drei globale Variablen mit Null-Wert.</td><td>5.1.1, Seiten 114–116, und 5.1.3, Seiten 119–120</td><td><a href="go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration</a></td></tr>
+      <tr><td><code>zielZahl := …</code>, <code>versuchsZaehler := 0</code></td><td>Dort stehen kurze Variablendeklarationen.</td><td>5.1.2, Seiten 116–118</td><td><a href="go_k5_variablen_deklaration_interaktiv.html#kurz">Variablendeklaration</a>, Schritt 2</td></tr>
+      <tr><td><code>gewonnen = true</code>, <code>gesamtVersuche += versuchsZaehler</code>, <code>anzahlSiege++</code></td><td>Dort stehen eine Zuweisung, ein kombinierter Operator und eine Inkrementierungs-Anweisung.</td><td>5.3, Seiten 126–128</td><td><a href="go_k5_zuweisungen_interaktiv.html">Zuweisungen</a></td></tr>
+      <tr><td><code>if … else if … else</code></td><td>Dort vergleicht das Programm den Tipp mit der Zahl.</td><td>5.5.1, Seiten 129–132</td><td><a href="go_k5_if_anweisungen_interaktiv.html">if-Anweisung</a></td></tr>
+      <tr><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>Dort bewertet das Programm den Durchschnitt.</td><td>5.5.2, Seiten 133–137</td><td><a href="go_k5_switch_interaktiv.html">switch-Anweisung</a></td></tr>
+      <tr><td><code>for versuchsZaehler &lt; MAX_VERSUCHE {</code></td><td>Dort wiederholt das Programm die Tipps einer Runde.</td><td>5.5.3.1, Seiten 138–142</td><td><a href="go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a></td></tr>
+      <tr><td><code>for {</code></td><td>Dort wiederholt das Programm die Runden.</td><td>5.5.3.2, Seiten 142–146, Expertenwissen 5.16</td><td><a href="go_k5_for_klausel_interaktiv.html#varianten">for-Anweisung mit for-Klausel</a>, Schritt 4</td></tr>
+      <tr><td><code>break</code></td><td>Dort verlässt das Programm eine Schleife sofort.</td><td>5.5.3.3, Seiten 146–149</td><td><a href="go_k5_break_interaktiv.html">break-Anweisung</a></td></tr>
+      <tr><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>Dort wandelt das Programm zwei ganze Zahlen um, bevor es teilt.</td><td>4.7, Seiten 109–111</td><td><a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a></td></tr>
+      <tr><td><code>antwort == "n" || antwort == "N"</code>, <code>!gewonnen</code></td><td>Dort verknüpft das Programm Wahrheitswerte.</td><td>4.5, Seite 93</td><td><a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a></td></tr>
+      <tr><td><code>fmt.Printf("… %d …", …)</code></td><td>Dort gibt das Programm Text mit eingesetzten Werten aus.</td><td>4.2, Seiten 53–58</td><td>Dazu gibt es noch keine Seite.</td></tr>
+    </table>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong><code>rand.Intn</code>:</strong> Das Paket <code>math/rand</code> kommt im Kurstext nicht vor.</li>
+    </ul>
+
+    <p>So geht es weiter: Den gleichen Weg von der Idee zum Programm geht die Übung <a href="../kap6-arrays/157_go_k6_BubbleSort.html">Sortieren mit Arrays und Indizes</a> in Kapitel 6.</p>
+    <p class="quelle">Kurstext v3.0.6, Kapitel 4 und 5.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …programmieruebung.html#raten
+  var ANKER = ["worum", "rahmen", "daten", "raten", "wertung", "runden", "programm", "kurstext"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 6: das ganze Programm, Zeile für Zeile ----
+  // Das Programm ist mit Go 1.26 übersetzt und gespielt. Die Teile nennen die Zeilen, die ein Knopf markiert.
+
+  var PROGRAMM = ["package main", "", "import (", "    \"fmt\"", "    \"math/rand\"", ")", "", "// Konstanten für Spielparameter", "const (", "    MAX_VERSUCHE = 7", "    MIN_ZAHL     = 1", "    MAX_ZAHL     = 100", ")", "", "// Globale Variablen für Spielstatistik", "var (", "    anzahlSiege       int", "    anzahlNiederlagen int", "    gesamtVersuche    int", ")", "", "func main() {", "    fmt.Println(\"🎯 Willkommen beim Zahlenraten-Spiel!\")", "    fmt.Printf(\"Rate eine Zahl zwischen %d und %d.\\n\", MIN_ZAHL, MAX_ZAHL)", "    fmt.Printf(\"Du hast %d Versuche pro Runde.\\n\\n\", MAX_VERSUCHE)", "", "    // Hauptschleife für mehrere Spielrunden", "    for {", "        // Generiere Zufallszahl für diese Runde", "        zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL", "", "        // Lokale Variablen für diese Runde", "        versuchsZaehler := 0", "        gewonnen := false", "", "        // Schleife für die Rateversuche", "        for versuchsZaehler < MAX_VERSUCHE {", "            versuchsZaehler++", "", "            // Eingabe der geratenen Zahl", "            fmt.Printf(\"Versuch %d/%d - Deine Zahl: \", versuchsZaehler, MAX_VERSUCHE)", "            var geratenZahl int", "            fmt.Scan(&geratenZahl)", "", "            // Prüfe die geratene Zahl", "            if geratenZahl == zielZahl {", "                fmt.Printf(\"🎉 Richtig! Die Zahl war %d!\\n\", zielZahl)", "                fmt.Printf(\"Du hast %d Versuche gebraucht.\\n\", versuchsZaehler)", "", "                // Aktualisiere Statistik", "                anzahlSiege++", "                gesamtVersuche += versuchsZaehler", "                gewonnen = true", "                break", "", "            } else if geratenZahl < zielZahl {", "                fmt.Println(\"📈 Zu klein! Versuche eine größere Zahl.\")", "            } else {", "                fmt.Println(\"📉 Zu groß! Versuche eine kleinere Zahl.\")", "            }", "        }", "", "        // Falls nicht gewonnen: Statistik aktualisieren", "        if !gewonnen {", "            fmt.Printf(\"😞 Leider verloren! Die Zahl war %d.\\n\", zielZahl)", "            anzahlNiederlagen++", "        }", "", "        // Statistik-Ausgabe", "        gesamtSpiele := anzahlSiege + anzahlNiederlagen", "", "        fmt.Println(\"\\n╔════════════════════════════╗\")", "        fmt.Println(\"║      📊 STATISTIK 📊       ║\")", "        fmt.Println(\"╚════════════════════════════╝\")", "        fmt.Printf(\"Gesamt gespielt: %d\\n\", gesamtSpiele)", "        fmt.Printf(\"Gewonnen: %d\\n\", anzahlSiege)", "        fmt.Printf(\"Verloren: %d\\n\", anzahlNiederlagen)", "", "        // Berechne Durchschnitt nur wenn Siege vorhanden", "        if anzahlSiege > 0 {", "            durchschnitt := float64(gesamtVersuche) / float64(anzahlSiege)", "            fmt.Printf(\"Durchschn. Versuche: %.2f\\n\", durchschnitt)", "", "            // Kategorisierung mit Switch", "            var kategorie string", "            switch {", "            case durchschnitt <= 3.0:", "                kategorie = \"🏆 Meister - Hervorragend!\"", "            case durchschnitt <= 4.0:", "                kategorie = \"⭐ Experte - Sehr gut!\"", "            case durchschnitt <= 5.5:", "                kategorie = \"👍 Fortgeschritten - Gut gemacht!\"", "            default:", "                kategorie = \"🌱 Anfänger - Weiter üben!\"", "            }", "            fmt.Printf(\"Kategorie: %s\\n\", kategorie)", "        } else {", "            fmt.Println(\"Noch keine Siege!\")", "        }", "", "        // Frage nach erneutem Spiel", "        fmt.Print(\"\\nNochmal spielen? (j/n): \")", "        var antwort string", "        fmt.Scan(&antwort)", "", "        // Beende Schleife bei 'n' oder 'N'", "        if antwort == \"n\" || antwort == \"N\" {", "            break", "        }", "", "        fmt.Print(\"\\n--- Neue Runde ---\\n\")", "    }", "", "    fmt.Println(\"\\n👋 Vielen Dank fürs Spielen! Bis zum nächsten Mal!\")", "}"];
+  var TEILE = [
+    { name: "nichts markieren", von: 0, bis: 0, wo: "" },
+    { name: "Konstanten und Variablen", von: 8, bis: 20, wo: "Schritt 2" },
+    { name: "Rateschleife", von: 29, bis: 67, wo: "Schritt 3" },
+    { name: "Statistik und Wertung", von: 69, bis: 99, wo: "Schritt 4" },
+    { name: "äußere Schleife", von: 28, bis: 112, wo: "Schritt 5" }
+  ];
+  var teil = 0;
+  function zeigeProgramm() {
+    var t = TEILE[teil];
+    $("p-programm").innerHTML = PROGRAMM.map(function (z, i) {
+      return "<li" + (i + 1 >= t.von && i + 1 <= t.bis ? " class=\"teil\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z) + "</li>";
+    }).join("");
+    jeder("#p-teile button", function (k) { k.classList.toggle("haupt", Number(k.dataset.teil) === teil); });
+  }
+  function kopiere() {
+    var text = PROGRAMM.join("\n") + "\n", hinweis = $("p-kopiert");
+    function fertig() { hinweis.textContent = "Das Programm liegt in der Zwischenablage."; }
+    function ersatz() {
+      var feld = document.createElement("textarea");
+      feld.value = text;
+      document.body.appendChild(feld);
+      feld.select();
+      document.execCommand("copy");
+      feld.remove();
+      fertig();
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(fertig, ersatz); else ersatz();
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-teil]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.teil !== undefined) { teil = Number(d.teil); zeigeProgramm(); }
+    melde(false);
+  });
+  $("p-kopieren").addEventListener("click", kopiere);
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Rahmen und Aufbau", "Schritt 2: Konstanten und Variablen", "Schritt 3: Rateschleife", "Schritt 4: Statistik und Wertung", "Schritt 5: Mehrere Runden", "Schritt 6: Das ganze Programm", "Schritt 7: Bezug zum Kurstext"];
+
+  function standSaetze() {
+    if (stufe !== 6) return ["Dieser Schritt hat keine Demo. Auf der Seite läuft kein Go, das Spiel lässt sich hier nicht spielen."];
+    var t = TEILE[teil];
+    return [teil === 0 ? "Im Programm ist nichts markiert." : "Gelb markiert ist der Teil „" + t.name + "“: die Zeilen " + t.von + " bis " + t.bis + ". Er wird in " + t.wo + " erklärt.",
+      "Markieren lassen sich nur vier Teile: Konstanten und Variablen (Zeilen 8 bis 20), Rateschleife (Zeilen 29 bis 67), Statistik und Wertung (Zeilen 69 bis 99), äußere Schleife (Zeilen 28 bis 112).",
+      "Das Programm hat " + PROGRAMM.length + " Zeilen. Auf der Seite läuft kein Go, das Spiel lässt sich hier nicht spielen."];
+  }
+  function kurz() { return stufe === 6 && teil > 0 ? "markiert: " + TEILE[teil].name : ""; }
+  // Programmzeilen: in Schritt 6 das ganze Programm mit Zeilennummern, sonst die Codeblöcke des Schritts
+  function zeilen() {
+    if (stufe === 6) return PROGRAMM.map(function (z, i) { return (i + 1 < 10 ? "  " : i + 1 < 100 ? " " : "") + (i + 1) + "  " + z; });
+    return Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre")).reduce(function (alle, p) {
+      return alle.concat(alle.length ? ["---"] : [], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+  }
+
+  zeigeProgramm();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Programmierübung: Zahlenraten mit Statistik",
+    thema: "Programmierübung Zahlenraten, Konstanten, globale Variablen, for-Anweisung, if-Anweisung, switch-Anweisung, break, Typkonvertierung",
+    bezug: "Kurstext v3.0.6, Kapitel 5, Seiten 113–149",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .hinweis, table.text",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer im ganzen Programm:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum steht versuchsZaehler++ am Anfang der Schleife?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
