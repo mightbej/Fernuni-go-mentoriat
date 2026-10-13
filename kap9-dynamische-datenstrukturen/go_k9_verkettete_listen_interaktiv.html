@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verkettete Listen in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    /* Die Liste als Kette: der Kopf und je Element ein Kasten mit Wert und Anfangsadresse */
+    .kette { display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:10px 0;font-family:Consolas,"Courier New",monospace; }
+    .wagen { border:2px solid var(--blau);border-radius:8px;background:#fff;padding:4px 9px;text-align:center;min-width:3.4em;font-weight:700; }
+    .wagen small { display:block;font-size:.72rem;font-weight:400;color:var(--muted); }
+    .wagen.kopf { border-color:#7c3aed;background:#f5f3ff; }
+    .wagen.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .wagen.akt { box-shadow:0 0 0 3px var(--accent); }
+    .wagen.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .pfeil { color:var(--muted); }
+    .kasten .feld span.frei { color:var(--muted);border-style:dashed; }
+    .kasten .feld span.neu { background:var(--aktiv-bg);border-color:var(--aktiv);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Verkettete Listen in Go</h1>
+    <p>In einem sortierten Array rücken beim Einfügen viele Elemente einen Platz weiter. In einer verketteten Liste ändern sich zwei Zeiger, und jedes Element bleibt an seinem Platz im Speicher.</p>
+    <p>Kurstext v3.0.6, Abschnitt 9.1 und 9.2, Seiten 227–236.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Einfügen im Array</button>
+    <button type="button" class="tab" data-stufe="2">2 Zwei Zuweisungen</button>
+    <button type="button" class="tab" data-stufe="3">3 Der Typ der Liste</button>
+    <button type="button" class="tab" data-stufe="4">4 Durchlaufen</button>
+    <button type="button" class="tab" data-stufe="5">5 Einfügen</button>
+    <button type="button" class="tab" data-stufe="6">6 Liste und Array</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Eine <strong>dynamische Datenstruktur</strong> ändert sich, während das Programm läuft: Sie wächst mit jedem Element, das dazukommt. Ein Array kann das nicht, seine Länge steht bei der Übersetzung fest.</p>
+    <p>Die erste dynamische Datenstruktur des Kurstexts ist die <strong>einfach verkettete Liste</strong>. Jedes Element ist ein Verbund mit einem Wert und einem Zeiger auf das nächste Element. Im Kurstext steht dafür ein Güterzug: Jeder Wagon hängt mit einer Kupplung am nächsten.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 8.3.1, rekursive Verbund-Typen:</strong> Die Lektion <a href="../kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a> zeigt einen Verbund mit einem Zeiger auf den eigenen Typ und eine Schleife, die bis <code>nil</code> läuft. Darauf baut diese Lektion auf.</li>
+      <li><strong>Abschnitt 8.2.4, Zeiger auf Verbünde:</strong> Die Lektion <a href="../kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde</a> zeigt <code>&amp;person{…}</code> und die Kurzschreibweise <code>p.feld</code>.</li>
+      <li><strong>Abschnitt 7.4, Zeiger und <code>nil</code>:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
+      <li><strong>Kapitel 6, Arrays:</strong> Die Lektion <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Du fügst einen Wert in ein sortiertes Array ein und zählst, wie viele Elemente weiterrücken.</li>
+      <li><strong>Schritt 2:</strong> Du hängst ein Element in eine Kette ein. Zwei Zuweisungen genügen, ihre Reihenfolge entscheidet.</li>
+      <li><strong>Schritt 3:</strong> Die zwei Verbund-Typen der Liste und die Liste im Hauptspeicher.</li>
+      <li><strong>Schritt 4:</strong> Eine Schleife läuft von Element zu Element, bis der Zeiger <code>nil</code> ist.</li>
+      <li><strong>Schritt 5:</strong> Du baust mit <code>elementEinfügen</code> die Liste des Kurstexts auf, Wert für Wert.</li>
+      <li><strong>Schritt 6:</strong> Liste und Array im Vergleich.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Einfügen im Array</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Array enthält sortiert die sechs Werte 3, 35, 42, 99, 111 und 176. Der Wert 1 soll dazu, das Array soll sortiert bleiben. Wie viele Elemente bekommen einen neuen Platz?
+          <details><summary>Auflösung</summary>Alle sechs. Jedes rückt einen Platz nach hinten, das letzte zuerst.</details></li>
+      </ol>
+    </div>
+    <p>Im Kurstext steht dafür ein Schrank mit Schubladen: In jeder Schublade liegen die Unterlagen einer Versicherung, sortiert nach der Versicherungsnummer. Kommt ein Vertrag mit einer kleinen Nummer dazu, wandern die Unterlagen aller größeren Nummern eine Schublade weiter.</p>
+    <p>Einem sortierten Array geht es genauso. Das Array hier hat acht Plätze, sechs sind belegt. Wähle den Wert, der dazukommt.</p>
+    <div class="zeile" id="a-wahl"></div>
+    <div id="a-bild"></div>
+    <div class="auskunft" id="a-urteil"></div>
+
+    <h3>Was daran stört</h3>
+    <ul>
+      <li><strong>Aufwand:</strong> Im ungünstigsten Fall rücken alle Elemente weiter, im Durchschnitt die Hälfte.</li>
+      <li><strong>Große Elemente:</strong> Ist jedes Element ein Verbund mit vielen Feldern, schreibt das Programm bei jedem Weiterrücken alle Felder neu.</li>
+      <li><strong>Feste Länge:</strong> Das Einfügen geht nur, solange das Array freie Plätze hat.</li>
+    </ul>
+    <p>Am Ende von Abschnitt 9.1 steht ein erster Ausweg: Im Array liegen nur der Schlüsselwert und ein Zeiger auf einen Verbund mit den übrigen Daten. Dann rücken nur diese kleinen Elemente weiter. Die verkettete Liste geht einen Schritt weiter und kommt ohne Weiterrücken aus.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.1, Seiten 227–229. Die Zahlen 3 bis 176 sind die Containernummern aus Abbildung 9.2. Das Array mit acht Plätzen ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Zwei Zuweisungen</h3>
+    <p>Im Kurstext steht für die verkettete Liste ein Güterzug. Auf jedem Wagon steht ein Container mit einer Nummer, und die Wagons sind nach dieser Nummer sortiert: 3, 35, 42, 99, 111, 176. Ein weiterer Container mit der Nummer 50 soll mit.</p>
+    <p>Ein Eisenbahner lädt dafür keinen Container um. Er trennt den Zug hinter dem Wagon 42, hängt einen Wagon mit dem neuen Container an und kuppelt den Rest des Zugs wieder an.</p>
+    <p>So übersetzt sich der Zug in das Programm:</p>
+    <ul>
+      <li><strong>Wagon:</strong> Ein Element der Liste.</li>
+      <li><strong>Containernummer:</strong> Der Wert des Elements.</li>
+      <li><strong>Kupplung:</strong> Ein Zeiger im Element. Er enthält die Adresse des nächsten Elements.</li>
+      <li><strong>Letzter Wagon:</strong> Sein Zeiger ist <code>nil</code>, es folgt kein Element.</li>
+    </ul>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Der neue Wagon 50 soll zwischen die Wagons 42 und 99. Im Programm sind dafür zwei Zeiger zu setzen. Angenommen, zuerst bekommt der Wagon 42 den neuen Wagon angekuppelt. Was geschieht im Programm mit dem Wagon 99?
+          <details><summary>Auflösung</summary>Das Programm findet ihn nicht mehr. Die Adresse des Wagons 99 stand nur im Zeiger des Wagons 42, und dort steht jetzt die Adresse des neuen Wagons. Bei der Eisenbahn stünde der Rest des Zugs noch auf dem Gleis. Im Speicher ist ein Element ohne Adresse nicht wiederzufinden.</details></li>
+      </ol>
+    </div>
+    <p>Die zwei Demos zeigen einen kurzen Zug als Kette mit den drei Elementen 35, 42 und 99. Das neue Element mit dem Wert 50 gehört hinter das Element 42. Der Zeiger <code>aktuelles</code> zeigt schon auf dieses Element.</p>
+
+    <h3>Die Reihenfolge des Kurstexts</h3>
+    <ol class="programm" id="r-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="r-weiter">nächste Anweisung</button>
+      <button type="button" id="r-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="r-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="r-bild"></div>
+    <div id="r-speicher"></div>
+    <div class="auskunft" id="r-urteil"></div>
+
+    <h3>Die umgekehrte Reihenfolge</h3>
+    <p>Hier stehen die Zeilen 2 und 3 in der anderen Reihenfolge.</p>
+    <ol class="programm" id="x-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="x-weiter">nächste Anweisung</button>
+      <button type="button" id="x-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="x-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="x-bild"></div>
+    <div id="x-speicher"></div>
+    <div class="auskunft" id="x-urteil"></div>
+    <div class="hinweis">Erst bekommt das neue Element seinen Nachfolger, dann wird es selbst angehängt. Wer zuerst <code>aktuelles.nächstes</code> überschreibt, verliert die Adresse des Rests der Kette.</div>
+
+    <h3>Die vier Zeiger des Kurstexts</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Zeiger im Kurstext</th><th>Ausdruck im Programm</th><th>Worauf der Zeiger zeigt</th></tr></thead>
+      <tbody>
+        <tr><td>z<sub>1</sub></td><td><code>aktuelles</code></td><td>Der Zeiger zeigt auf den Wagon, hinter den der neue Wagon gehört.</td></tr>
+        <tr><td>z<sub>2</sub></td><td><code>aktuelles.nächstes</code></td><td>Der Zeiger zeigt auf den Wagon, der bisher folgt.</td></tr>
+        <tr><td>z<sub>3</sub></td><td><code>neues</code></td><td>Der Zeiger zeigt auf den neuen Wagon.</td></tr>
+        <tr><td>z<sub>4</sub></td><td><code>neues.nächstes</code></td><td>Der Zeiger ist noch <code>nil</code> und bekommt den Wert von z<sub>2</sub>.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–231, mit Abbildung 9.3. Die drei Zeilen stehen in der Funktion <code>elementEinfügen</code> in Listing 9.1. Die umgekehrte Reihenfolge ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Der Typ der Liste</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Eine Liste enthält die Werte 2, 8, 12 und 17 in dieser Reihenfolge. Liegen ihre Elemente auch im Hauptspeicher in dieser Reihenfolge?
+          <details><summary>Auflösung</summary>Das muss nicht sein. Jedes Element liegt dort, wo beim Erzeugen Platz war. Die Reihenfolge der Liste steht allein in den Zeigern.</details></li>
+      </ol>
+    </div>
+    <p>Die Liste des Kurstexts braucht zwei Verbund-Typen:</p>
+    <pre class="code-block">// Verbund-Typ für ein Listen-Element
+type listenElement struct {
+    wert     int
+    nächstes *listenElement
+}
+
+// Verbund-Typ für eine Liste
+type sortierteListe struct {
+    kopf *listenElement
+}</pre>
+    <ul>
+      <li><strong><code>listenElement</code>:</strong> Ein Element der Liste, im Bild des Kurstexts ein Wagon. Das Feld <code>wert</code> ist die Containernummer, das Feld <code>nächstes</code> die Kupplung. Der Typ ist ein rekursiver Verbund-Typ.</li>
+      <li><strong><code>sortierteListe</code>:</strong> Die Liste selbst, im Bild des Kurstexts die Lokomotive. Ihr einziges Feld <code>kopf</code> zeigt auf das erste Element. Bei einer leeren Liste ist <code>kopf</code> gleich <code>nil</code>.</li>
+    </ul>
+    <p>Eine leere Liste entsteht so:</p>
+    <pre class="code-block">liste := &amp;sortierteListe{} // leere Liste erzeugen</pre>
+    <p>Die Variable <code>liste</code> ist ein Zeiger auf einen Verbund ohne Namen. Einen solchen Verbund nennt der Kurstext anonyme Variable. Auch jedes Element der Liste ist eine anonyme Variable, erzeugt mit <code>&amp;listenElement{wert: neuerWert}</code>.</p>
+
+    <h3>Die Liste im Hauptspeicher</h3>
+    <p>Das Bild zeigt die Liste, nachdem das Programm des Kurstexts die Werte 8, 17, 12 und 2 eingefügt hat. Oben steht die Liste als Kette, darunter stehen die Blöcke im Hauptspeicher des Modells. Die Adressen sind erfunden.</p>
+    <div id="t-kette"></div>
+    <div class="blockreihe" id="t-speicher"></div>
+    <ul>
+      <li><strong>Größe:</strong> Ein <code>int</code> und ein Zeiger belegen im Modell je 8 Zellen. Ein <code>listenElement</code> belegt 16 Zellen, eine <code>sortierteListe</code> 8.</li>
+      <li><strong>Reihenfolge im Speicher:</strong> Die Elemente liegen in der Reihenfolge, in der sie erzeugt wurden: 8, 17, 12, 2.</li>
+      <li><strong>Reihenfolge der Liste:</strong> Sie ergibt sich aus den Zeigern. <code>kopf</code> enthält 248, dort liegt die 2. Deren Feld <code>nächstes</code> enthält 200, dort liegt die 8. So geht es weiter bis zum Element 17 mit <code>nil</code>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 231–233. Die zwei Typen und die leere Liste stammen aus Listing 9.1. Die Adressen und die Größen in Zellen gehören zum Modell dieser HTML-Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Durchlaufen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>In einem Array führt <code>a[2]</code> ohne Umweg zum dritten Element. Wie kommt ein Programm zum dritten Element einer verketteten Liste?
+          <details><summary>Auflösung</summary>Nur über die zwei Elemente davor. Es beginnt bei <code>kopf</code> und folgt zweimal dem Feld <code>nächstes</code>.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion <code>listeAusgeben</code> gibt alle Werte der Liste aus. Sie bekommt einen Zeiger auf die Liste. Ihre Variable <code>element</code> ist ein Zeiger, der von Element zu Element wandert.</p>
+    <p>Die Liste enthält hier die Werte 2, 8, 12 und 17, wie in Schritt 3.</p>
+    <ol class="programm" id="d-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="d-weiter">nächste Anweisung</button>
+      <button type="button" id="d-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="d-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="d-bild"></div>
+    <div id="d-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="d-ausgabe"></div>
+    <div class="auskunft" id="d-urteil"></div>
+    <p>Die Funktion <code>längeDerListe</code> läuft auf die gleiche Art durch die Liste und zählt dabei:</p>
+    <pre class="code-block">// liefert die Länge der Liste (d.h. die Anzahl ihrer Elemente) zurück
+func längeDerListe(liste *sortierteListe) int {
+    länge := 0
+    element := liste.kopf
+    for element != nil {
+        länge++
+        element = element.nächstes
+    }
+    return länge
+}</pre>
+    <p>Wie lang die Liste ist, steht in keinem Feld. Das Programm erfährt es nur, indem es alle Elemente besucht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Listing 9.1, Datei <code>sortierteListe.go</code>, Seiten 233–234. Beide Funktionen stammen aus dem Listing.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Einfügen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Liste enthält 2, 8, 12, 17 und 23. Der Wert 20 soll dazu. Bei welchem Element bleibt der Zeiger <code>aktuelles</code> stehen?
+          <details><summary>Auflösung</summary>Beim Element 17. Sein Nachfolger 23 ist nicht kleiner als 20, also gehört das neue Element zwischen 17 und 23.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion <code>elementEinfügen</code> fügt einen Wert so ein, dass die Liste aufsteigend sortiert bleibt. Sie unterscheidet zwei Fälle:</p>
+    <ul>
+      <li><strong>Am Anfang:</strong> Die Liste ist leer, oder der neue Wert ist kleiner oder gleich dem Wert im Kopf. Dann wird das neue Element der Kopf der Liste.</li>
+      <li><strong>Weiter hinten:</strong> Der Zeiger <code>aktuelles</code> beginnt beim Kopf und rückt weiter, solange es einen Nachfolger gibt und dessen Wert kleiner ist als der neue Wert. Danach folgen die zwei Zuweisungen aus Schritt 2.</li>
+    </ul>
+    <pre class="code-block">func elementEinfügen(liste *sortierteListe, neuerWert int) {
+    if liste.kopf == nil || neuerWert &lt;= liste.kopf.wert {
+        // neues Element vor dem bisherigen Listen-Kopf einfügen
+        neues := &amp;listenElement{wert: neuerWert} // Element erzeugen
+        neues.nächstes = liste.kopf
+        liste.kopf = neues
+        return
+    }
+
+    aktuelles := liste.kopf
+    for aktuelles.nächstes != nil &amp;&amp;
+        aktuelles.nächstes.wert &lt; neuerWert {
+        aktuelles = aktuelles.nächstes
+    }
+
+    // neues Element zwischen dem aktuellen Element und
+    // seinem Nachfolger einfügen
+    neues := &amp;listenElement{wert: neuerWert} // Element erzeugen
+    neues.nächstes = aktuelles.nächstes
+    aktuelles.nächstes = neues
+}</pre>
+    <p>Im Kurstext meldet die Funktion mit <code>fmt.Printf</code> außerdem, wohin das Element kommt. Diese Zeilen fehlen hier, die Demo zeigt die Meldungen als Ausgabe.</p>
+    <div class="hinweis">In beiden Bedingungen kommt es auf die Reihenfolge an. Go wertet <code>||</code> und <code>&amp;&amp;</code> von links aus und hört auf, sobald das Ergebnis feststeht. So liest das Programm <code>liste.kopf.wert</code> nur, wenn <code>kopf</code> auf ein Element zeigt. Das steht in der Lektion <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</div>
+
+    <h3>Die Liste des Kurstexts entsteht</h3>
+    <p>Das Programm fügt nacheinander die Werte 8, 17, 12, 2, 23, 20, 17, 5 und 14 ein. Eine Anweisung der Demo ist ein ganzer Aufruf. Gelb ist das neue Element, grün umrandet das Element, bei dem <code>aktuelles</code> stehen geblieben ist.</p>
+    <ol class="programm" id="e-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="e-weiter">nächste Anweisung</button>
+      <button type="button" id="e-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="e-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="e-bild"></div>
+    <div id="e-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="e-ausgabe"></div>
+    <div class="auskunft" id="e-urteil"></div>
+    <p>Der Wert 17 kommt zweimal vor. Die Liste darf gleiche Werte enthalten. Das zweite Element 17 steht vor dem ersten, weil die Schleife nur weiterrückt, solange der Nachfolger kleiner ist.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Listing 9.1, Datei <code>sortierteListe.go</code>, Seiten 233–236. Die Funktion ist um die Meldungen gekürzt. Die Meldungen in der Ausgabe sind mit Go 1.26 erzeugt. Im Kurstext weicht ihr Wortlaut an zwei Stellen ab, dort steht „ans Ende hinter“ und „am Anfang einfügen vor“.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Liste und Array</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Frage</th><th>Sortiertes Array</th><th>Sortierte verkettete Liste</th></tr></thead>
+      <tbody>
+        <tr><td>Was geschieht beim Einfügen?</td><td>Die Elemente hinter der Stelle rücken einen Platz weiter, im Durchschnitt die Hälfte.</td><td>Zwei Zeiger bekommen einen neuen Wert. Kein Element wechselt seinen Platz im Speicher.</td></tr>
+        <tr><td>Wie findet das Programm die Stelle?</td><td>Das Programm kann jeden Index ohne Umweg lesen. Deshalb geht die binäre Suche aus Abschnitt 8.4.1.</td><td>Das Programm läuft vom Kopf aus von Element zu Element, im Durchschnitt durch die halbe Liste.</td></tr>
+        <tr><td>Wie viele Elemente passen hinein?</td><td>Die Länge steht bei der Übersetzung fest.</td><td>Die Liste wächst mit jedem Element und belegt nur den Speicher, den sie gerade braucht.</td></tr>
+        <tr><td>Was kostet ein Element an Speicher?</td><td>Ein Element belegt nur seine eigenen Zellen.</td><td>Zu jedem Element kommt ein Zeiger, im Modell 8 Zellen.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Das Einfügen selbst ist in der Liste billig, das Suchen der Stelle nicht. Im Kurstext folgt deshalb in Abschnitt 9.3 der binäre Suchbaum, in dem auch das Suchen schnell geht.</p>
+
+    <h3>Zum Weiterdenken</h3>
+    <p>Im Kurstext werden weitere Operationen genannt und nicht ausgeführt. Zu diesen Aufgaben gibt es hier keine Lösung.</p>
+    <ul>
+      <li><strong>Suchen:</strong> Schreibe eine Funktion <code>istWertInListe(liste *sortierteListe, suchwert int) bool</code>. Wann darf die Schleife in einer sortierten Liste vorzeitig aufhören?</li>
+      <li><strong>Löschen:</strong> Schreibe eine Funktion, die das erste Element mit einem bestimmten Wert aus der Liste nimmt. Welcher Zeiger bekommt einen neuen Wert, und welcher Fall braucht eine eigene Behandlung?</li>
+      <li><strong>Umdrehen:</strong> Schreibe eine Funktion, die die Liste umdreht: Das erste Element wird das letzte, das zweite das vorletzte.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Abschnitt 9.3:</strong> Die Lektion <a href="go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>. Dort hat jeder Verbund zwei Zeiger.</li>
+      <li><strong>Exkurs:</strong> <a href="../exkurse/Blockchain_Analogie_Go_Mentoriat.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a> greift das Bild des Zugs auf.</li>
+      <li><strong>Laufzeit:</strong> Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 231–232. Die Tabelle fasst zusammen, was dort im Text steht. Die Zeile zum Speicher je Element ist eine Ergänzung.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#array
+  const ANKER = ['worum', 'array', 'zug', 'typ', 'durchlaufen', 'einfuegen', 'vergleich'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Einfügen im Array', 'Schritt 2: Zwei Zuweisungen', 'Schritt 3: Der Typ der Liste', 'Schritt 4: Durchlaufen', 'Schritt 5: Einfügen', 'Schritt 6: Liste und Array'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? (v.totText || 'freigegeben') : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + (D.speicher.ziele && D.speicher.ziele[p[1]] !== undefined ? D.speicher.ziele[p[1]] : p[1])).join(', ') + '}' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      if (D.nach) D.nach(z);   // eigenes Bild der Seite zu diesem Zustand
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // ---------- Die Liste als Kette ----------
+  // E: je Anfangsadresse ein Element { w (Wert), n (Adresse des nächsten oder null) }. kopf: Adresse oder null.
+  const kopie = E => { const K = {}; Object.keys(E).forEach(a => { K[a] = { w: E[a].w, n: E[a].n }; }); return K; };
+  function erreichbar(kopf, E) { const weg = []; let a = kopf; while (a && weg.indexOf(a) < 0) { weg.push(a); a = E[a].n; } return { weg: weg, kreis: a }; }
+  function kette(k) {
+    const r = erreichbar(k.kopf, k.E), marke = k.marke || {};
+    const wagen = a => '<span class="wagen ' + (marke[a] || '') + '">' + k.E[a].w + '<small>ab ' + a + '</small></span>';
+    const rest = Object.keys(k.E).map(Number).filter(a => r.weg.indexOf(a) < 0 && !(k.lose && k.lose.indexOf(a) >= 0));
+    return '<div class="kette"><span class="wagen kopf">' + esc(k.name || 'kopf') + '<small>' + (k.kopf || 'nil') + '</small></span>' +
+      r.weg.map(a => '<span class="pfeil">→</span>' + wagen(a)).join('') + '<span class="pfeil">→ ' + (r.kreis ? 'wieder das Element ab ' + r.kreis + ', ohne Ende' : 'nil') + '</span></div>' +
+      (k.lose || []).map(a => '<div class="kette"><span class="pfeil">Noch nicht in der Kette:</span>' + wagen(a) + '<span class="pfeil">→ ' + (k.E[a].n || 'nil') + '</span></div>').join('') +
+      (rest.length ? '<div class="kette"><span class="pfeil">Kein Zeiger führt mehr hierher:</span>' + rest.map(a => '<span class="wagen tot">' + k.E[a].w + '<small>ab ' + a + '</small></span>').join('') + '</div>' : '');
+  }
+  function ketteText(k) {
+    const r = erreichbar(k.kopf, k.E);
+    const rest = Object.keys(k.E).map(Number).filter(a => r.weg.indexOf(a) < 0 && !(k.lose && k.lose.indexOf(a) >= 0));
+    return 'Die Kette im Bild, je Element der Wert und in Klammern die Anfangsadresse: ' + (k.name || 'kopf') + ' → ' + r.weg.map(a => k.E[a].w + ' (' + a + ')').join(' → ') + (r.weg.length ? ' → ' : '') + (r.kreis ? 'wieder das Element ab ' + r.kreis + ', die Kette hat kein Ende' : 'nil') + '.' +
+      (k.lose && k.lose.length ? ' Noch nicht in der Kette: das Element ' + k.lose.map(a => k.E[a].w + ' (' + a + ')').join(', ') + '.' : '') +
+      (rest.length ? ' Kein Zeiger führt mehr zu: ' + rest.map(a => k.E[a].w + ' (' + a + ')').join(', ') + '.' : '');
+  }
+  // Hängt das Bild der Kette über die Rahmen einer Demo. Jeder Zustand des Laufs trägt seine Kette in k.
+  function mitKette(D, kurz, k0) {
+    el(kurz + '-bild').insertAdjacentHTML('beforebegin', '<div id="' + kurz + '-kette"></div>');
+    D.k0 = k0;
+    D.nach = z => { el(kurz + '-kette').innerHTML = kette(z ? z.k : k0); };
+    D.kette = () => ketteText(D.stand ? D.lauf[D.stand - 1].k : k0);
+    return D;
+  }
+  const ADR = a => a ? 'Adresse ' + a : 'nil';
+  const ZIELE = {};
+  [120, 200, 216, 232, 248, 264, 280, 296, 312, 328].forEach(a => { ZIELE['Adresse ' + a] = a; });
+  const ELEMENT = (a, E, neu, m) => V('Element ab ' + a, FELDER(['wert', 'nächstes'], [E[a].w, ADR(E[a].n)]), neu, m);
+  const ORTE_E = {};
+  [200, 216, 232, 248, 264, 280, 296, 312, 328].forEach(a => { ORTE_E['~.Element ab ' + a] = [a, 'listenElement', 16]; });
+  const ANONYM = 'Anonyme Variablen, erzeugt mit &';
+
+  // ---------- Schritt 1: Einfügen im sortierten Array ----------
+  const VOR = [3, 35, 42, 99, 111, 176];
+  const WA = wahl('a', [200, 100, 40, 1].map(x => {
+    const i = VOR.filter(w => w <= x).length, n = VOR.length - i;
+    return { code: x + ' einfügen', x: x, i: i, n: n, satz: n === 0 ? 'Der Wert ' + x + ' ist größer als alle anderen. Er kommt auf den ersten freien Platz mit dem Index 6. Kein Element rückt weiter.' :
+      'Der Wert ' + x + ' gehört an den Index ' + i + '. Davor rücken ' + n + ' Elemente einen Platz nach hinten, das letzte zuerst: ' + VOR.slice(i).reverse().join(', ') + '. Das sind ' + n + ' Zuweisungen, bevor der Wert ' + x + ' selbst geschrieben wird.' };
+  }));
+  const zeichneWA = WA.zeichne;
+  WA.zeichne = function () {
+    const x = WA.liste[WA.i], nach = VOR.slice(0, x.i).concat([x.x], VOR.slice(x.i));
+    const reihe = (name, a, f) => '<div class="kasten"><span>' + name + '</span><span class="feld">' + [0, 1, 2, 3, 4, 5, 6, 7].map(k => '<span class="' + (a[k] === undefined ? 'frei' : f(k)) + '">' + (a[k] === undefined ? 'frei' : a[k]) + '</span>').join('') + '</span></div>';
+    el('a-bild').innerHTML = reihe('vorher', VOR, () => '') + reihe('nachher', nach, k => k === x.i ? 'neu' : k > x.i ? 'm' : '');
+    zeichneWA();
+  };
+
+  // ---------- Schritt 2: zwei Zuweisungen in beiden Reihenfolgen ----------
+  const E0 = { 200: { w: 35, n: 216 }, 216: { w: 42, n: 232 }, 232: { w: 99, n: null } };
+  function zug(kurz, zeilen, schritte) {
+    let E = kopie(E0);
+    const orte = { 'main.aktuelles': [100, '*listenElement', 8], 'main.neues': [108, '*listenElement', 8], '~.Element ab 200': ORTE_E['~.Element ab 200'], '~.Element ab 216': ORTE_E['~.Element ab 216'], '~.Element ab 232': ORTE_E['~.Element ab 232'], '~.Element ab 248': ORTE_E['~.Element ab 248'] };
+    const bild = (E, neuV, m, lose) => {
+      const r = erreichbar(200, E).weg;
+      return [R('main', [V('aktuelles', 'Adresse 216')].concat(E[248] ? [V('neues', 'Adresse 248', neuV === 'neues')] : [])),
+        FREI(ANONYM, Object.keys(E).map(Number).map(a => { const v = ELEMENT(a, E, neuV === a, m && m[a]); if (r.indexOf(a) < 0 && lose.indexOf(a) < 0) { v.tot = true; v.totText = 'nicht mehr erreichbar'; } return v; }))];
+    };
+    const lauf = schritte.map(s => { s.tu(E); const lose = s.lose || []; return { z: s.z, satz: s.satz, k: { name: 'Element 35 ist der Anfang', kopf: 200, E: kopie(E), marke: s.marke, lose: lose }, rahmen: bild(kopie(E), s.neu, s.m, lose), aus: '' }; });
+    const D = ablauf(kurz, zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Die Kette hat die Elemente 35, 42 und 99. aktuelles zeigt auf das Element 42.', { orte: orte, ziele: ZIELE });
+    lauf.forEach(z => { z.k.name = 'Anfang'; });
+    return mitKette(D, kurz, { name: 'Anfang', kopf: 200, E: kopie(E0), marke: { 216: 'akt' } });
+  }
+  const DR = zug('r', ['neues := &listenElement{wert: 50}', 'neues.nächstes = aktuelles.nächstes', 'aktuelles.nächstes = neues'], [
+    { z: 1, tu: E => { E[248] = { w: 50, n: null }; }, lose: [248], neu: 248, marke: { 216: 'akt', 248: 'neu' }, satz: 'Das neue Element entsteht ab Zelle 248. Sein Feld nächstes ist nil. neues enthält die Adresse 248. Zur Kette gehört das Element noch nicht.' },
+    { z: 2, tu: E => { E[248].n = 232; }, lose: [248], neu: 248, m: { 248: [1] }, marke: { 216: 'akt', 248: 'neu' }, satz: 'aktuelles.nächstes enthält die Adresse 232 des Elements 99. Diese Adresse steht jetzt auch im Feld nächstes des neuen Elements. Das Element 99 hat damit zwei Vorgänger: das Element 42 und das neue Element.' },
+    { z: 3, tu: E => { E[216].n = 248; }, neu: 216, m: { 216: [1] }, marke: { 216: 'akt', 248: 'neu' }, satz: 'Das Feld nächstes des Elements 42 bekommt die Adresse 248. Die Kette lautet 35, 42, 50, 99. Kein Element hat seinen Platz im Speicher gewechselt.' }
+  ]);
+  const DX = zug('x', ['neues := &listenElement{wert: 50}', 'aktuelles.nächstes = neues', 'neues.nächstes = aktuelles.nächstes'], [
+    { z: 1, tu: E => { E[248] = { w: 50, n: null }; }, lose: [248], neu: 248, marke: { 216: 'akt', 248: 'neu' }, satz: 'Das neue Element entsteht ab Zelle 248. Sein Feld nächstes ist nil.' },
+    { z: 2, tu: E => { E[216].n = 248; }, neu: 216, m: { 216: [1] }, marke: { 216: 'akt', 248: 'neu' }, satz: 'Das Feld nächstes des Elements 42 bekommt die Adresse 248. Vorher stand dort 232, die Adresse des Elements 99. Diese Adresse steht jetzt in keiner Variable und in keinem Feld mehr: Das Element 99 ist nicht mehr erreichbar.' },
+    { z: 3, tu: E => { E[248].n = 248; }, neu: 248, m: { 248: [1] }, marke: { 216: 'akt', 248: 'neu' }, satz: 'aktuelles.nächstes enthält jetzt die Adresse 248 des neuen Elements. Das neue Element bekommt also seine eigene Adresse als Nachfolger. Die Kette hat kein Ende mehr: Eine Schleife, die bis nil läuft, hört nie auf.' }
+  ]);
+
+  // ---------- Schritt 3 und 4: die Liste 2, 8, 12, 17 ----------
+  const E4 = { 200: { w: 8, n: 232 }, 216: { w: 17, n: null }, 232: { w: 12, n: 216 }, 248: { w: 2, n: 200 } };
+  const K4 = { kopf: 248, E: E4 };
+  el('t-kette').innerHTML = kette(K4);
+  el('t-speicher').innerHTML = '<div class="block zeiger"><div class="adr">Zellen 100 bis 107</div><div class="wer">liste <i>*sortierteListe</i></div><div class="was">120</div></div>' +
+    '<div class="block"><div class="adr">Zellen 120 bis 127</div><div class="wer">ohne Namen <i>sortierteListe</i></div><div class="was">{kopf: 248}</div></div>' +
+    [200, 216, 232, 248].map(a => '<div class="block"><div class="adr">Zellen ' + a + ' bis ' + (a + 15) + '</div><div class="wer">ohne Namen <i>listenElement</i></div><div class="was">{wert: ' + E4[a].w + ', nächstes: ' + (E4[a].n || 'nil') + '}</div></div>').join('');
+  const SPEICHER4 = 'Die Liste im Hauptspeicher des Modells, die Adressen sind erfunden: liste in den Zellen 100 bis 107 mit dem Inhalt 120. Ab Zelle 120 der Verbund vom Typ sortierteListe mit kopf 248. Die Elemente: ab 200 {wert: 8, nächstes: 232}, ab 216 {wert: 17, nächstes: nil}, ab 232 {wert: 12, nächstes: 216}, ab 248 {wert: 2, nächstes: 200}.';
+
+  const DD = (function () {
+    const zeilen = ['func listeAusgeben(liste *sortierteListe) {', '    element := liste.kopf', '    fmt.Printf("-> ")', '    for element != nil {', '        fmt.Printf("%d -> ", element.wert)', '        element = element.nächstes', '    }', '    fmt.Printf("nil\\n")', '}'];
+    const orte = Object.assign({ 'main.liste': [100, '*sortierteListe', 8], '~.Liste ab 120': [120, 'sortierteListe', 8], 'listeAusgeben.liste': [300, '*sortierteListe', 8], 'listeAusgeben.element': [308, '*listenElement', 8] }, ORTE_E);
+    const bild = (e, neu, m) => [R('main', [V('liste', 'Adresse 120')]), R('listeAusgeben', [V('liste', 'Adresse 120')].concat(e === undefined ? [] : [V('element', ADR(e), neu)])),
+      FREI(ANONYM, [V('Liste ab 120', FELDER(['kopf'], ['Adresse 248']), 0, m === 120 ? [0] : undefined)].concat([200, 216, 232, 248].map(a => ELEMENT(a, E4, 0, m === a ? [0] : m === -a ? [1] : undefined))))];
+    const lauf = [{ z: 1, satz: 'main ruft listeAusgeben(liste) auf. Der Parameter liste ist eine Kopie des Zeigers: In ihm steht die gleiche Adresse 120.', k: { kopf: 248, E: E4 }, rahmen: bild(), aus: '' },
+      { z: 2, satz: 'liste.kopf ist das Feld kopf des Verbunds, auf den liste zeigt. Es enthält die Adresse 248. element zeigt jetzt auf das erste Element der Liste.', k: { kopf: 248, E: E4, marke: { 248: 'akt' } }, rahmen: bild(248, 1, 120), aus: '' },
+      { z: 3, satz: 'Die Ausgabe beginnt mit einem Pfeil.', k: { kopf: 248, E: E4, marke: { 248: 'akt' } }, rahmen: bild(248), aus: '-> ' }];
+    let a = 248, aus = '-> ';
+    while (a) {
+      aus += E4[a].w + ' -> ';
+      lauf.push({ z: 5, satz: 'element ist nicht nil, die Bedingung der Schleife ist erfüllt. element.wert ist das Feld wert des Elements ab Zelle ' + a + ', also ' + E4[a].w + '.', k: { kopf: 248, E: E4, marke: { [a]: 'akt' } }, rahmen: bild(a, 0, a), aus: aus });
+      const n = E4[a].n;
+      lauf.push({ z: 6, satz: 'Der Rechner liest aus dem Element ab Zelle ' + a + ' das Feld nächstes' + (n ? ', die Adresse ' + n + ', und legt sie in element ab. element zeigt jetzt auf das Element ' + E4[n].w + '.' : '. Dort steht nil. element ist jetzt nil.'), k: { kopf: 248, E: E4, marke: n ? { [n]: 'akt' } : {} }, rahmen: bild(n, 1, -a), aus: aus });
+      a = n;
+    }
+    lauf.push({ z: 8, satz: 'element ist nil, die Bedingung der Schleife ist nicht mehr erfüllt. Die Funktion schließt die Zeile mit nil ab.', k: { kopf: 248, E: E4 }, rahmen: bild(null), aus: aus + 'nil' });
+    const D = ablauf('d', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht der Aufruf listeAusgeben(liste).', { orte: orte, ziele: ZIELE });
+    return mitKette(D, 'd', K4);
+  })();
+
+  // ---------- Schritt 5: die Liste des Kurstexts entsteht ----------
+  const WERTE = [8, 17, 12, 2, 23, 20, 17, 5, 14];
+  const DE = (function () {
+    const zeilen = ['liste := &sortierteListe{}'].concat(WERTE.map(w => 'elementEinfügen(liste, ' + w + ')'), ['fmt.Println("Länge der Liste:", längeDerListe(liste))']);
+    const orte = Object.assign({ 'main.liste': [100, '*sortierteListe', 8], '~.Liste ab 120': [120, 'sortierteListe', 8] }, ORTE_E);
+    const mal = ['nicht', 'einmal', 'zweimal', 'dreimal'];
+    let kopf = null; const E = {}, aus = [];
+    const bild = (neu, akt) => [R('main', [V('liste', 'Adresse 120', neu === 120)]), FREI(ANONYM, [V('Liste ab 120', FELDER(['kopf'], [ADR(kopf)]), neu === 120, akt === 120 ? [0] : undefined)].concat(Object.keys(E).map(Number).map(a => ELEMENT(a, E, a === neu, a === akt ? [1] : undefined))))];
+    const lauf = [{ z: 1, satz: 'liste zeigt auf einen Verbund vom Typ sortierteListe ab Zelle 120. Sein Feld kopf ist nil: Die Liste ist leer.', k: { kopf: null, E: {} }, rahmen: bild(120), aus: '' }];
+    WERTE.forEach((w, i) => {
+      const adr = 200 + 16 * i, marke = {}; let satz, akt = 120;
+      if (kopf === null || w <= E[kopf].w) {
+        aus.push(kopf === null ? 'Wert ' + w + ' in leere Liste einfügen' : 'Wert ' + w + ' am Anfang vor ' + E[kopf].w + ' einfügen');
+        satz = kopf === null ? 'Die Liste ist leer, kopf ist nil. Das neue Element entsteht ab Zelle ' + adr + '. Sein Feld nächstes bekommt den alten Wert von kopf, also nil. Dann bekommt kopf die Adresse ' + adr + '.' :
+          w + ' ist kleiner oder gleich ' + E[kopf].w + ', dem Wert im Kopf. Das neue Element entsteht ab Zelle ' + adr + ' und kommt an den Anfang: Sein Feld nächstes bekommt die Adresse ' + kopf + ' des bisherigen ersten Elements, dann bekommt kopf die Adresse ' + adr + '.';
+        E[adr] = { w: w, n: kopf }; kopf = adr;
+      } else {
+        let a = kopf, s = 0; const weg = [];
+        while (E[a].n && E[E[a].n].w < w) { a = E[a].n; s++; weg.push(E[a].w); }
+        const nach = E[a].n;
+        aus.push(nach ? 'Wert ' + w + ' zwischen ' + E[a].w + ' und ' + E[nach].w + ' einfügen' : 'Wert ' + w + ' am Ende hinter ' + E[a].w + ' einfügen');
+        satz = 'aktuelles beginnt beim ersten Element mit dem Wert ' + E[kopf].w + '. Die Schleife rückt ' + mal[s] + ' weiter' + (s ? ', zu ' + weg.join(', dann zu ') : '') + '. ' +
+          (nach ? 'Der Nachfolger ' + E[nach].w + ' ist nicht kleiner als ' + w + '.' : 'Das Element ' + E[a].w + ' hat keinen Nachfolger.') +
+          ' Das neue Element entsteht ab Zelle ' + adr + '. Sein Feld nächstes bekommt ' + (nach ? 'die Adresse ' + nach : 'nil') + ', dann bekommt das Feld nächstes des Elements ' + E[a].w + ' die Adresse ' + adr + '.';
+        E[adr] = { w: w, n: nach }; E[a].n = adr; marke[a] = 'akt'; akt = a;
+      }
+      marke[adr] = 'neu';
+      lauf.push({ z: i + 2, satz: satz, k: { kopf: kopf, E: kopie(E), marke: marke }, rahmen: bild(adr, akt), aus: aus.join(NL) });
+    });
+    lauf.push({ z: 11, satz: 'längeDerListe läuft vom Kopf bis nil durch die Liste und zählt neun Elemente.', k: { kopf: kopf, E: kopie(E) }, rahmen: bild(), aus: aus.join(NL) + NL + 'Länge der Liste: 9' });
+    const D = ablauf('e', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Die elf Zeilen stehen im Rumpf von main.', { orte: orte, ziele: ZIELE });
+    return mitKette(D, 'e', { kopf: null, E: {} });
+  })();
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0 || stufe === 6) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) { const x = WA.liste[WA.i]; return ['Das Array hat acht Plätze. Vorher: 3, 35, 42, 99, 111, 176 und zwei freie Plätze.'].concat(standWahl(WA, 'der Wert'), ['Nachher: ' + VOR.slice(0, x.i).concat([x.x], VOR.slice(x.i)).join(', ') + ' und ein freier Platz. Gelb ist der neue Wert am Index ' + x.i + ', grün sind die ' + x.n + ' Elemente, die weitergerückt sind.']); }
+    if (stufe === 2) return ['Der Schritt hat zwei Demos mit den gleichen drei Anweisungen in verschiedener Reihenfolge.', 'Demo „Die Reihenfolge des Kurstexts“:'].concat(standAblauf(DR), [DR.kette(), 'Demo „Die umgekehrte Reihenfolge“:'], standAblauf(DX), [DX.kette(), 'In den Rahmen steht eine Adresse als „Adresse 216“, im Hauptspeicher darunter als Zahl. Ein gestrichelter Kasten ist ein Element, zu dem kein Zeiger mehr führt.']);
+    if (stufe === 3) return ['Dieser Schritt hat keine Demo, nur ein festes Bild.', ketteText(K4), SPEICHER4];
+    if (stufe === 4) return standAblauf(DD).concat([DD.kette(), 'Grün umrandet ist in der Kette das Element, auf das element zeigt.']);
+    return standAblauf(DE).concat([DE.kette(), 'Gelb ist in der Kette das neue Element. Grün umrandet ist das Element, bei dem aktuelles stehen geblieben ist. Eine Anweisung der Demo ist ein ganzer Aufruf von elementEinfügen.']);
+  }
+  const kurzStand = () => stufe === 1 ? WA.liste[WA.i].code : stufe === 2 ? 'Kurstext: ' + kurzVon(DR) + ', umgekehrt: ' + kurzVon(DX) : stufe === 4 ? kurzVon(DD) : stufe === 5 ? kurzVon(DE) : '';
+  const programmZeilen = () => stufe === 2 ? ['Die Reihenfolge des Kurstexts:'].concat(zeilenVon(DR), ['Die umgekehrte Reihenfolge:'], zeilenVon(DX)) : zeilenVon(stufe === 4 ? DD : stufe === 5 ? DE : null);
+
+  WA.zeichne(); DR.zeichne(); DX.zeichne(); DD.zeichne(); DE.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Verkettete Listen in Go',
+    thema: 'dynamische Datenstruktur, einfach verkettete Liste, Listen-Element, Zeiger auf das nächste Element, nil, Einfügen in eine sortierte Liste',
+    bezug: 'Kurstext v3.0.6, Abschnitt 9.1 und 9.2, Seiten 227–236',
+    beschreibung: '../kurslotse/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text, pre.code-block',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum muss neues.nächstes zuerst gesetzt werden?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
