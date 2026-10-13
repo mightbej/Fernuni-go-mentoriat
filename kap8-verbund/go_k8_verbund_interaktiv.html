@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verbund in Go: der Datentyp struct</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Verbund in Go: der Datentyp struct</h1>
+    <p>Ein Verbund fasst Werte verschiedener Typen unter einem Namen zusammen, zum Beispiel Vorname, Geburtsjahr und Wohnort einer Person. In Go heißt der Verbund struct.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.1 bis 8.2.2, Seiten 195–203.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Wozu ein Verbund</button>
+    <button type="button" class="tab" data-stufe="2">2 Verbund-Typ</button>
+    <button type="button" class="tab" data-stufe="3">3 Null-Wert und Literale</button>
+    <button type="button" class="tab" data-stufe="4">4 Ausgabe</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Ein Array fasst viele Werte des gleichen Typs zusammen. Ein <strong>Verbund</strong> fasst Werte zusammen, die zusammengehören und verschiedene Typen haben dürfen. Andere Namen für den Verbund sind Datensatz, englisch Record, und in Go Struct.</p>
+    <p>Die Teile eines Verbunds heißen <strong>Felder</strong>. Jedes Feld hat einen Namen und einen Typ.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Typen:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a> zeigt in Schritt 3, was ein Typ festlegt.</li>
+      <li><strong>Abschnitt 5.1, Variablendeklaration:</strong> Ein Verbund-Typ steht in einer Deklaration an der Stelle von <code>int</code> oder <code>string</code>. Die Lektion dazu heißt <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+      <li><strong>Kapitel 6, Arrays:</strong> Das Verbund-Literal ist dem Array-Literal ähnlich. Die Lektion <a href="../kap6-arrays/go_k6_arrays_interaktiv.html#literal">Arrays in Go</a> zeigt das Array-Literal in Schritt 1.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Was ein Verbund leistet, was einzelne Variablen und Arrays nicht leisten.</li>
+      <li><strong>Schritt 2:</strong> Die Definition mit <code>struct</code> und der benannte Typ mit <code>type</code>.</li>
+      <li><strong>Schritt 3:</strong> Der Null-Wert und die zwei Schreibweisen des Verbund-Literals. Du wählst eine von neun Zeilen.</li>
+      <li><strong>Schritt 4:</strong> Die Ausgabe mit <code>%v</code>, <code>%+v</code> und <code>%#v</code>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Wozu ein Verbund</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Daten von zwei Personen stehen in sechs Variablen: <code>nummerA</code>, <code>vornameA</code>, <code>nachnameA</code> und das Gleiche mit B. Wie viele Paare von Variablen muss ein Programm tauschen, damit A und B die Plätze wechseln?
+          <details><summary>Auflösung</summary>Drei, eines für jede Angabe. Mit einem Verbund ist es ein einziger Tausch.</details></li>
+      </ol>
+    </div>
+    <p>Im Kurstext steht als Beispiel die Lochkarte: 80 Spalten, aufgeteilt in feste Bereiche für Personalnummer, Nachname, Vorname, Geburtsdatum und Gehalt. Eine Karte trägt die Daten einer Person.</p>
+    <p>Ein Programm soll viele solche Karten speichern. Ohne Verbund gibt es zwei Wege, und beide haben den gleichen Mangel:</p>
+    <ul>
+      <li><strong>Einzelne Variablen:</strong> <code>nachnameA</code>, <code>nachnameB</code>, <code>vornameA</code>, <code>vornameB</code>. Dass <code>nachnameA</code> und <code>vornameA</code> zu einer Person gehören, steht nur im letzten Buchstaben des Namens.</li>
+      <li><strong>Ein Array je Angabe:</strong> ein Array für die Nachnamen, eines für die Vornamen, eines für die Personalnummern. Was zusammengehört, steht nur am gleichen Index.</li>
+    </ul>
+    <p>Mit einem Verbund gehören die Daten einer Person zu einer Variable. Auf ein Feld greift das Programm mit einem Punkt zu, zum Beispiel <code>personA.nachname</code>.</p>
+
+    <ol class="programm" id="t-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="t-weiter">nächste Anweisung</button>
+      <button type="button" id="t-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="t-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="t-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="t-ausgabe"></div>
+    <div class="auskunft" id="t-urteil"></div>
+
+    <h3>Viele Verbünde: ein Array von Verbünden</h3>
+    <p>Für das Personal eines ganzen Unternehmens nimmt man ein Array, dessen Elemente Verbünde sind. Die Suche nach einer Person läuft dann über ein einziges Array:</p>
+    <pre class="code-block">for i, _ := range personArr {
+    if personArr[i].Vorname == "Gundel" &amp;&amp; personArr[i].Nachname == "Gaukeley" {
+        return personArr[i].Personalnummer
+    }
+}</pre>
+    <p>Ohne Verbund müsste die Schleife in drei Arrays zugleich nachsehen.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.1, Seiten 195–198. Die Schleife stammt aus dem Kurstext, dort sind die Feldnamen in Abschnitt 8.1 groß geschrieben. Das Programm der Demo ist ein eigenes Beispiel zum Tausch <code>personA, personB = personB, personA</code> aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Der Verbund-Typ</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Zwei Verbund-Definitionen haben die gleichen fünf Felder mit den gleichen Typen. In der zweiten steht <code>nachname</code> vor <code>vorname</code>. Ist das der gleiche Datentyp?
+          <details><summary>Auflösung</summary>Nein. Zum Typ gehören die Namen der Felder, ihre Typen und ihre Reihenfolge.</details></li>
+      </ol>
+    </div>
+    <p>Ein Verbund wird mit dem Schlüsselwort <code>struct</code> definiert. Jedes Feld steht in einer eigenen Zeile: erst der Name, dann der Typ. Hinter dem Typ steht kein Komma.</p>
+    <pre class="code-block">struct {
+    vorname     string
+    nachname    string
+    gebJahr     int
+    ort         string
+    verheiratet bool
+}</pre>
+
+    <h3>Ein Name für den Typ</h3>
+    <p>Vor die Definition setzt man das Schlüsselwort <code>type</code> und einen Bezeichner. Das deklariert einen <strong>benannten Datentyp</strong>:</p>
+    <pre class="code-block">type person struct {
+    vorname     string
+    nachname    string
+    gebJahr     int
+    ort         string
+    verheiratet bool
+}</pre>
+    <p>Der Typname <code>person</code> steht danach überall, wo auch <code>int</code> oder <code>string</code> stehen kann:</p>
+    <pre class="code-block">var ich person
+var großeltern [4]person
+
+func jünger(p1, p2 person) person {
+    // ...
+}</pre>
+
+    <h3>Vier Schreibweisen im Vergleich</h3>
+    <p>Wähle eine Definition. Die Seite sagt, ob sie den gleichen Datentyp beschreibt wie die Definition oben.</p>
+    <div class="spalte" id="ty-wahl"></div>
+    <div class="auskunft" id="ty-urteil"></div>
+
+    <h3>Groß oder klein geschrieben</h3>
+    <p>Auch für Typnamen und Feldnamen gilt die Regel aus Abschnitt 3.3.4: Nur ein Bezeichner, der mit einem Großbuchstaben beginnt, wird exportiert und ist außerhalb seines Pakets sichtbar. In der Standardbibliothek sind Typnamen und Feldnamen von Verbünden deshalb meist groß geschrieben. Die Beispiele des Kurstexts schreiben sie klein, weil sie nichts exportieren.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2, Seiten 199–200. Alle Definitionen stammen aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Null-Wert und Literale</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(anna)</code> nach <code>var anna person</code> aus?
+          <details><summary>Auflösung</summary><code>{  0  false}</code>. Jedes Feld hat den Null-Wert seines Typs. Die drei leeren Strings sieht man nur an den Leerzeichen dazwischen.</details></li>
+        <li>Ein Array-Literal darf weniger Werte nennen, als das Array Elemente hat. Gilt das auch für <code>person{"Anna", "Schmidt", 1966, "Hamburg"}</code>?
+          <details><summary>Auflösung</summary>Nein. In der Schreibweise ohne Feldnamen müssen alle fünf Werte dastehen.</details></li>
+      </ol>
+    </div>
+
+    <h3>Der Null-Wert</h3>
+    <p>Eine Verbund-Variable ohne Anfangswert bekommt den Null-Wert ihres Typs. Er besteht aus den Null-Werten der Felder, bei <code>person</code> also aus <code>""</code>, <code>""</code>, <code>0</code>, <code>""</code> und <code>false</code>.</p>
+
+    <h3>Das Verbund-Literal</h3>
+    <p>Ein <strong>Verbund-Literal</strong> schreibt einen Wert des Typs hin: erst der Typname, dann die Werte der Felder in geschweiften Klammern. Dafür gibt es zwei Schreibweisen:</p>
+    <ul>
+      <li><strong>Ohne Feldnamen:</strong> Die Werte aller Felder stehen in der Reihenfolge der Definition, getrennt durch Kommas. Es darf keiner fehlen.</li>
+      <li><strong>Mit Feldnamen:</strong> Vor jedem Wert stehen der Feldname und ein Doppelpunkt. Die Reihenfolge ist frei. Ein Feld, das fehlt, bekommt seinen Null-Wert.</li>
+    </ul>
+    <pre class="code-block">karl = person{
+    nachname: "Müller",
+    vorname:  "Karl",
+    ort:      "Köln",
+    gebJahr:  1955, // Komma ist Pflicht
+}</pre>
+    <p>Steht das Literal über mehrere Zeilen, braucht auch die letzte Angabe ein Komma. Das ist die gleiche Regel wie beim Array-Literal.</p>
+    <p>Wähle eine Zeile. Die Seite zeigt, was <code>fmt.Println</code> für die Variable ausgibt, oder die Meldung des Compilers.</p>
+    <div class="spalte" id="li-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="li-ausgabe"></div>
+    <div class="auskunft" id="li-urteil"></div>
+
+    <div class="hinweis"><strong>Hinweis 8.1 des Kurstexts:</strong> Die Schreibweise ohne Feldnamen ist kurz. Ändert jemand später die Reihenfolge der Felder, muss er jedes Literal anpassen. Tauscht er zwei Felder des gleichen Typs, etwa <code>nachname</code> und <code>vorname</code>, meldet der Compiler nichts. In der Praxis nimmt man deshalb meist die Schreibweise mit Feldnamen. Die kurze passt zu kleinen Typen mit einer festen Reihenfolge, zum Beispiel <code>koordinate{10, -7, 22}</code> für x, y und z oder <code>rgb{255, 255, 0}</code> für Rot, Grün und Blau.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.1, Seiten 201–202, und Hinweis 8.1, Seite 203. Die Zeilen 1 bis 3 stammen aus dem Kurstext. Die Zeilen 4 bis 9 und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Ausgabe</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>fmt.Println(anna)</code> gibt <code>{Anna Schmidt 1966 Hamburg false}</code> aus. Woran erkennt ein Leser, welcher Wert der Wohnort ist?
+          <details><summary>Auflösung</summary>An der Ausgabe erkennt er es nicht, er muss die Definition des Typs kennen. Mit <code>%+v</code> stehen die Feldnamen dabei.</details></li>
+      </ol>
+    </div>
+    <p><code>fmt.Println</code> gibt von einem Verbund die Werte der Felder in geschweiften Klammern aus. <code>fmt.Printf</code> mit dem Verb <code>%v</code> tut das Gleiche. Zwei Flags vor dem <code>v</code> ändern die Ausgabe:</p>
+    <ul>
+      <li><strong><code>%+v</code>:</strong> Die Feldnamen stehen dabei.</li>
+      <li><strong><code>%#v</code>:</strong> Die Ausgabe hat die Form eines Verbund-Literals mit Feldnamen.</li>
+    </ul>
+    <p>Die Variable der Demo ist <code>anna := person{"Anna", "Schmidt", 1966, "Hamburg", false}</code>. Wähle eine Zeile:</p>
+    <div class="spalte" id="au-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="au-ausgabe"></div>
+    <div class="auskunft" id="au-urteil"></div>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Felder ändern:</strong> Die Lektion <a href="go_k8_feld_variablen_interaktiv.html">Verbund-Variablen und Feld-Variablen</a> zeigt die Punkt-Notation und den Zeiger auf ein Feld.</li>
+      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a> zeigt, wie die Felder hintereinander im Hauptspeicher liegen.</li>
+      <li><strong>Quiz:</strong> Das <a href="S207_struct_quiz.html">Quiz zu struct</a> fragt den Stoff dieser Lektion ab.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.2, Seiten 202–203. Die Zeilen und ihre Ausgaben stammen aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#wozu
+  const ANKER = ['worum', 'wozu', 'typ', 'literale', 'ausgabe'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Wozu ein Verbund', 'Schritt 2: Der Verbund-Typ', 'Schritt 3: Null-Wert und Literale', 'Schritt 4: Ausgabe'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // ---------- Schritt 1: zwei Verbünde tauschen ----------
+  const PN = ['personalnummer', 'vorname', 'nachname'];
+  const DONALD = FELDER(PN, [4711, '"Donald"', '"Duck"']), GUNDEL = FELDER(PN, [1313, '"Gundel"', '"Gaukeley"']);
+  const DT = ablauf('t', ['type person struct {', '    personalnummer int', '    vorname        string', '    nachname       string', '}', '', 'func main() {',
+    '    personA := person{4711, "Donald", "Duck"}', '    personB := person{1313, "Gundel", "Gaukeley"}', '    personA, personB = personB, personA', '    fmt.Println(personA.nachname, personB.nachname)', '}'], [
+    { z: 8, satz: 'personA ist eine Variable vom Typ person. Ihre drei Felder bekommen die drei Werte des Literals, in der Reihenfolge der Definition.', rahmen: [R('main', [V('personA', DONALD, 1)])], aus: '' },
+    { z: 9, satz: 'personB ist eine zweite Variable vom gleichen Typ, mit eigenen drei Feldern.', rahmen: [R('main', [V('personA', DONALD), V('personB', GUNDEL, 1)])], aus: '' },
+    { z: 10, satz: 'Die Tupel-Zuweisung tauscht die zwei Verbünde als Ganzes. Alle drei Felder wechseln mit. Ohne Verbund wären das drei Tausche, einer je Angabe.', rahmen: [R('main', [V('personA', GUNDEL, 1), V('personB', DONALD, 1)])], aus: '' },
+    { z: 11, satz: 'personA.nachname ist das Feld nachname der Variable personA. Das Programm gibt die zwei Nachnamen aus.', rahmen: [R('main', [V('personA', GUNDEL, 0, [2]), V('personB', DONALD, 0, [2])])], aus: 'Gaukeley Duck' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 8.');
+
+  // ---------- Schritt 2: vier Definitionen ----------
+  const WT = wahl('ty', [
+    { code: 'struct {vorname string; nachname string; gebJahr int; ort string; verheiratet bool}', satz: 'Das ist der gleiche Datentyp. Die Felder stehen in einer Zeile, getrennt durch Semikolons. Go erlaubt das, übersichtlich ist es nicht.' },
+    { code: 'struct { vorname, nachname string; gebJahr int; ort string; verheiratet bool }', satz: 'Das ist der gleiche Datentyp. Zwei Felder des gleichen Typs, die aufeinander folgen, teilen sich die Typangabe, wie bei einer Variablendeklaration.' },
+    { code: 'struct { nachname, vorname, ort string; verheiratet bool; gebJahr int }', satz: 'Das ist ein anderer Datentyp. Die Felder und ihre Typen sind die gleichen, sie stehen aber in einer anderen Reihenfolge. Die Reihenfolge gehört zum Typ.' },
+    { code: 'struct { vorname string; name string; gebJahr int; ort string; verheiratet bool }', satz: 'Das ist ein anderer Datentyp. Das zweite Feld heißt name und nicht nachname. Die Namen der Felder gehören zum Typ.' }
+  ], true);
+
+  // ---------- Schritt 3: neun Literale ----------
+  const WL = wahl('li', [
+    { code: 'var anna person', aus: '{  0  false}', satz: 'Ohne Anfangswert hat jedes Feld seinen Null-Wert: drei leere Strings, 0 und false.' },
+    { code: 'anna := person{"Anna", "Schmidt", 1966, "Hamburg", false}', aus: '{Anna Schmidt 1966 Hamburg false}', satz: 'Schreibweise ohne Feldnamen: fünf Werte für fünf Felder, in der Reihenfolge der Definition.' },
+    { code: 'karl := person{nachname: "Müller", vorname: "Karl", ort: "Köln", gebJahr: 1955}', aus: '{Karl Müller 1955 Köln false}', satz: 'Schreibweise mit Feldnamen: Die Reihenfolge ist frei. Das Feld verheiratet fehlt und bekommt den Null-Wert false. Die Ausgabe folgt der Reihenfolge der Definition.' },
+    { code: 'eva := person{vorname: "Eva"}', aus: '{Eva  0  false}', satz: 'Nur ein Feld ist genannt. Die vier anderen bekommen ihren Null-Wert.' },
+    { code: 'leer := person{}', aus: '{  0  false}', satz: 'Ein Literal ohne Angaben ist der Null-Wert des Typs.' },
+    { code: 'anna := person{"Anna", "Schmidt", 1966, "Hamburg"}', fehler: true, aus: 'too few values in struct literal of type person', satz: 'Ohne Feldnamen müssen alle fünf Werte dastehen. Ein Array-Literal füllt mit Null-Werten auf, ein Verbund-Literal in dieser Schreibweise nicht.' },
+    { code: 'anna := person{"Anna", "Schmidt", "Hamburg", 1966, false}', fehler: true, aus: 'cannot use "Hamburg" (untyped string constant) as int value in struct literal', satz: 'Der dritte Wert gehört zum Feld gebJahr vom Typ int. Ort und Geburtsjahr stehen in der falschen Reihenfolge, und hier fällt es auf, weil die Typen verschieden sind.' },
+    { code: 'anna := person{vorname: "Anna", "Schmidt"}', fehler: true, aus: 'mixture of field:value and value elements in struct literal', satz: 'Ein Literal verwendet eine der zwei Schreibweisen. Mischen ist nicht erlaubt.' },
+    { code: 'anna := person{name: "Anna"}', fehler: true, aus: 'unknown field name in struct literal of type person', satz: 'Der Typ person hat kein Feld mit dem Namen name.' }
+  ], true);
+
+  // ---------- Schritt 4: Ausgabe ----------
+  const WA = wahl('au', [
+    { code: 'fmt.Println(anna)', aus: '{Anna Schmidt 1966 Hamburg false}', satz: 'fmt.Println gibt die Werte der Felder aus, in der Reihenfolge der Definition.' },
+    { code: 'fmt.Printf("%v\\n", anna)', aus: '{Anna Schmidt 1966 Hamburg false}', satz: 'Das Verb %v gibt das Gleiche aus wie fmt.Println.' },
+    { code: 'fmt.Printf("%+v\\n", anna)', aus: '{vorname:Anna nachname:Schmidt gebJahr:1966 ort:Hamburg verheiratet:false}', satz: 'Das Flag + setzt vor jeden Wert den Feldnamen.' },
+    { code: 'fmt.Printf("%#v\\n", anna)', aus: 'main.person{vorname:"Anna", nachname:"Schmidt", gebJahr:1966, ort:"Hamburg", verheiratet:false}', satz: 'Das Flag # gibt den Wert als Verbund-Literal aus. Vor dem Typnamen steht der Name des Pakets, hier main. Strings stehen in Anführungszeichen.' }
+  ], false);
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return standAblauf(DT).concat('Ein Verbund steht in seinem Kasten als Liste seiner Felder mit Name und Wert.');
+    if (stufe === 2) return standWahl(WT, 'die Definition').concat('Verglichen wird mit der Definition mit den Feldern vorname, nachname, gebJahr, ort und verheiratet in dieser Reihenfolge.');
+    if (stufe === 3) return standWahl(WL);
+    return standWahl(WA).concat('Die Variable ist anna := person{"Anna", "Schmidt", 1966, "Hamburg", false}.');
+  }
+  const kurzStand = () => stufe === 1 ? kurzVon(DT) : stufe === 2 ? 'Definition ' + (WT.i + 1) : stufe === 3 ? 'Zeile ' + (WL.i + 1) : stufe === 4 ? WA.liste[WA.i].code : '';
+  const programmZeilen = () => zeilenVon(stufe === 1 ? DT : null);
+
+  DT.zeichne(); WT.zeichne(); WL.zeichne(); WA.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Verbund in Go: der Datentyp struct',
+    thema: 'Verbund, struct, Feld, benannter Datentyp, type, Null-Wert, Verbund-Literal, Ausgabe mit %v, %+v und %#v',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.1 bis 8.2.2, Seiten 195–203',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_verbund_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum darf im Literal kein Wert fehlen?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
