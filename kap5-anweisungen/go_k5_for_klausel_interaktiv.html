@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>for-Anweisung mit for-Klausel in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    pre.code-block mark { background:var(--aktiv);color:#111827;border-radius:4px;padding:0 3px;font-weight:700; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+    .paar { display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px; }
+    .paar h4 { margin:8px 0 0;font-size:.95rem; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm .marke { display:inline-block;margin-left:1.2em;padding:0 8px;border-radius:999px;font-size:.82rem;font-weight:700;line-height:1.6;font-family:"Segoe UI",Tahoma,sans-serif; }
+    .programm .marke.wahr { background:#bbf7d0;color:#14532d; }
+    .programm .marke.falsch { background:#fecaca;color:#7f1d1d; }
+    .programm .marke.offen { background:#475569;color:#e2e8f0; }
+
+    /* Was das Programm auf den Bildschirm schreibt */
+    .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
+    .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>for-Anweisung mit for-Klausel in Go</h1>
+    <p>Eine Schleife, die zählt, braucht einen Startwert, eine Bedingung und einen Zählschritt. Die for-Klausel schreibt alle drei in eine Zeile. Die Seite führt das Programm zu den Quadratzahlen aus dem Kurstext Anweisung für Anweisung aus.</p>
+    <p>Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 142–146.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Die for-Klausel</button>
+    <button type="button" class="tab" data-stufe="2">2 Der Ablauf</button>
+    <button type="button" class="tab" data-stufe="3">3 Die Laufvariable</button>
+    <button type="button" class="tab" data-stufe="4">4 Eine Schleife, vier Schreibweisen</button>
+    <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Viele Schleifen zählen: Sie beginnen bei einem Startwert, erhöhen eine Variable in jedem Schleifendurchlauf und hören bei einem Zielwert auf. Mit der for-Anweisung mit Bedingung sieht das so aus:</p>
+<pre class="code-block">i := 1
+for i &lt;= 10 {
+    fmt.Println(i * i)
+    i++
+}</pre>
+    <p>Die drei Teile, die das Zählen ausmachen, stehen hier an drei verschiedenen Stellen. Weil Programme solche Schleifen sehr oft brauchen, hat Go dafür eine eigene Schreibweise, die for-Anweisung mit for-Klausel, englisch for statement with for clause:</p>
+<pre class="code-block">for i := 1; i &lt;= 10; i++ {
+    fmt.Println(i * i)
+}</pre>
+    <p>Beide Programme laufen genau gleich ab und geben die Quadratzahlen von 1 bis 100 aus.</p>
+
+    <h3>Was aus früheren Abschnitten dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 5.5.3.1, Seiten 138–142, die for-Anweisung mit Bedingung:</strong> Dort stehen die Begriffe Schleifenbedingung, Schleifenrumpf und Schleifendurchlauf. Dazu gibt es die Seite <a href="go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a>.</li>
+      <li><strong>Abschnitt 5.4, Seite 129, die einfachen Anweisungen:</strong> Zwei Teile der for-Klausel müssen einfache Anweisungen sein. Dazu gibt es die Seite <a href="go_k5_zuweisungen_interaktiv.html#einfach">Zuweisungen</a>, Schritt 5.</li>
+      <li><strong>Abschnitt 5.1.3, Seiten 119–120, der Gültigkeitsbereich:</strong> Die Variable einer for-Klausel gilt nur in der Schleife. Dazu gibt es die Seite <a href="go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration</a>, Schritt 3.</li>
+    </ul>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt die drei Teile der for-Klausel: Init-Anweisung, Schleifenbedingung, Post-Anweisung.</li>
+      <li><strong>Schritt 2</strong> führt das Programm aus Listing 5.6 Anweisung für Anweisung aus.</li>
+      <li><strong>Schritt 3</strong> zeigt, wo die Laufvariable gilt und wie sie heißt.</li>
+      <li><strong>Schritt 4</strong> zeigt, dass Go im Grunde nur eine Schleife hat, die sich auf vier Arten schreiben lässt.</li>
+      <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
+    </ul>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 142–143. Die zwei Programme mit <code>fmt.Println(i * i)</code> sind gekürzte Fassungen der Programme im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Die for-Klausel</h2>
+    <p>Die for-Klausel steht zwischen <code>for</code> und der öffnenden Klammer <code>{</code>. Sie hat drei Teile, getrennt durch zwei Semikolons:</p>
+    <ul>
+      <li><strong>Init-Anweisung:</strong> hier <code>i := 1</code>. „Init“ steht für das englische initial, also anfänglich.</li>
+      <li><strong>Schleifenbedingung:</strong> hier <code>i &lt;= 10</code>.</li>
+      <li><strong>Post-Anweisung:</strong> hier <code>i++</code>. „Post“ ist lateinisch und heißt hier: hinterher.</li>
+    </ul>
+
+    <h3>Ausprobieren: wo die drei Teile stehen</h3>
+    <p>Links steht die Schleife mit Bedingung, rechts die gleiche Schleife mit for-Klausel. Wähle einen Teil. Er ist in beiden Programmen gelb markiert.</p>
+    <div class="zeile" id="k-knoepfe">
+      <button type="button" data-teil="0">Init-Anweisung</button>
+      <button type="button" data-teil="1">Schleifenbedingung</button>
+      <button type="button" data-teil="2">Post-Anweisung</button>
+    </div>
+    <div class="paar">
+      <div><h4>Mit Bedingung</h4><pre class="code-block" id="k-alt"></pre></div>
+      <div><h4>Mit for-Klausel</h4><pre class="code-block" id="k-neu"></pre></div>
+    </div>
+    <div class="auskunft" id="k-text"></div>
+
+    <h3>Was Go bei der for-Klausel verlangt</h3>
+    <ul>
+      <li><strong>Init-Anweisung und Post-Anweisung sind einfache Anweisungen.</strong> Die ausführliche Deklaration mit <code>var</code> ist keine. Zu <code>for var i int = 1; i &lt;= 10; i++ {</code> meldet der Compiler <code>syntax error: var declaration not allowed in for initializer</code>.</li>
+      <li><strong>In der Post-Anweisung ist keine kurze Variablendeklaration erlaubt.</strong> Zu <code>for i := 1; i &lt;= 3; j := 0 {</code> meldet der Compiler <code>syntax error: cannot declare in post statement of for loop</code>.</li>
+      <li><strong>Um die for-Klausel stehen keine runden Klammern.</strong> In Java und C++ sind sie Pflicht. Zu <code>for (i := 1; i &lt;= 3; i++) {</code> meldet der Go-Compiler <code>syntax error: unexpected :=, expected )</code>.</li>
+    </ul>
+
+    <h3>Was %2[1]v bedeutet</h3>
+    <p>Im Listing des Kurstexts steht die Ausgabe als <code>fmt.Printf("%2[1]v * %2[1]v ist %3v\n", i, i*i)</code>. Die Formatangabe <code>%2[1]v</code> hat drei Teile:</p>
+    <ul>
+      <li><strong><code>%v</code>:</strong> An dieser Stelle setzt <code>Printf</code> einen Wert ein.</li>
+      <li><strong><code>2</code>:</strong> Der Wert bekommt mindestens zwei Zeichen Platz. Eine einstellige Zahl rückt nach rechts, davor steht ein Leerzeichen. So stehen die Zahlen untereinander.</li>
+      <li><strong><code>[1]</code>:</strong> Gemeint ist das erste Argument hinter dem Text, also <code>i</code>. Deshalb kann <code>i</code> zweimal ausgegeben werden, obwohl es nur einmal in der Liste steht.</li>
+    </ul>
+    <p><code>%3v</code> gibt danach das nächste Argument aus, also <code>i*i</code>, mit mindestens drei Zeichen Platz.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–144. Die drei Meldungen des Compilers und die Erklärung der Formatangabe stehen nicht in diesem Abschnitt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Der Ablauf</h2>
+    <p>Die drei Teile der for-Klausel stehen in einer Zeile, laufen aber zu drei verschiedenen Zeiten:</p>
+    <ul>
+      <li><strong>Init-Anweisung:</strong> einmal, ganz am Anfang.</li>
+      <li><strong>Schleifenbedingung:</strong> vor jedem Schleifendurchlauf, auch vor dem ersten.</li>
+      <li><strong>Post-Anweisung:</strong> nach jedem Schleifendurchlauf, also nach dem Schleifenrumpf.</li>
+    </ul>
+
+    <h3>Ausprobieren: Anweisung für Anweisung</h3>
+    <p>Zeile 6 kommt in diesem Lauf immer wieder dran. Hinter ihr steht, welcher Teil der for-Klausel gerade gelaufen ist.</p>
+    <div class="zeile" id="a-grenze">
+      <button type="button" data-grenze="10">Zeile 6 wie im Kurstext: i &lt;= 10</button>
+      <button type="button" data-grenze="3">Zeile 6 geändert: i &lt;= 3</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">Nächste Anweisung</button>
+      <button type="button" id="a-ende">Bis zum Ende</button>
+      <button type="button" id="a-vorn">Von vorn</button>
+    </div>
+    <div class="feld">
+      <span class="was">i</span><span class="wie" id="a-i"></span>
+      <span class="was">Prüfungen der Bedingung bisher</span><span class="wie" id="a-pruef"></span>
+      <span class="was">Schleifendurchläufe bisher</span><span class="wie" id="a-durch"></span>
+    </div>
+    <div class="auskunft" id="a-text"></div>
+    <ol class="programm" id="a-programm"></ol>
+    <div class="konsole" id="a-konsole"></div>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Das Schild hinter Zeile 6 nennt den Teil der for-Klausel, der gerade gelaufen ist: grau für Init-Anweisung und Post-Anweisung, grün oder rot für das Ergebnis der Schleifenbedingung.</p>
+    <p class="quelle">Listing 5.6, <code>for_klausel_quadrat.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.2. Die Fassung mit <code>i &lt;= 3</code> ist für diese Seite geändert.</p>
+
+    <h3>Das Ende genau betrachtet</h3>
+    <p>Nach dem letzten Schleifendurchlauf läuft die Post-Anweisung noch einmal. In der Fassung des Kurstexts hat <code>i</code> im zehnten Schleifendurchlauf den Wert 10. Danach erhöht <code>i++</code> den Wert auf 11. Erst die nächste Prüfung <code>11 &lt;= 10</code> ergibt <code>false</code> und beendet die Schleife.</p>
+    <p>Die Schleifenbedingung wird also elfmal geprüft, der Schleifenrumpf läuft zehnmal.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–144.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Die Laufvariable</h2>
+    <p>Die Init-Anweisung darf jede einfache Anweisung sein. Fast immer ist sie eine kurze Variablendeklaration und führt eine Variable ein, die in der Schleife zählt. Diese Variable heißt Laufvariable, manchmal auch Kontrollvariable.</p>
+
+    <h3>Wo die Laufvariable gilt</h3>
+    <p>Der Gültigkeitsbereich einer Laufvariable, die in der Init-Anweisung deklariert ist, umfasst die ganze for-Anweisung: die for-Klausel und den Schleifenrumpf. Sie ist eine lokale Variable der Schleife. Hinter der Schleife gibt es sie nicht mehr.</p>
+    <div class="zeile" id="l-knoepfe">
+      <button type="button" data-lauf="0">i im Schleifenrumpf</button>
+      <button type="button" data-lauf="1">i hinter der Schleife</button>
+      <button type="button" data-lauf="2">i vor der Schleife deklariert</button>
+    </div>
+    <ol class="programm" id="l-programm"></ol>
+    <div class="feld">
+      <span class="was" id="l-art"></span><span class="wie" id="l-ergebnis"></span>
+      <span class="was">Ausgabe</span><span class="wie" id="l-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="l-text"></div>
+    <p class="legende">Gelb markiert ist die Zeile, auf die es in der gewählten Fassung ankommt. Die drei Programme sind Ausschnitte ohne <code>package</code>, <code>import</code> und <code>func main</code>.</p>
+
+    <h3>Wie die Laufvariable heißt</h3>
+    <p>Laufvariablen heißen üblicherweise <code>i</code>, <code>j</code> oder <code>k</code>. Dafür gibt es zwei Gründe:</p>
+    <ul>
+      <li><strong>Erkennbar:</strong> Wer <code>i</code> liest, erkennt die Laufvariable auf den ersten Blick.</li>
+      <li><strong>Der Grundsatz dahinter:</strong> Je kleiner der Gültigkeitsbereich einer Variable ist, desto kürzer darf ihr Bezeichner sein. Eine Laufvariable gilt nur in ihrer Schleife. Dort bleibt ihre Bedeutung auch mit einem Namen aus einem Buchstaben klar.</li>
+    </ul>
+
+    <h3>Zwei Laufvariablen</h3>
+    <p>Eine kurze Variablendeklaration kann mehrere Variablen deklarieren, und eine Tupel-Zuweisung kann mehreren Variablen Werte geben. Beide sind je eine einfache Anweisung. Deshalb kann eine for-Klausel zwei Laufvariablen führen:</p>
+<pre class="code-block">for i, j := 0, 100; i &lt; j; i, j = i+1, j-5 {
+    fmt.Println("i, j:", i, j)
+}</pre>
+    <ul>
+      <li><strong>Init-Anweisung:</strong> <code>i</code> beginnt mit 0, <code>j</code> mit 100.</li>
+      <li><strong>Post-Anweisung:</strong> <code>i</code> wächst um 1, <code>j</code> schrumpft um 5.</li>
+      <li><strong>Ausgabe:</strong> 17 Zeilen. Die erste ist <code>i, j: 0 100</code>, die letzte <code>i, j: 16 20</code>. Danach hat <code>i</code> den Wert 17 und <code>j</code> den Wert 15, und <code>17 &lt; 15</code> ergibt <code>false</code>.</li>
+    </ul>
+    <p>Solche Schleifen kommen bei höherdimensionalen Arrays vor, die in Abschnitt 6.3 behandelt werden.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–145, mit dem Expertenwissen 5.15. Die drei Programme der Demo und die Meldung des Compilers stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Eine Schleife, vier Schreibweisen</h2>
+    <p>Alle drei Teile der for-Klausel dürfen fehlen. Daran sieht man: Go hat im Grunde nur eine Schleife. Die for-Anweisung mit Bedingung und die Schleife ohne Bedingung sind verkürzte Schreibweisen der for-Anweisung mit for-Klausel.</p>
+    <p>Jeder Knopf zeigt eine Schreibweise. Alle vier Programme geben 1, 2 und 3 aus.</p>
+    <div class="zeile" id="v-knoepfe">
+      <button type="button" data-variante="0">mit allen drei Teilen</button>
+      <button type="button" data-variante="1">ohne Init- und Post-Anweisung</button>
+      <button type="button" data-variante="2">ohne die Semikolons</button>
+      <button type="button" data-variante="3">ohne Schleifenbedingung</button>
+    </div>
+    <pre class="code-block" id="v-programm"></pre>
+    <div class="auskunft" id="v-text"></div>
+
+    <h3>Wozu eine Schleife ohne Bedingung gut ist</h3>
+    <p>Eine Schleife, deren Bedingung immer <code>true</code> ist, wirkt zunächst sinnlos. Gebraucht wird sie in Programmen, die auf Dauer laufen und immer wieder Daten einlesen oder ausgeben. Eine solche Schleife heißt auf Englisch event loop.</p>
+    <p>Weil die Bedingung nie <code>false</code> ergibt, muss die Schleife auf anderem Weg enden: mit <code>break</code> oder mit dem Ende des ganzen Programms durch <code>os.Exit(0)</code>. Zu <code>break</code> gibt es die Seite <a href="go_k5_break_interaktiv.html">break-Anweisung</a>.</p>
+    <p>Die dritte Art der for-Anweisung, die mit <code>range</code>, wird in Abschnitt 6.2 bei den Arrays behandelt.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 145–146, mit dem Expertenwissen 5.16. Die vier Programme sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Aus der Praxis</h2>
+    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.3.2 des Kurstexts. Go übersetzt jede Fassung, auch die vier mit dem Kommentar „falsch“. <code>{ … }</code> steht für einen beliebigen Schleifenrumpf.</div>
+
+    <h3>1. Startwert und Vergleich gehören zusammen</h3>
+<pre class="code-block">for i := 0; i &lt; 10; i++ { … }    // zehn Schleifendurchläufe: i von 0 bis 9
+for i := 1; i &lt;= 10; i++ { … }   // zehn Schleifendurchläufe: i von 1 bis 10</pre>
+<pre class="code-block">for i := 1; i &lt; 10; i++ { … }    // falsch: nur neun Schleifendurchläufe
+for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
+    <p>Wer zehnmal zählen will, hat zwei übliche Formen: ab 0 mit <code>&lt;</code> oder ab 1 mit <code>&lt;=</code>. Wer die Formen mischt, zählt einmal zu wenig oder einmal zu viel. Der Fehler heißt auf Englisch off-by-one error.</p>
+    <p>In Go ist die Form ab 0 die häufigere. Der Grund kommt in Kapitel 6: Das erste Element eines Arrays hat den Index 0.</p>
+
+    <h3>2. Die Laufvariable ändert nur die Post-Anweisung</h3>
+<pre class="code-block">for i := 1; i &lt;= 10; i++ {
+    fmt.Print(i, " ")
+    i++              // falsch: i wird zweimal je Schleifendurchlauf erhöht
+}                    // Ausgabe: 1 3 5 7 9</pre>
+    <p>Die for-Klausel verspricht dem Leser: Diese Schleife zählt von 1 bis 10 in Schritten von 1. Ändert der Schleifenrumpf die Laufvariable, stimmt das nicht mehr, und niemand sieht es der ersten Zeile an.</p>
+    <p>Wer in Schritten von 2 zählen will, schreibt es in die Post-Anweisung: <code>for i := 1; i &lt;= 10; i += 2</code>.</p>
+
+    <h3>3. Wer herunterzählt, dreht alle drei Teile um</h3>
+<pre class="code-block">for i := 10; i &gt;= 1; i-- { … }   // zehn Schleifendurchläufe: i von 10 bis 1</pre>
+<pre class="code-block">for i := 10; i &lt;= 1; i-- { … }   // falsch: kein einziger Schleifendurchlauf</pre>
+    <p>Beim Herunterzählen ändern sich der Startwert, der Vergleich und die Post-Anweisung. In der zweiten Fassung ist der Vergleich stehen geblieben: <code>10 &lt;= 1</code> ergibt schon bei der ersten Prüfung <code>false</code>, und die Schleife läuft nie.</p>
+    <p>Die Prüffrage ist die gleiche wie bei der for-Anweisung mit Bedingung: Ergibt die Schleifenbedingung am Anfang <code>true</code>, und sorgt die Post-Anweisung dafür, dass sie irgendwann <code>false</code> ergibt?</p>
+
+    <p>Zum Abschluss: Das <a href="151_go_k5_for_klausel_quiz.html">Quiz zur for-Anweisung mit for-Klausel</a> fragt den Stoff von Abschnitt 5.5.3.2 ab.</p>
+    <p class="quelle">Faustregeln zur for-Anweisung mit Bedingung stehen auf der Seite <a href="go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+  function nummern(liste) { return liste.length < 2 ? String(liste[0]) : liste.slice(0, -1).join(", ") + " und " + liste[liste.length - 1]; }
+  function einmalig(liste) { return liste.filter(function (z, i) { return liste.indexOf(z) === i; }).sort(function (a, b) { return a - b; }); }
+
+  // Ein Programm als nummerierte Liste. Eine Zeile: t Text, k Klasse (war, aktuell), m Schild hinter der Zeile, mk Klasse des Schilds
+  function zeigeProgramm(id, zeilen) {
+    $(id).innerHTML = zeilen.map(function (z, i) {
+      return "<li" + (z.k ? " class=\"" + z.k + "\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z.t) +
+        (z.m ? "<span class=\"marke " + z.mk + "\">" + esc(z.m) + "</span>" : "") + "</li>";
+    }).join("");
+  }
+  function mitNummern(texte) { return texte.map(function (t, i) { return (i + 1) + "  " + t; }); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#ablauf
+  var ANKER = ["worum", "klausel", "ablauf", "laufvariable", "varianten", "praxis"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: wo die drei Teile stehen ----
+
+  var DRUCK = "    fmt.Printf(\"%2[1]v * %2[1]v ist %3v\\n\", i, i*i)";
+  var ALT = ["i := 1", "for i <= 10 {", DRUCK, "    i++", "}"];
+  var NEU = ["for i := 1; i <= 10; i++ {", DRUCK, "}"];
+  var TEILE = [
+    { name: "Init-Anweisung", stueck: "i := 1",
+      text: "<p>Die Init-Anweisung läuft genau einmal, bevor die Schleifenbedingung zum ersten Mal geprüft wird. Danach kommt sie nicht mehr dran.</p><p>Links steht sie als eigene Zeile vor der Schleife. Rechts steht sie in der for-Klausel vor dem ersten Semikolon.</p><p>Sie muss eine einfache Anweisung sein. Meist ist sie eine kurze Variablendeklaration.</p>" },
+    { name: "Schleifenbedingung", stueck: "i <= 10",
+      text: "<p>Die Schleifenbedingung wird vor jedem Schleifendurchlauf geprüft, auch vor dem ersten. Ergibt sie " + c("false") + ", ist die Schleife zu Ende.</p><p>Sie steht in beiden Programmen hinter " + c("for") + ", rechts zwischen den zwei Semikolons.</p><p>Sie ist ein boolescher Ausdruck und enthält meist die Laufvariable.</p>" },
+    { name: "Post-Anweisung", stueck: "i++",
+      text: "<p>Die Post-Anweisung läuft nach jedem Schleifendurchlauf, also immer erst nach dem Schleifenrumpf. Danach wird die Schleifenbedingung erneut geprüft.</p><p>Links steht sie als letzte Zeile im Schleifenrumpf. Rechts steht sie in der for-Klausel hinter dem zweiten Semikolon.</p><p>Sie muss eine einfache Anweisung sein, darf aber keine kurze Variablendeklaration sein. Meist ist sie " + c("i++") + ", " + c("i--") + " oder eine Zuweisung.</p>" }
+  ];
+  var teil = 0;
+  function markiert(zeilen, stueck) {
+    var gefunden = false;
+    return zeilen.map(function (z) {
+      var ort = gefunden ? -1 : z.indexOf(stueck);
+      if (ort < 0) return esc(z);
+      gefunden = true;
+      return esc(z.slice(0, ort)) + "<mark>" + esc(stueck) + "</mark>" + esc(z.slice(ort + stueck.length));
+    }).join("\n");
+  }
+  function zeigeTeil() {
+    var t = TEILE[teil];
+    $("k-alt").innerHTML = markiert(ALT, t.stueck);
+    $("k-neu").innerHTML = markiert(NEU, t.stueck);
+    $("k-text").innerHTML = t.text;
+    jeder("#k-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.teil) === teil); });
+  }
+
+  // ---- Schritt 2: Listing 5.6 Anweisung für Anweisung ----
+
+  var grenze = 3, ort2 = 0;
+  function listing() {
+    return ["package main", "", "import \"fmt\"", "", "func main() {", "    for i := 1; i <= " + grenze + "; i++ {", "    " + DRUCK, "    }", "}"];
+  }
+  function breit(zahl, n) { var s = String(zahl); while (s.length < n) s = " " + s; return s; }
+  // Der Lauf: je ausgeführtem Teil ein Eintrag. teil nennt den Teil der for-Klausel in Zeile 6, i ist null, solange es die Laufvariable nicht gibt.
+  function lauf2() {
+    var i = null, k = 0, d = 0, aus = [], s = [];
+    function dazu(zeile, teilName, ergebnis, text) { s.push({ zeile: zeile, teil: teilName, ergebnis: ergebnis, text: text, i: i, k: k, d: d, aus: aus.slice() }); }
+    dazu(5, "", null, "Das Programm beginnt in der Funktion main. Die Laufvariable i gibt es noch nicht.");
+    i = 1;
+    dazu(6, "Init-Anweisung", null, "Die Init-Anweisung i := 1 deklariert die Laufvariable i und belegt sie mit dem Startwert 1. Das geschieht genau einmal.");
+    while (true) {
+      k++;
+      var b = i <= grenze;
+      dazu(6, "Schleifenbedingung", b, k + ". Prüfung der Schleifenbedingung: " + i + " <= " + grenze + " ergibt " + b + "." + (b ? " Der Schleifenrumpf wird ausgeführt." : " Die for-Anweisung ist zu Ende. Der Schleifenrumpf wird nicht noch einmal ausgeführt."));
+      if (!b) break;
+      d++;
+      aus.push(breit(i, 2) + " * " + breit(i, 2) + " ist " + breit(i * i, 3));
+      dazu(7, "", null, d + ". Schleifendurchlauf: Das Programm gibt i und i*i aus, also " + i + " und " + (i * i) + ". Der Schleifenrumpf ist zu Ende. Es geht zurück zu Zeile 6, zur Post-Anweisung.");
+      i++;
+      dazu(6, "Post-Anweisung", null, "Die Post-Anweisung i++ erhöht i um 1. i hat jetzt den Wert " + i + ". Als Nächstes wird die Schleifenbedingung erneut geprüft.");
+    }
+    i = null;
+    dazu(9, "", null, "Das Programm macht hinter der for-Anweisung weiter. Dort folgt keine Anweisung mehr, das Programm ist zu Ende. Die Laufvariable i gibt es nicht mehr. Der Schleifenrumpf wurde " + d + "-mal ausgeführt, die Schleifenbedingung " + k + "-mal geprüft.");
+    return s;
+  }
+  function schild(e) { return e.teil === "Schleifenbedingung" ? "Schleifenbedingung: " + e.ergebnis : e.teil; }
+  function zeigeAblauf() {
+    var s = lauf2(), e = s[ort2], war = s.slice(0, ort2 + 1).map(function (x) { return x.zeile; }), fertig = ort2 === s.length - 1;
+    zeigeProgramm("a-programm", listing().map(function (t, n) {
+      var nr = n + 1, hier = nr === e.zeile;
+      return { t: t, k: hier ? "aktuell" : war.indexOf(nr) >= 0 ? "war" : "",
+        m: hier && e.teil ? schild(e) : "", mk: e.ergebnis === null ? "offen" : e.ergebnis ? "wahr" : "falsch" };
+    }));
+    $("a-i").textContent = e.i === null ? (ort2 === 0 ? "gibt es noch nicht" : "gibt es nicht mehr") : e.i;
+    $("a-pruef").textContent = e.k;
+    $("a-durch").textContent = e.d;
+    $("a-konsole").textContent = e.aus.length ? e.aus.join("\n") : "noch keine";
+    $("a-text").innerHTML = "<p><strong>Zeile " + e.zeile + (e.teil ? ", " + esc(e.teil) : "") + ":</strong> " + esc(e.text) + "</p>";
+    $("a-weiter").disabled = fertig;
+    $("a-ende").disabled = fertig;
+    jeder("#a-grenze button", function (k) { k.classList.toggle("haupt", Number(k.dataset.grenze) === grenze); });
+  }
+
+  // ---- Schritt 3: wo die Laufvariable gilt ----
+  // Ausgaben und Meldung stammen aus Läufen mit Go 1.26.
+
+  var GELTUNG = [
+    { name: "i im Schleifenrumpf", zeilen: ["for i := 1; i <= 3; i++ {", "    fmt.Println(i)", "}"], marke: 2, fehler: false, ausgabe: "1\n2\n3",
+      text: "<p>Zeile 2 steht im Schleifenrumpf. Dort gilt die Laufvariable " + c("i") + ", und das Programm kann ihren Wert ausgeben.</p>" },
+    { name: "i hinter der Schleife", zeilen: ["for i := 1; i <= 3; i++ {", "    fmt.Println(i)", "}", "fmt.Println(i)"], marke: 4, fehler: true, meldung: "undefined: i", ausgabe: "keine, das Programm läuft nicht",
+      text: "<p>Zeile 4 steht hinter der schließenden Klammer der Schleife. Dort gibt es " + c("i") + " nicht mehr. Go übersetzt das Programm nicht.</p><p>Die Meldung heißt auf Deutsch: i ist nicht definiert.</p>" },
+    { name: "i vor der Schleife deklariert", zeilen: ["i := 1", "for ; i <= 3; i++ {", "    fmt.Println(i)", "}", "fmt.Println(\"danach:\", i)"], marke: 5, fehler: false, ausgabe: "1\n2\n3\ndanach: 4",
+      text: "<p>" + c("i") + " ist hier in Zeile 1 vor der Schleife deklariert und gehört nicht zur for-Klausel. Die Init-Anweisung ist leer, das erste Semikolon bleibt stehen.</p><p>Deshalb gilt " + c("i") + " auch in Zeile 5 hinter der Schleife. Der Wert ist 4: Mit ihm hat die Prüfung " + c("4 <= 3") + " die Schleife beendet.</p><p>So schreibt man eine Schleife nur, wenn das Programm den Wert danach braucht.</p>" }
+  ];
+  var geltung = 0;
+  function zeigeGeltung() {
+    var g = GELTUNG[geltung];
+    zeigeProgramm("l-programm", g.zeilen.map(function (t, i) { return { t: t, k: i + 1 === g.marke ? "aktuell" : "" }; }));
+    $("l-art").textContent = g.fehler ? "Meldung des Compilers" : "Ergebnis";
+    $("l-ergebnis").textContent = g.fehler ? g.meldung : "Go übersetzt das Programm.";
+    $("l-ergebnis").classList.toggle("fehler", g.fehler);
+    $("l-ausgabe").textContent = g.ausgabe;
+    $("l-text").innerHTML = g.text;
+    jeder("#l-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.lauf) === geltung); });
+  }
+
+  // ---- Schritt 4: eine Schleife, vier Schreibweisen ----
+
+  var VARIANTE = [
+    { name: "mit allen drei Teilen", zeilen: ["for i := 1; i <= 3; i++ {", "    fmt.Println(i)", "}"],
+      text: "<p>Das ist die for-Anweisung mit for-Klausel, wie Schritt 1 bis 3 sie zeigen.</p>" },
+    { name: "ohne Init- und Post-Anweisung", zeilen: ["i := 1", "for ; i <= 3; {", "    fmt.Println(i)", "    i++", "}"],
+      text: "<p>Init-Anweisung und Post-Anweisung fehlen. Von der for-Klausel bleiben die Schleifenbedingung und die zwei Semikolons.</p><p>Die Deklaration von " + c("i") + " steht jetzt vor der Schleife, " + c("i++") + " steht im Schleifenrumpf.</p><p>Go übersetzt das Programm. Die zwei Semikolons sind hier nutzlos.</p>" },
+    { name: "ohne die Semikolons", zeilen: ["i := 1", "for i <= 3 {", "    fmt.Println(i)", "    i++", "}"],
+      text: "<p>Stehen in der for-Klausel nur noch die Schleifenbedingung und zwei Semikolons, dürfen die Semikolons wegfallen.</p><p>Das Ergebnis ist die for-Anweisung mit Bedingung aus Abschnitt 5.5.3.1. Sie ist also eine verkürzte for-Anweisung mit for-Klausel.</p>" },
+    { name: "ohne Schleifenbedingung", zeilen: ["i := 1", "for {", "    if i > 3 {", "        break", "    }", "    fmt.Println(i)", "    i++", "}"],
+      text: "<p>Auch die Schleifenbedingung fehlt. Go setzt dann stillschweigend " + c("true") + " ein: " + c("for {") + " bedeutet " + c("for true {") + ".</p><p>Die Schleife ist von sich aus eine Endlosschleife. Hier beendet " + c("break") + " sie, sobald " + c("i") + " größer als 3 ist.</p>" }
+  ];
+  var variante = 0;
+  function zeigeVariante() {
+    var v = VARIANTE[variante];
+    $("v-programm").textContent = v.zeilen.join("\n");
+    $("v-text").innerHTML = v.text;
+    jeder("#v-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.variante) === variante); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-teil], [data-grenze], [data-lauf], [data-variante]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.teil !== undefined) { teil = Number(d.teil); zeigeTeil(); }
+    else if (d.grenze !== undefined) { grenze = Number(d.grenze); ort2 = 0; zeigeAblauf(); }
+    else if (d.lauf !== undefined) { geltung = Number(d.lauf); zeigeGeltung(); }
+    else if (d.variante !== undefined) { variante = Number(d.variante); zeigeVariante(); }
+    melde(false);
+  });
+  $("a-weiter").addEventListener("click", function () { ort2 = Math.min(ort2 + 1, lauf2().length - 1); zeigeAblauf(); melde(false); });
+  $("a-ende").addEventListener("click", function () { ort2 = lauf2().length - 1; zeigeAblauf(); melde(false); });
+  $("a-vorn").addEventListener("click", function () { ort2 = 0; zeigeAblauf(); melde(false); });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Die for-Klausel", "Schritt 2: Der Ablauf", "Schritt 3: Die Laufvariable", "Schritt 4: Eine Schleife, vier Schreibweisen", "Schritt 5: Aus der Praxis"];
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
+    if (stufe === 1) {
+      var t = TEILE[teil];
+      return ["Gewählt ist der Teil „" + t.name + "“. Gelb markiert ist in beiden Programmen das Stück " + t.stueck + ".",
+        "Links, im Programm mit Bedingung, steht dieses Stück " + ["als eigene Zeile vor der Schleife", "hinter for", "als letzte Zeile im Schleifenrumpf"][teil] + ". Rechts, im Programm mit for-Klausel, steht es " + ["vor dem ersten Semikolon", "zwischen den zwei Semikolons", "hinter dem zweiten Semikolon"][teil] + ".",
+        "Wählbar sind nur die drei Teile Init-Anweisung, Schleifenbedingung und Post-Anweisung. Die Demo führt die Programme nicht aus."];
+    }
+    if (stufe === 2) {
+      var s = lauf2(), e = s[ort2], fertig = ort2 === s.length - 1, ende = s[s.length - 1];
+      return ["In Zeile 6 steht i <= " + grenze + (grenze === 10 ? ", wie im Kurstext." : ". Diese Fassung ist für die Seite geändert, im Kurstext steht i <= 10.") + " Wählbar sind nur die zwei Fassungen i <= 10 und i <= 3.",
+        "Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert. Das ist Anweisung " + (ort2 + 1) + " von " + s.length + " dieses Laufs." + (e.teil ? " Hinter Zeile 6 steht das Schild „" + schild(e) + "“." : " Hinter Zeile 6 steht gerade kein Schild."),
+        "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
+        "Die Laufvariable i " + (e.i === null ? (ort2 === 0 ? "gibt es noch nicht." : "gibt es nicht mehr.") : "hat den Wert " + e.i + ".") + " Die Schleifenbedingung wurde bisher " + e.k + "-mal geprüft. Der Schleifenrumpf ist bisher " + e.d + "-mal gelaufen.",
+        "Schon gelaufen sind die Zeilen " + nummern(einmalig(s.slice(0, ort2 + 1).map(function (x) { return x.zeile; }))) + ".",
+        "Ausgabe bisher: " + (e.aus.length ? e.aus.join(" ; ") : "noch keine"),
+        fertig ? "Der Lauf ist zu Ende." : "Der Lauf ist noch nicht zu Ende. Am Ende ist der Schleifenrumpf " + ende.d + "-mal ausgeführt und die Schleifenbedingung " + ende.k + "-mal geprüft."];
+    }
+    if (stufe === 3) {
+      var g = GELTUNG[geltung];
+      return ["Gewählt ist die Fassung „" + g.name + "“. Gelb markiert ist Zeile " + g.marke + ".",
+        g.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + g.meldung : "Go übersetzt diese Fassung. Die Ausgabe: " + g.ausgabe.replace(/\n/g, " ; "),
+        "Wählbar sind nur die drei Fassungen „i im Schleifenrumpf“, „i hinter der Schleife“ und „i vor der Schleife deklariert“. Die Demo zeigt das Ergebnis, einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
+    }
+    var v = VARIANTE[variante];
+    return ["Gewählt ist die Schreibweise „" + v.name + "“. Ihre Zeilen: " + v.zeilen.join(" ; "),
+      "Alle vier Schreibweisen geben 1, 2 und 3 aus. Go übersetzt alle vier.",
+      "Wählbar sind nur die vier Schreibweisen: " + VARIANTE.map(function (x) { return "„" + x.name + "“"; }).join(", ") + "."];
+  }
+  function kurz() {
+    if (stufe === 1) return TEILE[teil].name;
+    if (stufe === 2) { var e = lauf2()[ort2]; return "i <= " + grenze + ", Zeile " + e.zeile + (e.teil ? ", " + e.teil : "") + (e.i === null ? "" : ", i = " + e.i); }
+    if (stufe === 3) return GELTUNG[geltung].name;
+    if (stufe === 4) return VARIANTE[variante].name;
+    return "";
+  }
+  // Programmzeilen: die Programme der Demos, dazu jeder feste Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre:not([id])")).reduce(function (alle, p) {
+      return alle.concat(["---"], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    var demo = stufe === 1 ? ["Links, mit Bedingung:"].concat(ALT, ["---", "Rechts, mit for-Klausel:"], NEU)
+      : stufe === 2 ? mitNummern(listing())
+      : stufe === 3 ? mitNummern(GELTUNG[geltung].zeilen)
+      : stufe === 4 ? ["Schreibweise „" + VARIANTE[variante].name + "“:"].concat(VARIANTE[variante].zeilen) : [];
+    return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
+  }
+
+  zeigeTeil();
+  zeigeAblauf();
+  zeigeGeltung();
+  zeigeVariante();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "for-Anweisung mit for-Klausel in Go",
+    thema: "for-Anweisung mit for-Klausel, Init-Anweisung, Schleifenbedingung, Post-Anweisung, Laufvariable, Schleife",
+    bezug: "Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 142–146",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_for_klausel_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Wann genau wird i++ ausgeführt?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
