@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klausurenlotse: Beschreibung und Anleitung</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    li { margin:6px 0; }
+    .hinweis { margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+    /* Kasten zur Weitergabe: steht in „Worum es geht“ und beim Herunterladen */
+    .nur-kurs { border:2px solid #b91c1c;background:#fef2f2;border-radius:8px;padding:12px 16px;margin:14px 0; }
+    .nur-kurs p { margin:0 0 8px; } .nur-kurs p:last-child { margin-bottom:0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Klausurenlotse</h1>
+    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Die Seite beschreibt, was er tut, und führt dich in vier Schritten vom Herunterladen bis zur ersten Aufgabe.</p>
+    <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
+    <button type="button" class="tab" data-stufe="2">2 Schlüssel einrichten</button>
+    <button type="button" class="tab" data-stufe="3">3 Die Aufgabenformen</button>
+    <button type="button" class="tab" data-stufe="4">4 Den Kurslotsen fragen</button>
+    <button type="button" class="tab" data-stufe="5">Gut zu wissen</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Er stellt dir Aufgaben aus den fünf Klausuren vom Sommersemester 2024 bis zum Sommersemester 2026, in den sechs Aufgabenformen, die in diesen Klausuren vorkommen.</p>
+    <p>Du löst eine Aufgabe und lässt deine Antwort prüfen. Zu jeder Aufgabe kannst du nachfragen. Bei der Aufgabenform „Was passiert?“ schreibt dir ein Sprachmodell auf Knopfdruck neue Aufgaben im Stil der Klausuren.</p>
+
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Klausurenlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält Aufgaben aus alten Klausuren und den Kurstext der FernUniversität.</p>
+    </div>
+
+    <h3>Was du auf dem Bildschirm siehst</h3>
+    <ul>
+      <li><strong>Oben:</strong> die Auswahl der Aufgabenform und der Aufgabe.</li>
+      <li><strong>Links:</strong> die Aufgabe mit den Feldern für deine Antwort.</li>
+      <li><strong>Rechts:</strong> die Spalte „Kurslotse“. Dort stellst du Fragen zur Aufgabe und bekommst Antworten mit Stellen aus dem Kurstext.</li>
+    </ul>
+
+    <h3>Was du brauchst</h3>
+    <ul>
+      <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Das Programm läuft auf deinem eigenen Rechner.</li>
+      <li><strong>Paket:</strong> eine ZIP-Datei aus Moodle. Schritt 1 zeigt, wo sie liegen wird.</li>
+      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Schritt 2 zeigt, wie du ihn einrichtest. Das Quiz läuft auch ohne Schlüssel.</li>
+    </ul>
+
+    <div class="hinweis">Der Klausurenlotse ist ein privates Angebot deines Mentors. Verbindlich sind allein der Kurstext und Moodle der FernUniversität. Welche Aufgaben in deiner Klausur stehen, weiß der Klausurenlotse nicht. Das Sprachmodell kann sich irren.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Herunterladen und starten</h2>
+    <div class="hinweis">Das Paket des Klausurenlotsen folgt in den nächsten Tagen. Die Schritte zum Entpacken und Starten stehen hier, sobald es in Moodle liegt.</div>
+
+    <h3>Wo das Paket liegen wird</h3>
+    <p>Das Paket kommt nach Moodle, in den Beitrag deines Mentors im Forum des Mentoriats. Dort steht es in der Tabelle „Die Lotsen zum Kurs“.</p>
+    <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Klausurenlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält Aufgaben aus alten Klausuren und den Kurstext der FernUniversität.</p>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Den Schlüssel für KI:connect einrichten</h2>
+    <p>KI:connect ist der KI-Dienst der Hochschulen in Nordrhein-Westfalen. Als Student der FernUniversität darfst du ihn nutzen. Der Klausurenlotse stellt deine Fragen dort, und dafür braucht er deinen persönlichen Schlüssel. Du richtest ihn einmal ein.</p>
+    <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen dieselben Schritte:</p>
+    <ol>
+      <li>Öffne <a href="https://chat.kiconnect.nrw" target="_blank" rel="noopener">chat.kiconnect.nrw</a>, wähle „FernUniversität in Hagen“ und melde dich an.</li>
+      <li>Klick unten links auf deinen Namen und dann auf „API-Schlüsselverwaltung“.</li>
+      <li>Gib einen Namen ein, zum Beispiel „mentoriat“, und klick auf „Schlüssel erstellen“.</li>
+      <li>Kopiere den Schlüssel. KI:connect zeigt ihn nur einmal an.</li>
+      <li>Füge den Schlüssel auf der Seite des Klausurenlotsen ein und klick auf „Prüfen und übernehmen“.</li>
+    </ol>
+
+    <h3>Was mit dem Schlüssel geschieht</h3>
+    <ul>
+      <li><strong>Er bleibt bei dir:</strong> Der Schlüssel bleibt auf deinem Rechner. Das Programm schickt ihn nur an KI:connect.</li>
+      <li><strong>Er ist persönlich:</strong> Gib den Schlüssel niemandem weiter.</li>
+      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für den Skriptlotsen oder den Kurslotsen eingerichtet, findet ihn der Klausurenlotse von selbst.</li>
+    </ul>
+
+    <h3>Ohne Schlüssel</h3>
+    <p>Mit „Ohne Schlüssel weiter“ bleiben die Aufgaben, die berechneten Ergebnisse, das Quiz und die Musterantworten. Es fehlen die Antworten des Kurslotsen, die neuen Aufgaben und die Beurteilung deiner Texte.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Die Aufgabenformen</h2>
+    <p>Du wählst erst die Aufgabenform und dann die Aufgabe. Bei jeder Aufgabenform prüft der Klausurenlotse deine Antwort auf eine andere Art.</p>
+
+    <h3>Was passiert?</h3>
+    <ul>
+      <li><strong>Aufgabe:</strong> Du siehst eine kurze Funktion und einige Aufrufe. Du wertest die Aufrufe von Hand aus und beschreibst, was die Funktion berechnet.</li>
+      <li><strong>Prüfung:</strong> Die Ergebnisse stammen von Go. Das Programm übersetzt die Funktion und führt sie aus. Deine Beschreibung beurteilt das Sprachmodell.</li>
+      <li><strong>Neue Aufgaben:</strong> Auf Knopfdruck schreibt das Sprachmodell eine neue Aufgabe im Stil der Klausuren. Auch ihre Ergebnisse rechnet Go aus.</li>
+    </ul>
+
+    <h3>Quiz mit „richtig“ und „falsch“</h3>
+    <ul>
+      <li><strong>Aufgabe:</strong> Du kreuzt bei vier oder fünf Aussagen „richtig“ oder „falsch“ an.</li>
+      <li><strong>Prüfung:</strong> Die Lösung stammt aus der Musterlösung der Klausur. Die Punkte zählt der Klausurenlotse nach der Regel der jeweiligen Klausur.</li>
+      <li><strong>Warum?</strong> Nach dem Prüfen steht neben jeder Aussage der Knopf „Warum?“. Der Kurslotse begründet die Lösung dann mit einer Stelle aus dem Kurstext.</li>
+    </ul>
+
+    <h3>Lücken füllen</h3>
+    <ul>
+      <li><strong>Aufgabe:</strong> Der Rahmen einer Funktion ist vorgegeben, du ergänzt die Lücken. Diese Aufgabenform bringt in der Klausur den größten Teil der Punkte.</li>
+      <li><strong>Prüfung:</strong> Go setzt deine Lücken in den Rahmen ein, übersetzt das Programm und führt es aus. Die Ausgaben vergleicht es mit denen der Musterlösung. Eine andere Schreibweise mit denselben Ergebnissen gilt als richtig.</li>
+    </ul>
+
+    <h3>Kurzfragen, Pseudocode umformen, Verhalten begründen</h3>
+    <ul>
+      <li><strong>Aufgabe:</strong> Du schreibst deine Antwort als freien Text.</li>
+      <li><strong>Musterantwort:</strong> Sie stammt aus der Musterlösung der Klausur. Du deckst sie mit einem Knopf auf.</li>
+      <li><strong>Prüfung:</strong> Mit „Beurteilen lassen“ vergleicht der Kurslotse deine Antwort mit der Musterantwort. Sein Urteil beginnt mit „Das trifft es“, „Das trifft es zum Teil“ oder „Das trifft es nicht“.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Den Kurslotsen fragen</h2>
+    <p>Rechts neben der Aufgabe steht die Spalte „Kurslotse“. Dort beantwortet das Sprachmodell deine Fragen zur Aufgabe, die du gerade siehst.</p>
+    <ul>
+      <li><strong>Fragen:</strong> Tipp deine Frage in das Feld, zum Beispiel „Warum ist der zweite Aufruf 0?“.</li>
+      <li><strong>Stellen aus dem Kurstext:</strong> Zu jeder Frage sucht der Klausurenlotse passende Stellen im Kurstext. Unter der Antwort stehen die Abschnitte, auf die sie sich stützt.</li>
+      <li><strong>Kopieren und Leeren:</strong> Mit „Kopieren“ nimmst du den Dialog in die Zwischenablage, mit „Leeren“ beginnst du neu.</li>
+      <li><strong>Beim Quiz:</strong> Die Spalte erscheint erst nach dem Prüfen, weil der Kurslotse die Musterlösung nennt.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu „Gut zu wissen“</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Gut zu wissen</h2>
+    <ul>
+      <li><strong>Was dein Rechner verlässt:</strong> Die Aufgabe, deine Antwort und deine Frage gehen an KI:connect. Alles andere bleibt auf deinem Rechner.</li>
+      <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
+      <li><strong>Nicht weitergeben:</strong> Das Paket enthält Aufgaben aus den Klausuren und den Kurstext der FernUniversität. Es ist nur für Teilnehmer dieses Kurses bestimmt.</li>
+      <li><strong>Erzeugte Aufgaben:</strong> Eine Aufgabe, die das Sprachmodell geschrieben hat, kann leichter oder schwerer sein als eine Aufgabe der Klausur. Ihre Ergebnisse stimmen, weil Go sie ausrechnet.</li>
+      <li><strong>Fehler und Fragen:</strong> Bring sie ins Mentoriat mit.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel #aufgaben.
+  var ANKER = ["worum", "starten", "schluessel", "aufgaben", "fragen", "wissen"];
+
+  function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
+
+  function zeigeStufe(nummer, nachOben) {
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (!k) return;
+    var d = k.dataset;
+    zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>
