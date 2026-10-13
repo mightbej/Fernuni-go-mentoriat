@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programmierübung: Bubble Sort mit Zeigern</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Bubble Sort mit Zeigern</h1>
+    <p>Die Funktionen <code>isGreater</code> und <code>swap</code> bekommen einen Zeiger auf das Array. Das Programm sortiert wie vorher und kopiert dabei kein Element mehr.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.3 und 7.4, Seiten 171–180. Bubblesort steht im Kurstext in Abschnitt 8.4.2, Seiten 225–226.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 swap</button>
+    <button type="button" class="tab" data-stufe="2">2 isGreater</button>
+    <button type="button" class="tab" data-stufe="3">3 Ein Durchgang</button>
+    <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Die Programmierübung <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> endet mit zwei Funktionen, die das Array als Kopie bekommen:</p>
+    <pre class="code-block">func isGreater(a [10]int, i int) bool {
+    return a[i] &gt; a[i+1]
+}
+
+func swap(a [10]int, i int) [10]int {
+    a[i], a[i+1] = a[i+1], a[i]
+    return a
+}</pre>
+    <p>Daran stören zwei Punkte:</p>
+    <ul>
+      <li><strong>Der Umweg:</strong> <code>swap</code> ändert eine Kopie und gibt sie zurück. Der Aufrufer muss <code>a = swap(a, i)</code> schreiben. Vergisst er <code>a =</code>, sortiert das Programm nicht, und Go meldet nichts.</li>
+      <li><strong>Der Aufwand:</strong> Für zehn Elemente kopiert das Programm 910 Elemente.</li>
+    </ul>
+    <p>Diese Übung übergibt den zwei Funktionen die Adresse des Arrays.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 7.3, Zeiger als Funktionsparameter:</strong> Die Lektion <a href="go_k7_zeiger_interaktiv.html#adresse">Zeiger in Go</a> führt in Schritt 1 Listing 7.2 aus. Die Funktion <code>negToZeroPointer</code> ist das Muster für diese Übung.</li>
+      <li><strong>Abschnitt 7.4.1, Seiteneffekt:</strong> Schritt 3 der gleichen Lektion zeigt die Funktion <code>incr</code>.</li>
+      <li><strong>Die Kopien gezählt:</strong> Der Exkurs <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: swap mit einem Zeiger</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>swap(pa *[10]int, i int)</code> hat keine Rückgabe. Woran sieht der Aufrufer nach <code>swap(&amp;a, 0)</code>, dass sie etwas getan hat?
+          <details><summary>Auflösung</summary>An seinem Array: <code>a[0]</code> und <code>a[1]</code> haben den Platz getauscht. Die Funktion wirkt durch einen Seiteneffekt.</details></li>
+      </ol>
+    </div>
+    <pre class="code-block">// tauscht in dem Array, auf das pa zeigt,
+// die Nachbarn an den Indizes i und i+1
+func swap(pa *[10]int, i int) {
+    pa[i], pa[i+1] = pa[i+1], pa[i]
+}</pre>
+    <p>Gegenüber der Fassung mit einer Kopie ändern sich vier Stellen:</p>
+    <ul>
+      <li><strong>Parameter:</strong> <code>pa *[10]int</code> ist ein Zeiger auf ein Array vom Typ <code>[10]int</code>.</li>
+      <li><strong>Rumpf:</strong> <code>pa[i]</code> ist die Kurzschreibweise für <code>(*pa)[i]</code>, also für das Element <code>i</code> des Arrays, auf das <code>pa</code> zeigt.</li>
+      <li><strong>Rückgabe:</strong> Sie entfällt, mit ihr die return-Anweisung.</li>
+      <li><strong>Aufruf:</strong> <code>swap(&amp;a, i)</code>. Der Adressoperator <code>&amp;</code> liefert die Adresse von <code>a</code>. Die Zuweisung <code>a = …</code> entfällt.</li>
+    </ul>
+    <p>Die Funktion ändert eine Variable, die außerhalb ihres Rumpfs deklariert ist. Im Kurstext heißt das Seiteneffekt.</p>
+    <div class="hinweis">Wer <code>&amp;</code> vergisst und <code>swap(a, i)</code> schreibt, bekommt eine Meldung des Compilers: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>. Der Fehler aus der Fassung mit der Kopie, das vergessene <code>a =</code>, blieb unbemerkt.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, Hinweis 7.4, Seite 177, und Abschnitt 7.4.1, Seiten 178–180. Die Funktion <code>swap</code> ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: isGreater mit einem Zeiger</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>isGreater</code> liest zwei Elemente und ändert nichts. Braucht die Funktion einen Zeiger, damit das Programm richtig sortiert?
+          <details><summary>Auflösung</summary>Nein. Zum Lesen genügt die Kopie, das Ergebnis ist das gleiche. Der Zeiger spart hier nur die Kopie von zehn Elementen je Aufruf.</details></li>
+      </ol>
+    </div>
+    <p><code>isGreater</code> ändert das Array nicht. Die Fassung mit der Kopie liefert deshalb das richtige Ergebnis. Sie kopiert aber bei jedem der 45 Vergleiche zehn Elemente, zusammen 450. Für die Fassung mit einem Zeiger sprechen zwei Gründe:</p>
+    <ul>
+      <li><strong>Aufwand:</strong> Der Aufruf kopiert eine Adresse und kein Element.</li>
+      <li><strong>Einheitlichkeit:</strong> Beide Funktionen bekommen das Array auf die gleiche Art.</li>
+    </ul>
+    <pre class="code-block">// liefert true, wenn das Element am Index i
+// größer ist als sein rechter Nachbar
+func isGreater(pa *[10]int, i int) bool {
+    return pa[i] &gt; pa[i+1]
+}</pre>
+    <p>Die zwei Fassungen im Vergleich:</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Fassung</th><th>Aufruf in main</th><th>Kopierte Elemente bei 45 Vergleichen</th></tr></thead>
+      <tbody>
+        <tr><td><code>isGreater(a [10]int, i int) bool</code></td><td><code>isGreater(a, i)</code></td><td>Die Aufrufe kopieren 450 Elemente.</td></tr>
+        <tr><td><code>isGreater(pa *[10]int, i int) bool</code></td><td><code>isGreater(&amp;a, i)</code></td><td>Die Aufrufe kopieren kein Element.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="hinweis">Ein Zeiger gibt der Funktion die Möglichkeit, das Array zu ändern. Am Aufruf <code>isGreater(&amp;a, i)</code> sieht man nicht, ob sie es tut. Das steht im Rumpf der Funktion und in ihrem Kommentar.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170, und Abschnitt 7.3, Seiten 171–172. Die Abwägung zwischen Kopie und Zeiger für eine Funktion, die nur liest, steht nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Ein Durchgang</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Wie viele Arrays gibt es, während <code>swap</code> läuft?
+          <details><summary>Auflösung</summary>Eines, das Array <code>a</code> in <code>main</code>. Im Rahmen von <code>swap</code> steht nur seine Adresse.</details></li>
+      </ol>
+    </div>
+    <p>Die Demo führt den ersten Durchgang aus. In den Rahmen der zwei Funktionen steht jetzt kein Array mehr. Dort steht der Zeiger <code>pa</code> mit der Adresse von <code>a</code>.</p>
+
+    <ol class="programm" id="b-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="b-weiter">nächste Anweisung</button>
+      <button type="button" id="b-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="b-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="b-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="b-ausgabe"></div>
+    <div class="auskunft" id="b-urteil"></div>
+    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo zeigt die Schleife nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Das ganze Programm</h3>
+    <pre class="code-block" id="p-ganz">package main
+
+import "fmt"
+
+// liefert true, wenn das Element am Index i
+// größer ist als sein rechter Nachbar
+func isGreater(pa *[10]int, i int) bool {
+    return pa[i] &gt; pa[i+1]
+}
+
+// tauscht in dem Array, auf das pa zeigt,
+// die Nachbarn an den Indizes i und i+1
+func swap(pa *[10]int, i int) {
+    pa[i], pa[i+1] = pa[i+1], pa[i]
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+    fmt.Println("Start:", a)
+
+    for durchgang := 0; durchgang &lt; len(a)-1; durchgang++ {
+        for i := 0; i &lt; len(a)-1-durchgang; i++ {
+            if isGreater(&amp;a, i) {
+                swap(&amp;a, i)
+            }
+        }
+        fmt.Printf("Nach Durchgang %d: %v\n", durchgang+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</pre>
+    <div class="zeile"><button type="button" data-kopiere="p-ganz">Programm kopieren</button></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole">Start: [42 7 19 88 3 25 71 14 60 9]
+Nach Durchgang 1: [7 19 42 3 25 71 14 60 9 88]
+Nach Durchgang 2: [7 19 3 25 42 14 60 9 71 88]
+Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]
+Nach Durchgang 4: [3 7 19 14 25 9 42 60 71 88]
+Nach Durchgang 5: [3 7 14 19 9 25 42 60 71 88]
+Nach Durchgang 6: [3 7 14 9 19 25 42 60 71 88]
+Nach Durchgang 7: [3 7 9 14 19 25 42 60 71 88]
+Nach Durchgang 8: [3 7 9 14 19 25 42 60 71 88]
+Nach Durchgang 9: [3 7 9 14 19 25 42 60 71 88]
+Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
+    <p>Die Ausgabe ist die gleiche wie in der Fassung mit Kopien.</p>
+
+    <h3>Die Bilanz</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Fassung</th><th>Vergleiche</th><th>Tausche</th><th>Kopierte Elemente</th></tr></thead>
+      <tbody>
+        <tr><td>Kapitel 6: Alles steht in <code>main</code>.</td><td>45</td><td>23</td><td>0</td></tr>
+        <tr><td>Mit Funktionen und Wertübergabe.</td><td>45</td><td>23</td><td>910</td></tr>
+        <tr><td>Mit Funktionen und Zeigern.</td><td>45</td><td>23</td><td>0</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Zum Weiterdenken</h3>
+    <ul>
+      <li>Schreibe im Rumpf von <code>swap</code> die lange Form <code>(*pa)[i]</code> an die Stelle von <code>pa[i]</code>. Was geschieht ohne die Klammern?</li>
+      <li>Schreibe eine Funktion <code>sortiere(pa *[10]int)</code>, die die zwei Schleifen enthält. Wie lautet der Aufruf in <code>main</code>?</li>
+      <li>Was gibt <code>fmt.Println(&amp;a)</code> aus? Der Kurstext nennt die Antwort in Abschnitt 7.4.</li>
+    </ul>
+    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
+      <tbody>
+        <tr><td>5.3.2 Tupel-Zuweisung</td><td>128–129</td><td><code>swap</code> tauscht zwei Elemente mit einer Tupel-Zuweisung.</td></tr>
+        <tr><td>7.2 Übergabe von Argumenten: call-by-value</td><td>169–170</td><td>Auch der Zeiger wird als Kopie übergeben. Kopiert wird eine Adresse.</td></tr>
+        <tr><td>7.3 Einführendes Beispiel: Zeiger als Funktionsparameter</td><td>171–172</td><td>Beide Funktionen haben einen Parameter vom Typ <code>*[10]int</code>, der Aufruf übergibt <code>&amp;a</code>.</td></tr>
+        <tr><td>7.4 Zeiger in Go, Hinweis 7.4</td><td>177</td><td>Das Programm schreibt <code>pa[i]</code> an der Stelle von <code>(*pa)[i]</code>.</td></tr>
+        <tr><td>7.4.1 Zeiger als Parameter einer Funktion</td><td>178–180</td><td><code>swap</code> wirkt durch einen Seiteneffekt.</td></tr>
+        <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit einem Array von Verbunden.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Die Funktionen <code>isGreater</code> und <code>swap</code> kommen im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
+
+    <h3>Die Reihe</h3>
+    <ul>
+      <li><strong>Davor:</strong> <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a> und <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a>.</li>
+      <li><strong>Danach:</strong> <a href="go_k7_bubblesort_rekursiv_programmieruebung.html">Bubble Sort rekursiv</a>.</li>
+      <li><strong>Das andere Verfahren:</strong> <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#tausch
+  const ANKER = ['worum', 'tausch', 'vergleich', 'durchgang', 'programm', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: swap mit einem Zeiger', 'Schritt 2: isGreater mit einem Zeiger', 'Schritt 3: Ein Durchgang', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9], ADR = 'Adresse von a';
+
+  // ---------- Schritt 3: der erste Durchgang, Aufruf für Aufruf ----------
+  const DB = (function () {
+    const zeilen = ['func isGreater(pa *[10]int, i int) bool {', '    return pa[i] > pa[i+1]', '}', '', 'func swap(pa *[10]int, i int) {', '    pa[i], pa[i+1] = pa[i+1], pa[i]', '}', '',
+      'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    for i := 0; i < len(a)-1; i++ {', '        if isGreater(&a, i) {', '            swap(&a, i)', '        }', '    }', '    fmt.Println(a)', '}'];
+    const lauf = [], a = START.slice();
+    lauf.push({ z: 10, satz: 'main legt das Array a mit zehn Elementen an. Kopierte Elemente bisher: 0.', rahmen: [R('main', [V('a', a.slice(), 1)])], aus: '' });
+    for (let i = 0; i < a.length - 1; i++) {
+      const groesser = a[i] > a[i + 1];
+      lauf.push({ z: 2, satz: 'i ist ' + i + '. main ruft isGreater(&a, ' + i + ') auf. Der Parameter pa bekommt die Adresse von a. Die Funktion liest pa[' + i + '] und pa[' + (i + 1) + '] aus dem Array in main, vergleicht ' + a[i] + ' > ' + a[i + 1] + ' und liefert ' + groesser + '. Kopierte Elemente bisher: 0.',
+        rahmen: [R('main', [V('a', a.slice(), 0, [i, i + 1]), V('i', i)]), R('isGreater', [V('pa', ADR), V('i', i), V('Rückgabe', groesser, 1)])], aus: '' });
+      if (!groesser) continue;
+      const l = a[i]; a[i] = a[i + 1]; a[i + 1] = l;
+      lauf.push({ z: 6, satz: 'Die Bedingung ist erfüllt. main ruft swap(&a, ' + i + ') auf. Die Funktion tauscht pa[' + i + '] und pa[' + (i + 1) + ']. Das sind die Elemente des Arrays in main, der Tausch steht sofort dort. Kopierte Elemente bisher: 0.',
+        rahmen: [R('main', [V('a', a.slice(), 0, [i, i + 1]), V('i', i)]), R('swap', [V('pa', ADR), V('i', i)])], aus: '' });
+    }
+    lauf.push({ z: 16, satz: 'Der Durchgang ist zu Ende. Die 88 steht am Ende des Arrays. Neun Vergleiche und acht Tausche haben kein Element kopiert.', rahmen: [R('main', [V('a', a.slice())])], aus: goArray(a) });
+    return ablauf('b', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.');
+  })();
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe !== 3) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 3. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
+    return standAblauf(DB).concat('Die Demo zeigt den ersten Durchgang. Ein Schritt der Demo ist ein Aufruf von isGreater oder ein Aufruf von swap.',
+      'Der Wert des Zeigers pa steht auf der Seite in Worten: „Adresse von a“. Grün markiert sind im Array von main die zwei Elemente, die der letzte Aufruf gelesen oder getauscht hat.');
+  }
+  const kurzStand = () => stufe === 3 ? (DB.stand ? 'Schritt ' + DB.stand + ' von ' + DB.lauf.length : 'nichts ausgeführt') : '';
+  // Das Programm der Demo steht in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 3) return [];
+    const jetzt = DB.stand ? DB.lauf[DB.stand - 1].z : 0;
+    return DB.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DB.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Programmierübung: Bubble Sort mit Zeigern',
+    thema: 'Bubble Sort, Zeiger auf ein Array, Adressoperator, Kurzschreibweise pa[i], Seiteneffekt, call-by-value',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.3 und 7.4, Seiten 171–180, und Abschnitt 8.4.2, Seiten 225–226',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum braucht swap jetzt keine Rückgabe mehr?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
