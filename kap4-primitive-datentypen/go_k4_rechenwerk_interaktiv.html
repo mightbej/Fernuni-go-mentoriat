@@ -5,13 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert</title>
   <style>
-    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#4338ca;--an:#b45309;--an-bg:#fef3c7;--ueb:#be123c;--ueb-bg:#ffe4e6;--erg:#0f766e;--erg-bg:#d1fae5;--rot:#dc2626;--highlight:#fef3c7; }
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--an:#b45309;--an-bg:#fef3c7;--ueb:#be123c;--ueb-bg:#ffe4e6;--erg:#0f766e;--erg-bg:#d1fae5;--rot:#dc2626;--highlight:#fef3c7; }
     * { box-sizing:border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#e0e7ff 0%,#f7f9fc 46%);line-height:1.6; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#eef5ff 0%,#f7f9fc 46%);line-height:1.6; }
     .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#4338ca 0%,#0f766e 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(67,56,202,.25);margin-bottom:20px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
     .hero h1 { margin:0 0 10px;font-size:1.9rem; }
     .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    .erklaerung { background:#f0fdfa !important; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab { background:#fff;border:1px solid #e5e7eb;color:#1f2937; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:#0f766e;color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
     .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
     h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
     h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
@@ -94,50 +107,107 @@
 
   <div class="hero">
     <h1>Rechenwerk: Von Strom an und aus zu 17 + 4</h1>
-    <p>Ein Computer kennt nur zwei Zustände: Strom fließt oder Strom fließt nicht. Diese Seite zeigt, wie daraus eine Addition wird, und warum die Subtraktion keine eigene Schaltung braucht. Kurstext Kapitel 4.3.5 und 4.3.7.2.</p>
+    <p>Ein Computer kennt nur zwei Zustände: Strom fließt oder Strom fließt nicht. Diese Seite zeigt, wie daraus eine Addition wird und warum die Subtraktion keine eigene Schaltung braucht.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74, und Abschnitt 4.3.5, Seiten 64–66.</p>
   </div>
 
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Ein Gatter</button>
+    <button type="button" class="tab" data-stufe="2">2 Die Gatter auf einem Byte</button>
+    <button type="button" class="tab" data-stufe="3">3 Eine Stelle mit Übertrag</button>
+    <button type="button" class="tab" data-stufe="4">4 Der Addierer</button>
+    <button type="button" class="tab" data-stufe="5">5 Die Subtraktion</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
   <div class="card">
-    <h2>Was die Seite zeigt</h2>
+    <h2>Worum es geht</h2>
     <p>Eine Leitung führt Strom oder sie führt keinen. Das ist ein Bit: 1 oder 0. Acht Leitungen nebeneinander sind ein Byte, also ein Wert vom Typ <code>uint8</code>.</p>
-    <p>Eine Schaltung, die zwei Leitungen zu einer verknüpft, heißt Gatter. Es gibt nur wenige Sorten: AND, OR, XOR und NOT. In Go heißen sie <code>&amp;</code>, <code>|</code> und <code>^</code>. Auf ein Byte angewendet, arbeiten sie auf allen acht Leitungen zugleich.</p>
-    <p>Aus diesen Gattern lässt sich eine Schaltung bauen, die eine einzelne Stelle addiert. Sie bekommt drei Bits: je eines von den beiden Zahlen und den Übertrag von rechts. Sie liefert zwei Bits: die Summe dieser Stelle und den Übertrag nach links. Acht solche Schaltungen hintereinander addieren zwei Bytes. Das ist das Rechenwerk.</p>
-    <p>Die Seite geht diesen Weg in fünf Schritten: ein Gatter, die Gatter auf einem Byte, eine Stelle mit Übertrag, der Addierer mit acht Stellen, die Subtraktion.</p>
-    <p>Wie man die Gatter aus Schaltern, einer Batterie und einer Lampe baut, zeigt die Seite <a href="go_k4_schalter_interaktiv.html">Gatter aus Schaltern</a>.</p>
-  </div>
 
+    <h3>Vom Gatter zum Rechenwerk</h3>
+    <ul>
+      <li><strong>Gatter:</strong> eine Schaltung, die zwei Leitungen zu einer verknüpft. Es gibt nur wenige Sorten: AND, OR, XOR und NOT. In Go heißen sie <code>&amp;</code>, <code>|</code> und <code>^</code>.</li>
+      <li><strong>Gatter auf einem Byte:</strong> Auf ein Byte angewendet, arbeitet ein Gatter auf allen acht Leitungen zugleich.</li>
+      <li><strong>Addierer für eine Stelle:</strong> Aus Gattern lässt sich eine Schaltung bauen, die eine einzelne Stelle addiert. Sie bekommt drei Bits: je eines von den zwei Zahlen und den Übertrag von rechts. Sie liefert zwei Bits: die Summe dieser Stelle und den Übertrag nach links.</li>
+      <li><strong>Rechenwerk:</strong> Acht solche Schaltungen hintereinander addieren zwei Bytes.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Rechnen im Rechner:</strong> Dort steht, dass der Rechner Operationen auf Werten ausführt. Wo das Rechenwerk im ganzen Rechner sitzt, zeigt der <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</li>
+      <li><strong>Abschnitt 4.3.5, Seiten 64–66, Bitmuster und Zweierkomplement:</strong> Dazu gibt es die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+    </ul>
+    <p>Wie man die Gatter aus Schaltern, einer Batterie und einer Lampe baut, zeigt die Seite <a href="go_k4_schalter_interaktiv.html">Gatter aus Schaltern</a>.</p>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt ein einzelnes Gatter mit zwei Eingängen.</li>
+      <li><strong>Schritt 2</strong> zeigt die Bit-Operatoren von Go auf einem Byte.</li>
+      <li><strong>Schritt 3</strong> zeigt die Schaltung für eine Stelle mit Übertrag.</li>
+      <li><strong>Schritt 4</strong> addiert zwei Bytes Stelle für Stelle.</li>
+      <li><strong>Schritt 5</strong> subtrahiert, indem es das Zweierkomplement addiert.</li>
+    </ul>
+    <div class="hinweis">Im Kurstext werden die Bit-Operatoren in Abschnitt 4.3.7.2.1 behandelt. Der Addierer wird dort nicht ausgeführt. Er ist eine Ergänzung des Mentors: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
   <div class="card">
-    <h2>Die Bit-Operatoren in Go</h2>
+    <h2>Ein Gatter</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>a und b stehen beide auf 1. Was steht in der Zeile „Addition“?
+          <details><summary>Auflösung</summary>Links eine 1, rechts eine 0, also nur der Übertrag. 1 + 1 ist im Zweiersystem 10: Summe 0, Übertrag 1. Das Summenbit kommt aus XOR, der Übertrag aus AND.</details></li>
+      </ol>
+    </div>
+    <p>Ein Gatter hat zwei Eingänge <code>a</code> und <code>b</code> und einen Ausgang. Jede Sorte verknüpft die Eingänge nach ihrer eigenen Regel.</p>
+    <div class="feld">
+      <table class="bits" id="tabG"></table>
+      <div class="legende">Ein Klick auf das Bit von a oder b schaltet den Strom um. Die Zeilen stehen in der gleichen Reihenfolge wie in Schritt 2 beim Byte. Dort gibt es acht solche Spalten nebeneinander.</div>
+    </div>
+    <p>Die letzte Zeile zeigt schon die Addition zweier Bits: Die Summe kommt aus XOR, der Übertrag aus AND.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Zeile „Addition“ steht nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Die Gatter auf einem Byte</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>a ist 13. Was ist <code>a &lt;&lt; 1</code>, und mit welcher Addition bekommt man das Gleiche?
+          <details><summary>Auflösung</summary>26. Das Gleiche liefert <code>a + a</code>. Um eine Stelle nach links schieben heißt verdoppeln.</details></li>
+      </ol>
+    </div>
+
+    <h3>Die Bit-Operatoren in Go</h3>
     <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Operator</th><th>Name</th><th>Das Ergebnis-Bit ist 1, wenn …</th><th>Aufgabe im Rechenwerk</th></tr></thead>
       <tbody>
-        <tr><td><code>a &amp; b</code></td><td>AND</td><td>beide Bits 1 sind</td><td>erkennt, ob ein Übertrag entsteht</td></tr>
-        <tr><td><code>a | b</code></td><td>OR</td><td>mindestens ein Bit 1 ist</td><td>fasst zwei Quellen für den Übertrag zusammen</td></tr>
-        <tr><td><code>a ^ b</code></td><td>XOR</td><td>genau ein Bit 1 ist</td><td>bildet das Summenbit</td></tr>
-        <tr><td><code>^a</code></td><td>NOT</td><td>das Bit 0 ist</td><td>dreht für die Subtraktion alle Bits um</td></tr>
-        <tr><td><code>a &amp;^ b</code></td><td>AND NOT, auch bit-clear</td><td>das Bit von a 1 und das von b 0 ist</td><td>löscht gezielt Bits, im Addierer nicht nötig</td></tr>
+        <tr><td><code>a &amp; b</code></td><td>AND</td><td>beide Bits 1 sind</td><td>Es erkennt, ob ein Übertrag entsteht.</td></tr>
+        <tr><td><code>a | b</code></td><td>OR</td><td>mindestens ein Bit 1 ist</td><td>Es fasst zwei Quellen für den Übertrag zusammen.</td></tr>
+        <tr><td><code>a ^ b</code></td><td>XOR</td><td>genau ein Bit 1 ist</td><td>Es bildet das Summenbit.</td></tr>
+        <tr><td><code>^a</code></td><td>NOT</td><td>das Bit 0 ist</td><td>Es dreht für die Subtraktion alle Bits um.</td></tr>
+        <tr><td><code>a &amp;^ b</code></td><td>AND NOT, auch bit-clear</td><td>das Bit von a 1 und das von b 0 ist</td><td>Es löscht gezielt Bits. Der Addierer braucht es nicht.</td></tr>
         <tr><td><code>a &lt;&lt; n</code></td><td>Schieben nach links</td><td colspan="2">Alle Bits rücken n Stellen nach links, rechts kommen Nullen nach. Das entspricht der Multiplikation mit 2<sup>n</sup>.</td></tr>
         <tr><td><code>a &gt;&gt; n</code></td><td>Schieben nach rechts</td><td colspan="2">Alle Bits rücken n Stellen nach rechts. Das entspricht der Division durch 2<sup>n</sup> mit Abrunden.</td></tr>
       </tbody>
     </table>
     </div>
     <p>Die Operatoren gelten für alle Ganzzahl-Typen. Wer ein Bitmuster meint und keine Zahl, nimmt einen vorzeichenlosen Typ wie <code>uint8</code>.</p>
-    <div class="hinweis"><strong>Wozu das heute gebraucht wird.</strong> Ein Sprachmodell mit 13 Milliarden Gewichten braucht 26 GB Speicher, also eine Grafikkarte für über 2.000 €. Forscher von Samsung haben es 2025 auf unter 1 GB verkleinert. Damit passt es in den Speicher jedes heutigen Smartphones. Sie speichern die Gewichte als einzelne Bits in <code>uint32</code>-Werten und ersetzen die Multiplikation durch XOR. Den Typ <code>uint32</code> zeigt die Tabelle auf der Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>, im Kurstext steht er in Abschnitt 4.3.4. Quelle: Lee u. a., „LittleBit", NeurIPS 2025, <a href="https://arxiv.org/abs/2506.13771">arXiv 2506.13771</a>.</div>
-    <p>Was <code>&lt;&lt;</code> und <code>&gt;&gt;</code> mit den Bits tun und warum sie verdoppeln und halbieren, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</p>
-    <p class="quelle">Nach Kurstext, Abschnitt 4.3.7.2. Den Addierer führt der Kurstext nicht aus, er ist eine Ergänzung.</p>
-  </div>
 
-  <div class="card">
-    <h2>Ausprobieren 1: Ein Gatter</h2>
-    <div class="feld">
-      <table class="bits" id="tabG"></table>
-      <div class="legende">Ein Klick auf das Bit von a oder b schaltet den Strom um. Die Zeilen stehen in derselben Reihenfolge wie unten beim Byte. Dort gibt es acht solche Spalten nebeneinander.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Ausprobieren 2: Die Gatter auf einem Byte</h2>
+    <h3>Ausprobieren: zwei Bytes verknüpfen</h3>
     <div class="zeile">
       <label for="zba">a</label><input id="zba" type="number" min="0" max="255" data-zahl="ba">
       <label for="zbb">b</label><input id="zbb" type="number" min="0" max="255" data-zahl="bb">
@@ -146,10 +216,26 @@
     <div class="feld"><table class="bits" id="tabB"></table>
       <div class="legende">Ein Klick auf ein Bit von a oder b schaltet es um. Jedes Ergebnis-Bit hängt nur von den zwei Bits darüber ab.</div></div>
     <div id="codeB"></div>
-  </div>
 
+    <div class="hinweis"><strong>Wozu das heute gebraucht wird.</strong> Ein Sprachmodell mit 13 Milliarden Gewichten braucht 26 GB Speicher, also eine Grafikkarte für über 2.000 €. Forscher von Samsung haben es 2025 auf unter 1 GB verkleinert. Damit passt es in den Speicher jedes heutigen Smartphones. Sie speichern die Gewichte als einzelne Bits in <code>uint32</code>-Werten und ersetzen die Multiplikation durch XOR. Den Typ <code>uint32</code> zeigt die Tabelle auf der Seite <a href="go_k4_zahlenkreis_interaktiv.html#typen">Zahlenkreis</a>, im Kurstext steht er in Abschnitt 4.3.4. Quelle: Lee u. a., „LittleBit“, NeurIPS 2025, <a href="https://arxiv.org/abs/2506.13771">arXiv 2506.13771</a>.</div>
+    <p>Was <code>&lt;&lt;</code> und <code>&gt;&gt;</code> mit den Bits tun und warum sie verdoppeln und halbieren, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Werte 10 und 12 sind das Beispiel des Kurstexts.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
   <div class="card">
-    <h2>Ausprobieren 3: Eine Stelle mit Übertrag</h2>
+    <h2>Eine Stelle mit Übertrag</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>a ist 1, b ist 1, und von rechts kommt eine 1. Was sind Summe und neuer Übertrag?
+          <details><summary>Auflösung</summary>Summe 1 und Übertrag 1. Drei Einsen ergeben im Zweiersystem 11.</details></li>
+      </ol>
+    </div>
     <p>Die Stelle ganz rechts bekommt nie einen Übertrag. Ab der zweiten Stelle kann von rechts einer ankommen. Hier ist die Stelle mit der Wertigkeit 2 für sich allein. Alle drei Eingänge lassen sich umschalten: <code>a</code>, <code>b</code> und der Übertrag von rechts.</p>
     <div class="feld">
       <table class="bits" id="tabV"></table>
@@ -160,10 +246,27 @@
       <svg id="schaltV" class="schaltbild" viewBox="0 0 660 360" role="img" aria-label="Schaltung eines Addierers für eine Stelle"></svg>
       <div class="legende">Eine dicke, farbige Leitung führt Strom und steht für 1. Eine dünne, graue Leitung führt keinen Strom und steht für 0. Ein Punkt verbindet zwei Leitungen, ein Bogen führt eine Leitung über eine andere hinweg.</div>
     </div>
+    <p class="quelle">Die Schaltung steht nicht im Kurstext. Sie ist eine Ergänzung des Mentors.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-4">
   <div class="card">
-    <h2>Ausprobieren 4: Der Addierer</h2>
+    <h2>Der Addierer</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>An wie vielen Stellen entsteht bei 17 + 4 ein Übertrag?
+          <details><summary>Auflösung</summary>An keiner. 17 ist 0001 0001 und 4 ist 0000 0100. Die Einsen stehen an verschiedenen Stellen, also trifft nie 1 auf 1.</details></li>
+        <li>Was geschieht bei 255 + 1?
+          <details><summary>Auflösung</summary>An jeder Stelle entsteht ein Übertrag. Das Ergebnis ist 0000 0000, und der Übertrag aus der vordersten Stelle hat keinen Platz mehr. Das ist die Nahtstelle im Zahlenkreis bei <code>uint8</code>.</details></li>
+        <li>127 + 1: Fällt ein Übertrag aus der vordersten Stelle heraus? Und stimmt das Ergebnis?
+          <details><summary>Auflösung</summary>Es fällt keiner heraus. Das Ergebnis ist 1000 0000. Als <code>uint8</code> gelesen ist das 128 und richtig. Als <code>int8</code> gelesen ist es −128 und falsch, denn der Übertrag ist in das Vorzeichen-Bit gelaufen.</details></li>
+      </ol>
+    </div>
     <div class="zeile">
       <label for="zaa">a</label><input id="zaa" type="number" min="0" max="255" data-zahl="aa">
       <label for="zab">b</label><input id="zab" type="number" min="0" max="255" data-zahl="ab">
@@ -183,14 +286,28 @@
     <h3 id="schaltTitel"></h3>
     <div class="feld">
       <svg id="schaltA" class="schaltbild" viewBox="0 0 660 360" role="img" aria-label="Schaltung eines Addierers für eine Stelle"></svg>
-      <div class="legende">Das ist die Schaltung aus „Ausprobieren 3", hier für die Stelle, die der Addierer gerade gerechnet hat. Acht solche Schaltungen stehen nebeneinander. Der Ausgang „Übertrag nach links" der einen ist der Eingang „Übertrag von rechts" der nächsten.</div>
+      <div class="legende">Das ist die Schaltung aus Schritt 3, hier für die Stelle, die der Addierer gerade gerechnet hat. Acht solche Schaltungen stehen nebeneinander. Der Ausgang „Übertrag nach links“ der einen ist der Eingang „Übertrag von rechts“ der nächsten.</div>
     </div>
     <div id="meldA"></div>
     <div id="codeA"></div>
+    <p>Was ein Übertrag über die vorderste Stelle hinaus für die Typen in Go bedeutet, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3.</p>
+    <p class="quelle">Der Addierer steht nicht im Kurstext. Der Überlauf wird dort in Abschnitt 4.3.8 behandelt, Seiten 78–84.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-5">
   <div class="card">
-    <h2>Ausprobieren 5: Die Subtraktion</h2>
+    <h2>Die Subtraktion</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was liefert 10 − 15 bei <code>uint8</code>?
+          <details><summary>Auflösung</summary>251. Das Rechenwerk addiert 10 und das Zweierkomplement von 15 und erhält 1111 1011. Als <code>int8</code> gelesen wäre das −5 und richtig. <code>uint8</code> kennt keine negativen Zahlen und liest 251.</details></li>
+      </ol>
+    </div>
     <p>Das Rechenwerk subtrahiert nicht. Es bildet aus <code>b</code> die Zahl <code>−b</code> und addiert sie. Dafür dreht es alle Bits von <code>b</code> um und zählt 1 dazu. Diese Darstellung heißt Zweierkomplement.</p>
     <div class="zeile">
       <label for="zsa">a</label><input id="zsa" type="number" min="0" max="255" data-zahl="sa">
@@ -202,31 +319,23 @@
     <div class="feld"><table class="bits" id="tabS"></table></div>
     <div id="meldS"></div>
     <div id="codeS"></div>
-    <div class="hinweis">Ein echtes Rechenwerk spart sich den Zwischenschritt „1 dazuzählen". Es dreht die Bits von <code>b</code> um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist dasselbe.</div>
+    <div class="hinweis">Ein echtes Rechenwerk spart sich den Zwischenschritt „1 dazuzählen“. Es dreht die Bits von <code>b</code> um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist das gleiche.</div>
+    <p>So geht es weiter:</p>
+    <ul>
+      <li><strong>Zweierkomplement:</strong> Wie ein Bitmuster als Zahl mit Vorzeichen gelesen wird, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#vorzeichen">Zahlenkreis</a>, Schritt 2.</li>
+      <li><strong>Schieben:</strong> Die Operatoren <code>&lt;&lt;</code> und <code>&gt;&gt;</code> stehen auf der Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>, dazu gibt es das <a href="go_k4_bitverschiebung_quiz.html">Quiz zur Bitverschiebung</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Im Kurstext steht, dass sich die Subtraktion mit dem Zweierkomplement auf die Addition zurückführen lässt.</p>
   </div>
-
-  <div class="card">
-    <h2>Erst vorhersagen, dann ausprobieren</h2>
-    <ol>
-      <li>a und b stehen beide auf 1. Was steht in der Zeile „Addition"?
-        <details><summary>Auflösung</summary>Links eine 1, rechts eine 0, also nur der Übertrag. 1 + 1 ist im Zweiersystem 10: Summe 0, Übertrag 1. Das Summenbit kommt aus XOR, der Übertrag aus AND.</details></li>
-      <li>Eine Stelle mit Übertrag: a ist 1, b ist 1, und von rechts kommt eine 1. Was sind Summe und neuer Übertrag?
-        <details><summary>Auflösung</summary>Summe 1 und Übertrag 1. Drei Einsen ergeben im Zweiersystem 11.</details></li>
-      <li>An wie vielen Stellen entsteht bei 17 + 4 ein Übertrag?
-        <details><summary>Auflösung</summary>An keiner. 17 ist 0001 0001 und 4 ist 0000 0100. Die Einsen stehen an verschiedenen Stellen, also trifft nie 1 auf 1.</details></li>
-      <li>Was geschieht bei 255 + 1?
-        <details><summary>Auflösung</summary>An jeder Stelle entsteht ein Übertrag. Das Ergebnis ist 0000 0000, und der Übertrag aus der vordersten Stelle hat keinen Platz mehr. Das ist die Nahtstelle im Zahlenkreis bei <code>uint8</code>.</details></li>
-      <li>127 + 1: Fällt ein Übertrag aus der vordersten Stelle heraus? Und stimmt das Ergebnis?
-        <details><summary>Auflösung</summary>Es fällt keiner heraus. Das Ergebnis ist 1000 0000. Als <code>uint8</code> gelesen ist das 128 und richtig. Als <code>int8</code> gelesen ist es −128 und falsch, denn der Übertrag ist in das Vorzeichen-Bit gelaufen.</details></li>
-      <li>Was liefert 10 − 15 bei <code>uint8</code>?
-        <details><summary>Auflösung</summary>251. Das Rechenwerk addiert 10 und das Zweierkomplement von 15 und erhält 1111 1011. Als <code>int8</code> gelesen wäre das −5 und richtig. <code>uint8</code> kennt keine negativen Zahlen und liest 251.</details></li>
-      <li>a ist 13. Was ist <code>a &lt;&lt; 1</code>, und mit welcher Addition bekommt man dasselbe?
-        <details><summary>Auflösung</summary>26. Dasselbe liefert <code>a + a</code>. Um eine Stelle nach links schieben heißt verdoppeln.</details></li>
-    </ol>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
   </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   const el = id => document.getElementById(id);
@@ -239,6 +348,24 @@
 
   // Zustand: ga/gb einzelne Bits, ba/bb Bytes für die Gatter, aa/ab Addierer, sa/sb Subtraktion
   const Z = { ga: 1, gb: 1, va: 1, vb: 0, vc: 1, ba: 10, bb: 12, aa: 17, ab: 4, pos: 0, sa: 17, sb: 4 };
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#addierer
+  const ANKER = ['worum', 'gatter', 'byte', 'stelle', 'addierer', 'subtraktion'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
 
   // ---------- Bausteine für die Bit-Tabellen ----------
   const kopf = extra => '<tr><th></th>' + (extra ? '<td></td>' : '') +
@@ -413,13 +540,14 @@
     const l = lesarten(a - b, sv(a) - sv(b), r.s);
     el('meldS').innerHTML = '<div class="meldung' + (l.okU && l.okS ? '' : ' ueberlauf') + '">Ergebnis: <code>' + mitLuecke(r.s) + '</code><br>' + l.text +
       (r.c[8] ? '<br>Der Übertrag aus der vordersten Stelle fällt weg. Bei der Subtraktion gehört das dazu und ist kein Fehler.' : '') + '</div>';
-    el('codeS').innerHTML = '<pre>' + esc('var a, b uint8 = ' + a + ', ' + b + '\nfmt.Println(a - b)        // ' + r.s + '\nfmt.Println(a + (^b + 1)) // ' + r.s + ', dieselbe Rechnung') + '</pre>';
+    el('codeS').innerHTML = '<pre>' + esc('var a, b uint8 = ' + a + ', ' + b + '\nfmt.Println(a - b)        // ' + r.s + '\nfmt.Println(a + (^b + 1)) // ' + r.s + ', die gleiche Rechnung') + '</pre>';
   }
 
   // ---------- Bedienung ----------
   function zeigeAlles(ausser) {
     zeige1(); zeige2(); zeigeStelle(); zeige3(); zeige4();
     document.querySelectorAll('[data-zahl]').forEach(i => { if (i !== ausser) i.value = Z[i.dataset.zahl]; });
+    melde(false);
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-var]');
@@ -443,11 +571,75 @@
     if (i.dataset.zahl === 'aa' || i.dataset.zahl === 'ab') Z.pos = 0;
     zeigeAlles(i);
   }));
-  el('weiter').onclick = () => { if (Z.pos < 8) Z.pos++; zeige3(); };
-  el('alle').onclick = () => { Z.pos = 8; zeige3(); };
-  el('vorn').onclick = () => { Z.pos = 0; zeige3(); };
+  el('weiter').onclick = () => { if (Z.pos < 8) Z.pos++; zeige3(); melde(false); };
+  el('alle').onclick = () => { Z.pos = 8; zeige3(); melde(false); };
+  el('vorn').onclick = () => { Z.pos = 0; zeige3(); melde(false); };
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Gatter', 'Schritt 2: Die Gatter auf einem Byte', 'Schritt 3: Eine Stelle mit Übertrag', 'Schritt 4: Der Addierer', 'Schritt 5: Die Subtraktion'];
+  const glatt = id => { const k = el(id).cloneNode(true); k.querySelectorAll('br').forEach(b => b.replaceWith(' ; ')); return k.textContent.replace(/\s+/g, ' ').trim(); };
+  const byte = v => mitLuecke(v) + ' (' + (v & 255) + ')';
+
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo.'];
+    if (stufe === 1) {
+      const a = Z.ga, b = Z.gb;
+      return ['a steht auf ' + a + ', b steht auf ' + b + '. 1 bedeutet Strom an, 0 bedeutet Strom aus.',
+        'Die Tabelle zeigt: AND a & b = ' + (a & b) + ', OR a | b = ' + (a | b) + ', XOR a ^ b = ' + (a ^ b) + ', NOT ^a = ' + (a ^ 1) + '.',
+        'Zeile Addition a + b: links der Übertrag ' + (a & b) + ', rechts die Summe ' + (a ^ b) + '. ' + a + ' + ' + b + ' ist im Zweiersystem ' + (a + b).toString(2).padStart(2, '0') + '.',
+        'Handgriffe: nur das Bit von a und das Bit von b anklicken. Mehr lässt sich in diesem Schritt nicht einstellen.'];
+    }
+    if (stufe === 2) {
+      const a = Z.ba, b = Z.bb;
+      return ['a = ' + byte(a) + ', b = ' + byte(b) + '. Beide haben den Typ uint8. In Klammern steht der Wert als Dezimalzahl.',
+        'Die Tabelle zeigt: a & b = ' + byte(a & b) + ' ; a | b = ' + byte(a | b) + ' ; a ^ b = ' + byte(a ^ b) + ' ; a &^ b = ' + byte(a & ~b) + ' ; ^a = ' + byte(~a) + ' ; a << 1 = ' + byte(a << 1) + ' ; a >> 1 = ' + byte(a >> 1) + '.',
+        'Handgriffe: ein Bit von a oder b anklicken, a und b als Zahl von 0 bis 255 eintragen oder „Beispiel des Kurstexts“ wählen, das ist a = 10 und b = 12. Geschoben wird immer um genau 1 Stelle.'];
+    }
+    if (stufe === 3) return ['Die drei Eingänge: a = ' + Z.va + ', b = ' + Z.vb + ', Übertrag von rechts = ' + Z.vc + '.',
+      'Die Seite sagt dazu: ' + glatt('erklV'),
+      'Im Schaltbild führt eine dicke, farbige Leitung Strom und steht für 1.',
+      'Handgriffe: nur die drei Bits a, b und Übertrag von rechts anklicken. Die Stelle ist immer die mit der Wertigkeit 2.'];
+    if (stufe === 4) {
+      const a = Z.aa, b = Z.ab, r = addiere(a, b, 0), p = Z.pos;
+      return ['a = ' + byte(a) + ', b = ' + byte(b) + '.',
+        p === 0 ? 'Der Addierer hat noch keine Stelle gerechnet.' : 'Gerechnet sind ' + p + ' von 8 Stellen, von rechts gezählt. Zuletzt gerechnet ist die Stelle mit der Wertigkeit ' + (1 << (p - 1)) + ', sie ist in der Tabelle umrandet.',
+        'Die Seite sagt dazu: ' + glatt('erklA'),
+        p === 8 ? 'Unter dem Schaltbild steht: ' + glatt('meldA')
+                : 'Das Ergebnis am Ende wird sein: ' + byte(r.s) + '. ' + (r.c[8] ? 'Aus der vordersten Stelle fällt ein Übertrag heraus.' : 'Aus der vordersten Stelle fällt kein Übertrag heraus.'),
+        'Handgriffe: „nächste Stelle“, „alle Stellen“, „von vorn“, ein Bit von a oder b anklicken, a und b als Zahl von 0 bis 255 eintragen oder einen der Knöpfe 17 + 4, 23 + 9, 255 + 1 und 127 + 1 wählen.'];
+    }
+    const a = Z.sa, b = Z.sb, nb = ~b & 255, minusB = (nb + 1) & 255;
+    return ['a = ' + byte(a) + ', b = ' + byte(b) + '.',
+      'Schritt 1 der Tabelle, alle Bits von b umdrehen: ^b = ' + byte(nb) + '. Schritt 2, 1 dazuzählen: ' + byte(minusB) + ', als int8 gelesen ' + sv(minusB) + '. Schritt 3, a und diesen Wert addieren: ' + byte(addiere(a, minusB, 0).s) + '.',
+      'Unter der Tabelle steht: ' + glatt('meldS'),
+      'Handgriffe: ein Bit von a oder b anklicken, a und b als Zahl von 0 bis 255 eintragen oder einen der Knöpfe 17 − 4, 10 − 15 und 0 − 1 wählen. Die Subtraktion läuft nicht Stelle für Stelle, die Tabelle zeigt alle drei Schritte auf einmal.'];
+  }
+  function kurzStand() {
+    if (stufe === 1) return 'a = ' + Z.ga + ', b = ' + Z.gb;
+    if (stufe === 2) return 'a = ' + Z.ba + ', b = ' + Z.bb;
+    if (stufe === 3) return 'a = ' + Z.va + ', b = ' + Z.vb + ', Übertrag ' + Z.vc;
+    if (stufe === 4) return Z.aa + ' + ' + Z.ab + ', ' + Z.pos + ' von 8 Stellen';
+    if (stufe === 5) return Z.sa + ' − ' + Z.sb;
+    return '';
+  }
 
   zeigeAlles();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert',
+    thema: 'Rechenwerk, Bit-Operatoren, AND, OR, XOR, NOT, Addierer, Übertrag, Zweierkomplement',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text, .legende',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum kommt das Summenbit aus XOR?'
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
