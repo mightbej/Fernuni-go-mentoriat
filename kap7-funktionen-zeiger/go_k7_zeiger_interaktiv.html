@@ -56,8 +56,38 @@
     .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
     .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
     .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
     .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
     .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    /* Speichersicht: Zellen mit Adresse und Bitmuster */
+    .zellenreihe { display:flex;flex-wrap:wrap;gap:6px;margin:12px 0; }
+    .zelle { border:2px solid #94a3b8;border-radius:8px;padding:5px 7px;background:#fff;text-align:center;min-width:104px; }
+    .zelle .adr { font-size:.8rem;color:var(--muted); }
+    .zelle .bits { font-family:Consolas,"Courier New",monospace;font-size:1rem;letter-spacing:1px;white-space:nowrap; }
+    .zelle .wem { font-size:.8rem;color:#111827;font-family:Consolas,"Courier New",monospace; }
+    .zelle.a { background:#eff6ff;border-color:var(--blau); }
+    .zelle.b { background:#f0fdfa;border-color:var(--accent); }
+    .zelle.c { background:#f5f3ff;border-color:#7c3aed; }
+    .zelle.d { background:#fff7ed;border-color:#c2410c; }
+    .zelle.ungleich { border-color:#b91c1c;background:#fef2f2; }
+    .zelle.gelesen { border-color:var(--aktiv);background:var(--aktiv-bg);box-shadow:0 0 0 2px var(--aktiv); }
+    .zelle button.bit { padding:1px 3px;min-width:1.25em;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:1rem;font-weight:400;background:#fff; }
+    .zelle button.bit.eins { background:#d1fae5;border-color:var(--accent);font-weight:700; }
   </style>
 </head>
 <body>
@@ -127,6 +157,7 @@
       <li><strong><code>*pa</code> im Rumpf:</strong> Der <strong>Dereferenzierungsoperator</strong> <code>*</code> vor einem Zeiger liefert die Variable, auf die der Zeiger zeigt. <code>*pa</code> ist hier das Array <code>nums</code>. Für den Zugriff auf ein Element braucht der Ausdruck Klammern: <code>(*pa)[i]</code>.</li>
     </ul>
 
+    <p>Unter den Rahmen steht der Hauptspeicher des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. In einem Zeiger steht eine Zahl, die Adresse einer Zelle. Die Adressen sind erfunden.</p>
     <ol class="programm" id="a-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="a-weiter">nächste Anweisung</button>
@@ -134,6 +165,7 @@
       <button type="button" id="a-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="a-bild"></div>
+    <div id="a-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="a-ausgabe"></div>
     <div class="auskunft" id="a-urteil"></div>
@@ -190,9 +222,18 @@
     <div class="auskunft" id="o-urteil"></div>
 
     <h3>Ausdrücke mit x, p und pp</h3>
-    <p>Am Ende des Programms hat <code>x</code> den Wert 33, <code>p</code> zeigt auf <code>x</code>, und <code>pp</code> zeigt auf <code>p</code>. Wähle einen Ausdruck oder eine Anweisung. Die Seite nennt Typ und Wert oder die Meldung von Go.</p>
+    <p>Am Ende des Programms hat <code>x</code> den Wert 33, <code>p</code> zeigt auf <code>x</code>, und <code>pp</code> zeigt auf <code>p</code>. Im Hauptspeicher sieht das so aus:</p>
+    <ul>
+      <li><strong><code>x</code></strong> liegt in Zelle 100. Dort steht das Bitmuster von 33.</li>
+      <li><strong><code>p</code></strong> liegt in den Zellen 101 bis 108. Dort steht die Zahl 100, die Adresse von <code>x</code>.</li>
+      <li><strong><code>pp</code></strong> liegt in den Zellen 109 bis 116. Dort steht die Zahl 101, die Adresse von <code>p</code>.</li>
+    </ul>
+    <p>Ein Zeiger ist also eine Variable wie jede andere: Zellen mit einem Bitmuster. Das Bitmuster ist als Adresse zu lesen. <code>&amp;</code> fragt nach der Adresse einer Variable, <code>*</code> geht zu der Adresse, die in einem Zeiger steht.</p>
+    <div class="zellenreihe" id="au-zellen"></div>
+    <p>Wähle einen Ausdruck oder eine Anweisung. Die Zellen, die der Rechner dafür liest, sind gelb markiert. Die Seite nennt Typ und Wert oder die Meldung von Go.</p>
     <div class="zeile" id="au-wahl"></div>
     <div class="auskunft" id="au-urteil"></div>
+    <div class="hinweis">Das Modell vereinfacht. Die Adressen 100 bis 116 sind erfunden, ein echtes Programm gibt Adressen wie <code>0xc00000a0a8</code> aus. Damit <code>x</code> in eine Zelle passt, hat es im Modell den Typ <code>int8</code>. Ein Zeiger belegt auf einem 64-Bit-Rechner 8 Zellen. Das ganze Modell mit Tabelle und Programm zeigt die Seite <a href="go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a>.</div>
 
     <h3>Zeiger vergleichen</h3>
     <p>Zwei Zeiger des gleichen Typs sind genau dann gleich, wenn sie auf dieselbe Variable zeigen oder beide <code>nil</code> sind. Zwei Variablen mit dem gleichen Wert haben zwei verschiedene Adressen:</p>
@@ -228,9 +269,12 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
       <button type="button" id="i-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="i-bild"></div>
+    <div id="i-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="i-ausgabe"></div>
     <div class="auskunft" id="i-urteil"></div>
+
+    <p>Im Hauptspeicher unter den Rahmen ist zu sehen, was <code>incr</code> bekommt: 8 Zellen mit der Zahl 100. Das ist die Adresse von <code>x</code>. Die Zuweisung <code>*p++</code> ändert die Zellen 100 bis 107, und die gehören zu <code>x</code>.</p>
 
     <h3>Seiteneffekt</h3>
     <p>Die Funktion <code>incr</code> liefert einen Wert und ändert dazu eine Variable, die außerhalb ihres Rumpfs deklariert ist. Eine solche Änderung heißt <strong>Seiteneffekt</strong>. Nach dem Aufruf ist der Zustand des Programms ein anderer als davor.</p>
@@ -272,10 +316,11 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
       <button type="button" id="g-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="g-bild"></div>
+    <div id="g-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="g-ausgabe"></div>
     <div class="auskunft" id="g-urteil"></div>
-    <p>Der grüne Rahmen enthält die Variablen, deren Bezeichner nicht mehr gilt. Das Programm erreicht sie nur noch über einen Zeiger.</p>
+    <p>Der grüne Rahmen enthält die Variablen, deren Bezeichner nicht mehr gilt. Das Programm erreicht sie nur noch über einen Zeiger. Im Hauptspeicher bleiben ihre Zellen belegt: Die erste Variable <code>v</code> liegt in den Zellen 200 bis 207, die zweite in den Zellen 208 bis 215. In <code>q</code> steht die Zahl 200, in <code>r</code> die Zahl 208.</p>
     <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.2, Seite 180. Das Programm stammt aus dem Kurstext. Die Namen „erste Variable v“ und „zweite Variable v“ gehören zur Darstellung dieser Seite.</p>
   </div>
   <div class="zeile schritte">
@@ -309,7 +354,10 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
       <button type="button" id="l-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="l-bild"></div>
+    <div id="l-speicher"></div>
     <div class="auskunft" id="l-urteil"></div>
+
+    <p>Im Hauptspeicher liegt die Variable aus <code>neueIntVar</code> in den Zellen 200 bis 207. Solange die Zahl 200 in <code>p</code> oder in <code>q</code> steht, bleiben diese Zellen belegt. Steht sie in keinem Zeiger mehr, gibt der Garbage-Collector die Zellen frei.</p>
 
     <h3>Eine Variable aus einem Block</h3>
     <p>Auch die Variable eines Blocks kann länger leben, als ihr Bezeichner gilt:</p>
@@ -360,9 +408,12 @@ fmt.Println(*p) // 18</pre>
       <button type="button" id="n-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="n-bild"></div>
+    <div id="n-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="n-ausgabe"></div>
     <div class="auskunft" id="n-urteil"></div>
+
+    <p>Im Hauptspeicher sind die anonymen Variablen Zellen wie alle anderen. Sie haben nur keinen Namen: Das Programm kennt ihre Adresse allein aus dem Zeiger.</p>
 
     <h3>Zwei Schreibweisen, die gleiche Variable</h3>
     <p>Die zwei Funktionen tun das Gleiche. Die erste vergibt einen Bezeichner, den niemand braucht:</p>
@@ -427,21 +478,46 @@ func neueIntVarNew() *int {
   // ---------- Ein Programm Anweisung für Anweisung ----------
   // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
   // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
-  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
   function rahmenText(rahmen) {
     return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
       (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
   }
-  function ablauf(kurz, zeilen, lauf, anfang) {
-    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? 'freigegeben' : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
     function zeichne() {
       const z = D.stand ? lauf[D.stand - 1] : null;
       el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
       el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
         '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
         (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
-          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
           '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
       if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
       el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
       el(kurz + '-weiter').disabled = D.stand === lauf.length;
@@ -460,20 +536,59 @@ func neueIntVarNew() *int {
       z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
       'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
       z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
       z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
       D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
       'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
-    ];
+    ].filter(Boolean);
   }
   // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
   document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
     navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
   }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
   const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
   const R = (name, vars) => ({ name: name, vars: vars || [] });
   const WEG = name => ({ name: name, weg: true, vars: [] });
   const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
 
+  // Die Speichersicht der Demos: wo jede Variable im Modell liegt und welche Zahl hinter „Adresse von …“ steht
+  const SP_A = { orte: { 'main.nums': [100, '[10]int', 80], 'negToZeroPointer.pa': [180, '*[10]int', 8], 'negToZeroPointer.i': [188, 'int', 8] }, ziele: { 'Adresse von nums': 100 } };
+  const SP_I = { orte: { 'main.x': [100, 'int', 8], 'incr.p': [108, '*int', 8] }, ziele: { 'Adresse von x': 100 } };
+  const SP_G = { orte: { 'main.q': [100, '*int', 8], 'main.r': [108, '*int', 8], 'giveMeFive.v': nr => [nr < 4 ? 200 : 208, 'int', 8], '~.erste Variable v': [200, 'int', 8], '~.zweite Variable v': [208, 'int', 8] },
+    ziele: { 'Adresse der ersten Variable v': 200, 'Adresse der zweiten Variable v': 208 } };
+  const SP_L = { orte: { 'main.x': [100, 'int', 8], 'main.p': [108, '*int', 8], 'main.q': [116, '*int', 8], 'neueIntVar.v': [200, 'int', 8], '~.Variable aus neueIntVar': [200, 'int', 8] },
+    ziele: { 'Adresse von x': 100, 'Adresse der Variable aus neueIntVar': 200 } };
+  const SP_N = { orte: { 'main.p': [100, '*int', 8], 'main.q': [108, '*int', 8], 'main.r': [116, '*int', 8], '~.erste': [200, 'int', 8], '~.zweite': [208, 'int', 8], '~.dritte': [216, 'int', 8] },
+    ziele: { 'Adresse der ersten anonymen Variable': 200, 'Adresse der zweiten anonymen Variable': 208, 'Adresse der dritten anonymen Variable': 216 } };
   // Der Wert eines Zeigers steht auf der Seite in Worten, zum Beispiel „Adresse von x“
   const ADR = name => 'Adresse von ' + name;
   const ADRD = name => 'Adresse der ' + name;
@@ -498,7 +613,7 @@ func neueIntVarNew() *int {
       rahmen: [R('main', [V('nums', a.slice())]), WEG('negToZeroPointer')], aus: erste });
     lauf.push({ z: 13, satz: 'fmt.Println gibt nums aus. Die fünf negativen Elemente sind 0. Die Funktion hat das Array ihres Aufrufers geändert.',
       rahmen: [R('main', [V('nums', a.slice())])], aus: erste + NL + goArray(a) });
-    return ablauf('a', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.');
+    return ablauf('a', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.', SP_A);
   })();
 
   // ---------- Schritt 2: x, p und pp ----------
@@ -514,18 +629,25 @@ func neueIntVarNew() *int {
     { z: 9, satz: '*pp ist p, der erste Vergleich liefert true. In p steht die Adresse von x, der zweite Vergleich liefert auch true.', rahmen: [R('main', [V('x', 33), V('p', ADR('x')), V('pp', ADR('p'))])], aus: '42' + NL + '33' + NL + '33' + NL + 'true true' }
   ], 'Noch ist keine Anweisung ausgeführt. Die neun Zeilen stehen im Rumpf von main.');
 
+  // Die Speichersicht zu x, p und pp: 17 Zellen. Die Adresse in einem Zeiger steht in seiner letzten Zelle.
+  const bitsVon = b => b.toString(2).padStart(8, '0');
+  const reihe = (a, b) => { const z = []; for (let i = a; i <= b; i++) z.push(i); return z; };
+  const ZP = reihe(101, 108), ZPP = reihe(109, 116);
+  const SPEICHER = [{ b: 33, k: 'a', wem: 'x' }];
+  for (let i = 0; i < 8; i++) SPEICHER.push({ b: i === 7 ? 100 : 0, k: 'c', wem: 'p' });
+  for (let i = 0; i < 8; i++) SPEICHER.push({ b: i === 7 ? 101 : 0, k: 'd', wem: 'pp' });
   const AUSDRUECKE = [
-    { code: 'x', typ: 'int', wert: '33', satz: 'x ist die Variable selbst.' },
-    { code: '&x', typ: '*int', wert: 'Adresse von x', satz: 'Der Adressoperator liefert einen Zeiger auf x.' },
-    { code: '*&x', typ: 'int', wert: '33', satz: '&x führt zur Adresse von x, der Stern führt von dort zurück zur Variable x.' },
-    { code: 'p', typ: '*int', wert: 'Adresse von x', satz: 'In p steht die Adresse von x.' },
-    { code: '*p', typ: 'int', wert: '33', satz: '*p ist die Variable, auf die p zeigt, also x.' },
-    { code: '&*p', typ: '*int', wert: 'Adresse von x', satz: '*p ist x, und &x ist die Adresse von x. Das ist der Wert von p.' },
-    { code: '&p', typ: '**int', wert: 'Adresse von p', satz: 'p ist selbst eine Variable und hat eine Adresse. Der Typ bekommt einen zweiten Stern.' },
-    { code: 'pp', typ: '**int', wert: 'Adresse von p', satz: 'In pp steht die Adresse von p.' },
-    { code: '*pp', typ: '*int', wert: 'Adresse von x', satz: '*pp ist die Variable p. Ihr Wert ist die Adresse von x.' },
-    { code: '**pp', typ: 'int', wert: '33', satz: '*pp ist p, und *p ist x.' },
-    { code: 'p == &x', typ: 'bool', wert: 'true', satz: 'Beide Zeiger zeigen auf dieselbe Variable x.' },
+    { code: 'x', lesen: [100], typ: 'int', wert: '33', satz: 'x ist die Variable selbst.' },
+    { code: '&x', lesen: [], typ: '*int', wert: 'Adresse von x, im Modell 100', satz: 'Der Adressoperator liefert einen Zeiger auf x. Dafür liest der Rechner keine Zelle: Wo x liegt, weiß er aus seiner Tabelle.' },
+    { code: '*&x', lesen: [100], typ: 'int', wert: '33', satz: '&x führt zur Adresse von x, der Stern führt von dort zurück zur Variable x.' },
+    { code: 'p', lesen: ZP, typ: '*int', wert: 'Adresse von x, im Modell 100', satz: 'In den 8 Zellen von p steht die Zahl 100, die Adresse von x.' },
+    { code: '*p', lesen: ZP.concat([100]), typ: 'int', wert: '33', satz: 'Der Rechner liest die Adresse 100 aus p und geht zu Zelle 100. Der Typ *int sagt, wie die Zellen dort zu lesen sind. *p ist die Variable x.' },
+    { code: '&*p', lesen: ZP, typ: '*int', wert: 'Adresse von x', satz: '*p ist x, und &x ist die Adresse von x. Das ist der Wert von p.' },
+    { code: '&p', lesen: [], typ: '**int', wert: 'Adresse von p, im Modell 101', satz: 'p ist selbst eine Variable und hat eine Adresse. Der Typ bekommt einen zweiten Stern.' },
+    { code: 'pp', lesen: ZPP, typ: '**int', wert: 'Adresse von p, im Modell 101', satz: 'In den 8 Zellen von pp steht die Zahl 101, die Adresse von p.' },
+    { code: '*pp', lesen: ZPP.concat(ZP), typ: '*int', wert: 'Adresse von x, im Modell 100', satz: 'Der Rechner liest die Adresse 101 aus pp und geht zu den Zellen von p. Dort steht 100. *pp ist die Variable p.' },
+    { code: '**pp', lesen: ZPP.concat(ZP, [100]), typ: 'int', wert: '33', satz: 'Zwei Schritte: Aus pp liest der Rechner 101 und geht zu p. Aus p liest er 100 und geht zu x. In Zelle 100 steht 33.' },
+    { code: 'p == &x', lesen: ZP, typ: 'bool', wert: 'true', satz: 'Beide Zeiger zeigen auf dieselbe Variable x.' },
     { code: '*x', fehler: 'invalid operation: cannot indirect x (variable of type int)', satz: 'Go übersetzt das nicht. x ist kein Zeiger, der Stern braucht einen Zeiger als Operanden.' },
     { code: 'p = x', fehler: 'cannot use x (variable of type int) as *int value in assignment', satz: 'Go übersetzt das nicht. p nimmt eine Adresse auf, x ist eine ganze Zahl. Gemeint war p = &x.' },
     { code: '&42', fehler: 'invalid operation: cannot take address of 42 (untyped int constant)', satz: 'Go übersetzt das nicht. Ein Literal ist keine Variable und hat keine Adresse.' },
@@ -535,7 +657,8 @@ func neueIntVarNew() *int {
   let auWahl = 0;
   function zeichneAusdruck() {
     el('au-wahl').innerHTML = AUSDRUECKE.map((a, i) => '<button type="button" class="code' + (i === auWahl ? ' gewaehlt' : '') + '" data-i="' + i + '">' + esc(a.code) + '</button>').join('');
-    const a = AUSDRUECKE[auWahl];
+    const a = AUSDRUECKE[auWahl], gelesen = a.lesen || [];
+    el('au-zellen').innerHTML = SPEICHER.map((z, i) => '<div class="zelle ' + z.k + (gelesen.indexOf(100 + i) >= 0 ? ' gelesen' : '') + '"><div class="adr">Zelle ' + (100 + i) + '</div><div class="bits">' + bitsVon(z.b) + '</div><div class="wem">' + esc(z.wem) + '</div></div>').join('');
     el('au-urteil').className = 'auskunft' + (a.fehler ? ' fehler' : '');
     el('au-urteil').innerHTML = (a.fehler ? '<p>' + (a.laufzeit ? 'Abbruch zur Laufzeit: ' : 'Meldung des Compilers: ') + c(a.fehler) + '</p>' : '<p>' + c(a.code) + ' hat den Typ ' + c(a.typ) + ' und den Wert ' + (/^Adresse/.test(a.wert) ? esc(a.wert) : c(a.wert)) + '.</p>') + '<p>' + esc(a.satz) + '</p>';
     melde(false);
@@ -555,7 +678,7 @@ func neueIntVarNew() *int {
     { z: 3, satz: 'return *p gibt 3 zurück.', rahmen: [R('main', [V('x', 3)]), R('incr', [V('p', ADR('x'))])], aus: '2' },
     { z: 10, satz: 'Zurück in main: fmt.Println gibt die Rückgabe 3 aus.', rahmen: [R('main', [V('x', 3)]), WEG('incr')], aus: '2' + NL + '3' },
     { z: 11, satz: 'fmt.Println gibt x aus: 3. Der zweite Aufruf hat x auch geändert.', rahmen: [R('main', [V('x', 3)])], aus: '2' + NL + '3' + NL + '3' }
-  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.');
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.', SP_I);
 
   // ---------- Schritt 4: giveMeFive ----------
   const OHNE = 'Variablen, deren Bezeichner nicht mehr gilt';
@@ -573,7 +696,7 @@ func neueIntVarNew() *int {
     { z: 10, satz: 'q == r vergleicht die zwei Adressen. Sie sind verschieden, weil q und r auf zwei verschiedene Variablen zeigen. Das Ergebnis ist false.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 5), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' },
     { z: 11, satz: 'Die Zuweisung rechnet 5 + 5 und legt 10 in der Variable ab, auf die q zeigt. Die Variable, auf die r zeigt, behält den Wert 5.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 10, 1), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' },
     { z: 12, satz: 'fmt.Println gibt die zwei Werte aus: 10 und 5.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 10), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' + NL + '10 5' }
-  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.');
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.', SP_G);
 
   // ---------- Schritt 5: neueIntVar ----------
   const NAMENLOS = 'Variable aus neueIntVar', TOT = { n: NAMENLOS, w: 0, tot: true };
@@ -587,7 +710,7 @@ func neueIntVarNew() *int {
     { z: 10, satz: 'q = p kopiert die Adresse aus p nach q. Verweise auf die Variable: 2, die Zeiger p und q.', rahmen: [R('main', [V('x', 8), V('p', ADRD('Variable aus neueIntVar')), V('q', ADRD('Variable aus neueIntVar'), 1)]), FREI(OHNE, [V(NAMENLOS, 0)])], aus: '' },
     { z: 11, satz: 'p = &x überschreibt den Zeiger in p. p zeigt jetzt auf x. Verweise auf die Variable aus neueIntVar: 1, der Zeiger q.', rahmen: [R('main', [V('x', 8), V('p', ADR('x'), 1), V('q', ADRD('Variable aus neueIntVar'))]), FREI(OHNE, [V(NAMENLOS, 0)])], aus: '' },
     { z: 12, satz: 'q = nil überschreibt den letzten Verweis. Verweise auf die Variable aus neueIntVar: 0. Sie ist unerreichbar, ihre Lebenszeit ist zu Ende. Der Garbage-Collector gibt ihren Speicherplatz frei.', rahmen: [R('main', [V('x', 8), V('p', ADR('x')), V('q', 'nil', 1)]), FREI(OHNE, [TOT])], aus: '' }
-  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7. Es gibt nichts aus.');
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7. Es gibt nichts aus.', SP_L);
 
   // ---------- Schritt 6: new ----------
   const ANON = 'Anonyme Variablen';
@@ -598,7 +721,7 @@ func neueIntVarNew() *int {
     { z: 4, satz: 'fmt.Println gibt den Wert der anonymen Variable aus: 15.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable'))]), FREI(ANON, [V('erste', 15)])], aus: '0' + NL + '15' },
     { z: 5, satz: 'Jeder Aufruf von new erzeugt eine neue Variable mit einer eigenen Adresse. q und r zeigen auf zwei verschiedene anonyme Variablen.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable')), V('q', ADRD('zweiten anonymen Variable'), 1), V('r', ADRD('dritten anonymen Variable'), 1)]), FREI(ANON, [V('erste', 15), V('zweite', 0, 1), V('dritte', 0, 1)])], aus: '0' + NL + '15' },
     { z: 6, satz: 'q == r vergleicht zwei verschiedene Adressen. Das Ergebnis ist false, obwohl beide Variablen den Wert 0 haben.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable')), V('q', ADRD('zweiten anonymen Variable')), V('r', ADRD('dritten anonymen Variable'))]), FREI(ANON, [V('erste', 15), V('zweite', 0), V('dritte', 0)])], aus: '0' + NL + '15' + NL + 'false' }
-  ], 'Noch ist keine Anweisung ausgeführt. Die sechs Zeilen stehen im Rumpf von main.');
+  ], 'Noch ist keine Anweisung ausgeführt. Die sechs Zeilen stehen im Rumpf von main.', SP_N);
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
@@ -606,11 +729,13 @@ func neueIntVarNew() *int {
   function standSaetze() {
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     const s = standAblauf(DEMOS[stufe]);
-    s.push('Der Wert eines Zeigers steht auf der Seite in Worten, zum Beispiel „Adresse von x“. Eine Zahl wie 0xc00000a0a8 zeigt die Seite nicht.');
+    s.push('In den Rahmen steht der Wert eines Zeigers in Worten, zum Beispiel „Adresse von x“. Im Hauptspeicher darunter steht dafür eine erfundene Adresse als Zahl, zum Beispiel 100. Eine Zahl wie 0xc00000a0a8 zeigt die Seite nicht.');
     if (stufe === 2) {
       const a = AUSDRUECKE[auWahl];
       s.push('Unter „Ausdrücke mit x, p und pp“ ist gewählt: ' + a.code + '. ' + (a.fehler ? (a.laufzeit ? 'Abbruch zur Laufzeit: ' : 'Meldung des Compilers: ') + a.fehler + '. ' : 'Typ ' + a.typ + ', Wert ' + a.wert + '. ') + 'Die Seite sagt dazu: ' + a.satz);
       s.push('Diese Auswahl gilt für den Stand am Ende des Programms: x hat den Wert 33, p zeigt auf x, pp zeigt auf p. Handgriff: einen von 16 Ausdrücken wählen.');
+      s.push('Über der Auswahl stehen 17 Zellen mit Adresse und Bitmuster: Zelle 100 gehört zu x und enthält 00100001, das ist 33. Die Zellen 101 bis 108 gehören zu p und enthalten die Zahl 100, die Adresse von x. Die Zellen 109 bis 116 gehören zu pp und enthalten die Zahl 101, die Adresse von p. Im Modell hat x den Typ int8, damit es in eine Zelle passt.');
+      s.push((a.lesen && a.lesen.length) ? 'Gelb markiert sind die Zellen, die der Rechner für den gewählten Ausdruck liest: ' + a.lesen.join(', ') + '.' : 'Für den gewählten Ausdruck ist keine Zelle markiert.');
     }
     return s;
   }
