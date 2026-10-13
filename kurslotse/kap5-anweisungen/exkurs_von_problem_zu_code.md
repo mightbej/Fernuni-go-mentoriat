@@ -166,7 +166,7 @@ Reiter: programm
 - Die Zuordnung: Grenzen zu `const ( MAX_VERSUCHE = 7 … )` und 5.2. Drei Werte über alle Runden zu `var ( … )` außerhalb von `main` und 5.1.3. Wiederholung je Runde zu `for { … }` und 5.5.3. Zufallszahl zu `zielZahl := rand.Intn(…)` und 5.1.2. Schleife der Tipps zu `for versuchsZaehler < MAX_VERSUCHE { … }` und 5.5.3.1. Vergleich zu `if … else if … else` und 5.5.1. Verlassen der Schleife zu `break` und 5.5.3.3. Durchschnitt zu `float64(gesamtVersuche) / float64(anzahlSiege)` und 4.7. Wertung zu `switch { case durchschnitt <= 3.0: … }` und 5.5.2.
 - Diese Stufe hat keine Spezifikation zum Kopieren. Das ganze Go-Programm steht auf der Seite „Programmierübung: Zahlenraten mit Statistik“, der Link steht unter der Tabelle.
 - Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt.
-- Am Ende steht ein Link zur Übung „Sortieren mit Arrays und Indizes“ in Kapitel 6.
+- Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
 
 ### Handgriffe
 
