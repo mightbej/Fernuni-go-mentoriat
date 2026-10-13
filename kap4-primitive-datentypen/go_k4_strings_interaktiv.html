@@ -1,1116 +1,632 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Strings - Interaktiv</title>
-    <link rel="stylesheet" href="../stil.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            min-height: 100vh;
-        }
-
-        .hero p {
-            opacity: 0.95;
-        }
-
-        .section {
-            margin-bottom: 50px;
-        }
-
-        .section h2 {
-            margin-bottom: 20px;
-        }
-
-        .section h3 {
-            margin: 30px 0 15px 0;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab-button.active {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
-        }
-
-        .tab-button:hover:not(.active) {
-            background: #d1d5db;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            margin: 20px 0;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #0f766e15 0%, #1e40af15 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid #0f766e;
-        }
-
-        .interactive-area {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .input-group {
-            margin: 15px 0;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .input-group input,
-        .input-group textarea,
-        .input-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: 'Courier New', monospace;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus,
-        .input-group textarea:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: #0f766e;
-        }
-
-        button {
-            background: #0f766e;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px 5px 10px 0;
-        }
-
-        button:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: slideIn 0.5s;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .result.success {
-            background: #d1fae5;
-            border: 2px solid #10b981;
-            color: #065f46;
-        }
-
-        .result.info {
-            background: #dbeafe;
-            border: 2px solid #3b82f6;
-            color: #1e40af;
-        }
-
-        .result.warning {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            color: #92400e;
-        }
-
-        code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-        }
-
-        .code-block {
-            margin: 15px 0;
-            line-height: 1.5;
-        }
-
-        .code-block .keyword { color: #c678dd; }
-        .code-block .string { color: #98c379; }
-        .code-block .comment { color: #5c6370; font-style: italic; }
-        .code-block .function { color: #61afef; }
-        .code-block .number { color: #d19a66; }
-
-        .byte-visualizer {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .byte-box {
-            padding: 10px;
-            background: #0f766e;
-            color: white;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            text-align: center;
-            min-width: 50px;
-        }
-
-        .byte-box.ascii {
-            background: #10b981;
-        }
-
-        .byte-box.unicode {
-            background: #f59e0b;
-        }
-
-        .char-display {
-            margin-top: 10px;
-            font-size: 2em;
-            text-align: center;
-            padding: 20px;
-            background: #f3f4f6;
-            border-radius: 10px;
-        }
-
-        table {
-            margin: 20px 0;
-        }
-
-        th {
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        .escape-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .escape-item {
-            background: #f3f4f6;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #0f766e;
-        }
-
-        .escape-item code {
-            font-size: 1.1em;
-            color: #0f766e;
-        }
-
-        .quiz-container {
-            margin-top: 30px;
-        }
-
-        .quiz-question {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .quiz-question h4 {
-            color: #0f766e;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .quiz-option {
-            padding: 15px;
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quiz-option:hover {
-            background: #f3f4f6;
-            border-color: #0f766e;
-        }
-
-        .quiz-option.selected {
-            background: #dbeafe;
-            border-color: #3b82f6;
-        }
-
-        .quiz-option.correct {
-            background: #d1fae5;
-            border-color: #10b981;
-        }
-
-        .quiz-option.incorrect {
-            background: #fee2e2;
-            border-color: #ef4444;
-        }
-
-        .quiz-feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .quiz-feedback.show {
-            display: block;
-        }
-
-        .quiz-score {
-            background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1.5em;
-            margin: 30px 0;
-            display: none;
-        }
-
-        .quiz-score.show {
-            display: block;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #6b7280;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .back-link:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
-        }
-
-        .string-comparison {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 15px;
-            margin: 15px 0;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-
-        .comparison-operator {
-            font-size: 2em;
-            color: #0f766e;
-            font-weight: bold;
-        }
-
-        .slice-visualizer {
-            margin: 20px 0;
-        }
-
-        .slice-chars {
-            display: flex;
-            gap: 5px;
-            margin: 15px 0;
-        }
-
-        .slice-char {
-            padding: 15px 10px;
-            background: #e5e7eb;
-            border: 2px solid #9ca3af;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            min-width: 50px;
-            position: relative;
-        }
-
-        .slice-char.highlighted {
-            background: #fef3c7;
-            border-color: #f59e0b;
-        }
-
-        .slice-char.selected {
-            background: #dbeafe;
-            border-color: #3b82f6;
-        }
-
-        .slice-index {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8em;
-            color: #6b7280;
-            font-weight: bold;
-        }
-
-        .utf8-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .utf8-card {
-            background: linear-gradient(135deg, #0f766e15 0%, #1e40af15 100%);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #0f766e;
-        }
-
-        .utf8-card .char {
-            font-size: 3em;
-            margin: 10px 0;
-        }
-
-        .utf8-card .info {
-            font-family: 'Courier New', monospace;
-            color: #4b5563;
-            margin: 5px 0;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strings in Go: Literale, Verkettung und Unveränderbarkeit</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    input[type=text] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem;width:100%;max-width:38em; }
+    input.kurz { max-width:9em; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .rahmen { display:flex;align-items:center;gap:4px;flex:1 1 20em;max-width:40em;font-family:Consolas,"Courier New",monospace;font-size:1.3rem;font-weight:700; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem;align-items:start; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:8;min-height:1.6em; }
+    .konsole .steuer { color:#fbbf24; }
+    .gross { font-size:3rem;line-height:1.2;text-align:center;margin:6px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Schritt 5: Programm mit Zeilennummern und die Variablen als Kästen */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .speicher { display:flex;flex-wrap:wrap;gap:10px;margin:12px 0; }
+    .speicher .kasten { min-width:180px;display:flex;justify-content:space-between;gap:14px;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:8px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem; }
+    .speicher .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .speicher .kasten.leer { border-style:dashed;border-color:#9ca3af;color:var(--muted); }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>🔤 Go String-Datentyp</h1>
-            <p>Interaktive Beispiele zu String-Literalen, Unicode, UTF-8 und String-Operationen</p>
-        </div>
+<div class="container">
 
-        <div class="content">
-            <!-- String-Literale -->
-            <div class="section">
-                <h2>1️⃣ String-Literale</h2>
-                
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('literals', 0)">Interpretierte Strings</button>
-                    <button class="tab-button" onclick="switchTab('literals', 1)">Rohe Strings</button>
-                    <button class="tab-button" onclick="switchTab('literals', 2)">Escape-Sequenzen</button>
-                    <button class="tab-button" onclick="switchTab('literals', 3)">Unicode</button>
-                </div>
+  <div class="hero">
+    <h1>Strings in Go: Literale, Verkettung und Unveränderbarkeit</h1>
+    <p>Ein String ist eine Zeichenkette. Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–102, und Abschnitt 4.6.2.2, Seiten 107–108.</p>
+  </div>
 
-                <div id="literals-0" class="tab-content active">
-                    <div class="card">
-                        <h3>Interpretierte String-Literale ("...")</h3>
-                        <p>String-Literale werden mit <strong>doppelten Anführungszeichen</strong> begrenzt und unterstützen Escape-Sequenzen.</p>
-                        
-                        <div class="code-block"><span class="keyword">var</span> text <span class="keyword">string</span> = <span class="string">"grüne Wiese"</span>
-<span class="keyword">var</span> pfad <span class="keyword">string</span> = <span class="string">"C:\\Program Files\\Go"</span>
-<span class="keyword">var</span> zitat <span class="keyword">string</span> = <span class="string">"Er sagte \"Hallo\""</span>
-<span class="keyword">var</span> zeilen <span class="keyword">string</span> = <span class="string">"Zeile 1\nZeile 2"</span></div>
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Der Backslash</button>
+    <button type="button" class="tab" data-stufe="2">2 Rohe Literale</button>
+    <button type="button" class="tab" data-stufe="3">3 Unicode-Nummern</button>
+    <button type="button" class="tab" data-stufe="4">4 Verketten</button>
+    <button type="button" class="tab" data-stufe="5">5 Unveränderbar</button>
+  </div>
 
-                        <div class="highlight-box">
-                            <strong>⚠️ Wichtig:</strong> Backslash <code>\</code> und Anführungszeichen <code>"</code> müssen escaped werden: <code>\\</code> und <code>\"</code>
-                        </div>
-                    </div>
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Wert vom Typ <code>string</code> ist eine Zeichenkette, zum Beispiel <code>grüne Wiese</code>. Im Quelltext steht dafür ein String-Literal. Die doppelten Anführungszeichen grenzen die Zeichenkette vom übrigen Quelltext ab:</p>
+<pre class="code-block">var text string = "grüne Wiese"
+fmt.Println(text)    // grüne Wiese</pre>
+    <p>Literal und Wert sind zweierlei. Das Literal ist die Schreibweise im Quelltext, mit den Anführungszeichen. Der Wert ist die Zeichenkette im Speicher, ohne sie. Mehrere Literale können für den gleichen Wert stehen. Dem Wert sieht man nicht mehr an, aus welchem Literal er stammt.</p>
 
-                    <div class="interactive-area">
-                        <h4>Interaktiver String-Parser</h4>
-                        <div class="input-group">
-                            <label>String-Literal eingeben (mit Escape-Sequenzen):</label>
-                            <input type="text" id="interpretedInput" placeholder='"Hallo\nWelt"' value='"Hallo\nWelt"'>
-                        </div>
-                        <button onclick="parseInterpretedString()">String interpretieren</button>
-                        <div id="interpretedResult" class="result"></div>
-                    </div>
-                </div>
+    <h3>Zwei Formen des String-Literals</h3>
+    <ul>
+      <li><strong>Das interpretierte String-Literal, <code>"…"</code>:</strong> Go deutet darin den Backslash <code>\</code>. Das ist Schritt 1.</li>
+      <li><strong>Das rohe String-Literal, <code>`…`</code>:</strong> Go übernimmt darin jedes Zeichen so, wie es dasteht. Das ist Schritt 2.</li>
+    </ul>
 
-                <div id="literals-1" class="tab-content">
-                    <div class="card">
-                        <h3>Rohe String-Literale (`...`)</h3>
-                        <p>Mit <strong>Backquotes</strong> (`) begrenzt. Escape-Sequenzen werden NICHT interpretiert!</p>
-                        
-                        <div class="code-block"><span class="keyword">var</span> pfad <span class="keyword">string</span> = <span class="string">`C:\Program Files\Go`</span>
-<span class="keyword">var</span> zitat <span class="keyword">string</span> = <span class="string">`Er sagte "Hallo"`</span>
-<span class="keyword">var</span> html <span class="keyword">string</span> = <span class="string">`&lt;html&gt;
-  &lt;body&gt;
-    &lt;p&gt;Text&lt;/p&gt;
-  &lt;/body&gt;
-&lt;/html&gt;`</span></div>
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 3.2, Seiten 22–24, das erste String-Literal:</strong> <code>"Hello World!"</code> im ersten Programm des Kurses.</li>
+      <li><strong>Abschnitt 3.3.7, Seite 36, Strings ausgeben und verketten:</strong> Dort steht der Operator <code>+</code> zum ersten Mal zwischen zwei Strings.</li>
+      <li><strong>Abschnitt 4.3.1, Seiten 59–61, Literal und Wert bei Zahlen:</strong> <code>123</code> und <code>0x7b</code> sind zwei Literale für einen Wert. Dazu gibt es die Seite <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</li>
+    </ul>
 
-                        <div class="highlight-box">
-                            <strong>✅ Vorteile:</strong>
-                            <ul style="margin-left: 20px; margin-top: 10px;">
-                                <li>Keine Escape-Sequenzen nötig</li>
-                                <li>Perfekt für Windows-Pfade</li>
-                                <li>Kann Zeilenumbrüche enthalten</li>
-                                <li>Ideal für mehrzeiligen Code (HTML, JSON, etc.)</li>
-                            </ul>
-                        </div>
-                    </div>
+    <h3>Zwei Lektionen zu Abschnitt 4.6</h3>
+    <ul>
+      <li><strong>Diese Seite, Abschnitte 4.6.1 und 4.6.2.2:</strong> Literale, Verkettung und Unveränderbarkeit.</li>
+      <li><strong>Abschnitte 4.6.2 und 4.6.2.1:</strong> Wie ein String als Folge von Bytes im Speicher liegt und was <code>len(s)</code>, <code>s[i]</code> und <code>s[low:high]</code> liefern, zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</li>
+    </ul>
 
-                    <div class="interactive-area">
-                        <h4>Vergleich: Interpretiert vs. Roh</h4>
-                        <div class="input-group">
-                            <label>Text eingeben (z.B. Windows-Pfad):</label>
-                            <input type="text" id="rawCompareInput" placeholder='C:\Users\info\Documents' value='C:\Users\info\Documents'>
-                        </div>
-                        <button onclick="compareRawVsInterpreted()">Vergleichen</button>
-                        <div id="rawCompareResult" class="result"></div>
-                    </div>
-                </div>
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, der Backslash:</strong> Escape-Sequenzen wie <code>\n</code> und <code>\"</code> im interpretierten String-Literal.</li>
+      <li><strong>Schritt 2, rohe Literale:</strong> Die Schreibweise mit Backquotes, in der der Backslash ein gewöhnliches Zeichen ist.</li>
+      <li><strong>Schritt 3, Unicode-Nummern:</strong> Ein Zeichen über seine Nummer angeben, mit <code>\u</code> und <code>\U</code>.</li>
+      <li><strong>Schritt 4, verketten:</strong> Der Operator <code>+</code> für Strings.</li>
+      <li><strong>Schritt 5, unveränderbar:</strong> Warum <code>s[0] = 85</code> nicht geht.</li>
+    </ul>
+    <div class="hinweis">Die Programmzeilen auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go, in Schritt 1 bis 3 rechnet der Browser.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–102.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
 
-                <div id="literals-2" class="tab-content">
-                    <div class="card">
-                        <h3>Escape-Sequenzen</h3>
-                        <p>Spezielle Zeichenfolgen mit besonderer Bedeutung in interpretierten String-Literalen:</p>
-                        
-                        <div class="escape-table">
-                            <div class="escape-item">
-                                <code>\n</code> – Zeilenumbruch (newline)
-                            </div>
-                            <div class="escape-item">
-                                <code>\t</code> – Tabulator (horizontal tab)
-                            </div>
-                            <div class="escape-item">
-                                <code>\\</code> – Backslash
-                            </div>
-                            <div class="escape-item">
-                                <code>\"</code> – Doppelte Anführungszeichen
-                            </div>
-                            <div class="escape-item">
-                                <code>\r</code> – Wagenrücklauf (carriage return)
-                            </div>
-                            <div class="escape-item">
-                                <code>\a</code> – Alarm/Bell
-                            </div>
-                            <div class="escape-item">
-                                <code>\b</code> – Backspace
-                            </div>
-                            <div class="escape-item">
-                                <code>\f</code> – Form Feed
-                            </div>
-                            <div class="escape-item">
-                                <code>\v</code> – Vertikaler Tab
-                            </div>
-                        </div>
-
-                        <div class="code-block"><span class="keyword">var</span> text = <span class="string">"Der Backslash \\ ist ein \"besonderes\" Zeichen."</span>
-fmt.Println(text)
-<span class="comment">// Ausgabe: Der Backslash \ ist ein "besonderes" Zeichen.</span></div>
-                    </div>
-
-                    <div class="interactive-area">
-                        <h4>Escape-Sequenz Tester</h4>
-                        <div class="input-group">
-                            <label>String mit Escape-Sequenzen:</label>
-                            <textarea id="escapeInput" rows="3">"Zeile 1\nZeile 2\tTabulator\nBackslash: \\ Quote: \""</textarea>
-                        </div>
-                        <button onclick="testEscapeSequences()">Escape-Sequenzen anwenden</button>
-                        <div id="escapeResult" class="result"></div>
-                    </div>
-                </div>
-
-                <div id="literals-3" class="tab-content">
-                    <div class="card">
-                        <h3>Unicode-Zeichen</h3>
-                        <p>Go unterstützt den vollständigen Unicode-Zeichensatz mit über 120.000 Zeichen!</p>
-                        
-                        <div class="highlight-box">
-                            <strong>Unicode code points (Runes):</strong><br>
-                            <code>\uXXXX</code> – 4-stellige Hexadezimalzahl (für BMP-Zeichen)<br>
-                            <code>\UXXXXXXXX</code> – 8-stellige Hexadezimalzahl (für alle Unicode-Zeichen)
-                        </div>
-
-                        <div class="code-block"><span class="keyword">var</span> unendlich = <span class="string">"∞"</span>              <span class="comment">// direkte Eingabe</span>
-<span class="keyword">var</span> unendlich2 = <span class="string">"\u221e"</span>       <span class="comment">// Unicode \u221e</span>
-<span class="keyword">var</span> smiley = <span class="string">"😀"</span>               <span class="comment">// direkte Eingabe</span>
-<span class="keyword">var</span> smiley2 = <span class="string">"\U0001f600"</span>    <span class="comment">// Unicode \U0001f600</span></div>
-
-                        <div class="utf8-info">
-                            <div class="utf8-card">
-                                <div class="char">∞</div>
-                                <div class="info">Unendlich</div>
-                                <div class="info">\u221e</div>
-                                <div class="info">3 Bytes (UTF-8)</div>
-                            </div>
-                            <div class="utf8-card">
-                                <div class="char">😀</div>
-                                <div class="info">Smiley</div>
-                                <div class="info">\U0001f600</div>
-                                <div class="info">4 Bytes (UTF-8)</div>
-                            </div>
-                            <div class="utf8-card">
-                                <div class="char">€</div>
-                                <div class="info">Euro</div>
-                                <div class="info">\u20ac</div>
-                                <div class="info">3 Bytes (UTF-8)</div>
-                            </div>
-                            <div class="utf8-card">
-                                <div class="char">ü</div>
-                                <div class="info">U-Umlaut</div>
-                                <div class="info">\u00fc</div>
-                                <div class="info">2 Bytes (UTF-8)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="interactive-area">
-                        <h4>Unicode-Explorer</h4>
-                        <div class="input-group">
-                            <label>Unicode Code Point (Hexadezimal, z.B. 221e oder 1f600):</label>
-                            <input type="text" id="unicodeInput" placeholder="221e">
-                        </div>
-                        <button onclick="exploreUnicode()">Zeichen anzeigen</button>
-                        <div id="unicodeResult" class="result"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- String-Datentyp und UTF-8 -->
-            <div class="section">
-                <h2>2️⃣ String-Datentyp und UTF-8</h2>
-                
-                <div class="card">
-                    <h3>Strings als Byte-Sequenzen</h3>
-                    <p>Ein String in Go ist eine <strong>Sequenz von Bytes</strong>, die Unicode-Zeichen im <strong>UTF-8 Format</strong> codiert.</p>
-                    
-                    <div class="highlight-box">
-                        <strong>UTF-8 Encoding:</strong>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>ASCII-Zeichen (A-Z, 0-9, ...):</strong> 1 Byte</li>
-                            <li><strong>Umlaute (ä, ö, ü, ß):</strong> 2 Bytes</li>
-                            <li><strong>Viele Symbole (∞, €, ...):</strong> 3 Bytes</li>
-                            <li><strong>Emojis (😀, 🎉, ...):</strong> 4 Bytes</li>
-                        </ul>
-                    </div>
-
-                    <div class="code-block"><span class="keyword">var</span> a = <span class="string">"anrufen"</span>     <span class="comment">// len(a) == 7 (7 ASCII-Zeichen, je 1 Byte)</span>
-<span class="keyword">var</span> e = <span class="string">"Tür"</span>         <span class="comment">// len(e) == 4 (T=1, ü=2, r=1 Byte)</span>
-<span class="keyword">var</span> f = <span class="string">"Maßstab"</span>     <span class="comment">// len(f) == 8 (M=1, a=1, ß=2, s=1, t=1, a=1, b=1)</span>
-<span class="keyword">var</span> g = <span class="string">"\u221e"</span>      <span class="comment">// len(g) == 3 (∞ benötigt 3 Bytes)</span>
-<span class="keyword">var</span> h = <span class="string">"\U0001f600"</span> <span class="comment">// len(h) == 4 (😀 benötigt 4 Bytes)</span></div>
-
-                    <div class="highlight-box">
-                        <strong>⚠️ Wichtig:</strong> <code>len(s)</code> liefert die <strong>Anzahl der Bytes</strong>, nicht die Anzahl der Zeichen!
-                        Die Anzahl der Zeichen liefert <code>utf8.RuneCountInString(s)</code>.<br>
-                        Die Bytes eines Strings mit Index zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.
-                    </div>
-                </div>
-
-                <div class="interactive-area">
-                    <h4>String-Längen-Analyzer</h4>
-                    <div class="input-group">
-                        <label>String eingeben:</label>
-                        <input type="text" id="lengthInput" placeholder="Tür" value="Tür">
-                    </div>
-                    <button onclick="analyzeStringLength()">Länge analysieren</button>
-                    <div id="lengthResult" class="result"></div>
-                </div>
-            </div>
-
-            <!-- Zugriff auf String-Teile -->
-            <div class="section">
-                <h2>3️⃣ Zugriff auf String-Teile</h2>
-                
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('access', 0)">Index-Ausdruck</button>
-                    <button class="tab-button" onclick="switchTab('access', 1)">Slice-Ausdruck</button>
-                </div>
-
-                <div id="access-0" class="tab-content active">
-                    <div class="card">
-                        <h3>Index-Ausdruck s[idx]</h3>
-                        <p>Zugriff auf ein einzelnes <strong>Byte</strong> (nicht Zeichen!) an Position <code>idx</code>.</p>
-                        
-                        <div class="highlight-box">
-                            <strong>Wichtig:</strong>
-                            <ul style="margin-left: 20px; margin-top: 10px;">
-                                <li>Index beginnt bei <strong>0</strong></li>
-                                <li>Letzter Index ist <code>len(s)-1</code></li>
-                                <li>Rückgabewert ist vom Typ <code>byte</code> (= <code>uint8</code>)</li>
-                                <li>Bei Unicode-Zeichen &gt; 1 Byte: Index zeigt auf einzelnes Byte!</li>
-                            </ul>
-                        </div>
-
-                        <div class="code-block"><span class="keyword">var</span> s = <span class="string">"Abo"</span>
-fmt.Println(s[<span class="number">0</span>], s[<span class="number">1</span>], s[<span class="number">2</span>])  <span class="comment">// Ausgabe: 65 98 111</span>
-fmt.Printf(<span class="string">"%#x %#x %#x"</span>, s[<span class="number">0</span>], s[<span class="number">1</span>], s[<span class="number">2</span>]) <span class="comment">// 0x41 0x62 0x6f</span>
-<span class="comment">// A=65=0x41, b=98=0x62, o=111=0x6f</span></div>
-                    </div>
-
-                    <div class="interactive-area">
-                        <h4>Byte-Index Explorer</h4>
-                        <div class="input-group">
-                            <label>String eingeben:</label>
-                            <input type="text" id="indexString" placeholder="Abo" value="Abo">
-                        </div>
-                        <div class="input-group">
-                            <label>Index (0 bis len-1):</label>
-                            <input type="number" id="indexValue" min="0" value="0">
-                        </div>
-                        <button onclick="exploreByteIndex()">Byte abrufen</button>
-                        <div id="indexResult" class="result"></div>
-                    </div>
-                </div>
-
-                <div id="access-1" class="tab-content">
-                    <div class="card">
-                        <h3>Slice-Ausdruck s[low:high]</h3>
-                        <p>Zugriff auf einen <strong>Substring</strong> (Teilstring) von Index <code>low</code> bis <code>high-1</code>.</p>
-                        
-                        <div class="highlight-box">
-                            <strong>Syntax:</strong>
-                            <ul style="margin-left: 20px; margin-top: 10px;">
-                                <li><code>s[low:high]</code> – von <code>low</code> bis <code>high-1</code></li>
-                                <li><code>s[:high]</code> – von Anfang bis <code>high-1</code> (= <code>s[0:high]</code>)</li>
-                                <li><code>s[low:]</code> – von <code>low</code> bis Ende (= <code>s[low:len(s)]</code>)</li>
-                                <li><strong>Länge:</strong> <code>high - low</code></li>
-                            </ul>
-                        </div>
-
-                        <div class="code-block"><span class="string">"anrufen"</span>[<span class="number">2</span>:<span class="number">5</span>]      <span class="comment">// "ruf" (Länge 5-2=3)</span>
-<span class="string">"anrufen"</span>[:<span class="number">2</span>]         <span class="comment">// "an" (entspricht [0:2])</span>
-<span class="string">"anrufen"</span>[<span class="number">2</span>:]         <span class="comment">// "rufen" (entspricht [2:7])</span>
-<span class="string">"Hallo Welt"</span>[<span class="number">0</span>:<span class="number">5</span>]    <span class="comment">// "Hallo"</span>
-<span class="string">"Hallo Welt"</span>[<span class="number">6</span>:<span class="number">10</span>]   <span class="comment">// "Welt"</span>
-<span class="string">"Tür"</span>[<span class="number">1</span>:<span class="number">3</span>]          <span class="comment">// "ü" (2 Bytes!)</span></div>
-                    </div>
-
-                    <div class="interactive-area">
-                        <h4>Slice-Visualizer</h4>
-                        <div class="input-group">
-                            <label>String eingeben:</label>
-                            <input type="text" id="sliceString" placeholder="anrufen" value="anrufen">
-                        </div>
-                        <div class="input-group">
-                            <label>Unterer Index (low):</label>
-                            <input type="number" id="sliceLow" min="0" value="2">
-                        </div>
-                        <div class="input-group">
-                            <label>Oberer Index (high):</label>
-                            <input type="number" id="sliceHigh" min="0" value="5">
-                        </div>
-                        <button onclick="visualizeSlice()">Slice erstellen</button>
-                        <div id="sliceResult" class="result"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- String-Operationen -->
-            <div class="section">
-                <h2>4️⃣ String-Operationen</h2>
-                
-                <div class="card">
-                    <h3>Konkatenation mit +</h3>
-                    <p>Strings können mit dem <code>+</code> Operator verkettet werden.</p>
-                    
-                    <div class="code-block"><span class="keyword">var</span> a = <span class="string">"hoch"</span> + <span class="string">"springen"</span>  <span class="comment">// "hochspringen"</span>
-<span class="keyword">var</span> b = <span class="string">"Sommer"</span>
-<span class="keyword">var</span> c = b + <span class="string">"zeit"</span>        <span class="comment">// "Sommerzeit"</span></div>
-
-                    <div class="highlight-box">
-                        <strong>⚠️ Wichtig:</strong> Keine implizite Typumwandlung!<br>
-                        <code>"Zahl: " + 42</code> ist NICHT erlaubt!<br>
-                        Stattdessen: <code>"Zahl: " + strconv.Itoa(42)</code>
-                    </div>
-
-                    <h3 style="margin-top: 30px;">Unveränderbarkeit (Immutability)</h3>
-                    <p>Strings sind <strong>unveränderbar</strong> – einzelne Zeichen können nicht modifiziert werden!</p>
-                    
-                    <div class="code-block"><span class="keyword">var</span> s = <span class="string">"Ohr"</span>
-s[<span class="number">0</span>] = <span class="number">85</span>          <span class="comment">// ❌ FEHLER! Strings sind unveränderbar</span>
-s = <span class="string">"Uhr"</span>          <span class="comment">// ✅ OK: Neuen String zuweisen</span></div>
-
-                    <div class="code-block"><span class="keyword">var</span> a = <span class="string">"Sommer"</span>
-<span class="keyword">var</span> b = a          <span class="comment">// b enthält "Sommer"</span>
-a = a + <span class="string">"zeit"</span>     <span class="comment">// a enthält jetzt "Sommerzeit"</span>
-fmt.Println(b)     <span class="comment">// Ausgabe: "Sommer" (unverändert!)</span></div>
-                </div>
-
-                <div class="interactive-area">
-                    <h4>String-Konkatenation</h4>
-                    <div class="input-group">
-                        <label>String 1:</label>
-                        <input type="text" id="concat1" placeholder="hoch" value="hoch">
-                    </div>
-                    <div class="input-group">
-                        <label>String 2:</label>
-                        <input type="text" id="concat2" placeholder="springen" value="springen">
-                    </div>
-                    <button onclick="concatenateStrings()">Verketten</button>
-                    <div id="concatResult" class="result"></div>
-                </div>
-            </div>
-
-            <!-- Verweis auf das Quiz -->
-            <div class="section">
-                <h2>🎯 Alles verstanden?</h2>
-                <p>Das Quiz zu dieser Seite steht auf einer eigenen Seite:</p>
-                <ul style="margin: 15px 0 0 25px;">
-                    <li><a href="go_k4_strings_selbsttest_quiz.html">Selbsttest: String-Datentyp</a>, 10 Fragen mit je vier Antworten</li>
-                    <li><a href="go_k4_string_typ_quiz.html">Quizrunde richtig oder falsch: string-Typ und Unveränderbarkeit</a></li>
-                </ul>
-            </div>
-
-            <a href="go_k4_quiz_hub.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
-        </div>
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Der Backslash</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println("Zeile 1\nZeile 2")</code> aus?
+          <details><summary>Auflösung</summary>Zwei Zeilen: erst „Zeile 1“, darunter „Zeile 2“. Die zwei Zeichen <code>\n</code> stehen zusammen für einen Zeilenumbruch.</details></li>
+        <li>Wie viele Zeichen hat der String <code>"a\\b"</code>?
+          <details><summary>Auflösung</summary>Drei: a, ein Backslash und b. Die zwei Backslashes im Literal stehen für einen Backslash im Wert.</details></li>
+      </ol>
     </div>
+    <p>In einem interpretierten String-Literal ist der Backslash <code>\</code> das Escape-Zeichen. Er steht nicht für sich selbst. Er sagt: Das Zeichen danach hat eine besondere Bedeutung. Backslash und Folgezeichen zusammen heißen Escape-Sequenz. Im Wert steht dafür ein einziges Zeichen.</p>
+    <table class="text">
+      <thead><tr><th>Escape-Sequenz</th><th>Welches Zeichen im Wert steht</th><th>Wie oft man sie braucht</th></tr></thead>
+      <tbody>
+        <tr><td><code>\n</code></td><td>Im Wert steht ein Zeilenumbruch.</td><td>Man braucht sie sehr oft.</td></tr>
+        <tr><td><code>\t</code></td><td>Im Wert steht ein Tabulator.</td><td>Man braucht sie gelegentlich.</td></tr>
+        <tr><td><code>\\</code></td><td>Im Wert steht ein Backslash.</td><td>Man braucht sie für jeden Backslash, der im Wert stehen soll.</td></tr>
+        <tr><td><code>\"</code></td><td>Im Wert steht ein doppeltes Anführungszeichen.</td><td>Man braucht sie für jedes Anführungszeichen, das im Wert stehen soll.</td></tr>
+        <tr><td><code>\a</code>, <code>\b</code>, <code>\f</code>, <code>\r</code>, <code>\v</code></td><td>Im Wert steht ein Steuerzeichen: Klingel, Rückschritt, Seitenvorschub, Wagenrücklauf, vertikaler Tabulator.</td><td>Man braucht sie fast nie.</td></tr>
+        <tr><td><code>\u</code> und <code>\U</code> mit einer Nummer</td><td>Im Wert steht das Unicode-Zeichen mit dieser Nummer.</td><td>Das ist Schritt 3.</td></tr>
+      </tbody>
+    </table>
 
-    <script>
-        // Tab-Verwaltung
-        function switchTab(group, index) {
-            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}'"]`);
-            const contents = document.querySelectorAll(`[id^="${group}-"]`);
-            
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', i === index);
-            });
-            
-            contents.forEach((content, i) => {
-                content.classList.toggle('active', i === index);
-            });
-        }
+    <h3>Warum es \\ und \" braucht</h3>
+    <ul>
+      <li><strong>Das Anführungszeichen:</strong> Ein <code>"</code> beendet das Literal. Soll ein Anführungszeichen im Wert stehen, muss Go es vom Ende unterscheiden können. Dafür steht <code>\"</code>.</li>
+      <li><strong>Der Backslash:</strong> Ein <code>\</code> leitet eine Escape-Sequenz ein. Soll ein Backslash im Wert stehen, schreibt man ihn doppelt.</li>
+    </ul>
+    <p>Das Beispiel des Kurstexts:</p>
+<pre class="code-block">fmt.Println("Der Backslash \\ ist ein \"besonderes\" Zeichen.")
+// Ausgabe: Der Backslash \ ist ein "besonderes" Zeichen.</pre>
 
-        // Hilfsfunktionen: Go rechnet bei Strings mit Bytes, nicht mit Zeichen
-        function htmlSicher(t) {
-            return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
+    <h3>Ausprobieren: vom Literal zum Wert</h3>
+    <p>Trage ein, was zwischen den Anführungszeichen steht. Die Seite zeigt den Wert, den Go daraus macht.</p>
+    <div class="zeile">
+      <span class="rahmen">"<input type="text" id="lit" maxlength="70" spellcheck="false" autocomplete="off">"</span>
+      <button type="button" class="haupt" id="lesen">lesen</button>
+    </div>
+    <div class="zeile" id="lit-bsp"><span>Beispiele:</span></div>
+    <div class="auskunft" id="l-urteil"></div>
+    <div id="l-ergebnis">
+      <p>So erscheint der Wert bei <code>fmt.Println</code>:</p>
+      <div class="konsole" id="l-konsole"></div>
+      <div class="feld" id="l-feld"></div>
+    </div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–100. Das erste und das zweite Beispiel der Demo stammen aus dem Kurstext. Die Meldungen des Compilers stehen dort nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
 
-        // Wandelt eine Byte-Folge in Text um. Bytes, die kein gültiges Zeichen bilden, erscheinen als \xNN (wie beim Verb %q).
-        function bytesAlsText(bytes) {
-            const dec = new TextDecoder('utf-8', { fatal: true });
-            let out = '', i = 0;
-            while (i < bytes.length) {
-                const b = bytes[i];
-                const n = b < 0x80 ? 1 : (b >= 0xc2 && b < 0xe0) ? 2 : (b >= 0xe0 && b < 0xf0) ? 3 : (b >= 0xf0 && b < 0xf5) ? 4 : 0;
-                let ch = null;
-                if (n > 0 && i + n <= bytes.length) {
-                    try { ch = dec.decode(bytes.slice(i, i + n)); } catch (e) { ch = null; }
-                }
-                if (ch === null) { out += '\\x' + b.toString(16).padStart(2, '0'); i++; }
-                else { out += ch; i += n; }
-            }
-            return out;
-        }
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Rohe Literale</h2>
+    <p>Ein rohes String-Literal steht zwischen zwei Backquotes: <code>`blauer Himmel`</code>. Darin gibt es keine Escape-Sequenzen. Jedes Zeichen kommt so in den Wert, wie es im Quelltext steht, auch <code>\</code> und <code>"</code>.</p>
+<pre class="code-block">fmt.Println(`Der Backslash \ ist ein "besonderes" Zeichen.`)
+// Ausgabe: Der Backslash \ ist ein "besonderes" Zeichen.</pre>
+    <p>Das einzige Zeichen, das in einem rohen String-Literal nicht vorkommen kann, ist der Backquote selbst, denn er beendet das Literal.</p>
+    <div class="hinweis">Der Backquote <code>`</code> ist das Akzentzeichen von è und nicht der Apostroph. Auf einer deutschen Tastatur: Umschalttaste und Akzenttaste zusammen drücken, danach die Leertaste.</div>
 
-        // Liefert zu jedem Byte das Zeichen, zu dem es gehört
-        function zeichenJeByte(str) {
-            const liste = [];
-            for (const ch of str) {
-                const n = new TextEncoder().encode(ch).length;
-                for (let k = 0; k < n; k++) liste.push({ ch, teil: k + 1, von: n });
-            }
-            return liste;
-        }
+    <h3>Wann sich das rohe Literal lohnt</h3>
+    <ul>
+      <li><strong>Viele Backslashes und Anführungszeichen:</strong> Ein Pfad unter Windows enthält Backslashes und steht oft selbst in Anführungszeichen. Im rohen Literal bleibt er lesbar.</li>
+      <li><strong>Mehrere Zeilen:</strong> Ein interpretiertes Literal muss in einer Zeile stehen, ein Zeilenumbruch darin heißt <code>\n</code>. Ein rohes Literal darf über mehrere Zeilen gehen. Jeder Zeilenumbruch im Quelltext gehört dann zum Wert.</li>
+    </ul>
+<pre class="code-block">var htmlCode string = `&lt;html&gt;
+    &lt;body&gt;
+        &lt;p&gt;This is a simple HTML page.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;`
+fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</pre>
 
-        // String-Parser
-        function parseInterpretedString() {
-            const input = document.getElementById('interpretedInput').value;
-            const result = document.getElementById('interpretedResult');
-            
-            try {
-                // Entferne äußere Anführungszeichen
-                let str = input.trim();
-                if (!str.startsWith('"') || !str.endsWith('"')) {
-                    throw new Error('String muss mit " beginnen und enden');
-                }
-                str = str.slice(1, -1);
-                
-                // Interpretiere Escape-Sequenzen in einem Durchgang von links nach rechts
-                const einfach = { n: '\n', t: '\t', r: '\r', '\\': '\\', '"': '"' };
-                const interpreted = str.replace(/\\(u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|.)/g, (ganz, s) => {
-                    if (s[0] === 'u' || s[0] === 'U') return s.length > 1 ? String.fromCodePoint(parseInt(s.slice(1), 16)) : ganz;
-                    return s in einfach ? einfach[s] : ganz;
-                });
-                const byteLaenge = new TextEncoder().encode(interpreted).length;
-                const zeichenAnzahl = Array.from(interpreted).length;
+    <h3>Ausprobieren: ein Wert, zwei Literale</h3>
+    <p>Trage eine Zeichenkette ein, so wie sie auf dem Bildschirm erscheinen soll. Die Seite schreibt sie als interpretiertes und als rohes String-Literal.</p>
+    <div class="zeile">
+      <input type="text" id="wert" maxlength="70" spellcheck="false" autocomplete="off">
+      <button type="button" class="haupt" id="schreiben">als Literal schreiben</button>
+    </div>
+    <div class="zeile" id="wert-bsp"><span>Beispiele:</span></div>
+    <div class="feld" id="w-feld"></div>
+    <div class="auskunft" id="w-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 100–102. Der Satz mit dem Backslash, der Pfad und das Programm mit <code>htmlCode</code> stammen aus dem Kurstext, das Programm ist hier gekürzt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
 
-                result.className = 'result show info';
-                result.innerHTML = `
-                    <strong>Interpretierter String:</strong><br>
-                    <div style="margin-top: 10px; padding: 15px; background: white; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace;">${htmlSicher(interpreted).replace(/\n/g, '↵\n')}</div>
-                    <div style="margin-top: 10px;"><strong>len(s):</strong> ${byteLaenge} Bytes, das sind ${zeichenAnzahl} Zeichen</div>
-                `;
-            } catch (e) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
-            }
-        }
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Unicode-Nummern</h2>
+    <p>Go arbeitet mit dem Zeichensatz Unicode. Er enthält über 120.000 Zeichen: die Buchstaben vieler Sprachen, mathematische Zeichen, Symbole und Emojis. Der alte Zeichensatz ASCII hatte 128 Zeichen. Jedes Unicode-Zeichen darf in einem String-Literal stehen.</p>
+    <p>Viele Zeichen gibt es auf keiner Tastatur. Deshalb hat jedes Unicode-Zeichen eine Nummer, den Unicode code point. In Go heißt diese Nummer auch <em>rune</em>. Man schreibt sie hexadezimal.</p>
+    <ul>
+      <li><strong><code>\u</code> mit vier Hexadezimalziffern:</strong> <code>"∞"</code> ist das Zeichen ∞ mit der Nummer 221E.</li>
+      <li><strong><code>\U</code> mit acht Hexadezimalziffern:</strong> <code>"\U0001f600"</code> ist der Smiley 😀 mit der Nummer 1F600. Das große <code>U</code> braucht man für Nummern mit mehr als vier Ziffern.</li>
+    </ul>
+    <p>Eine kürzere Nummer wird vorn mit Nullen aufgefüllt: Das ü hat die Nummer FC und heißt <code>ü</code>.</p>
+<pre class="code-block">fmt.Println("Unendlich ist ∞ und Smiley ist \U0001f600")
+// Ausgabe: Unendlich ist ∞ und Smiley ist 😀</pre>
 
-        // Vergleich roh vs. interpretiert
-        function compareRawVsInterpreted() {
-            const input = document.getElementById('rawCompareInput').value;
-            const result = document.getElementById('rawCompareResult');
-            
-            const interpreted = '"' + input.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-            const raw = '`' + input + '`';
-            
-            result.className = 'result show info';
-            result.innerHTML = `
-                <strong>Interpretiertes Literal:</strong><br>
-                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${interpreted}</code>
-                <strong>Rohes Literal:</strong><br>
-                <code style="display: block; margin: 10px 0; font-size: 1.1em;">${raw}</code>
-                <div style="margin-top: 15px; padding: 10px; background: #d1fae5; border-radius: 6px;">
-                    ✅ Das rohe Literal ist deutlich einfacher zu lesen!
-                </div>
-            `;
-        }
+    <h3>Ausprobieren: von der Nummer zum Zeichen</h3>
+    <div class="zeile">
+      <label for="nummer">Unicode-Nummer, hexadezimal:</label>
+      <input type="text" class="kurz" id="nummer" maxlength="8" spellcheck="false" autocomplete="off">
+      <button type="button" class="haupt" id="zeigen">Zeichen zeigen</button>
+    </div>
+    <div class="zeile" id="nr-bsp">
+      <span>Beispiele:</span>
+      <button type="button" class="code" data-nr="221e">221e</button>
+      <button type="button" class="code" data-nr="1f600">1f600</button>
+      <button type="button" class="code" data-nr="20ac">20ac</button>
+      <button type="button" class="code" data-nr="fc">fc</button>
+      <button type="button" class="code" data-nr="41">41</button>
+      <button type="button" class="code" data-nr="3b1">3b1</button>
+    </div>
+    <div class="auskunft fehler" id="u-fehler" hidden></div>
+    <div id="u-ergebnis">
+      <div class="gross" id="u-zeichen"></div>
+      <div class="feld" id="u-feld"></div>
+    </div>
+    <div class="hinweis">Die Escape-Sequenzen <code>\u</code> und <code>\U</code> gelten nur im interpretierten String-Literal. Im rohen Literal <code>`∞`</code> stehen sechs gewöhnliche Zeichen.</div>
+    <p>Wie viele Bytes ein Zeichen im Speicher belegt und warum <code>len("∞")</code> den Wert 3 hat, zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seite 99. Die Nummern 221E und 1F600 und die Zeile mit <code>fmt.Println</code> stammen aus dem Kurstext. Die anderen Nummern sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
 
-        // Escape-Sequenzen testen
-        function testEscapeSequences() {
-            const input = document.getElementById('escapeInput').value.trim();
-            const result = document.getElementById('escapeResult');
-            
-            try {
-                let str = input;
-                if (str.startsWith('"') && str.endsWith('"')) {
-                    str = str.slice(1, -1);
-                }
-                
-                const interpreted = str
-                    .replace(/\\n/g, '\n')
-                    .replace(/\\t/g, '\t')
-                    .replace(/\\r/g, '\r')
-                    .replace(/\\\\/g, '\\')
-                    .replace(/\\"/g, '"')
-                    .replace(/\\a/g, '🔔')
-                    .replace(/\\b/g, '⌫')
-                    .replace(/\\f/g, '⏏')
-                    .replace(/\\v/g, '⇳');
-                
-                result.className = 'result show info';
-                result.innerHTML = `
-                    <strong>Ergebnis:</strong><br>
-                    <div style="margin-top: 10px; padding: 15px; background: white; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace;">${interpreted.replace(/\n/g, '↵\n').replace(/\t/g, '→   ')}</div>
-                `;
-            } catch (e) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
-            }
-        }
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Verketten</h2>
+    <p>Für Strings gibt es den Operator <code>+</code>. Er heißt hier Verkettungsoperator oder Konkatenationsoperator. Er hängt den rechten String an den linken und liefert einen neuen String:</p>
+<pre class="code-block">fmt.Println("hoch" + "springen")    // hochspringen</pre>
+    <p>Die zwei Operanden bleiben, wie sie sind. Zwischen ihnen fügt Go nichts ein, auch kein Leerzeichen.</p>
 
-        // Unicode-Explorer
-        function exploreUnicode() {
-            const input = document.getElementById('unicodeInput').value.trim();
-            const result = document.getElementById('unicodeResult');
-            
-            try {
-                const codePoint = parseInt(input, 16);
-                if (isNaN(codePoint)) {
-                    throw new Error('Ungültige Hexadezimalzahl');
-                }
-                
-                const char = String.fromCodePoint(codePoint);
-                const bytes = new TextEncoder().encode(char);
-                const literal = input.length <= 4 ? `\\u${input.padStart(4, '0')}` : `\\U${input.padStart(8, '0')}`;
-                
-                result.className = 'result show success';
-                result.innerHTML = `
-                    <div class="char-display">${char}</div>
-                    <div style="margin-top: 15px;">
-                        <strong>Unicode Code Point:</strong> U+${input.toUpperCase()}<br>
-                        <strong>Go-Literal:</strong> <code>${literal}</code><br>
-                        <strong>UTF-8 Bytes:</strong> ${bytes.length} (${Array.from(bytes).map(b => '0x' + b.toString(16).padStart(2, '0')).join(', ')})<br>
-                        <strong>Dezimal:</strong> ${codePoint}
-                    </div>
-                `;
-            } catch (e) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> ${e.message}`;
-            }
-        }
+    <h3>Beide Operanden müssen Strings sein</h3>
+    <p>Go wandelt eine Zahl nicht von selbst in einen String um. Ein String und eine Zahl lassen sich deshalb nicht mit <code>+</code> verbinden. Go übersetzt den Ausdruck nicht.</p>
 
-        // String-Längen-Analyzer
-        function analyzeStringLength() {
-            const input = document.getElementById('lengthInput').value;
-            const result = document.getElementById('lengthResult');
-            
-            const bytes = new TextEncoder().encode(input);
-            const charCount = Array.from(input).length;
-            
-            let byteViz = '<div class="byte-visualizer">';
-            for (let i = 0; i < bytes.length; i++) {
-                const isAscii = bytes[i] < 128;
-                byteViz += `<div class="byte-box ${isAscii ? 'ascii' : 'unicode'}">0x${bytes[i].toString(16).padStart(2, '0')}</div>`;
-            }
-            byteViz += '</div>';
-            
-            result.className = 'result show info';
-            result.innerHTML = `
-                <strong>String:</strong> "${input}"<br>
-                <strong>len(s):</strong> ${bytes.length} Bytes<br>
-                <strong>Zeichen:</strong> ${charCount}<br>
-                <div style="margin-top: 15px;">
-                    <strong>Byte-Darstellung:</strong>
-                    ${byteViz}
-                    <div style="margin-top: 10px; font-size: 0.9em;">
-                        <span style="color: #10b981;">■</span> Grün = ASCII (1 Byte)
-                        <span style="color: #f59e0b; margin-left: 15px;">■</span> Orange = Unicode (2+ Bytes)
-                    </div>
-                </div>
-            `;
-        }
+    <h3>Ausprobieren: was Go annimmt</h3>
+    <div class="zeile" id="wahl"></div>
+    <pre class="code-block" id="v-zeile"></pre>
+    <div class="auskunft" id="v-urteil"></div>
 
-        // Byte-Index Explorer
-        function exploreByteIndex() {
-            const str = document.getElementById('indexString').value;
-            const idx = parseInt(document.getElementById('indexValue').value);
-            const result = document.getElementById('indexResult');
-            
-            // Go zählt Bytes: gültig sind die Indizes 0 bis len(s)-1
-            const bytes = new TextEncoder().encode(str);
-            if (isNaN(idx) || idx < 0 || idx >= bytes.length) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Index ${idx} außerhalb des gültigen Bereichs (0 bis ${bytes.length - 1}, denn len(s) ist ${bytes.length})`;
-                return;
-            }
+    <h3>Was es außer + für Strings gibt</h3>
+    <ul>
+      <li><strong>Vergleichen:</strong> <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code> und <code>&gt;=</code>. Wie Go zwei Strings vergleicht, zeigt die Seite <a href="go_k4_logische_operatoren_interaktiv.html#strings">Logische Operatoren und Vergleiche</a>, Schritt 2.</li>
+      <li><strong>Teile herausgreifen:</strong> <code>s[i]</code> und <code>s[low:high]</code>. Das zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html#bytes">Strings: Bytes und Zeichen</a>, Schritt 1.</li>
+    </ul>
+    <p>Minus, Mal und Geteilt gibt es für Strings nicht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2.2, Seite 107. Die Ausdrücke <code>"hoch" + "springen"</code> und <code>"das Quadrat von 12 ist " + (12 * 12)</code> stammen aus dem Kurstext. Die drei anderen Zeilen der Demo und die Meldung des Compilers stehen dort nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
 
-            const byteValue = bytes[idx];
-            const z = zeichenJeByte(str)[idx];
-            const gehoertZu = z.von === 1
-                ? `das Zeichen '${htmlSicher(z.ch)}'`
-                : `Byte ${z.teil} von ${z.von} des Zeichens '${htmlSicher(z.ch)}'`;
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Unveränderbar</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Programm unten weist <code>b</code> den Wert von <code>a</code> zu und hängt danach an <code>a</code> etwas an. Was gibt <code>fmt.Println(b)</code> aus?
+          <details><summary>Auflösung</summary>Sommer. Die Zuweisung <code>b = a</code> hat den Wert kopiert. Was danach mit <code>a</code> geschieht, betrifft <code>b</code> nicht.</details></li>
+      </ol>
+    </div>
+    <p>Strings sind in Go unveränderbar, auf Englisch <em>immutable</em>. Ein einzelnes Zeichen eines Strings lässt sich nicht austauschen. Der Ausdruck <code>s[0]</code> liefert das erste Byte, aber er kann nie auf der linken Seite einer Zuweisung stehen:</p>
+<pre class="code-block">var s string = "Ohr"
+s[0] = 85    // Go übersetzt die Zeile nicht</pre>
+    <p>Die 85 ist die Nummer des Buchstabens U. Aus „Ohr“ sollte „Uhr“ werden. Der Compiler meldet: <code>cannot assign to s[0] (neither addressable nor a map index expression)</code></p>
 
-            result.className = 'result show info';
-            result.innerHTML = `
-                <strong>String:</strong> "${htmlSicher(str)}" (len(s) = ${bytes.length})<br>
-                <strong>Index:</strong> ${idx}<br>
-                <strong>Byte-Wert:</strong> ${byteValue} (dezimal) = 0x${byteValue.toString(16).toUpperCase()} (hex)<br>
-                <strong>Dieses Byte ist:</strong> ${gehoertZu}<br>
-                <div style="margin-top: 15px; padding: 10px; background: #fef3c7; border-radius: 6px;">
-                    ⚠️ <code>s[${idx}]</code> hat den Typ <code>byte</code> (nicht <code>string</code>)
-                </div>
-            `;
-        }
+    <h3>Was stattdessen geht</h3>
+    <p>Die Variable <code>s</code> ist veränderbar, der String nicht. Man weist <code>s</code> einen neuen String zu:</p>
+<pre class="code-block">s = "Uhr"           // ein anderer String
+s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
 
-        // Slice-Visualizer
-        function visualizeSlice() {
-            const str = document.getElementById('sliceString').value;
-            const low = parseInt(document.getElementById('sliceLow').value);
-            const high = parseInt(document.getElementById('sliceHigh').value);
-            const result = document.getElementById('sliceResult');
-            
-            // Go schneidet nach Bytes: es muss gelten 0 <= low <= high <= len(s)
-            const bytes = new TextEncoder().encode(str);
-            if (isNaN(low) || isNaN(high) || low < 0 || high > bytes.length || low > high) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Ungültige Indizes (low=${low}, high=${high}, len=${bytes.length})`;
-                return;
-            }
+    <h3>Ausprobieren: ein neuer String entsteht</h3>
+    <p>Auch die Verkettung ändert keinen String. Sie baut aus zwei vorhandenen Strings einen neuen. Führe das Programm Zeile für Zeile aus:</p>
+    <ol class="programm" id="programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="weiter">nächste Zeile ausführen</button>
+      <button type="button" id="zurueck">eine Zeile zurück</button>
+      <button type="button" id="vorn">von vorn</button>
+    </div>
+    <div class="speicher" id="speicher"></div>
+    <p>Ausgabe des Programms:</p>
+    <div class="konsole" id="p-ausgabe"></div>
+    <div class="auskunft" id="p-urteil"></div>
 
-            const substring = htmlSicher(bytesAlsText(bytes.slice(low, high)));
+    <h3>Was die Regel bringt</h3>
+    <p>Weil kein String sich ändern kann, dürfen sich Kopien eines Strings den gleichen Platz im Arbeitsspeicher teilen. Bei <code>b = a</code> muss Go die Zeichen nicht noch einmal ablegen. Das gilt auch für einen Substring wie <code>s[1:]</code>. Im Kurstext steht das als Expertenwissen 4.19.</p>
 
-            // Ein Kästchen je Byte: ASCII-Bytes zeigen ihr Zeichen, die übrigen ihren Hex-Wert
-            let charViz = '<div class="slice-visualizer"><div class="slice-chars">';
-            const zuordnung = zeichenJeByte(str);
-            for (let i = 0; i < bytes.length; i++) {
-                const selected = i >= low && i < high;
-                const z = zuordnung[i];
-                const inhalt = z.von === 1 ? htmlSicher(z.ch === ' ' ? '␣' : z.ch) : `${htmlSicher(z.ch)}<br><small>${bytes[i].toString(16)}</small>`;
-                charViz += `
-                    <div class="slice-char ${selected ? 'selected' : ''}">
-                        <div class="slice-index">${i}</div>
-                        ${inhalt}
-                    </div>
-                `;
-            }
-            charViz += '</div></div>';
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_string_typ_quiz.html">Quiz zum Typ string</a> und der <a href="go_k4_strings_selbsttest_quiz.html">Selbsttest zu den Strings</a> fragen den Stoff von Abschnitt 4.6 ab.</li>
+      <li><strong>Bytes und Zeichen:</strong> Die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a> zeigt, wie ein String im Speicher liegt.</li>
+      <li><strong>Zuweisung:</strong> Was <code>a = a + "zeit"</code> und die Kurzform <code>a += "zeit"</code> tun, zeigt die Seite <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2.2, Seiten 107–108, mit Expertenwissen 4.19. Das Beispiel mit „Ohr“ und das Programm mit „Sommer“ stammen aus dem Kurstext. Die Meldung des Compilers und die Zeile <code>s = "U" + s[1:]</code> stehen dort nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
-            result.className = 'result show success';
-            result.innerHTML = `
-                <strong>Slice-Ausdruck:</strong> <code>s[${low}:${high}]</code><br>
-                <strong>Ergebnis:</strong> "${substring}"<br>
-                <strong>Länge:</strong> ${high - low} ${high - low === 1 ? 'Byte' : 'Bytes'}<br>
-                ${charViz}
-                <div style="margin-top: 15px; padding: 10px; background: #dbeafe; border-radius: 6px; font-size: 0.95em;">
-                    💡 Der Slice enthält Bytes von Index <strong>${low}</strong> bis <strong>${high - 1}</strong> (high ist exklusiv!)
-                </div>
-            `;
-        }
+</div>
 
-        // String-Konkatenation
-        function concatenateStrings() {
-            const str1 = document.getElementById('concat1').value;
-            const str2 = document.getElementById('concat2').value;
-            const result = document.getElementById('concatResult');
-            
-            const concatenated = str1 + str2;
-            
-            result.className = 'result show success';
-            result.innerHTML = `
-                <strong>String 1:</strong> "${str1}"<br>
-                <strong>String 2:</strong> "${str2}"<br>
-                <strong>Ergebnis:</strong> "${concatenated}"<br>
-                <div style="margin-top: 15px;">
-                    <strong>Code:</strong>
-                    <div class="code-block" style="margin-top: 10px;">
-<span class="string">"${str1}"</span> + <span class="string">"${str2}"</span> = <span class="string">"${concatenated}"</span></div>
-                </div>
-            `;
-        }
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const BS = String.fromCharCode(92);                       // der Backslash
+  const bytesVon = t => new TextEncoder().encode(t).length;   // Länge in UTF-8, wie len(s) in Go
+  const zeichenVon = t => Array.from(t).length;
+  const hex = n => n.toString(16);
 
-        // Initialisierung
-        document.addEventListener('DOMContentLoaded', () => {
-            parseInterpretedString();
-        });
-    </script>
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#roh
+  const ANKER = ['worum', 'backslash', 'roh', 'unicode', 'verketten', 'unveraenderbar'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // Knöpfe mit Beispielen, deren Text Backslashes und Anführungszeichen enthält
+  function knoepfe(ziel, liste, tun) {
+    liste.forEach(t => {
+      const k = document.createElement('button');
+      k.type = 'button'; k.className = 'code'; k.textContent = t;
+      k.addEventListener('click', () => tun(t));
+      el(ziel).appendChild(k);
+    });
+  }
+
+  // ---------- Schritt 1: ein interpretiertes String-Literal lesen, wie Go es liest ----------
+  const EINFACH = { n: ['\n', 'Zeilenumbruch'], t: ['\t', 'Tabulator'], a: ['\x07', 'Klingel'], b: ['\b', 'Rückschritt'], f: ['\f', 'Seitenvorschub'], r: ['\r', 'Wagenrücklauf'], v: ['\v', 'vertikaler Tabulator'] };
+  EINFACH[BS] = [BS, 'Backslash'];
+  EINFACH['"'] = ['"', 'Anführungszeichen'];
+  // Liefert { ok, wert, sequenzen } oder { ok: false, grund, meldung }
+  function liesLiteral(t) {
+    let wert = '';
+    const sequenzen = [];
+    for (let i = 0; i < t.length; i++) {
+      const z = t[i];
+      if (z === '"') return { ok: false, grund: 'Das Anführungszeichen an der Stelle ' + (i + 1) + ' beendet das Literal. Was danach kommt, gehört für Go nicht mehr dazu. Soll ein Anführungszeichen im Wert stehen, schreibe ' + BS + '".' };
+      if (z !== BS) { wert += z; continue; }
+      const f = t[i + 1];
+      if (f === undefined) return { ok: false, grund: 'Das Literal endet mit einem einzelnen Backslash. Go liest ihn zusammen mit dem schließenden Anführungszeichen als ' + BS + '" und findet dann kein Ende des Literals. Soll ein Backslash im Wert stehen, schreibe ihn doppelt.' };
+      if (EINFACH[f]) { wert += EINFACH[f][0]; sequenzen.push(BS + f + ' wird zu: ' + EINFACH[f][1]); i++; continue; }
+      if (f === 'u' || f === 'U') {
+        const n = f === 'u' ? 4 : 8, ziffern = t.slice(i + 2, i + 2 + n);
+        if (ziffern.length < n || !/^[0-9a-fA-F]+$/.test(ziffern)) return { ok: false, grund: 'Nach ' + BS + f + ' müssen genau ' + n + ' Hexadezimalziffern stehen. Eine kürzere Nummer wird vorn mit Nullen aufgefüllt.' };
+        const nr = parseInt(ziffern, 16);
+        if (nr > 0x10FFFF || (nr >= 0xD800 && nr <= 0xDFFF)) return { ok: false, grund: 'Die Nummer ' + ziffern.toUpperCase() + ' gehört zu keinem Unicode-Zeichen.', meldung: 'escape is invalid Unicode code point U+' + nr.toString(16).toUpperCase() };
+        const zeichen = String.fromCodePoint(nr);
+        wert += zeichen; sequenzen.push(BS + f + ziffern + ' wird zu: ' + zeichen); i += 1 + n; continue;
+      }
+      if (f === 'x' || /[0-7]/.test(f)) return { ok: false, grund: 'Die Escape-Sequenz ' + BS + f + '… gibt es in Go. Sie gibt ein einzelnes Byte über seine Nummer an. Im Kurstext kommt sie nicht vor, und die Seite zeigt sie nicht.' };
+      return { ok: false, grund: 'Die Escape-Sequenz ' + BS + f + ' gibt es in Go nicht. Soll ein Backslash im Wert stehen, schreibe ihn doppelt.', meldung: 'unknown escape' };
+    }
+    return { ok: true, wert: wert, sequenzen: sequenzen };
+  }
+  // Der Wert, wie er auf der Konsole erscheint: Zeilenumbruch und Tabulator wirken, andere Steuerzeichen bekommen ein Schild
+  const SCHILD = { 7: 'Klingel', 8: 'Rückschritt', 12: 'Seitenvorschub', 13: 'Wagenrücklauf', 11: 'vertikaler Tabulator' };
+  const alsKonsole = w => Array.from(w).map(z => SCHILD[z.codePointAt(0)] ? '<span class="steuer">‹' + SCHILD[z.codePointAt(0)] + '›</span>' : esc(z)).join('');
+  const s1 = { text: '', gelesen: null };
+  function lies(text) {
+    s1.text = text; el('lit').value = text;
+    const g = s1.gelesen = liesLiteral(text);
+    el('l-ergebnis').hidden = !g.ok;
+    el('l-urteil').classList.toggle('fehler', !g.ok);
+    if (!g.ok) {
+      el('l-urteil').innerHTML = '<p>Go übersetzt das Literal ' + c('"' + text + '"') + ' nicht.' + (g.meldung ? ' Der Compiler meldet: ' + c(g.meldung) : '') + '</p><p>' + esc(g.grund) + '</p>';
+      melde(false); return;
+    }
+    el('l-urteil').innerHTML = '<p>' + (g.sequenzen.length ? 'Das Literal enthält ' + (g.sequenzen.length === 1 ? 'eine Escape-Sequenz' : g.sequenzen.length + ' Escape-Sequenzen') + '. Jede steht im Wert für ein einziges Zeichen.' : 'Das Literal enthält keine Escape-Sequenz. Der Wert besteht aus den Zeichen zwischen den Anführungszeichen.') + '</p>';
+    el('l-konsole').innerHTML = alsKonsole(g.wert);
+    el('l-feld').innerHTML =
+      '<span class="was">Zeichen im Literal, ohne die Anführungszeichen</span><span class="wie">' + zeichenVon(text) + '</span>' +
+      '<span class="was">Zeichen im Wert</span><span class="wie">' + zeichenVon(g.wert) + '</span>' +
+      '<span class="was">' + c('len(s)') + ', die Zahl der Bytes im Wert</span><span class="wie">' + bytesVon(g.wert) + '</span>' +
+      (g.sequenzen.length ? '<span class="was">Escape-Sequenzen</span><span class="wie">' + g.sequenzen.map(esc).join('\n') + '</span>' : '');
+    melde(false);
+  }
+  el('lesen').addEventListener('click', () => lies(el('lit').value));
+  el('lit').addEventListener('keydown', e => { if (e.key === 'Enter') lies(el('lit').value); });
+  const LIT = [
+    'Der Backslash ' + BS + BS + ' ist ein ' + BS + '"besonderes' + BS + '" Zeichen.',
+    'Unendlich ist ' + BS + 'u221e und Smiley ist ' + BS + 'U0001f600',
+    'Zeile 1' + BS + 'nZeile 2',
+    'Name' + BS + 'tOrt',
+    'C:' + BS + 'neu' + BS + 'tabelle.txt',
+    'Er sagte "Hallo"'
+  ];
+  knoepfe('lit-bsp', LIT, lies);
+
+  // ---------- Schritt 2: ein Wert, zwei Literale ----------
+  const s2 = { wert: '' };
+  function schreibe(wert) {
+    s2.wert = wert; el('wert').value = wert;
+    const flucht = (wert.match(/[\\"]/g) || []).length;
+    s2.interpretiert = '"' + wert.split(BS).join(BS + BS).split('"').join(BS + '"') + '"';
+    s2.roh = wert.includes('`') ? null : '`' + wert + '`';
+    s2.flucht = flucht;
+    el('w-feld').innerHTML =
+      '<span class="was">Der Wert, wie er erscheinen soll</span><span class="wie">' + esc(wert) + '</span>' +
+      '<span class="was">Interpretiertes String-Literal</span><span class="wie">' + esc(s2.interpretiert) + '</span>' +
+      '<span class="was">Rohes String-Literal</span><span class="wie">' + (s2.roh === null ? 'geht nicht' : esc(s2.roh)) + '</span>' +
+      '<span class="was">' + c('len(s)') + ', die Zahl der Bytes im Wert</span><span class="wie">' + bytesVon(wert) + '</span>';
+    el('w-urteil').classList.toggle('fehler', s2.roh === null);
+    el('w-urteil').innerHTML = s2.roh === null
+      ? '<p>Der Wert enthält einen Backquote. Der würde das rohe Literal beenden. Für diesen Wert bleibt nur das interpretierte String-Literal.</p>'
+      : flucht === 0 ? '<p>Der Wert enthält keinen Backslash und kein Anführungszeichen. Die zwei Literale unterscheiden sich nur in den Begrenzern. Üblich ist dann das interpretierte String-Literal.</p>'
+      : '<p>Das interpretierte String-Literal braucht ' + (flucht === 1 ? 'eine Escape-Sequenz' : flucht + ' Escape-Sequenzen') + '. Das rohe String-Literal kommt ohne aus. Beide Literale stehen für den gleichen Wert.</p>';
+    melde(false);
+  }
+  el('schreiben').addEventListener('click', () => schreibe(el('wert').value));
+  el('wert').addEventListener('keydown', e => { if (e.key === 'Enter') schreibe(el('wert').value); });
+  const WERTE = [
+    '"C:' + BS + 'Program Files (x86)' + BS + 'Windows Defender"',
+    'Der Backslash ' + BS + ' ist ein "besonderes" Zeichen.',
+    'grüne Wiese',
+    'Der Backquote ` ist ein Akzent.'
+  ];
+  knoepfe('wert-bsp', WERTE, schreibe);
+
+  // ---------- Schritt 3: von der Nummer zum Zeichen ----------
+  const s3 = { text: '221e', fehler: '' };
+  function zeigeNummer(text) {
+    const t = text.trim().replace(/^(U\+|0x|\\u|\\U)/i, '');
+    s3.text = t; el('nummer').value = t;
+    const nr = /^[0-9a-fA-F]{1,8}$/.test(t) ? parseInt(t, 16) : -1;
+    s3.fehler = nr < 0 ? 'Gib eine Nummer aus Hexadezimalziffern ein: 0 bis 9 und a bis f, höchstens acht Stellen.'
+      : nr > 0x10FFFF ? 'Die größte Unicode-Nummer ist 10FFFF.'
+      : nr >= 0xD800 && nr <= 0xDFFF ? 'Die Nummern D800 bis DFFF gehören zu keinem Zeichen. Go übersetzt ein Literal mit einer solchen Nummer nicht.'
+      : nr < 32 || (nr >= 127 && nr < 160) ? 'Die Nummer ' + hex(nr).toUpperCase() + ' gehört zu einem Steuerzeichen. Es hat kein Schriftbild.' : '';
+    el('u-fehler').hidden = !s3.fehler; el('u-fehler').textContent = s3.fehler;
+    el('u-ergebnis').hidden = !!s3.fehler;
+    if (s3.fehler) { melde(false); return; }
+    const zeichen = String.fromCodePoint(nr), kurz = nr <= 0xFFFF;
+    s3.nr = nr; s3.zeichen = zeichen;
+    s3.literal = '"' + BS + (kurz ? 'u' + hex(nr).padStart(4, '0') : 'U' + hex(nr).padStart(8, '0')) + '"';
+    s3.bytes = bytesVon(zeichen);
+    el('u-zeichen').textContent = zeichen;
+    el('u-feld').innerHTML =
+      '<span class="was">Unicode-Nummer</span><span class="wie">U+' + hex(nr).toUpperCase().padStart(4, '0') + ', dezimal ' + nr + '</span>' +
+      '<span class="was">String-Literal mit Escape-Sequenz</span><span class="wie">' + esc(s3.literal) + '</span>' +
+      '<span class="was">String-Literal mit dem Zeichen selbst</span><span class="wie">' + esc('"' + (zeichen === '"' || zeichen === BS ? BS : '') + zeichen + '"') + '</span>' +
+      '<span class="was">Bytes im Speicher</span><span class="wie">' + s3.bytes + '</span>' +
+      '<span class="was">Welche Escape-Sequenz</span><span class="wie" style="font-family:inherit;font-weight:400">' + (kurz ? 'Die Nummer hat höchstens vier Ziffern. Das kleine u genügt.' : 'Die Nummer hat mehr als vier Ziffern. Es braucht das große U mit acht Ziffern.') + '</span>';
+    melde(false);
+  }
+  el('zeigen').addEventListener('click', () => zeigeNummer(el('nummer').value));
+  el('nummer').addEventListener('keydown', e => { if (e.key === 'Enter') zeigeNummer(el('nummer').value); });
+  el('nr-bsp').addEventListener('click', e => { const k = e.target.closest('[data-nr]'); if (k) zeigeNummer(k.dataset.nr); });
+
+  // ---------- Schritt 4: fünf Zeilen. Ausgaben und Meldung stammen aus Läufen mit Go 1.26. ----------
+  const WAHL = [
+    { knopf: '"hoch" + "springen"', zeilen: ['fmt.Println("hoch" + "springen")    // hochspringen'], aus: 'hochspringen',
+      warum: 'Der rechte String wird an den linken gehängt. Es entsteht ein neuer String mit zwölf Zeichen.' },
+    { knopf: '"3" + "4"', zeilen: ['fmt.Println("3" + "4")    // 34'], aus: '34',
+      warum: 'Beide Operanden sind Strings. Go hängt sie aneinander und rechnet nicht. Erst 3 + 4 ohne Anführungszeichen ergibt 7.' },
+    { knopf: '"das Quadrat von 12 ist " + (12 * 12)', zeilen: ['fmt.Println("das Quadrat von 12 ist " + (12 * 12))'],
+      meldung: 'invalid operation: "das Quadrat von 12 ist " + (12 * 12) (mismatched types untyped string and untyped int)',
+      warum: 'Links steht ein String, rechts eine ganze Zahl. Go wandelt die Zahl nicht von selbst in einen String um.' },
+    { knopf: 'fmt.Println("das Quadrat von 12 ist", 12*12)', zeilen: ['fmt.Println("das Quadrat von 12 ist", 12*12)    // das Quadrat von 12 ist 144'], aus: 'das Quadrat von 12 ist 144',
+      warum: 'Hier wird nichts verkettet. fmt.Println bekommt zwei Werte, einen String und eine Zahl, gibt beide aus und setzt ein Leerzeichen dazwischen.' },
+    { knopf: 't += "!"', zeilen: ['t := "Go"', 't += "!"', 'fmt.Println(t)    // Go!'], aus: 'Go!',
+      warum: 't += "!" ist die Kurzform von t = t + "!". Die Variable t bekommt den neuen String "Go!".' }
+  ];
+  let wahl = 0;
+  el('wahl').innerHTML = WAHL.map((w, i) => '<button type="button" class="code" data-wahl="' + i + '">' + esc(w.knopf) + '</button>').join('');
+  function zeigeWahl(i) {
+    wahl = i;
+    const w = WAHL[i];
+    document.querySelectorAll('[data-wahl]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.wahl) === i));
+    el('v-zeile').textContent = w.zeilen.join('\n');
+    el('v-urteil').classList.toggle('fehler', !!w.meldung);
+    el('v-urteil').innerHTML = (w.meldung ? '<p>Go übersetzt die Zeile nicht. Der Compiler meldet: ' + c(w.meldung) + '</p>' : '<p>Go übersetzt die Zeile. Ausgabe: ' + c(w.aus) + '</p>') + '<p>' + esc(w.warum) + '</p>';
+    melde(false);
+  }
+  el('wahl').addEventListener('click', e => { const k = e.target.closest('[data-wahl]'); if (k) zeigeWahl(Number(k.dataset.wahl)); });
+
+  // ---------- Schritt 5: das Programm mit „Sommer“, Zeile für Zeile ----------
+  // Nach jeder Zeile: die Werte von a und b, die neue Variable, die Ausgabe und ein Satz dazu.
+  const PROGRAMM = [
+    { code: 'var a string = "Sommer"', a: 'Sommer', b: null, neu: 'a', aus: [], sagt: 'Go legt die Variable a an. Sie bekommt den Wert "Sommer".' },
+    { code: 'var b string = a', a: 'Sommer', b: 'Sommer', neu: 'b', aus: [], sagt: 'Go legt die Variable b an und weist ihr den Wert von a zu. Jetzt haben a und b den gleichen Wert.' },
+    { code: 'a = a + "zeit"', a: 'Sommerzeit', b: 'Sommer', neu: 'a', aus: [], sagt: 'Go bildet aus "Sommer" und "zeit" den neuen String "Sommerzeit" und weist ihn a zu. Der String "Sommer" selbst ändert sich nicht. b behält ihn.' },
+    { code: 'fmt.Println(a)', a: 'Sommerzeit', b: 'Sommer', neu: null, aus: ['Sommerzeit'], sagt: 'a hat den neuen Wert.' },
+    { code: 'fmt.Println(b)', a: 'Sommerzeit', b: 'Sommer', neu: null, aus: ['Sommerzeit', 'Sommer'], sagt: 'b hat weiter den Wert "Sommer". Die Zuweisung an a hat b nicht berührt.' }
+  ];
+  let lauf5 = 0;       // so viele Zeilen sind ausgeführt
+  function zeichne5() {
+    el('programm').innerHTML = PROGRAMM.map((z, i) => '<li class="' + (i === lauf5 - 1 ? 'aktuell' : i < lauf5 - 1 ? 'war' : '') + '"><span class="nr">' + (i + 1) + '</span>' + esc(z.code) + '</li>').join('');
+    const z = lauf5 ? PROGRAMM[lauf5 - 1] : { a: null, b: null, neu: null, aus: [], sagt: 'Noch ist keine Zeile ausgeführt. Die Variablen a und b gibt es noch nicht.' };
+    const kasten = (name, w) => '<div class="kasten' + (w === null ? ' leer' : '') + (z.neu === name ? ' neu' : '') + '"><span>' + name + '</span><b>' + (w === null ? 'noch nicht deklariert' : esc('"' + w + '"')) + '</b></div>';
+    el('speicher').innerHTML = kasten('a', z.a) + kasten('b', z.b);
+    el('p-ausgabe').textContent = z.aus.join('\n');
+    el('p-urteil').innerHTML = '<p>' + esc(z.sagt) + '</p>';
+    el('weiter').disabled = lauf5 >= PROGRAMM.length;
+    el('zurueck').disabled = lauf5 === 0;
+    melde(false);
+  }
+  el('weiter').addEventListener('click', () => { if (lauf5 < PROGRAMM.length) { lauf5++; zeichne5(); } });
+  el('zurueck').addEventListener('click', () => { if (lauf5 > 0) { lauf5--; zeichne5(); } });
+  el('vorn').addEventListener('click', () => { lauf5 = 0; zeichne5(); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Backslash', 'Schritt 2: Rohe Literale', 'Schritt 3: Unicode-Nummern', 'Schritt 4: Verketten', 'Schritt 5: Unveränderbar'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+  const sichtbarGemacht = w => Array.from(w).map(z => z === '\n' ? '[Zeilenumbruch]' : z === '\t' ? '[Tabulator]' : SCHILD[z.codePointAt(0)] ? '[' + SCHILD[z.codePointAt(0)] + ']' : z).join('');
+
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. Der Codeblock ist fest. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) {
+      const g = s1.gelesen, griffe = 'Handgriffe: zwischen den zwei Anführungszeichen einen Text mit höchstens 70 Zeichen eintragen und „lesen“ wählen, oder einen der sechs Knöpfe mit Beispielen wählen. Die äußeren Anführungszeichen stehen fest neben dem Feld und werden nicht mit eingetragen.';
+      if (!g.ok) return ['Im Feld steht das Literal "' + s1.text + '".', 'Go übersetzt es nicht.' + (g.meldung ? ' Der Compiler meldet: ' + g.meldung : ''), 'Die Seite sagt dazu: ' + g.grund, griffe];
+      return ['Im Feld steht das Literal "' + s1.text + '".',
+        'Der Wert, den Go daraus macht: ' + sichtbarGemacht(g.wert),
+        'Das Literal hat ohne die Anführungszeichen ' + zeichenVon(s1.text) + ' Zeichen. Der Wert hat ' + zeichenVon(g.wert) + ' Zeichen und ' + bytesVon(g.wert) + ' Bytes.',
+        g.sequenzen.length ? 'Die Escape-Sequenzen im Literal: ' + g.sequenzen.map(sichtbarGemacht).join(' ; ') + '.' : 'Das Literal enthält keine Escape-Sequenz.',
+        griffe];
+    }
+    if (stufe === 2) return ['Eingetragen ist der Wert: ' + s2.wert,
+      'Als interpretiertes String-Literal: ' + s2.interpretiert,
+      s2.roh === null ? 'Als rohes String-Literal geht es nicht, weil der Wert einen Backquote enthält.' : 'Als rohes String-Literal: ' + s2.roh,
+      'Der Wert hat ' + bytesVon(s2.wert) + ' Bytes. Das interpretierte Literal braucht ' + s2.flucht + ' Escape-Sequenzen.',
+      'Die Seite sagt dazu: ' + glatt(el('w-urteil').innerText),
+      'Handgriffe: eine Zeichenkette mit höchstens 70 Zeichen in einer Zeile eintragen und „als Literal schreiben“ wählen, oder einen der vier Knöpfe mit Beispielen wählen. Einen Zeilenumbruch nimmt das Feld nicht an.'];
+    if (stufe === 3) {
+      const griffe = 'Handgriffe: eine Unicode-Nummer aus höchstens acht Hexadezimalziffern eintragen und „Zeichen zeigen“ wählen, oder einen der Knöpfe 221e, 1f600, 20ac, fc, 41 und 3b1 wählen.';
+      if (s3.fehler) return ['Eingetragen ist ' + s3.text + '.', 'Die Seite meldet: ' + s3.fehler, griffe];
+      return ['Eingetragen ist die Nummer ' + s3.text + '. Das ist U+' + hex(s3.nr).toUpperCase().padStart(4, '0') + ', dezimal ' + s3.nr + '.',
+        'Das Zeichen dazu ist ' + s3.zeichen + '.',
+        'Als String-Literal mit Escape-Sequenz: ' + s3.literal + '. Das Zeichen belegt im Speicher ' + s3.bytes + (s3.bytes === 1 ? ' Byte.' : ' Bytes.'),
+        s3.nr <= 0xFFFF ? 'Die Nummer hat höchstens vier Ziffern, das kleine u genügt.' : 'Die Nummer hat mehr als vier Ziffern, es braucht das große U mit acht Ziffern.',
+        griffe];
+    }
+    if (stufe === 4) {
+      const w = WAHL[wahl];
+      return ['Gewählt ist: ' + w.zeilen.join(' ; '),
+        w.meldung ? 'Go übersetzt die Zeile nicht. Der Compiler meldet: ' + w.meldung : 'Go übersetzt die Zeile. Die Ausgabe ist ' + w.aus + '.',
+        'Die Seite sagt dazu: ' + w.warum,
+        'Handgriffe: eine der fünf Zeilen wählen. Eigener Code lässt sich nicht eingeben.'];
+    }
+    const z = lauf5 ? PROGRAMM[lauf5 - 1] : null;
+    return [z ? 'Ausgeführt sind ' + lauf5 + ' von 5 Zeilen. Zuletzt ausgeführt wurde Zeile ' + lauf5 + ': ' + z.code : 'Noch ist keine Zeile ausgeführt.',
+      lauf5 < PROGRAMM.length ? 'Als nächste Zeile folgt Zeile ' + (lauf5 + 1) + ': ' + PROGRAMM[lauf5].code : 'Das Programm ist zu Ende.',
+      'Die Variablen: a ' + (z && z.a !== null ? 'hat den Wert "' + z.a + '"' : 'ist noch nicht deklariert') + ', b ' + (z && z.b !== null ? 'hat den Wert "' + z.b + '"' : 'ist noch nicht deklariert') + '.',
+      'Bisherige Ausgabe des Programms: ' + (z && z.aus.length ? z.aus.join(' ; ') : 'noch keine') + '.',
+      'Die Seite sagt dazu: ' + (z ? z.sagt : 'Noch ist keine Zeile ausgeführt. Die Variablen a und b gibt es noch nicht.'),
+      'Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“. Das Programm lässt sich nicht ändern.'];
+  }
+  const kurzStand = () => stufe === 1 ? '"' + s1.text + '"' : stufe === 2 ? s2.wert : stufe === 3 ? 'Nummer ' + s3.text : stufe === 4 ? WAHL[wahl].knopf
+    : stufe === 5 ? (lauf5 ? 'Zeile ' + lauf5 + ': ' + PROGRAMM[lauf5 - 1].code : 'keine Zeile ausgeführt') : '';
+  // In Schritt 5 steht das Programm in einer Liste und nicht in pre
+  function programmZeilen() {
+    const z = Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(p => p.textContent.split('\n')).map(t => t.trimEnd()).filter(Boolean);
+    if (stufe !== 5) return z;
+    return z.concat(['', 'Das Programm der Demo:'], PROGRAMM.map((p, i) => (i + 1) + '  ' + p.code + (i === lauf5 - 1 ? '   // zuletzt ausgeführt' : i < lauf5 ? '   // ausgeführt' : '')));
+  }
+
+  lies(LIT[0]);
+  schreibe(WERTE[0]);
+  zeigeNummer('221e');
+  zeigeWahl(0);
+  zeichne5();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Strings in Go: Literale, Verkettung und Unveränderbarkeit',
+    thema: 'String-Literal, Escape-Sequenz, rohes String-Literal, Unicode, rune, Verkettung, unveränderbar',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–102, und Abschnitt 4.6.2.2, Seiten 107–108',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_strings_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum braucht man zwei Backslashes?'
+  });
+  angemeldet = true;
+})();
+</script>
 </body>
 </html>
