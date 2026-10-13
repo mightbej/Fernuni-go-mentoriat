@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vergleich von Verbünden in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    /* Speichersicht: Zellen mit Adresse und Bitmuster */
+    .zellenreihe { display:flex;flex-wrap:wrap;gap:6px;margin:12px 0; }
+    #m-zellen { display:grid;grid-template-columns:repeat(3, max-content); }
+    .zelle { border:2px solid #94a3b8;border-radius:8px;padding:5px 7px;background:#fff;text-align:center;min-width:104px; }
+    .zelle .adr { font-size:.8rem;color:var(--muted); }
+    .zelle .bits { font-family:Consolas,"Courier New",monospace;font-size:1rem;letter-spacing:1px;white-space:nowrap; }
+    .zelle .wem { font-size:.8rem;color:#111827;font-family:Consolas,"Courier New",monospace; }
+    .zelle.a { background:#eff6ff;border-color:var(--blau); }
+    .zelle.b { background:#f0fdfa;border-color:var(--accent); }
+    .zelle.c { background:#f5f3ff;border-color:#7c3aed; }
+    .zelle.d { background:#fff7ed;border-color:#c2410c; }
+    .zelle.ungleich { border-color:#b91c1c;background:#fef2f2; }
+    .zelle.gelesen { border-color:var(--aktiv);background:var(--aktiv-bg);box-shadow:0 0 0 2px var(--aktiv); }
+    .zelle button.bit { padding:1px 3px;min-width:1.25em;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:1rem;font-weight:400;background:#fff; }
+    .zelle button.bit.eins { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Vergleich von Verbünden in Go</h1>
+    <p>Zwei Verbünde sind gleich, wenn alle ihre Felder gleich sind. Zwei Verbund-Variablen mit dem gleichen Wert bleiben trotzdem zwei Variablen an zwei Adressen.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.2.5, Seite 208.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Feld für Feld</button>
+    <button type="button" class="tab" data-stufe="2">2 Wert oder Variable</button>
+    <button type="button" class="tab" data-stufe="3">3 Im Speicher</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Ein Datentyp heißt in Go <strong>vergleichbar</strong>, englisch comparable, wenn die Operatoren <code>==</code> und <code>!=</code> für ihn definiert sind. Alle primitiven Datentypen sind vergleichbar.</p>
+    <p>Für Verbünde gelten zwei Regeln:</p>
+    <ul>
+      <li><strong>Wann ein Verbund-Typ vergleichbar ist:</strong> wenn alle seine Feld-Typen vergleichbar sind.</li>
+      <li><strong>Wann zwei Verbund-Werte gleich sind:</strong> wenn alle ihre Feld-Werte gleich sind.</li>
+    </ul>
+    <p>Die Beispiele verwenden den Typ <code>koordinate</code> aus dem Kurstext:</p>
+    <pre class="code-block">type koordinate struct {
+    x, y, z int
+}</pre>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 4.5.2, Vergleichsoperatoren:</strong> Die Lektion <a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a> zeigt <code>==</code> und <code>!=</code> für die primitiven Datentypen.</li>
+      <li><strong>Abschnitt 7.4, Vergleich von Zeigern:</strong> Zwei Zeiger sind gleich, wenn sie auf dieselbe Variable zeigen. Das steht in der Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#operatoren">Zeiger in Go</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 8.2.1, Verbund-Literal:</strong> Die Lektion <a href="go_k8_verbund_interaktiv.html#literale">Verbund in Go</a>, Schritt 3.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Feld für Feld</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>a</code> ist <code>koordinate{5, -7, 8}</code>, <code>b</code> ist <code>koordinate{0, -7, 8}</code>. Zwei von drei Feldern stimmen überein. Was liefert <code>a == b</code>?
+          <details><summary>Auflösung</summary><code>false</code>. Schon ein Feld mit verschiedenen Werten genügt.</details></li>
+      </ol>
+    </div>
+    <p>Beim Vergleich zweier Verbund-Werte vergleicht Go die Felder, die einander entsprechen. Für den Typ <code>koordinate</code> bedeutet <code>a == b</code> das Gleiche wie:</p>
+    <pre class="code-block">a.x == b.x &amp;&amp; a.y == b.y &amp;&amp; a.z == b.z</pre>
+
+    <ol class="programm" id="v-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="v-weiter">nächste Anweisung</button>
+      <button type="button" id="v-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="v-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="v-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="v-ausgabe"></div>
+    <div class="auskunft" id="v-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.5, Seite 208. Das Programm stammt aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Gleicher Wert oder dieselbe Variable</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>a</code> und <code>b</code> haben beide den Wert <code>{5 -7 8}</code>. Was liefert <code>&amp;a == &amp;b</code>?
+          <details><summary>Auflösung</summary><code>false</code>. <code>&amp;a</code> und <code>&amp;b</code> sind die Adressen von zwei verschiedenen Variablen.</details></li>
+      </ol>
+    </div>
+    <p>Zwei Fragen sehen ähnlich aus und sind verschieden:</p>
+    <ul>
+      <li><strong>Haben zwei Variablen den gleichen Wert?</strong> Das fragt <code>a == b</code>. Verglichen werden die Felder.</li>
+      <li><strong>Ist es dieselbe Variable?</strong> Das fragt <code>&amp;a == &amp;b</code>. Verglichen werden die Adressen.</li>
+    </ul>
+    <p>Auch wenn <code>a == b</code> gilt, sind <code>a</code> und <code>b</code> zwei Variablen. Es gilt dann weiter <code>&amp;a != &amp;b</code>.</p>
+    <p>Für die Auswahl gilt der Stand am Ende von Schritt 1, dazu eine Farbe:</p>
+    <pre class="code-block">a := koordinate{5, -7, 8}
+b := koordinate{5, -7, 8}
+f := rgb{5, -7, 8}</pre>
+    <p>Wähle einen Vergleich:</p>
+    <div class="zeile" id="w-wahl"></div>
+    <p><strong>Ausgabe oder Meldung</strong></p>
+    <div class="konsole" id="w-ausgabe"></div>
+    <div class="auskunft" id="w-urteil"></div>
+
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.5, Seite 208. Die Vergleiche 1 und 3 stammen aus dem Kurstext. Die anderen fünf und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Der Vergleich im Speicher</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>In den drei Zellen von <code>a</code> und in den drei Zellen von <code>b</code> stehen die gleichen Bitmuster. Du schaltest in einer Zelle von <code>b</code> ein einziges Bit um. Was liefert <code>a == b</code> danach?
+          <details><summary>Auflösung</summary><code>false</code>. Ein anderes Bitmuster ist bei einer Ganzzahl ein anderer Wert, und ein Feld mit einem anderen Wert genügt.</details></li>
+      </ol>
+    </div>
+    <p>Im Hauptspeicher ist ein Verbund eine Reihe von Zellen, in denen die Felder hintereinander liegen. Jede Zelle fasst 8 Bit. Der Vergleich <code>a == b</code> sieht dort so aus: Der Rechner liest die Zellen jedes Felds von <code>a</code> und die Zellen des gleichen Felds von <code>b</code> und vergleicht die Bitmuster.</p>
+    <ul>
+      <li><strong>Gleiche Bitmuster in allen Feldern:</strong> Die zwei Verbünde sind gleich.</li>
+      <li><strong>Ein Bit ist verschieden:</strong> Das Feld hat einen anderen Wert, die zwei Verbünde sind verschieden.</li>
+    </ul>
+    <p>Damit ein Feld in eine Zelle passt, haben die Felder in diesem Modell den Typ <code>int8</code>:</p>
+    <pre class="code-block">type koordinate struct {
+    x, y, z int8
+}
+
+a := koordinate{5, -7, 8}  // liegt in den Zellen 100 bis 102
+b := koordinate{0, -7, 8}  // liegt in den Zellen 103 bis 105</pre>
+    <p>Ein Klick auf ein Bit schaltet es um. Die Seite vergleicht nach jedem Klick neu.</p>
+    <div class="zellenreihe" id="m-zellen"></div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="m-setze">b.x = 3 + 2 ausführen</button>
+      <button type="button" id="m-vorn">von vorn</button>
+    </div>
+    <div class="auskunft" id="m-urteil"></div>
+
+    <h3>Zwei Adressen</h3>
+    <p><code>&amp;a</code> ist in diesem Modell die Adresse 100, <code>&amp;b</code> ist die Adresse 103. Der Vergleich <code>&amp;a == &amp;b</code> vergleicht diese zwei Zahlen und sieht die Zellen gar nicht an. Er liefert deshalb <code>false</code>, gleich was in den Zellen steht.</p>
+    <div class="hinweis">Das Modell vereinfacht. Für Ganzzahlen stimmt es genau: gleicher Wert, gleiches Bitmuster. Go vergleicht aber Feld für Feld nach den Regeln des Feld-Typs. Bei einem Feld vom Typ <code>string</code> vergleicht Go die Zeichen der zwei Strings. Die Zellen, die Adressen 100 bis 105 und der Typ <code>int8</code> für die Felder gehören zum Modell dieser Seite, im Kurstext hat <code>koordinate</code> Felder vom Typ <code>int</code>.</div>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Funktionen:</strong> Die Lektion <a href="go_k8_verbund_funktionen_interaktiv.html">Verbünde und Funktionen</a> übergibt einen Verbund als Zeiger und als Kopie.</li>
+      <li><strong>Sortieren:</strong> Für Verbünde gibt es kein <code>&lt;</code>. Ein Sortierprogramm vergleicht deshalb ein Feld, zum Beispiel <code>p1.gebJahr &lt; p2.gebJahr</code>. Im Kurstext steht das in Abschnitt 8.4.</li>
+      <li><strong>Quiz:</strong> Das <a href="S216_verbund_vergleich_demo_quiz.html">Quiz zum Vergleich von Verbünden</a>.</li>
+    </ul>
+    <p class="quelle">Die Speichersicht steht nicht im Kurstext. Das Modell mit Zellen und Adressen zeigt die Seite <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a> ausführlich.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#felder
+  const ANKER = ['worum', 'felder', 'adresse', 'speicher'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Feld für Feld', 'Schritt 2: Gleicher Wert oder dieselbe Variable', 'Schritt 3: Der Vergleich im Speicher'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const K = (x, y, z) => FELDER(['x', 'y', 'z'], [x, y, z]);
+
+  // ---------- Schritt 1: a und b ----------
+  const DV = ablauf('v', ['a := koordinate{5, -7, 8}', 'b := koordinate{0, -7, 8}', 'fmt.Println(a == b)', 'b.x = 3 + 2', 'fmt.Println(a == b)', 'fmt.Println(&a == &b)'], [
+    { z: 1, satz: 'a ist eine Verbund-Variable vom Typ koordinate.', rahmen: [R('main', [V('a', K(5, -7, 8), 1)])], aus: '' },
+    { z: 2, satz: 'b ist eine zweite Variable vom gleichen Typ. Ihr Feld x hat einen anderen Wert als a.x.', rahmen: [R('main', [V('a', K(5, -7, 8)), V('b', K(0, -7, 8), 1)])], aus: '' },
+    { z: 3, satz: 'Go vergleicht Feld für Feld: a.x ist 5, b.x ist 0. Schon das erste Paar ist verschieden, das Ergebnis ist false.', rahmen: [R('main', [V('a', K(5, -7, 8), 0, [0]), V('b', K(0, -7, 8), 0, [0])])], aus: 'false' },
+    { z: 4, satz: 'Die Zuweisung ändert das Feld x von b. 3 + 2 ergibt 5.', rahmen: [R('main', [V('a', K(5, -7, 8)), V('b', K(5, -7, 8), 0, [0])])], aus: 'false' },
+    { z: 5, satz: 'Jetzt sind alle drei Paare gleich: 5 und 5, -7 und -7, 8 und 8. Das Ergebnis ist true.', rahmen: [R('main', [V('a', K(5, -7, 8), 0, [0, 1, 2]), V('b', K(5, -7, 8), 0, [0, 1, 2])])], aus: 'false' + NL + 'true' },
+    { z: 6, satz: '&a und &b sind die Adressen der zwei Variablen. a und b haben den gleichen Wert, es sind aber zwei Variablen. Das Ergebnis ist false.', rahmen: [R('main', [V('a', K(5, -7, 8)), V('b', K(5, -7, 8))])], aus: 'false' + NL + 'true' + NL + 'false' }
+  ], 'Noch ist keine Anweisung ausgeführt. Die sechs Zeilen stehen im Rumpf von main.');
+
+  // ---------- Schritt 2: sieben Vergleiche ----------
+  const WW = wahl('w', [
+    { code: 'a == b', aus: 'true', satz: 'Alle drei Felder haben in a und in b den gleichen Wert.' },
+    { code: 'a != b', aus: 'false', satz: '!= liefert das Gegenteil von ==. Die zwei Werte sind gleich, also false.' },
+    { code: '&a == &b', aus: 'false', satz: 'Verglichen werden zwei Adressen. a und b sind zwei verschiedene Variablen.' },
+    { code: 'a == koordinate{5, -7, 8}', aus: 'true', satz: 'Auf der rechten Seite darf ein Verbund-Literal stehen. Seine drei Werte stimmen mit den Feldern von a überein.' },
+    { code: 'a == f', fehler: true, aus: 'invalid operation: a == f (mismatched types koordinate and rgb)', satz: 'koordinate und rgb sind zwei verschiedene Typen, auch wenn beide aus drei int bestehen. Zwei Werte verschiedener Typen lassen sich nicht vergleichen.' },
+    { code: 'a < b', fehler: true, aus: 'invalid operation: a < b (operator < not defined on struct)', satz: 'Für Verbünde gibt es nur == und !=. Was „kleiner“ bei einem Verbund bedeuten soll, legt Go nicht fest. Ein Programm vergleicht dafür ein Feld, zum Beispiel a.x < b.x.' },
+    { code: 'a == nil', fehler: true, aus: 'invalid operation: a == nil (mismatched types koordinate and untyped nil)', satz: 'nil ist der Null-Wert eines Zeigers. Ein Verbund ist kein Zeiger. Sein Null-Wert ist koordinate{}.' }
+  ], true);
+
+  // ---------- Schritt 3: sechs Zellen, jedes Bit lässt sich umschalten ----------
+  const FELDNAMEN = ['x', 'y', 'z'], ANFANG_M = [5, 249, 8, 0, 249, 8];   // 249 ist das Bitmuster von -7 als int8
+  let zellen = ANFANG_M.slice();
+  let letzte = 'Noch hat der Student kein Bit umgeschaltet.';   // die letzte Änderung in Worten, für den Kurslotsen
+  const bits = b => b.toString(2).padStart(8, '0');
+  const alsInt8 = b => b > 127 ? b - 256 : b;
+  function vergleichSaetze() {
+    const s = [];
+    let gleich = true;
+    FELDNAMEN.forEach((f, i) => {
+      const g = zellen[i] === zellen[i + 3];
+      if (!g) gleich = false;
+      s.push('a.' + f + ' in Zelle ' + (100 + i) + ': ' + bits(zellen[i]) + ', das ist ' + alsInt8(zellen[i]) + '. b.' + f + ' in Zelle ' + (103 + i) + ': ' + bits(zellen[i + 3]) + ', das ist ' + alsInt8(zellen[i + 3]) + '. Die Bitmuster sind ' + (g ? 'gleich.' : 'verschieden.'));
+    });
+    s.push(gleich ? 'Alle drei Felder haben das gleiche Bitmuster: a == b liefert true.' : 'Mindestens ein Feld hat ein anderes Bitmuster: a == b liefert false.');
+    s.push('&a ist 100, &b ist 103: &a == &b liefert false.');
+    return s;
+  }
+  function zeichneZellen() {
+    el('m-zellen').innerHTML = zellen.map((b, i) => {
+      const ungleich = zellen[i % 3] !== zellen[i % 3 + 3];
+      return '<div class="zelle ' + (i < 3 ? 'a' : 'b') + (ungleich ? ' ungleich' : '') + '"><div class="adr">Zelle ' + (100 + i) + '</div><div class="bits">' +
+        bits(b).split('').map((z, k) => '<button type="button" class="bit' + (z === '1' ? ' eins' : '') + '" data-zelle="' + i + '" data-bit="' + (7 - k) + '">' + z + '</button>').join('') +
+        '</div><div class="wem">' + (i < 3 ? 'a.' : 'b.') + FELDNAMEN[i % 3] + ' = ' + alsInt8(b) + '</div></div>';
+    }).join('');
+    const s = vergleichSaetze();
+    el('m-urteil').className = 'auskunft' + (/false\.$/.test(s[3]) ? ' fehler' : '');
+    el('m-urteil').innerHTML = s.map(t => '<p>' + esc(t) + '</p>').join('');
+    melde(false);
+  }
+  el('m-zellen').addEventListener('click', ev => {
+    const k = ev.target.closest('button.bit');
+    if (!k) return;
+    const i = Number(k.dataset.zelle), wert = 1 << Number(k.dataset.bit), alt = zellen[i], name = (i < 3 ? 'a.' : 'b.') + FELDNAMEN[i % 3];
+    zellen[i] ^= wert;
+    letzte = 'Zuletzt hat der Student in Zelle ' + (100 + i) + ', dem Feld ' + name + ', das Bit mit der Wertigkeit ' + wert + ' umgeschaltet. Vorher stand dort ' + bits(alt) + ', das ist ' + alsInt8(alt) + '. Jetzt steht dort ' + bits(zellen[i]) + ', das ist ' + alsInt8(zellen[i]) + '.';
+    zeichneZellen();
+  });
+  el('m-setze').addEventListener('click', () => { zellen[3] = 5; letzte = 'Zuletzt hat der Student „b.x = 3 + 2 ausführen“ gewählt. In Zelle 103 steht jetzt 00000101, das ist 5.'; zeichneZellen(); });
+  el('m-vorn').addEventListener('click', () => { zellen = ANFANG_M.slice(); letzte = 'Zuletzt hat der Student „von vorn“ gewählt.'; zeichneZellen(); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return standAblauf(DV).concat('Ein Verbund steht in seinem Kasten als Liste seiner Felder. Grün sind die Felder, die die letzte Anweisung verglichen oder geändert hat.');
+    if (stufe === 3) return ['Zu sehen sind sechs Zellen mit den Adressen 100 bis 105. Die Zellen 100 bis 102 gehören zu a, die Zellen 103 bis 105 zu b. Die Felder haben in diesem Modell den Typ int8.', letzte].concat(vergleichSaetze(),
+      ['Eine Zelle mit rotem Rand gehört zu einem Feld, dessen Bitmuster in a und b verschieden ist.', 'Handgriffe: ein Bit in einer der sechs Zellen anklicken, es wechselt zwischen 0 und 1. „b.x = 3 + 2 ausführen“ schreibt 00000101 in Zelle 103. „von vorn“ stellt a = {5, -7, 8} und b = {0, -7, 8} wieder her.']);
+    return standWahl(WW, 'der Vergleich').concat('Für die Auswahl gilt: a und b sind koordinate{5, -7, 8}, f ist rgb{5, -7, 8}.');
+  }
+  const kurzStand = () => stufe === 1 ? kurzVon(DV) : stufe === 2 ? WW.liste[WW.i].code : stufe === 3 ? 'a = {' + zellen.slice(0, 3).map(alsInt8).join(' ') + '}, b = {' + zellen.slice(3).map(alsInt8).join(' ') + '}' : '';
+  const programmZeilen = () => zeilenVon(stufe === 1 ? DV : null);
+
+  DV.zeichne(); WW.zeichne(); zeichneZellen();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Vergleich von Verbünden in Go',
+    thema: 'vergleichbar, Vergleich von Verbund-Werten Feld für Feld, Vergleich von Adressen',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.2.5, Seite 208',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_vergleich_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo, die Zeilen stehen im Rumpf von main:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ist &a == &b false, obwohl a == b true ist?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
