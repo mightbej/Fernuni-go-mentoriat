@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-13T16:09",
+ "stand": "2026-10-13T18:28",
  "abschnitte": {
   "2.1": [
    {
@@ -99,6 +99,13 @@
     "titel": "Variablendeklaration in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -315,6 +322,13 @@
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -906,6 +920,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Wahrheitswerte: bool und die Kurzschluss-Auswertung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html",
     "beschreibung": "Die Seite zeigt, dass Go bei `&&` und `||` den rechten Operanden nur auswertet, wenn das Ergebnis noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts: der Division, die nicht stattfindet, und der Funktion aus Listing 4.2, die nicht aufgerufen wird.",
@@ -1070,6 +1091,13 @@
     "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1650,6 +1678,13 @@
     "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "6.1": [
@@ -1692,6 +1727,13 @@
     "titel": "Programmierübung: Sortieren mit Selection Sort",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -1871,6 +1913,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
     "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
@@ -1971,6 +2020,34 @@
     "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "7.4.1": [
@@ -1996,6 +2073,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
@@ -2017,6 +2101,13 @@
     "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "7.4.3": [
@@ -2058,6 +2149,13 @@
     "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "7.4.6": [
@@ -2081,6 +2179,13 @@
     "titel": "Programmierübung: Bubble Sort rekursiv",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2158,51 +2263,113 @@
     "art": "nennt"
    }
   ],
+  "8.1": [
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
   "8.2": [
    {
-    "titel": "S207 struct in Go - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S207_struct_veranschaulichung.html",
-    "beschreibung": "Die Seite führt den Verbund als Antwort auf ein Modellierungsproblem ein und zeigt die Schreibweise mit struct.",
-    "geprueft": false,
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
     "titel": "Speichermodell: Verbund-Datentyp in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
-    "beschreibung": "Die Seite zeigt, dass ein Verbund Felder verschiedener Typen unter einem Namen zusammenfasst und dass der Bauplan des Typs sagt, wo ein Feld liegt.",
-    "geprueft": false,
+    "beschreibung": "Die Seite zeigt, wie ein Verbund im Hauptspeicher liegt: Die Felder liegen lückenlos hintereinander, und ein Bauplan des Typs sagt, wo jedes Feld beginnt. Sie ist die vierte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.2.1": [
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Anonyme Felder und eingebettete Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
+    "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.2.2": [
+   {
+    "titel": "Verbund in Go: der Datentyp struct",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
+    "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Anonyme Felder und eingebettete Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
+    "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
     "art": "nennt"
    }
   ],
   "8.2.3": [
    {
-    "titel": "S212 Verbund-Variablen und Feld-Variablen - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S212_verbund_felder_demo_veranschaulichung.html",
-    "beschreibung": "Die Seite zeigt die Verbund-Variable und den Zugriff auf ihre Felder mit der Punktnotation.",
-    "geprueft": false,
+    "titel": "Speichermodell: Verbund-Datentyp in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie ein Verbund im Hauptspeicher liegt: Die Felder liegen lückenlos hintereinander, und ein Bauplan des Typs sagt, wo jedes Feld beginnt. Sie ist die vierte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
-    "titel": "Speichermodell: Verbund-Datentyp in Go",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
-    "beschreibung": "Die Seite zeigt, dass ein Verbund Felder verschiedener Typen unter einem Namen zusammenfasst und dass der Bauplan des Typs sagt, wo ein Feld liegt.",
-    "geprueft": false,
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
     "geprueft": true,
     "art": "nennt"
    }
   ],
   "8.2.4": [
    {
-    "titel": "S214 Zeiger auf Verbünde - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S214_zeiger_auf_verbund_demo_veranschaulichung.html",
-    "beschreibung": "Die Seite zeigt den Zeiger auf einen ganzen Verbund und den Zugriff auf Felder über diesen Zeiger.",
-    "geprueft": false,
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
@@ -2211,32 +2378,53 @@
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "8.2.5": [
    {
-    "titel": "S216 Vergleich von Verbünden - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S216_verbund_vergleich_demo_veranschaulichung.html",
-    "beschreibung": "Die Seite zeigt, wann zwei Verbünde mit == und != verglichen werden können.",
-    "geprueft": false,
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "8.2.6": [
    {
-    "titel": "S219 Verbund-Parameter - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S219_verbund_parameter_demo_veranschaulichung.html",
-    "beschreibung": "Die Seite zeigt Verbünde als Parameter einer Funktion und einen Verbund-Zeiger als Rückgabewert.",
-    "geprueft": false,
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
     "art": "erklaert"
    }
   ],
   "8.2.7": [
    {
-    "titel": "S219 Verbund-Parameter - Veranschaulichung",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/S219_verbund_parameter_demo_veranschaulichung.html",
-    "beschreibung": "Die Seite zeigt Verbünde als Parameter einer Funktion und einen Verbund-Zeiger als Rückgabewert.",
-    "geprueft": false,
+    "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
@@ -2256,6 +2444,20 @@
     "art": "erklaert"
    },
    {
+    "titel": "Anonyme Felder und eingebettete Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
+    "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
@@ -2264,6 +2466,13 @@
    }
   ],
   "8.3.1": [
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
@@ -2274,9 +2483,32 @@
   ],
   "8.3.2": [
    {
+    "titel": "Anonyme Felder und eingebettete Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
+    "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "8.4": [
+   {
+    "titel": "Anonyme Felder und eingebettete Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
+    "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -2364,6 +2596,13 @@
     "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
     "geprueft": false,
     "art": "erklaert"
+   },
+   {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
