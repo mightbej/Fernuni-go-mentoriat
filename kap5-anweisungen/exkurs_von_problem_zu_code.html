@@ -306,7 +306,7 @@
                 <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>4.7</td></tr>
                 <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>5.5.2</td></tr>
             </table>
-            <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="156_go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
+            <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
         </div>
         <div class="card">
             <h2>Was wir gesehen haben</h2>
@@ -326,6 +326,7 @@
     <footer>Diese Seite ist ein Exkurs zu Kapitel 5. <a href="../index.html">Zurück zur Startseite</a></footer>
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
     // Die Sätze der Spezifikation. "ab" nennt die Stufe, auf der ein Absatz dazukommt.
     const ABSAETZE = [
@@ -407,11 +408,23 @@
         }
     }
 
-    function zeigeStufe(nummer) {
+    // Jede Stufe hat eine eigene Adresse, zum Beispiel …exkurs_von_problem_zu_code.html#versuche
+    const ANKER = ["worum", "spielidee", "zahlenbereich", "versuche", "runden", "ablauf", "programm"];
+    let stufe = 0;
+    let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+    function zeigeStufe(nummer, nachOben) {
+        const gewechselt = nummer !== stufe;
+        stufe = nummer;
         document.querySelectorAll(".stufe").forEach(s => s.classList.toggle("active", s.id === "stufe-" + nummer));
         document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", Number(t.dataset.stufe) === nummer));
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (gewechselt && angemeldet) Kurslotse.schrittGewechselt();   // die Antworten gehören zur Stufe davor
+        if (nachOben) {
+            history.replaceState(null, "", "#" + ANKER[nummer]);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
     }
+    function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
 
     // Halbieren: Wie viele Zahlen sind vor jedem Tipp noch möglich, wenn es jedes Mal schlecht läuft?
     function rechneHalbieren() {
@@ -441,14 +454,49 @@
     }
 
     document.getElementById("tabs").addEventListener("click", e => {
-        if (e.target.dataset.stufe !== undefined) zeigeStufe(Number(e.target.dataset.stufe));
+        if (e.target.dataset.stufe !== undefined) zeigeStufe(Number(e.target.dataset.stufe), true);
     });
-    document.querySelectorAll("[data-gehe]").forEach(k => k.addEventListener("click", () => zeigeStufe(Number(k.dataset.gehe))));
+    document.querySelectorAll("[data-gehe]").forEach(k => k.addEventListener("click", () => zeigeStufe(Number(k.dataset.gehe), true)));
     document.querySelectorAll("[data-kopiere]").forEach(k => k.addEventListener("click", () => kopiere(Number(k.dataset.kopiere))));
-    document.getElementById("obergrenze").addEventListener("input", rechneHalbieren);
+    document.getElementById("obergrenze").addEventListener("input", () => { rechneHalbieren(); if (angemeldet) Kurslotse.standGeaendert(); });
+    window.addEventListener("hashchange", () => zeigeStufe(stufeAusAdresse(), false));
+
+    // ---- Kurslotse ----
+    // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+    const SCHRITTE = ["Worum es geht", "Stufe 1: Die Spielidee", "Stufe 2: Der Zahlenbereich", "Stufe 3: Die Zahl der Versuche", "Stufe 4: Runden und Wertung", "Stufe 5: Der Ablauf", "Stufe 6: Das Go-Programm"];
+
+    function standSaetze() {
+        const fest = "Das Spiel wird nicht in dieser Spalte gespielt. Der Student kopiert die Spezifikation und gibt sie in einem eigenen Gespräch einem Sprachmodell.";
+        if (stufe === 0 || stufe === 6) return ["Diese Stufe hat keine Demo und keine Spezifikation zum Kopieren."];
+        if (stufe !== 3) return ["Diese Stufe hat keine Demo. Die Spezifikation der Stufe steht im dunklen Kasten und geht mit dem Text der Stufe mit.", fest];
+        const n = Math.floor(Number(document.getElementById("obergrenze").value));
+        if (!(n >= 2 && n <= 1000000)) return ["Im Feld „Zahlen von 1 bis“ steht kein gültiger Wert. Erlaubt ist eine ganze Zahl von 2 bis 1000000.", fest];
+        const reihe = [];
+        for (let m = n; m >= 1; m = Math.floor(m / 2)) reihe.push(m);
+        return ["Im Feld „Zahlen von 1 bis“ steht " + n + ". Erlaubt ist eine ganze Zahl von 2 bis 1000000.",
+            "Die Seite zeigt dazu: Mit Halbieren reichen " + reihe.length + " Versuche.",
+            "Die Tabelle nennt, wie viele Zahlen vor jedem Tipp noch möglich sind: " + reihe.map((m, i) => "Tipp " + (i + 1) + ": " + m).join(", ") + ".",
+            "Zum Vergleich steht darunter: Wer der Reihe nach rät, braucht im Mittel " + ((n + 1) / 2).toLocaleString("de-DE") + " Tipps und im schlimmsten Fall " + n + ".",
+            fest];
+    }
 
     zeigeSpezifikationen();
     rechneHalbieren();
+    zeigeStufe(stufeAusAdresse(), false);
+    Kurslotse.einrichten({
+        titel: "Exkurs: Von der Problemstellung zum Go-Programm",
+        thema: "Zahlenraten, Spezifikation, Entwicklungsprozess, Ablauf, Halbieren",
+        bezug: "Kurstext v3.0.6, Kapitel 5, Seiten 113–149",
+        beschreibung: "../kurslotse/kap5-anweisungen/exkurs_von_problem_zu_code.md",
+        reiter: () => ANKER[stufe],
+        schritt: () => SCHRITTE[stufe],
+        sichtbar: () => document.getElementById("stufe-" + stufe),
+        text: ".card > h2, .card > h3, .card > p, .card > ul, .card > ol, .card > table, .card > div",
+        stand: standSaetze,
+        kurz: () => stufe === 3 ? "Zahlen von 1 bis " + document.getElementById("obergrenze").value : "",
+        beispiel: "Warum reichen 7 Versuche für 100 Zahlen?"
+    });
+    angemeldet = true;
 </script>
 </body>
 </html>
