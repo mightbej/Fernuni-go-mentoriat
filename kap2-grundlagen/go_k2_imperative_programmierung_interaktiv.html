@@ -57,9 +57,9 @@
     .programm { margin:0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;list-style:none;overflow-x:auto; }
     .programm li { margin:0;padding:3px 14px 3px 10px;color:#cbd5e1;border-left:4px solid transparent;white-space:pre; }
     .programm li.aktuell { color:#fff;background:#334155;border-left-color:var(--aktiv);font-weight:700; }
-    .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.95rem; }
-    .stand .was { color:var(--muted); }
-    .stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
+    .paar .stand { display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:.95rem; }
+    .paar .stand .was { color:var(--muted); }
+    .paar .stand .wie { font-family:Consolas,monospace;min-height:1.5em;overflow-wrap:anywhere; }
   </style>
 </head>
 <body>
@@ -205,6 +205,7 @@
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -216,10 +217,19 @@
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#bausteine
   var ANKER = ["worum", "sprachen", "arten", "bausteine"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
   function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
     jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
     jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
     if (nachOben) {
       history.replaceState(null, "", "#" + ANKER[nummer]);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -397,21 +407,93 @@
   document.addEventListener("click", function (ev) {
     var k = ev.target.closest("[data-stufe], [data-gehe], [data-art], [data-baustein], [data-start]");
     if (!k) return;
-    if (k.dataset.art !== undefined) { art = k.dataset.art; zeigeArt(); return; }
-    if (k.dataset.baustein !== undefined) { waehleBaustein(Number(k.dataset.baustein)); return; }
-    if (k.dataset.start !== undefined) { waehleBaustein(baustein, Number(k.dataset.start)); return; }
+    if (k.dataset.art !== undefined) { art = k.dataset.art; zeigeArt(); melde(false); return; }
+    if (k.dataset.baustein !== undefined) { waehleBaustein(Number(k.dataset.baustein)); melde(false); return; }
+    if (k.dataset.start !== undefined) { waehleBaustein(baustein, Number(k.dataset.start)); melde(false); return; }
     zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
   });
   window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
-  $("aufdecken").addEventListener("click", function () { aufgedeckt = !aufgedeckt; zeigeBalken(); });
-  $("weiter").addEventListener("click", function () { schritt++; zeigeBaustein(); });
-  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeBaustein(); } });
-  $("vorn").addEventListener("click", function () { schritt = 0; zeigeBaustein(); });
+  $("aufdecken").addEventListener("click", function () { aufgedeckt = !aufgedeckt; zeigeBalken(); melde(false); });
+  $("weiter").addEventListener("click", function () { schritt++; zeigeBaustein(); melde(false); });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeBaustein(); melde(false); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeBaustein(); melde(false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Welche Sprachen heute benutzt werden", "Schritt 2: Vier Arten zu programmieren", "Schritt 3: Die Bausteine"];
+  var SEITEN = ["Links", "Rechts"];
+
+  function ohneCode(html) { return html.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&amp;/g, "&"); }
+  function prozent(zahl) { return zahl.toFixed(1).replace(".", ",") + " %"; }
+  function ausgaben(spur, bis) {
+    return spur.slice(0, bis).filter(function (s) { return s.ausgabe !== undefined; }).map(function (s) { return s.ausgabe; }).join("  ") || "keine";
+  }
+  function laenge() { return Math.max(spuren[0].length, spuren[1].length); }
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 1) return [
+      "Die 15 Balken von oben nach unten: " + SPRACHEN.map(function (s, i) { return (i + 1) + ". " + s[0] + " " + prozent(s[1]); }).join(", ") + ".",
+      "Go steht auf Platz 14 und ist grün hervorgehoben.",
+      aufgedeckt ? "Die Antwort ist aufgedeckt. SQL und HTML/CSS sind braun hervorgehoben, sie sind nicht imperativ."
+                 : "Die Antwort auf die Frage „Welche dieser Sprachen sind nicht imperativ?“ ist noch verdeckt."];
+    if (stufe === 2) return [
+      "Gewählt ist die Art „" + ARTEN[art].name + "“.",
+      "In der Zeitleiste sind gelb hervorgehoben: " + ZEIT.filter(function (z) { return z[2] === art; }).map(function (z) { return z[1] + " (ca. " + z[0] + ")"; }).join(", ") + ". Die übrigen Zeilen sind blass."];
+    var b = BAUSTEINE[baustein];
+    var saetze = ["Gewählt ist der Baustein „" + b.name + "“ mit dem Startwert " + b.variable + " = " + start + ".",
+      "Für den Startwert gibt es bei diesem Baustein genau diese Knöpfe: " + b.starts.map(function (w) { return b.variable + " = " + w; }).join(", ") + ". Ein Eingabefeld gibt es nicht, andere Startwerte lassen sich auf der Seite nicht einstellen.",
+      schritt === 0 ? "Noch ist kein Schritt ausgeführt. In keinem der zwei Programme ist eine Zeile markiert."
+                    : "Ausgeführt sind " + schritt + " von " + laenge() + " Schritten."];
+    b.programme.forEach(function (p, seite) {
+      var spur = spuren[seite], kopf = SEITEN[seite] + ", „" + p.titel + "“: ";
+      if (schritt > 0) {
+        var bei = spur[Math.min(schritt, spur.length) - 1];
+        kopf += schritt > spur.length ? "Das Programm ist schon zu Ende, keine Zeile ist markiert. "
+                                      : "Markiert ist die Zeile „" + p.zeilen[bei.zeile].trim() + "“. " + ohneCode(bei.text) + " ";
+        kopf += "Wert von " + b.variable + ": " + bei.wert + ". ";
+      } else kopf += "Wert von " + b.variable + ": " + start + ". ";
+      saetze.push(kopf + "Ausgabe bisher: " + ausgaben(spur, schritt) + ". Das Programm braucht " + spur.length + " Schritte, am Ende lautet die Ausgabe: " + ausgaben(spur, spur.length) + ".");
+    });
+    return saetze;
+  }
+  function kurz() {
+    if (stufe === 0) return "";
+    if (stufe === 1) return aufgedeckt ? "Antwort aufgedeckt" : "Antwort verdeckt";
+    if (stufe === 2) return "gewählt: " + ARTEN[art].name;
+    var b = BAUSTEINE[baustein];
+    return b.name + ", " + b.variable + " = " + start + ", Schritt " + schritt + " von " + laenge();
+  }
+  function zeilen() {
+    if (stufe !== 3) return [];
+    var liste = [];
+    BAUSTEINE[baustein].programme.forEach(function (p, seite) {
+      liste.push(SEITEN[seite] + ", „" + p.titel + "“:");
+      p.zeilen.forEach(function (z) { liste.push("    " + z); });
+    });
+    return liste;
+  }
 
   zeigeBalken();
   zeigeArt();
   waehleBaustein(0);
   zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    thema: "Imperative und strukturierte Programmierung, Anweisung, Sprung mit GOTO, Block, Verzweigung und Schleife",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.1, Seiten 5–8",
+    beschreibung: "../kurslotse/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p:not(.quelle), .card > ul, .auskunft, table",
+    zeilen: zeilen,
+    zeilenTitel: "Die zwei Programme des sichtbaren Schritts. Sie gehören zu keiner bestimmten Programmiersprache und sind kein Go:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum gibt REPEAT-UNTIL bei n = 0 etwas aus und WHILE nicht?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
