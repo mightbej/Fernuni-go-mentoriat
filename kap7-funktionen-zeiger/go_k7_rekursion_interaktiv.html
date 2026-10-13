@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rekursion in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    /* Türme von Hanoi: drei Stangen, die Scheiben liegen als Balken übereinander */
+    .hanoi { display:flex;gap:12px;margin:12px 0;align-items:flex-end; }
+    .stange { flex:1;min-width:90px;max-width:220px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:132px;border-bottom:5px solid #475569;padding-bottom:2px;position:relative; }
+    .stange::before { content:"";position:absolute;bottom:0;top:8px;width:6px;background:#cbd5e1;border-radius:3px;z-index:0; }
+    .stange .scheibe { height:22px;border-radius:6px;margin-top:3px;background:var(--blau);color:#fff;font-weight:700;font-size:.85rem;text-align:center;line-height:22px;z-index:1; }
+    .stange .scheibe.neu { background:#b45309; }
+    .stangenname { flex:1;min-width:90px;max-width:220px;text-align:center;font-weight:600;color:var(--muted); }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    .tabellenrahmen td, .tabellenrahmen th { text-align:center; }
+    .tabellenrahmen td:first-child, .tabellenrahmen th:first-child { text-align:left; }
+    .baum { background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.45;white-space:pre;overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Rekursion in Go</h1>
+    <p>Eine Funktion, die sich selbst aufruft, heißt rekursiv. Die Seite führt die rekursiven Funktionen des Kurstexts Aufruf für Aufruf aus: Fakultät, Fibonacci-Zahlen und die Türme von Hanoi.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Iterativ und rekursiv</button>
+    <button type="button" class="tab" data-stufe="2">2 Endrekursion</button>
+    <button type="button" class="tab" data-stufe="3">3 Fibonacci-Zahlen</button>
+    <button type="button" class="tab" data-stufe="4">4 Türme von Hanoi</button>
+    <button type="button" class="tab" data-stufe="5">5 Terminierung</button>
+  </div>
+
+  <!-- ===================== Worum es geht ===================== -->
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Funktionen lagern eine Berechnung aus. Ein Programm verwendet sie aus zwei Gründen: Es braucht die gleiche Berechnung an mehreren Stellen, und es wird durch Funktionen übersichtlich.</p>
+    <p>Eine Funktion darf andere Funktionen aufrufen, und sie darf sich selbst aufrufen. Ruft eine Funktion in ihrem Rumpf sich selbst auf, heißt das <strong>direkte Rekursion</strong>. Rekursion gliedert das Problem und weniger das Programm: Die Funktion führt eine Aufgabe auf eine kleinere Aufgabe der gleichen Art zurück.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Rekursion ohne Go:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#rekursion">Unterprogramme und Funktionen</a> zeigt in Schritt 4 eine rekursive Definition.</li>
+      <li><strong>Abschnitt 3.4, Funktionen:</strong> Jeder Aufruf hat eigene Parameter und eigene lokale Variablen. Das trägt die ganze Rekursion.</li>
+      <li><strong>Abschnitt 5.5.3.3, Fakultät mit einer Schleife:</strong> Die Fakultät kommt im Kurstext schon bei den Schleifen vor. Die Lektion <a href="../kap5-anweisungen/go_k5_for_klausel_interaktiv.html">for-Anweisung mit for-Klausel</a> gehört dazu.</li>
+      <li><strong>Abschnitt 7.1, Funktionen in Go:</strong> Die Lektion <a href="go_k7_funktionen_interaktiv.html">Funktionen in Go</a> zeigt Aufruf und Rückgabe mit Rahmen wie diese Seite.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Die Fakultät als Schleife und als rekursive Funktion. Du führst <code>fakultätRek(4)</code> Aufruf für Aufruf aus.</li>
+      <li><strong>Schritt 2:</strong> Die endrekursive Fassung rechnet auf dem Hinweg und reicht das Ergebnis nur noch zurück.</li>
+      <li><strong>Schritt 3:</strong> Die rekursive Funktion für die Fibonacci-Zahlen ruft sich zweimal auf. Du zählst die Aufrufe.</li>
+      <li><strong>Schritt 4:</strong> Die Türme von Hanoi, mit einer Funktion von sieben Zeilen.</li>
+      <li><strong>Schritt 5:</strong> Wann eine Rekursion endet, und wie man das zeigt.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 1 ===================== -->
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Iterativ und rekursiv</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>fakultätRek</code> ruft für <code>n</code> größer als 1 sich selbst mit <code>n-1</code> auf. Wie oft läuft die Funktion beim Aufruf <code>fakultätRek(4)</code> insgesamt?
+          <details><summary>Auflösung</summary>Viermal: mit den Argumenten 4, 3, 2 und 1.</details></li>
+      </ol>
+    </div>
+    <p>Die Fakultät n! einer natürlichen Zahl n ≥ 1 hat zwei Definitionen:</p>
+    <ul>
+      <li><strong>Als Produkt:</strong> n! = 1 · 2 · 3 · … · n</li>
+      <li><strong>Rekursiv:</strong> 1! = 1 und (n + 1)! = (n + 1) · n!</li>
+    </ul>
+
+    <h3>Iterativ</h3>
+    <p>Aus der ersten Definition wird eine Schleife. Die Variable <code>fac</code> beginnt mit 1 und wird nacheinander mit 2, 3, … n multipliziert. Eine Funktion ohne Selbstaufruf heißt <strong>iterativ</strong>.</p>
+    <pre class="code-block">func fakultätIte(n int) int {
+    fac := 1
+    for i := 2; i &lt;= n; i++ {
+        fac = fac * i
+    }
+    return fac
+}</pre>
+
+    <h3>Rekursiv</h3>
+    <p>Aus der zweiten Definition wird eine Funktion, die sich selbst aufruft. Sie hat zwei Zweige:</p>
+    <ul>
+      <li><strong>Der kleinste Wert:</strong> Für <code>n</code> gleich 1 liefert sie 1 und ruft sich nicht mehr auf.</li>
+      <li><strong>Alle anderen Werte:</strong> Sie ruft sich mit dem Argument <code>n-1</code> auf und multipliziert das Ergebnis mit <code>n</code>.</li>
+    </ul>
+
+    <ol class="programm" id="f-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="f-weiter">nächste Anweisung</button>
+      <button type="button" id="f-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="f-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="f-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="f-ausgabe"></div>
+    <div class="auskunft" id="f-urteil"></div>
+    <p>Jeder Aufruf hat einen eigenen Rahmen mit einem eigenen <code>n</code>. Ein Aufruf, der auf das Ergebnis eines anderen wartet, bleibt stehen. Sein <code>n</code> muss so lange gespeichert bleiben.</p>
+
+    <h3>Was gegen dieses Beispiel spricht</h3>
+    <ul>
+      <li><strong>Speicher:</strong> Die rekursive Fassung hat keine Variablen <code>i</code> und <code>fac</code>. Sie spart trotzdem keinen Speicher, denn für jeden wartenden Aufruf bleibt ein Wert von <code>n</code> gespeichert.</li>
+      <li><strong>Tabelle:</strong> Eine Funktion für die Fakultät nimmt man in der Praxis aus einer Tabelle. Die Werte wachsen so schnell, dass nur wenige in einen Ganzzahltyp passen.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5 und 7.5.1, Seiten 185–187. Die zwei Funktionen stammen aus dem Kurstext. Die Funktion <code>main</code> der Demo ist eine Ergänzung. Mit Go 1.26 nachgerechnet: 20! ist 2432902008176640000 und passt noch in <code>int64</code>, 21! passt nicht mehr.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 2 ===================== -->
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Endrekursion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>In <code>fakultätRek</code> steht <code>return n * fakultätRek(n-1)</code>. Was muss der Aufruf noch tun, nachdem der rekursive Aufruf sein Ergebnis geliefert hat?
+          <details><summary>Auflösung</summary>Er muss das Ergebnis mit <code>n</code> multiplizieren. Der rekursive Aufruf ist dort also nicht die letzte Operation.</details></li>
+      </ol>
+    </div>
+    <p>Eine Funktion ist <strong>endrekursiv</strong>, englisch tail recursion, wenn zwei Bedingungen erfüllt sind:</p>
+    <ul>
+      <li>Ein Aufruf ruft die Funktion höchstens einmal rekursiv auf.</li>
+      <li>Dieser rekursive Aufruf ist die letzte Operation des Aufrufs.</li>
+    </ul>
+    <p>Nach dem rekursiven Aufruf ist dann nichts mehr zu tun. Der Aufrufer gibt das Ergebnis unverändert weiter und braucht dafür keinen seiner Werte mehr. Dafür muss der letzte Aufruf das fertige Ergebnis schon in der Hand haben.</p>
+    <p>Die endrekursive Fakultät braucht eine Hilfsfunktion <code>iter</code> mit zwei Parametern: <code>k</code> zählt herunter, <code>e</code> trägt das Zwischenergebnis. Jeder Aufruf multipliziert erst <code>k</code> in das Zwischenergebnis und ruft dann <code>iter</code> mit <code>k-1</code> auf.</p>
+
+    <ol class="programm" id="e-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="e-weiter">nächste Anweisung</button>
+      <button type="button" id="e-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="e-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="e-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="e-ausgabe"></div>
+    <div class="auskunft" id="e-urteil"></div>
+
+    <h3>Der Unterschied zu Schritt 1</h3>
+    <ul>
+      <li><strong><code>fakultätRek</code> rechnet auf dem Rückweg:</strong> Erst steigt die Funktion bis <code>n</code> gleich 1 ab. Die Multiplikationen laufen danach, eine in jedem wartenden Aufruf.</li>
+      <li><strong><code>iter</code> rechnet auf dem Hinweg:</strong> Bei <code>k</code> gleich 1 steht das ganze Ergebnis in <code>e</code>. Auf dem Rückweg reicht jeder Aufruf den Wert 24 nur weiter.</li>
+    </ul>
+    <p>Das <code>else</code> nach dem <code>return</code> ist in <code>iter</code> überflüssig, weil die Funktion im if-Zweig schon endet. Im Kurstext steht es der Klarheit wegen.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.2, Seiten 187–188. Die zwei Funktionen stammen aus dem Kurstext. Die Funktion <code>main</code> der Demo ist eine Ergänzung.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 3 ===================== -->
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Fibonacci-Zahlen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>fibonacciRek(5)</code> ruft <code>fibonacciRek(4)</code> und <code>fibonacciRek(3)</code> auf. Wie oft läuft die Funktion insgesamt mit dem Argument 3?
+          <details><summary>Auflösung</summary>Zweimal: einmal direkt aus dem Aufruf mit 5 und einmal aus dem Aufruf mit 4. Wähle unten n = 5 und sieh dir den Baum an.</details></li>
+      </ol>
+    </div>
+    <p>Die Fibonacci-Zahlen sind rekursiv definiert: Fibo(1) = 1, Fibo(2) = 1 und Fibo(n + 2) = Fibo(n) + Fibo(n + 1). Die Folge beginnt mit 1, 1, 2, 3, 5, 8.</p>
+
+    <h3>Iterativ</h3>
+    <p>Die Schleife merkt sich die letzte und die vorletzte Zahl. Die Zuweisung an <code>letzte</code> überschreibt die bisherige letzte Zahl. Die zweite Zuweisung gewinnt sie als Differenz zurück.</p>
+    <pre class="code-block">func fibonacciIter(n int) int {
+    if n &lt;= 2 {
+        return 1
+    }
+    vorletzte := 1
+    letzte := 1
+    for i := 3; i &lt;= n; i++ {
+        letzte = vorletzte + letzte
+        vorletzte = letzte - vorletzte
+    }
+    return letzte
+}</pre>
+
+    <h3>Rekursiv</h3>
+    <p>Die rekursive Fassung ist kürzer und folgt der Definition Wort für Wort:</p>
+    <pre class="code-block">func fibonacciRek(n int) int {
+    if n &lt;= 2 {
+        return 1
+    } else {
+        return fibonacciRek(n-1) + fibonacciRek(n-2)
+    }
+}</pre>
+    <p>Die Funktion enthält zwei rekursive Aufrufe. Danach unterscheidet man zwei Arten:</p>
+    <ul>
+      <li><strong>Lineare Rekursion:</strong> Ein Aufruf ruft die Funktion höchstens einmal auf, wie bei der Fakultät. Die Zahl der Aufrufe wächst linear mit der Rekursionstiefe.</li>
+      <li><strong>Kaskadenartige Rekursion:</strong> Ein Aufruf ruft die Funktion mehrmals auf, wie hier. Die Zahl der Aufrufe wächst exponentiell mit der Rekursionstiefe.</li>
+    </ul>
+    <p>Wähle ein Argument. Die Seite zählt die Aufrufe von <code>fibonacciRek</code>.</p>
+    <div class="zeile" id="fi-wahl"></div>
+    <div class="auskunft" id="fi-urteil"></div>
+    <div class="tabellenrahmen"><table class="text" id="fi-tabelle"></table></div>
+    <div class="baum" id="fi-baum"></div>
+    <p>Die Funktion rechnet viel, und sie rechnet das Gleiche mehrmals: Für das gleiche Argument läuft sie immer wieder, obwohl der Wert schon einmal berechnet war. Die rekursive Fassung ist elegant geschrieben und nicht effizient.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.3, Seiten 188–189. Die zwei Funktionen stammen aus dem Kurstext. Die Zahlen der Aufrufe und der Baum stehen dort nicht, sie sind mit Go 1.26 gezählt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 4 ===================== -->
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Türme von Hanoi</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Zwei Scheiben liegen auf Stange 1 und sollen nach Stange 3. Welche drei Züge braucht es?
+          <details><summary>Auflösung</summary>Die kleine Scheibe von 1 nach 2, die große von 1 nach 3, die kleine von 2 nach 3.</details></li>
+      </ol>
+    </div>
+    <p>Auf einer Stange liegen n Scheiben verschiedener Größe, die größte unten. Alle Scheiben sollen auf eine andere Stange. Eine dritte Stange hilft. Zwei Regeln gelten:</p>
+    <ul>
+      <li>Ein Zug nimmt die oberste Scheibe einer Stange und legt sie oben auf eine andere Stange.</li>
+      <li>Nie liegt eine größere Scheibe auf einer kleineren.</li>
+    </ul>
+
+    <h3>Die Zerlegung</h3>
+    <p>Irgendwann muss die größte Scheibe zur Zielstange. Dafür müssen alle anderen Scheiben auf der dritten Stange liegen. Daraus folgen drei Teile:</p>
+    <ul>
+      <li>n − 1 Scheiben von der Startstange zur dritten Stange bewegen,</li>
+      <li>die größte Scheibe von der Startstange zur Zielstange bewegen,</li>
+      <li>n − 1 Scheiben von der dritten Stange zur Zielstange bewegen.</li>
+    </ul>
+    <p>Der erste und der dritte Teil sind die gleiche Aufgabe mit einer Scheibe weniger. Das ist der rekursive Aufruf.</p>
+    <pre class="code-block">func move(start, ziel, n int) {
+    if n == 1 {
+        fmt.Println("Zug von", start, "nach", ziel)
+    } else {
+        move(start, 6-start-ziel, n-1)
+        fmt.Println("Zug von", start, "nach", ziel)
+        move(6-start-ziel, ziel, n-1)
+    }
+}</pre>
+    <p>Die Stangen heißen 1, 2 und 3. Ihre Summe ist 6. Die Differenz <code>6 - start - ziel</code> ist deshalb immer die Nummer der dritten Stange.</p>
+
+    <p>Wähle die Zahl der Scheiben. Die Demo führt <code>move(1, 3, n)</code> Zug für Zug aus.</p>
+    <div class="zeile" id="h-wahl"></div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="h-weiter">nächster Zug</button>
+      <button type="button" id="h-zurueck">einen Zug zurück</button>
+      <button type="button" id="h-vorn">von vorn</button>
+    </div>
+    <div class="hanoi" id="h-bild"></div>
+    <div class="hanoi"><span class="stangenname">Stange 1</span><span class="stangenname">Stange 2</span><span class="stangenname">Stange 3</span></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="h-ausgabe"></div>
+    <div class="auskunft" id="h-urteil"></div>
+
+    <h3>Indirekte Rekursion</h3>
+    <p>Im Kurstext steht vor <code>move</code> eine Fassung mit sechs Funktionen, eine für jedes Paar von Stangen: <code>moveAB</code>, <code>moveAC</code>, <code>moveBA</code>, <code>moveBC</code>, <code>moveCA</code> und <code>moveCB</code>.</p>
+    <pre class="code-block">func moveAB(n int) {
+    if n == 1 {
+        fmt.Println("Zug von A nach B")
+    } else {
+        moveAC(n - 1)
+        fmt.Println("Zug von A nach B")
+        moveCB(n - 1)
+    }
+}</pre>
+    <p>Keine dieser Funktionen ruft sich selbst auf. <code>moveAB</code> ruft aber <code>moveAC</code> auf, und <code>moveAC</code> ruft wieder <code>moveAB</code> auf. Ein solcher Selbstaufruf über einen Umweg heißt <strong>indirekte Rekursion</strong>. Sie ist schwerer zu erkennen als die direkte, weil sich viele Funktionen im Kreis aufrufen können.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.4, Seiten 189–191. Die Funktionen stammen aus dem Kurstext, dort steht auch die Ausgabe für vier Scheiben. Die Zahl der Züge, 2<sup>n</sup> − 1, steht dort nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 5 ===================== -->
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Terminierung</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>zahlenfolge</code> ruft sich für ein gerades <code>n</code> mit <code>n / 2</code> auf und für ein ungerades <code>n</code> mit <code>n + 1</code>. Welche Argumente entstehen nach dem Aufruf mit 7?
+          <details><summary>Auflösung</summary>7, 8, 4, 2, 1. Bei 1 endet die Funktion.</details></li>
+      </ol>
+    </div>
+    <p><strong>Terminierung</strong> heißt: Die rekursiven Aufrufe kommen zu einem Ende. Dafür braucht es zweierlei:</p>
+    <ul>
+      <li><strong>Ein Ende:</strong> Für mindestens einen Wert ruft die Funktion sich nicht mehr auf. Bei indirekter Rekursion gilt das für mindestens eine der beteiligten Funktionen.</li>
+      <li><strong>Ein Abstieg:</strong> Jeder rekursive Aufruf bekommt ein Argument, das kleiner ist als das eigene. So kommt die Funktion dem Ende mit jedem Aufruf näher.</li>
+    </ul>
+    <p>In den Schritten 1 bis 4 war das Argument eine natürliche Zahl, und der rekursive Aufruf bekam <code>n-1</code> oder <code>n-2</code>. Bei 1 war Schluss.</p>
+
+    <h3>Wenn das Argument nicht immer kleiner wird</h3>
+    <p>„Kleiner“ muss nicht die Ordnung der Zahlen sein. Es genügt, dass irgendeine Größe mit jedem Aufruf kleiner wird und nicht endlos kleiner werden kann. Die Funktion <code>zahlenfolge</code> zeigt das:</p>
+    <pre class="code-block">func zahlenfolge(n int) {
+    fmt.Printf("%v, ", n)
+    if n == 1 {
+        fmt.Println("Ende")
+    } else if n%2 == 0 { // n gerade
+        zahlenfolge(n / 2)
+    } else { // n ungerade und n &gt;= 3
+        zahlenfolge(n + 1)
+    }
+}</pre>
+    <p>Bei einem ungeraden <code>n</code> wird das Argument um 1 größer. Die Funktion endet trotzdem. Das zeigt eine <strong>Abstiegsfunktion</strong> f<sub>A</sub>. Sie ordnet jedem Argument eine natürliche Zahl zu:</p>
+    <ul>
+      <li>f<sub>A</sub>(n) = n, falls n gerade ist,</li>
+      <li>f<sub>A</sub>(n) = n + 2, falls n ungerade und mindestens 3 ist,</li>
+      <li>f<sub>A</sub>(1) = 1.</li>
+    </ul>
+    <p>Zu zeigen ist: Ruft die Funktion mit dem Argument n sich selbst mit dem Argument m auf, dann ist f<sub>A</sub>(n) größer als f<sub>A</sub>(m). Die Werte von f<sub>A</sub> sind natürliche Zahlen, und eine Folge natürlicher Zahlen kann nicht endlos kleiner werden. Also endet die Funktion.</p>
+    <p>Wähle einen Anfangswert. Die Tabelle zeigt zu jedem Aufruf das Argument und den Wert der Abstiegsfunktion.</p>
+    <div class="zeile" id="z-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="z-ausgabe"></div>
+    <div class="tabellenrahmen"><table class="text" id="z-tabelle"></table></div>
+    <div class="auskunft" id="z-urteil"></div>
+    <p>Im Kurstext wird der Abstieg für vier Fälle nachgerechnet: n gerade und n/2 gerade, n gerade und n/2 ungerade mit n ≥ 6, n = 2, und n ungerade. Eine solche Abstiegsfunktion zu finden ist oft schwer.</p>
+
+    <h3>Was geschieht, wenn eine Rekursion nicht endet</h3>
+    <p>Fehlt der Zweig ohne rekursiven Aufruf, ruft die Funktion sich immer weiter auf. Jeder Aufruf belegt Speicher. Go bricht das Programm ab, sobald der Speicher für die Aufrufe verbraucht ist:</p>
+    <pre class="code-block">func ohneEnde(n int) int {
+    return n * ohneEnde(n-1)
+}</pre>
+    <div class="konsole">runtime: goroutine stack exceeds 1000000000-byte limit
+fatal error: stack overflow</div>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Programmieren:</strong> Die Programmierübung <a href="go_k7_bubblesort_rekursiv_programmieruebung.html">Bubble Sort rekursiv</a> ersetzt die äußere Schleife des Sortierprogramms durch einen rekursiven Aufruf.</li>
+      <li><strong>Laufzeit:</strong> Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Laufzeit und Datenmenge</a> zeigt, was lineares und exponentielles Wachstum bedeuten.</li>
+      <li><strong>Kapitel 9:</strong> Rekursive Funktionen bearbeiten dort rekursive Datenstrukturen, zum Beispiel binäre Bäume.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.5, Seiten 191–193. Die Funktion <code>zahlenfolge</code> und die Abstiegsfunktion stammen aus dem Kurstext, dort stehen die Folgen für 9 und 22. Die Funktion <code>ohneEnde</code> und die Meldung von Go sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#fakultaet
+  const ANKER = ['worum', 'fakultaet', 'endrekursion', 'fibonacci', 'hanoi', 'terminierung'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Iterativ und rekursiv', 'Schritt 2: Endrekursion', 'Schritt 3: Fibonacci-Zahlen', 'Schritt 4: Türme von Hanoi', 'Schritt 5: Terminierung'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // ---------- Schritt 1: fakultätRek(4) ----------
+  const DF = (function () {
+    const zeilen = ['func fakultätRek(n int) int {', '    if n == 1 {', '        return 1', '    } else {', '        return n * fakultätRek(n-1)', '    }', '}', '', 'func main() {', '    fmt.Println(fakultätRek(4))', '}'];
+    const lauf = [], N = 4, name = n => 'fakultätRek, Aufruf mit n = ' + n;
+    // stapel(bis, neu): die Rahmen der Aufrufe von n = 4 bis n = bis
+    const stapel = (bis, neu, extra) => {
+      const r = [R('main')];
+      for (let n = N; n >= bis; n--) r.push(R(name(n), [V('n', n, n === bis && neu)].concat(n === bis && extra ? [extra] : [])));
+      return r;
+    };
+    lauf.push({ z: 10, satz: 'main ruft fakultätRek(4) auf. Der Aufruf bekommt einen Rahmen mit dem Parameter n gleich 4.', rahmen: stapel(4, true), aus: '' });
+    for (let n = N; n > 1; n--) {
+      lauf.push({ z: 5, satz: 'n ist ' + n + ' und nicht 1, es gilt der else-Zweig. Für n * fakultätRek(n-1) braucht der Aufruf erst den Wert von fakultätRek(' + (n - 1) + '). Er ruft die Funktion auf und wartet. Sein n bleibt gespeichert.' +
+        (n === N ? '' : ' Jetzt warten ' + (N - n + 1) + ' Aufrufe.'), rahmen: stapel(n - 1, true), aus: '' });
+    }
+    lauf.push({ z: 3, satz: 'n ist 1. Die Bedingung n == 1 ist erfüllt. Der Aufruf gibt 1 zurück und ruft die Funktion nicht mehr auf. Von hier an geht es zurück.', rahmen: stapel(1, false, V('Rückgabe', 1, 1)), aus: '' });
+    let wert = 1;
+    for (let n = 2; n <= N; n++) {
+      const neu = n * wert;
+      const r = stapel(n, false, V('Rückgabe', neu, 1)); r.push(WEG(name(n - 1)));
+      lauf.push({ z: 5, satz: 'Zurück im Aufruf mit n gleich ' + n + ': fakultätRek(' + (n - 1) + ') hat ' + wert + ' geliefert. Der Aufruf rechnet ' + n + ' * ' + wert + ' = ' + neu + ' und gibt ' + neu + ' zurück.', rahmen: r, aus: '' });
+      wert = neu;
+    }
+    lauf.push({ z: 10, satz: 'Zurück in main: fakultätRek(4) hat 24 geliefert. fmt.Println gibt 24 aus. Die Funktion ist viermal gelaufen.', rahmen: [R('main'), WEG(name(4))], aus: '24' });
+    return ablauf('f', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.');
+  })();
+
+  // ---------- Schritt 2: fakultätEnd(4) ----------
+  const DE = (function () {
+    const zeilen = ['func fakultätEnd(n int) int {', '    return iter(n, 1)', '}', '', 'func iter(k, e int) int {', '    if k == 1 {', '        return e', '    } else {', '        return iter(k-1, e*k)', '    }', '}', '', 'func main() {', '    fmt.Println(fakultätEnd(4))', '}'];
+    const lauf = [], paare = [[4, 1], [3, 4], [2, 12], [1, 24]], name = p => 'iter, Aufruf mit k = ' + p[0];
+    const stapel = (bis, neu, rueck) => {
+      const r = [R('main'), R('fakultätEnd', [V('n', 4)])];
+      for (let i = 0; i <= bis; i++) r.push(R(name(paare[i]), [V('k', paare[i][0], i === bis && neu), V('e', paare[i][1], i === bis && neu)].concat(i === bis && rueck ? [V('Rückgabe', 24, 1)] : [])));
+      return r;
+    };
+    lauf.push({ z: 14, satz: 'main ruft fakultätEnd(4) auf.', rahmen: [R('main'), R('fakultätEnd', [V('n', 4, 1)])], aus: '' });
+    lauf.push({ z: 2, satz: 'fakultätEnd ruft iter(4, 1) auf: k beginnt mit n, das Zwischenergebnis e beginnt mit 1.', rahmen: stapel(0, true), aus: '' });
+    for (let i = 0; i < 3; i++) {
+      const p = paare[i], q = paare[i + 1];
+      lauf.push({ z: 9, satz: 'k ist ' + p[0] + ' und nicht 1. Der Aufruf rechnet erst die Argumente aus: k-1 ist ' + q[0] + ', e*k ist ' + p[1] + ' * ' + p[0] + ' = ' + q[1] + '. Dann ruft er iter(' + q[0] + ', ' + q[1] + ') auf. Danach hat er nichts mehr zu rechnen.', rahmen: stapel(i + 1, true), aus: '' });
+    }
+    lauf.push({ z: 7, satz: 'k ist 1. Das ganze Ergebnis steht schon in e. Der Aufruf gibt 24 zurück.', rahmen: stapel(3, false, true), aus: '' });
+    for (let i = 2; i >= 0; i--) {
+      const r = stapel(i, false, true); r.push(WEG(name(paare[i + 1])));
+      lauf.push({ z: 9, satz: 'Zurück im Aufruf mit k gleich ' + paare[i][0] + ': Der rekursive Aufruf hat 24 geliefert. Der Aufruf gibt 24 unverändert weiter. Seine Werte k und e braucht er dafür nicht mehr.', rahmen: r, aus: '' });
+    }
+    lauf.push({ z: 2, satz: 'Zurück in fakultätEnd: iter(4, 1) hat 24 geliefert. Die Funktion gibt 24 zurück.', rahmen: [R('main'), R('fakultätEnd', [V('n', 4), V('Rückgabe', 24, 1)]), WEG(name(paare[0]))], aus: '' });
+    lauf.push({ z: 14, satz: 'Zurück in main: fmt.Println gibt 24 aus.', rahmen: [R('main'), WEG('fakultätEnd')], aus: '24' });
+    return ablauf('e', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 14.');
+  })();
+
+  // ---------- Schritt 3: Aufrufe von fibonacciRek zählen ----------
+  let fiWahl = 5;
+  function fibo(n) {
+    // liefert Wert, Zahl der Aufrufe je Argument und den Baum der Aufrufe als Zeilen
+    const zahl = {}, baum = [];
+    function f(k, einzug) {
+      zahl[k] = (zahl[k] || 0) + 1;
+      baum.push(einzug + 'fibonacciRek(' + k + ')' + (k <= 2 ? ' liefert 1' : ''));
+      return k <= 2 ? 1 : f(k - 1, einzug + '    ') + f(k - 2, einzug + '    ');
+    }
+    const wert = f(n, '');
+    return { wert: wert, zahl: zahl, baum: baum, alle: baum.length };
+  }
+  function fiSaetze() {
+    const e = fibo(fiWahl), doppelt = Object.keys(e.zahl).filter(k => e.zahl[k] > 1).length;
+    return ['fibonacciRek(' + fiWahl + ') liefert ' + e.wert + '. Die Funktion läuft dafür ' + e.alle + '-mal.',
+      fiWahl <= 2 ? 'Für n kleiner oder gleich 2 gibt es keinen rekursiven Aufruf.' : 'fibonacciIter(' + fiWahl + ') liefert den gleichen Wert mit ' + (fiWahl - 2) + (fiWahl === 3 ? ' Durchlauf' : ' Durchläufen') + ' der Schleife.',
+      doppelt ? 'Für ' + doppelt + (doppelt === 1 ? ' Argument' : ' verschiedene Argumente') + ' läuft die Funktion mehr als einmal.' : ''].filter(Boolean);
+  }
+  function zeichneFibo() {
+    el('fi-wahl').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => '<button type="button" class="code' + (n === fiWahl ? ' gewaehlt' : '') + '" data-n="' + n + '">n = ' + n + '</button>').join('');
+    const e = fibo(fiWahl);
+    el('fi-urteil').innerHTML = fiSaetze().map(t => '<p>' + esc(t) + '</p>').join('');
+    const args = Object.keys(e.zahl).map(Number).sort((a, b) => b - a);
+    el('fi-tabelle').innerHTML = '<thead><tr><th>Argument</th>' + args.map(k => '<th>' + k + '</th>').join('') + '</tr></thead><tbody><tr><td>Zahl der Aufrufe mit diesem Argument</td>' + args.map(k => '<td>' + e.zahl[k] + '</td>').join('') + '</tr></tbody>';
+    el('fi-baum').textContent = fiWahl <= 6 ? e.baum.join(NL) : 'Der Baum der Aufrufe hat ' + e.alle + ' Zeilen. Die Seite zeigt ihn bis n = 6.';
+    melde(false);
+  }
+  el('fi-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { fiWahl = Number(k.dataset.n); zeichneFibo(); } });
+
+  // ---------- Schritt 4: Türme von Hanoi ----------
+  const H = { n: 3, stand: 0, zuege: [] };
+  function hanoiZuege(n) {
+    const z = [];
+    (function move(start, ziel, k) {
+      if (k === 1) z.push({ von: start, nach: ziel, scheibe: 1 });
+      else { move(start, 6 - start - ziel, k - 1); z.push({ von: start, nach: ziel, scheibe: k }); move(6 - start - ziel, ziel, k - 1); }
+    })(1, 3, n);
+    return z;
+  }
+  function hanoiStangen() {
+    const s = [[], [], []];
+    for (let k = H.n; k >= 1; k--) s[0].push(k);
+    for (let i = 0; i < H.stand; i++) s[H.zuege[i].nach - 1].push(s[H.zuege[i].von - 1].pop());
+    return s;
+  }
+  const scheibenName = k => k === 1 ? 'die kleinste Scheibe' : k === H.n ? 'die größte Scheibe' : 'Scheibe ' + k;
+  function hanoiSatz() {
+    if (!H.stand) return 'Noch ist kein Zug ausgeführt. ' + (H.n === 1 ? 'Die eine Scheibe liegt' : 'Alle ' + H.n + ' Scheiben liegen') + ' auf Stange 1. move(1, 3, ' + H.n + ') braucht ' + H.zuege.length + (H.zuege.length === 1 ? ' Zug.' : ' Züge.');
+    const z = H.zuege[H.stand - 1];
+    return 'Zug ' + H.stand + ' von ' + H.zuege.length + ': ' + scheibenName(z.scheibe).replace(/^d/, 'D') + ' geht von Stange ' + z.von + ' nach Stange ' + z.nach + '. Diese Zeile gibt der Aufruf move(' + z.von + ', ' + z.nach + ', ' + z.scheibe + ') aus.' +
+      (z.scheibe === H.n && H.n > 1 ? ' Das ist der mittlere Zug: Davor lagen die ' + (H.n - 1) + ' kleineren Scheiben auf Stange 2, danach wandern sie nach Stange 3.' : '') +
+      (H.stand === H.zuege.length ? ' Alle Scheiben liegen auf Stange 3.' : '');
+  }
+  function zeichneHanoi() {
+    el('h-wahl').innerHTML = [1, 2, 3, 4].map(n => '<button type="button" class="code' + (n === H.n ? ' gewaehlt' : '') + '" data-n="' + n + '">' + n + (n === 1 ? ' Scheibe' : ' Scheiben') + '</button>').join('');
+    const s = hanoiStangen(), letzter = H.stand ? H.zuege[H.stand - 1] : null;
+    el('h-bild').innerHTML = s.map((st, i) => '<div class="stange">' + st.slice().reverse().map((k, j) =>
+      '<div class="scheibe' + (letzter && letzter.nach === i + 1 && j === 0 ? ' neu' : '') + '" style="width:' + (30 + k * 17) + '%">' + k + '</div>').join('') + '</div>').join('');
+    el('h-ausgabe').textContent = H.zuege.slice(0, H.stand).map(z => 'Zug von ' + z.von + ' nach ' + z.nach).join(NL);
+    el('h-urteil').innerHTML = '<p>' + esc(hanoiSatz()) + '</p>';
+    el('h-weiter').disabled = H.stand === H.zuege.length;
+    el('h-zurueck').disabled = H.stand === 0;
+    melde(false);
+  }
+  function hanoiNeu(n) { H.n = n; H.stand = 0; H.zuege = hanoiZuege(n); zeichneHanoi(); }
+  el('h-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) hanoiNeu(Number(k.dataset.n)); });
+  el('h-weiter').addEventListener('click', () => { if (H.stand < H.zuege.length) { H.stand++; zeichneHanoi(); } });
+  el('h-zurueck').addEventListener('click', () => { if (H.stand > 0) { H.stand--; zeichneHanoi(); } });
+  el('h-vorn').addEventListener('click', () => { H.stand = 0; zeichneHanoi(); });
+
+  // ---------- Schritt 5: zahlenfolge und Abstiegsfunktion ----------
+  const ANFAENGE = [9, 22, 7, 27, 16, 1];
+  let zWahl = 9;
+  const fA = n => n === 1 ? 1 : n % 2 === 0 ? n : n + 2;
+  function folge(n) { const f = [n]; while (n !== 1) { n = n % 2 === 0 ? n / 2 : n + 1; f.push(n); } return f; }
+  function zSaetze() {
+    const f = folge(zWahl), steigt = f.filter((n, i) => i > 0 && n > f[i - 1]).length;
+    return ['zahlenfolge(' + zWahl + ') läuft ' + f.length + '-mal, mit den Argumenten ' + f.join(', ') + '.',
+      steigt ? 'Das Argument wird ' + steigt + '-mal größer, jedes Mal nach einer ungeraden Zahl.' : 'Das Argument wird hier nie größer.',
+      f.length > 1 ? 'Die Werte der Abstiegsfunktion sind ' + f.map(fA).join(', ') + '. Jeder Wert ist kleiner als der davor.' : 'Bei 1 gibt es keinen rekursiven Aufruf.'];
+  }
+  function zeichneFolge() {
+    el('z-wahl').innerHTML = ANFAENGE.map(n => '<button type="button" class="code' + (n === zWahl ? ' gewaehlt' : '') + '" data-n="' + n + '">zahlenfolge(' + n + ')</button>').join('');
+    const f = folge(zWahl);
+    el('z-ausgabe').textContent = f.join(', ') + ', Ende';
+    el('z-tabelle').innerHTML = '<thead><tr><th>Aufruf</th>' + f.map((n, i) => '<th>' + (i + 1) + '</th>').join('') + '</tr></thead><tbody><tr><td>Argument n</td>' + f.map(n => '<td>' + n + '</td>').join('') +
+      '</tr><tr><td>Abstiegsfunktion f<sub>A</sub>(n)</td>' + f.map(n => '<td>' + fA(n) + '</td>').join('') + '</tr></tbody>';
+    el('z-urteil').innerHTML = zSaetze().map(t => '<p>' + esc(t) + '</p>').join('');
+    melde(false);
+  }
+  el('z-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { zWahl = Number(k.dataset.n); zeichneFolge(); } });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1 || stufe === 2) return standAblauf(stufe === 1 ? DF : DE).concat('Jeder Aufruf hat einen eigenen Rahmen. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste Aufruf steht zuletzt.');
+    if (stufe === 3) {
+      const e = fibo(fiWahl), args = Object.keys(e.zahl).map(Number).sort((a, b) => b - a);
+      return ['Gewählt ist n = ' + fiWahl + '.'].concat(fiSaetze(), ['Zahl der Aufrufe je Argument: ' + args.map(k => 'Argument ' + k + ': ' + e.zahl[k]).join(', ') + '.',
+        fiWahl <= 6 ? 'Die Seite zeigt den Baum der Aufrufe als eingerückte Zeilen, ' + e.alle + ' Zeilen.' : 'Den Baum der Aufrufe zeigt die Seite nur bis n = 6.',
+        'Handgriffe: ein Argument von 1 bis 10 wählen. Andere Werte lassen sich nicht eingeben.']);
+    }
+    if (stufe === 4) {
+      const s = hanoiStangen();
+      return ['Gewählt sind ' + H.n + (H.n === 1 ? ' Scheibe' : ' Scheiben') + '. Die Demo führt move(1, 3, ' + H.n + ') aus, das sind ' + H.zuege.length + (H.zuege.length === 1 ? ' Zug.' : ' Züge.'),
+        'Ausgeführt sind ' + H.stand + ' von ' + H.zuege.length + ' Zügen.', 'Die Seite sagt dazu: ' + hanoiSatz(),
+        'Die Stangen, von unten nach oben, 1 ist die kleinste Scheibe: ' + s.map((st, i) => 'Stange ' + (i + 1) + ': ' + (st.length ? st.join(', ') : 'leer')).join('; ') + '.',
+        H.stand ? 'Die Ausgabe bisher: ' + H.zuege.slice(0, H.stand).map(z => 'Zug von ' + z.von + ' nach ' + z.nach).join(' | ') : 'Ausgegeben ist noch nichts.',
+        H.stand < H.zuege.length ? 'Der nächste Zug geht von Stange ' + H.zuege[H.stand].von + ' nach Stange ' + H.zuege[H.stand].nach + '.' : 'Alle Züge sind ausgeführt.',
+        'Handgriffe: 1 bis 4 Scheiben wählen, „nächster Zug“, „einen Zug zurück“, „von vorn“. Der Student kann keine Scheibe selbst bewegen.'];
+    }
+    return ['Gewählt ist zahlenfolge(' + zWahl + '). Die Ausgabe: ' + folge(zWahl).join(', ') + ', Ende'].concat(zSaetze(),
+      ['Handgriffe: einen von sechs Anfangswerten wählen: ' + ANFAENGE.join(', ') + '. Andere Werte lassen sich nicht eingeben.']);
+  }
+  function kurzStand() {
+    if (stufe === 1 || stufe === 2) { const D = stufe === 1 ? DF : DE; return D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt'; }
+    if (stufe === 3) return 'n = ' + fiWahl;
+    if (stufe === 4) return H.n + (H.n === 1 ? ' Scheibe' : ' Scheiben') + ', Zug ' + H.stand + ' von ' + H.zuege.length;
+    if (stufe === 5) return 'zahlenfolge(' + zWahl + ')';
+    return '';
+  }
+  // Die Programme der zwei Demos stehen in Listen und nicht in pre
+  function programmZeilen() {
+    const D = stufe === 1 ? DF : stufe === 2 ? DE : null;
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DF.zeichne(); DE.zeichne(); zeichneFibo(); hanoiNeu(3); zeichneFolge();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Rekursion in Go',
+    thema: 'Rekursion, direkte und indirekte Rekursion, iterativ, Endrekursion, lineare und kaskadenartige Rekursion, Fakultät, Fibonacci-Zahlen, Türme von Hanoi, Terminierung, Abstiegsfunktion',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum braucht die Funktion den Fall n == 1?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
