@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verbünde und Funktionen: Zeiger oder Kopie</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Verbünde und Funktionen: Zeiger oder Kopie</h1>
+    <p>Eine Funktion kann einen Verbund als Kopie bekommen oder einen Zeiger auf ihn. Sie kann auch einen Zeiger auf einen Verbund zurückgeben. Die Seite führt die Programme des Kurstexts dazu aus.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.2.6 und 8.2.7, Seiten 208–211.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Zeiger als Rückgabe</button>
+    <button type="button" class="tab" data-stufe="2">2 Linke Seite</button>
+    <button type="button" class="tab" data-stufe="3">3 Zeiger als Parameter</button>
+    <button type="button" class="tab" data-stufe="4">4 Kopie als Parameter</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>In Go gilt bei jedem Funktionsaufruf call-by-value: Der Parameter bekommt eine Kopie des Arguments. Wer eine Funktion für einen Verbund schreibt, muss deshalb jedes Mal entscheiden:</p>
+    <ul>
+      <li><strong>Kopie:</strong> Der Parameter hat den Verbund-Typ, zum Beispiel <code>a auto</code>. Die Funktion bekommt Kopien aller Feld-Werte.</li>
+      <li><strong>Zeiger:</strong> Der Parameter hat den Zeiger-Typ, zum Beispiel <code>a *auto</code>. Die Funktion bekommt die Adresse und kann den Verbund des Aufrufers ändern.</li>
+    </ul>
+    <p>Für ein Array stand die gleiche Frage schon in Kapitel 7. Bei Verbünden kommt sie in fast jedem Programm vor.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 7.2, Wertübergabe:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a> zeigt in Schritt 5 die Kopie eines Arrays.</li>
+      <li><strong>Abschnitt 7.4.1 und 7.4.2, Zeiger als Parameter und als Rückgabe:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#parameter">Zeiger in Go</a>, Schritt 3 und 4.</li>
+      <li><strong>Abschnitt 8.2.4, Kurzschreibweise:</strong> <code>p.gebJahr</code> an der Stelle von <code>(*p).gebJahr</code>. Die Lektion dazu heißt <a href="go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde</a>.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Die Funktion <code>werIstÄlter</code> gibt einen Zeiger auf einen von zwei Verbünden zurück.</li>
+      <li><strong>Schritt 2:</strong> Ein Funktionsaufruf auf der linken Seite einer Zuweisung: Wann geht das?</li>
+      <li><strong>Schritt 3:</strong> Die Funktion <code>tüvErneuern</code> bekommt einen Zeiger und ändert den Verbund.</li>
+      <li><strong>Schritt 4:</strong> Die Funktion <code>tüvErneuernWert</code> bekommt eine Kopie und ändert nichts. Danach: Wann nimmt man was?</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Ein Verbund-Zeiger als Rückgabe</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>otto1</code> ist 1895 geboren, <code>otto2</code> 1930. Die Anweisung <code>werIstÄlter(&amp;otto1, &amp;otto2).nachname += " senior"</code> läuft. Welcher der zwei Verbünde ändert sich?
+          <details><summary>Auflösung</summary><code>otto1</code>. Die Funktion gibt den Zeiger auf den Älteren zurück, und über diesen Zeiger ändert die Anweisung das Feld <code>nachname</code>.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion <code>werIstÄlter</code> bekommt zwei Zeiger auf Verbünde vom Typ <code>person</code> und gibt einen der zwei Zeiger zurück. Ihr Rückgabe-Typ ist <code>*person</code>.</p>
+    <p>Beim Zugriff auf ein Feld dereferenziert Go einen Verbund-Zeiger von selbst. Das gilt auch für den Zeiger, den ein Funktionsaufruf liefert. Der Aufrufer schreibt das Feld deshalb gleich hinter den Aufruf.</p>
+
+    <ol class="programm" id="r-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="r-weiter">nächste Anweisung</button>
+      <button type="button" id="r-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="r-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="r-bild"></div>
+    <div id="r-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="r-ausgabe"></div>
+    <div class="auskunft" id="r-urteil"></div>
+    <p>Der Hauptspeicher unter den Rahmen zeigt die zwei Verbünde ab den Adressen 100 und 200. Die Funktion bekommt in <code>p1</code> und <code>p2</code> je 8 Zellen mit einer dieser zwei Zahlen und gibt die Zahl 100 zurück. Die Adressen sind erfunden.</p>
+    <p>Die lange Schreibweise der Zeile 12 dereferenziert den Rückgabewert mit Stern und Klammern:</p>
+    <pre class="code-block">(*werIstÄlter(&amp;otto1, &amp;otto2)).nachname += " senior"</pre>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.6, Seiten 208–209. Das Programm stammt aus dem Kurstext. Der Typ <code>person</code> hat die fünf Felder <code>vorname</code>, <code>nachname</code>, <code>gebJahr</code>, <code>ort</code> und <code>verheiratet</code>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Was links vom Gleichheitszeichen stehen darf</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Übersetzt Go die Zuweisung <code>werIstÄlter(&amp;otto1, &amp;otto2) = &amp;person{}</code>?
+          <details><summary>Auflösung</summary>Nein. Links steht der Zeiger, den die Funktion liefert. Das ist ein Wert und keine Variable.</details></li>
+      </ol>
+    </div>
+    <p>Die Regel bleibt, wie sie war: Einen Wert zuweisen kann man nur einer Variable. Neu ist, was alles eine Variable ist:</p>
+    <ul>
+      <li><strong>Ein Bezeichner:</strong> <code>x = 5</code>.</li>
+      <li><strong>Ein dereferenzierter Zeiger:</strong> <code>*p = 5</code>.</li>
+      <li><strong>Ein dereferenzierter Rückgabewert:</strong> Liefert ein Funktionsaufruf einen Zeiger, dann ist der dereferenzierte Aufruf eine Variable, zum Beispiel <code>*werIstÄlter(&amp;otto1, &amp;otto2)</code>.</li>
+    </ul>
+    <p>Beim Zugriff auf ein Feld darf der Stern fehlen, weil Go den Zeiger dann von selbst dereferenziert. Das Gleiche gilt für ein Element, wenn der Zeiger auf ein Array zeigt.</p>
+    <p>Für die Auswahl gilt der Anfang von Schritt 1: <code>otto1</code> ist 1895 geboren, <code>otto2</code> 1930, beide heißen Otto Meier und wohnen in Bonn. Nach der gewählten Zeile läuft <code>fmt.Println(otto1)</code>.</p>
+    <div class="spalte" id="w-wahl"></div>
+    <p><strong>Ausgabe oder Meldung</strong></p>
+    <div class="konsole" id="w-ausgabe"></div>
+    <div class="auskunft" id="w-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.6, Seite 209. Alle vier Zeilen stammen aus dem Kurstext. Die Meldung des Compilers zur vierten Zeile stammt aus einem Lauf mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Ein Zeiger als Parameter</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>tüvErneuern(a *auto)</code> erhöht <code>a.tüvJahr</code> um 2. <code>golf.tüvJahr</code> ist 2024. Welchen Wert hat das Feld nach <code>tüvErneuern(&amp;golf)</code>?
+          <details><summary>Auflösung</summary>2026. <code>a</code> zeigt auf <code>golf</code>, und <code>a.tüvJahr</code> ist das Feld von <code>golf</code>.</details></li>
+      </ol>
+    </div>
+    <p>Die Beispiele von Abschnitt 8.2.7 verwenden einen neuen Typ:</p>
+    <pre class="code-block">type auto struct {
+    marke       string
+    kennzeichen string
+    tachostand  int
+    tüvJahr     int
+}</pre>
+    <p>Die Funktion <code>tüvErneuern</code> soll das Jahr der nächsten Hauptuntersuchung um zwei Jahre erhöhen. Sie soll also einen Verbund ihres Aufrufers ändern. Dafür braucht sie einen Zeiger: Ihr Parameter hat den Typ <code>*auto</code>, und der Aufruf übergibt <code>&amp;golf</code>.</p>
+
+    <ol class="programm" id="z-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
+      <button type="button" id="z-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="z-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="z-bild"></div>
+    <div id="z-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="z-ausgabe"></div>
+    <div class="auskunft" id="z-urteil"></div>
+    <p>Im Hauptspeicher unter den Rahmen gibt es den Verbund nur einmal, ab der Adresse 100. Der Parameter <code>a</code> belegt 8 Zellen, in denen die Zahl 100 steht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.7, Seite 210. Das Programm stammt aus dem Kurstext. Dort steht das Literal über sechs Zeilen.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Eine Kopie als Parameter</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>tüvErneuernWert(a auto)</code> hat den gleichen Rumpf, ihr Parameter ist aber kein Zeiger. Welchen Wert hat <code>golf.tüvJahr</code> nach <code>tüvErneuernWert(golf)</code>?
+          <details><summary>Auflösung</summary>Weiter 2024. Die Funktion erhöht das Feld in ihrer Kopie.</details></li>
+      </ol>
+    </div>
+    <p>Hat der Parameter den Verbund-Typ selbst, bekommt die Funktion eine Kopie des ganzen Verbunds, also Kopien aller Feld-Werte. Der Rumpf sieht gleich aus wie in Schritt 3. Er ändert jetzt aber die Kopie.</p>
+
+    <ol class="programm" id="k-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="k-weiter">nächste Anweisung</button>
+      <button type="button" id="k-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="k-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="k-bild"></div>
+    <div id="k-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="k-ausgabe"></div>
+    <div class="auskunft" id="k-urteil"></div>
+    <p>Im Hauptspeicher unter den Rahmen gibt es den Verbund jetzt zweimal: <code>golf</code> ab der Adresse 100 und die Kopie <code>a</code> ab der Adresse 200. Die Zuweisung ändert Zellen der Kopie. Am Ende der Funktion werden die Zellen der Kopie wieder frei.</p>
+
+    <h3>Wert oder Zeiger: Wann nimmt man was?</h3>
+    <ul>
+      <li><strong>Die Funktion soll den Verbund ändern:</strong> Zeiger. Mit einer Kopie geht es nicht.</li>
+      <li><strong>Die Funktion liest nur, und der Verbund ist groß:</strong> oft auch Zeiger. Die Kopie des ganzen Verbunds kostet Speicherplatz und Rechenzeit, und in einer Schleife über viele große Verbünde merkt man das.</li>
+      <li><strong>Die Funktion soll den Verbund auf keinen Fall ändern können:</strong> Kopie. Dann ist der Verbund des Aufrufers sicher, auch wenn der Rumpf durch einen Programmierfehler ein Feld ändert. Ein solcher Fehler bleibt dann aber leicht lange unbemerkt.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Verbund im Verbund:</strong> Die Lektion <a href="go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> zu Abschnitt 8.3 verwendet den Typ <code>auto</code> als Feld.</li>
+      <li><strong>Die Kopie bei Arrays:</strong> Der Exkurs <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, was die Kopie beim Sortieren kostet.</li>
+      <li><strong>Quiz:</strong> Das <a href="S219_verbund_parameter_demo_quiz.html">Quiz zu Verbund-Parametern</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.7, Seiten 210–211. Das Programm und die drei Fälle stammen aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#rueckgabe
+  const ANKER = ['worum', 'rueckgabe', 'links', 'zeiger', 'kopie'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund-Zeiger als Rückgabe', 'Schritt 2: Was links vom Gleichheitszeichen stehen darf', 'Schritt 3: Ein Zeiger als Parameter', 'Schritt 4: Eine Kopie als Parameter'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? 'freigegeben' : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const PN = ['vorname', 'nachname', 'gebJahr', 'ort', 'verheiratet'];
+  const O = (nachname, jahr) => FELDER(PN, ['"Otto"', '"' + nachname + '"', jahr, '"Bonn"', false]);
+  const AN = ['marke', 'kennzeichen', 'tachostand', 'tüvJahr'];
+  const G = jahr => FELDER(AN, ['"VW"', '"M-FG574"', 12000, jahr]);
+
+  // Die Speichersicht der drei Demos. Ein Verbund bekommt im Modell eine Anfangsadresse, ein Zeiger belegt 8 Zellen.
+  const SP_R = { orte: { 'main.otto1': [100, 'person', null], 'main.otto2': [200, 'person', null], 'werIstÄlter.p1': [300, '*person', 8], 'werIstÄlter.p2': [308, '*person', 8] }, ziele: { 'Adresse von otto1': 100, 'Adresse von otto2': 200 } };
+  const SP_Z = { orte: { 'main.golf': [100, 'auto', null], 'tüvErneuern.a': [200, '*auto', 8] }, ziele: { 'Adresse von golf': 100 } };
+  const SP_K = { orte: { 'main.golf': [100, 'auto', null], 'tüvErneuernWert.a': [200, 'auto', null] }, ziele: {} };
+  // ---------- Schritt 1: werIstÄlter ----------
+  const A1 = 'Adresse von otto1', A2 = 'Adresse von otto2';
+  const DR = ablauf('r', ['func werIstÄlter(p1, p2 *person) *person {', '    if p1.gebJahr < p2.gebJahr {', '        return p1', '    } else {', '        return p2', '    }', '}', '', 'func main() {',
+    '    otto1 := person{nachname: "Meier", vorname: "Otto", ort: "Bonn", gebJahr: 1895}', '    otto2 := person{nachname: "Meier", vorname: "Otto", ort: "Bonn", gebJahr: 1930}', '    werIstÄlter(&otto1, &otto2).nachname += " senior"', '    fmt.Println(otto1)', '    fmt.Println(otto2)', '}'], [
+    { z: 10, satz: 'otto1 ist ein Verbund vom Typ person. Das Feld verheiratet fehlt im Literal und hat den Null-Wert false.', rahmen: [R('main', [V('otto1', O('Meier', 1895), 1)])], aus: '' },
+    { z: 11, satz: 'otto2 hat die gleichen Werte bis auf das Geburtsjahr.', rahmen: [R('main', [V('otto1', O('Meier', 1895)), V('otto2', O('Meier', 1930), 1)])], aus: '' },
+    { z: 12, satz: 'main ruft werIstÄlter(&otto1, &otto2) auf. Die Parameter p1 und p2 bekommen die Adressen der zwei Verbünde. Kein Feld wird kopiert.', rahmen: [R('main', [V('otto1', O('Meier', 1895)), V('otto2', O('Meier', 1930))]), R('werIstÄlter', [V('p1', A1, 1), V('p2', A2, 1)])], aus: '' },
+    { z: 3, satz: 'p1.gebJahr ist 1895, p2.gebJahr ist 1930. Die Bedingung 1895 < 1930 ist erfüllt. Die Funktion gibt p1 zurück, also die Adresse von otto1.', rahmen: [R('main', [V('otto1', O('Meier', 1895), 0, [2]), V('otto2', O('Meier', 1930), 0, [2])]), R('werIstÄlter', [V('p1', A1), V('p2', A2), V('Rückgabe', A1, 1)])], aus: '' },
+    { z: 12, satz: 'Zurück in main: Der Aufruf hat einen Zeiger auf otto1 geliefert. .nachname dahinter ist das Feld nachname von otto1. Die Zuweisung hängt " senior" an.', rahmen: [R('main', [V('otto1', O('Meier senior', 1895), 0, [1]), V('otto2', O('Meier', 1930))]), WEG('werIstÄlter')], aus: '' },
+    { z: 13, satz: 'fmt.Println gibt otto1 aus. Der Nachname ist geändert.', rahmen: [R('main', [V('otto1', O('Meier senior', 1895)), V('otto2', O('Meier', 1930))])], aus: '{Otto Meier senior 1895 Bonn false}' },
+    { z: 14, satz: 'fmt.Println gibt otto2 aus. Dieser Verbund ist unverändert.', rahmen: [R('main', [V('otto1', O('Meier senior', 1895)), V('otto2', O('Meier', 1930))])], aus: '{Otto Meier senior 1895 Bonn false}' + NL + '{Otto Meier 1930 Bonn false}' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.', SP_R);
+
+  // ---------- Schritt 2: vier Zuweisungen ----------
+  const WW = wahl('w', [
+    { code: 'werIstÄlter(&otto1, &otto2).nachname += " senior"', aus: '{Otto Meier senior 1895 Bonn false}', satz: 'Kurze Schreibweise: Links steht das Feld nachname des Verbunds, auf den der gelieferte Zeiger zeigt. Ein Feld ist eine Variable.' },
+    { code: '(*werIstÄlter(&otto1, &otto2)).nachname += " senior"', aus: '{Otto Meier senior 1895 Bonn false}', satz: 'Lange Schreibweise mit Stern und Klammern. Sie meint das Gleiche wie Zeile 1.' },
+    { code: '*werIstÄlter(&otto1, &otto2) = person{}', aus: '{  0  false}', satz: 'Links steht der dereferenzierte Zeiger, also die Verbund-Variable otto1. Rechts steht ein Verbund-Wert. Die Zuweisung ersetzt alle Felder von otto1 durch Null-Werte. Hier ist der Stern nötig, weil kein Feld-Zugriff folgt.' },
+    { code: 'werIstÄlter(&otto1, &otto2) = &person{}', fehler: true, aus: 'cannot assign to werIstÄlter(&otto1, &otto2) (neither addressable nor a map index expression)', satz: 'Links steht der Zeiger, den die Funktion liefert. Das ist ein Wert und keine Variable, und einem Wert kann man nichts zuweisen. Die Meldung sagt: Der Ausdruck ist nicht adressierbar.' }
+  ], true);
+
+  // ---------- Schritt 3 und 4: tüvErneuern ----------
+  const TV = 'TÜV vorher:  2024';
+  const DZ = ablauf('z', ['func tüvErneuern(a *auto) {', '    a.tüvJahr += 2', '}', '', 'func main() {', '    golf := auto{marke: "VW", kennzeichen: "M-FG574", tachostand: 12000, tüvJahr: 2024}', '    fmt.Println("TÜV vorher: ", golf.tüvJahr)', '    tüvErneuern(&golf)', '    fmt.Println("TÜV nachher: ", golf.tüvJahr)', '}'], [
+    { z: 6, satz: 'golf ist ein Verbund vom Typ auto mit vier Feldern.', rahmen: [R('main', [V('golf', G(2024), 1)])], aus: '' },
+    { z: 7, satz: 'Das Programm gibt das Feld tüvJahr aus.', rahmen: [R('main', [V('golf', G(2024), 0, [3])])], aus: TV },
+    { z: 8, satz: 'main ruft tüvErneuern(&golf) auf. Der Parameter a bekommt die Adresse von golf. Kein Feld wird kopiert, es gibt weiter nur einen Verbund.', rahmen: [R('main', [V('golf', G(2024))]), R('tüvErneuern', [V('a', 'Adresse von golf', 1)])], aus: TV },
+    { z: 2, satz: 'a.tüvJahr ist die kurze Schreibweise für (*a).tüvJahr. Das ist das Feld tüvJahr von golf. Die Zuweisung erhöht es auf 2026.', rahmen: [R('main', [V('golf', G(2026), 0, [3])]), R('tüvErneuern', [V('a', 'Adresse von golf')])], aus: TV },
+    { z: 8, satz: 'Die Funktion ist zu Ende. Sie hat keine Rückgabe. Geblieben ist der Seiteneffekt im Verbund golf.', rahmen: [R('main', [V('golf', G(2026))]), WEG('tüvErneuern')], aus: TV },
+    { z: 9, satz: 'Das Feld golf.tüvJahr hat jetzt den Wert 2026.', rahmen: [R('main', [V('golf', G(2026), 0, [3])])], aus: TV + NL + 'TÜV nachher:  2026' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 6.', SP_Z);
+
+  const DK = ablauf('k', ['func tüvErneuernWert(a auto) {', '    a.tüvJahr += 2', '}', '', 'func main() {', '    golf := auto{marke: "VW", kennzeichen: "M-FG574", tachostand: 12000, tüvJahr: 2024}', '    fmt.Println("TÜV vorher: ", golf.tüvJahr)', '    tüvErneuernWert(golf)', '    fmt.Println("TÜV nachher: ", golf.tüvJahr)', '}'], [
+    { z: 6, satz: 'golf ist ein Verbund vom Typ auto mit vier Feldern.', rahmen: [R('main', [V('golf', G(2024), 1)])], aus: '' },
+    { z: 7, satz: 'Das Programm gibt das Feld tüvJahr aus.', rahmen: [R('main', [V('golf', G(2024), 0, [3])])], aus: TV },
+    { z: 8, satz: 'main ruft tüvErneuernWert(golf) auf. Der Parameter a ist eine neue Verbund-Variable. Der Rechner kopiert alle vier Feld-Werte von golf hinein. Von hier an gibt es zwei Verbünde.', rahmen: [R('main', [V('golf', G(2024))]), R('tüvErneuernWert', [V('a', G(2024), 1)])], aus: TV },
+    { z: 2, satz: 'a.tüvJahr ist das Feld der Kopie. Die Zuweisung erhöht es auf 2026. Das Feld golf.tüvJahr in main ist eine andere Variable und behält 2024.', rahmen: [R('main', [V('golf', G(2024))]), R('tüvErneuernWert', [V('a', G(2026), 0, [3])])], aus: TV },
+    { z: 8, satz: 'Die Funktion ist zu Ende. Ihre Kopie mit dem Wert 2026 gibt es nicht mehr. Die Änderung ist verloren.', rahmen: [R('main', [V('golf', G(2024))]), WEG('tüvErneuernWert')], aus: TV },
+    { z: 9, satz: 'Das Feld golf.tüvJahr hat weiter den Wert 2024. Die Funktion hat nichts bewirkt.', rahmen: [R('main', [V('golf', G(2024), 0, [3])])], aus: TV + NL + 'TÜV nachher:  2024' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 6.', SP_K);
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMOS = [null, DR, null, DZ, DK];
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 2) return standWahl(WW).concat('Vor der gewählten Zeile gilt: otto1 ist {Otto Meier 1895 Bonn false}, otto2 ist {Otto Meier 1930 Bonn false}. Die Ausgabe ist die von fmt.Println(otto1) nach der Zeile.');
+    return standAblauf(DEMOS[stufe]).concat('Ein Verbund steht in seinem Kasten als Liste seiner Felder. Der Wert eines Zeigers steht in Worten da, zum Beispiel „Adresse von golf“.');
+  }
+  const kurzStand = () => DEMOS[stufe] ? kurzVon(DEMOS[stufe]) : stufe === 2 ? 'Zeile ' + (WW.i + 1) : '';
+  const programmZeilen = () => zeilenVon(DEMOS[stufe]);
+
+  DR.zeichne(); WW.zeichne(); DZ.zeichne(); DK.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Verbünde und Funktionen: Zeiger oder Kopie',
+    thema: 'Verbund als Parameter, Verbund-Zeiger als Parameter und als Rückgabe, call-by-value, implizite Dereferenzierung, linke Seite einer Zuweisung',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.2.6 und 8.2.7, Seiten 208–211',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_verbund_funktionen_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ändert tüvErneuernWert das Auto nicht?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
