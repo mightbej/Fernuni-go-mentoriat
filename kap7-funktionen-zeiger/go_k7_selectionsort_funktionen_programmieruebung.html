@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programmierübung: Selection Sort mit Funktionen</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Selection Sort mit Funktionen</h1>
+    <p>Selection Sort sucht in jeder Runde das kleinste Element des Rests und tauscht es nach vorn. Diese Übung macht aus der Suche die Funktion <code>findMin</code> und aus dem Tausch die Funktion <code>swap</code>.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.1 und 7.2, Seiten 163–170. Selection Sort kommt im Kurstext nicht vor.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Suche</button>
+    <button type="button" class="tab" data-stufe="2">2 Tausch</button>
+    <button type="button" class="tab" data-stufe="3">3 Runde für Runde</button>
+    <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Die Programmierübung <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Sortieren mit Selection Sort</a> endet mit diesem Kern:</p>
+    <pre class="code-block">for pos := 0; pos &lt; len(a)-1; pos++ {
+    minIndex := pos
+    for i := pos + 1; i &lt; len(a); i++ {
+        if a[i] &lt; a[minIndex] {
+            minIndex = i
+        }
+    }
+    if minIndex != pos {
+        a[pos], a[minIndex] = a[minIndex], a[pos]
+    }
+}</pre>
+    <p>Eine Runde hat zwei Teile. Jeder Teil wird eine Funktion:</p>
+    <ul>
+      <li><strong>Die Suche</strong> nach dem kleinsten Element ab dem Index <code>pos</code> wird zur Funktion <code>findMin</code>. Sie nimmt die ganze innere Schleife auf.</li>
+      <li><strong>Der Tausch</strong> zweier Elemente wird zur Funktion <code>swap</code>.</li>
+    </ul>
+    <p>Die äußere Schleife in <code>main</code> schrumpft auf drei Zeilen.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Das Verfahren:</strong> Die Programmierübung <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Sortieren mit Selection Sort</a> erklärt Runde, Kandidat und Tausch.</li>
+      <li><strong>Abschnitt 3.4 und 7.1, Funktionen:</strong> Die Lektion <a href="go_k7_funktionen_interaktiv.html">Funktionen in Go</a>.</li>
+      <li><strong>Abschnitt 7.2, Wertübergabe:</strong> Schritt 5 der gleichen Lektion führt Listing 7.1 aus.</li>
+      <li><strong>Das gleiche mit Bubble Sort:</strong> Die Programmierübung <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Die Suche als Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Array ist <code>[42 7 19 88 3 25 71 14 60 9]</code>. Was liefert <code>findMin(a, 0)</code>?
+          <details><summary>Auflösung</summary>4. Die Funktion liefert den Index des kleinsten Elements und nicht seinen Wert. Die 3 steht am Index 4.</details></li>
+      </ol>
+    </div>
+    <pre class="code-block">// liefert den Index des kleinsten Elements ab dem Index pos
+func findMin(a [10]int, pos int) int {
+    minIndex := pos
+    for i := pos + 1; i &lt; len(a); i++ {
+        if a[i] &lt; a[minIndex] {
+            minIndex = i
+        }
+    }
+    return minIndex
+}</pre>
+    <ul>
+      <li><strong>Parameter:</strong> das Array und der Index <code>pos</code>, ab dem gesucht wird.</li>
+      <li><strong>Lokale Variable:</strong> <code>minIndex</code> ist der Kandidat. Die Variable gehört jetzt der Funktion und ist in <code>main</code> nicht sichtbar.</li>
+      <li><strong>Rückgabe:</strong> ein <code>int</code>, der Index des kleinsten Elements. Mit dem Index kann der Aufrufer tauschen, mit dem Wert allein könnte er es nicht.</li>
+    </ul>
+    <p>Die Funktion liest das Array und ändert es nicht. Dass sie eine Kopie bekommt, stört das Ergebnis deshalb nicht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.4 und Abschnitt 7.1, Seiten 163–165. Die Funktion <code>findMin</code> ist ein eigenes Beispiel. Die Variable heißt <code>minIndex</code>, weil es in Go seit Version 1.21 eine eingebaute Funktion <code>min</code> gibt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Der Tausch als Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Bubble Sort tauscht immer zwei Nachbarn. Wie viele Indizes braucht die Funktion <code>swap</code> für Selection Sort?
+          <details><summary>Auflösung</summary>Zwei. Selection Sort tauscht das Element am Index <code>pos</code> mit dem kleinsten Element, und das kann an jedem Index dahinter stehen.</details></li>
+      </ol>
+    </div>
+    <pre class="code-block">// liefert eine Kopie des Arrays, in der die Elemente
+// an den Indizes i und j getauscht sind
+func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]
+    return a
+}</pre>
+    <p>Die Funktion bekommt eine Kopie des Arrays. Sie gibt ihre geänderte Kopie zurück, und der Aufrufer weist sie zu. Eine Runde lautet damit:</p>
+    <pre class="code-block">minIndex := findMin(a, pos)
+if minIndex != pos {
+    a = swap(a, pos, minIndex)
+}</pre>
+    <p>Die Zeilen lesen sich so: Suche das kleinste Element ab <code>pos</code>. Steht es nicht schon am Index <code>pos</code>, dann tausche es dorthin.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170. Die Funktion <code>swap</code> ist ein eigenes Beispiel nach dem Muster von <code>negToZeroValue</code> in Listing 7.1.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Runde für Runde</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Programm läuft neun Runden und tauscht siebenmal. Wie viele Elemente kopiert der Rechner für die Aufrufe von <code>findMin</code> und <code>swap</code>?
+          <details><summary>Auflösung</summary>230. Neun Aufrufe von <code>findMin</code> kopieren je 10 Elemente. Sieben Aufrufe von <code>swap</code> kopieren je 20: zehn hin und zehn zurück.</details></li>
+      </ol>
+    </div>
+    <p>Die Demo führt das ganze Sortieren aus, einen Aufruf nach dem anderen. Sie zeigt für jeden Aufruf den Rahmen der Funktion mit ihrer Kopie des Arrays und zählt die kopierten Elemente mit.</p>
+
+    <ol class="programm" id="s-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="s-weiter">nächste Anweisung</button>
+      <button type="button" id="s-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="s-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="s-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="s-ausgabe"></div>
+    <div class="auskunft" id="s-urteil"></div>
+    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo zeigt die Schleifen nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion. Wie <code>findMin</code> das Minimum Vergleich für Vergleich findet, zeigt Schritt 2 der Programmierübung zu Kapitel 6.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Das ganze Programm</h3>
+    <pre class="code-block" id="p-ganz">package main
+
+import "fmt"
+
+// liefert den Index des kleinsten Elements ab dem Index pos
+func findMin(a [10]int, pos int) int {
+    minIndex := pos
+    for i := pos + 1; i &lt; len(a); i++ {
+        if a[i] &lt; a[minIndex] {
+            minIndex = i
+        }
+    }
+    return minIndex
+}
+
+// liefert eine Kopie des Arrays, in der die Elemente
+// an den Indizes i und j getauscht sind
+func swap(a [10]int, i int, j int) [10]int {
+    a[i], a[j] = a[j], a[i]
+    return a
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+    fmt.Println("Start:", a)
+
+    for pos := 0; pos &lt; len(a)-1; pos++ {
+        minIndex := findMin(a, pos)
+        if minIndex != pos {
+            a = swap(a, pos, minIndex)
+        }
+        fmt.Printf("Nach Runde %d: %v\n", pos+1, a)
+    }
+
+    fmt.Println("Sortiert:", a)
+}</pre>
+    <div class="zeile"><button type="button" data-kopiere="p-ganz">Programm kopieren</button></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole">Start: [42 7 19 88 3 25 71 14 60 9]
+Nach Runde 1: [3 7 19 88 42 25 71 14 60 9]
+Nach Runde 2: [3 7 19 88 42 25 71 14 60 9]
+Nach Runde 3: [3 7 9 88 42 25 71 14 60 19]
+Nach Runde 4: [3 7 9 14 42 25 71 88 60 19]
+Nach Runde 5: [3 7 9 14 19 25 71 88 60 42]
+Nach Runde 6: [3 7 9 14 19 25 71 88 60 42]
+Nach Runde 7: [3 7 9 14 19 25 42 88 60 71]
+Nach Runde 8: [3 7 9 14 19 25 42 60 88 71]
+Nach Runde 9: [3 7 9 14 19 25 42 60 71 88]
+Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
+
+    <h3>Die Bilanz</h3>
+    <ul>
+      <li><strong>Lesbarkeit:</strong> In <code>main</code> steht nur noch die äußere Schleife. Jede Runde nennt ihre zwei Teile beim Namen.</li>
+      <li><strong>Aufwand:</strong> Das Programm vergleicht 45-mal und tauscht siebenmal, wie die Fassung aus Kapitel 6. Dazu kommen die Kopien: 9 · 10 + 7 · 20 = 230 kopierte Elemente.</li>
+      <li><strong>Vergleich mit Bubble Sort:</strong> Die Fassung mit <code>isGreater</code> und <code>swap</code> kopiert 910 Elemente. Selection Sort ruft seine Funktionen viel seltener auf.</li>
+    </ul>
+    <p>Die Programmierübung <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a> schafft die Kopien ab.</p>
+
+    <h3>Zum Weiterdenken</h3>
+    <ul>
+      <li>Schreibe eine Funktion <code>findMax</code> und sortiere damit absteigend.</li>
+      <li>Was geschieht, wenn die Zeile <code>if minIndex != pos</code> fehlt? Sortiert das Programm noch richtig, und wie viele Elemente kopiert es dann?</li>
+      <li>Ändere <code>findMin</code> so, dass sie zwei Werte zurückgibt: den Index und den Wert des kleinsten Elements.</li>
+    </ul>
+    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
+      <tbody>
+        <tr><td>3.4 Funktionen in einem Go-Programm</td><td>37–41</td><td>Das Programm deklariert zwei Funktionen mit Parametern und Rückgabe. <code>minIndex</code> ist in <code>findMin</code> eine lokale Variable.</td></tr>
+        <tr><td>5.3.2 Tupel-Zuweisung</td><td>128–129</td><td><code>swap</code> tauscht zwei Elemente mit einer Tupel-Zuweisung.</td></tr>
+        <tr><td>5.5.3.2 for-Anweisung mit for-Klausel</td><td>142–146</td><td><code>findMin</code> enthält die innere Schleife, <code>main</code> die äußere.</td></tr>
+        <tr><td>6.1 Index-Position in einem Array</td><td>154–155</td><td>Beide Funktionen greifen über den Index auf Elemente zu.</td></tr>
+        <tr><td>7.1 Mehr zu Funktionen in Go</td><td>163–165</td><td>Die zwei Funktionen haben verschiedene Signaturen.</td></tr>
+        <tr><td>7.2 Übergabe von Argumenten: call-by-value</td><td>169–170</td><td>Beide Funktionen bekommen eine Kopie des Arrays. <code>swap</code> gibt ihre Kopie zurück.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Selection Sort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
+
+    <h3>Die Reihe</h3>
+    <ul>
+      <li><strong>Davor:</strong> <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Sortieren mit Selection Sort</a> in Kapitel 6.</li>
+      <li><strong>Danach:</strong> <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
+      <li><strong>Das andere Verfahren:</strong> <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#minimum
+  const ANKER = ['worum', 'minimum', 'tausch', 'runden', 'programm', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Suche als Funktion', 'Schritt 2: Der Tausch als Funktion', 'Schritt 3: Runde für Runde', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9];
+
+  // ---------- Schritt 3: das ganze Sortieren, Aufruf für Aufruf ----------
+  const DS = (function () {
+    const zeilen = ['func findMin(a [10]int, pos int) int {', '    minIndex := pos', '    for i := pos + 1; i < len(a); i++ {', '        if a[i] < a[minIndex] {', '            minIndex = i', '        }', '    }', '    return minIndex', '}', '',
+      'func swap(a [10]int, i int, j int) [10]int {', '    a[i], a[j] = a[j], a[i]', '    return a', '}', '',
+      'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    for pos := 0; pos < len(a)-1; pos++ {', '        minIndex := findMin(a, pos)', '        if minIndex != pos {', '            a = swap(a, pos, minIndex)', '        }', '    }', '    fmt.Println(a)', '}'];
+    const lauf = [], a = START.slice();
+    let kopiert = 0, tausche = 0;
+    const bisher = () => ' Kopierte Elemente bisher: ' + kopiert + '.';
+    lauf.push({ z: 17, satz: 'main legt das Array a mit zehn Elementen an.' + bisher(), rahmen: [R('main', [V('a', a.slice(), 1)])], aus: '' });
+    for (let pos = 0; pos < a.length - 1; pos++) {
+      let m = pos;
+      for (let i = pos + 1; i < a.length; i++) if (a[i] < a[m]) m = i;
+      kopiert += 10;
+      lauf.push({ z: 8, satz: 'Runde ' + (pos + 1) + ', pos ist ' + pos + '. main ruft findMin(a, ' + pos + ') auf. Die Funktion bekommt eine Kopie aller zehn Elemente. Sie durchsucht die Kopie ab dem Index ' + pos + ' und liefert ' + m + ': Dort steht ' + a[m] + ', das kleinste Element des Rests.' + bisher(),
+        rahmen: [R('main', [V('a', a.slice()), V('pos', pos)]), R('findMin', [V('a', a.slice(), 0, [m]), V('pos', pos), V('minIndex', m, 1)])], aus: '' });
+      if (m === pos) {
+        lauf.push({ z: 20, satz: 'minIndex ist ' + m + ' und damit gleich pos. Die Bedingung minIndex != pos ist nicht erfüllt: ' + a[pos] + ' steht schon am richtigen Platz. swap wird nicht aufgerufen.' + bisher(),
+          rahmen: [R('main', [V('a', a.slice(), 0, [pos]), V('pos', pos), V('minIndex', m, 1)]), WEG('findMin')], aus: '' });
+        continue;
+      }
+      const kopie = a.slice(); kopie[pos] = a[m]; kopie[m] = a[pos];
+      kopiert += 10;
+      lauf.push({ z: 12, satz: 'minIndex ist ' + m + ', pos ist ' + pos + '. main ruft swap(a, ' + pos + ', ' + m + ') auf. Die Funktion bekommt wieder eine Kopie und tauscht darin ' + a[pos] + ' und ' + a[m] + '. Das Array in main ist noch unverändert.' + bisher(),
+        rahmen: [R('main', [V('a', a.slice()), V('pos', pos), V('minIndex', m)]), R('swap', [V('a', kopie.slice(), 0, [pos, m]), V('i', pos), V('j', m)])], aus: '' });
+      a[pos] = kopie[pos]; a[m] = kopie[m];
+      kopiert += 10; tausche++;
+      lauf.push({ z: 21, satz: 'swap gibt ihre Kopie zurück. Die Zuweisung a = … kopiert die zehn Elemente in das Array von main. ' + a[pos] + ' steht jetzt am Index ' + pos + '.' + bisher(),
+        rahmen: [R('main', [V('a', a.slice(), 0, [pos, m]), V('pos', pos), V('minIndex', m)]), WEG('swap')], aus: '' });
+    }
+    lauf.push({ z: 24, satz: 'Alle neun Runden sind gelaufen. Das Array ist sortiert. Neun Aufrufe von findMin und ' + tausche + ' Aufrufe von swap haben ' + kopiert + ' Elemente kopiert.', rahmen: [R('main', [V('a', a.slice())])], aus: goArray(a) });
+    return ablauf('s', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 17.');
+  })();
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe !== 3) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 3. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
+    return standAblauf(DS).concat('Die Demo zeigt alle neun Runden. Ein Schritt der Demo ist ein Aufruf von findMin, die Prüfung minIndex != pos ohne Tausch, ein Aufruf von swap oder die Zuweisung der Rückgabe von swap.');
+  }
+  const kurzStand = () => stufe === 3 ? (DS.stand ? 'Schritt ' + DS.stand + ' von ' + DS.lauf.length : 'nichts ausgeführt') : '';
+  // Das Programm der Demo steht in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 3) return [];
+    const jetzt = DS.stand ? DS.lauf[DS.stand - 1].z : 0;
+    return DS.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DS.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Programmierübung: Selection Sort mit Funktionen',
+    thema: 'Selection Sort, Funktion, Parameter, Rückgabe, lokale Variable, call-by-value, Kopie eines Arrays',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.1 und 7.2, Seiten 163–170',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum gibt findMin den Index zurück und nicht den Wert?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
