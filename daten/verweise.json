@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-13T14:25",
+ "stand": "2026-10-13T15:10",
  "abschnitte": {
   "2.1": [
    {
@@ -914,6 +914,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
@@ -981,6 +988,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
@@ -1096,6 +1110,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "5.2": [
@@ -1160,6 +1181,20 @@
     "art": "erklaert"
    },
    {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
@@ -1216,6 +1251,20 @@
     "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
     "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1361,6 +1410,27 @@
     "art": "erklaert"
    },
    {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
     "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
@@ -1435,36 +1505,78 @@
   ],
   "6": [
    {
-    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
-    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
-    "geprueft": false,
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Speichermodell: Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "6.1": [
    {
-    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
-    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
-    "geprueft": false,
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
     "titel": "Speichermodell: Arrays in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html",
-    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet.",
-    "geprueft": false,
+    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "6.2": [
    {
-    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
-    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
-    "geprueft": false,
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "for-Anweisung mit Bedingung in Go",
@@ -1483,10 +1595,10 @@
   ],
   "6.3": [
    {
-    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
-    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
-    "geprueft": false,
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
@@ -1499,10 +1611,10 @@
   ],
   "6.4": [
    {
-    "titel": "Arrays in Go – Interaktive Veranschaulichung | FernUni Hagen Kurs 01613",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/S157-168_go_k6_arrays_veranschaulichung.html",
-    "beschreibung": "Die Seite behandelt Deklaration, Index-Zugriff, Durchlaufen, höherdimensionale Arrays und den Ausblick auf Slices.",
-    "geprueft": false,
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
     "art": "erklaert"
    }
   ],
@@ -1791,6 +1903,20 @@
     "art": "erklaert"
    },
    {
+    "titel": "Programmierübung: Sortieren mit Bubble Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Sortieren mit Selection Sort",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert die gleichen zehn Zahlen wie die Übung zu Bubble Sort mit Selection Sort: erst das kleinste Element suchen, dann einmal tauschen. Am Ende vergleicht sie die zwei Verfahren.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "S233-250 Dynamische Datenstrukturen - Erklärseite",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/S233_250_dynamische_datenstrukturen_erklaerung.html",
     "beschreibung": "Die Seite ordnet Kapitel 9 ein: warum Arrays an Grenzen stoßen, wie verkettete Listen arbeiten und warum Suchbäume schnell sein können.",
@@ -1842,20 +1968,6 @@
    }
   ],
   "Kapitel 6": [
-   {
-    "titel": "Programmieruebung: Selection Sort mit Arrays und Indizes",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/159_go_k6_SelectionSort.html",
-    "beschreibung": "Die Seite sortiert ein Array mit Selection Sort und vergleicht das Verfahren mit Bubble Sort.",
-    "geprueft": false,
-    "art": "nennt"
-   },
-   {
-    "titel": "Programmieruebung: Sortieren mit Arrays und Indizes",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/157_go_k6_BubbleSort.html",
-    "beschreibung": "Die Seite sortiert zehn Zahlen mit Bubble Sort und zeigt dabei, warum man dafür ein Array braucht.",
-    "geprueft": false,
-    "art": "nennt"
-   },
    {
     "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
