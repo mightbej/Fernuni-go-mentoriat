@@ -166,6 +166,7 @@ Reiter: vorbeugen
 - Der Teil „Gefährdete Stellen erkennen“ nennt drei Stellen: das Produkt großer Zahlen, große Zwischenergebnisse wie die Summe für einen Durchschnitt und Ausdrücke aus mehreren Variablen.
 - Der Teil „Vor der Rechnung prüfen“ zeigt ein Programm: `var a, b int8 = 120, 20`, dann `if a > math.MaxInt8-b`. Ist die Bedingung wahr, gibt das Programm „Die Summe passt nicht in int8.“ aus, sonst `a + b`. Mit 120 und 20 erscheint die Meldung. Mit 100 und 20 erscheint 120.
 - Die Bedingung stellt `a + b > 127` so um, dass nichts überlaufen kann. Sie gilt für ein positives `b`. `math.MaxInt8` ist die Konstante 127.
+- Unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
 - Ein gelber Kasten sagt: Im Kurstext steht nur, dass man vor der Addition prüfen kann. Das Programm ist eine Ergänzung des Mentors.
 - Der Teil „Wenn kein Typ reicht“ nennt das Paket `math/big` aus dem Expertenwissen 4.15.
 - Der Schritt endet mit Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“ und „break-Anweisung in Go“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.

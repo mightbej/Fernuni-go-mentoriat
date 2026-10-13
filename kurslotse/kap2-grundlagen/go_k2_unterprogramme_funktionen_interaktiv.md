@@ -141,6 +141,7 @@ Reiter: rekursion
 - Eine Ziffernfolge mit L Ziffern braucht L Aufrufe und 2 · L − 1 Schritte.
 - Unter den Zeilen steht in einem grünen Feld ein Satz zum letzten Schritt.
 - Nach der Regel des Kurstexts darf nur die letzte Ziffer eine 0 sein, denn nur auf eine Ziffer von 1 bis 9 folgt eine weitere Dezimaldarstellung. 40 ist erlaubt, 404 und 04 nimmt die Seite nicht an.
+- Am Ende steht: In Go wird die Rekursion in Abschnitt 7.5 behandelt, ab Seite 185. Ein Link führt zur Seite „Rekursion in Go“ zu Kapitel 7.
 
 ### Handgriffe
 
