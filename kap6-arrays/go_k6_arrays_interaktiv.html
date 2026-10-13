@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arrays in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    input[type=number] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem;width:6.5em; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Ein Array: Kästen nebeneinander, über jedem Element sein Index */
+    .array { display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;align-items:flex-end; }
+    .array .name { font-family:Consolas,"Courier New",monospace;font-weight:700;padding:0 6px 12px 0; }
+    .element { display:flex;flex-direction:column;align-items:center;gap:3px; }
+    .element .index { font-family:Consolas,monospace;font-size:.85rem;color:var(--muted); }
+    .element .wert { min-width:54px;padding:10px 8px;text-align:center;font-family:Consolas,"Courier New",monospace;font-size:1.15rem;font-weight:700;background:#fff;color:#111827;border:2px solid var(--blau);border-radius:8px; }
+    button.wert { cursor:pointer; }
+    .element.dran .wert { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .element.dran .index { color:#111827;font-weight:700; }
+    .element.neu .wert { background:#d1fae5;border-color:var(--accent); }
+    .matrix { display:inline-grid;gap:6px;margin:12px 0;align-items:center; }
+    .matrix .kopf { font-family:Consolas,monospace;font-size:.85rem;color:var(--muted);text-align:center;padding:0 6px; }
+    .matrix .wert { min-width:54px;padding:10px 8px;text-align:center;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;font-weight:700;background:#fff;color:#111827;border:2px solid var(--blau);border-radius:8px; }
+    .matrix .wert.dran { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .matrix .wert.neu { background:#d1fae5;border-color:var(--accent); }
+    .matrix .wert.reihe { background:#eff6ff; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .variablen { display:flex;flex-wrap:wrap;gap:10px;margin:12px 0; }
+    .variablen .kasten { min-width:110px;display:flex;justify-content:space-between;gap:14px;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:8px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem; }
+    .variablen .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .variablen .kasten.weg { border-style:dashed;border-color:#9ca3af;color:var(--muted); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Arrays in Go</h1>
+    <p>Ein Array fasst eine feste Zahl von Werten des gleichen Typs unter einem Namen zusammen. Die Seite zeigt, wie man ein Array anlegt, wie man mit dem Index ein Element anspricht, wie man ein Array mit einer Schleife durchläuft und was ein zweidimensionales Array ist.</p>
+    <p>Kurstext v3.0.6, Kapitel 6, Seiten 151–162.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Array und Literal</button>
+    <button type="button" class="tab" data-stufe="2">2 Index</button>
+    <button type="button" class="tab" data-stufe="3">3 Durchlaufen</button>
+    <button type="button" class="tab" data-stufe="4">4 Zwei Dimensionen</button>
+    <button type="button" class="tab" data-stufe="5">5 Slices</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Oft gehören mehrere Werte des gleichen Typs zusammen, zum Beispiel die sechs Zahlen einer Lottoziehung. Mit einzelnen Variablen sieht das so aus:</p>
+<pre class="code-block">var z1, z2, z3, z4, z5, z6 int = 3, 17, 24, 31, 36, 47
+fmt.Println(z1, z2, z3, z4, z5, z6)</pre>
+    <p>Schon bei sechs Werten ist das mühsam. Bei tausend Werten geht es nicht mehr. Vor allem kann keine Schleife über <code>z1</code> bis <code>z6</code> laufen, denn jeder Name muss einzeln im Programm stehen.</p>
+    <p>Dafür gibt es das Array. Ein Array ist eine Folge aus einer festen Zahl von Elementen, die alle Werte eines einzigen Typs sind:</p>
+<pre class="code-block">var lotto [6]int = [6]int{3, 17, 24, 31, 36, 47}
+fmt.Println(lotto)    // [3 17 24 31 36 47]</pre>
+    <p>Die sechs Werte haben jetzt einen gemeinsamen Namen. Jedes Element hat eine Nummer, seinen Index. Über den Index kann eine Schleife alle Elemente nacheinander ansprechen.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 4.6.2.1, Seiten 105–107, der Index bei Strings:</strong> Dort beginnt die Zählung schon bei 0, und <code>len(s)</code> liefert die Länge. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</li>
+      <li><strong>Abschnitt 5.1 und 5.1.5, Deklaration und leerer Bezeichner:</strong> Die Deklaration mit <code>var</code> und mit <code>:=</code> und der Unterstrich <code>_</code> stehen auf der Seite <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3.2, die for-Klausel:</strong> Die Schleife mit Init-Anweisung, Bedingung und Post-Anweisung steht auf der Seite <a href="../kap5-anweisungen/go_k5_for_klausel_interaktiv.html">for-Anweisung mit for-Klausel in Go</a>.</li>
+    </ul>
+    <p>In Kapitel 2 und 3 des Kurstexts kommen Arrays noch nicht vor.</p>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, Array und Literal:</strong> Der Typ eines Arrays, das Array-Literal und die Null-Werte.</li>
+      <li><strong>Schritt 2, Index:</strong> Mit <code>a[i]</code> ein Element lesen und ändern, und was bei einem falschen Index geschieht.</li>
+      <li><strong>Schritt 3, Durchlaufen:</strong> Die for-Anweisung mit range-Klausel, Zeile für Zeile ausgeführt.</li>
+      <li><strong>Schritt 4, zwei Dimensionen:</strong> Ein Array, dessen Elemente selbst Arrays sind.</li>
+      <li><strong>Schritt 5, Slices:</strong> Ein Ausblick auf das Array, das wachsen kann.</li>
+    </ul>
+    <p>Wie ein Array im Hauptspeicher liegt und wie der Rechner aus dem Index die Adresse eines Elements ausrechnet, zeigt die Seite <a href="go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a>.</p>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Kapitel 6, Seite 151.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Array und Literal</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(q)</code> nach <code>q := [5]float64{12.5, -8.3}</code> aus?
+          <details><summary>Auflösung</summary><code>[12.5 -8.3 0 0 0]</code>. Das Array hat fünf Elemente. Die drei Elemente ohne Wert bekommen den Null-Wert des Typs.</details></li>
+        <li>Übersetzt Go die Zeile <code>var b [6]int = [4]int{5, 8, 8, 2}</code>?
+          <details><summary>Auflösung</summary>Nein. <code>[4]int</code> und <code>[6]int</code> sind zwei verschiedene Typen.</details></li>
+      </ol>
+    </div>
+
+    <h3>Der Typ eines Arrays</h3>
+    <p>Die Variable <code>lotto</code> hat den Typ <code>[6]int</code>. Ein Array-Typ besteht aus zwei Teilen:</p>
+    <ul>
+      <li><strong>Die Länge, in eckigen Klammern:</strong> Sie sagt, wie viele Elemente das Array hat. Sie steht fest, wenn das Programm übersetzt wird. Deshalb muss sie eine Konstante sein und darf keine Variable sein.</li>
+      <li><strong>Der Element-Typ, dahinter:</strong> Alle Elemente haben diesen Typ.</li>
+    </ul>
+    <p>Die Länge gehört zum Typ. <code>[4]int</code> ist deshalb ein anderer Typ als <code>[6]int</code>, und ein Array mit vier Elementen lässt sich keiner Variable vom Typ <code>[6]int</code> zuweisen.</p>
+
+    <h3>Das Array-Literal</h3>
+    <p>Rechts vom Gleichheitszeichen steht ein Array-Literal: erst der Typ, dann in geschweiften Klammern die Werte, durch Kommas getrennt. Ein Array-Literal ist ein Ausdruck.</p>
+    <ul>
+      <li><strong>Kurze Deklaration:</strong> Go leitet den Typ aus dem Literal ab. <code>lotto := [6]int{3, 17, 24, 31, 36, 47}</code></li>
+      <li><strong>Fehlende Werte:</strong> Stehen im Literal weniger Werte, als das Array Elemente hat, bekommen die übrigen den Null-Wert des Element-Typs. Bei Zahlen ist das 0, bei <code>bool</code> ist es <code>false</code>, bei <code>string</code> der leere String.</li>
+      <li><strong>Ohne Literal:</strong> <code>var jahr [12]int</code> legt zwölf Elemente an, alle mit dem Wert 0.</li>
+      <li><strong>Die Ellipse <code>...</code>:</strong> Stehen im Typ drei Punkte anstelle der Länge, zählt Go die Werte im Literal. <code>[...]int{3, 17, 24}</code> hat den Typ <code>[3]int</code>.</li>
+    </ul>
+
+    <h3>Ausprobieren: neun Deklarationen</h3>
+    <div class="zeile" id="wahl"></div>
+    <pre class="code-block" id="d-code"></pre>
+    <div class="array" id="d-array"></div>
+    <div class="auskunft" id="d-urteil"></div>
+
+    <h3>Ein Wert je Zeile</h3>
+    <p>Ein langes Literal darf über mehrere Zeilen gehen, zum Beispiel für Kommentare. Dann steht auch hinter dem letzten Wert ein Komma:</p>
+<pre class="code-block">lotto := [...]int{
+    3,
+    17, // Geburtsjahr von Oma
+    24,
+    31,
+    36, // Glückszahl
+    47,
+}</pre>
+    <p>Das Komma am Ende wirkt zuerst lästig. Es hat einen Vorteil: Wer die letzte Zeile verschiebt oder auskommentiert, muss kein Komma nachtragen oder löschen.</p>
+
+    <h3>Ein Literal mit Variablen</h3>
+    <p>In einem Array-Literal dürfen auch Variablen stehen. Go wertet das Literal einmal aus, in dem Augenblick der Zuweisung. Ändert sich die Variable später, bleibt das Array, wie es ist:</p>
+<pre class="code-block">s := -5
+r := [...]int{3, 4, s, 6}
+fmt.Println(r)    // [3 4 -5 6]
+s = 8
+fmt.Println(r)    // [3 4 -5 6]
+
+r = [...]int{0, 1, 0, s}    // ein Literal lässt sich jederzeit zuweisen
+fmt.Println(r)    // [0 1 0 8]</pre>
+    <p class="quelle">Kurstext v3.0.6, Kapitel 6, Seiten 151–154. Die ersten fünf Deklarationen der Demo stammen aus dem Kurstext, <code>kurz</code> ist dort <code>lotto</code> mit sechs Werten. Die vier Deklarationen danach und die Meldungen des Compilers stehen dort nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Index</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Array <code>lotto</code> hat sechs Elemente. Welchen Index hat das letzte?
+          <details><summary>Auflösung</summary>5. Die Zählung beginnt bei 0. Das letzte Element eines Arrays der Länge n hat den Index n − 1.</details></li>
+      </ol>
+    </div>
+    <p>Jedes Element eines Arrays steht an einer festen Stelle. Die Nummer dieser Stelle heißt Index. Arrays sind null-indiziert: Das erste Element hat den Index 0, das zweite den Index 1.</p>
+    <p>Mit einem Index-Ausdruck greift man auf ein Element zu. Er besteht aus dem Namen des Arrays und einem Ausdruck in eckigen Klammern: <code>a[i]</code>. Ein Element wie <code>a[i]</code> heißt indizierte Variable. Man kann es lesen und ihm einen Wert zuweisen wie jeder anderen Variable.</p>
+<pre class="code-block">i := 2
+a := [...]int{11, 22, 33, 44}
+a[i] = 99
+fmt.Println(a)              // [11 22 99 44]
+fmt.Println(a[0] + a[3])    // 55</pre>
+
+    <h3>Die Länge</h3>
+    <p>Die eingebaute Funktion <code>len</code> liefert die Länge eines Arrays. <code>len(a)-1</code> ist deshalb immer der Index des letzten Elements, und <code>a[len(a)-1]</code> ist das letzte Element.</p>
+
+    <h3>Ausprobieren: lesen und zuweisen</h3>
+    <p>Wähle ein Element. Trage einen Wert ein und weise ihn zu.</p>
+    <div class="array" id="i-array"></div>
+    <div class="zeile">
+      <label for="neuerWert">Neuer Wert:</label>
+      <input type="number" id="neuerWert" value="99" min="-999" max="999">
+      <button type="button" class="haupt" id="zuweisen">a[i] = Wert</button>
+      <button type="button" id="i-vorn">von vorn</button>
+    </div>
+    <div class="zeile" id="i-falsch">
+      <span>Ein Index außerhalb:</span>
+      <button type="button" class="code" data-falsch="konst">fmt.Println(a[4])</button>
+      <button type="button" class="code" data-falsch="var">j := 4; fmt.Println(a[j])</button>
+    </div>
+    <pre class="code-block" id="i-code"></pre>
+    <div class="auskunft" id="i-urteil"></div>
+
+    <h3>Ein Index außerhalb des Arrays</h3>
+    <p>Ein Index, der negativ ist oder zu groß, ist ungültig. Wann Go das bemerkt, hängt davon ab, wann der Index feststeht:</p>
+    <ul>
+      <li><strong>Der Index ist eine Konstante:</strong> Der Compiler sieht den Fehler und übersetzt das Programm nicht.</li>
+      <li><strong>Der Index ist eine Variable:</strong> Ihren Wert kennt Go erst, wenn das Programm läuft. Das Programm wird übersetzt und bricht an dieser Stelle mit einer Meldung ab.</li>
+    </ul>
+    <p>Go prüft also jeden Zugriff. Ein Programm kann nie unbemerkt neben ein Array greifen.</p>
+
+    <h3>Index-Positionen im Literal</h3>
+    <p>In einem Array-Literal kann vor einem Wert sein Index stehen, gefolgt von einem Doppelpunkt. Der Wert kommt dann an diese Stelle. Alle Stellen ohne Wert bekommen den Null-Wert:</p>
+<pre class="code-block">b := [8]int{5, 2: 8, 4: -2}
+c := [...]int{4: 6}
+fmt.Println(b)    // [5 0 8 0 -2 0 0 0]
+fmt.Println(c)    // [0 0 0 0 6]</pre>
+    <p>Bei <code>c</code> zählt Go mit der Ellipse bis zum größten Index: Das Array hat fünf Elemente.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 6.1, Seiten 154–155. Das Array mit 11, 22, 33 und 44 stammt aus dem Kurstext. Dort greifen die zwei falschen Zugriffe auf <code>lotto</code> zu, mit den Indizes 10 und 8. Im Kurstext endet die Meldung des Compilers mit <code>[0:4]</code>, Go 1.26 nennt für <code>lotto</code> die Länge 6: <code>[0:6]</code>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Durchlaufen</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>In einer for-range-Schleife über <code>a</code> steht im Rumpf <code>v = 99</code>. Was enthält <code>a</code> nach der Schleife?
+          <details><summary>Auflösung</summary>Die alten Werte. <code>v</code> ist eine Kopie des Elements. Wer das Element ändern will, schreibt <code>a[i] = 99</code>. Die fünfte Fassung der Demo zeigt es.</details></li>
+      </ol>
+    </div>
+    <p>Wer alle Elemente eines Arrays der Reihe nach braucht, nimmt eine Schleife. Mit der for-Klausel aus Kapitel 5 sieht sie fast immer gleich aus:</p>
+    <ul>
+      <li><strong>Init-Anweisung <code>i := 0</code>:</strong> Die Laufvariable beginnt beim Index des ersten Elements.</li>
+      <li><strong>Bedingung <code>i &lt; len(a)</code>:</strong> Im Rumpf ist <code>i</code> höchstens <code>len(a)-1</code>, also der Index des letzten Elements.</li>
+      <li><strong>Post-Anweisung <code>i++</code>:</strong> Nach jedem Durchlauf geht es zum nächsten Index.</li>
+    </ul>
+
+    <h3>Die for-Anweisung mit range-Klausel</h3>
+    <p>Weil diese Schleife so oft vorkommt, hat Go eine kürzere Form dafür, die for-range-Schleife:</p>
+<pre class="code-block">for i, v := range a {
+    …
+}</pre>
+    <ul>
+      <li><strong>Rechts von <code>range</code>:</strong> Dort steht das Array.</li>
+      <li><strong>Die erste Variable, hier <code>i</code>:</strong> Sie ist die Index-Variable und hat den Typ <code>int</code>. Sie beginnt bei 0 und wird nach jedem Durchlauf um 1 erhöht.</li>
+      <li><strong>Die zweite Variable, hier <code>v</code>:</strong> Sie hat den Element-Typ des Arrays. Vor jedem Durchlauf bekommt sie den Wert von <code>a[i]</code>. Sie darf fehlen.</li>
+    </ul>
+    <p>Beide Variablen gelten nur im Rumpf der Schleife. Die Namen <code>i</code> für Index und <code>v</code> für das englische <em>value</em> sind üblich.</p>
+
+    <h3>Ausprobieren: fünf Schleifen Zeile für Zeile</h3>
+    <div class="zeile" id="fassungen"></div>
+    <ol class="programm" id="programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="weiter">nächste Anweisung</button>
+      <button type="button" id="zurueck">eine Anweisung zurück</button>
+      <button type="button" id="vorn">von vorn</button>
+    </div>
+    <div class="array" id="s-array"></div>
+    <div class="variablen" id="s-variablen"></div>
+    <p>Ausgabe des Programms:</p>
+    <div class="konsole" id="s-ausgabe"></div>
+    <div class="auskunft" id="s-urteil"></div>
+
+    <h3>Welche Variable man weglassen kann</h3>
+    <ul>
+      <li><strong>Nur der Wert wird gebraucht:</strong> Go übersetzt kein Programm mit einer ungenutzten Variable. Für den Index steht dann der leere Bezeichner <code>_</code>: <code>for _, v := range a</code>.</li>
+      <li><strong>Nur der Index wird gebraucht:</strong> Die zweite Variable fällt einfach weg: <code>for i := range a</code>.</li>
+      <li><strong>Keine von beiden wird gebraucht:</strong> <code>for range a</code> führt den Rumpf einmal je Element aus.</li>
+    </ul>
+
+    <h3>Was die for-range-Schleife bringt</h3>
+    <p>Sie ist kürzer als die Schleife mit for-Klausel, und in ihr kann man sich bei Anfang, Bedingung und Schrittweite nicht verschreiben. Ein Leser muss keine for-Klausel prüfen.</p>
+
+    <h3>Seit Go 1.22: range über eine ganze Zahl</h3>
+<pre class="code-block">for i := range 10 {
+    fmt.Println(i)    // 0 bis 9
+}</pre>
+    <p>Diese Form braucht kein Array. Sie zählt von 0 bis zu der Zahl hinter <code>range</code>, die Zahl selbst ausgenommen.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 6.2, Seiten 156–159, mit Hinweis 6.1. Die ersten vier Fassungen der Demo stammen aus dem Kurstext. Die fünfte Fassung mit <code>v = 99</code> steht dort nur als Satz und nicht als Programm.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Zwei Dimensionen</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>a</code> hat den Typ <code>[3][2]int</code>. Was liefert <code>len(a)</code>, was <code>len(a[0])</code>?
+          <details><summary>Auflösung</summary>3 und 2. <code>a</code> ist ein Array aus drei Elementen. Jedes Element ist ein Array aus zwei ganzen Zahlen.</details></li>
+      </ol>
+    </div>
+    <p>Ein Array in Go ist eine Folge von Werten und hat damit eine Dimension. Der Element-Typ darf aber selbst ein Array-Typ sein. So entsteht ein zweidimensionales Array. Es entspricht einer Matrix aus der linearen Algebra, ein einfaches Array entspricht einem Vektor.</p>
+<pre class="code-block">a := [3][2]int{
+    {1, 2},
+    {3, 4},
+    {5, 6},
+}
+fmt.Println(a)    // [[1 2] [3 4] [5 6]]</pre>
+    <p>Den Typ <code>[3][2]int</code> liest man von links: ein Array der Länge 3, dessen Elemente den Typ <code>[2]int</code> haben. Das sind 3 Zeilen mit je 2 Spalten.</p>
+    <p>Für jede Dimension kommt ein Paar eckiger Klammern dazu: <code>a[i][j]</code> ist das Element in Zeile <code>i</code> und Spalte <code>j</code>. <code>a[i]</code> allein ist die ganze Zeile <code>i</code>, ein Array vom Typ <code>[2]int</code>.</p>
+
+    <h3>Ausprobieren: Zeile und Spalte</h3>
+    <p>Wähle ein Element der Matrix.</p>
+    <div class="matrix" id="m-matrix"></div>
+    <div class="auskunft" id="m-urteil"></div>
+
+    <h3>Durchlaufen mit zwei Schleifen</h3>
+    <p>Für ein zweidimensionales Array nimmt man zwei verschachtelte Schleifen. Die äußere läuft über die Zeilen, die innere über die Spalten einer Zeile. Das folgende Programm setzt alle negativen Elemente einer Matrix auf 0 und gibt sie aus.</p>
+    <ol class="programm" id="b-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="b-weiter">nächstes Element</button>
+      <button type="button" id="b-zurueck">ein Element zurück</button>
+      <button type="button" id="b-alle">bis zum Ende</button>
+      <button type="button" id="b-vorn">von vorn</button>
+    </div>
+    <div class="matrix" id="b-matrix"></div>
+    <p>Ausgabe des Programms:</p>
+    <div class="konsole" id="b-ausgabe"></div>
+    <div class="auskunft" id="b-urteil"></div>
+    <p><code>range b</code> liefert die Indizes der Zeilen, <code>range b[i]</code> die Indizes der Spalten in Zeile <code>i</code>. Das Programm braucht die Indizes, weil es mit <code>b[i][j] = 0</code> in die Matrix schreibt. Das Verb <code>%3v</code> gibt jeden Wert drei Zeichen breit aus, so stehen die Spalten untereinander.</p>
+
+    <h3>Nur lesen: die Zeile als Wert</h3>
+<pre class="code-block">for i, zeile := range a {
+    fmt.Printf("Zeile %v: ", i)
+    for _, element := range zeile {
+        fmt.Printf("%v ", element)
+    }
+    fmt.Println()
+}
+// Zeile 0: 1 2
+// Zeile 1: 3 4
+// Zeile 2: 5 6</pre>
+    <p>Hier bekommt <code>zeile</code> in jedem Durchlauf eine ganze Zeile von <code>a</code>, also ein Array vom Typ <code>[2]int</code>. Die innere Schleife läuft über diese Zeile.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 6.3, Seiten 160–162. Beide Matrizen und beide Programme stammen aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Slices</h2>
+    <p>Die Länge eines Arrays steht fest. Ein Element anhängen kann man nicht. In der Praxis braucht man das aber oft. Go hat dafür einen eigenen Typ, den Slice. Ein Slice ist, einfach gesagt, ein Array, dessen Länge wachsen kann, während das Programm läuft.</p>
+<pre class="code-block">zahlen := []int{1, 2, 3}       // ein Slice: eckige Klammern ohne Länge
+zahlen = append(zahlen, 4)     // append hängt ein Element an
+teil := zahlen[1:3]            // ein neuer Slice aus den Elementen 1 und 2
+
+fmt.Println(zahlen)         // [1 2 3 4]
+fmt.Println(teil)           // [2 3]
+fmt.Println(len(zahlen))    // 4
+fmt.Println(cap(zahlen))    // 6</pre>
+    <table class="text">
+      <thead><tr><th>Frage</th><th>Array</th><th>Slice</th></tr></thead>
+      <tbody>
+        <tr><td>Wie schreibt man den Typ?</td><td>Die Länge steht in den Klammern: <code>[4]int</code>.</td><td>Die Klammern sind leer: <code>[]int</code>.</td></tr>
+        <tr><td>Wann steht die Länge fest?</td><td>Sie steht beim Übersetzen fest und gehört zum Typ.</td><td>Sie kann sich ändern, während das Programm läuft.</td></tr>
+        <tr><td>Kann man ein Element anhängen?</td><td>Nein. Go übersetzt <code>append</code> mit einem Array nicht.</td><td>Ja, mit <code>append</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Was dahinter steckt</h3>
+    <p>Ein Slice benutzt intern ein Array fester Größe. <code>len</code> liefert die Länge des Slice, <code>cap</code> die Größe dieses internen Arrays, die Kapazität. Reicht der Platz nicht mehr, legt Go ein neues, größeres Array an und kopiert die Elemente dorthin. Im Beispiel hat Go 1.26 beim Anhängen des vierten Elements Platz für sechs geschaffen.</p>
+
+    <h3>Im Kurs bleibt es bei Arrays</h3>
+    <div class="hinweis">Im Kurstext werden Slices nur an dieser einen Stelle gezeigt. Alle Beispiele des Kurses verwenden Arrays, auch dort, wo man in der Praxis einen Slice nähme. Zwei Gründe stehen dort: Arrays gibt es in fast jeder Programmiersprache, und die Speicherverwaltung hinter einem Slice ist verwickelter.</div>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="S157-168_go_k6_arrays_quiz.html">Quiz zu den Arrays</a> fragt den Stoff von Kapitel 6 ab.</li>
+      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a> zeigt, wie ein Array im Hauptspeicher liegt.</li>
+      <li><strong>Programmieren:</strong> Zwei Programmierübungen sortieren ein Array: <a href="go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a> und <a href="go_k6_selectionsort_programmieruebung.html">Sortieren mit Selection Sort</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 6.4, Seite 162. Das Programm stammt aus dem Kurstext. Die Ausgabe 6 für die Kapazität steht dort nicht, sie stammt aus einem Lauf mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#index
+  const ANKER = ['worum', 'literal', 'index', 'durchlaufen', 'matrix', 'slices'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // Ein Array als Reihe von Kästen. dran: Index des hervorgehobenen Elements. klick: macht die Kästen zu Knöpfen.
+  function zeichneArray(ziel, name, werte, dran, klick, neu) {
+    const kasten = klick ? 'button type="button"' : 'div';
+    el(ziel).innerHTML = '<span class="name">' + esc(name) + '</span>' + werte.map((w, i) =>
+      '<div class="element' + (i === dran ? ' dran' : '') + (i === neu ? ' neu' : '') + '"><span class="index">' + i + '</span><' + kasten + ' class="wert" data-i="' + i + '">' + esc(w) + '</' + (klick ? 'button' : 'div') + '></div>').join('');
+  }
+
+  // ---------- Schritt 1: neun Deklarationen. Ausgaben und Meldungen stammen aus Läufen mit Go 1.26. ----------
+  const WAHL = [
+    { knopf: 'var lotto [6]int = [6]int{…}', zeilen: ['var lotto [6]int = [6]int{3, 17, 24, 31, 36, 47}'], name: 'lotto', typ: '[6]int', werte: [3, 17, 24, 31, 36, 47],
+      warum: 'Links steht der Typ der Variable, rechts ein Array-Literal vom gleichen Typ. Kürzer geht es mit lotto := [6]int{3, 17, 24, 31, 36, 47}.' },
+    { knopf: 'farben := [4]string{…}', zeilen: ['farben := [4]string{"rot", "gelb", "grün", "blau"}'], name: 'farben', typ: '[4]string', werte: ['rot', 'gelb', 'grün', 'blau'],
+      warum: 'Die kurze Deklaration leitet den Typ [4]string aus dem Literal ab. fmt.Println gibt die Strings ohne Anführungszeichen aus.' },
+    { knopf: 'q := [5]float64{12.5, -8.3}', zeilen: ['q := [5]float64{12.5, -8.3}'], name: 'q', typ: '[5]float64', werte: [12.5, -8.3, 0, 0, 0],
+      warum: 'Das Literal nennt zwei Werte, das Array hat fünf Elemente. Die drei übrigen bekommen den Null-Wert von float64, also 0.' },
+    { knopf: 'var jahr [12]int', zeilen: ['var jahr [12]int'], name: 'jahr', typ: '[12]int', werte: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      warum: 'Ohne Literal bekommen alle zwölf Elemente den Null-Wert. Das Gleiche bewirkt jahr := [12]int{}.' },
+    { knopf: 'kurz := [...]int{3, 17, 24}', zeilen: ['kurz := [...]int{3, 17, 24}'], name: 'kurz', typ: '[3]int', werte: [3, 17, 24],
+      warum: 'Die Ellipse lässt Go die Werte zählen. Das Literal hat drei Werte, der Typ ist [3]int. Die Länge steht damit weiter beim Übersetzen fest.' },
+    { knopf: 'var b [6]int = [4]int{5, 8, 8, 2}', zeilen: ['var b [6]int = [4]int{5, 8, 8, 2}'],
+      meldung: 'cannot use [4]int{…} (value of type [4]int) as [6]int value in variable declaration',
+      warum: 'Die Länge gehört zum Typ. Ein Wert vom Typ [4]int passt nicht in eine Variable vom Typ [6]int. Go füllt hier nichts auf.' },
+    { knopf: 'a := [3]int{1, 2, 3, 4}', zeilen: ['a := [3]int{1, 2, 3, 4}'],
+      meldung: 'index 3 is out of bounds (>= 3)',
+      warum: 'Das Literal nennt vier Werte für ein Array mit drei Elementen. Der vierte Wert bekäme den Index 3, und den gibt es in einem Array der Länge 3 nicht.' },
+    { knopf: 'n := 5; var a [n]int', zeilen: ['n := 5', 'var a [n]int'],
+      meldung: 'invalid array length n',
+      warum: 'Die Länge eines Arrays muss beim Übersetzen feststehen. n ist eine Variable, ihren Wert kennt Go erst zur Laufzeit.' },
+    { knopf: 'const n = 5; var a [n]int', zeilen: ['const n = 5', 'var a [n]int'], name: 'a', typ: '[5]int', werte: [0, 0, 0, 0, 0],
+      warum: 'Mit einer Konstante geht es. Ihren Wert kennt der Compiler.' }
+  ];
+  let wahl = 2;
+  el('wahl').innerHTML = WAHL.map((w, i) => '<button type="button" class="code" data-wahl="' + i + '">' + esc(w.knopf) + '</button>').join('');
+  function zeigeWahl(i) {
+    wahl = i;
+    const w = WAHL[i];
+    document.querySelectorAll('[data-wahl]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.wahl) === i));
+    el('d-code').textContent = w.zeilen.join(NL) + (w.meldung ? '' : NL + 'fmt.Println(' + w.name + ')    // ' + goArray(w.werte));
+    el('d-array').hidden = !!w.meldung;
+    if (!w.meldung) zeichneArray('d-array', w.name, w.werte, -1, false, -1);
+    el('d-urteil').classList.toggle('fehler', !!w.meldung);
+    el('d-urteil').innerHTML = (w.meldung ? '<p>Go übersetzt das Programm nicht. Der Compiler meldet: ' + c(w.meldung) + '</p>'
+      : '<p>Die Variable ' + c(w.name) + ' hat den Typ ' + c(w.typ) + ' und ' + w.werte.length + ' Elemente. Über jedem Element steht sein Index.</p>') + '<p>' + esc(w.warum) + '</p>';
+    melde(false);
+  }
+  el('wahl').addEventListener('click', e => { const k = e.target.closest('[data-wahl]'); if (k) zeigeWahl(Number(k.dataset.wahl)); });
+
+  // ---------- Schritt 2: lesen und zuweisen ----------
+  const START2 = [11, 22, 33, 44];
+  const s2 = { a: START2.slice(), i: 2, letzte: '', fehler: '', falsch: '' };
+  function zeichne2(geaendert) {
+    zeichneArray('i-array', 'a', s2.a, s2.i, true, geaendert ? s2.i : -1);
+    el('zuweisen').textContent = 'a[' + s2.i + '] = Wert';
+    const letztes = s2.a.length - 1;
+    el('i-urteil').classList.toggle('fehler', !!(s2.falsch || s2.fehler));
+    if (s2.falsch) {
+      const konst = s2.falsch === 'konst';
+      el('i-code').textContent = (konst ? 'fmt.Println(a[4])' : 'j := 4' + NL + 'fmt.Println(a[j])');
+      el('i-urteil').innerHTML = konst
+        ? '<p>Go übersetzt das Programm nicht. Der Compiler meldet: ' + c('invalid argument: index 4 out of bounds [0:4]') + '</p><p>Der Index 4 ist eine Konstante. Der Compiler sieht, dass das Array nur die Indizes 0 bis 3 hat.</p>'
+        : '<p>Go übersetzt das Programm. Es bricht in der zweiten Zeile ab: ' + c('panic: runtime error: index out of range [4] with length 4') + '</p><p>Den Wert von ' + c('j') + ' kennt Go erst zur Laufzeit. Vor dem Zugriff prüft das Programm den Index und bricht ab.</p>';
+    } else {
+      el('i-code').textContent = (s2.letzte ? s2.letzte + NL : '') + 'fmt.Println(a[' + s2.i + '])           // ' + s2.a[s2.i] + NL + 'fmt.Println(a)              // ' + goArray(s2.a) + NL +
+        'fmt.Println(len(a))         // ' + s2.a.length + NL + 'fmt.Println(a[len(a)-1])    // ' + s2.a[letztes];
+      el('i-urteil').innerHTML = s2.fehler ? '<p>' + esc(s2.fehler) + '</p>'
+        : '<p>Gewählt ist der Index ' + s2.i + '. ' + c('a[' + s2.i + ']') + ' ist das ' + (s2.i + 1) + '. Element und hat den Wert ' + s2.a[s2.i] + '.</p>' +
+          (s2.letzte ? '<p>Die Zuweisung ' + c(s2.letzte) + ' hat nur dieses eine Element geändert.</p>' : '');
+    }
+    melde(false);
+  }
+  el('i-array').addEventListener('click', e => { const k = e.target.closest('[data-i]'); if (k) { s2.i = Number(k.dataset.i); s2.letzte = ''; s2.fehler = ''; s2.falsch = ''; zeichne2(false); } });
+  el('zuweisen').addEventListener('click', () => {
+    const w = Number(el('neuerWert').value);
+    s2.falsch = '';
+    if (el('neuerWert').value.trim() === '' || !Number.isInteger(w) || w < -999 || w > 999) { s2.fehler = 'Trage eine ganze Zahl von −999 bis 999 ein. Die Elemente haben den Typ int.'; zeichne2(false); return; }
+    s2.fehler = ''; s2.a[s2.i] = w; s2.letzte = 'a[' + s2.i + '] = ' + w;
+    zeichne2(true);
+  });
+  el('neuerWert').addEventListener('keydown', e => { if (e.key === 'Enter') el('zuweisen').click(); });
+  el('i-vorn').addEventListener('click', () => { s2.a = START2.slice(); s2.i = 2; s2.letzte = ''; s2.fehler = ''; s2.falsch = ''; zeichne2(false); });
+  el('i-falsch').addEventListener('click', e => { const k = e.target.closest('[data-falsch]'); if (k) { s2.falsch = k.dataset.falsch; zeichne2(false); } });
+
+  // ---------- Schritt 3: fünf Schleifen, Anweisung für Anweisung ----------
+  // Jede Fassung liefert ihre Programmzeilen und die Liste aller Zustände des Laufs.
+  // Ein Zustand: zeile (Nummer ab 1), a (Array), dran (Index des Elements), vars (Name und Wert), aus (Ausgabe), sagt (Satz).
+  const A0 = [8, -5, 14, 3];
+  function lauf(zeilen, fn) {
+    const z = [];
+    const a = A0.slice(), aus = [];
+    const merke = (zeile, dran, vars, sagt) => z.push({ zeile: zeile, a: a.slice(), dran: dran, vars: vars, aus: aus.slice(), sagt: sagt });
+    fn(a, aus, merke);
+    return { zeilen: zeilen, z: z };
+  }
+  const FASSUNGEN = [
+    { knopf: 'for-Klausel', bau: () => lauf([
+        'a := [...]int{8, -5, 14, 3}', 'sum := 0', '', 'for i := 0; i < len(a); i++ {', '    fmt.Println("Index:", i, "Wert:", a[i])', '    sum += a[i]', '}', 'fmt.Println("Summe aller Werte:", sum)'],
+      (a, aus, m) => {
+        let sum = 0;
+        m(1, -1, [], 'Go legt das Array a mit vier Elementen an.');
+        m(2, -1, [['sum', 0]], 'sum bekommt den Wert 0.');
+        m(4, -1, [['sum', 0], ['i', 0]], 'Init-Anweisung: i bekommt den Wert 0, den Index des ersten Elements. Die Bedingung 0 < 4 ist erfüllt.');
+        for (let i = 0; i < a.length; i++) {
+          aus.push('Index: ' + i + ' Wert: ' + a[i]);
+          m(5, i, [['sum', sum], ['i', i]], 'Der Rumpf liest das Element a[' + i + '] und gibt Index und Wert aus.');
+          sum += a[i];
+          m(6, i, [['sum', sum], ['i', i]], 'sum += a[' + i + ']: Zu sum kommt ' + a[i] + ' dazu. sum ist jetzt ' + sum + '.');
+          m(4, -1, [['sum', sum], ['i', i + 1]], 'Post-Anweisung i++: i ist jetzt ' + (i + 1) + '. Die Bedingung ' + (i + 1) + ' < 4 ist ' + (i + 1 < a.length ? 'erfüllt, der Rumpf läuft noch einmal.' : 'nicht mehr erfüllt. Die Schleife endet. Die Variable i gibt es danach nicht mehr.'));
+        }
+        aus.push('Summe aller Werte: ' + sum);
+        m(8, -1, [['sum', sum]], 'Die Summe aller vier Elemente ist ' + sum + '.');
+      }) },
+    { knopf: 'for i, v := range a', bau: () => lauf([
+        'a := [...]int{8, -5, 14, 3}', 'sum := 0', '', 'for i, v := range a {', '    fmt.Println("Index:", i, "Wert:", v)', '    sum += v', '}', 'fmt.Println("Summe aller Werte:", sum)'],
+      (a, aus, m) => {
+        let sum = 0;
+        m(1, -1, [], 'Go legt das Array a mit vier Elementen an.');
+        m(2, -1, [['sum', 0]], 'sum bekommt den Wert 0.');
+        for (let i = 0; i < a.length; i++) {
+          m(4, i, [['sum', sum], ['i', i], ['v', a[i]]], (i === 0 ? 'Die range-Klausel beginnt beim Index 0.' : 'Die range-Klausel geht zum nächsten Index: i ist ' + i + '.') + ' v bekommt eine Kopie von a[' + i + '], also ' + a[i] + '.');
+          aus.push('Index: ' + i + ' Wert: ' + a[i]);
+          m(5, i, [['sum', sum], ['i', i], ['v', a[i]]], 'Der Rumpf gibt i und v aus.');
+          sum += a[i];
+          m(6, i, [['sum', sum], ['i', i], ['v', a[i]]], 'sum += v: Zu sum kommt ' + a[i] + ' dazu. sum ist jetzt ' + sum + '.');
+        }
+        m(4, -1, [['sum', sum]], 'Nach dem Index 3 gibt es kein Element mehr. Die Schleife endet. Die Variablen i und v gibt es danach nicht mehr.');
+        aus.push('Summe aller Werte: ' + sum);
+        m(8, -1, [['sum', sum]], 'Die Ausgabe ist die gleiche wie bei der Schleife mit for-Klausel.');
+      }) },
+    { knopf: 'for _, v := range a', bau: () => lauf([
+        'a := [...]int{8, -5, 14, 3}', 'prod := 1', '', 'for _, v := range a {', '    prod *= v', '}', 'fmt.Println("Produkt aller Werte:", prod)'],
+      (a, aus, m) => {
+        let prod = 1;
+        m(1, -1, [], 'Go legt das Array a mit vier Elementen an.');
+        m(2, -1, [['prod', 1]], 'prod bekommt den Wert 1.');
+        for (let i = 0; i < a.length; i++) {
+          m(4, i, [['prod', prod], ['v', a[i]]], 'v bekommt eine Kopie des ' + (i + 1) + '. Elements, also ' + a[i] + '. Der Index wird nicht gebraucht, an seiner Stelle steht der leere Bezeichner _.');
+          prod *= a[i];
+          m(5, i, [['prod', prod], ['v', a[i]]], 'prod *= v: prod wird mit ' + a[i] + ' multipliziert und ist jetzt ' + prod + '.');
+        }
+        m(4, -1, [['prod', prod]], 'Alle vier Elemente sind durchlaufen. Die Schleife endet.');
+        aus.push('Produkt aller Werte: ' + prod);
+        m(7, -1, [['prod', prod]], 'Das Produkt aller vier Elemente ist ' + prod + '.');
+      }) },
+    { knopf: 'for i := range a', bau: () => lauf([
+        'a := [...]int{8, -5, 14, 3}', '', 'for i := range a {', '    a[i] = -a[i]', '}', 'fmt.Println("negiertes Array:", a)'],
+      (a, aus, m) => {
+        m(1, -1, [], 'Go legt das Array a mit vier Elementen an.');
+        for (let i = 0; i < a.length; i++) {
+          m(3, i, [['i', i]], 'i ist ' + i + '. Eine Variable für den Wert gibt es hier nicht, sie ist weggelassen.');
+          const alt = a[i]; a[i] = -a[i];
+          m(4, i, [['i', i]], 'a[' + i + '] = -a[' + i + ']: Die Zuweisung an den Index-Ausdruck ändert das Element im Array. Aus ' + alt + ' wird ' + a[i] + '.');
+        }
+        m(3, -1, [], 'Alle vier Elemente sind durchlaufen. Die Schleife endet.');
+        aus.push('negiertes Array: ' + goArray(a));
+        m(6, -1, [], 'Das Array selbst hat sich geändert.');
+      }) },
+    { knopf: 'v = 99 im Rumpf', bau: () => lauf([
+        'a := [...]int{8, -5, 14, 3}', '', 'for _, v := range a {', '    v = 99', '    fmt.Println(v)', '}', 'fmt.Println(a)'],
+      (a, aus, m) => {
+        m(1, -1, [], 'Go legt das Array a mit vier Elementen an.');
+        for (let i = 0; i < a.length; i++) {
+          m(3, i, [['v', a[i]]], 'v bekommt eine Kopie des ' + (i + 1) + '. Elements, also ' + a[i] + '.');
+          m(4, i, [['v', 99]], 'v = 99 ändert die Variable v. Das Element im Array bleibt ' + a[i] + ', denn v ist nur eine Kopie.');
+          aus.push('99');
+          m(5, i, [['v', 99]], 'Ausgegeben wird der Wert von v.');
+        }
+        m(3, -1, [], 'Alle vier Elemente sind durchlaufen. Die Schleife endet.');
+        aus.push(goArray(a));
+        m(7, -1, [], 'Das Array ist unverändert. Wer ein Element ändern will, braucht den Index und schreibt a[i] = 99.');
+      }) }
+  ];
+  FASSUNGEN.forEach(f => { f.lauf = f.bau(); });
+  let fassung = 1, stand3 = 0;      // stand3: so viele Anweisungen sind ausgeführt
+  el('fassungen').innerHTML = FASSUNGEN.map((f, i) => '<button type="button" class="code" data-fassung="' + i + '">' + esc(f.knopf) + '</button>').join('');
+  function zeichne3() {
+    const L = FASSUNGEN[fassung].lauf, z = stand3 ? L.z[stand3 - 1] : null;
+    document.querySelectorAll('[data-fassung]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.fassung) === fassung));
+    el('programm').innerHTML = L.zeilen.map((t, i) => '<li class="' + (z && z.zeile === i + 1 ? 'aktuell' : '') + '"><span class="nr">' + (i + 1) + '</span>' + esc(t) + '</li>').join('');
+    zeichneArray('s-array', 'a', z ? z.a : A0, z ? z.dran : -1, false, -1);
+    el('s-array').style.visibility = stand3 ? 'visible' : 'hidden';
+    const vorher = stand3 > 1 ? L.z[stand3 - 2].vars : [];
+    el('s-variablen').innerHTML = z && z.vars.length ? z.vars.map(v => {
+      const alt = vorher.find(x => x[0] === v[0]);
+      return '<div class="kasten' + (!alt || alt[1] !== v[1] ? ' neu' : '') + '"><span>' + v[0] + '</span><b>' + v[1] + '</b></div>';
+    }).join('') : '<div class="kasten weg"><span>Noch gibt es keine Variable außer a.</span></div>';
+    el('s-ausgabe').textContent = z ? z.aus.join(NL) : '';
+    el('s-urteil').innerHTML = '<p>' + esc(z ? z.sagt : 'Noch ist keine Anweisung ausgeführt.') + '</p>';
+    el('weiter').disabled = stand3 >= L.z.length;
+    el('zurueck').disabled = stand3 === 0;
+    melde(false);
+  }
+  el('fassungen').addEventListener('click', e => { const k = e.target.closest('[data-fassung]'); if (k) { fassung = Number(k.dataset.fassung); stand3 = 0; zeichne3(); } });
+  el('weiter').addEventListener('click', () => { if (stand3 < FASSUNGEN[fassung].lauf.z.length) { stand3++; zeichne3(); } });
+  el('zurueck').addEventListener('click', () => { if (stand3 > 0) { stand3--; zeichne3(); } });
+  el('vorn').addEventListener('click', () => { stand3 = 0; zeichne3(); });
+
+  // ---------- Schritt 4: zwei Dimensionen ----------
+  // Eine Matrix als Gitter mit Zeilen- und Spaltenindex
+  function zeichneMatrix(ziel, name, m, zi, zj, klick, neu) {
+    const spalten = m[0].length;
+    let h = '<span class="kopf">' + esc(name) + '</span>' + m[0].map((_, j) => '<span class="kopf">Spalte ' + j + '</span>').join('');
+    m.forEach((zeile, i) => {
+      h += '<span class="kopf">Zeile ' + i + '</span>' + zeile.map((w, j) => {
+        const kl = 'wert' + (i === zi && j === zj ? ' dran' : i === zi && klick ? ' reihe' : '') + (neu && neu[0] === i && neu[1] === j ? ' neu' : '');
+        return klick ? '<button type="button" class="' + kl + '" data-z="' + i + '" data-s="' + j + '">' + w + '</button>' : '<span class="' + kl + '">' + w + '</span>';
+      }).join('');
+    });
+    el(ziel).style.gridTemplateColumns = 'auto repeat(' + spalten + ', auto)';
+    el(ziel).innerHTML = h;
+  }
+  const MA = [[1, 2], [3, 4], [5, 6]];
+  const s4 = { i: 1, j: 0 };
+  function zeichneM() {
+    zeichneMatrix('m-matrix', 'a', MA, s4.i, s4.j, true, null);
+    el('m-urteil').innerHTML = '<p>' + c('a[' + s4.i + '][' + s4.j + ']') + ' ist das Element in Zeile ' + s4.i + ' und Spalte ' + s4.j + '. Es hat den Wert ' + MA[s4.i][s4.j] + '.</p>' +
+      '<p>' + c('a[' + s4.i + ']') + ' ist die ganze Zeile ' + s4.i + ', ein Array vom Typ ' + c('[2]int') + ' mit dem Wert ' + c(goArray(MA[s4.i])) + '. Sie ist blau unterlegt.</p>' +
+      '<p>' + c('len(a)') + ' ist 3, die Zahl der Zeilen. ' + c('len(a[' + s4.i + '])') + ' ist 2, die Zahl der Spalten.</p>';
+    melde(false);
+  }
+  el('m-matrix').addEventListener('click', e => { const k = e.target.closest('[data-z]'); if (k) { s4.i = Number(k.dataset.z); s4.j = Number(k.dataset.s); zeichneM(); } });
+
+  // Das Programm, das alle negativen Elemente auf 0 setzt: ein Zustand je Element
+  const MB = [[-43, 12, 5, -63], [-19, -82, 91, 55], [2, 46, -37, 28]];
+  const B_ZEILEN = ['b := [3][4]int{', '    {-43,  12,   5, -63},', '    {-19, -82,  91,  55},', '    {  2,  46, -37,  28},', '}', '',
+    'for i := range b {', '    for j := range b[i] {', '        if b[i][j] < 0 {', '            b[i][j] = 0', '        }', '        fmt.Printf("%3v ", b[i][j])', '    }', '    fmt.Println()', '}'];
+  const B_LAUF = (() => {
+    const b = MB.map(z => z.slice()), z = [], aus = [];
+    let reihe = '';
+    b.forEach((zeile, i) => zeile.forEach((w, j) => {
+      const negativ = w < 0;
+      if (negativ) b[i][j] = 0;
+      reihe += String(b[i][j]).padStart(3, ' ') + ' ';
+      const ende = j === zeile.length - 1;
+      z.push({ i: i, j: j, b: b.map(x => x.slice()), aus: aus.concat([reihe]), negativ: negativ, alt: w,
+        sagt: 'i ist ' + i + ', j ist ' + j + '. b[' + i + '][' + j + '] hat den Wert ' + w + '. ' +
+          (negativ ? 'Die Bedingung ' + w + ' < 0 ist erfüllt: Die Zuweisung b[' + i + '][' + j + '] = 0 setzt das Element auf 0.' : 'Die Bedingung ' + w + ' < 0 ist nicht erfüllt, das Element bleibt.') +
+          ' Ausgegeben wird ' + b[i][j] + ', drei Zeichen breit.' + (ende ? ' Das war die letzte Spalte der Zeile ' + i + '. fmt.Println() beginnt eine neue Zeile der Ausgabe.' : '') });
+      if (ende) { aus.push(reihe); reihe = ''; }
+    }));
+    return z;
+  })();
+  let stand4 = 0;      // so viele Elemente sind bearbeitet
+  function zeichneB() {
+    const z = stand4 ? B_LAUF[stand4 - 1] : null;
+    const zeile = z ? (z.negativ ? 10 : 12) : 0;
+    el('b-programm').innerHTML = B_ZEILEN.map((t, i) => '<li class="' + (z && (i + 1 === zeile || i + 1 === 12) ? 'aktuell' : '') + '"><span class="nr">' + (i + 1) + '</span>' + esc(t) + '</li>').join('');
+    zeichneMatrix('b-matrix', 'b', z ? z.b : MB, z ? z.i : -1, z ? z.j : -1, false, z && z.negativ ? [z.i, z.j] : null);
+    el('b-ausgabe').textContent = z ? z.aus.join(NL) : '';
+    el('b-urteil').innerHTML = '<p>' + esc(z ? z.sagt : 'Noch ist kein Element bearbeitet. Die Matrix b hat 3 Zeilen und 4 Spalten, also 12 Elemente. Fünf davon sind negativ.') + '</p>' +
+      (stand4 === B_LAUF.length ? '<p>Alle 12 Elemente sind bearbeitet. In der Matrix steht keine negative Zahl mehr.</p>' : '');
+    el('b-weiter').disabled = el('b-alle').disabled = stand4 >= B_LAUF.length;
+    el('b-zurueck').disabled = stand4 === 0;
+    melde(false);
+  }
+  el('b-weiter').addEventListener('click', () => { if (stand4 < B_LAUF.length) { stand4++; zeichneB(); } });
+  el('b-zurueck').addEventListener('click', () => { if (stand4 > 0) { stand4--; zeichneB(); } });
+  el('b-alle').addEventListener('click', () => { stand4 = B_LAUF.length; zeichneB(); });
+  el('b-vorn').addEventListener('click', () => { stand4 = 0; zeichneB(); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Array und Literal', 'Schritt 2: Index', 'Schritt 3: Durchlaufen', 'Schritt 4: Zwei Dimensionen', 'Schritt 5: Slices'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+  const mitIndex = a => a.map((w, i) => 'Index ' + i + ': ' + w).join(', ');
+
+  function standSaetze() {
+    if (stufe === 0 || stufe === 5) return ['Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) {
+      const w = WAHL[wahl];
+      return ['Gewählt ist die Deklaration: ' + w.zeilen.join(' ; '),
+        w.meldung ? 'Go übersetzt das Programm nicht. Der Compiler meldet: ' + w.meldung
+          : 'Go übersetzt das Programm. Die Variable ' + w.name + ' hat den Typ ' + w.typ + ' und ' + w.werte.length + ' Elemente: ' + mitIndex(w.werte) + '. fmt.Println(' + w.name + ') gibt ' + goArray(w.werte) + ' aus.',
+        'Die Seite sagt dazu: ' + w.warum,
+        'Die neun Deklarationen zur Wahl: ' + WAHL.map(x => x.zeilen.join(' ; ') + (x.meldung ? ' (Go übersetzt es nicht)' : '')).join(' | ') + '.',
+        'Handgriffe: eine der neun Deklarationen wählen. Eine eigene Deklaration lässt sich nicht eingeben.'];
+    }
+    if (stufe === 2) {
+      const griffe = 'Handgriffe: ein Element des Arrays anklicken und so den Index wählen, eine ganze Zahl von −999 bis 999 eintragen und mit dem Knopf „a[i] = Wert“ zuweisen, „von vorn“ wählen, einen der zwei Knöpfe mit einem Index außerhalb wählen. Das Array hat immer vier Elemente.';
+      const kopf = 'Das Array a hat den Typ [4]int. Seine Elemente: ' + mitIndex(s2.a) + '. Am Anfang enthielt es 11, 22, 33 und 44.';
+      if (s2.falsch) return [kopf, s2.falsch === 'konst'
+        ? 'Gewählt ist der Zugriff fmt.Println(a[4]) mit einem konstanten Index. Go übersetzt das Programm nicht. Der Compiler meldet: invalid argument: index 4 out of bounds [0:4]'
+        : 'Gewählt ist der Zugriff über eine Variable: j := 4 ; fmt.Println(a[j]). Go übersetzt das Programm. Es bricht zur Laufzeit ab: panic: runtime error: index out of range [4] with length 4', griffe];
+      return [kopf,
+        'Gewählt und gelb markiert ist der Index ' + s2.i + '. a[' + s2.i + '] hat den Wert ' + s2.a[s2.i] + '.',
+        s2.fehler ? 'Die Seite meldet: ' + s2.fehler : s2.letzte ? 'Die letzte Zuweisung war ' + s2.letzte + '.' : 'Seit der Wahl des Index ist nichts zugewiesen.',
+        'len(a) ist 4, a[len(a)-1] ist ' + s2.a[3] + '.', griffe];
+    }
+    if (stufe === 3) {
+      const F = FASSUNGEN[fassung], L = F.lauf, z = stand3 ? L.z[stand3 - 1] : null;
+      return ['Gewählt ist die Fassung „' + F.knopf + '“. Das Array a enthält am Anfang 8, −5, 14 und 3.',
+        z ? 'Ausgeführt sind ' + stand3 + ' von ' + L.z.length + ' Anweisungen. Der Lauf steht in Zeile ' + z.zeile + ': ' + L.zeilen[z.zeile - 1].trim() : 'Noch ist keine Anweisung ausgeführt.',
+        z ? 'Das Array a: ' + mitIndex(z.a) + '.' + (z.dran >= 0 ? ' Gelb markiert ist das Element mit dem Index ' + z.dran + '.' : '') : '',
+        z ? 'Die Variablen: ' + (z.vars.length ? z.vars.map(v => v[0] + ' = ' + v[1]).join(', ') : 'keine außer a') + '.' : '',
+        z ? 'Bisherige Ausgabe: ' + (z.aus.length ? z.aus.join(' ; ') : 'noch keine') + '.' : '',
+        z ? 'Die Seite sagt dazu: ' + z.sagt : '',
+        stand3 >= L.z.length ? 'Das Programm ist zu Ende.' : '',
+        'Die fünf Fassungen: ' + FASSUNGEN.map(f => f.knopf).join(', ') + '.',
+        'Handgriffe: eine der fünf Fassungen wählen, „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Die Werte des Arrays und die Programme lassen sich nicht ändern.'].filter(Boolean);
+    }
+    const z = stand4 ? B_LAUF[stand4 - 1] : null;
+    return ['Erste Demo, die Matrix a vom Typ [3][2]int mit den Zeilen [1 2], [3 4] und [5 6]: Gewählt ist a[' + s4.i + '][' + s4.j + '] mit dem Wert ' + MA[s4.i][s4.j] + '. a[' + s4.i + '] ist die Zeile ' + goArray(MA[s4.i]) + '.',
+      'Zweite Demo, das Programm mit der Matrix b vom Typ [3][4]int: ' + (z ? 'Bearbeitet sind ' + stand4 + ' von 12 Elementen. Zuletzt bearbeitet und gelb markiert ist b[' + z.i + '][' + z.j + '].' : 'Noch ist kein Element bearbeitet.'),
+      'Die Matrix b jetzt: ' + (z ? z.b : MB).map((x, i) => 'Zeile ' + i + ' ' + goArray(x)).join(', ') + '. Am Anfang: Zeile 0 [-43 12 5 -63], Zeile 1 [-19 -82 91 55], Zeile 2 [2 46 -37 28].',
+      'Bisherige Ausgabe des Programms: ' + (z ? z.aus.map(glatt).join(' ; ') : 'noch keine') + '.',
+      z ? 'Die Seite sagt dazu: ' + z.sagt : '',
+      'Handgriffe: in der ersten Demo ein Element der Matrix a anklicken. In der zweiten Demo „nächstes Element“, „ein Element zurück“, „bis zum Ende“, „von vorn“. Die Werte lassen sich nicht ändern.'].filter(Boolean);
+  }
+  const kurzStand = () => stufe === 1 ? WAHL[wahl].knopf : stufe === 2 ? (s2.falsch ? 'Index 4 außerhalb' : 'a[' + s2.i + '] = ' + s2.a[s2.i])
+    : stufe === 3 ? FASSUNGEN[fassung].knopf + ', Anweisung ' + stand3 : stufe === 4 ? 'a[' + s4.i + '][' + s4.j + '], b: ' + stand4 + ' von 12' : '';
+  // In Schritt 3 und 4 stehen Programme in Listen und nicht in pre
+  function programmZeilen() {
+    const pre = Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(p => p.textContent.split(NL)).map(t => t.trimEnd()).filter(Boolean);
+    const nummeriert = z => z.map((t, i) => (i + 1) + '  ' + t);
+    if (stufe === 3) return pre.concat(['', 'Das Programm der gewählten Fassung der Demo, mit Zeilennummern:'], nummeriert(FASSUNGEN[fassung].lauf.zeilen));
+    if (stufe === 4) return pre.concat(['', 'Das Programm der zweiten Demo, mit Zeilennummern:'], nummeriert(B_ZEILEN));
+    return pre;
+  }
+
+  zeigeWahl(2);
+  zeichne2(false);
+  zeichne3();
+  zeichneM();
+  zeichneB();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Arrays in Go',
+    thema: 'Array, Array-Literal, Index, indizierte Variable, len, for-Anweisung mit range-Klausel, zweidimensionales Array, Slice',
+    bezug: 'Kurstext v3.0.6, Kapitel 6, Seiten 151–162',
+    beschreibung: '../kurslotse/kap6-arrays/go_k6_arrays_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ändert v = 99 das Array nicht?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
