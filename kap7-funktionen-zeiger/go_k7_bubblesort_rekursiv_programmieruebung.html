@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programmierübung: Bubble Sort rekursiv</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Bubble Sort rekursiv</h1>
+    <p>Die äußere Schleife von Bubble Sort wird zu einem rekursiven Aufruf: Die Funktion macht einen Durchgang und ruft sich dann für ein Element weniger selbst auf.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193. Bubblesort steht im Kurstext in Abschnitt 8.4.2, Seiten 225–226.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Die Idee</button>
+    <button type="button" class="tab" data-stufe="2">2 Die Funktion</button>
+    <button type="button" class="tab" data-stufe="3">3 Schleife oder Rekursion</button>
+    <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Die Programmierübung <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> sortiert mit zwei Schleifen in <code>main</code>:</p>
+    <pre class="code-block">for durchgang := 0; durchgang &lt; len(a)-1; durchgang++ {
+    for i := 0; i &lt; len(a)-1-durchgang; i++ {
+        if isGreater(&amp;a, i) {
+            swap(&amp;a, i)
+        }
+    }
+}</pre>
+    <p>Die äußere Schleife wiederholt den gleichen Durchgang für einen immer kürzeren Anfang des Arrays. Eine solche Wiederholung lässt sich auch rekursiv schreiben. Diese Übung baut dafür eine Funktion <code>bubbleSort</code>, die sich selbst aufruft.</p>
+    <p>Die Funktionen <code>isGreater</code> und <code>swap</code> bleiben, wie sie sind. Die innere Schleife bleibt eine Schleife.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 7.5, Rekursion:</strong> Die Lektion <a href="go_k7_rekursion_interaktiv.html">Rekursion in Go</a> zeigt Fakultät, Endrekursion und Terminierung.</li>
+      <li><strong>Abschnitt 7.3, Zeiger als Parameter:</strong> Die Programmierübung <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> liefert <code>isGreater</code> und <code>swap</code>.</li>
+      <li><strong>Das Verfahren:</strong> Die Programmierübung <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a> in Kapitel 6.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Die Idee</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Durchgang über zehn Elemente bringt das größte Element an den Index 9. Welche Aufgabe bleibt danach übrig?
+          <details><summary>Auflösung</summary>Die ersten neun Elemente sortieren. Das ist die gleiche Aufgabe mit einem Element weniger.</details></li>
+      </ol>
+    </div>
+    <p>Rekursion führt eine Aufgabe auf eine kleinere Aufgabe der gleichen Art zurück. Für das Sortieren mit Bubble Sort heißt das:</p>
+    <ul>
+      <li><strong>Die Aufgabe:</strong> Sortiere die ersten n Elemente des Arrays.</li>
+      <li><strong>Ein Durchgang:</strong> Vergleiche die Nachbarn vom Index 0 bis zum Index n − 2 und tausche, wo das linke Element größer ist. Danach steht das größte der n Elemente am Index n − 1.</li>
+      <li><strong>Die kleinere Aufgabe:</strong> Sortiere die ersten n − 1 Elemente des Arrays.</li>
+      <li><strong>Das Ende:</strong> Für n gleich 1 oder 0 ist nichts zu tun. Ein einzelnes Element ist sortiert.</li>
+    </ul>
+    <p>Die Funktion braucht dafür zwei Parameter: einen Zeiger auf das Array und die Zahl n. Die Länge des Arrays steht fest im Typ <code>[10]int</code>. Wie viele Elemente noch zu sortieren sind, sagt n.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5, Seite 185, und Abschnitt 7.5.5, Seiten 191–193. Die Zerlegung von Bubble Sort ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Die Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>main</code> ruft <code>bubbleSort(&amp;a, 10)</code> auf. Wie oft läuft die Funktion <code>bubbleSort</code> insgesamt?
+          <details><summary>Auflösung</summary>Zehnmal: mit n gleich 10, 9, 8 und so weiter bis 1. Der Aufruf mit n gleich 1 endet sofort.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion hat drei Teile:</p>
+    <ul>
+      <li><strong>Das Ende, Zeilen 2 bis 4:</strong> Für <code>n &lt;= 1</code> kehrt die Funktion sofort zurück. Hier steht kein rekursiver Aufruf.</li>
+      <li><strong>Ein Durchgang, Zeilen 5 bis 9:</strong> die innere Schleife aus dem Programm mit zwei Schleifen. An der Stelle von <code>len(a)-1-durchgang</code> steht <code>n-1</code>.</li>
+      <li><strong>Der rekursive Aufruf, Zeile 10:</strong> <code>bubbleSort(pa, n-1)</code>. Das Argument ist um 1 kleiner als der eigene Parameter.</li>
+    </ul>
+    <p>Im rekursiven Aufruf steht <code>pa</code> und nicht <code>&amp;pa</code>: <code>pa</code> ist schon die Adresse des Arrays, und die Funktion gibt sie weiter.</p>
+
+    <ol class="programm" id="r-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="r-weiter">nächste Anweisung</button>
+      <button type="button" id="r-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="r-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="r-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="r-ausgabe"></div>
+    <div class="auskunft" id="r-urteil"></div>
+    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo fasst jeden Durchgang zu einem Schritt zusammen. Wie ein Durchgang Vergleich für Vergleich läuft, zeigt Schritt 3 der Programmierübung <a href="go_k7_bubblesort_zeiger_programmieruebung.html#durchgang">Bubble Sort mit Zeigern</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Schleife oder Rekursion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ist <code>bubbleSort</code> endrekursiv?
+          <details><summary>Auflösung</summary>Ja. Die Funktion ruft sich höchstens einmal auf, und dieser Aufruf ist ihre letzte Operation. Danach rechnet sie nichts mehr.</details></li>
+      </ol>
+    </div>
+    <p>Beide Programme vergleichen und tauschen in der gleichen Reihenfolge. Sie unterscheiden sich darin, wie sie die Durchgänge wiederholen:</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Frage</th><th>Mit zwei Schleifen</th><th>Rekursiv</th></tr></thead>
+      <tbody>
+        <tr><td>Was zählt die Durchgänge?</td><td>Die Variable <code>durchgang</code> zählt von 0 bis 8.</td><td>Der Parameter <code>n</code> fällt von 10 bis 1.</td></tr>
+        <tr><td>Wie weit läuft ein Durchgang?</td><td>Die innere Schleife läuft bis <code>i &lt; len(a)-1-durchgang</code>.</td><td>Die innere Schleife läuft bis <code>i &lt; n-1</code>.</td></tr>
+        <tr><td>Wann ist Schluss?</td><td>Die Bedingung der äußeren Schleife ist nicht mehr erfüllt.</td><td>Die Bedingung <code>n &lt;= 1</code> ist erfüllt.</td></tr>
+        <tr><td>Wie viele Vergleiche und Tausche?</td><td>Es sind 45 Vergleiche und 23 Tausche.</td><td>Es sind 45 Vergleiche und 23 Tausche.</td></tr>
+        <tr><td>Was bleibt gespeichert?</td><td>Zwei Variablen: <code>durchgang</code> und <code>i</code>.</td><td>Für jeden der zehn Aufrufe ein Wert von <code>pa</code> und von <code>n</code>.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Einordnung nach Abschnitt 7.5 des Kurstexts</h3>
+    <ul>
+      <li><strong>Direkte Rekursion:</strong> <code>bubbleSort</code> ruft sich selbst auf.</li>
+      <li><strong>Lineare Rekursion:</strong> Ein Aufruf enthält höchstens einen rekursiven Aufruf. Für zehn Elemente läuft die Funktion zehnmal.</li>
+      <li><strong>Endrekursion:</strong> Der rekursive Aufruf ist die letzte Operation. Auf dem Rückweg hat kein Aufruf mehr etwas zu tun.</li>
+      <li><strong>Terminierung:</strong> Jeder rekursive Aufruf bekommt <code>n-1</code>. Bei <code>n &lt;= 1</code> gibt es keinen Aufruf mehr.</li>
+    </ul>
+    <div class="hinweis">Die rekursive Fassung ist hier nicht besser als die Schleife. Sie zeigt an einem bekannten Programm, wie eine Schleife und ein rekursiver Aufruf einander entsprechen. Wo Rekursion die naheliegende Lösung ist, zeigen im Kurstext die Türme von Hanoi und später die Bäume in Kapitel 9.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.2, Seiten 187–188, Abschnitt 7.5.3, Seiten 188–189, und Abschnitt 7.5.5, Seiten 191–193.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Das ganze Programm</h3>
+    <pre class="code-block" id="p-ganz">package main
+
+import "fmt"
+
+// liefert true, wenn das Element am Index i
+// größer ist als sein rechter Nachbar
+func isGreater(pa *[10]int, i int) bool {
+    return pa[i] &gt; pa[i+1]
+}
+
+// tauscht in dem Array, auf das pa zeigt,
+// die Nachbarn an den Indizes i und i+1
+func swap(pa *[10]int, i int) {
+    pa[i], pa[i+1] = pa[i+1], pa[i]
+}
+
+// sortiert die ersten n Elemente des Arrays, auf das pa zeigt
+func bubbleSort(pa *[10]int, n int) {
+    if n &lt;= 1 {
+        return
+    }
+    for i := 0; i &lt; n-1; i++ {
+        if isGreater(pa, i) {
+            swap(pa, i)
+        }
+    }
+    fmt.Printf("n = %2d: %v\n", n, *pa)
+    bubbleSort(pa, n-1)
+}
+
+func main() {
+    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}
+    fmt.Println("Start:", a)
+    bubbleSort(&amp;a, len(a))
+    fmt.Println("Sortiert:", a)
+}</pre>
+    <div class="zeile"><button type="button" data-kopiere="p-ganz">Programm kopieren</button></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole">Start: [42 7 19 88 3 25 71 14 60 9]
+n = 10: [7 19 42 3 25 71 14 60 9 88]
+n =  9: [7 19 3 25 42 14 60 9 71 88]
+n =  8: [7 3 19 25 14 42 9 60 71 88]
+n =  7: [3 7 19 14 25 9 42 60 71 88]
+n =  6: [3 7 14 19 9 25 42 60 71 88]
+n =  5: [3 7 14 9 19 25 42 60 71 88]
+n =  4: [3 7 9 14 19 25 42 60 71 88]
+n =  3: [3 7 9 14 19 25 42 60 71 88]
+n =  2: [3 7 9 14 19 25 42 60 71 88]
+Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
+    <p>Gegenüber der Demo hat das Programm eine Zeile mehr: <code>fmt.Printf</code> gibt nach jedem Durchgang das Array aus. <code>*pa</code> ist das Array, auf das <code>pa</code> zeigt. Die Zeilen sind die gleichen wie „Nach Durchgang 1“ bis „Nach Durchgang 9“ im Programm mit zwei Schleifen.</p>
+
+    <h3>Zum Weiterdenken</h3>
+    <ul>
+      <li>Was geschieht, wenn die drei Zeilen mit <code>if n &lt;= 1</code> fehlen? Die Lektion <a href="go_k7_rekursion_interaktiv.html#terminierung">Rekursion in Go</a> zeigt in Schritt 5 eine Funktion ohne Ende.</li>
+      <li>Stelle den rekursiven Aufruf vor die Schleife. Sortiert das Programm dann noch? Ist die Funktion dann noch endrekursiv?</li>
+      <li>Schreibe auch den Durchgang rekursiv: eine Funktion <code>durchgang(pa *[10]int, i int, n int)</code>, die ein Paar vergleicht und sich für <code>i+1</code> selbst aufruft.</li>
+    </ul>
+    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
+      <tbody>
+        <tr><td>7.3 Einführendes Beispiel: Zeiger als Funktionsparameter</td><td>171–172</td><td>Alle drei Funktionen haben einen Parameter vom Typ <code>*[10]int</code>.</td></tr>
+        <tr><td>7.4 Zeiger in Go</td><td>173–178</td><td>Das Programm schreibt <code>pa[i]</code> in der Kurzschreibweise und gibt mit <code>*pa</code> das Array aus.</td></tr>
+        <tr><td>7.5 Rekursion</td><td>185</td><td><code>bubbleSort</code> ruft sich selbst auf: direkte Rekursion.</td></tr>
+        <tr><td>7.5.2 Endrekursion</td><td>187–188</td><td>Der rekursive Aufruf ist die letzte Operation der Funktion.</td></tr>
+        <tr><td>7.5.3 Lineare und kaskadenartige Rekursion</td><td>188–189</td><td>Ein Aufruf enthält höchstens einen rekursiven Aufruf: lineare Rekursion.</td></tr>
+        <tr><td>7.5.5 Terminierung</td><td>191–193</td><td>Das Argument <code>n</code> wird mit jedem Aufruf um 1 kleiner, bei <code>n &lt;= 1</code> endet die Rekursion.</td></tr>
+        <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit zwei Schleifen und einem Array von Verbunden.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Eine rekursive Fassung von Bubblesort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
+
+    <h3>Die Reihe</h3>
+    <ul>
+      <li><strong>Davor:</strong> <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a>, <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> und <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a>.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#idee
+  const ANKER = ['worum', 'idee', 'funktion', 'vergleich', 'programm', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Schleife oder Rekursion', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9], ADR = 'Adresse von a';
+
+  // ---------- Schritt 2: bubbleSort(&a, 10), Aufruf für Aufruf ----------
+  const DR = (function () {
+    const zeilen = ['func bubbleSort(pa *[10]int, n int) {', '    if n <= 1 {', '        return', '    }', '    for i := 0; i < n-1; i++ {', '        if isGreater(pa, i) {', '            swap(pa, i)', '        }', '    }', '    bubbleSort(pa, n-1)', '}', '',
+      'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    bubbleSort(&a, len(a))', '    fmt.Println(a)', '}'];
+    const lauf = [], a = START.slice(), name = n => 'bubbleSort, Aufruf mit n = ' + n;
+    // die Rahmen der Aufrufe von n = 10 bis n = bis; fest: ab diesem Index stehen die Werte am Platz
+    const stapel = (bis, neu, marke) => {
+      const r = [R('main', [V('a', a.slice(), 0, marke)])];
+      for (let n = 10; n >= bis; n--) r.push(R(name(n), [V('pa', ADR, n === bis && neu), V('n', n, n === bis && neu)]));
+      return r;
+    };
+    const fest = n => { const m = []; for (let k = n; k < 10; k++) m.push(k); return m; };
+    lauf.push({ z: 14, satz: 'main legt das Array a mit zehn Elementen an.', rahmen: [R('main', [V('a', a.slice(), 1)])], aus: '' });
+    lauf.push({ z: 15, satz: 'main ruft bubbleSort(&a, len(a)) auf. pa bekommt die Adresse von a, n bekommt 10.', rahmen: stapel(10, true, []), aus: '' });
+    let vergleiche = 0, tausche = 0;
+    for (let n = 10; n >= 2; n--) {
+      let t = 0;
+      for (let i = 0; i < n - 1; i++) { vergleiche++; if (a[i] > a[i + 1]) { const l = a[i]; a[i] = a[i + 1]; a[i + 1] = l; t++; } }
+      tausche += t;
+      lauf.push({ z: 9, satz: 'n ist ' + n + ' und nicht kleiner oder gleich 1. Die Schleife macht einen Durchgang über die ersten ' + n + ' Elemente: ' + (n - 1) + (n - 1 === 1 ? ' Vergleich, ' : ' Vergleiche, ') + t + (t === 1 ? ' Tausch. ' : ' Tausche. ') +
+        'Danach steht ' + a[n - 1] + ' am Index ' + (n - 1) + '. Grün markiert sind die Elemente, die schon an ihrem Platz stehen. Bisher: ' + vergleiche + ' Vergleiche, ' + tausche + ' Tausche.', rahmen: stapel(n, false, fest(n - 1)), aus: '' });
+      lauf.push({ z: 10, satz: 'Der Aufruf mit n gleich ' + n + ' ruft bubbleSort(pa, ' + (n - 1) + ') auf. Er gibt die Adresse des Arrays weiter. Der neue Aufruf sortiert die ersten ' + (n - 1 === 1 ? 'ein Element' : (n - 1) + ' Elemente') + '.' +
+        (n === 10 ? '' : ' Jetzt warten ' + (11 - n) + ' Aufrufe.'), rahmen: stapel(n - 1, true, fest(n - 1)), aus: '' });
+    }
+    lauf.push({ z: 3, satz: 'n ist 1. Die Bedingung n <= 1 ist erfüllt: Ein einzelnes Element ist sortiert. Der Aufruf kehrt zurück, ohne die Funktion noch einmal aufzurufen.', rahmen: stapel(1, false, fest(0)), aus: '' });
+    lauf.push({ z: 10, satz: 'Zurück im Aufruf mit n gleich 2: Nach dem rekursiven Aufruf steht dort keine Anweisung mehr, auch dieser Aufruf endet. So enden nacheinander alle neun wartenden Aufrufe, bis zum Aufruf mit n gleich 10. Keiner hat auf dem Rückweg noch etwas zu tun.',
+      rahmen: [R('main', [V('a', a.slice(), 0, fest(0))]), WEG('bubbleSort, alle zehn Aufrufe')], aus: '' });
+    lauf.push({ z: 16, satz: 'Zurück in main: fmt.Println gibt das sortierte Array aus. Die Funktion bubbleSort ist zehnmal gelaufen, mit ' + vergleiche + ' Vergleichen und ' + tausche + ' Tauschen.', rahmen: [R('main', [V('a', a.slice())])], aus: goArray(a) });
+    return ablauf('r', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 14.');
+  })();
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe !== 2) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 2. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
+    return standAblauf(DR).concat('Jeder Aufruf von bubbleSort hat einen eigenen Rahmen mit pa und n. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste Aufruf steht zuletzt.',
+      'Ein Schritt der Demo ist ein ganzer Durchgang, ein rekursiver Aufruf oder eine Rückkehr. Der Wert des Zeigers pa steht in Worten da: „Adresse von a“.');
+  }
+  const kurzStand = () => stufe === 2 ? (DR.stand ? 'Schritt ' + DR.stand + ' von ' + DR.lauf.length : 'nichts ausgeführt') : '';
+  // Das Programm der Demo steht in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 2) return [];
+    const jetzt = DR.stand ? DR.lauf[DR.stand - 1].z : 0;
+    return DR.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DR.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Programmierübung: Bubble Sort rekursiv',
+    thema: 'Bubble Sort, Rekursion, direkte Rekursion, lineare Rekursion, Endrekursion, Terminierung, Zeiger auf ein Array',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193, und Abschnitt 8.4.2, Seiten 225–226',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum steht im rekursiven Aufruf pa und nicht &pa?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
