@@ -12,7 +12,7 @@ Für alle Schritte gilt:
 - `findMin(pa *[10]int, pos int) int` liefert den Index des kleinsten Elements ab dem Index `pos`. Der Aufruf lautet `findMin(&a, pos)`.
 - `pa *[10]int` ist ein Zeiger auf ein Array vom Typ `[10]int`. `&a` liefert die Adresse von `a`.
 - `pa[i]` ist die Kurzschreibweise für `(*pa)[i]`. Das steht in Hinweis 7.4 des Kurstexts.
-- In `findMin` steht `len(*pa)`: Der Stern führt vom Zeiger zum Array, `len` liefert dessen Länge 10. Go erlaubt auch `len(pa)` mit dem Zeiger selbst. Diese Schreibweise steht nicht im Kurstext, die Seite verwendet sie nicht.
+- In `findMin` steht `len(*pa)`: Der Stern führt vom Zeiger zum Array, `len` liefert dessen Länge 10. Go erlaubt auch `len(pa)` mit dem Zeiger selbst. So steht es in Listing 8.2 des Kurstexts, dort `len(a)` mit `a *[10]person`. Die Seite verwendet die Schreibweise mit dem Stern.
 - Auch ein Zeiger wird als Kopie übergeben. Kopiert wird eine Adresse und kein Element.
 - Unter den Rahmen der Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger, in ihm steht die Zahl 100, die Adresse des Arrays. Die Adressen sind erfunden. Ein `int` und ein Zeiger belegen im Modell je 8 Zellen. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
 - Die Blöcke in Schritt 3: `a` in den Zellen 100 bis 179, `pos` und `minIndex` von `main` ab 180 und 188. `pa` von `findMin` oder `swap` in den Zellen 196 bis 203 mit dem Inhalt 100, die übrigen Parameter und Variablen der Funktion ab 204 und 212.
