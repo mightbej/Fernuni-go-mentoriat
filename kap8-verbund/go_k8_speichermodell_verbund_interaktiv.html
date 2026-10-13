@@ -9,6 +9,16 @@
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
     .container { max-width:1200px; }
     .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+    .quelle { color:#4b5563;font-size:.88rem;margin:8px 0 0; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
@@ -105,19 +115,44 @@
 
   <div class="hero">
     <h1>Speichermodell: Verbund</h1>
-    <p>Ein Verbund fasst Felder verschiedener Typen unter einem Namen zusammen. In der Tabelle steht nur der Anfang. Wo ein Feld liegt, legt der Bauplan des Typs fest. Kurstext Kapitel 8, Verbund-Datentyp.</p>
+    <p>Ein Verbund fasst Felder verschiedener Typen unter einem Namen zusammen. In der Tabelle steht nur der Anfang. Wo ein Feld liegt, legt der Bauplan des Typs fest.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.2 und 8.2.3, Seiten 199–205.</p>
   </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Der Bauplan des Typs</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Programm im Speicher</button>
+    <button type="button" class="tab" data-stufe="3">Aufgaben</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
 
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
     <p>Ein Verbund ist eine Variable mit mehreren Feldern. Die Felder liegen lückenlos hintereinander und dürfen verschiedene Typen haben. Die Tabelle bekommt für den ganzen Verbund eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Feldes.</p>
     <p>Bei einem Array rechnet der Rechner die Adresse eines Elements aus dem Index aus, denn alle Elemente sind gleich groß. Die Felder eines Verbunds sind verschieden groß. Darum merkt sich der Rechner zu jedem Verbund-Typ einen Bauplan.</p>
+    <p>Die Seite geht in zwei Schritten vor. Schritt 1 zeigt den Bauplan des Typs <code>student</code>. Schritt 2 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Danach folgen fünf Aufgaben.</p>
+    <p>Drei HTML-Seiten gehen dieser voraus:</p>
+    <ul>
+      <li>Der Verbund in Go: <a href="go_k8_verbund_interaktiv.html">Verbund in Go: der Datentyp struct</a> zeigt Typ, Literal und Ausgabe.</li>
+      <li>Felder als Variablen: <a href="go_k8_feld_variablen_interaktiv.html">Verbund-Variablen und Feld-Variablen</a> zeigt die Punkt-Notation und die Kopie eines Verbunds.</li>
+      <li>Das Modell bei Arrays: <a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a> zeigt, wie der Rechner die Adresse eines Elements aus dem Index bestimmt.</li>
+    </ul>
+    <div class="hinweis">Das Modell vereinfacht. Die Wörter „Zelle“, „Tabelle des Rechners“ und „Bauplan“ gehören zum Modell dieser Seite. Im Kurstext steht in Abschnitt 8.2.3: Jedes Feld einer Verbund-Variable ist selbst eine Variable, und Verbund und Felder sind adressierbar.</div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
 
   <div class="card">
     <h2>Der Bauplan des Typs</h2>
-    <p>Die Deklaration <code>type Student struct { … }</code> legt den Bauplan fest. Für jedes Feld steht darin, wie viele Zellen hinter dem Anfang es beginnt.</p>
+    <p>Die Deklaration <code>type student struct { … }</code> legt den Bauplan fest. Für jedes Feld steht darin, wie viele Zellen hinter dem Anfang es beginnt.</p>
     <div class="tabellenrahmen">
     <table>
       <thead><tr><th>Feld</th><th>Typ des Feldes</th><th>Abstand vom Anfang in Zellen</th><th>Zellen des Feldes</th></tr></thead>
@@ -130,12 +165,21 @@
     </table>
     </div>
     <div class="formel">Adresse des Feldes = Adresse des Verbunds + Abstand des Feldes</div>
-    <p>Im Hauptspeicher unten sind die Felder abwechselnd hell und dunkel gefärbt.</p>
+    <p>Beispiel: Liegt eine Variable <code>s</code> vom Typ <code>student</code> an der Adresse 100, dann liegt <code>s.semester</code> an der Adresse 100 + 4 = 104 und <code>s.note</code> an der Adresse 100 + 6 = 106. Der ganze Verbund belegt 4 + 2 + 1 + 1 = 8 Zellen.</p>
+    <p>Im Hauptspeicher von Schritt 2 sind die Felder abwechselnd hell und dunkel gefärbt.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2, Seiten 199–200. Der Typ <code>student</code> ist ein eigenes Beispiel. Der Bauplan mit den Abständen steht nicht im Kurstext.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
 
   <div class="card">
     <h2>Ausprobieren</h2>
-    <p>Das Programm läuft Zeile für Zeile. </p>
+    <p>Das Programm läuft Zeile für Zeile. Die Deklaration des Typs steht vor <code>main</code>, die übrigen Zeilen stehen im Rumpf von <code>main</code>.</p>
     <ol class="programm" id="programm"></ol>
     <div class="zeile">
       <button id="weiter" class="haupt" type="button">nächste Zeile ausführen</button>
@@ -182,12 +226,19 @@
 
     </div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu den Aufgaben</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-3">
   <div class="card">
     <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <p>Die Aufgaben 1, 2 und 5 gehören zu Schritt 1, die Aufgaben 3 und 4 gehören zu Schritt 2.</p>
     <ol>
-      <li>Wie viele Zellen reserviert die Zeile <code>type Student struct { … }</code>?
-        <details><summary>Antwort</summary>Keine. Die Zeile legt nur den Bauplan fest. Erst <code>var s Student</code> reserviert 8 Zellen.</details></li>
+      <li>Wie viele Zellen reserviert die Zeile <code>type student struct { … }</code>?
+        <details><summary>Antwort</summary>Keine. Die Zeile legt nur den Bauplan fest. Erst <code>var s student</code> reserviert 8 Zellen.</details></li>
       <li>An welcher Adresse liegt <code>s.note</code>?
         <details><summary>Antwort</summary>100 + 6 = 106. Der Abstand 6 steht im Bauplan.</details></li>
       <li>Führe das Programm bis <code>t = s</code> aus. Wie viele Zellen hat diese Zeile beschrieben?
@@ -200,18 +251,24 @@
   </div>
 
   <div class="card">
-    <h2>Dasselbe Modell auf vier Seiten</h2>
-    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
+    <h2>Das Modell auf vier HTML-Seiten</h2>
+    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder der vier HTML-Seiten gleich aus. Von HTML-Seite zu HTML-Seite kommt eine Art von Typ dazu.</p>
     <ol class="seiten">
       <li><a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4)</a></li>
       <li><a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Arrays: ein Name für viele Elemente (Kapitel 6)</a></li>
       <li><a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Zeiger: eine Adresse als Wert (Kapitel 7)</a></li>
-      <li class="hier">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8). Das ist diese Seite.</li>
+      <li class="hier">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8). Das ist diese HTML-Seite.</li>
     </ol>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -225,11 +282,16 @@
     "*int32": { n: 8, vorzeichen: false, zeiger: true, ziel: "int32" }
   };
   // Zusammengesetzte Typen dieser Seite: Jeder Teil hat einen Abstand vom Anfang.
-  var BAU = { "Student": [ { anhang: ".matrikel", ab: 0, typ: "int32" }, { anhang: ".semester", ab: 4, typ: "int16" }, { anhang: ".note", ab: 6, typ: "int8" }, { anhang: ".versuch", ab: 7, typ: "int8" } ] };
+  var BAU = { "student": [ { anhang: ".matrikel", ab: 0, typ: "int32" }, { anhang: ".semester", ab: 4, typ: "int16" }, { anhang: ".note", ab: 6, typ: "int8" }, { anhang: ".versuch", ab: 7, typ: "int8" } ] };
   var RAHMEN = ["#0f766e", "#1e40af", "#b45309", "#be185d", "#6d28d9"];
   var FLAECHE = ["#d1fae5", "#dbeafe", "#fef3c7", "#fce7f3", "#ede9fe"];
 
   var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
+  var ANKER = ["worum", "bauplan", "speicher", "aufgaben"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
 
   function $(id) { return document.getElementById(id); }
   function bits(b) { return b.toString(2).padStart(8, "0"); }
@@ -414,7 +476,7 @@
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "dasselbe Bitmuster" : "dieselben Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -518,12 +580,12 @@
   }
 
   var PROGRAMM = [
-    { code: "type Student struct {\n    matrikel int32\n    semester int16\n    note     int8\n    versuch  int8\n}", tun: function () { return typDeklaration("Student"); } },
-    { code: "var s Student", tun: function () { return deklariere("s", "Student"); } },
+    { code: "type student struct {\n    matrikel int32\n    semester int16\n    note     int8\n    versuch  int8\n}", tun: function () { return typDeklaration("student"); } },
+    { code: "var s student", tun: function () { return deklariere("s", "student"); } },
     { code: "s.matrikel = 1234567", tun: function () { return weiseZu("s.matrikel", 1234567); } },
     { code: "s.semester = 3", tun: function () { return weiseZu("s.semester", 3); } },
     { code: "s.note = 2", tun: function () { return weiseZu("s.note", 2); } },
-    { code: "var t Student", tun: function () { return deklariere("t", "Student"); } },
+    { code: "var t student", tun: function () { return deklariere("t", "student"); } },
     { code: "t = s", tun: function () { return kopiere("t", "s"); } },
     { code: "t.note = 1", tun: function () { return weiseZu("t.note", 1); } },
     { code: "fmt.Println(s, t)", tun: function () { return gibAus(["s", "t"]); } }
@@ -571,6 +633,7 @@
     $("weiter").disabled = schritt >= PROGRAMM.length || abgebrochen;
     $("zurueck").disabled = schritt === 0;
     requestAnimationFrame(zeichnePfeile);
+    melde(false);
   }
 
   function zeichneProgramm() {
@@ -737,7 +800,86 @@
   $("zurueck").addEventListener("click", zurueck);
   $("vorn").addEventListener("click", vonVorn);
   window.addEventListener("resize", zeichnePfeile);
+
+  // ---- Reiter ----
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (x) { x.classList.toggle("active", x.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) { history.replaceState(null, "", "#" + ANKER[nummer]); window.scrollTo({ top: 0, behavior: "smooth" }); }
+    requestAnimationFrame(zeichnePfeile);
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (k) zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Der Bauplan des Typs", "Schritt 2: Ein Programm im Speicher", "Aufgaben"];
+  function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
+  function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
+  var einzeilig = function (code) { return glatt(code.split(String.fromCharCode(10)).join(" ")); };
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 1) return ["Dieser Schritt hat keine Demo. Die Tabelle mit dem Bauplan ist fest. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 3) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf Schritt 1 und auf die Demo in Schritt 2.",
+      "Die Antwort einer Aufgabe ist verdeckt, bis der Student „Antwort“ aufklappt."];
+    var belegt = [];
+    for (var i = 0; i < ANZAHL; i++) if (eintragBei(START + i)) belegt.push("Zelle " + (START + i) + " enthält " + bits(zellen[i]));
+    var zeilen = tabelle.map(function (e) {
+      return "Name " + (e.name || "ohne Namen") + ", Typ " + e.typ + ", Adresse " + e.adr + ", " + zellenWort(e.n) + ", Wert " + ausgabeWert(e);
+    });
+    return [
+      schritt === 0 ? "Noch ist keine Zeile des Programms ausgeführt." :
+        "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + einzeilig(PROGRAMM[schritt - 1].code),
+      abgebrochen ? "Das Programm ist abgebrochen. Es lässt sich nur mit „eine Zeile zurück“ oder „von vorn“ fortsetzen." :
+        schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + einzeilig(PROGRAMM[schritt].code),
+      zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+      "Der Bauplan des Typs student: matrikel int32 mit Abstand 0 und 4 Zellen, semester int16 mit Abstand 4 und 2 Zellen, note int8 mit Abstand 6 und 1 Zelle, versuch int8 mit Abstand 7 und 1 Zelle.",
+      belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
+        "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
+      "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
+      "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
+      "Ein Bit, das der Student von Hand umschaltet, ändert den Wert des Feldes sofort. Die Tabelle bleibt gleich.",
+      "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten. Das Programm lässt sich nicht ändern."
+    ];
+  }
+  function kurzStand() {
+    if (stufe !== 2) return "";
+    return schritt === 0 ? "keine Zeile ausgeführt" : "Zeile " + schritt + ": " + einzeilig(PROGRAMM[schritt - 1].code).slice(0, 40);
+  }
+  // Die Programmzeilen von Schritt 2 stehen in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 2) return [];
+    return PROGRAMM.map(function (z, i) {
+      return (i + 1) + "  " + einzeilig(z.code) + (i === schritt - 1 ? "   // zuletzt ausgeführt" : i < schritt ? "   // ausgeführt" : "");
+    });
+  }
+
   vonVorn();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Speichermodell: Verbund-Datentyp in Go",
+    thema: "Verbund, struct, Feld, Adresse eines Feldes, Bauplan des Typs, Kopie eines Verbunds, Hauptspeicher",
+    bezug: "Kurstext v3.0.6, Abschnitt 8.2 und 8.2.3, Seiten 199–205",
+    beschreibung: "../kurslotse/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h2, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .hinweis, .formel, .card > table, .card > .tabellenrahmen table",
+    zeilen: programmZeilen,
+    zeilenTitel: "Programm von Schritt 2:",
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: "Woher weiß der Rechner, wo s.note liegt?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
