@@ -6,12 +6,11 @@
   <title>Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
-    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#6d28d9;--pos:#0f766e;--pos-bg:#d1fae5;--exp:#1e40af;--exp-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--exp:#1e40af;--exp-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
     .container { max-width:1200px; }
-    body { background:radial-gradient(circle at 18% -12%,#ede9fe 0%,#f7f9fc 46%); }
-    .hero { background:linear-gradient(135deg,#6d28d9 0%,#1e40af 100%);box-shadow:0 10px 24px rgba(109,40,217,.25); }
     h2 { color:var(--accent); }
     .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap;overflow-x:auto; }
@@ -22,6 +21,17 @@
     button:hover { background:#e5e7eb; }
     button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
     button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
     input[type="text"],select { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:130px;background:#fff; }
     select { width:auto; }
     input:focus,select:focus,button:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
@@ -77,36 +87,80 @@
 
   <div class="hero">
     <h1>Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler</h1>
-    <p>Eine Gleitkommazahl hat nur endlich viele Stellen. Zwischen zwei darstellbaren Zahlen liegt eine Lücke, und fast jede Eingabe fällt in eine solche Lücke. Kurstext Kapitel 4.4, Datentypen für Gleitkommazahlen.</p>
+    <p>Eine Gleitkommazahl hat nur endlich viele Stellen. Zwischen zwei darstellbaren Zahlen liegt eine Lücke, und fast jede Eingabe fällt in eine solche Lücke.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.4, Seiten 85–92.</p>
   </div>
 
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Eine Zahl speichern</button>
+    <button type="button" class="tab" data-stufe="2">2 Im Modell rechnen</button>
+    <button type="button" class="tab" data-stufe="3">3 In Go mit float64</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
   <div class="card">
-    <h2>Was die Seite zeigt</h2>
-    <p>Eine Gleitkommazahl besteht aus drei Teilen: dem Vorzeichen, der Mantisse und dem Exponenten. Die Mantisse ist eine Binärzahl, die mit 0,1 beginnt. Sie liegt also zwischen 1/2 und 1. Der Exponent sagt, mit welcher Zweierpotenz die Mantisse multipliziert wird.</p>
-    <p>Man kann dasselbe auch so lesen: Die Zahl bleibt eine Binärzahl, und der Exponent verschiebt ihr Komma. Ein Exponent von 7 schiebt das Komma um 7 Stellen nach rechts, aus 0,11001000 wird 1100100, also 100. Ein negativer Exponent schiebt es nach links. Daher der Name Gleitkommazahl.</p>
+    <h2>Worum es geht</h2>
+    <p>Eine Gleitkommazahl besteht aus drei Teilen:</p>
+    <ul>
+      <li><strong>Vorzeichen:</strong> plus oder minus.</li>
+      <li><strong>Mantisse:</strong> eine Binärzahl, die mit 0,1 beginnt. Sie liegt also zwischen 1/2 und 1.</li>
+      <li><strong>Exponent:</strong> Er sagt, mit welcher Zweierpotenz die Mantisse multipliziert wird.</li>
+    </ul>
+
+    <h3>Warum sie Gleitkommazahl heißt</h3>
+    <p>Man kann den Exponenten auch so lesen: Die Zahl bleibt eine Binärzahl, und der Exponent verschiebt ihr Komma.</p>
+    <ul>
+      <li><strong>Positiver Exponent:</strong> Ein Exponent von 7 schiebt das Komma um 7 Stellen nach rechts. Aus 0,11001000 wird 1100100, also 100.</li>
+      <li><strong>Negativer Exponent:</strong> Er schiebt das Komma nach links.</li>
+    </ul>
+
+    <h3>Das Modell dieser Seite</h3>
     <p>Die Seite rechnet mit dem Modell aus dem Kurstext: Die Mantisse hat 8 Bit. Mit so wenigen Stellen sieht man die Lücken zwischen den Zahlen mit bloßem Auge. Bei <code>float64</code> sind es 52 Bit. Die Lücken sind dort viel kleiner, aber sie sind da.</p>
-    <p>Der Abstand zweier darstellbarer Zahlen hängt vom Exponenten ab. Bei kleinen Zahlen ist er klein, bei großen Zahlen groß. Eine Eingabe, die zwischen zwei darstellbaren Zahlen liegt, wird durch ihre Nachbarzahl ersetzt. Das ist der Darstellungsfehler. Beim Rechnen kann er wachsen, vor allem bei der Subtraktion zweier ähnlich großer Zahlen. Das ist der Rundungsfehler.</p>
     <div class="hinweis">Das Modell schneidet Stellen ab, die nicht in die Mantisse passen. So rechnen auch die Beispiele im Kurstext. Go rundet bei <code>float32</code> und <code>float64</code> zur nächsten darstellbaren Zahl.</div>
-  </div>
 
+    <h3>Zwei Fehler</h3>
+    <ul>
+      <li><strong>Darstellungsfehler:</strong> Eine Eingabe, die zwischen zwei darstellbaren Zahlen liegt, wird durch ihre Nachbarzahl ersetzt. Der Abstand zweier darstellbarer Zahlen hängt vom Exponenten ab: Bei kleinen Zahlen ist er klein, bei großen Zahlen groß.</li>
+      <li><strong>Rundungsfehler:</strong> Beim Rechnen kann der Darstellungsfehler wachsen, vor allem bei der Subtraktion zweier ähnlich großer Zahlen.</li>
+    </ul>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Typ und Speicherplatz:</strong> Ein Typ legt fest, wie die Bits eines Speicherplatzes zu lesen sind. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, der Typ <code>float64</code>:</strong> Dort ist er der Typ der ersten Variable <code>tempC</code>.</li>
+      <li><strong>Abschnitt 4.3.5, Seiten 64–66, Wertigkeit eines Bits:</strong> Bei den ganzen Zahlen hat jedes Bit die Wertigkeit einer Zweierpotenz. Dazu gibt es die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+    </ul>
+
+    <h3>Die drei Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> speichert eine Zahl im Modell und zeigt Mantisse, Exponent und Darstellungsfehler.</li>
+      <li><strong>Schritt 2</strong> rechnet im Modell mit zwei Zahlen und zeigt, wie der Fehler wächst.</li>
+      <li><strong>Schritt 3</strong> zeigt die Typen in Go und einen Vergleich mit <code>float64</code>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.3, Seiten 87–90.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
   <div class="card">
-    <h2>Die Gleitkomma-Typen in Go</h2>
-    <div class="tabellenrahmen">
-    <table>
-      <thead><tr><th>Typ</th><th>Bits gesamt</th><th>Vorzeichen</th><th>Exponent</th><th>Mantisse</th><th>Genauigkeit</th></tr></thead>
-      <tbody>
-        <tr><td><code>float32</code></td><td>32</td><td>1 Bit</td><td>8 Bit</td><td>23 Bit</td><td>etwa 7 Dezimalziffern</td></tr>
-        <tr><td><code>float64</code></td><td>64</td><td>1 Bit</td><td>11 Bit</td><td>52 Bit</td><td>etwa 16 Dezimalziffern</td></tr>
-        <tr class="betont"><td>Modell auf dieser Seite</td><td></td><td>1 Bit</td><td>−12 bis 12</td><td>8 Bit</td><td>etwa 2 Dezimalziffern</td></tr>
-      </tbody>
-    </table>
+    <h2>Eine Zahl speichern</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Im Modell 0,5 speichern. Wie groß ist der Darstellungsfehler?
+          <details><summary>Auflösung</summary>Null. 0,5 ist 1/2, und dafür gibt es ein Bit in der Mantisse. Brüche mit einer Zweierpotenz im Nenner sind genau darstellbar.</details></li>
+        <li>Im Modell 0,1 speichern. Welcher Wert wird gespeichert?
+          <details><summary>Auflösung</summary>0,099609375. Ein Zehntel ist im Binärsystem ein unendlicher periodischer Bruch, so wie ein Drittel im Dezimalsystem. Das gilt auch bei <code>float64</code>, der Fehler ist dort nur viel kleiner.</details></li>
+        <li>Im Modell 0,67 speichern. Dann den Exponenten von 0 auf 7 erhöhen. Was geschieht mit dem Abstand zur nächstgrößeren Zahl?
+          <details><summary>Auflösung</summary>Er wächst von 1/256 auf 0,5. Jeder Schritt im Exponenten verdoppelt den Abstand. Bei Zahlen um 100 kann das Modell also keine Zehntel mehr unterscheiden.</details></li>
+      </ol>
     </div>
-    <p>Der Kurstext empfiehlt, in der Praxis <code>float64</code> zu verwenden. Bei <code>float32</code> verstärken sich Rundungsfehler schnell.</p>
-    <p class="quelle">Nach Kurstext, Abschnitt 4.4.2.</p>
-  </div>
 
-  <div class="card">
-    <h2>Ausprobieren 1: Eine Zahl speichern</h2>
+    <h3>Ausprobieren: speichern, Bits umschalten, Exponent verschieben</h3>
     <div class="zeile">
       <label for="eingabe">Zahl</label>
       <input id="eingabe" type="text" value="0,67" aria-label="Zahl, die gespeichert werden soll">
@@ -139,10 +193,29 @@
       <span class="name">Darstellungsfehler</span><span id="aFehler"></span>
       <span class="name">Abstand zur nächstgrößeren Zahl</span><span id="aAbstand"></span>
     </div>
+    <p class="legende">Auf dem Zahlenstrahl ist der grüne Strich die gespeicherte Zahl. Die schwarzen Striche sind ihre darstellbaren Nachbarn. Das rote Dreieck zeigt die eingegebene Zahl.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.3, Seiten 87–88. Die Zahlen 2/3 und 0,67 sind die Beispiele des Kurstexts.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-2">
   <div class="card">
-    <h2>Ausprobieren 2: Im Modell rechnen</h2>
+    <h2>Im Modell rechnen</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Im Modell 0,67 − 2/3 rechnen. Wie viel Prozent weicht das Ergebnis vom wahren Wert ab?
+          <details><summary>Auflösung</summary>Etwa 17 Prozent. Beide Zahlen sind für sich auf weniger als ein halbes Prozent genau gespeichert. Bei der Subtraktion heben sich die vorderen Stellen auf, und übrig bleibt fast nur der Fehler.</details></li>
+        <li>Im Modell 100 + 0,2 rechnen. Was kommt heraus?
+          <details><summary>Auflösung</summary>100. Der Abstand zweier Zahlen beträgt bei 100 schon 0,5. Der Summand 0,2 ist kleiner als dieser Abstand und verschwindet.</details></li>
+      </ol>
+    </div>
+    <p>Das Modell speichert erst beide Zahlen, jede mit ihrem Darstellungsfehler. Dann rechnet es mit den gespeicherten Werten und speichert das Ergebnis wieder mit 8 Bit Mantisse.</p>
+
+    <h3>Ausprobieren: zwei Zahlen verrechnen</h3>
     <div class="zeile">
       <input id="ra" type="text" value="0,67" aria-label="erste Zahl">
       <select id="rop" aria-label="Rechenart"><option value="-">−</option><option value="+">+</option><option value="*">·</option></select>
@@ -163,11 +236,47 @@
     </table>
     </div>
     <div id="rmeldung"></div>
-  </div>
 
+    <h3>Wo die Gefahr liegt</h3>
+    <ul>
+      <li><strong>Subtraktion zweier ähnlich großer Zahlen:</strong> Die vorderen Stellen heben sich auf. Die Mantisse des Ergebnisses wird nach links geschoben, bis sie wieder mit 0,1 beginnt, und von rechts mit Nullen aufgefüllt. Das heißt Normalisierung. Die Nullen stehen an der Stelle von Ziffern, die das Modell nie gespeichert hat.</li>
+      <li><strong>Addition:</strong> Der Fehler wächst im Verhältnis zum Ergebnis nicht.</li>
+      <li><strong>Multiplikation:</strong> Die Mantisse verschiebt sich höchstens um eine Stelle. Auch hier droht wenig.</li>
+    </ul>
+    <p>Das Bild im Kurstext dazu: Wer eine Centmünze wiegen will, indem er ein Auto einmal mit und einmal ohne Münze wiegt, misst nur die Ungenauigkeit der Autowaage.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.3, Seiten 87–90. Die Rechnungen 0,67 − 2/3 und 0,67 + 2/3 stehen im Kurstext, 100 + 0,2 ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
   <div class="card">
-    <h2>Ausprobieren 3: Dasselbe in Go mit float64</h2>
-    <p>Hier rechnet der Browser mit 64-Bit-Gleitkommazahlen nach IEEE 754. Das ist dieselbe Darstellung wie <code>float64</code> in Go.</p>
+    <h2>In Go mit float64</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>In Go: <code>a</code> ist 0.1, <code>b</code> ist 0.2. Was liefert <code>a + b == 0.3</code>?
+          <details><summary>Auflösung</summary><code>false</code>. Die Summe ist 0.30000000000000004. Gleitkommazahlen vergleicht man deshalb nie mit <code>==</code>, sondern prüft, ob ihr Abstand kleiner als ein kleines ε ist.</details></li>
+      </ol>
+    </div>
+
+    <h3>Die Gleitkomma-Typen in Go</h3>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Typ</th><th>Bits gesamt</th><th>Vorzeichen</th><th>Exponent</th><th>Mantisse</th><th>Genauigkeit</th></tr></thead>
+      <tbody>
+        <tr><td><code>float32</code></td><td>32</td><td>1 Bit</td><td>8 Bit</td><td>23 Bit</td><td>etwa 7 Dezimalziffern</td></tr>
+        <tr><td><code>float64</code></td><td>64</td><td>1 Bit</td><td>11 Bit</td><td>52 Bit</td><td>etwa 16 Dezimalziffern</td></tr>
+        <tr class="betont"><td>Modell auf dieser Seite</td><td></td><td>1 Bit</td><td>−12 bis 12</td><td>8 Bit</td><td>etwa 2 Dezimalziffern</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Im Kurstext wird empfohlen, in der Praxis <code>float64</code> zu verwenden. Bei <code>float32</code> verstärken sich Rundungsfehler schnell.</p>
+
+    <h3>Ausprobieren: a + b mit c vergleichen</h3>
+    <p>Hier rechnet der Browser mit 64-Bit-Gleitkommazahlen nach IEEE 754. Das ist die Darstellung, die auch <code>float64</code> in Go verwendet.</p>
     <div class="zeile">
       <label for="ga">a</label><input id="ga" type="text" value="0.1">
       <label for="gb">b</label><input id="gb" type="text" value="0.2">
@@ -183,34 +292,50 @@
     </div>
     <div id="gcode"></div>
     <div class="hinweis">Schreibt man die Zahlen direkt in den Vergleich, also <code>0.1 + 0.2 == 0.3</code>, liefert Go <code>true</code>. Go rechnet konstante Ausdrücke beim Übersetzen exakt aus. Der Rundungsfehler entsteht erst, wenn die Werte in Variablen vom Typ <code>float64</code> stehen.</div>
-  </div>
 
-  <div class="card">
-    <h2>Erst vorhersagen, dann ausprobieren</h2>
-    <ol>
-      <li>Im Modell 0,5 speichern. Wie groß ist der Darstellungsfehler?
-        <details><summary>Auflösung</summary>Null. 0,5 ist 1/2, und dafür gibt es ein Bit in der Mantisse. Brüche mit einer Zweierpotenz im Nenner sind genau darstellbar.</details></li>
-      <li>Im Modell 0,1 speichern. Welcher Wert wird gespeichert?
-        <details><summary>Auflösung</summary>0,099609375. Ein Zehntel ist im Binärsystem ein unendlicher periodischer Bruch, so wie ein Drittel im Dezimalsystem. Das gilt auch bei <code>float64</code>, der Fehler ist dort nur viel kleiner.</details></li>
-      <li>Im Modell 0,67 speichern. Dann den Exponenten von 0 auf 7 erhöhen. Was geschieht mit dem Abstand zur nächstgrößeren Zahl?
-        <details><summary>Auflösung</summary>Er wächst von 1/256 auf 0,5. Jeder Schritt im Exponenten verdoppelt den Abstand. Bei Zahlen um 100 kann das Modell also keine Zehntel mehr unterscheiden.</details></li>
-      <li>Im Modell 0,67 − 2/3 rechnen. Wie viel Prozent weicht das Ergebnis vom wahren Wert ab?
-        <details><summary>Auflösung</summary>Etwa 17 Prozent. Beide Zahlen sind für sich auf weniger als ein halbes Prozent genau gespeichert. Bei der Subtraktion heben sich die vorderen Stellen auf, und übrig bleibt fast nur der Fehler.</details></li>
-      <li>Im Modell 100 + 0,2 rechnen. Was kommt heraus?
-        <details><summary>Auflösung</summary>100. Der Abstand zweier Zahlen beträgt bei 100 schon 0,5. Der Summand 0,2 ist kleiner als dieser Abstand und verschwindet.</details></li>
-      <li>In Go: <code>a</code> ist 0.1, <code>b</code> ist 0.2. Was liefert <code>a + b == 0.3</code>?
-        <details><summary>Auflösung</summary><code>false</code>. Die Summe ist 0.30000000000000004. Gleitkommazahlen vergleicht man deshalb nie mit <code>==</code>, sondern prüft, ob ihr Abstand kleiner als ein kleines ε ist.</details></li>
-    </ol>
+    <h3>Die Regel für den Vergleich</h3>
+    <p>Zwei Gleitkommazahlen prüft man nicht mit <code>==</code> auf Gleichheit. Man prüft, ob ihr Abstand kleiner ist als ein kleines ε, zum Beispiel <code>math.Abs(a+b-c) &lt; 1e-9</code>.</p>
+    <p>So geht es weiter:</p>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_float_typen_quiz.html">Quiz zu den Gleitkomma-Typen</a> fragt den Stoff von Abschnitt 4.4 ab.</li>
+      <li><strong>Anwendung:</strong> Eine Schleife, die wegen dieses Fehlers nie endet, steht auf der Seite <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</li>
+      <li><strong>Komma verschieben:</strong> Wie das Verschieben von Bits mit dem Exponenten zusammenhängt, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html#komma">Bitverschiebung</a>, Schritt 4.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.4, Seiten 90–91. Das Beispiel mit 0.1, 0.2 und 0.3 und der Hinweis zu konstanten Ausdrücken stehen nicht im Kurstext.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   const el = id => document.getElementById(id);
   const SVG = 'http://www.w3.org/2000/svg';
   const GEWICHT = ['1/2', '1/4', '1/8', '1/16', '1/32', '1/64', '1/128', '1/256'];
   const EMIN = -12, EMAX = 12;
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#rechnen
+  const ANKER = ['worum', 'speichern', 'rechnen', 'float64'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
 
   // Zahl mit Komma und ohne überflüssige Nullen
   function komma(v) {
@@ -307,6 +432,7 @@
       el('aFehler').textContent = f === 0 ? '0, die Zahl ist genau darstellbar' : kurz(f) + (A.eingabe !== 0 ? ', das sind ' + prozent(f / Math.abs(A.eingabe) * 100) + ' der Eingabe' : '');
     }
     zeichneStrahl();
+    melde(false);
   }
 
   function zeichneStrahl() {
@@ -386,6 +512,7 @@
     else if (p >= 5) m = 'Die beiden Zahlen waren genauer gespeichert als das Ergebnis. Der Fehler ist beim Rechnen gewachsen.';
     else if (f === 0) m = 'Das Ergebnis ist genau.';
     if (m) el('rmeldung').innerHTML = '<div class="hinweis">' + m + '</div>';
+    melde(false);
   }
   el('rechne').onclick = rechne;
   ['ra', 'rb'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') rechne(); }));
@@ -419,11 +546,67 @@
     ];
     const breite = Math.max(...zeilen.slice(1).map(q => q[0].length));
     el('gcode').innerHTML = '<pre>' + zeilen.map(q => q[1] === '' ? q[0] : q[0].padEnd(breite) + ' // ' + q[1]).join('\n').replace(/</g, '&lt;') + '</pre>';
+    melde(false);
   }
   el('grechne').onclick = vergleiche;
   ['ga', 'gb', 'gc'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') vergleiche(); }));
 
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Zahl speichern', 'Schritt 2: Im Modell rechnen', 'Schritt 3: In Go mit float64'];
+  // Text eines Elements, Hochzahlen als 2^-7 geschrieben
+  function textVon(knoten) {
+    const k = knoten.cloneNode(true);
+    k.querySelectorAll('sup').forEach(h => h.replaceWith('^' + h.textContent));
+    k.querySelectorAll('br').forEach(b => b.replaceWith(' ; '));
+    return k.textContent.replace(/\s+/g, ' ').trim();
+  }
+  const zeilenVon = id => Array.from(el(id).querySelectorAll('tr')).map(z => Array.from(z.children).map(textVon).filter(Boolean).join(': '));
+
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo.'];
+    if (stufe === 1) {
+      const z = A.z;
+      return ['Im Modell gespeichert ist: Vorzeichen ' + (z.neg ? 'minus' : 'plus') + ', Mantisse 0,' + bitsVon(z.M) + ', Exponent ' + z.e + '.',
+        'Unter den Bits steht: ' + textVon(el('bitsumme')),
+        'Eingegeben: ' + el('aEin').textContent + '. Gespeichert: ' + el('aGesp').textContent + '. Darstellungsfehler: ' + el('aFehler').textContent + '. Abstand zur nächstgrößeren Zahl: ' + el('aAbstand').textContent + '.',
+        el('fehlerA').textContent ? 'Die Seite meldet: ' + el('fehlerA').textContent : 'Die Seite zeigt keine Fehlermeldung.',
+        'Handgriffe: eine Zahl eintragen und „speichern“ wählen, einen der Knöpfe 2/3, 0,67, 0,1, 0,5 und 100,3 wählen, ein Bit der Mantisse umschalten, das Vorzeichen umschalten, den Exponenten mit − und + von −12 bis 12 verändern. Das erste Bit der Mantisse ist immer 1 und lässt sich nicht umschalten.'];
+    }
+    if (stufe === 2) return ['Gerechnet wird: ' + el('ra').value + ' ' + OPZ[el('rop').value] + ' ' + el('rb').value + '.',
+      'Die Tabelle zeigt: ' + zeilenVon('rtab').join(' ; '),
+      el('rmeldung').textContent ? 'Darunter steht: ' + el('rmeldung').textContent : 'Unter der Tabelle steht kein Hinweis.',
+      el('fehlerB').textContent ? 'Die Seite meldet: ' + el('fehlerB').textContent : 'Die Seite zeigt keine Fehlermeldung.',
+      'Handgriffe: zwei Zahlen eintragen, die Rechenart −, + oder · wählen und „rechnen“ wählen, oder einen der vier Knöpfe 0,67 − 2/3, 0,67 + 2/3, 3 · 2/3 und 100 + 0,2 wählen. Eine Division gibt es in der Demo nicht.'];
+    return ['Eingetragen sind a = ' + el('ga').value + ', b = ' + el('gb').value + ', c = ' + el('gc').value + '.',
+      'Die Tabelle zeigt die gespeicherten Werte auf 22 Ziffern: ' + zeilenVon('gtab').join(' ; '),
+      'Darunter steht das Programm mit seinen Ausgaben hinter //: ' + el('gcode').textContent.split('\n').map(z => z.replace(/\s+/g, ' ')).join(' ; '),
+      el('fehlerC').textContent ? 'Die Seite meldet: ' + el('fehlerC').textContent : 'Die Seite zeigt keine Fehlermeldung.',
+      'Handgriffe: drei Zahlen für a, b und c eintragen und „vergleichen“ wählen. Die Seite prüft immer a + b gegen c. Eine andere Rechnung lässt sich nicht einstellen.'];
+  }
+  function kurzStand() {
+    if (stufe === 1) return 'gespeichert ' + el('aGesp').textContent + ', Exponent ' + A.z.e;
+    if (stufe === 2) return el('ra').value + ' ' + OPZ[el('rop').value] + ' ' + el('rb').value;
+    if (stufe === 3) return 'a = ' + el('ga').value + ', b = ' + el('gb').value + ', c = ' + el('gc').value;
+    return '';
+  }
+
   zeigeA(); rechne(); vergleiche();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go',
+    thema: 'Gleitkommazahlen, float64, Mantisse, Exponent, Darstellungsfehler, Rundungsfehler',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.4, Seiten 85–92',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum lässt sich 0,1 nicht genau speichern?'
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
