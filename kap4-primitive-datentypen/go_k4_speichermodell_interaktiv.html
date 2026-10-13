@@ -12,6 +12,7 @@
     .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
     .hero h1 { margin:0 0 10px;font-size:1.9rem; }
     .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
     .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
     h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
     h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
@@ -131,7 +132,8 @@
 
   <div class="hero">
     <h1>Speichermodell: Name, Typ und Adresse</h1>
-    <p>Eine Variable ist ein Stück Hauptspeicher mit einem Namen. Der Typ legt fest, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Kurstext Kapitel 4, Primitive Datentypen.</p>
+    <p>Eine Variable ist ein Stück Hauptspeicher mit einem Namen. Der Typ legt fest, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitte 4.3.1 bis 4.3.4, Seiten 59–63</p>
   </div>
 
   <div class="tabs">
@@ -154,6 +156,11 @@
     </ol>
     <p>Der Wert einer Variable steht nur im Hauptspeicher. In der Tabelle steht er nicht.</p>
     <p>Die Seite geht in drei Schritten vor. Schritt 1 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Schritt 2 zeigt einen Wert in vier Schreibweisen: dezimal, binär, oktal und hexadezimal. Schritt 3 liest ein Bitmuster mit verschiedenen Typen. Jeder Schritt hat oben einen Reiter.</p>
+    <p>Zwei HTML-Seiten gehen diesem Modell voraus:</p>
+    <ul>
+      <li>Abschnitt 2.2, ohne Go: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a> zeigt die Variable als Speicherplatz aus acht Speicherelementen, noch ohne Zellen und Adressen.</li>
+      <li>Exkurs: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Speichern und Rechnen im Rechner</a> zeigt, woher die Aufteilung in Hauptspeicher und Rechenwerk kommt.</li>
+    </ul>
     <div class="hinweis">Das Modell vereinfacht. In Go benutzt der Compiler die Tabelle, während er das Programm übersetzt, und setzt die Adressen fest in das Programm ein. Andere Sprachen wie Python schlagen Namen auch dann noch nach, wenn das Programm läuft.</div>
   </div>
 
@@ -307,6 +314,7 @@
     </table>
     </div>
     <div class="hinweis">Der Kurstext unterscheidet in Abschnitt 4.3.3 auf Seite 63 die syntaktische von der semantischen Ebene. Sein Beispiel sind die Literale <code>123</code> und <code>0x7b</code>: zwei Schreibweisen im Quelltext, ein Wert. Das war Schritt 2. Dieser Schritt dreht die Richtung um: ein Bitmuster im Speicher, mehrere Werte. Auch das steht im Kurstext, in Abschnitt 2.2 auf den Seiten 8–10: Wie eine Folge von 0 und 1 als Wert gelesen wird, hängt vom Typ ab. In einem Go-Programm legt die Deklaration den Typ einer Variable fest, und er bleibt. Nur auf dieser Seite lässt er sich für eine Zelle wechseln.</div>
+    <p>Dem Wechsel des Typs kommt in Go die Konvertierung am nächsten, zum Beispiel <code>int8(u)</code>. Sie steht auf der Seite <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -356,6 +364,7 @@
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -378,6 +387,9 @@
   var probe = 123, lesart = "int8";
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#typen
   var ANKER = ["worum", "speicher", "schreibweisen", "typen", "aufgaben"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
 
   function $(id) { return document.getElementById(id); }
   function bits(b) { return b.toString(2).padStart(8, "0"); }
@@ -562,7 +574,7 @@
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "dasselbe Bitmuster" : "dieselben Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -718,6 +730,7 @@
     $("weiter").disabled = schritt >= PROGRAMM.length || abgebrochen;
     $("zurueck").disabled = schritt === 0;
     requestAnimationFrame(zeichnePfeile);
+    melde(false);
   }
 
   function zeichneProgramm() {
@@ -870,11 +883,14 @@
     Array.prototype.forEach.call($("lesarten").querySelectorAll("button"), function (k) {
       k.className = k.dataset.lesart === lesart ? "haupt" : "";
     });
+    melde(false);
   }
 
   // ---- Reiter ----
 
   function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
     Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
     if (nachOben) {
@@ -882,6 +898,7 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
     requestAnimationFrame(zeichnePfeile);
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
   }
   function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
 
@@ -969,9 +986,87 @@
   });
   window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
   window.addEventListener("resize", zeichnePfeile);
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Name, Typ und Adresse", "Schritt 2: Ein Wert, mehrere Schreibweisen", "Schritt 3: Ein Bitmuster, mehrere Werte", "Aufgaben"];
+  function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
+  function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 4) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf die Demos in Schritt 1, 2 und 3.",
+      "Die Antwort einer Aufgabe ist verdeckt, bis der Student „Antwort“ aufklappt."];
+    if (stufe === 1) {
+      var belegt = [];
+      for (var i = 0; i < ANZAHL; i++) if (eintragBei(START + i)) belegt.push("Zelle " + (START + i) + " enthält " + bits(zellen[i]));
+      var zeilen = tabelle.map(function (e) {
+        return "Name " + (e.name || "ohne Namen") + ", Typ " + e.typ + ", Adresse " + e.adr + ", " + zellenWort(e.n) + ", Wert " + ausgabeWert(e);
+      });
+      return [
+        schritt === 0 ? "Noch ist keine Zeile des Programms ausgeführt." :
+          "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code,
+        schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + PROGRAMM[schritt].code,
+        zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+        belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
+          "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
+        "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
+        "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
+        "Ein Bit, das der Student von Hand umschaltet, ändert den Inhalt der Zelle sofort. Die Tabelle ändert sich dabei nicht.",
+        "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten."
+      ];
+    }
+    var b = bits(probe);
+    if (stufe === 2) return [
+      "Die Zelle enthält das Bitmuster " + b + ".",
+      "Der Wert in vier Schreibweisen: dezimal " + probe + ", binär 0b" + b + ", oktal 0o" + probe.toString(8) + ", hexadezimal 0x" + probe.toString(16) + ".",
+      "Die Gruppen aus vier Bits: " + b.slice(0, 4) + " ergibt die Hexadezimalziffer " + parseInt(b.slice(0, 4), 2).toString(16) + ", " + b.slice(4) + " ergibt " + parseInt(b.slice(4), 2).toString(16) + ".",
+      "Die Gruppen für die Oktalziffern: " + b.slice(0, 2) + " ergibt " + parseInt(b.slice(0, 2), 2) + ", " + b.slice(2, 5) + " ergibt " + parseInt(b.slice(2, 5), 2) + ", " + b.slice(5) + " ergibt " + parseInt(b.slice(5), 2) + ".",
+      "Die Ausgabe mit fmt.Printf: %d liefert " + probe + ", %b liefert " + probe.toString(2) + ", %o liefert " + probe.toString(8) + ", %x liefert " + probe.toString(16) + ".",
+      "Handgriffe: ein Bit anklicken und damit umschalten, einen der vier Knöpfe 01111011, 01000001, 11111111 und 00001000 wählen."
+    ];
+    return [
+      "Die Zelle enthält das Bitmuster " + b + ". Es ist die Zelle aus Schritt 2, ein Bit, das hier umgeschaltet wird, ist auch dort umgeschaltet.",
+      "Gewählt ist die Lesart " + (lesart === "zeichen" ? "als Zeichen" : "als " + lesart) + ".",
+      "Unter der Zelle steht: " + textVon("gelesen"),
+      "Das gleiche Bitmuster in allen vier Lesarten: als int8 " + (probe > 127 ? "−" + (256 - probe) : probe) + ", als uint8 " + probe + ", als Zeichen " +
+        (probe >= 128 ? "kein einzelnes Zeichen" : probe < 32 || probe === 127 ? "ein Steuerzeichen" : probe === 32 ? "das Leerzeichen" : String.fromCharCode(probe)) +
+        ", als bool " + (probe === 0 ? "false" : probe === 1 ? "true" : "kein gültiges Bitmuster") + ".",
+      "Handgriffe: ein Bit anklicken und damit umschalten, einen der vier Knöpfe 01111011, 01000001, 11111111 und 00000001 wählen, eine der Lesarten „als int8“, „als uint8“, „als Zeichen“ und „als bool“ wählen."
+    ];
+  }
+  function kurzStand() {
+    if (stufe === 1) return schritt === 0 ? "keine Zeile ausgeführt" : "Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code;
+    if (stufe === 2) return "Zelle " + bits(probe);
+    if (stufe === 3) return bits(probe) + " als " + (lesart === "zeichen" ? "Zeichen" : lesart);
+    return "";
+  }
+  // Die Programmzeilen von Schritt 1 stehen in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 1) return [];
+    return PROGRAMM.map(function (z, i) {
+      return (i + 1) + "  " + z.code + (i === schritt - 1 ? "   // zuletzt ausgeführt" : i < schritt ? "   // ausgeführt" : "");
+    });
+  }
+
   vonVorn();
   zeichneProbe();
   zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Speichermodell: Name, Typ und Adresse in Go",
+    thema: "Variable, Hauptspeicher, Zelle, Adresse, Typ, Bitmuster, Literal, Zahlensystem, int8, int32",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitte 4.3.1 bis 4.3.4, Seiten 59–63",
+    beschreibung: "../kurslotse/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h2, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .hinweis, .card > .tabellenrahmen table",
+    zeilen: programmZeilen,
+    zeilenTitel: "Programm von Schritt 1, die Zeilen stehen im Rumpf von main:",
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: "Warum steht der Wert nicht in der Tabelle?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
