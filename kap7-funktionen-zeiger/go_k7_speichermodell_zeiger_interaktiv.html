@@ -9,6 +9,15 @@
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
     .container { max-width:1200px; }
     .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
@@ -105,16 +114,40 @@
 
   <div class="hero">
     <h1>Speichermodell: Zeiger</h1>
-    <p>Ein Zeiger ist eine Variable, in deren Zellen eine Adresse steht. Über diese Adresse erreicht das Programm auch Zellen, die keinen Namen haben. Kurstext Kapitel 7, Funktionen und Zeiger.</p>
+    <p>Ein Zeiger ist eine Variable, in deren Zellen eine Adresse steht. Über diese Adresse erreicht das Programm auch Zellen, die keinen Namen haben.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.4, Seiten 173–178, und Abschnitt 7.4.5, Seiten 183–184.</p>
   </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Drei Schreibweisen</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Programm im Speicher</button>
+    <button type="button" class="tab" data-stufe="3">Aufgaben</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
 
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
     <p>Bisher kam der Rechner immer über einen Namen zur Adresse. Die Adresse selbst ist aber auch nur eine Zahl. Man kann sie in einer Variable ablegen. Eine solche Variable heißt Zeiger.</p>
-    <p>Ein Zeiger hat in der Tabelle eine Zeile wie jede Variable. Sein Typ <code>*int32</code> legt zwei Dinge fest: In den Zellen des Zeigers steht eine Adresse, und an dieser Adresse liegt ein <code>int32</code>.</p>
+    <p>Ein Zeiger hat in der Tabelle eine Zeile wie jede Variable. Sein Typ <code>*int32</code> sagt zweierlei: In den Zellen des Zeigers steht eine Adresse, und an dieser Adresse liegt ein <code>int32</code>.</p>
     <p>Mit <code>new</code> reserviert das Programm Zellen, für die in der Tabelle kein Name steht. Diese Zellen erreicht es nur über einen Zeiger.</p>
+    <p>Die Seite geht in zwei Schritten vor. Schritt 1 zeigt die drei Schreibweisen <code>&amp;b</code>, <code>*p</code> und <code>new(int32)</code>. Schritt 2 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Danach folgen fünf Aufgaben.</p>
+    <p>Zwei HTML-Seiten gehen dieser voraus:</p>
+    <ul>
+      <li>Das Modell mit Zellen, Adressen und Tabelle: <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell: Name, Typ und Adresse</a> zeigt es an einzelnen Variablen.</li>
+      <li>Adressen ausrechnen: <a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a> zeigt, wie der Rechner die Adresse eines Elements aus dem Index bestimmt.</li>
+    </ul>
+    <div class="hinweis">Das Modell vereinfacht. Die Wörter „Zelle“ und „Tabelle des Rechners“ gehören zum Modell dieser Seite. Im Kurstext heißt es in Abschnitt 7.4: Der Wert eines Zeigers ist die Adresse, unter der eine Variable im Speicher abgelegt ist.</div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
 
   <div class="card">
     <h2>Die drei Schreibweisen</h2>
@@ -129,11 +162,20 @@
     </table>
     </div>
     <p>Auf einem 64-Bit-Rechner ist jede Adresse 8 Zellen lang. Darum braucht jeder Zeiger 8 Zellen, gleich auf welchen Typ er zeigt.</p>
+    <p>Im Kurstext haben die zwei Zeichen Namen: <code>&amp;</code> ist der Adressoperator, <code>*</code> vor einem Zeiger ist der Dereferenzierungsoperator. Eine Variable, die <code>new</code> erzeugt hat, heißt dort anonyme Variable.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4, Seiten 173–174, und Abschnitt 7.4.5, Seiten 183–184. Was der Rechner dabei mit Tabelle und Zellen tut, steht nicht im Kurstext.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
 
   <div class="card">
     <h2>Ausprobieren</h2>
-    <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>.</p>
+    <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>. Ein Pfeil im Hauptspeicher führt von einem Zeiger zu der Zelle, deren Adresse in ihm steht.</p>
     <ol class="programm" id="programm"></ol>
     <div class="zeile">
       <button id="weiter" class="haupt" type="button">nächste Zeile ausführen</button>
@@ -180,9 +222,16 @@
 
     </div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu den Aufgaben</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-3">
   <div class="card">
     <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <p>Die Aufgaben 1 bis 4 gehören zu Schritt 2, Aufgabe 5 gehört zu Schritt 1.</p>
     <ol>
       <li>Führe das Programm bis <code>p := &amp;b</code> aus. Welche Zahl steht in den Zellen von <code>p</code>?
         <details><summary>Antwort</summary>100. Das ist die Adresse von <code>b</code> aus der Tabelle.</details></li>
@@ -198,18 +247,24 @@
   </div>
 
   <div class="card">
-    <h2>Dasselbe Modell auf vier Seiten</h2>
-    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
+    <h2>Das Modell auf vier HTML-Seiten</h2>
+    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder der vier HTML-Seiten gleich aus. Von HTML-Seite zu HTML-Seite kommt eine Art von Typ dazu.</p>
     <ol class="seiten">
       <li><a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4)</a></li>
       <li><a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Arrays: ein Name für viele Elemente (Kapitel 6)</a></li>
-      <li class="hier">Zeiger: eine Adresse als Wert (Kapitel 7). Das ist diese Seite.</li>
+      <li class="hier">Zeiger: eine Adresse als Wert (Kapitel 7). Das ist diese HTML-Seite.</li>
       <li><a href="../kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8)</a></li>
     </ol>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -228,6 +283,11 @@
   var FLAECHE = ["#d1fae5", "#dbeafe", "#fef3c7", "#fce7f3", "#ede9fe"];
 
   var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
+  var ANKER = ["worum", "schreibweisen", "speicher", "aufgaben"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
 
   function $(id) { return document.getElementById(id); }
   function bits(b) { return b.toString(2).padStart(8, "0"); }
@@ -412,7 +472,7 @@
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "dasselbe Bitmuster" : "dieselben Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -567,6 +627,7 @@
     $("weiter").disabled = schritt >= PROGRAMM.length || abgebrochen;
     $("zurueck").disabled = schritt === 0;
     requestAnimationFrame(zeichnePfeile);
+    melde(false);
   }
 
   function zeichneProgramm() {
@@ -733,7 +794,88 @@
   $("zurueck").addEventListener("click", zurueck);
   $("vorn").addEventListener("click", vonVorn);
   window.addEventListener("resize", zeichnePfeile);
+
+  // ---- Reiter ----
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (x) { x.classList.toggle("active", x.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) { history.replaceState(null, "", "#" + ANKER[nummer]); window.scrollTo({ top: 0, behavior: "smooth" }); }
+    requestAnimationFrame(zeichnePfeile);
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (k) zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Drei Schreibweisen", "Schritt 2: Ein Programm im Speicher", "Aufgaben"];
+  function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
+  function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 1) return ["Dieser Schritt hat keine Demo. Die Tabelle mit den drei Schreibweisen ist fest. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 3) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf Schritt 1 und auf die Demo in Schritt 2.",
+      "Die Antwort einer Aufgabe ist verdeckt, bis der Student „Antwort“ aufklappt."];
+    var belegt = [];
+    for (var i = 0; i < ANZAHL; i++) if (eintragBei(START + i)) belegt.push("Zelle " + (START + i) + " enthält " + bits(zellen[i]));
+    var zeiger = [];
+    var zeilen = tabelle.map(function (e) {
+      var istZeiger = TYPEN[e.typ] && TYPEN[e.typ].zeiger;
+      if (istZeiger) zeiger.push((e.name || "die Variable ohne Namen") + " ist ein Zeiger. In seinen Zellen steht die Adresse " + wertVon(e) + ". " + glatt(zielText(wertVon(e)).replace(/<[^>]+>/g, " ")));
+      return "Name " + (e.name || "ohne Namen") + ", Typ " + e.typ + ", Adresse " + e.adr + ", " + zellenWort(e.n) + (istZeiger ? ", enthält die Adresse " : ", Wert ") + ausgabeWert(e);
+    });
+    return [
+      schritt === 0 ? "Noch ist keine Zeile des Programms ausgeführt." :
+        "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code,
+      abgebrochen ? "Das Programm ist abgebrochen. Es lässt sich nur mit „eine Zeile zurück“ oder „von vorn“ fortsetzen." :
+        schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + PROGRAMM[schritt].code,
+      zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+      zeiger.length ? "Die Zeiger und ihre Pfeile: " + zeiger.join(" ; ") : "Noch gibt es keinen Zeiger und keinen Pfeil.",
+      belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
+        "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
+      "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
+      "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
+      "Ein Bit, das der Student von Hand umschaltet, ändert den Inhalt der Zelle sofort. Schaltet er ein Bit in den Zellen eines Zeigers um, zeigt der Pfeil auf eine andere Zelle. In Go selbst lässt sich eine Adresse so nicht verstellen.",
+      "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten. Das Programm lässt sich nicht ändern."
+    ];
+  }
+  function kurzStand() {
+    if (stufe !== 2) return "";
+    return schritt === 0 ? "keine Zeile ausgeführt" : "Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code;
+  }
+  // Die Programmzeilen von Schritt 2 stehen in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 2) return [];
+    return PROGRAMM.map(function (z, i) {
+      return (i + 1) + "  " + z.code + (i === schritt - 1 ? "   // zuletzt ausgeführt" : i < schritt ? "   // ausgeführt" : "");
+    });
+  }
+
   vonVorn();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Speichermodell: Zeiger in Go",
+    thema: "Zeiger, Adresse, Adressoperator, Dereferenzierung, new, anonyme Variable, Hauptspeicher",
+    bezug: "Kurstext v3.0.6, Abschnitt 7.4, Seiten 173–178, und Abschnitt 7.4.5, Seiten 183–184",
+    beschreibung: "../kurslotse/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h2, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .hinweis, .card > table, .card > .tabellenrahmen table",
+    zeilen: programmZeilen,
+    zeilenTitel: "Programm von Schritt 2, die Zeilen stehen im Rumpf von main:",
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: "Was steht in den Zellen von p?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
