@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zeiger in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Zeiger in Go</h1>
+    <p>Ein Zeiger ist die Adresse einer Variable. Mit einem Zeiger greift ein Programm auf eine Variable zu, ohne ihren Namen zu nennen. So kann eine Funktion eine Variable ihres Aufrufers ändern.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.3 und 7.4, Seiten 171–184.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Adresse übergeben</button>
+    <button type="button" class="tab" data-stufe="2">2 &amp; und *</button>
+    <button type="button" class="tab" data-stufe="3">3 Zeiger als Parameter</button>
+    <button type="button" class="tab" data-stufe="4">4 Zeiger als Rückgabe</button>
+    <button type="button" class="tab" data-stufe="5">5 Lebenszeit</button>
+    <button type="button" class="tab" data-stufe="6">6 new</button>
+  </div>
+
+  <!-- ===================== Worum es geht ===================== -->
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Eine Funktion bekommt von jedem Argument eine Kopie. Die Funktion <code>negToZeroValue</code> aus Listing 7.1 konnte deshalb das Array ihres Aufrufers nicht ändern. Sie hat eine geänderte Kopie zurückgegeben.</p>
+    <p>Mit einem Zeiger geht es ohne Kopie des Arrays: Der Aufrufer übergibt die Adresse des Arrays, und die Funktion ändert das Array an dieser Adresse.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Variable und Speicher:</strong> Eine Variable ist ein Speicherplatz mit einer Adresse. Die Lektion <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a> zeigt das ohne Go.</li>
+      <li><strong>Abschnitt 5.1, Variablendeklaration:</strong> Eine Variable ist ein Speicherort, der mit einem Wert belegt ist. Der Bezeichner ist der Name, unter dem das Programm sie anspricht. Die Lektion dazu heißt <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+      <li><strong>Abschnitt 7.2, Wertübergabe:</strong> Die Lektion <a href="go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a> führt in Schritt 5 Listing 7.1 aus.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Listing 7.2 übergibt die Adresse eines Arrays. Die Funktion ändert das Array des Aufrufers.</li>
+      <li><strong>Schritt 2:</strong> Der Zeiger-Typ <code>*T</code>, der Adressoperator <code>&amp;</code> und der Dereferenzierungsoperator <code>*</code>, an drei Variablen.</li>
+      <li><strong>Schritt 3:</strong> Die Funktion <code>incr</code> erhöht eine Variable ihres Aufrufers. Das ist ein Seiteneffekt.</li>
+      <li><strong>Schritt 4:</strong> Die Funktion <code>giveMeFive</code> gibt einen Zeiger auf ihre lokale Variable zurück.</li>
+      <li><strong>Schritt 5:</strong> Eine Variable lebt, solange ein Verweis auf sie besteht.</li>
+      <li><strong>Schritt 6:</strong> <code>new</code> erzeugt eine Variable ohne Namen.</li>
+    </ul>
+    <div class="hinweis">Diese Lektion zeigt Variablen als Kästen. Wie ein Zeiger im Hauptspeicher liegt, Zelle für Zelle, zeigt die Seite <a href="go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a>.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 1 ===================== -->
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Adresse übergeben</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>negToZeroPointer</code> bekommt die Adresse des Arrays <code>nums</code> und hat keine Rückgabe. Was gibt <code>fmt.Println(nums)</code> nach dem Aufruf aus?
+          <details><summary>Auflösung</summary><code>[8 0 6 0 0 1 0 3 0 2]</code>. Die Funktion hat das Array <code>nums</code> selbst geändert.</details></li>
+      </ol>
+    </div>
+    <p>Listing 7.2 löst die Aufgabe aus Listing 7.1 mit einem Zeiger. Drei Schreibweisen sind neu:</p>
+    <ul>
+      <li><strong><code>&amp;nums</code> im Aufruf:</strong> Der <strong>Adressoperator</strong> <code>&amp;</code> liefert die Speicheradresse der Variable <code>nums</code>. Die Adresse einer Variable heißt <strong>Zeiger</strong>, englisch pointer. Die Funktion bekommt also einen Zeiger und keine Kopie des Arrays.</li>
+      <li><strong><code>pa *[10]int</code> in der Parameterliste:</strong> Der Stern vor dem Typ macht daraus einen <strong>Zeiger-Typ</strong>. Ein Wert vom Typ <code>*[10]int</code> ist ein Zeiger auf eine Variable vom Typ <code>[10]int</code>.</li>
+      <li><strong><code>*pa</code> im Rumpf:</strong> Der <strong>Dereferenzierungsoperator</strong> <code>*</code> vor einem Zeiger liefert die Variable, auf die der Zeiger zeigt. <code>*pa</code> ist hier das Array <code>nums</code>. Für den Zugriff auf ein Element braucht der Ausdruck Klammern: <code>(*pa)[i]</code>.</li>
+    </ul>
+
+    <ol class="programm" id="a-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">nächste Anweisung</button>
+      <button type="button" id="a-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="a-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="a-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="a-ausgabe"></div>
+    <div class="auskunft" id="a-urteil"></div>
+
+    <h3>Kürzer geschrieben</h3>
+    <p>Der Zugriff auf ein Element über einen Zeiger auf ein Array kommt oft vor. Go erlaubt deshalb zwei Kurzschreibweisen und dereferenziert den Zeiger dabei von selbst:</p>
+    <ul>
+      <li><strong>Element:</strong> <code>pa[i]</code> an der Stelle von <code>(*pa)[i]</code>.</li>
+      <li><strong>Schleife:</strong> <code>for i := range pa</code> an der Stelle von <code>for i := range *pa</code>.</li>
+    </ul>
+    <pre class="code-block">func negToZeroPointer(pa *[10]int) {
+    for i := range pa {
+        if pa[i] &lt; 0 {
+            pa[i] = 0
+        }
+    }
+}</pre>
+    <div class="hinweis"><strong>Hinweis 7.4 des Kurstexts:</strong> An <code>pa[i]</code> oder <code>range pa</code> allein sieht man nicht, ob <code>pa</code> ein Array ist oder ein Zeiger auf ein Array. Das steht in der Deklaration von <code>pa</code>.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Hinweis 7.4, Seite 177. Das Programm ist Listing 7.2, <code>array_per_zeiger.go</code>, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 2 ===================== -->
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Die Operatoren &amp; und *</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Nach <code>var x int = 42</code> und <code>p := &amp;x</code> läuft die Zuweisung <code>*p = 33</code>. Welchen Wert hat <code>x</code> danach?
+          <details><summary>Auflösung</summary>33. <code>*p</code> ist die Variable, auf die <code>p</code> zeigt, und das ist <code>x</code>.</details></li>
+      </ol>
+    </div>
+    <p>Der Wert eines Zeigers ist die Adresse, unter der eine Variable im Speicher abgelegt ist. Mit einem Zeiger greift ein Programm <strong>indirekt</strong> auf eine Variable zu, also ohne ihren Bezeichner.</p>
+    <ul>
+      <li><strong>Zeiger-Typ <code>*T</code>:</strong> Zu jedem Typ <code>T</code> gibt es den Zeiger-Typ <code>*T</code>. <code>*int</code> spricht man „Zeiger auf int“. Der Null-Wert jedes Zeiger-Typs ist <code>nil</code>.</li>
+      <li><strong>Adressoperator <code>&amp;</code>:</strong> <code>&amp;x</code> liefert die Adresse von <code>x</code>. Der Operand muss eine Variable sein, auch ein Element <code>a[i]</code> eines Arrays zählt dazu. Ein Literal wie <code>4.95</code> hat keine Adresse.</li>
+      <li><strong>Dereferenzierungsoperator <code>*</code>:</strong> <code>*p</code> ist die Variable, auf die <code>p</code> zeigt. <code>*p</code> darf in einem Ausdruck stehen und auf der linken Seite einer Zuweisung.</li>
+    </ul>
+    <p>Nach <code>p = &amp;x</code> sagt man: „<code>p</code> zeigt auf <code>x</code>“ oder „<code>p</code> enthält die Adresse von <code>x</code>“.</p>
+
+    <ol class="programm" id="o-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="o-weiter">nächste Anweisung</button>
+      <button type="button" id="o-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="o-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="o-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="o-ausgabe"></div>
+    <div class="auskunft" id="o-urteil"></div>
+
+    <h3>Ausdrücke mit x, p und pp</h3>
+    <p>Am Ende des Programms hat <code>x</code> den Wert 33, <code>p</code> zeigt auf <code>x</code>, und <code>pp</code> zeigt auf <code>p</code>. Wähle einen Ausdruck oder eine Anweisung. Die Seite nennt Typ und Wert oder die Meldung von Go.</p>
+    <div class="zeile" id="au-wahl"></div>
+    <div class="auskunft" id="au-urteil"></div>
+
+    <h3>Zeiger vergleichen</h3>
+    <p>Zwei Zeiger des gleichen Typs sind genau dann gleich, wenn sie auf dieselbe Variable zeigen oder beide <code>nil</code> sind. Zwei Variablen mit dem gleichen Wert haben zwei verschiedene Adressen:</p>
+    <pre class="code-block">var y, z int = 5, 5
+fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
+
+    <div class="hinweis"><strong>Hinweis 7.3 des Kurstexts, der Stern:</strong> In einer Typangabe wie <code>*int</code> bildet der Stern den Namen des Zeiger-Typs. In einem Ausdruck wie <code>*p</code> ist er der Dereferenzierungsoperator. Zwischen zwei Operanden wie in <code>a * b</code> multipliziert er.</div>
+    <p>Mit einem Zeiger lässt sich in Go nicht rechnen. Ein Programm kann einen Zeiger zuweisen, vergleichen und ausgeben, mehr nicht. In der Sprache C ist das anders, dort gibt es Zeiger-Arithmetik.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4, Seiten 173–178. Das Programm fasst Zeilen des Kurstexts zusammen. Im Kurstext gibt das Programm auch Adressen aus, zum Beispiel <code>0xc00000a0a8</code>. Sie sind bei jedem Start andere, die Seite schreibt dafür „Adresse von x“. Die Meldungen von Go sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 3 ===================== -->
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Zeiger als Parameter</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>x</code> hat den Wert 1. Das Programm ruft zweimal <code>incr(&amp;x)</code> auf. Welchen Wert hat <code>x</code> danach?
+          <details><summary>Auflösung</summary>3. Jeder Aufruf erhöht die Variable, auf die der Zeiger zeigt, um 1.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion <code>incr</code> bekommt einen Zeiger auf eine <code>int</code>-Variable. Sie erhöht diese Variable um 1 und gibt ihren neuen Wert zurück.</p>
+
+    <ol class="programm" id="i-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="i-weiter">nächste Anweisung</button>
+      <button type="button" id="i-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="i-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="i-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="i-ausgabe"></div>
+    <div class="auskunft" id="i-urteil"></div>
+
+    <h3>Seiteneffekt</h3>
+    <p>Die Funktion <code>incr</code> liefert einen Wert und ändert dazu eine Variable, die außerhalb ihres Rumpfs deklariert ist. Eine solche Änderung heißt <strong>Seiteneffekt</strong>. Nach dem Aufruf ist der Zustand des Programms ein anderer als davor.</p>
+
+    <h3>Auch ein Zeiger wird kopiert</h3>
+    <p>Call-by-value gilt auch hier. Beim Aufruf <code>incr(&amp;x)</code> bekommt der Parameter <code>p</code> eine Kopie des Arguments. Das Argument ist eine Adresse, also bekommt <code>p</code> eine Kopie dieser Adresse. Die Kopie zeigt auf dieselbe Variable <code>x</code>.</p>
+
+    <h3>x++ und incr(&amp;x)</h3>
+    <ul>
+      <li><strong><code>x++</code></strong> ist eine Anweisung und kein Ausdruck. Die Zeile <code>fmt.Println(x++)</code> übersetzt Go nicht.</li>
+      <li><strong><code>incr(&amp;x)</code></strong> ist eine Anweisung und auch ein Ausdruck, weil der Aufruf einen Wert liefert. <code>fmt.Println(incr(&amp;x))</code> ist erlaubt.</li>
+    </ul>
+    <p>Einen Zeiger als Argument kennst du schon von <code>fmt.Scan(&amp;s)</code>: Die Funktion bekommt die Adresse von <code>s</code> und legt die Eingabe in dieser Variable ab.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.1, Seiten 178–180. Das Programm stammt aus dem Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 4 ===================== -->
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Zeiger als Rückgabe</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>q</code> und <code>r</code> bekommen je einen Zeiger aus einem Aufruf von <code>giveMeFive()</code>. Was liefert <code>*q == *r</code>, und was liefert <code>q == r</code>?
+          <details><summary>Auflösung</summary><code>*q == *r</code> liefert <code>true</code>: Beide Variablen haben den Wert 5. <code>q == r</code> liefert <code>false</code>: Die zwei Zeiger zeigen auf zwei verschiedene Variablen.</details></li>
+      </ol>
+    </div>
+    <p>Der Bezeichner einer lokalen Variable gilt nur in dem Block, in dem sie deklariert ist. Das gilt für den Bezeichner. Die Variable selbst kann länger bestehen: Gibt die Funktion einen Zeiger auf sie zurück, erreicht der Aufrufer sie über diesen Zeiger.</p>
+    <p>Jeder Aufruf von <code>giveMeFive</code> deklariert eine neue Variable <code>v</code>. Zwei Aufrufe liefern deshalb Zeiger auf zwei verschiedene Variablen.</p>
+
+    <ol class="programm" id="g-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="g-weiter">nächste Anweisung</button>
+      <button type="button" id="g-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="g-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="g-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="g-ausgabe"></div>
+    <div class="auskunft" id="g-urteil"></div>
+    <p>Der grüne Rahmen enthält die Variablen, deren Bezeichner nicht mehr gilt. Das Programm erreicht sie nur noch über einen Zeiger.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.2, Seite 180. Das Programm stammt aus dem Kurstext. Die Namen „erste Variable v“ und „zweite Variable v“ gehören zur Darstellung dieser Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 5 ===================== -->
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Lebenszeit</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Eine Funktion gibt einen Zeiger auf ihre lokale Variable zurück, und der Aufrufer legt ihn in <code>p</code> ab. Später weist das Programm <code>p</code> eine andere Adresse zu. Was geschieht mit der lokalen Variable?
+          <details><summary>Auflösung</summary>Gibt es keinen anderen Zeiger auf sie, ist sie unerreichbar. Go gibt ihren Speicherplatz von selbst wieder frei.</details></li>
+      </ol>
+    </div>
+    <p>Die <strong>Lebenszeit</strong> einer Variable ist der Zeitraum, in dem es die Variable während des Programmlaufs gibt. Der <strong>Gültigkeitsbereich</strong> ist der Teil des Programmtexts, in dem ihr Bezeichner gilt.</p>
+    <ul>
+      <li><strong>Ohne Zeiger:</strong> Die Variable entsteht bei ihrer Deklaration. Verlässt das Programm den Gültigkeitsbereich ihres Bezeichners, endet ihre Lebenszeit.</li>
+      <li><strong>Mit Zeigern:</strong> Jeder Zeiger, in dem die Adresse der Variable steht, ist ein weiterer <strong>Verweis</strong> auf sie. Die Variable lebt, solange mindestens ein Verweis besteht.</li>
+      <li><strong>Unerreichbar:</strong> Gilt der Bezeichner nicht mehr und steht die Adresse in keinem Zeiger mehr, heißt die Variable unerreichbar. Erst dann endet ihre Lebenszeit. Der <strong>Garbage-Collector</strong> von Go gibt ihren Speicherplatz frei.</li>
+    </ul>
+    <p>Im Programm der Demo gibt <code>neueIntVar</code> einen Zeiger auf die lokale Variable <code>v</code> zurück. Man sagt: Die Variable <code>v</code> bricht aus der Funktion aus, englisch „v escapes from the function“.</p>
+
+    <ol class="programm" id="l-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="l-weiter">nächste Anweisung</button>
+      <button type="button" id="l-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="l-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="l-bild"></div>
+    <div class="auskunft" id="l-urteil"></div>
+
+    <h3>Eine Variable aus einem Block</h3>
+    <p>Auch die Variable eines Blocks kann länger leben, als ihr Bezeichner gilt:</p>
+    <pre class="code-block">var p *int
+for i := range 10 {
+    i += i
+    p = &amp;i
+}
+fmt.Println(*p) // 18</pre>
+    <p>Der Bezeichner <code>i</code> gilt nur im Rumpf der Schleife. Im letzten Durchlauf hat <code>i</code> erst den Wert 9 und nach <code>i += i</code> den Wert 18. <code>p</code> enthält die Adresse dieser Variable, deshalb gibt es sie nach der Schleife noch.</p>
+
+    <h3>Sorgsam mit der Lebenszeit umgehen</h3>
+    <ul>
+      <li><strong>Globale Variable:</strong> Ihre Lebenszeit ist die ganze Laufzeit des Programms. Sie belegt die ganze Zeit Speicher, auch wenn das Programm sie nicht mehr braucht.</li>
+      <li><strong>Vergessener Zeiger:</strong> Solange ein Zeiger auf eine Variable zeigt, kann der Garbage-Collector ihren Speicher nicht freigeben. Zeigt ein Zeiger auf eine Variable, die das Programm längst nicht mehr braucht, bleibt der Speicher belegt. Das heißt <strong>Speicherleck</strong>, englisch memory leak.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.3, Seiten 181–182, und Abschnitt 7.4.4, Seiten 182–183. Das Programm der Demo stammt aus dem Kurstext, ohne die vier Zeilen, die Adressen ausgeben. Die Zahl der Verweise zählt die Seite mit.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <!-- ===================== Schritt 6 ===================== -->
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: new</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(*p)</code> gleich nach <code>var p *int = new(int)</code> aus?
+          <details><summary>Auflösung</summary><code>0</code>. <code>new(int)</code> erzeugt eine <code>int</code>-Variable mit dem Null-Wert und liefert ihre Adresse.</details></li>
+      </ol>
+    </div>
+    <p>Eine Deklaration verlangt einen Bezeichner. Greift das Programm auf die Variable nur über einen Zeiger zu, ist der Bezeichner überflüssig. Dafür gibt es die eingebaute Funktion <code>new</code>.</p>
+    <p>Der Aufruf <code>new(T)</code> tut drei Schritte:</p>
+    <ul>
+      <li>Er erzeugt eine Variable vom Typ <code>T</code>.</li>
+      <li>Er gibt ihr den Null-Wert von <code>T</code>.</li>
+      <li>Er liefert ihre Adresse, einen Wert vom Typ <code>*T</code>.</li>
+    </ul>
+    <p>Eine Variable, die <code>new</code> erzeugt hat, heißt <strong>unbenannte</strong> oder <strong>anonyme Variable</strong>.</p>
+
+    <ol class="programm" id="n-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="n-weiter">nächste Anweisung</button>
+      <button type="button" id="n-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="n-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="n-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="n-ausgabe"></div>
+    <div class="auskunft" id="n-urteil"></div>
+
+    <h3>Zwei Schreibweisen, die gleiche Variable</h3>
+    <p>Die zwei Funktionen tun das Gleiche. Die erste vergibt einen Bezeichner, den niemand braucht:</p>
+    <pre class="code-block">func neueIntVar() *int {
+    var v int
+    return &amp;v
+}
+
+func neueIntVarNew() *int {
+    return new(int)
+}</pre>
+    <p>Für die Variable macht es keinen Unterschied, ob eine Deklaration oder <code>new</code> sie erzeugt hat. Auch eine Variable aus <code>new</code> gibt der Garbage-Collector frei, sobald sie unerreichbar ist.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a> zeigt <code>&amp;b</code>, <code>*p</code> und <code>new(int32)</code> Zelle für Zelle.</li>
+      <li><strong>Kapitel 9:</strong> Zeiger tragen die dynamischen Datenstrukturen, zum Beispiel verkettete Listen und binäre Bäume. Das ist der Ausblick in Abschnitt 7.4.6.</li>
+      <li><strong>Kapitel 8:</strong> Die Lektion <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> verwendet Zeiger auf Verbunde.</li>
+      <li><strong>Rekursion:</strong> Der letzte Abschnitt von Kapitel 7 steht in der Lektion <a href="go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Programmieren:</strong> Zwei Programmierübungen sortieren ein Array über einen Zeiger: <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.5, Seiten 183–184, und Abschnitt 7.4.6, Seite 184. Das Programm der Demo fasst Zeilen des Kurstexts zusammen.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#adresse
+  const ANKER = ['worum', 'adresse', 'operatoren', 'parameter', 'rueckgabe', 'lebenszeit', 'new'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Adresse übergeben', 'Schritt 2: Die Operatoren & und *', 'Schritt 3: Zeiger als Parameter', 'Schritt 4: Zeiger als Rückgabe', 'Schritt 5: Lebenszeit', 'Schritt 6: new'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // Der Wert eines Zeigers steht auf der Seite in Worten, zum Beispiel „Adresse von x“
+  const ADR = name => 'Adresse von ' + name;
+  const ADRD = name => 'Adresse der ' + name;
+
+  // ---------- Schritt 1: Listing 7.2 ----------
+  const NUMS = [8, -5, 6, -3, -7, 1, -4, 3, -9, 2];
+  const DA = (function () {
+    const zeilen = ['func negToZeroPointer(pa *[10]int) {', '    for i := range *pa {', '        if (*pa)[i] < 0 {', '            (*pa)[i] = 0', '        }', '    }', '}', '',
+      'func main() {', '    nums := [10]int{8, -5, 6, -3, -7, 1, -4, 3, -9, 2}', '    fmt.Println(nums)', '    negToZeroPointer(&nums)', '    fmt.Println(nums)', '}'];
+    const lauf = [], a = NUMS.slice(), erste = goArray(NUMS);
+    lauf.push({ z: 10, satz: 'main legt das Array nums mit zehn Elementen an.', rahmen: [R('main', [V('nums', NUMS, 1)])], aus: '' });
+    lauf.push({ z: 11, satz: 'fmt.Println gibt nums aus.', rahmen: [R('main', [V('nums', NUMS)])], aus: erste });
+    lauf.push({ z: 12, satz: 'main ruft negToZeroPointer(&nums) auf. &nums liefert die Adresse des Arrays. Der Parameter pa bekommt eine Kopie dieser Adresse. Kein einziges Element wird kopiert, es gibt weiter nur ein Array.',
+      rahmen: [R('main', [V('nums', NUMS)]), R('negToZeroPointer', [V('pa', ADR('nums'), 1)])], aus: erste });
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] >= 0) continue;
+      const alt = a[i]; a[i] = 0;
+      lauf.push({ z: 4, satz: 'i ist ' + i + '. *pa ist das Array nums. (*pa)[' + i + '] ist ' + alt + ', also kleiner als 0. Die Zuweisung setzt das Element auf 0, und zwar in nums selbst.',
+        rahmen: [R('main', [V('nums', a.slice(), 0, [i])]), R('negToZeroPointer', [V('pa', ADR('nums')), V('i', i)])], aus: erste });
+    }
+    lauf.push({ z: 7, satz: 'Die Schleife ist zu Ende, die Funktion auch. Sie hat keine Rückgabe. Ihr Parameter pa besteht nicht mehr.',
+      rahmen: [R('main', [V('nums', a.slice())]), WEG('negToZeroPointer')], aus: erste });
+    lauf.push({ z: 13, satz: 'fmt.Println gibt nums aus. Die fünf negativen Elemente sind 0. Die Funktion hat das Array ihres Aufrufers geändert.',
+      rahmen: [R('main', [V('nums', a.slice())])], aus: erste + NL + goArray(a) });
+    return ablauf('a', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 10.');
+  })();
+
+  // ---------- Schritt 2: x, p und pp ----------
+  const DO = ablauf('o', ['var x int = 42', 'var p *int', 'p = &x', 'fmt.Println(*p)', '*p = 33', 'fmt.Println(x)', 'var pp **int = &p', 'fmt.Println(**pp)', 'fmt.Println(*pp == p, p == &x)'], [
+    { z: 1, satz: 'x ist eine Variable vom Typ int mit dem Wert 42.', rahmen: [R('main', [V('x', 42, 1)])], aus: '' },
+    { z: 2, satz: 'p ist eine Variable vom Typ *int. Sie kann die Adresse einer int-Variable aufnehmen. Noch hat sie den Null-Wert nil und zeigt auf keine Variable.', rahmen: [R('main', [V('x', 42), V('p', 'nil', 1)])], aus: '' },
+    { z: 3, satz: '&x liefert die Adresse von x. Die Zuweisung legt sie in p ab. Jetzt zeigt p auf x.', rahmen: [R('main', [V('x', 42), V('p', ADR('x'), 1)])], aus: '' },
+    { z: 4, satz: '*p ist die Variable, auf die p zeigt, also x. Das Programm gibt ihren Wert aus. Der Zugriff ist indirekt: Die Zeile nennt den Bezeichner x nicht.', rahmen: [R('main', [V('x', 42), V('p', ADR('x'))])], aus: '42' },
+    { z: 5, satz: '*p steht links in einer Zuweisung. Der Wert 33 geht an die Variable, auf die p zeigt. x hat jetzt den Wert 33. p selbst ändert sich nicht.', rahmen: [R('main', [V('x', 33, 1), V('p', ADR('x'))])], aus: '42' },
+    { z: 6, satz: 'fmt.Println gibt x aus: 33.', rahmen: [R('main', [V('x', 33), V('p', ADR('x'))])], aus: '42' + NL + '33' },
+    { z: 7, satz: 'Auch p ist eine Variable und hat eine Adresse. &p ist ein Zeiger auf einen Zeiger auf int, sein Typ ist **int. pp zeigt auf p.', rahmen: [R('main', [V('x', 33), V('p', ADR('x')), V('pp', ADR('p'), 1)])], aus: '42' + NL + '33' },
+    { z: 8, satz: '*pp ist die Variable p. Ein zweiter Stern führt von p weiter zu x. **pp ist also x, das Programm gibt 33 aus.', rahmen: [R('main', [V('x', 33), V('p', ADR('x')), V('pp', ADR('p'))])], aus: '42' + NL + '33' + NL + '33' },
+    { z: 9, satz: '*pp ist p, der erste Vergleich liefert true. In p steht die Adresse von x, der zweite Vergleich liefert auch true.', rahmen: [R('main', [V('x', 33), V('p', ADR('x')), V('pp', ADR('p'))])], aus: '42' + NL + '33' + NL + '33' + NL + 'true true' }
+  ], 'Noch ist keine Anweisung ausgeführt. Die neun Zeilen stehen im Rumpf von main.');
+
+  const AUSDRUECKE = [
+    { code: 'x', typ: 'int', wert: '33', satz: 'x ist die Variable selbst.' },
+    { code: '&x', typ: '*int', wert: 'Adresse von x', satz: 'Der Adressoperator liefert einen Zeiger auf x.' },
+    { code: '*&x', typ: 'int', wert: '33', satz: '&x führt zur Adresse von x, der Stern führt von dort zurück zur Variable x.' },
+    { code: 'p', typ: '*int', wert: 'Adresse von x', satz: 'In p steht die Adresse von x.' },
+    { code: '*p', typ: 'int', wert: '33', satz: '*p ist die Variable, auf die p zeigt, also x.' },
+    { code: '&*p', typ: '*int', wert: 'Adresse von x', satz: '*p ist x, und &x ist die Adresse von x. Das ist der Wert von p.' },
+    { code: '&p', typ: '**int', wert: 'Adresse von p', satz: 'p ist selbst eine Variable und hat eine Adresse. Der Typ bekommt einen zweiten Stern.' },
+    { code: 'pp', typ: '**int', wert: 'Adresse von p', satz: 'In pp steht die Adresse von p.' },
+    { code: '*pp', typ: '*int', wert: 'Adresse von x', satz: '*pp ist die Variable p. Ihr Wert ist die Adresse von x.' },
+    { code: '**pp', typ: 'int', wert: '33', satz: '*pp ist p, und *p ist x.' },
+    { code: 'p == &x', typ: 'bool', wert: 'true', satz: 'Beide Zeiger zeigen auf dieselbe Variable x.' },
+    { code: '*x', fehler: 'invalid operation: cannot indirect x (variable of type int)', satz: 'Go übersetzt das nicht. x ist kein Zeiger, der Stern braucht einen Zeiger als Operanden.' },
+    { code: 'p = x', fehler: 'cannot use x (variable of type int) as *int value in assignment', satz: 'Go übersetzt das nicht. p nimmt eine Adresse auf, x ist eine ganze Zahl. Gemeint war p = &x.' },
+    { code: '&42', fehler: 'invalid operation: cannot take address of 42 (untyped int constant)', satz: 'Go übersetzt das nicht. Ein Literal ist keine Variable und hat keine Adresse.' },
+    { code: 'p + 1', fehler: 'invalid operation: p + 1 (mismatched types *int and untyped int)', satz: 'Go übersetzt das nicht. Mit einem Zeiger lässt sich in Go nicht rechnen.' },
+    { code: 'var n *int; fmt.Println(*n)', fehler: 'panic: runtime error: invalid memory address or nil pointer dereference', laufzeit: true, satz: 'Go übersetzt die Zeilen, das Programm bricht aber ab. n hat den Null-Wert nil und zeigt auf keine Variable. *n gibt es nicht.' }
+  ];
+  let auWahl = 0;
+  function zeichneAusdruck() {
+    el('au-wahl').innerHTML = AUSDRUECKE.map((a, i) => '<button type="button" class="code' + (i === auWahl ? ' gewaehlt' : '') + '" data-i="' + i + '">' + esc(a.code) + '</button>').join('');
+    const a = AUSDRUECKE[auWahl];
+    el('au-urteil').className = 'auskunft' + (a.fehler ? ' fehler' : '');
+    el('au-urteil').innerHTML = (a.fehler ? '<p>' + (a.laufzeit ? 'Abbruch zur Laufzeit: ' : 'Meldung des Compilers: ') + c(a.fehler) + '</p>' : '<p>' + c(a.code) + ' hat den Typ ' + c(a.typ) + ' und den Wert ' + (/^Adresse/.test(a.wert) ? esc(a.wert) : c(a.wert)) + '.</p>') + '<p>' + esc(a.satz) + '</p>';
+    melde(false);
+  }
+  el('au-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { auWahl = Number(k.dataset.i); zeichneAusdruck(); } });
+
+  // ---------- Schritt 3: incr ----------
+  const DI = ablauf('i', ['func incr(p *int) int {', '    *p++', '    return *p', '}', '', 'func main() {', '    x := 1', '    incr(&x)', '    fmt.Println(x)', '    fmt.Println(incr(&x))', '    fmt.Println(x)', '}'], [
+    { z: 7, satz: 'main legt x mit dem Wert 1 an.', rahmen: [R('main', [V('x', 1, 1)])], aus: '' },
+    { z: 8, satz: 'main ruft incr(&x) auf. Der Parameter p bekommt eine Kopie der Adresse von x. p zeigt auf x.', rahmen: [R('main', [V('x', 1)]), R('incr', [V('p', ADR('x'), 1)])], aus: '' },
+    { z: 2, satz: '*p++ erhöht die Variable, auf die p zeigt, um 1. Das ist x in main: x hat jetzt den Wert 2.', rahmen: [R('main', [V('x', 2, 1)]), R('incr', [V('p', ADR('x'))])], aus: '' },
+    { z: 3, satz: 'return *p gibt den Wert von x zurück, also 2.', rahmen: [R('main', [V('x', 2)]), R('incr', [V('p', ADR('x'))])], aus: '' },
+    { z: 8, satz: 'Zurück in main: Der Aufruf steht allein als Anweisung, die Rückgabe 2 ist verworfen. Geblieben ist der Seiteneffekt: x hat den Wert 2.', rahmen: [R('main', [V('x', 2)]), WEG('incr')], aus: '' },
+    { z: 9, satz: 'fmt.Println gibt x aus: 2.', rahmen: [R('main', [V('x', 2)])], aus: '2' },
+    { z: 10, satz: 'Das Argument von fmt.Println ist der Aufruf incr(&x). Erst läuft der Aufruf: p bekommt wieder eine Kopie der Adresse von x.', rahmen: [R('main', [V('x', 2)]), R('incr', [V('p', ADR('x'), 1)])], aus: '2' },
+    { z: 2, satz: '*p++ erhöht x auf 3.', rahmen: [R('main', [V('x', 3, 1)]), R('incr', [V('p', ADR('x'))])], aus: '2' },
+    { z: 3, satz: 'return *p gibt 3 zurück.', rahmen: [R('main', [V('x', 3)]), R('incr', [V('p', ADR('x'))])], aus: '2' },
+    { z: 10, satz: 'Zurück in main: fmt.Println gibt die Rückgabe 3 aus.', rahmen: [R('main', [V('x', 3)]), WEG('incr')], aus: '2' + NL + '3' },
+    { z: 11, satz: 'fmt.Println gibt x aus: 3. Der zweite Aufruf hat x auch geändert.', rahmen: [R('main', [V('x', 3)])], aus: '2' + NL + '3' + NL + '3' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.');
+
+  // ---------- Schritt 4: giveMeFive ----------
+  const OHNE = 'Variablen, deren Bezeichner nicht mehr gilt';
+  const V1 = 'erste Variable v', V2 = 'zweite Variable v';
+  const DG = ablauf('g', ['func giveMeFive() *int {', '    v := 5', '    return &v', '}', '', 'func main() {', '    var q, r *int = giveMeFive(), giveMeFive()', '    fmt.Println(*q, *r)', '    fmt.Println(*q == *r)', '    fmt.Println(q == r)', '    *q = *q + *r', '    fmt.Println(*q, *r)', '}'], [
+    { z: 7, satz: 'Die Deklaration von q und r hat rechts zwei Aufrufe. Zuerst läuft der erste Aufruf von giveMeFive.', rahmen: [R('main'), R('giveMeFive')], aus: '' },
+    { z: 2, satz: 'Die Funktion legt eine lokale Variable v mit dem Wert 5 an.', rahmen: [R('main'), R('giveMeFive', [V('v', 5, 1)])], aus: '' },
+    { z: 3, satz: 'return &v gibt die Adresse von v zurück. Die Funktion ist beendet, der Bezeichner v gilt nicht mehr. Die Variable besteht weiter, weil es einen Zeiger auf sie gibt.', rahmen: [R('main'), WEG('giveMeFive'), FREI(OHNE, [V(V1, 5, 1)])], aus: '' },
+    { z: 7, satz: 'Jetzt läuft der zweite Aufruf von giveMeFive.', rahmen: [R('main'), R('giveMeFive'), FREI(OHNE, [V(V1, 5)])], aus: '' },
+    { z: 2, satz: 'Die Funktion legt wieder eine lokale Variable v an. Es ist eine neue Variable und nicht die vom ersten Aufruf.', rahmen: [R('main'), R('giveMeFive', [V('v', 5, 1)]), FREI(OHNE, [V(V1, 5)])], aus: '' },
+    { z: 3, satz: 'return &v gibt die Adresse der zweiten Variable zurück.', rahmen: [R('main'), WEG('giveMeFive'), FREI(OHNE, [V(V1, 5), V(V2, 5, 1)])], aus: '' },
+    { z: 7, satz: 'main legt die zwei Zeiger in q und r ab. q zeigt auf die erste Variable, r auf die zweite.', rahmen: [R('main', [V('q', ADRD('ersten Variable v'), 1), V('r', ADRD('zweiten Variable v'), 1)]), FREI(OHNE, [V(V1, 5), V(V2, 5)])], aus: '' },
+    { z: 8, satz: '*q und *r sind die zwei Variablen. Beide haben den Wert 5.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 5), V(V2, 5)])], aus: '5 5' },
+    { z: 9, satz: '*q == *r vergleicht die Werte der zwei Variablen: 5 und 5. Das Ergebnis ist true.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 5), V(V2, 5)])], aus: '5 5' + NL + 'true' },
+    { z: 10, satz: 'q == r vergleicht die zwei Adressen. Sie sind verschieden, weil q und r auf zwei verschiedene Variablen zeigen. Das Ergebnis ist false.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 5), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' },
+    { z: 11, satz: 'Die Zuweisung rechnet 5 + 5 und legt 10 in der Variable ab, auf die q zeigt. Die Variable, auf die r zeigt, behält den Wert 5.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 10, 1), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' },
+    { z: 12, satz: 'fmt.Println gibt die zwei Werte aus: 10 und 5.', rahmen: [R('main', [V('q', ADRD('ersten Variable v')), V('r', ADRD('zweiten Variable v'))]), FREI(OHNE, [V(V1, 10), V(V2, 5)])], aus: '5 5' + NL + 'true' + NL + 'false' + NL + '10 5' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7.');
+
+  // ---------- Schritt 5: neueIntVar ----------
+  const NAMENLOS = 'Variable aus neueIntVar', TOT = { n: NAMENLOS, w: 0, tot: true };
+  const DL = ablauf('l', ['func neueIntVar() *int {', '    var v int', '    return &v', '}', '', 'func main() {', '    var x int = 8', '    var p, q *int', '    p = neueIntVar()', '    q = p', '    p = &x', '    q = nil', '}'], [
+    { z: 7, satz: 'main legt x mit dem Wert 8 an.', rahmen: [R('main', [V('x', 8, 1)])], aus: '' },
+    { z: 8, satz: 'p und q sind zwei Zeiger auf int. Beide haben den Null-Wert nil.', rahmen: [R('main', [V('x', 8), V('p', 'nil', 1), V('q', 'nil', 1)])], aus: '' },
+    { z: 9, satz: 'main ruft neueIntVar auf.', rahmen: [R('main', [V('x', 8), V('p', 'nil'), V('q', 'nil')]), R('neueIntVar')], aus: '' },
+    { z: 2, satz: 'Die Funktion legt die lokale Variable v an, mit dem Null-Wert 0. Verweise auf diese Variable: 1, der Bezeichner v.', rahmen: [R('main', [V('x', 8), V('p', 'nil'), V('q', 'nil')]), R('neueIntVar', [V('v', 0, 1)])], aus: '' },
+    { z: 3, satz: 'return &v gibt die Adresse von v zurück. Die Funktion ist beendet, der Bezeichner v gilt nicht mehr.', rahmen: [R('main', [V('x', 8), V('p', 'nil'), V('q', 'nil')]), WEG('neueIntVar'), FREI(OHNE, [V(NAMENLOS, 0, 1)])], aus: '' },
+    { z: 9, satz: 'Die Zuweisung legt den Zeiger in p ab. Die Variable hat keinen Namen mehr, lebt aber weiter. Verweise auf sie: 1, der Zeiger p.', rahmen: [R('main', [V('x', 8), V('p', ADRD('Variable aus neueIntVar'), 1), V('q', 'nil')]), FREI(OHNE, [V(NAMENLOS, 0)])], aus: '' },
+    { z: 10, satz: 'q = p kopiert die Adresse aus p nach q. Verweise auf die Variable: 2, die Zeiger p und q.', rahmen: [R('main', [V('x', 8), V('p', ADRD('Variable aus neueIntVar')), V('q', ADRD('Variable aus neueIntVar'), 1)]), FREI(OHNE, [V(NAMENLOS, 0)])], aus: '' },
+    { z: 11, satz: 'p = &x überschreibt den Zeiger in p. p zeigt jetzt auf x. Verweise auf die Variable aus neueIntVar: 1, der Zeiger q.', rahmen: [R('main', [V('x', 8), V('p', ADR('x'), 1), V('q', ADRD('Variable aus neueIntVar'))]), FREI(OHNE, [V(NAMENLOS, 0)])], aus: '' },
+    { z: 12, satz: 'q = nil überschreibt den letzten Verweis. Verweise auf die Variable aus neueIntVar: 0. Sie ist unerreichbar, ihre Lebenszeit ist zu Ende. Der Garbage-Collector gibt ihren Speicherplatz frei.', rahmen: [R('main', [V('x', 8), V('p', ADR('x')), V('q', 'nil', 1)]), FREI(OHNE, [TOT])], aus: '' }
+  ], 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 7. Es gibt nichts aus.');
+
+  // ---------- Schritt 6: new ----------
+  const ANON = 'Anonyme Variablen';
+  const DN = ablauf('n', ['var p *int = new(int)', 'fmt.Println(*p)', '*p = 15', 'fmt.Println(*p)', 'var q, r *int = new(int), new(int)', 'fmt.Println(q == r)'], [
+    { z: 1, satz: 'new(int) erzeugt eine int-Variable ohne Namen, gibt ihr den Null-Wert 0 und liefert ihre Adresse. Die Adresse steht jetzt in p.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable'), 1)]), FREI(ANON, [V('erste', 0, 1)])], aus: '' },
+    { z: 2, satz: '*p ist die anonyme Variable. Sie hat den Wert 0.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable'))]), FREI(ANON, [V('erste', 0)])], aus: '0' },
+    { z: 3, satz: 'Die Zuweisung legt 15 in der anonymen Variable ab. Der Zugriff über *p ist der gleiche wie bei einer Variable mit Namen.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable'))]), FREI(ANON, [V('erste', 15, 1)])], aus: '0' },
+    { z: 4, satz: 'fmt.Println gibt den Wert der anonymen Variable aus: 15.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable'))]), FREI(ANON, [V('erste', 15)])], aus: '0' + NL + '15' },
+    { z: 5, satz: 'Jeder Aufruf von new erzeugt eine neue Variable mit einer eigenen Adresse. q und r zeigen auf zwei verschiedene anonyme Variablen.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable')), V('q', ADRD('zweiten anonymen Variable'), 1), V('r', ADRD('dritten anonymen Variable'), 1)]), FREI(ANON, [V('erste', 15), V('zweite', 0, 1), V('dritte', 0, 1)])], aus: '0' + NL + '15' },
+    { z: 6, satz: 'q == r vergleicht zwei verschiedene Adressen. Das Ergebnis ist false, obwohl beide Variablen den Wert 0 haben.', rahmen: [R('main', [V('p', ADRD('ersten anonymen Variable')), V('q', ADRD('zweiten anonymen Variable')), V('r', ADRD('dritten anonymen Variable'))]), FREI(ANON, [V('erste', 15), V('zweite', 0), V('dritte', 0)])], aus: '0' + NL + '15' + NL + 'false' }
+  ], 'Noch ist keine Anweisung ausgeführt. Die sechs Zeilen stehen im Rumpf von main.');
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMOS = [null, DA, DO, DI, DG, DL, DN];
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    const s = standAblauf(DEMOS[stufe]);
+    s.push('Der Wert eines Zeigers steht auf der Seite in Worten, zum Beispiel „Adresse von x“. Eine Zahl wie 0xc00000a0a8 zeigt die Seite nicht.');
+    if (stufe === 2) {
+      const a = AUSDRUECKE[auWahl];
+      s.push('Unter „Ausdrücke mit x, p und pp“ ist gewählt: ' + a.code + '. ' + (a.fehler ? (a.laufzeit ? 'Abbruch zur Laufzeit: ' : 'Meldung des Compilers: ') + a.fehler + '. ' : 'Typ ' + a.typ + ', Wert ' + a.wert + '. ') + 'Die Seite sagt dazu: ' + a.satz);
+      s.push('Diese Auswahl gilt für den Stand am Ende des Programms: x hat den Wert 33, p zeigt auf x, pp zeigt auf p. Handgriff: einen von 16 Ausdrücken wählen.');
+    }
+    return s;
+  }
+  function kurzStand() {
+    const D = DEMOS[stufe];
+    if (!D) return '';
+    return (D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt') + (stufe === 2 ? '; Ausdruck ' + AUSDRUECKE[auWahl].code : '');
+  }
+  // Die Programme der Demos stehen in Listen und nicht in pre
+  function programmZeilen() {
+    const D = DEMOS[stufe];
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  DEMOS.forEach(D => { if (D) D.zeichne(); });
+  zeichneAusdruck();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Zeiger in Go',
+    thema: 'Zeiger, Zeiger-Typ, Adressoperator, Dereferenzierungsoperator, nil, Seiteneffekt, Lebenszeit, Gültigkeitsbereich, Garbage-Collector, Speicherleck, new, anonyme Variable',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.3 und 7.4, Seiten 171–184',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Was ist der Unterschied zwischen p und *p?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
