@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binäre Suchbäume in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    /* Der Baum als Bild: Kreise mit dem Wert, Linien für die Zeiger links und rechts */
+    svg.baum { display:block;width:100%;height:auto;margin:10px 0; }
+    svg.baum .kante { stroke:#94a3b8;stroke-width:2; }
+    svg.baum .knoten circle { fill:#fff;stroke:var(--blau);stroke-width:2; }
+    svg.baum .knoten text { font:700 15px Consolas,"Courier New",monospace;fill:#111827;text-anchor:middle; }
+    svg.baum .knoten text.unter { font-weight:400;font-size:12px;fill:var(--muted); }
+    svg.baum .knoten.pfad circle { fill:var(--aktiv-bg);stroke:var(--aktiv);stroke-width:3; }
+    svg.baum .knoten.ziel circle { fill:#d1fae5;stroke:var(--accent);stroke-width:3; }
+    .zweibilder { display:flex;flex-wrap:wrap;gap:16px; }
+    .zweibilder > div { flex:1 1 280px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Binäre Suchbäume in Go</h1>
+    <p>Ein Knoten mit zwei Zeigern statt einem: Links hängen die kleineren Werte, rechts die größeren. So halbiert jeder Vergleich den Rest der Suche.</p>
+    <p>Kurstext v3.0.6, Abschnitt 9.3, Seiten 237–244.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Begriffe</button>
+    <button type="button" class="tab" data-stufe="2">2 Der Suchbaum</button>
+    <button type="button" class="tab" data-stufe="3">3 Einfügen</button>
+    <button type="button" class="tab" data-stufe="4">4 Suchen</button>
+    <button type="button" class="tab" data-stufe="5">5 Durchlaufen</button>
+    <button type="button" class="tab" data-stufe="6">6 Löschen</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>In einer verketteten Liste ist das Einfügen billig, das Suchen der Stelle aber nicht: Das Programm läuft im Durchschnitt durch die halbe Liste. Ein <strong>binärer Suchbaum</strong> macht auch das Suchen schnell. Jeder Verbund hat dort zwei Zeiger, einen nach links und einen nach rechts.</p>
+    <p>Im Kurstext steht dafür ein Mobile: An jedem Stab hängen an zwei Fäden wieder Stäbe. Wer einen Faden abschneidet, bekommt alles, was daran hing, nie zurück.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 9.2, verkettete Listen:</strong> Die Lektion <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a> zeigt Verbünde, die über einen Zeiger aneinanderhängen, und anonyme Variablen.</li>
+      <li><strong>Abschnitt 8.3.1, rekursive Verbund-Typen:</strong> Die Lektion <a href="../kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a> zeigt mit dem Stammbaum schon einen Verbund mit zwei Zeigern auf den eigenen Typ.</li>
+      <li><strong>Abschnitt 7.5, Rekursion:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a>. Alle Funktionen dieser Lektion rufen sich selbst auf.</li>
+      <li><strong>Abschnitt 8.4.1, binäre Suche:</strong> Im sortierten Array vergleicht die binäre Suche mit dem Element in der Mitte und sucht in einer Hälfte weiter. Der Suchbaum baut diese Idee in die Datenstruktur ein.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Wurzel, Knoten, Blatt und Höhe.</li>
+      <li><strong>Schritt 2:</strong> Die Regel des Suchbaums und drei Bäume mit den gleichen sieben Werten.</li>
+      <li><strong>Schritt 3:</strong> Du baust mit <code>einfügen</code> den Baum des Kurstexts auf und siehst die Knoten im Hauptspeicher.</li>
+      <li><strong>Schritt 4:</strong> Du suchst Werte und zählst die Aufrufe.</li>
+      <li><strong>Schritt 5:</strong> Eine rekursive Funktion besucht alle Knoten in aufsteigender Reihenfolge.</li>
+      <li><strong>Schritt 6:</strong> Die drei Fälle beim Löschen.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Begriffe</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein binärer Baum hat die Höhe 4. Wie viele Knoten hat er höchstens?
+          <details><summary>Auflösung</summary>15. In jeder Ebene verdoppelt sich die Zahl der Knoten: 1 + 2 + 4 + 8.</details></li>
+      </ol>
+    </div>
+    <p>Ein Baum der Informatik wächst von oben nach unten, wie ein Stammbaum. Die Begriffe:</p>
+    <ul>
+      <li><strong>Knoten:</strong> Eine Stelle, an der sich der Baum verzweigt. In Go ist ein Knoten ein Verbund.</li>
+      <li><strong>Wurzel:</strong> Der oberste Knoten. Von ihm aus ist jeder andere Knoten erreichbar.</li>
+      <li><strong>Kante:</strong> Die Verbindung von einem Knoten zu einem Knoten darunter. In Go ist eine Kante ein Zeiger.</li>
+      <li><strong>Elternknoten und Kindknoten:</strong> Jeder Knoten außer der Wurzel hat genau einen Elternknoten über sich und ist dessen Kindknoten.</li>
+      <li><strong>Blatt und innerer Knoten:</strong> Ein Knoten ohne Kind heißt Blatt, jeder andere innerer Knoten.</li>
+      <li><strong>Pfad und Höhe:</strong> Von der Wurzel führt genau ein Pfad zu jedem Knoten. Die Höhe eines Knotens ist die Zahl der Knoten auf diesem Pfad, die Wurzel hat die Höhe 1. Die Höhe des Baums ist die größte Höhe eines Blatts.</li>
+      <li><strong>Binärer Baum:</strong> Jeder Knoten hat höchstens zwei Kinder.</li>
+    </ul>
+    <p>Wähle einen Knoten. Gelb ist der Pfad von der Wurzel, grün der gewählte Knoten.</p>
+    <div class="zeile" id="b-wahl"></div>
+    <div id="b-bild"></div>
+    <div class="auskunft" id="b-urteil"></div>
+
+    <h3>Viele Knoten bei geringer Höhe</h3>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Höhe des Baums</th><th>Knoten in der untersten Ebene</th><th>Größte mögliche Zahl von Knoten</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td><td>1 + 2 = 3</td></tr>
+        <tr><td>3</td><td>4</td><td>1 + 2 + 4 = 7</td></tr>
+        <tr><td>4</td><td>8</td><td>1 + 2 + 4 + 8 = 15</td></tr>
+        <tr><td>n</td><td>2<sup>n−1</sup></td><td>2<sup>n</sup> − 1</td></tr>
+      </tbody>
+    </table></div>
+    <p>Die Zahl der Knoten wächst exponentiell mit der Höhe. Ein Baum der Höhe 20 fasst mehr als eine Million Knoten, und zu jedem führt ein Pfad mit höchstens 20 Knoten. Darauf beruht die schnelle Suche.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3, Seite 237. Der Baum im Bild ist der Baum aus Abbildung 9.5. Das Beispiel mit der Höhe 20 ist ergänzt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Der Suchbaum</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die sieben Werte 17, 36, 42, 57, 71, 88 und 93 kommen in dieser sortierten Reihenfolge in einen leeren Suchbaum. Welche Höhe hat der Baum danach?
+          <details><summary>Auflösung</summary>7. Jeder Wert ist größer als alle davor und landet rechts unter dem letzten. Der Baum ist eine Kette.</details></li>
+      </ol>
+    </div>
+    <p>In einem <strong>binären Suchbaum</strong> enthält jeder Knoten einen Wert und zwei Zeiger <code>links</code> und <code>rechts</code>. Für jeden Knoten mit dem Wert x gilt:</p>
+    <ul>
+      <li><strong><code>links</code>:</strong> Der Zeiger führt zur Wurzel eines Suchbaums, in dem nur Werte vorkommen, die kleiner als x sind.</li>
+      <li><strong><code>rechts</code>:</strong> Der Zeiger führt zur Wurzel eines Suchbaums, in dem nur Werte vorkommen, die größer als x sind.</li>
+    </ul>
+    <p>Die Regel gilt für jeden Knoten und damit für jeden Teilbaum. Im Kurstext wird angenommen, dass kein Wert doppelt vorkommt.</p>
+
+    <h3>Die gleichen Werte, drei Bäume</h3>
+    <p>Welche Form der Baum bekommt, hängt von der Reihenfolge ab, in der die Werte eingefügt werden. Wähle eine Reihenfolge.</p>
+    <div class="spalte" id="f-wahl"></div>
+    <div id="f-bild"></div>
+    <div class="auskunft" id="f-urteil"></div>
+    <ul>
+      <li><strong>Extrem balanciert:</strong> Alle Blätter haben die gleiche Höhe.</li>
+      <li><strong>Entartet:</strong> Die Höhe des Baums ist gleich der Zahl seiner Elemente. Der Baum arbeitet wie eine verkettete Liste.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.1 und 9.3.2, Seiten 238–240, mit den Abbildungen 9.5 bis 9.7. Die drei Reihenfolgen stehen auf Seite 240.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Einfügen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Wurzel hat den Wert 36, rechts darunter hängt die 88. Wohin kommt die 57?
+          <details><summary>Auflösung</summary>57 ist größer als 36, also nach rechts zur 88. 57 ist kleiner als 88, und links von der 88 ist noch kein Knoten. Dort entsteht der neue Knoten.</details></li>
+      </ol>
+    </div>
+    <p>Der Knoten des Baums ist ein rekursiver Verbund-Typ mit zwei Zeigern:</p>
+    <pre class="code-block">// Verbund-Typ für einen binären Knoten
+type knoten struct {
+    wert          int
+    links, rechts *knoten
+}</pre>
+    <p>Die Funktion <code>einfügen</code> vergleicht den neuen Wert mit dem Wert der Wurzel. Ist auf der passenden Seite noch kein Knoten, erzeugt sie dort den neuen. Sonst ruft sie sich selbst mit der Wurzel des Teilbaums auf dieser Seite auf.</p>
+    <pre class="code-block">func einfügen(wurzel *knoten, neuerWert int) {
+    if neuerWert &lt; wurzel.wert {
+        if wurzel.links == nil {
+            // neuen Knoten erzeugen
+            wurzel.links = &amp;knoten{wert: neuerWert}
+        } else {
+            // rekursiv im linken Teilbaum nach
+            // passender Einfüge-Position suchen
+            einfügen(wurzel.links, neuerWert)
+        }
+    } else {
+        if wurzel.rechts == nil {
+            // neuen Knoten erzeugen
+            wurzel.rechts = &amp;knoten{wert: neuerWert}
+        } else {
+            // rekursiv im rechten Teilbaum nach
+            // passender Einfüge-Position suchen
+            einfügen(wurzel.rechts, neuerWert)
+        }
+    }
+}</pre>
+    <p>Die Funktion stellt zwei Bedingungen an ihren Aufruf:</p>
+    <ul>
+      <li><strong><code>wurzel</code> ist nicht <code>nil</code>:</strong> Den ersten Knoten erzeugt das Programm selbst, mit <code>baum := &amp;knoten{wert: 36}</code>. Mit <code>nil</code> bricht das Programm bei <code>wurzel.wert</code> ab.</li>
+      <li><strong>Der Wert ist neu:</strong> Der Suchbaum soll keinen Wert doppelt enthalten. Das prüft das Programm vor dem Einfügen mit <code>istWertInBaum</code> aus Schritt 4.</li>
+    </ul>
+
+    <h3>Der Baum des Kurstexts entsteht</h3>
+    <p>Eine Anweisung der Demo ist ein ganzer Aufruf von <code>einfügen</code>. Gelb sind die Knoten, mit denen die Funktion vergleicht, grün ist der neue Knoten. Unter jedem Knoten steht seine Anfangsadresse im Modell.</p>
+    <ol class="programm" id="e-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="e-weiter">nächste Anweisung</button>
+      <button type="button" id="e-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="e-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="e-bild"></div>
+    <div id="e-speicher"></div>
+    <div class="auskunft" id="e-urteil"></div>
+    <p>Die Knoten liegen im Hauptspeicher in der Reihenfolge, in der sie erzeugt wurden. Die Form des Baums steht allein in den Zeigern, wie bei der Liste.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Listing 9.2, Datei <code>suchbaum.go</code>, Seiten 240–242. Typ, Funktion und die sieben Zeilen der Demo stammen aus dem Kurstext. Der Abbruch mit <code>nil</code> ist mit Go 1.26 geprüft. Die Adressen gehören zum Modell dieser HTML-Seite, ein Knoten belegt darin 24 Zellen.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Suchen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Der Baum aus Schritt 3 enthält sieben Werte. Die 13 ist nicht dabei. Mit wie vielen Knoten vergleicht die Suche, bis das feststeht?
+          <details><summary>Auflösung</summary>Mit zwei: mit der 36 und mit der 17. Links von der 17 ist kein Knoten, dort müsste die 13 hängen.</details></li>
+      </ol>
+    </div>
+    <p>Die Suche beginnt in der Wurzel. Steht dort der gesuchte Wert, ist sie fertig. Sonst geht sie in den linken oder in den rechten Teilbaum. Ist der Zeiger dorthin <code>nil</code>, kommt der Wert im Baum nicht vor.</p>
+    <pre class="code-block">func suchen(wurzel *knoten, suchwert int) *knoten {
+    if wurzel == nil || wurzel.wert == suchwert {
+        return wurzel
+    }
+
+    if suchwert &lt; wurzel.wert {
+        return suchen(wurzel.links, suchwert)
+    } else {
+        return suchen(wurzel.rechts, suchwert)
+    }
+}
+
+func istWertInBaum(wurzel *knoten, suchwert int) bool {
+    return suchen(wurzel, suchwert) != nil
+}</pre>
+    <ul>
+      <li><strong>Rückgabe:</strong> <code>suchen</code> liefert einen Zeiger auf den gefundenen Knoten oder <code>nil</code>.</li>
+      <li><strong>Die erste Bedingung:</strong> <code>return wurzel</code> deckt beide Fälle ab. Ist <code>wurzel</code> gleich <code>nil</code>, liefert die Funktion <code>nil</code>. Steht in der Wurzel der Suchwert, liefert sie den Zeiger auf diesen Knoten.</li>
+    </ul>
+    <p>Wähle einen Suchwert. Gesucht wird im Baum aus Schritt 3.</p>
+    <div class="zeile" id="s-wahl"></div>
+    <div id="s-bild"></div>
+    <p><strong>Ausgabe von <code>fmt.Println(istWertInBaum(baum, …))</code></strong></p>
+    <div class="konsole" id="s-ausgabe"></div>
+    <div class="auskunft" id="s-urteil"></div>
+
+    <h3>Auf die Höhe kommt es an</h3>
+    <p>Die Suche geht in jedem Aufruf eine Ebene tiefer. Die Zahl der Aufrufe ist deshalb höchstens die Höhe des Baums plus eins. Die drei Bäume aus Schritt 2 enthalten die gleichen Werte, die Suche nach der 93 ist aber verschieden lang:</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Baum</th><th>Höhe</th><th>Aufrufe von <code>suchen</code> für den Wert 93</th></tr></thead>
+      <tbody>
+        <tr><td>Der extrem balancierte Baum aus Abbildung 9.5</td><td>3</td><td>3</td></tr>
+        <tr><td>Der Baum aus Abbildung 9.6</td><td>4</td><td>3</td></tr>
+        <tr><td>Der entartete Baum aus Abbildung 9.7</td><td>7</td><td>7</td></tr>
+      </tbody>
+    </table></div>
+    <p>In einem balancierten Baum mit n Knoten braucht die Suche etwa log<sub>2</sub>(n) Schritte, bei einer Million Knoten etwa 20. In einem entarteten Baum sind es bis zu n. Wie ein Baum beim Einfügen balanciert bleibt, ist Stoff des Moduls Algorithmen und Datenstrukturen.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Listing 9.2, Seiten 240–243. Beide Funktionen stammen aus dem Listing. Die Zahl der Aufrufe ist mit Go 1.26 gezählt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Durchlaufen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion <code>baumAusgeben</code> gibt erst den linken Teilbaum aus, dann den Wert der Wurzel, dann den rechten Teilbaum. Welchen Wert des Baums aus Schritt 3 gibt sie als ersten aus?
+          <details><summary>Auflösung</summary>Die 17. Sie steht ganz links und ist der kleinste Wert. Die Wurzel 36 kommt erst als zweiter Wert.</details></li>
+      </ol>
+    </div>
+    <p>Eine Liste durchläuft eine Schleife. In einem Baum gibt es an jedem Knoten zwei Wege, und beide müssen gegangen werden. Die rekursive Datenstruktur verlangt eine rekursive Funktion:</p>
+    <ol class="programm" id="d-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="d-weiter">nächste Anweisung</button>
+      <button type="button" id="d-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="d-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="d-bild"></div>
+    <div id="d-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="d-ausgabe"></div>
+    <div class="auskunft" id="d-urteil"></div>
+    <p>Die Reihenfolge linker Teilbaum, Knoten, rechter Teilbaum heißt <strong>In-Order</strong>. In einem Suchbaum liefert sie die Werte aufsteigend sortiert.</p>
+
+    <h3>Die Summe aller Werte</h3>
+    <p>Die Summe eines Baums ist der Wert der Wurzel plus die Summe des linken und die Summe des rechten Teilbaums. Für <code>nil</code> ist die Summe 0.</p>
+    <pre class="code-block">// liefert die Summe aller Werte des Baums zurück
+func summeDesBaums(wurzel *knoten) int {
+    summe := 0
+    if wurzel != nil {
+        // Traversierung des Baums in sog. Pre-Order (Knoten-L-R)
+        summe += wurzel.wert
+        summe += summeDesBaums(wurzel.links)
+        summe += summeDesBaums(wurzel.rechts)
+    }
+    return summe
+}</pre>
+    <p>Unter jedem Knoten steht, was der Aufruf mit diesem Knoten als Wurzel zurückliefert:</p>
+    <div id="m-bild"></div>
+    <ul>
+      <li><strong>Blatt:</strong> Ein Blatt liefert seinen eigenen Wert.</li>
+      <li><strong>Knoten 57:</strong> 57 + 42 + 71 = 170.</li>
+      <li><strong>Knoten 88:</strong> 88 + 170 + 93 = 351.</li>
+      <li><strong>Wurzel 36:</strong> 36 + 17 + 351 = 404.</li>
+    </ul>
+    <p>Hier kommt der Knoten vor seinen Teilbäumen an die Reihe. Diese Reihenfolge heißt <strong>Pre-Order</strong>. Für die Summe ist die Reihenfolge gleichgültig.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Seiten 241–244. <code>baumAusgeben</code> steht in Listing 9.2, <code>summeDesBaums</code> und die Zwischensummen stehen am Ende des Abschnitts.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Löschen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Im Baum aus Schritt 3 soll die 88 gelöscht werden. Sie hat zwei Kinder, die 57 und die 93. Welcher Wert kann an ihre Stelle treten, damit links weiter nur kleinere und rechts nur größere Werte hängen?
+          <details><summary>Auflösung</summary>Die 71, der größte Wert im linken Teilbaum der 88. Auch die 93 ginge, der kleinste Wert im rechten Teilbaum.</details></li>
+      </ol>
+    </div>
+    <p>Im Kurstext wird das Löschen beschrieben und nicht programmiert. Drei Fälle sind zu unterscheiden:</p>
+    <ul>
+      <li><strong>Der Knoten ist ein Blatt:</strong> Im Elternknoten bekommt der Zeiger auf das Blatt den Wert <code>nil</code>.</li>
+      <li><strong>Der Knoten hat ein Kind:</strong> Der Zeiger auf den Knoten bekommt die Adresse dieses Kinds. Der Teilbaum darunter rückt eine Ebene nach oben.</li>
+      <li><strong>Der Knoten hat zwei Kinder:</strong> Der Knoten bleibt mit seinen zwei Zeigern stehen. Sein Wert wird mit dem Wert eines anderen Knotens überschrieben, und dieser andere Knoten wird gelöscht.</li>
+    </ul>
+
+    <h3>Das Beispiel des Kurstexts: die 88 löschen</h3>
+    <p>Der andere Knoten ist der mit dem größten Wert im linken Teilbaum. Das Programm findet ihn so: einmal nach links, dann so lange nach rechts, bis es rechts nicht weitergeht. Von der 88 aus führt das zur 57 und dann zur 71.</p>
+    <div class="zweibilder">
+      <div><p><strong>Vorher</strong></p><div id="l-vor"></div></div>
+      <div><p><strong>Nachher</strong></p><div id="l-nach"></div></div>
+    </div>
+    <p>Der Wert 71 überschreibt den Wert 88. Danach wird der alte Knoten 71 gelöscht. Er ist hier ein Blatt. Im Allgemeinen hat er höchstens ein Kind, und zwar ein linkes, sodass einer der zwei leichten Fälle vorliegt.</p>
+    <p>Go-Code dazu steht im Kurstext nicht: Die Idee ist einfach, das Programm braucht aber viele Sonderfälle.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Liste und Baum:</strong> Die Lektion <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a> zu Abschnitt 9.2.</li>
+      <li><strong>Rekursion:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a> zeigt, wie der Rechner bei jedem Aufruf einen eigenen Rahmen anlegt.</li>
+      <li><strong>Laufzeit:</strong> Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a> stellt log<sub>2</sub>(n) neben n und n².</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Seite 243. Die zwei Bilder zeigen den Baum aus Abbildung 9.6 vor und nach dem Löschen der 88.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#begriffe
+  const ANKER = ['worum', 'begriffe', 'suchbaum', 'einfuegen', 'suchen', 'durchlaufen', 'loeschen'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Begriffe', 'Schritt 2: Der Suchbaum', 'Schritt 3: Einfügen', 'Schritt 4: Suchen', 'Schritt 5: Durchlaufen', 'Schritt 6: Löschen'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? (v.totText || 'freigegeben') : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + (D.speicher.ziele && D.speicher.ziele[p[1]] !== undefined ? D.speicher.ziele[p[1]] : p[1])).join(', ') + '}' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      if (D.nach) D.nach(z);   // eigenes Bild der Seite zu diesem Zustand
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // ---------- Der Baum ----------
+  // Ein Knoten: { w (Wert), l, r (Knoten oder null), adr (Anfangsadresse im Modell) }. baue fügt die Werte ein wie die Funktion einfügen.
+  function baue(folge) {
+    let W = null;
+    folge.forEach((w, i) => {
+      const k = { w: w, l: null, r: null, adr: 100 + 24 * i };
+      if (!W) { W = k; return; }
+      let a = W;
+      for (;;) { if (w < a.w) { if (!a.l) { a.l = k; break; } a = a.l; } else { if (!a.r) { a.r = k; break; } a = a.r; } }
+    });
+    return W;
+  }
+  const hoehe = k => k ? 1 + Math.max(hoehe(k.l), hoehe(k.r)) : 0;
+  const alle = (k, liste) => { if (k) { alle(k.l, liste); liste.push(k); alle(k.r, liste); } return liste; };
+  // Der Weg der Suche nach w: die Knoten, mit denen verglichen wird
+  function weg(W, w) { const p = []; let a = W; while (a) { p.push(a); if (a.w === w) break; a = w < a.w ? a.l : a.r; } return { p: p, gefunden: !!a }; }
+  function baumBild(W, marke, unter) {
+    const liste = [], B = 62, H = 64;
+    (function lauf(k, t) { if (!k) return; lauf(k.l, t + 1); k.x = liste.length; k.t = t; liste.push(k); lauf(k.r, t + 1); })(W, 0);
+    const breite = Math.max(liste.length, 3) * B, hoch = hoehe(W) * H + (unter ? 6 : -10);
+    const X = k => k.x * B + B / 2, Y = k => k.t * H + 26;
+    let s = '<svg class="baum" viewBox="0 0 ' + breite + ' ' + hoch + '" style="max-width:' + Math.round(breite * 1.15) + 'px" role="img" aria-label="Der Baum als Bild">';
+    liste.forEach(k => { [k.l, k.r].forEach(kind => { if (kind) s += '<line class="kante" x1="' + X(k) + '" y1="' + Y(k) + '" x2="' + X(kind) + '" y2="' + Y(kind) + '"/>'; }); });
+    liste.forEach(k => { s += '<g class="knoten ' + ((marke && marke[k.w]) || '') + '"><circle cx="' + X(k) + '" cy="' + Y(k) + '" r="19"/><text x="' + X(k) + '" y="' + (Y(k) + 5) + '">' + k.w + '</text>' +
+      (unter && unter(k) !== undefined ? '<text class="unter" x="' + X(k) + '" y="' + (Y(k) + 33) + '">' + unter(k) + '</text>' : '') + '</g>'; });
+    return s + '</svg>';
+  }
+  const baumText = W => { const t = []; (function lauf(k) { if (!k) return; t.push('Knoten ' + k.w + ' hat links ' + (k.l ? k.l.w : 'nil') + ' und rechts ' + (k.r ? k.r.w : 'nil')); lauf(k.l); lauf(k.r); })(W); return t.join('; ') + '.'; };
+  const F95 = [57, 36, 17, 42, 88, 93, 71], F96 = [36, 88, 17, 93, 57, 42, 71], F97 = [17, 36, 42, 57, 71, 88, 93];
+  const B95 = baue(F95), B96 = baue(F96);
+  const marken = (pfad, ziel) => { const m = {}; pfad.forEach(k => { m[k.w] = 'pfad'; }); if (ziel !== undefined) m[ziel] = 'ziel'; return m; };
+
+  // ---------- Schritt 1: ein Knoten und sein Pfad ----------
+  const WB = wahl('b', [57, 36, 42, 93].map(w => {
+    const p = weg(B95, w).p, k = p[p.length - 1], kinder = [k.l, k.r].filter(Boolean).map(x => x.w);
+    return { code: 'Knoten ' + w, w: w, satz: 'Der Pfad von der Wurzel: ' + p.map(x => x.w).join(', ') + '. Der Knoten ' + w + ' hat die Höhe ' + p.length + '. ' +
+      (p.length === 1 ? 'Er ist die Wurzel und hat keinen Elternknoten.' : 'Sein Elternknoten ist der Knoten ' + p[p.length - 2].w + '.') + ' ' +
+      (kinder.length ? 'Seine Kindknoten sind ' + kinder.join(' und ') + ', er ist ein innerer Knoten.' : 'Er hat kein Kind und ist ein Blatt.') };
+  }));
+  const zeichneWB = WB.zeichne;
+  WB.zeichne = function () { const w = WB.liste[WB.i].w; el('b-bild').innerHTML = baumBild(B95, marken(weg(B95, w).p, w)); zeichneWB(); };
+
+  // ---------- Schritt 2: drei Reihenfolgen, drei Bäume ----------
+  const WF = wahl('f', [[F95, 'Abbildung 9.5', 'Der Baum ist extrem balanciert: Alle vier Blätter haben die Höhe 3.'], [F96, 'Abbildung 9.6', 'Die Blätter 17 und 93 haben die Höhe 2 und 3, die Blätter 42 und 71 die Höhe 4.'], [F97, 'Abbildung 9.7', 'Der Baum ist entartet: Jeder Knoten hat nur ein rechtes Kind, die Höhe ist gleich der Zahl der Werte.']].map(x =>
+    ({ code: x[0].join(', '), folge: x[0], satz: 'Diese Reihenfolge ergibt den Baum aus ' + x[1] + '. Er hat die Höhe ' + hoehe(baue(x[0])) + '. ' + x[2] })), true);
+  const zeichneWF = WF.zeichne;
+  WF.zeichne = function () { el('f-bild').innerHTML = baumBild(baue(WF.liste[WF.i].folge)); zeichneWF(); };
+
+  // ---------- Schritt 3: der Baum des Kurstexts entsteht ----------
+  const ADR = k => k ? 'Adresse ' + k.adr : 'nil';
+  const ZIELE = {}, ORTE = { 'main.baum': [60, '*knoten', 8] };
+  F96.forEach((w, i) => { const a = 100 + 24 * i; ZIELE['Adresse ' + a] = a; ORTE['~.Knoten ab ' + a] = [a, 'knoten', 24]; });
+  const DE = (function () {
+    const zeilen = ['baum := &knoten{wert: 36}'].concat(F96.slice(1).map(w => 'einfügen(baum, ' + w + ')'));
+    const lauf = F96.map((w, i) => {
+      const W = baue(F96.slice(0, i + 1)), p = weg(W, w).p, neu = p[p.length - 1], eltern = p[p.length - 2];
+      const satz = i === 0 ? 'Den ersten Knoten erzeugt das Programm selbst. Er liegt ab Zelle 100, seine zwei Zeiger sind nil. baum enthält die Adresse 100.' :
+        p.slice(0, -1).map(k => w + (w < k.w ? ' ist kleiner als ' + k.w + ', also nach links' : ' ist nicht kleiner als ' + k.w + ', also nach rechts')).join('. ') + '. Auf dieser Seite des Knotens ' + eltern.w + ' hängt noch kein Knoten. Der neue Knoten entsteht ab Zelle ' + neu.adr + ', und das Feld ' + (w < eltern.w ? 'links' : 'rechts') + ' des Knotens ' + eltern.w + ' bekommt die Adresse ' + neu.adr + '. ' +
+        (p.length === 2 ? 'Dafür genügt ein Aufruf von einfügen.' : 'Dafür ruft sich einfügen selbst auf, zusammen sind es ' + (p.length - 1) + ' Aufrufe.');
+      return { z: i + 1, satz: satz, W: W, marke: marken(p.slice(0, -1), w), aus: '',
+        rahmen: [R('main', [V('baum', 'Adresse 100', i === 0)]), FREI('Anonyme Variablen, erzeugt mit &', alle(W, []).sort((a, b) => a.adr - b.adr).map(k => V('Knoten ab ' + k.adr, FELDER(['wert', 'links', 'rechts'], [k.w, ADR(k.l), ADR(k.r)]), k === neu, k === eltern ? [w < k.w ? 1 : 2] : undefined)))] };
+    });
+    const D = ablauf('e', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Die sieben Zeilen stehen im Rumpf von main.', { orte: ORTE, ziele: ZIELE });
+    el('e-bild').insertAdjacentHTML('beforebegin', '<div id="e-baum"></div>');
+    D.nach = z => { el('e-baum').innerHTML = z ? baumBild(z.W, z.marke, k => 'ab ' + k.adr) : ''; };
+    return D;
+  })();
+
+  // ---------- Schritt 4: suchen ----------
+  const WS = wahl('s', [57, 71, 36, 13, 24, 100].map(w => {
+    const r = weg(B96, w), p = r.p, letzter = p[p.length - 1], n = r.gefunden ? p.length : p.length + 1;
+    return { code: 'Suchwert ' + w, w: w, p: p, gefunden: r.gefunden, aus: String(r.gefunden),
+      satz: 'Die Suche vergleicht mit ' + p.map(k => k.w).join(', dann mit ') + '. ' + (r.gefunden ? 'Im Knoten ' + w + ' steht der Suchwert, suchen liefert einen Zeiger auf diesen Knoten.' :
+        w + ' ist ' + (w < letzter.w ? 'kleiner' : 'größer') + ' als ' + letzter.w + ', und das Feld ' + (w < letzter.w ? 'links' : 'rechts') + ' des Knotens ' + letzter.w + ' ist nil. Der nächste Aufruf bekommt nil und liefert nil: Der Wert ' + w + ' kommt im Baum nicht vor. Hier müsste er hängen.') +
+        (n === 1 ? ' Das ist ein einziger Aufruf von suchen.' : ' Das sind ' + n + ' Aufrufe von suchen.') };
+  }));
+  const zeichneWS = WS.zeichne;
+  WS.zeichne = function () { const x = WS.liste[WS.i]; el('s-bild').innerHTML = baumBild(B96, marken(x.p, x.gefunden ? x.w : undefined)); zeichneWS(); };
+
+  // ---------- Schritt 5: In-Order ----------
+  const DD = (function () {
+    const zeilen = ['func baumAusgeben(wurzel *knoten) {', '    if wurzel != nil {', '        baumAusgeben(wurzel.links)', '        fmt.Printf("%d ", wurzel.wert)', '        baumAusgeben(wurzel.rechts)', '    }', '}'];
+    const lauf = [], fertig = []; let aus = '';
+    const bild = stapel => [R('main', [V('baum', 'Adresse 100')])].concat(stapel.map((k, i) => R('baumAusgeben', [V('wurzel', 'Adresse ' + k.adr + ', der Knoten ' + k.w, i === stapel.length - 1)])));
+    const marke = stapel => { const m = {}; fertig.forEach(w => { m[w] = 'ziel'; }); stapel.forEach(k => { if (!m[k.w]) m[k.w] = 'pfad'; }); return m; };
+    (function besuche(k, stapel) {
+      const st = stapel.concat([k]);
+      if (k.l) { lauf.push({ z: 3, satz: 'Der Aufruf für den Knoten ' + k.w + ' gibt zuerst seinen linken Teilbaum aus. Er ruft baumAusgeben mit dem Knoten ' + k.l.w + ' auf und wartet.', marke: marke(st), rahmen: bild(st), aus: aus }); besuche(k.l, st); }
+      aus += k.w + ' '; fertig.push(k.w);
+      lauf.push({ z: 4, satz: (k.l ? 'Der linke Teilbaum des Knotens ' + k.w + ' ist ausgegeben.' : 'Der Knoten ' + k.w + ' hat links kein Kind. Der Aufruf mit nil kehrt sofort zurück.') + ' Jetzt gibt der Aufruf seinen eigenen Wert ' + k.w + ' aus.', marke: marke(st), rahmen: bild(st), aus: aus });
+      if (k.r) { lauf.push({ z: 5, satz: 'Nach dem eigenen Wert folgt der rechte Teilbaum. Der Aufruf für den Knoten ' + k.w + ' ruft baumAusgeben mit dem Knoten ' + k.r.w + ' auf und wartet.', marke: marke(st), rahmen: bild(st), aus: aus }); besuche(k.r, st); }
+    })(B96, []);
+    const D = ablauf('d', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht der Aufruf baumAusgeben(baum) mit dem Baum aus Schritt 3.');
+    el('d-bild').insertAdjacentHTML('beforebegin', '<div id="d-baum"></div>');
+    D.nach = z => { el('d-baum').innerHTML = baumBild(B96, z ? z.marke : {}); };
+    return D;
+  })();
+  const summe = k => k ? k.w + summe(k.l) + summe(k.r) : 0;
+  el('m-bild').innerHTML = baumBild(B96, {}, k => 'Summe ' + summe(k));
+
+  // ---------- Schritt 6: die 88 löschen ----------
+  el('l-vor').innerHTML = baumBild(B96, { 88: 'pfad', 57: 'pfad', 71: 'ziel' });
+  el('l-nach').innerHTML = baumBild(baue([36, 17, 71, 57, 93, 42]), { 71: 'ziel' });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const T96 = 'Der Baum aus Schritt 3, das ist der Baum aus Abbildung 9.6: ' + baumText(B96);
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return ['Das Bild zeigt den Baum aus Abbildung 9.5: ' + baumText(B95)].concat(standWahl(WB, 'der Knoten'), ['Gelb ist im Bild der Pfad von der Wurzel, grün der gewählte Knoten.']);
+    if (stufe === 2) return standWahl(WF, 'die Reihenfolge').concat(['Der Baum im Bild: ' + baumText(baue(WF.liste[WF.i].folge))]);
+    if (stufe === 3) { const z = DE.stand ? DE.lauf[DE.stand - 1] : null; return standAblauf(DE).concat([z ? 'Der Baum im Bild: ' + baumText(z.W) + ' Gelb sind die Knoten, mit denen einfügen verglichen hat, grün ist der neue Knoten.' : 'Ein Bild des Baums gibt es noch nicht.', 'Im Modell belegt ein Knoten 24 Zellen: 8 für wert, 8 für links, 8 für rechts.']); }
+    if (stufe === 4) return [T96].concat(standWahl(WS, 'der Suchwert'), ['Gelb sind im Bild die Knoten, mit denen die Suche vergleicht' + (WS.liste[WS.i].gefunden ? ', grün ist der gefundene Knoten.' : '. Einen grünen Knoten gibt es nicht, der Wert fehlt.')]);
+    if (stufe === 5) return [T96].concat(standAblauf(DD), ['Im Bild sind die schon ausgegebenen Knoten grün. Gelb sind die Knoten, deren Aufruf läuft und wartet. Je Aufruf von baumAusgeben steht ein Rahmen da.', 'Darunter steht ein festes Bild zu summeDesBaums mit den Summen 17, 42, 71, 93, 170 für den Knoten 57, 351 für den Knoten 88 und 404 für die Wurzel 36.']);
+    return ['Dieser Schritt hat keine Demo, nur zwei feste Bilder.', 'Vorher: ' + baumText(B96), 'Nachher: ' + baumText(baue([36, 17, 71, 57, 93, 42]))];
+  }
+  const kurzStand = () => stufe === 1 ? WB.liste[WB.i].code : stufe === 2 ? 'Reihenfolge ' + (WF.i + 1) : stufe === 3 ? kurzVon(DE) : stufe === 4 ? WS.liste[WS.i].code : stufe === 5 ? kurzVon(DD) : '';
+  const programmZeilen = () => zeilenVon(stufe === 3 ? DE : stufe === 5 ? DD : null);
+
+  WB.zeichne(); WF.zeichne(); DE.zeichne(); WS.zeichne(); DD.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Binäre Suchbäume in Go',
+    thema: 'binärer Baum, Wurzel, Knoten, Blatt, Höhe, binärer Suchbaum, rekursives Einfügen und Suchen, In-Order, Summe des Baums, Löschen',
+    bezug: 'Kurstext v3.0.6, Abschnitt 9.3, Seiten 237–244',
+    beschreibung: '../kurslotse/kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text, pre.code-block',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum hängt die Form des Baums von der Reihenfolge ab?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
