@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>break-Anweisung in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.65;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm .marke { display:inline-block;margin-left:1.2em;padding:0 8px;border-radius:999px;font-size:.82rem;font-weight:700;line-height:1.6;font-family:"Segoe UI",Tahoma,sans-serif; }
+    .programm .marke.wahr { background:#bbf7d0;color:#14532d; }
+    .programm .marke.falsch { background:#fecaca;color:#7f1d1d; }
+    .programm .marke.offen { background:#475569;color:#e2e8f0; }
+
+    /* Was das Programm auf den Bildschirm schreibt */
+    .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
+    .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>break-Anweisung in Go</h1>
+    <p>Die Anweisung <code>break</code> verlässt eine Schleife sofort, mitten im Schleifenrumpf. Die Seite führt das Programm zur Fakultät aus dem Kurstext Anweisung für Anweisung aus und zeigt, wie die gleiche Schleife ohne <code>break</code> auskommt.</p>
+    <p>Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–149.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Fakultät und Überlauf</button>
+    <button type="button" class="tab" data-stufe="2">2 break im Lauf</button>
+    <button type="button" class="tab" data-stufe="3">3 Ohne break</button>
+    <button type="button" class="tab" data-stufe="4">4 Wann break passt</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Eine Schleife endet, wenn ihre Schleifenbedingung <code>false</code> ergibt. Geprüft wird die Bedingung aber nur vor einem Schleifendurchlauf. Manchmal stellt ein Programm mitten im Schleifenrumpf fest, dass Weitermachen keinen Sinn hat.</p>
+    <p>Dafür gibt es die break-Anweisung. Sie besteht nur aus dem Schlüsselwort <code>break</code>:</p>
+<pre class="code-block">for k := 1; k &lt;= 5; k++ {
+    if k == 3 {
+        break
+    }
+    fmt.Print(k, " ")
+}</pre>
+    <p>Das Programm gibt <code>1 2</code> aus. Beim dritten Schleifendurchlauf verlässt <code>break</code> die Schleife, bevor die 3 ausgegeben wird.</p>
+
+    <h3>Was aus früheren Abschnitten dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 5.5.3.2, Seiten 142–146, die for-Klausel:</strong> Init-Anweisung, Schleifenbedingung und Post-Anweisung. Dazu gibt es die Seite <a href="go_k5_for_klausel_interaktiv.html">for-Anweisung mit for-Klausel</a>.</li>
+      <li><strong>Abschnitt 5.5.3.1, Seiten 138–142, die Flag-Variable:</strong> eine Variable vom Typ <code>bool</code>, die einen Zustand festhält. Dazu gibt es die Seite <a href="go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, der arithmetische Überlauf:</strong> Ein Ergebnis passt nicht mehr in den Typ, und Go rechnet mit einem falschen Wert weiter. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</li>
+    </ul>
+
+    <h3>Die vier Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> erklärt die Aufgabe des Programms: die Fakultät berechnen und einen Überlauf vorher erkennen.</li>
+      <li><strong>Schritt 2</strong> führt das Programm aus Listing 5.7 Anweisung für Anweisung aus.</li>
+      <li><strong>Schritt 3</strong> zeigt die gleiche Schleife ohne <code>break</code>, mit einer Flag-Variable in der Schleifenbedingung.</li>
+      <li><strong>Schritt 4</strong> sagt, warum <code>break</code> als schlechter Stil gilt, wann es trotzdem passt und was es genau verlässt.</li>
+    </ul>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–149. Das Programm mit <code>k</code> ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Fakultät und Überlauf</h2>
+    <p>Das Programm des Kurstexts berechnet zu einer natürlichen Zahl n ihre Fakultät n!.</p>
+    <ul>
+      <li><strong>Die Fakultät:</strong> das Produkt aller ganzen Zahlen von 1 bis n. Beispiel: 5! = 1 · 2 · 3 · 4 · 5 = 120.</li>
+      <li><strong>Der Sonderfall:</strong> 0! ist als 1 festgelegt.</li>
+    </ul>
+    <p>Eine Schleife rechnet das Produkt Faktor für Faktor aus. Die Variable <code>fak</code> beginnt mit 1 und wird in jedem Schleifendurchlauf mit der Laufvariable <code>i</code> multipliziert:</p>
+<pre class="code-block">fak := 1
+for i := 1; i &lt;= eingabe; i++ {
+    fak *= i
+}</pre>
+
+    <h3>Das Problem: die Fakultät wächst sehr schnell</h3>
+    <p>Der Typ <code>int</code> hat auf den üblichen Rechnern 64 Bit. Sein größter Wert steht in der Konstante <code>math.MaxInt</code> und ist 9223372036854775807. Schon 21! ist größer.</p>
+    <p>Rechnet das Programm trotzdem weiter, kommt es zum arithmetischen Überlauf: Go meldet keinen Fehler und liefert einen falschen Wert.</p>
+
+    <h3>Die Prüfung vor der Multiplikation</h3>
+    <p>Ob <code>fak * i</code> noch in den Typ passt, lässt sich nicht am Ergebnis ablesen, denn das Ergebnis ist dann schon falsch. Das Programm prüft deshalb vorher, mit einer Division:</p>
+<pre class="code-block">if math.MaxInt/fak &gt;= i {
+    fak *= i
+}</pre>
+    <p>Der Gedanke dahinter: <code>math.MaxInt/fak</code> sagt, wie oft <code>fak</code> in den größten Wert hineinpasst. Ist diese Zahl mindestens so groß wie <code>i</code>, dann ist <code>fak * i</code> höchstens <code>math.MaxInt</code>.</p>
+
+    <h3>Ausprobieren: die Prüfung für einen Schleifendurchlauf</h3>
+    <div class="zeile" id="p-knoepfe">
+      <span>Schleifendurchlauf mit <code>i</code> gleich:</span>
+      <button type="button" data-pruef="0">5</button>
+      <button type="button" data-pruef="1">13</button>
+      <button type="button" data-pruef="2">20</button>
+      <button type="button" data-pruef="3">21</button>
+    </div>
+    <div class="feld">
+      <span class="was">fak vor der Multiplikation</span><span class="wie" id="p-fak"></span>
+      <span class="was">math.MaxInt/fak</span><span class="wie" id="p-quotient"></span>
+      <span class="was">math.MaxInt/fak &gt;= i</span><span class="wie" id="p-ok"></span>
+      <span class="was">fak * i</span><span class="wie" id="p-produkt"></span>
+    </div>
+    <div class="auskunft" id="p-text"></div>
+    <p>Die Division <code>math.MaxInt/fak</code> ist eine Division ganzer Zahlen. Die Nachkommastellen fallen weg.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–148. Die Werte der Demo stammen aus einem Lauf mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>break im Lauf</h2>
+    <p>Ergibt die Prüfung aus Schritt 1 <code>false</code>, meldet das Programm den Überlauf. Danach soll die Schleife enden, sonst käme in jedem weiteren Schleifendurchlauf die gleiche Meldung. Das erledigt <code>break</code>.</p>
+    <p>Die break-Anweisung im Schleifenrumpf einer for-Anweisung bewirkt zweierlei:</p>
+    <ul>
+      <li><strong>Der Schleifenrumpf wird sofort verlassen.</strong> Was im Schleifenrumpf noch folgt, läuft nicht mehr.</li>
+      <li><strong>Die for-Anweisung ist sofort zu Ende.</strong> Auch die Post-Anweisung läuft nicht mehr, und die Schleifenbedingung wird nicht mehr geprüft.</li>
+    </ul>
+
+    <h3>Ausprobieren: du bist der Benutzer</h3>
+    <p>Das Programm hält in Zeile 13 an und wartet auf deine Eingabe. Wähle dann eine der fünf Zahlen.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" id="l-weiter">Nächste Anweisung</button>
+      <button type="button" id="l-durchlauf">Bis zur nächsten Prüfung in Zeile 19</button>
+      <button type="button" id="l-ende">Bis zum Ende</button>
+      <button type="button" id="l-vorn">Von vorn</button>
+    </div>
+    <div class="zeile" id="l-eingaben">
+      <span>Eingabe:</span>
+      <button type="button" data-eingabe="0">0</button>
+      <button type="button" data-eingabe="3">3</button>
+      <button type="button" data-eingabe="5">5</button>
+      <button type="button" data-eingabe="21">21</button>
+      <button type="button" data-eingabe="-2">−2</button>
+    </div>
+    <div class="feld">
+      <span class="was">eingabe</span><span class="wie" id="l-eingabe"></span>
+      <span class="was">überlauf</span><span class="wie" id="l-ueber"></span>
+      <span class="was">fak</span><span class="wie" id="l-fak"></span>
+      <span class="was">i</span><span class="wie" id="l-i"></span>
+      <span class="was">Schleifendurchläufe bisher</span><span class="wie" id="l-durch"></span>
+    </div>
+    <div class="auskunft" id="l-text"></div>
+    <ol class="programm" id="l-programm"></ol>
+    <div class="konsole" id="l-konsole"></div>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde oder an der das Programm wartet. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Hinter einer Bedingung steht ein Schild mit dem Ergebnis ihrer letzten Prüfung. Das Schild hinter Zeile 19 nennt den Teil der for-Klausel, der gerade gelaufen ist.</p>
+    <p class="quelle">Listing 5.7, <code>for_klausel_fakultaet.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.3.</p>
+
+    <h3>Wozu die Variable überlauf dient</h3>
+    <p>Hinter der Schleife weiß das Programm zunächst nicht, auf welchem Weg es dorthin gekommen ist:</p>
+    <ul>
+      <li><strong>Regulär:</strong> Die Schleifenbedingung <code>i &lt;= eingabe</code> ergab <code>false</code>. Dann steht in <code>fak</code> die Fakultät.</li>
+      <li><strong>Vorzeitig:</strong> <code>break</code> hat die Schleife verlassen. Dann steht in <code>fak</code> ein Zwischenergebnis.</li>
+    </ul>
+    <p>Die Flag-Variable <code>überlauf</code> hält den Unterschied fest. Sie beginnt mit <code>false</code>, und Zeile 25 setzt sie vor dem <code>break</code> auf <code>true</code>. Zeile 29 fragt sie ab.</p>
+
+    <h3>Zwei Stellen im Programm</h3>
+    <ul>
+      <li><strong>Eingabe 0:</strong> Die Schleifenbedingung <code>1 &lt;= 0</code> ergibt schon bei der ersten Prüfung <code>false</code>. Der Schleifenrumpf läuft nie. Weil <code>fak</code> mit 1 beginnt, stimmt das Ergebnis trotzdem: 0! = 1.</li>
+      <li><strong>Negative Eingabe:</strong> Zeile 15 fängt sie ab. Die Fakultät ist nur für natürliche Zahlen erklärt.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–148.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Ohne break</h2>
+    <p>Im Kurstext steht <code>break</code> in Listing 5.7, um die Anweisung an einem Beispiel zu zeigen. Die bessere Lösung kommt ohne <code>break</code> aus: Die Flag-Variable <code>überlauf</code> wandert in die Schleifenbedingung.</p>
+<pre class="code-block">for i := 1; i &lt;= eingabe &amp;&amp; !überlauf; i++ {
+    // Schleifenrumpf wie zuvor, aber ohne break
+}</pre>
+    <p>Die neue Schleifenbedingung hat zwei Teile, verknüpft mit <code>&amp;&amp;</code>, dem Operator für „und“:</p>
+    <ul>
+      <li><strong><code>i &lt;= eingabe</code>:</strong> die alte Bedingung. Es sind noch Faktoren übrig.</li>
+      <li><strong><code>!überlauf</code>:</strong> Das Ausrufezeichen kehrt den Wahrheitswert um. Der Ausdruck ist <code>true</code>, solange noch kein Überlauf festgestellt wurde.</li>
+    </ul>
+    <p>Die Schleife läuft nur weiter, wenn beide Teile <code>true</code> ergeben.</p>
+
+    <h3>Vergleich: was nach dem Überlauf geschieht</h3>
+    <p>Die Eingabe ist 25. Im Schleifendurchlauf mit <code>i</code> gleich 21 ergibt die Prüfung <code>false</code>.</p>
+    <div class="zeile" id="o-knoepfe">
+      <button type="button" data-ohne="0">mit break</button>
+      <button type="button" data-ohne="1">mit Flag in der Schleifenbedingung</button>
+    </div>
+    <pre class="code-block" id="o-programm"></pre>
+    <div class="auskunft" id="o-text"></div>
+    <p>Beide Fassungen geben für jede Eingabe das Gleiche aus.</p>
+    <p>Der gleiche Kunstgriff steht schon in Abschnitt 5.5.3.1: Dort erzwingt die Flag-Variable <code>ersterLauf</code> in der Schleifenbedingung einen ersten Schleifendurchlauf. Die Seite <a href="go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a> zeigt ihn in Schritt 4. Die Operatoren <code>&amp;&amp;</code> und <code>!</code> stehen auf der Seite <a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seite 148. Im Kurstext steht nur der Kopf der Schleife. Den Schleifenrumpf hat die Seite aus Listing 5.7 übernommen.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Wann break passt</h2>
+    <p>Eine Schleife mit <code>break</code> zu verlassen gilt oft als schlechter Programmierstil. Der Grund:</p>
+    <ul>
+      <li><strong>Ohne <code>break</code></strong> entscheidet allein die Schleifenbedingung, wann die Schleife endet. Wer den Kopf der Schleife liest, weiß Bescheid.</li>
+      <li><strong>Mit <code>break</code></strong> stimmt das nicht mehr. Irgendwo im Schleifenrumpf kann ein <code>break</code> stehen, das unter einer ganz anderen Bedingung zuschlägt. Der Leser muss den ganzen Schleifenrumpf durchsuchen.</li>
+    </ul>
+    <p>Die Regel im Kurstext lautet deshalb: Eine Schleife soll möglichst ohne <code>break</code> auskommen.</p>
+
+    <h3>Wann break trotzdem in Ordnung ist</h3>
+    <ul>
+      <li><strong>Hinter dem Grund für den Abbruch folgen noch Anweisungen im Schleifenrumpf,</strong> die dann nicht mehr laufen sollen. Ohne <code>break</code> bräuchte man mehrere Flag-Variablen und if-Anweisungen, und der Code würde unübersichtlicher als mit <code>break</code>.</li>
+      <li><strong>In Listing 5.7 ist das anders:</strong> Hinter dem Überlauf ist der Schleifenrumpf ohnehin zu Ende. Deshalb ist dort die Fassung aus Schritt 3 die bessere.</li>
+    </ul>
+    <p>Wer eine Schleife aus gutem Grund mit <code>break</code> baut, schreibt das in einen Kommentar an den Anfang der Schleife.</p>
+
+    <h3>Ausprobieren: was break verlässt</h3>
+    <p><code>break</code> ist nur in einer Schleife und in einer switch-Anweisung erlaubt. Es verlässt immer nur die innerste Schleife oder switch-Anweisung, in der es steht.</p>
+    <div class="zeile" id="b-knoepfe">
+      <button type="button" data-wo="0">in einer Schleife</button>
+      <button type="button" data-wo="1">in zwei geschachtelten Schleifen</button>
+      <button type="button" data-wo="2">in switch in einer Schleife</button>
+      <button type="button" data-wo="3">außerhalb einer Schleife</button>
+    </div>
+    <ol class="programm" id="b-programm"></ol>
+    <div class="feld">
+      <span class="was" id="b-art"></span><span class="wie" id="b-ergebnis"></span>
+      <span class="was">Ausgabe</span><span class="wie" id="b-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="b-text"></div>
+    <p class="legende">Gelb markiert ist die Zeile mit <code>break</code>. Die vier Programme sind Ausschnitte ohne <code>package</code>, <code>import</code> und <code>func main</code>.</p>
+
+    <p>Zum Abschluss: Das <a href="155_go_k5_break_anweisung_quiz.html">Quiz zur break-Anweisung</a> fragt den Stoff von Abschnitt 5.5.3.3 ab.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 147–149. Die vier Programme der Demo und die Meldung des Compilers stehen nicht im Kurstext. Dass <code>break</code> bei geschachtelten Schleifen nur die innere verlässt, steht dort ebenfalls nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+  function nummern(liste) { return liste.length < 2 ? String(liste[0]) : liste.slice(0, -1).join(", ") + " und " + liste[liste.length - 1]; }
+  function einmalig(liste) { return liste.filter(function (z, i) { return liste.indexOf(z) === i; }).sort(function (a, b) { return a - b; }); }
+  function kopie(o) { var k = {}; Object.keys(o).forEach(function (n) { k[n] = o[n]; }); return k; }
+
+  // Ein Programm als nummerierte Liste. Eine Zeile: t Text, k Klasse (war, aktuell), m Schild hinter der Zeile, mk Klasse des Schilds
+  function zeigeProgramm(id, zeilen) {
+    $(id).innerHTML = zeilen.map(function (z, i) {
+      return "<li" + (z.k ? " class=\"" + z.k + "\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z.t) +
+        (z.m ? "<span class=\"marke " + z.mk + "\">" + esc(z.m) + "</span>" : "") + "</li>";
+    }).join("");
+  }
+  function mitNummern(texte) { return texte.map(function (t, i) { return (i + 1 < 10 ? " " : "") + (i + 1) + "  " + t; }); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#lauf
+  var ANKER = ["worum", "pruefung", "lauf", "flag", "wann"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: die Prüfung für einen Schleifendurchlauf ----
+  // Die Werte stammen aus einem Lauf mit Go 1.26. Als Text, weil sie für eine Zahl in JavaScript zu groß sind.
+
+  var MAXINT = "9223372036854775807";
+  var PRUEF = [
+    { i: 5, fak: "24", quotient: "384307168202282325", ok: true, produkt: "120" },
+    { i: 13, fak: "479001600", quotient: "19255409662", ok: true, produkt: "6227020800" },
+    { i: 20, fak: "121645100408832000", quotient: "75", ok: true, produkt: "2432902008176640000" },
+    { i: 21, fak: "2432902008176640000", quotient: "3", ok: false, produkt: "-4249290049419214848" }
+  ];
+  var pruef = 0;
+  function text1(p) {
+    return p.ok ? ["fak hat vor diesem Schleifendurchlauf den Wert " + p.fak + ". Das ist " + (p.i - 1) + "!.",
+        "fak passt " + p.quotient + "-mal in math.MaxInt. Das ist mindestens " + p.i + ", also passt " + p.fak + " * " + p.i + " in den Typ int.",
+        "Das Programm führt fak *= i aus. fak hat danach den Wert " + p.produkt + ". Das ist " + p.i + "!."]
+      : ["fak hat vor diesem Schleifendurchlauf den Wert " + p.fak + ". Das ist 20!.",
+        "fak passt nur noch " + p.quotient + "-mal in math.MaxInt. Das ist weniger als 21. Das Produkt 20! * 21 wäre größer als math.MaxInt.",
+        "Würde das Programm trotzdem multiplizieren, käme " + p.produkt + " heraus: eine negative Zahl als Produkt zweier positiver Zahlen. Das ist der arithmetische Überlauf. Das Programm multipliziert deshalb nicht, sondern meldet den Überlauf und verlässt die Schleife."];
+  }
+  function zeigePruefung() {
+    var p = PRUEF[pruef];
+    $("p-fak").textContent = p.fak;
+    $("p-quotient").textContent = p.quotient;
+    $("p-ok").textContent = p.quotient + " >= " + p.i + " ergibt " + p.ok;
+    $("p-ok").classList.toggle("fehler", !p.ok);
+    $("p-produkt").textContent = p.ok ? p.produkt : "passt nicht in int. Go rechnete " + p.produkt;
+    $("p-produkt").classList.toggle("fehler", !p.ok);
+    $("p-text").innerHTML = text1(p).map(function (s) { return "<p>" + esc(s) + "</p>"; }).join("");
+    jeder("#p-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.pruef) === pruef); });
+  }
+
+  // ---- Schritt 2: Listing 5.7 Anweisung für Anweisung ----
+
+  var FRAGE = "Fakultät berechnen (natürliche Zahl eingeben):";
+  var LISTING = [
+    "package main", "", "import (", "    \"fmt\"", "    \"math\"", ")", "",
+    "func main() {",
+    "    eingabe := 0",
+    "    überlauf := false", "",
+    "    fmt.Println(\"" + FRAGE + "\")",
+    "    fmt.Scan(&eingabe)", "",
+    "    if eingabe < 0 {",
+    "        fmt.Printf(\"Eingabe %v ist ungültig.\\n\", eingabe)",
+    "    } else {",
+    "        fak := 1",
+    "        for i := 1; i <= eingabe; i++ {",
+    "            // vorab prüfen, ob Multiplikation ohne Überlauf möglich ist",
+    "            if math.MaxInt/fak >= i {",
+    "                fak *= i",
+    "            } else {",
+    "                fmt.Printf(\"Achtung: %v * %v führt zu Überlauf: %v\\n\", fak, i, fak*i)",
+    "                überlauf = true",
+    "                break // Schleife sofort verlassen",
+    "            }",
+    "        }",
+    "        if überlauf {",
+    "            fmt.Printf(\"Fakultät von %v ist zu groß, um mit int berechnet werden zu können.\", eingabe)",
+    "        } else {",
+    "            fmt.Printf(\"Fakultät von %v ist %v.\\n\", eingabe, fak)",
+    "        }",
+    "    }", "",
+    "}"
+  ];
+  var gewaehlt = null, ort2 = 0;   // null: Der Student hat noch keine Zahl gewählt
+
+  // Der Lauf: je ausgeführter Anweisung ein Eintrag. fak ist eine BigInt, weil 20! für eine Zahl in JavaScript zu groß ist.
+  // teil nennt den Teil der for-Klausel in Zeile 19. i und fak sind null, solange es die Variable nicht gibt.
+  function lauf2() {
+    var MAX = BigInt(MAXINT);
+    var e = 0, ueber = false, fak = null, i = null, d = 0, aus = [], marken = {}, s = [];
+    function dazu(zeile, text, teilName, ergebnis, wartet) {
+      s.push({ zeile: zeile, text: text, teil: teilName || "", ergebnis: ergebnis === undefined ? null : ergebnis, e: e, ueber: ueber,
+        fak: fak === null ? null : fak.toString(), i: i, d: d, aus: aus.slice(), marken: kopie(marken), wartet: !!wartet });
+    }
+    dazu(9, "Die Variable eingabe wird deklariert und mit 0 belegt.");
+    dazu(10, "Die Flag-Variable überlauf wird deklariert und mit false belegt. Sie hält später fest, ob die Schleife wegen eines Überlaufs verlassen wurde.");
+    aus.push(FRAGE);
+    dazu(12, "Das Programm gibt die Aufforderung aus.");
+    if (gewaehlt === null) { dazu(13, "fmt.Scan wartet auf die Eingabe. Wähle über dem Programm eine Zahl.", "", null, true); return s; }
+    e = gewaehlt;
+    dazu(13, "fmt.Scan liest die Eingabe " + e + " und legt sie in der Variable eingabe ab.");
+    marken[15] = e < 0;
+    dazu(15, "if-Anweisung: " + e + " < 0 ergibt " + (e < 0) + "." + (e < 0 ? " Der if-Zweig wird ausgeführt." : " Der else-Zweig ab Zeile 17 wird ausgeführt."));
+    if (e < 0) {
+      aus.push("Eingabe " + e + " ist ungültig.");
+      dazu(16, "Das Programm meldet die ungültige Eingabe. Der else-Zweig mit der Schleife wird übersprungen.");
+      dazu(36, "Das Programm ist zu Ende. Die Schleife ist nie gelaufen.");
+      return s;
+    }
+    fak = BigInt(1);
+    dazu(18, "Die Variable fak wird deklariert und mit 1 belegt. Sie nimmt das Produkt auf.");
+    i = 1;
+    dazu(19, "Die Init-Anweisung i := 1 deklariert die Laufvariable i mit dem Startwert 1.", "Init-Anweisung");
+    while (true) {
+      var b = i <= e;
+      dazu(19, "Prüfung der Schleifenbedingung: " + i + " <= " + e + " ergibt " + b + "." + (b ? " Der Schleifenrumpf wird ausgeführt." : (d === 0 ? " Der Schleifenrumpf wird kein einziges Mal ausgeführt." : " Die Schleife endet regulär.") + " Das Programm macht in Zeile 29 weiter."), "Schleifenbedingung", b);
+      if (!b) break;
+      d++;
+      var q = MAX / fak, ok = q >= BigInt(i);
+      marken[21] = ok;
+      dazu(21, d + ". Schleifendurchlauf, Prüfung vor der Multiplikation: math.MaxInt/fak ergibt " + q + ". " + q + " >= " + i + " ergibt " + ok + "." + (ok ? " Die Multiplikation ist gefahrlos möglich." : " Das Produkt fak * i passt nicht mehr in den Typ int. Der else-Zweig wird ausgeführt."));
+      if (ok) {
+        var alt = fak;
+        fak = fak * BigInt(i);
+        dazu(22, "fak *= i rechnet " + alt + " * " + i + ". fak hat jetzt den Wert " + fak + ". Der Schleifenrumpf ist zu Ende. Es geht zurück zu Zeile 19, zur Post-Anweisung.");
+        i++;
+        dazu(19, "Die Post-Anweisung i++ erhöht i auf " + i + ". Als Nächstes wird die Schleifenbedingung erneut geprüft.", "Post-Anweisung");
+      } else {
+        var falsch = BigInt.asIntN(64, fak * BigInt(i));
+        aus.push("Achtung: " + fak + " * " + i + " führt zu Überlauf: " + falsch);
+        dazu(24, "Das Programm meldet den Überlauf. Der dritte Wert in der Meldung ist fak*i, so wie Go es falsch berechnet: " + falsch + ". Der Variable fak wird dieses Produkt nicht zugewiesen.");
+        ueber = true;
+        dazu(25, "Die Flag-Variable überlauf bekommt den Wert true. So lässt sich hinter der Schleife erkennen, warum sie geendet hat.");
+        dazu(26, "break verlässt die Schleife sofort. Die Post-Anweisung i++ läuft nicht mehr, i bleibt " + i + ". Die Schleifenbedingung wird nicht mehr geprüft, obwohl " + i + " <= " + e + " noch true ergäbe. Das Programm macht in Zeile 29 weiter.");
+        break;
+      }
+    }
+    i = null;
+    marken[29] = ueber;
+    dazu(29, "Die Schleife ist zu Ende, die Laufvariable i gibt es nicht mehr. if-Anweisung: überlauf hat den Wert " + ueber + "." + (ueber ? " Die Schleife wurde also mit break verlassen." : " Die Schleife ist also regulär durchgelaufen."));
+    if (ueber) {
+      aus.push("Fakultät von " + e + " ist zu groß, um mit int berechnet werden zu können.");
+      dazu(30, "Das Programm meldet, dass die Fakultät von " + e + " nicht mit int berechnet werden kann. Den Wert von fak gibt es nicht aus, denn er ist nur ein Zwischenergebnis.");
+    } else {
+      aus.push("Fakultät von " + e + " ist " + fak + ".");
+      dazu(32, "Das Programm gibt die Fakultät aus: " + e + "! = " + fak + ".");
+    }
+    dazu(36, "Das Programm ist zu Ende. Der Schleifenrumpf wurde " + d + "-mal begonnen.");
+    return s;
+  }
+  function schild(e) { return e.teil === "Schleifenbedingung" ? "Schleifenbedingung: " + e.ergebnis : e.teil; }
+  function zeigeLauf() {
+    var s = lauf2(), e = s[ort2], war = s.slice(0, ort2 + 1).map(function (x) { return x.zeile; }), letzter = ort2 === s.length - 1;
+    zeigeProgramm("l-programm", LISTING.map(function (t, n) {
+      var nr = n + 1, hier = nr === e.zeile, m = "", mk = "";
+      if (nr === 19) { if (hier && e.teil) { m = schild(e); mk = e.ergebnis === null ? "offen" : e.ergebnis ? "wahr" : "falsch"; } }
+      else if (e.marken[nr] !== undefined) { m = String(e.marken[nr]); mk = e.marken[nr] ? "wahr" : "falsch"; }
+      return { t: t, k: hier ? "aktuell" : war.indexOf(nr) >= 0 ? "war" : "", m: m, mk: mk };
+    }));
+    $("l-eingabe").textContent = e.e;
+    $("l-ueber").textContent = ort2 === 0 ? "noch nicht deklariert" : e.ueber;
+    $("l-fak").textContent = e.fak === null ? "noch nicht deklariert" : e.fak;
+    $("l-i").textContent = e.i === null ? (e.fak === null || e.zeile === 18 ? "gibt es noch nicht" : "gibt es nicht mehr") : e.i;
+    $("l-durch").textContent = e.d;
+    $("l-konsole").textContent = e.aus.length ? e.aus.join("\n") : "noch keine";
+    $("l-text").innerHTML = "<p><strong>Zeile " + e.zeile + (e.teil ? ", " + esc(e.teil) : "") + ":</strong> " + esc(e.text) + "</p>";
+    $("l-weiter").disabled = letzter || e.wartet;
+    $("l-weiter").classList.toggle("haupt", !e.wartet);
+    $("l-durchlauf").disabled = letzter || e.wartet || naechstePruefung(s) === ort2;
+    $("l-ende").disabled = letzter || e.wartet;
+    jeder("#l-eingaben button", function (k) { k.disabled = !e.wartet; k.classList.toggle("haupt", e.wartet); });
+  }
+  // Der nächste Eintrag, an dem die Schleifenbedingung in Zeile 19 geprüft wird. Gibt es keinen mehr, das Ende des Laufs.
+  function naechstePruefung(s) {
+    for (var n = ort2 + 1; n < s.length; n++) if (s[n].teil === "Schleifenbedingung") return n;
+    return s.length - 1;
+  }
+
+  // ---- Schritt 3: mit break und mit Flag in der Schleifenbedingung ----
+
+  var RUMPF = ["    if math.MaxInt/fak >= i {", "        fak *= i", "    } else {", "        fmt.Printf(\"Achtung: %v * %v führt zu Überlauf: %v\\n\", fak, i, fak*i)", "        überlauf = true"];
+  var OHNE = [
+    { name: "mit break", zeilen: ["for i := 1; i <= eingabe; i++ {"].concat(RUMPF, ["        break // Schleife sofort verlassen", "    }", "}"]),
+      text: "<p>Nach " + c("überlauf = true") + " folgt " + c("break") + ". Die Schleife ist sofort zu Ende.</p><p>Die Post-Anweisung " + c("i++") + " läuft nicht mehr, " + c("i") + " bleibt 21. Die Schleifenbedingung wird nicht mehr geprüft.</p><p>Der Kopf der Schleife sagt nur: Sie läuft, solange " + c("i <= eingabe") + " gilt. Dass sie auch früher enden kann, steht erst sechs Zeilen tiefer.</p>" },
+    { name: "mit Flag in der Schleifenbedingung", zeilen: ["for i := 1; i <= eingabe && !überlauf; i++ {"].concat(RUMPF, ["    }", "}"]),
+      text: "<p>Nach " + c("überlauf = true") + " ist der Schleifenrumpf zu Ende. Die Schleife läuft ihren gewohnten Gang weiter.</p><p>Die Post-Anweisung " + c("i++") + " erhöht " + c("i") + " auf 22. Dann wird die Schleifenbedingung geprüft: " + c("22 <= 25") + " ergibt " + c("true") + ", " + c("!überlauf") + " ergibt " + c("false") + ". Beides zusammen ergibt " + c("false") + ", und die Schleife endet.</p><p>Der Kopf der Schleife sagt jetzt alles: Sie läuft, solange noch Faktoren übrig sind und kein Überlauf festgestellt wurde.</p>" }
+  ];
+  var ohne = 0;
+  function zeigeOhne() {
+    $("o-programm").textContent = OHNE[ohne].zeilen.join("\n");
+    $("o-text").innerHTML = OHNE[ohne].text;
+    jeder("#o-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.ohne) === ohne); });
+  }
+
+  // ---- Schritt 4: was break verlässt ----
+  // Ausgaben und Meldung stammen aus Läufen mit Go 1.26.
+
+  var WO = [
+    { name: "in einer Schleife", zeilen: ["for k := 1; k <= 5; k++ {", "    if k == 3 {", "        break", "    }", "    fmt.Print(k, \" \")", "}"], marke: 3, fehler: false, ausgabe: "1 2",
+      text: "<p>Bei " + c("k") + " gleich 3 verlässt " + c("break") + " die Schleife. Die Ausgabe in Zeile 5 läuft für die 3 nicht mehr, und die Werte 4 und 5 kommen gar nicht erst dran.</p><p>Das " + c("break") + " steht im Block einer if-Anweisung. Verlassen wird die Schleife, in der die if-Anweisung steht.</p>" },
+    { name: "in zwei geschachtelten Schleifen", zeilen: ["for i := 1; i <= 3; i++ {", "    for j := 1; j <= 3; j++ {", "        if j == 2 {", "            break", "        }", "        fmt.Println(\"i, j:\", i, j)", "    }", "}"], marke: 4, fehler: false, ausgabe: "i, j: 1 1\ni, j: 2 1\ni, j: 3 1",
+      text: "<p>" + c("break") + " steht in der inneren Schleife mit " + c("j") + " und verlässt nur diese. Die äußere Schleife mit " + c("i") + " läuft weiter und beginnt die innere jedes Mal neu.</p><p>Deshalb erscheint für jedes " + c("i") + " eine Zeile mit " + c("j") + " gleich 1.</p>" },
+    { name: "in switch in einer Schleife", zeilen: ["for i := 1; i <= 5; i++ {", "    switch i {", "    case 3:", "        break", "    }", "    fmt.Print(i, \" \")", "}"], marke: 4, fehler: false, ausgabe: "1 2 3 4 5",
+      text: "<p>" + c("break") + " steht in einer switch-Anweisung und verlässt nur diese. Die Schleife läuft weiter, auch die 3 wird ausgegeben.</p><p>Wer hier die Schleife verlassen wollte, erlebt eine Überraschung: Das Programm verhält sich, als stünde das " + c("break") + " nicht da.</p>" },
+    { name: "außerhalb einer Schleife", zeilen: ["x := 5", "if x > 3 {", "    break", "}", "fmt.Println(x)"], marke: 3, fehler: true, meldung: "break is not in a loop, switch, or select", ausgabe: "keine, das Programm läuft nicht",
+      text: "<p>Um dieses " + c("break") + " herum gibt es keine Schleife und keine switch-Anweisung. Eine if-Anweisung allein lässt sich mit " + c("break") + " nicht verlassen. Go übersetzt das Programm nicht.</p><p>Die Meldung heißt auf Deutsch: break steht nicht in einer Schleife, switch-Anweisung oder select-Anweisung. Die select-Anweisung gehört nicht zum Stoff des Kurses.</p>" }
+  ];
+  var wo = 0;
+  function zeigeWo() {
+    var w = WO[wo];
+    zeigeProgramm("b-programm", w.zeilen.map(function (t, i) { return { t: t, k: i + 1 === w.marke ? "aktuell" : "" }; }));
+    $("b-art").textContent = w.fehler ? "Meldung des Compilers" : "Ergebnis";
+    $("b-ergebnis").textContent = w.fehler ? w.meldung : "Go übersetzt das Programm.";
+    $("b-ergebnis").classList.toggle("fehler", w.fehler);
+    $("b-ausgabe").textContent = w.ausgabe;
+    $("b-text").innerHTML = w.text;
+    jeder("#b-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.wo) === wo); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-pruef], [data-eingabe], [data-ohne], [data-wo]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.pruef !== undefined) { pruef = Number(d.pruef); zeigePruefung(); }
+    else if (d.eingabe !== undefined) { gewaehlt = Number(d.eingabe); zeigeLauf(); }
+    else if (d.ohne !== undefined) { ohne = Number(d.ohne); zeigeOhne(); }
+    else if (d.wo !== undefined) { wo = Number(d.wo); zeigeWo(); }
+    melde(false);
+  });
+  $("l-weiter").addEventListener("click", function () { ort2 = Math.min(ort2 + 1, lauf2().length - 1); zeigeLauf(); melde(false); });
+  $("l-durchlauf").addEventListener("click", function () { ort2 = naechstePruefung(lauf2()); zeigeLauf(); melde(false); });
+  $("l-ende").addEventListener("click", function () { ort2 = lauf2().length - 1; zeigeLauf(); melde(false); });
+  $("l-vorn").addEventListener("click", function () { gewaehlt = null; ort2 = 0; zeigeLauf(); melde(false); });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Fakultät und Überlauf", "Schritt 2: break im Lauf", "Schritt 3: Ohne break", "Schritt 4: Wann break passt"];
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 1) {
+      var p = PRUEF[pruef];
+      return ["Gewählt ist der Schleifendurchlauf mit i = " + p.i + ". Wählbar sind nur die Knöpfe 5, 13, 20 und 21.",
+        "Die Demo zeigt: fak vor der Multiplikation = " + p.fak + ". math.MaxInt/fak = " + p.quotient + ". math.MaxInt/fak >= i: " + p.quotient + " >= " + p.i + " ergibt " + p.ok + ".",
+        p.ok ? "fak * i = " + p.produkt + ". Das Produkt passt in den Typ int." : "fak * i passt nicht in den Typ int. Go rechnete " + p.produkt + ", das ist falsch.",
+        "math.MaxInt hat den Wert " + MAXINT + "."].concat(text1(p).map(function (s) { return "Dazu sagt die HTML-Seite: " + s; }));
+    }
+    if (stufe === 2) {
+      var s = lauf2(), e = s[ort2], letzter = ort2 === s.length - 1;
+      var bed = Object.keys(e.marken).map(Number).sort(function (a, b) { return a - b; });
+      return ["Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert. Das ist Anweisung " + (ort2 + 1) + " dieses Laufs." + (e.zeile === 19 && e.teil ? " Hinter Zeile 19 steht das Schild „" + schild(e) + "“." : ""),
+        "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
+        "Werte nach dieser Anweisung: eingabe = " + e.e + ", überlauf " + (ort2 === 0 ? "ist noch nicht deklariert" : "= " + e.ueber) + ", fak " + (e.fak === null ? "ist noch nicht deklariert" : "= " + e.fak) + ", i " + (e.i === null ? "gibt es gerade nicht" : "= " + e.i) + ".",
+        "Begonnen sind bisher " + e.d + " Schleifendurchläufe.",
+        "Schon gelaufen sind die Zeilen " + nummern(einmalig(s.slice(0, ort2 + 1).map(function (x) { return x.zeile; }))) + ".",
+        bed.length ? "Schilder hinter den Bedingungen: " + bed.map(function (z) { return "Zeile " + z + " „" + e.marken[z] + "“"; }).join(", ") + "." : "Hinter den Bedingungen in den Zeilen 15, 21 und 29 steht noch kein Schild.",
+        "Ausgabe bisher: " + (e.aus.length ? e.aus.join(" ; ") : "noch keine"),
+        e.wartet ? "Das Programm wartet auf eine Eingabe. Der Student wählt sie mit einem der Knöpfe 0, 3, 5, 21 und −2. Ein Eingabefeld gibt es nicht."
+                 : letzter ? "Der Lauf ist zu Ende. „Von vorn“ beginnt neu und fragt wieder nach einer Eingabe."
+                           : "Der Lauf ist noch nicht zu Ende. Die Ausgabe am Ende: " + s[s.length - 1].aus.join(" ; ")];
+    }
+    if (stufe === 3) {
+      var o = OHNE[ohne];
+      return ["Gewählt ist die Fassung „" + o.name + "“. Wählbar sind nur die zwei Fassungen „mit break“ und „mit Flag in der Schleifenbedingung“.",
+        "Der Kopf der Schleife in dieser Fassung: " + o.zeilen[0],
+        "Der Vergleich gilt für die Eingabe 25 und den Schleifendurchlauf mit i = 21. Beide Fassungen geben das Gleiche aus: Achtung: 2432902008176640000 * 21 führt zu Überlauf: -4249290049419214848 ; Fakultät von 25 ist zu groß, um mit int berechnet werden zu können.",
+        "Die Demo führt das Programm nicht Anweisung für Anweisung aus. Eine Eingabe lässt sich hier nicht wählen."];
+    }
+    var w = WO[wo];
+    return ["Gewählt ist die Fassung „" + w.name + "“. Gelb markiert ist Zeile " + w.marke + " mit break.",
+      w.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + w.meldung : "Go übersetzt diese Fassung. Die Ausgabe: " + w.ausgabe.replace(/\n/g, " ; "),
+      "Wählbar sind nur die vier Fassungen: " + WO.map(function (x) { return "„" + x.name + "“"; }).join(", ") + ". Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
+  }
+  function kurz() {
+    if (stufe === 1) return "i = " + PRUEF[pruef].i;
+    if (stufe === 2) { var e = lauf2()[ort2]; return "eingabe = " + e.e + ", Zeile " + e.zeile + (e.wartet ? ", wartet auf Eingabe" : "") + (e.i === null ? "" : ", i = " + e.i); }
+    if (stufe === 3) return OHNE[ohne].name;
+    if (stufe === 4) return "break " + WO[wo].name;
+    return "";
+  }
+  // Programmzeilen: die Programme der Demos, dazu jeder feste Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre:not([id])")).reduce(function (alle, p) {
+      return alle.concat(["---"], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    var demo = stufe === 2 ? mitNummern(LISTING)
+      : stufe === 3 ? ["Fassung „" + OHNE[ohne].name + "“:"].concat(OHNE[ohne].zeilen)
+      : stufe === 4 ? mitNummern(WO[wo].zeilen) : [];
+    return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
+  }
+
+  zeigePruefung();
+  zeigeLauf();
+  zeigeOhne();
+  zeigeWo();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "break-Anweisung in Go",
+    thema: "break-Anweisung, Schleife verlassen, Flag-Variable, Fakultät, arithmetischer Überlauf, Schleifenbedingung",
+    bezug: "Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–149",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_break_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum wird i++ nach dem break nicht mehr ausgeführt?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
