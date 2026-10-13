@@ -146,7 +146,7 @@ type besitzerZ struct {
         <li><strong>Datenverbund in Kapitel 2:</strong> In Abschnitt 2.2, Seite 9, wird eine Person mit Vorname, Nachname, Adresse und Telefonnummer beschrieben. Die Adresse ist dort selbst aus Straße, Hausnummer, Postleitzahl und Ort zusammengesetzt. Das ist ein hierarchischer Verbund ohne Go. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher, Schritt 3</a>.</li>
         <li><strong>Zuweisung eines Verbunds:</strong> Eine Zuweisung kopiert alle Felder eines Verbunds. Das steht in Abschnitt 8.2.3, Seiten 204–205. Dazu gibt es die Seite <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a>.</li>
         <li><strong>Zeiger:</strong> Ein Zeiger ist eine Variable, deren Wert eine Adresse ist. Das steht in Abschnitt 7.4, Seiten 173–178. Dazu gibt es die Seite <a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a>.</li>
-        <li><strong>Zeiger auf einen Verbund:</strong> Über einen Zeiger erreicht man ein Feld mit <code>p.feld</code>. Go folgt dem Zeiger dabei von selbst. Das steht in Abschnitt 8.2.4, Seiten 205–207, Hinweis 8.2. Dazu gibt es die Seite <a href="S214_zeiger_auf_verbund_demo_veranschaulichung.html">Zeiger auf Verbünde</a>.</li>
+        <li><strong>Zeiger auf einen Verbund:</strong> Über einen Zeiger erreicht man ein Feld mit <code>p.feld</code>. Go folgt dem Zeiger dabei von selbst. Das steht in Abschnitt 8.2.4, Seiten 205–207, Hinweis 8.2. Dazu gibt es die Seite <a href="go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde</a>.</li>
       </ul>
     </div>
     <div class="nav">
@@ -282,8 +282,8 @@ fmt.Println("Mike mit altem Auto:", mike)
       <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 8.3, Seite 214.</p>
       <h3>Wie es im Kurstext weitergeht</h3>
       <ul>
-        <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum.</li>
-        <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds.</li>
+        <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum. Dazu gibt es die Seite <a href="go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a>.</li>
+        <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds. Dazu gibt es die Seite <a href="go_k8_anonyme_felder_interaktiv.html">Anonyme Felder und eingebettete Verbünde</a>.</li>
       </ul>
       <p>Ein längeres Go-Programm zu dieser Seite liegt im Repository: <a href="go/S220_hierarchische_verbunde_demo.go">S220_hierarchische_verbunde_demo.go</a>.</p>
     </div>

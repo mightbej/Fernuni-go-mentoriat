@@ -126,7 +126,7 @@ Reiter: vergleich
 - Die Tabelle hat fünf Zeilen: was das Feld speichert, was bei einer Zuweisung an das Feld geschieht, ob zwei Besitzer dasselbe Auto haben können, wer eine Änderung am Auto bemerkt, wie der Zugriff auf den Tachostand lautet.
 - Die Beispiele in der Tabelle stammen aus Schritt 2 mit `mike` und `bmw` und aus Schritt 3 mit `audi`, `olaf` und `olga`.
 - Unter der Tabelle steht die Aussage des Kurstexts, dass in der Praxis meist Zeiger auf Verbünde als Feld-Typ verwendet werden.
-- Die Liste „Wie es im Kurstext weitergeht“ nennt Abschnitt 8.3.1 mit den rekursiven Verbund-Typen und Abschnitt 8.3.2 mit den anonymen Feldern. Zu beiden gibt es noch keine HTML-Seite.
+- Die Liste „Wie es im Kurstext weitergeht“ nennt Abschnitt 8.3.1 mit den rekursiven Verbund-Typen und Abschnitt 8.3.2 mit den anonymen Feldern. Zu beiden gibt es seit 2026-10-13 eine HTML-Seite, die Liste verlinkt sie: „Rekursive Verbund-Typen“ und „Anonyme Felder und eingebettete Verbünde“.
 - Unter der Karte steht auf jedem Reiter der Link zum Quiz.
 
 ### Handgriffe
