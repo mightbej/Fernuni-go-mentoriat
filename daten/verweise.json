@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-13T15:10",
+ "stand": "2026-10-13T16:09",
  "abschnitte": {
   "2.1": [
    {
@@ -110,6 +110,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zweierkomplement: negative Zahlen als Bitmuster in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zweierkomplement_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt, wie man aus einer Zahl ihr Negatives bildet und warum ein Bitmuster im Speicher etwas anderes ist als ein binäres Literal im Quelltext.",
@@ -207,6 +214,20 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Zuweisungen in Go",
@@ -369,9 +390,37 @@
     "art": "erklaert"
    },
    {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -712,6 +761,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
@@ -793,6 +849,13 @@
     "titel": "Logische Operatoren und Vergleiche in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
     "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1009,6 +1072,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "5.1.1": [
@@ -1179,6 +1249,41 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
@@ -1417,6 +1522,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
@@ -1489,6 +1601,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
@@ -1547,6 +1666,20 @@
     "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
@@ -1620,17 +1753,31 @@
   ],
   "7.1": [
    {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Programmierübung: Bubble Sort mit Funktionen",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/160_go_k7_bubblesort_mit_funktionen.html",
-    "beschreibung": "Die Seite zerlegt Bubble Sort in benannte Funktionen.",
-    "geprueft": false,
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
     "art": "nennt"
    },
    {
     "titel": "Programmierübung: Selection Sort mit Funktionen",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/162_go_k7_selectionsort_mit_funktionen.html",
-    "beschreibung": "Die Seite zerlegt Selection Sort in benannte Funktionen.",
-    "geprueft": false,
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
     "art": "nennt"
    },
    {
@@ -1641,7 +1788,23 @@
     "art": "nennt"
    }
   ],
+  "7.1.1": [
+   {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
   "7.1.2": [
+   {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Variablendeklaration in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
@@ -1652,11 +1815,18 @@
   ],
   "7.2": [
    {
-    "titel": "Das Kopier-Problem visualisiert",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html",
-    "beschreibung": "Die Seite zeigt, dass ein Array bei der Übergabe an eine Funktion und bei der Rückgabe vollständig kopiert wird.",
-    "geprueft": false,
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Das Kopier-Problem: Arrays als Argument",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
+    "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
@@ -1666,19 +1836,89 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
     "geprueft": true,
     "art": "nennt"
    }
   ],
   "7.3": [
    {
-    "titel": "Das Kopier-Problem visualisiert",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/150_go_k7_das_kopier_problem.html",
-    "beschreibung": "Die Seite zeigt, dass ein Array bei der Übergabe an eine Funktion und bei der Rückgabe vollständig kopiert wird.",
-    "geprueft": false,
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Das Kopier-Problem: Arrays als Argument",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
+    "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
+    "geprueft": true,
     "art": "nennt"
    }
   ],
@@ -1686,9 +1926,23 @@
    {
     "titel": "Speichermodell: Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
-    "beschreibung": "Die Seite zeigt, dass ein Zeiger eine Variable ist, in deren Zellen eine Adresse steht.",
-    "geprueft": false,
+    "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Das Kopier-Problem: Arrays als Argument",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
+    "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
@@ -1696,21 +1950,49 @@
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Selection Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "7.4.1": [
    {
-    "titel": "Programmierübung: Bubble Sort mit Zeigerparameter",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/161_go_k7_bubblesort_mit_zeigern.html",
-    "beschreibung": "Die Seite ersetzt in Bubble Sort die Rückgabe des Arrays durch einen Zeigerparameter.",
-    "geprueft": false,
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
     "art": "nennt"
    },
    {
-    "titel": "Programmierübung: Selection Sort mit Zeigerparameter",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/163_go_k7_selectionsort_mit_zeigern.html",
-    "beschreibung": "Die Seite ersetzt in Selection Sort die Übergabe als Kopie durch einen Zeigerparameter.",
-    "geprueft": false,
+    "titel": "Programmierübung: Selection Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
+    "geprueft": true,
     "art": "nennt"
    },
    {
@@ -1728,16 +2010,80 @@
     "art": "nennt"
    }
   ],
-  "7.4.5": [
+  "7.4.2": [
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "7.4.3": [
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Speichermodell: Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
-    "beschreibung": "Die Seite zeigt, dass ein Zeiger eine Variable ist, in deren Zellen eine Adresse steht.",
-    "geprueft": false,
+    "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
     "art": "nennt"
    }
   ],
+  "7.4.4": [
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "7.4.5": [
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Speichermodell: Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.4.6": [
+   {
+    "titel": "Zeiger in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
   "7.5": [
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
@@ -1748,10 +2094,67 @@
   ],
   "7.5.1": [
    {
-    "titel": "Bubble Sort Rekursiv mit Zeigern",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/164_go_k7_bubblesort_rekursiv.html",
-    "beschreibung": "Die Seite schreibt Bubble Sort als rekursive Funktion: ein Durchlauf, dann der Aufruf für ein kleineres Array.",
-    "geprueft": false,
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "7.5.2": [
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.5.3": [
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "7.5.4": [
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "7.5.5": [
+   {
+    "titel": "Rekursion in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html",
+    "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
     "art": "nennt"
    }
   ],
@@ -1903,6 +2306,27 @@
     "art": "erklaert"
    },
    {
+    "titel": "Programmierübung: Bubble Sort mit Funktionen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort mit Zeigern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Bubble Sort rekursiv",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
@@ -1974,15 +2398,6 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "nennt"
-   }
-  ],
-  "Kapitel 7": [
-   {
-    "titel": "Kapitel 7 - Funktionen, Zeiger und Rekursion in Go",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/169-201_go_k7_funktionen_zeiger_rekursion_veranschaulichung.html",
-    "beschreibung": "Die Seite geht durch das ganze Kapitel 7 und zeigt, wie Funktionen, Zeiger und Rekursion zusammenhängen.",
-    "geprueft": false,
-    "art": "erklaert"
    }
   ],
   "Kapitel 8": [
