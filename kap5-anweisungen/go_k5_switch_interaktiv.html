@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>switch-Anweisung in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Grüner Strich: Die Zeile ist schon gelaufen. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.war { border-left-color:#34d399; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm .marke { display:inline-block;margin-left:1.2em;padding:0 8px;border-radius:999px;font-size:.82rem;font-weight:700;line-height:1.6;font-family:"Segoe UI",Tahoma,sans-serif; }
+    .programm .marke.wahr { background:#bbf7d0;color:#14532d; }
+    .programm .marke.falsch { background:#fecaca;color:#7f1d1d; }
+    .programm .marke.offen { background:#475569;color:#e2e8f0; }
+
+    /* Was das Programm auf den Bildschirm schreibt */
+    .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
+    .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>switch-Anweisung in Go</h1>
+    <p>Die switch-Anweisung wählt unter mehreren Fällen den ersten aus, der passt. Die Seite führt das Programm zur Zuordnung der Wochentage aus dem Kurstext Anweisung für Anweisung aus und vergleicht <code>switch</code> mit <code>if</code>.</p>
+    <p>Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–137.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Aufbau und Ablauf</button>
+    <button type="button" class="tab" data-stufe="2">2 switch oder if</button>
+    <button type="button" class="tab" data-stufe="3">3 Ohne switch-Ausdruck</button>
+    <button type="button" class="tab" data-stufe="4">4 In anderen Sprachen</button>
+    <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Ein Programm soll oft unter mehr als zwei Fällen wählen: Aus der Zahl 1 wird „Montag“, aus der 2 wird „Dienstag“ und so weiter. Eine solche Auswahl heißt Mehrfachverzweigung.</p>
+    <p>Mit <code>if</code>, <code>else if</code> und <code>else</code> geht das. Kürzer und übersichtlicher geht es oft mit der switch-Anweisung, englisch switch statement:</p>
+<pre class="code-block">switch num {
+case 1:
+    text = "Montag"
+case 2:
+    text = "Dienstag"
+default:
+    text = "unbekannt"
+}</pre>
+    <p>Die switch-Anweisung ist wie <code>if</code> und <code>for</code> eine Kontrollfluss-Anweisung: Sie steuert, welche Anweisungen als nächste ausgeführt werden.</p>
+
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, die Auswahl ohne Go:</strong> Dort steht die Verzweigung als <code>IF b THEN … ELSE …</code>. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, die Mehrfachverzweigung mit <code>else if</code>:</strong> Dazu gibt es die Seite <a href="go_k5_if_anweisungen_interaktiv.html#elseif">if-Anweisung</a>, Schritt 3. Schritt 2 dieser Seite vergleicht beide Schreibweisen.</li>
+    </ul>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> erklärt den Aufbau und führt das Programm aus Listing 5.3 Anweisung für Anweisung aus.</li>
+      <li><strong>Schritt 2</strong> stellt <code>switch</code> und <code>if</code> gegenüber und zeigt, was ein Funktionsaufruf als switch-Ausdruck ändert.</li>
+      <li><strong>Schritt 3</strong> zeigt die switch-Anweisung ohne switch-Ausdruck.</li>
+      <li><strong>Schritt 4</strong> zeigt, was die switch-Anweisung in Java und C++ anders macht.</li>
+      <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
+    </ul>
+    <div class="hinweis">Die Go-Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–137.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Aufbau und Ablauf</h2>
+    <p>Eine switch-Anweisung besteht aus dem Schlüsselwort <code>switch</code>, einem Ausdruck und einem Block. Die Teile haben eigene Namen:</p>
+    <ul>
+      <li><strong>switch-Ausdruck:</strong> der Ausdruck hinter <code>switch</code>, zum Beispiel <code>num</code>.</li>
+      <li><strong>case-Abschnitt:</strong> das Schlüsselwort <code>case</code>, ein oder mehrere Ausdrücke und ein Doppelpunkt, zum Beispiel <code>case 6, 7:</code>.</li>
+      <li><strong>case-Ausdruck:</strong> ein Ausdruck in einem case-Abschnitt, hier <code>6</code> und <code>7</code>. Mehrere case-Ausdrücke sind durch Kommas getrennt.</li>
+      <li><strong>Anweisungsteil:</strong> die Anweisungen, die auf den case-Abschnitt folgen, zum Beispiel <code>text = "Wochenende"</code>.</li>
+      <li><strong>default-case:</strong> ein Abschnitt, der mit <code>default:</code> beginnt. Er darf fehlen.</li>
+    </ul>
+
+    <h3>Wie Go eine switch-Anweisung ausführt</h3>
+    <ul>
+      <li><strong>Auswerten:</strong> Go wertet den switch-Ausdruck einmal aus.</li>
+      <li><strong>Vergleichen:</strong> Go vergleicht seinen Wert von oben nach unten mit den Werten der case-Ausdrücke.</li>
+      <li><strong>Ausführen:</strong> Beim ersten case-Ausdruck mit gleichem Wert führt Go dessen Anweisungsteil aus. Damit ist die switch-Anweisung zu Ende. Die case-Abschnitte darunter prüft Go nicht mehr.</li>
+      <li><strong>default:</strong> Stimmt kein case-Ausdruck überein, führt Go den Anweisungsteil des default-case aus. Gibt es keinen, tut die switch-Anweisung nichts.</li>
+    </ul>
+
+    <h3>Ausprobieren: du bist der Benutzer</h3>
+    <p>Das Programm ordnet einer Zahl von 1 bis 7 einen Wochentag zu. Es hält in Zeile 9 an und wartet auf deine Eingabe. Wähle dann eine der neun Zahlen.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" id="w-weiter">Nächste Anweisung</button>
+      <button type="button" id="w-ende">Bis zum Ende</button>
+      <button type="button" id="w-vorn">Von vorn</button>
+    </div>
+    <div class="zeile" id="w-eingaben">
+      <span>Eingabe:</span>
+      <button type="button" data-eingabe="1">1</button>
+      <button type="button" data-eingabe="2">2</button>
+      <button type="button" data-eingabe="3">3</button>
+      <button type="button" data-eingabe="4">4</button>
+      <button type="button" data-eingabe="5">5</button>
+      <button type="button" data-eingabe="6">6</button>
+      <button type="button" data-eingabe="7">7</button>
+      <button type="button" data-eingabe="9">9</button>
+      <button type="button" data-eingabe="0">0</button>
+    </div>
+    <div class="feld">
+      <span class="was">num</span><span class="wie" id="w-num"></span>
+      <span class="was">text</span><span class="wie" id="w-textwert"></span>
+      <span class="was">Geprüfte case-Abschnitte bisher</span><span class="wie" id="w-vergleiche"></span>
+    </div>
+    <div class="auskunft" id="w-text"></div>
+    <ol class="programm" id="w-programm"></ol>
+    <div class="konsole" id="w-konsole"></div>
+    <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde oder an der das Programm wartet. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Hinter einem geprüften case-Abschnitt steht ein Schild: rot mit „passt nicht“ oder grün mit „passt“.</p>
+    <p class="quelle">Listing 5.3, <code>switch_wochentag.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.2.</p>
+
+    <h3>Was Go bei den case-Ausdrücken verlangt</h3>
+    <ul>
+      <li><strong>Gleicher Typ:</strong> Die case-Ausdrücke müssen den gleichen Typ haben wie der switch-Ausdruck. Zu <code>case "sechs":</code> in einer switch-Anweisung über die Zahl <code>num</code> meldet der Compiler <code>cannot convert "sechs" (untyped string constant) to type int</code>.</li>
+      <li><strong>Kein Wert doppelt:</strong> Steht <code>case 6:</code> zweimal da, meldet der Compiler <code>duplicate case 6 (constant of type int) in expression switch</code>.</li>
+      <li><strong>Beliebiger Typ:</strong> Der switch-Ausdruck muss keine ganze Zahl sein. <code>switch wort {</code> mit <code>case "ja", "j":</code> vergleicht Strings.</li>
+      <li><strong>Beliebige Ausdrücke:</strong> Im Listing sind die case-Ausdrücke Literale. Erlaubt sind dort beliebige Ausdrücke.</li>
+      <li><strong>Platz des default-case:</strong> Er darf an jeder Stelle zwischen den case-Abschnitten stehen. Üblich ist das Ende.</li>
+    </ul>
+    <p>Im Kurstext wird noch eine zweite Form der switch-Anweisung erwähnt, die nach einem Typ verzweigt. Sie gehört nicht zum Stoff des Kurses.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–134. Die zwei Meldungen des Compilers und das Beispiel mit <code>wort</code> stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>switch oder if</h2>
+    <p>Die Zuordnung der Wochentage lässt sich auch mit einer if-Anweisung schreiben. Beide Fassungen tun das Gleiche.</p>
+    <div class="zeile" id="v-knoepfe">
+      <button type="button" data-fassung="0">mit switch</button>
+      <button type="button" data-fassung="1">mit if</button>
+    </div>
+    <pre class="code-block" id="v-programm"></pre>
+    <div class="feld">
+      <span class="was">So oft steht num im Code</span><span class="wie" id="v-num"></span>
+    </div>
+    <div class="auskunft" id="v-text"></div>
+    <p>Die switch-Anweisung passt, wenn ein Wert mit mehreren festen Werten auf Gleichheit verglichen wird. Dann ist sie kürzer und leichter zu lesen.</p>
+
+    <h3>Ein Funktionsaufruf als switch-Ausdruck</h3>
+    <p>Ein zweiter Vorteil zeigt sich, wenn der switch-Ausdruck ein Funktionsaufruf <code>f()</code> ist. Go wertet den switch-Ausdruck nur einmal aus und merkt sich den Wert für alle Vergleiche.</p>
+    <p>Die Funktion <code>f</code> dieser Demo zählt in der globalen Variable <code>aufrufe</code> mit, wie oft sie aufgerufen wird, und liefert den Wert 1:</p>
+<pre class="code-block">var aufrufe int
+
+func f() int {
+    aufrufe++
+    return 1
+}</pre>
+    <div class="zeile" id="f-knoepfe">
+      <button type="button" data-aufruf="0">if mit f()</button>
+      <button type="button" data-aufruf="1">if mit Variable</button>
+      <button type="button" data-aufruf="2">switch mit f()</button>
+    </div>
+    <pre class="code-block" id="f-programm"></pre>
+    <div class="feld">
+      <span class="was">Wert von text danach</span><span class="wie" id="f-wert"></span>
+      <span class="was">Wert von aufrufe danach</span><span class="wie" id="f-aufrufe"></span>
+    </div>
+    <div class="auskunft" id="f-text"></div>
+    <p>Mehrfache Aufrufe kosten Zeit. Schlimmer ist ein Aufruf mit Seiteneffekt: Liefert <code>f</code> nicht jedes Mal den gleichen Wert oder ändert sie etwas, wie hier die Variable <code>aufrufe</code>, dann verhält sich die if-Anweisung mit <code>f()</code> anders als gedacht.</p>
+    <p>Funktionen mit Rückgabewert werden in Abschnitt 3.4 kurz und in Kapitel 7 ausführlich behandelt. Globale Variablen stehen auf der Seite <a href="go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration</a>, Schritt 3.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 134–136, mit dem Expertenwissen 5.11. Die Funktion <code>f</code> mit dem Zähler ist ein eigenes Beispiel.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Ohne switch-Ausdruck</h2>
+    <p>Der switch-Ausdruck darf fehlen. Go setzt dann stillschweigend den switch-Ausdruck <code>true</code> ein. Diese Form heißt auf Englisch tagless switch.</p>
+    <p>Daraus folgt:</p>
+    <ul>
+      <li><strong>Jeder case-Ausdruck hat den Typ <code>bool</code>.</strong> Er ist eine Bedingung, zum Beispiel <code>x &lt; 0</code>.</li>
+      <li><strong>Go sucht den ersten case-Ausdruck, der <code>true</code> ergibt,</strong> und führt dessen Anweisungsteil aus.</li>
+    </ul>
+    <p>So lässt sich eine Mehrfachverzweigung nach beliebigen Bedingungen schreiben, nicht nur nach Gleichheit.</p>
+
+    <h3>Ausprobieren: negativ, positiv oder Null</h3>
+    <div class="zeile" id="t-knoepfe">
+      <span>Wert von <code>x</code>:</span>
+      <button type="button" data-x="-5">−5</button>
+      <button type="button" data-x="0">0</button>
+      <button type="button" data-x="7">7</button>
+    </div>
+    <ol class="programm" id="t-programm"></ol>
+    <div class="feld">
+      <span class="was">Ausgabe</span><span class="wie" id="t-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="t-text"></div>
+    <p class="legende">Hinter jedem case-Ausdruck steht ein Schild mit seinem Ergebnis: grün mit <code>true</code>, rot mit <code>false</code>, grau mit „nicht geprüft“. Gelb markiert ist die Anweisung, die Go ausführt.</p>
+
+    <h3>Das Gleiche mit if</h3>
+    <p>Die switch-Anweisung ohne switch-Ausdruck ist eine andere Schreibweise für <code>if</code>, <code>else if</code> und <code>else</code>:</p>
+<pre class="code-block">if x &lt; 0 {
+    fmt.Println("x ist negativ")
+} else if x &gt; 0 {
+    fmt.Println("x ist positiv")
+} else {
+    fmt.Println("x ist Null")
+}</pre>
+
+    <h3>Mit und ohne switch-Ausdruck nicht mischen</h3>
+    <p>Steht ein switch-Ausdruck da, gehört in den case-Abschnitt ein Wert und keine Bedingung. Zu <code>switch x {</code> mit <code>case x &lt; 0:</code> meldet der Compiler <code>cannot convert x &lt; 0 (untyped bool value) to type int</code>. Go würde den Wert von <code>x</code> mit <code>true</code> oder <code>false</code> vergleichen, und das passt vom Typ nicht.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seite 135. Die Fassung mit <code>if</code> und die Meldung des Compilers stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>In anderen Sprachen</h2>
+    <p>Java, C++ und andere Sprachen aus der Familie von C haben auch eine switch-Anweisung. Sie sieht ähnlich aus und verhält sich in zwei Punkten anders.</p>
+
+    <h3>Fallthrough und break</h3>
+    <p>In diesen Sprachen ist die switch-Anweisung nach dem Anweisungsteil eines case-Abschnitts nicht zu Ende. Das Programm führt den Anweisungsteil des nächsten case-Abschnitts gleich mit aus. Es „fällt“ in den nächsten Abschnitt hinein, englisch fallthrough.</p>
+    <p>Wer das nicht will, schreibt ans Ende jedes Anweisungsteils das Schlüsselwort <code>break</code>. Das wird leicht vergessen und danach leicht übersehen.</p>
+    <div class="zeile" id="s-sprache">
+      <button type="button" data-sprache="0">Go</button>
+      <button type="button" data-sprache="1">Java ohne break</button>
+      <button type="button" data-sprache="2">Java mit break</button>
+    </div>
+    <div class="zeile" id="s-x">
+      <span>Wert von <code>x</code>:</span>
+      <button type="button" data-sx="1">1</button>
+      <button type="button" data-sx="2">2</button>
+      <button type="button" data-sx="3">3</button>
+    </div>
+    <pre class="code-block" id="s-programm"></pre>
+    <div class="feld">
+      <span class="was">Ausgabe</span><span class="wie" id="s-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="s-text"></div>
+    <p>Go beendet die switch-Anweisung nach dem Anweisungsteil von selbst. Ein vergessenes <code>break</code> kann dort keinen Fehler auslösen.</p>
+
+    <h3>Der Typ des switch-Ausdrucks</h3>
+    <ul>
+      <li><strong>Go:</strong> Der switch-Ausdruck darf jeden Typ haben, und die case-Ausdrücke dürfen beliebige Ausdrücke sein.</li>
+      <li><strong>Manche andere Sprachen:</strong> Der switch-Ausdruck ist auf bestimmte primitive Typen beschränkt, oder die case-Ausdrücke müssen konstant sein. Dort dient <code>switch</code> deshalb meist nur für einfache Vergleiche mit ganzen Zahlen oder Strings.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seite 137, mit dem Sprachvergleich 5.12. Die drei Programme sind eigene Beispiele. Ausgeführt ist die Fassung in Go. Die Ausgaben der zwei Fassungen in Java folgen aus der Regel für den Fallthrough.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Aus der Praxis</h2>
+    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.2 des Kurstexts. Go übersetzt jedes Beispiel, auch die drei mit dem Kommentar „falsch“.</div>
+
+    <h3>1. Ein leerer case-Abschnitt tut nichts</h3>
+<pre class="code-block">switch num {
+case 6:          // falsch: für 6 geschieht nichts
+case 7:
+    text = "Wochenende"
+}</pre>
+<pre class="code-block">switch num {
+case 6, 7:       // richtig: beide Werte in einem case-Abschnitt
+    text = "Wochenende"
+}</pre>
+    <p>Wer von Java oder C kommt, schreibt gleiche Fälle gern untereinander und verlässt sich auf den Fallthrough aus Schritt 4. In Go gibt es ihn nicht: Bei <code>num</code> gleich 6 passt der erste case-Abschnitt, sein Anweisungsteil ist leer, und die switch-Anweisung ist zu Ende. <code>text</code> bleibt der leere String.</p>
+    <p>Mehrere Werte mit dem gleichen Anweisungsteil gehören in einen case-Abschnitt, durch Kommas getrennt.</p>
+
+    <h3>2. Der default-case fängt den Wert ab, an den niemand gedacht hat</h3>
+<pre class="code-block">switch num {
+case 1:
+    text = "Montag"
+case 6, 7:
+    text = "Wochenende"
+}
+fmt.Println(num, "ist", text, "zugeordnet.")   // falsch bei 9: 9 ist  zugeordnet.</pre>
+    <p>Ohne default-case tut die switch-Anweisung bei einem unerwarteten Wert nichts. Das Programm läuft weiter, als wäre alles in Ordnung, und gibt hier einen leeren Text aus. Der Fehler fällt erst viel später auf.</p>
+    <p>Die Prüffrage beim Schreiben einer switch-Anweisung: Was geschieht mit einem Wert, der in keinem case-Abschnitt steht? Ist die Antwort „das darf nicht vorkommen“, gehört eine Meldung in den default-case.</p>
+
+    <h3>3. Ohne switch-Ausdruck entscheidet die Reihenfolge</h3>
+<pre class="code-block">switch {
+case t &lt; 25:     // falsch: trifft auch für -5 zu
+    fmt.Println("angenehm")
+case t &lt; 15:
+    fmt.Println("kühl")
+case t &lt; 0:
+    fmt.Println("frostig")
+default:
+    fmt.Println("warm")
+}</pre>
+<pre class="code-block">switch {
+case t &lt; 0:      // richtig: die engste Bedingung zuerst
+    fmt.Println("frostig")
+case t &lt; 15:
+    fmt.Println("kühl")
+case t &lt; 25:
+    fmt.Println("angenehm")
+default:
+    fmt.Println("warm")
+}</pre>
+    <p>Go nimmt den ersten case-Ausdruck, der <code>true</code> ergibt. In der ersten Fassung ist das für jede Temperatur unter 25 der erste Abschnitt. Für −5 gibt sie „angenehm“ aus, die Abschnitte „kühl“ und „frostig“ erreicht das Programm nie.</p>
+    <p>Bei Bedingungen, die einander einschließen, steht die engste zuerst. Bei einer switch-Anweisung mit switch-Ausdruck stellt sich die Frage nicht: Dort kann jeder Wert nur in einem case-Abschnitt stehen.</p>
+
+    <p>Zum Abschluss: Das <a href="138_go_k5_switch_quiz.html">Quiz zur switch-Anweisung</a> fragt den Stoff von Abschnitt 5.5.2 ab.</p>
+    <p class="quelle">Faustregeln zur if-Anweisung stehen auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+  function nummern(liste) { return liste.length < 2 ? String(liste[0]) : liste.slice(0, -1).join(", ") + " und " + liste[liste.length - 1]; }
+  function einmalig(liste) { return liste.filter(function (z, i) { return liste.indexOf(z) === i; }).sort(function (a, b) { return a - b; }); }
+  function kopie(o) { var k = {}; Object.keys(o).forEach(function (n) { k[n] = o[n]; }); return k; }
+
+  // Ein Programm als nummerierte Liste. Eine Zeile: t Text, k Klasse (war, aktuell), m Schild hinter der Zeile, mk Klasse des Schilds
+  function zeigeProgramm(id, zeilen) {
+    $(id).innerHTML = zeilen.map(function (z, i) {
+      return "<li" + (z.k ? " class=\"" + z.k + "\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z.t) +
+        (z.m ? "<span class=\"marke " + z.mk + "\">" + esc(z.m) + "</span>" : "") + "</li>";
+    }).join("");
+  }
+  function mitNummern(texte) { return texte.map(function (t, i) { return (i + 1 < 10 ? " " : "") + (i + 1) + "  " + t; }); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#tagless
+  var ANKER = ["worum", "aufbau", "vergleich", "tagless", "sprachen", "praxis"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: Listing 5.3 Anweisung für Anweisung ----
+
+  var LISTING = [
+    "package main", "", "import \"fmt\"", "", "func main() {",
+    "    var num int", "    var text string", "",
+    "    fmt.Scan(&num)", "",
+    "    switch num {",
+    "    case 1:", "        text = \"Montag\"",
+    "    case 2:", "        text = \"Dienstag\"",
+    "    case 3:", "        text = \"Mittwoch\"",
+    "    case 4:", "        text = \"Donnerstag\"",
+    "    case 5:", "        text = \"Freitag\"",
+    "    case 6, 7:", "        text = \"Wochenende\"",
+    "    default:", "        text = \"unbekannt\"",
+    "    }", "",
+    "    fmt.Println(num, \"ist\", text, \"zugeordnet.\")",
+    "}"
+  ];
+  var FAELLE = [
+    { zeile: 12, werte: [1], text: "Montag" }, { zeile: 14, werte: [2], text: "Dienstag" }, { zeile: 16, werte: [3], text: "Mittwoch" },
+    { zeile: 18, werte: [4], text: "Donnerstag" }, { zeile: 20, werte: [5], text: "Freitag" }, { zeile: 22, werte: [6, 7], text: "Wochenende" }
+  ];
+  var EINGABEN = [1, 2, 3, 4, 5, 6, 7, 9, 0];
+  var eingabe = null, ort1 = 0;   // null: Der Student hat noch keine Zahl gewählt
+
+  // Der Lauf: je ausgeführter Anweisung oder geprüftem case-Abschnitt ein Eintrag mit Zeile, Erklärung und Werten danach
+  function lauf1() {
+    var num = 0, text = "", aus = [], marken = {}, v = 0, s = [];
+    function dazu(zeile, erklaerung, wartet) { s.push({ zeile: zeile, text: erklaerung, num: num, wert: text, aus: aus.slice(), marken: kopie(marken), v: v, wartet: !!wartet }); }
+    dazu(6, "Die Variable num wird deklariert. Ein Wert steht nicht da, sie bekommt den Null-Wert 0.");
+    dazu(7, "Die Variable text wird deklariert. Sie bekommt den Null-Wert des Typs string, den leeren String.");
+    if (eingabe === null) { dazu(9, "fmt.Scan wartet auf die Eingabe. Wähle über dem Programm eine Zahl.", true); return s; }
+    num = eingabe;
+    dazu(9, "fmt.Scan liest die Eingabe " + num + " und legt sie in der Variable num ab.");
+    dazu(11, "Die switch-Anweisung beginnt. Go wertet den switch-Ausdruck num aus, sein Wert ist " + num + ". Diesen Wert vergleicht Go jetzt von oben nach unten mit den case-Ausdrücken.");
+    var treffer = false;
+    for (var i = 0; i < FAELLE.length && !treffer; i++) {
+      var f = FAELLE[i];
+      treffer = f.werte.indexOf(num) >= 0;
+      marken[f.zeile] = treffer;
+      v++;
+      var vergleich = f.werte.length === 1 ? num + " == " + f.werte[0] + " ergibt " + treffer + "."
+        : num === 6 ? "Der case-Abschnitt hat zwei case-Ausdrücke. Schon der erste passt: 6 == 6 ergibt true."
+        : num === 7 ? "Der case-Abschnitt hat zwei case-Ausdrücke. 7 == 6 ergibt false, 7 == 7 ergibt true. Ein Treffer genügt."
+        : "Der case-Abschnitt hat zwei case-Ausdrücke. " + num + " == 6 ergibt false, " + num + " == 7 ergibt false.";
+      dazu(f.zeile, vergleich + (treffer ? " Dieser case-Abschnitt passt." : " Go geht zum nächsten Abschnitt."));
+      if (treffer) {
+        text = f.text;
+        dazu(f.zeile + 1, "Go führt den Anweisungsteil dieses case-Abschnitts aus: text bekommt den Wert \"" + text + "\". Damit ist die switch-Anweisung zu Ende. " +
+          (i < FAELLE.length - 1 ? "Die case-Abschnitte darunter prüft Go nicht mehr. " : "") + "Das Programm macht hinter der Klammer } in Zeile 26 weiter.");
+      }
+    }
+    if (!treffer) {
+      marken[24] = true;
+      dazu(24, "Kein case-Ausdruck hat den Wert " + num + ". Jetzt kommt der default-case zum Tragen.");
+      text = "unbekannt";
+      dazu(25, "Go führt den Anweisungsteil des default-case aus: text bekommt den Wert \"unbekannt\". Die switch-Anweisung ist zu Ende.");
+    }
+    aus.push(num + " ist " + text + " zugeordnet.");
+    dazu(28, "Die Anweisung hinter der switch-Anweisung gibt num und text aus. Das Programm ist zu Ende. Go hat " + v + " von 6 case-Abschnitten geprüft.");
+    return s;
+  }
+  function schild(zeile, wert) { return zeile === 24 ? "kein case passt" : wert ? "passt" : "passt nicht"; }
+  function zeigeWochentag() {
+    var s = lauf1(), e = s[ort1], war = s.slice(0, ort1 + 1).map(function (x) { return x.zeile; }), letzter = ort1 === s.length - 1;
+    zeigeProgramm("w-programm", LISTING.map(function (t, i) {
+      var nr = i + 1, m = e.marken[nr];
+      return { t: t, k: nr === e.zeile ? "aktuell" : war.indexOf(nr) >= 0 ? "war" : "", m: m === undefined ? "" : schild(nr, m), mk: m ? "wahr" : "falsch" };
+    }));
+    $("w-num").textContent = e.num;
+    $("w-textwert").textContent = "\"" + e.wert + "\"";
+    $("w-vergleiche").textContent = e.v;
+    $("w-konsole").textContent = e.aus.length ? e.aus.join("\n") : "noch keine";
+    $("w-text").innerHTML = "<p><strong>Zeile " + e.zeile + ":</strong> " + esc(e.text) + "</p>";
+    $("w-weiter").disabled = letzter;
+    $("w-weiter").classList.toggle("haupt", !e.wartet);
+    $("w-ende").disabled = letzter;
+    jeder("#w-eingaben button", function (k) { k.disabled = !e.wartet; k.classList.toggle("haupt", e.wartet); });
+  }
+
+  // ---- Schritt 2: switch oder if, und ein Funktionsaufruf als switch-Ausdruck ----
+
+  var FASSUNG = [
+    { name: "mit switch", zeilen: ["switch num {", "case 1:", "    text = \"Montag\"", "case 2:", "    text = \"Dienstag\"", "case 3:", "    text = \"Mittwoch\"", "case 4:", "    text = \"Donnerstag\"", "case 5:", "    text = \"Freitag\"", "case 6, 7:", "    text = \"Wochenende\"", "default:", "    text = \"unbekannt\"", "}"], num: 1,
+      text: "<p>" + c("num") + " steht einmal da, hinter " + c("switch") + ". In jedem case-Abschnitt steht nur noch der Wert, mit dem verglichen wird.</p>" },
+    { name: "mit if", zeilen: ["if num == 1 {", "    text = \"Montag\"", "} else if num == 2 {", "    text = \"Dienstag\"", "} else if num == 3 {", "    text = \"Mittwoch\"", "} else if num == 4 {", "    text = \"Donnerstag\"", "} else if num == 5 {", "    text = \"Freitag\"", "} else if num == 6 || num == 7 {", "    text = \"Wochenende\"", "} else {", "    text = \"unbekannt\"", "}"], num: 7,
+      text: "<p>Der Vergleich " + c("num ==") + " steht in jedem Zweig neu da, im Zweig für das Wochenende zweimal. Wer die Variable umbenennt oder vertippt, muss an sieben Stellen suchen.</p><p>Die zwei Werte 6 und 7 verbindet der Operator " + c("||") + ", er bedeutet „oder“.</p>" }
+  ];
+  // Die Werte stammen aus Läufen mit Go 1.26.
+  var AUFRUF = [
+    { name: "if mit f()", zeilen: ["if f() == -1 {", "    text = \"minus\"", "} else if f() == 1 {", "    text = \"plus\"", "}"], aufrufe: 2,
+      text: "<p>" + c("f()") + " steht in zwei Bedingungen. Die erste ergibt " + c("false") + ", also wertet Go auch die zweite aus und ruft " + c("f") + " ein zweites Mal auf.</p><p>Mit jedem weiteren " + c("else if") + " käme ein Aufruf dazu.</p>" },
+    { name: "if mit Variable", zeilen: ["fWert := f()", "if fWert == -1 {", "    text = \"minus\"", "} else if fWert == 1 {", "    text = \"plus\"", "}"], aufrufe: 1,
+      text: "<p>Die Variable " + c("fWert") + " hebt den Rückgabewert von " + c("f") + " auf. " + c("f") + " wird nur einmal aufgerufen.</p><p>Das kostet eine Zeile und eine Variable mehr.</p>" },
+    { name: "switch mit f()", zeilen: ["switch f() {", "case -1:", "    text = \"minus\"", "case 1:", "    text = \"plus\"", "}"], aufrufe: 1,
+      text: "<p>Go wertet den switch-Ausdruck " + c("f()") + " einmal aus und merkt sich den Wert für alle Vergleiche. " + c("f") + " wird nur einmal aufgerufen.</p><p>Die Variable zum Aufheben braucht man hier nicht.</p>" }
+  ];
+  var fassung = 0, aufruf = 0;
+  function zeigeFassung() {
+    var f = FASSUNG[fassung];
+    $("v-programm").textContent = f.zeilen.join("\n");
+    $("v-num").textContent = f.num + "-mal";
+    $("v-text").innerHTML = f.text;
+    jeder("#v-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.fassung) === fassung); });
+  }
+  function zeigeAufruf() {
+    var a = AUFRUF[aufruf];
+    $("f-programm").textContent = a.zeilen.join("\n");
+    $("f-wert").textContent = "\"plus\"";
+    $("f-aufrufe").textContent = a.aufrufe;
+    $("f-aufrufe").classList.toggle("fehler", a.aufrufe > 1);
+    $("f-text").innerHTML = a.text;
+    jeder("#f-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.aufruf) === aufruf); });
+  }
+
+  // ---- Schritt 3: switch ohne switch-Ausdruck ----
+
+  var TAGLESS = ["switch {", "case x < 0:", "    fmt.Println(\"x ist negativ\")", "case x > 0:", "    fmt.Println(\"x ist positiv\")", "default:", "    fmt.Println(\"x ist Null\")", "}"];
+  var x = 7;
+  function tagless() {
+    var erster = x < 0, zweiter = x > 0;
+    return { erster: erster, zweiter: erster ? null : zweiter, zeile: erster ? 3 : zweiter ? 5 : 7,
+      ausgabe: erster ? "x ist negativ" : zweiter ? "x ist positiv" : "x ist Null" };
+  }
+  function text3(t) {
+    var s = ["Erster case-Ausdruck: " + x + " < 0 ergibt " + t.erster + "."];
+    if (t.erster) s.push("Go führt Zeile 3 aus. Den zweiten case-Ausdruck x > 0 prüft Go nicht mehr.");
+    else {
+      s.push("Zweiter case-Ausdruck: " + x + " > 0 ergibt " + t.zweiter + ".");
+      s.push(t.zweiter ? "Go führt Zeile 5 aus." : "Kein case-Ausdruck ergibt true. Go führt den default-case in Zeile 7 aus.");
+    }
+    return s;
+  }
+  function zeigeTagless() {
+    var t = tagless();
+    zeigeProgramm("t-programm", TAGLESS.map(function (z, i) {
+      var nr = i + 1, m = "", mk = "";
+      if (nr === 2) { m = String(t.erster); mk = t.erster ? "wahr" : "falsch"; }
+      if (nr === 4) { m = t.zweiter === null ? "nicht geprüft" : String(t.zweiter); mk = t.zweiter === null ? "offen" : t.zweiter ? "wahr" : "falsch"; }
+      return { t: z, k: nr === t.zeile ? "aktuell" : "", m: m, mk: mk };
+    }));
+    $("t-ausgabe").textContent = t.ausgabe;
+    $("t-text").innerHTML = text3(t).map(function (s) { return "<p>" + esc(s) + "</p>"; }).join("");
+    jeder("#t-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.x) === x); });
+  }
+
+  // ---- Schritt 4: Fallthrough in Java ----
+
+  var SPRACHE = [
+    { name: "Go", zeilen: ["switch x {", "case 1:", "    fmt.Println(\"Eins\")", "case 2:", "    fmt.Println(\"Zwei\")", "default:", "    fmt.Println(\"Anderes\")", "}"] },
+    { name: "Java ohne break", zeilen: ["switch (x) {", "case 1:", "    System.out.println(\"Eins\");", "case 2:", "    System.out.println(\"Zwei\");", "default:", "    System.out.println(\"Anderes\");", "}"] },
+    { name: "Java mit break", zeilen: ["switch (x) {", "case 1:", "    System.out.println(\"Eins\");", "    break;", "case 2:", "    System.out.println(\"Zwei\");", "    break;", "default:", "    System.out.println(\"Anderes\");", "}"] }
+  ];
+  var WORT = ["Eins", "Zwei", "Anderes"];
+  var sprache = 0, sx = 1;
+  function ausgabe4() { return sprache === 1 ? WORT.slice(sx - 1) : [WORT[sx - 1]]; }
+  function text4() {
+    var a = ausgabe4();
+    if (sprache === 0) return "Go führt den Anweisungsteil des passenden Abschnitts aus und beendet die switch-Anweisung. Ausgegeben wird nur „" + a[0] + "“.";
+    if (sprache === 2) return "Jeder Anweisungsteil endet mit break. Das beendet die switch-Anweisung, so wie Go es von selbst tut. Ausgegeben wird nur „" + a[0] + "“.";
+    return a.length === 1 ? "Der default-case ist der letzte Abschnitt. Dahinter kommt kein Abschnitt mehr, in den das Programm fallen könnte. Ausgegeben wird nur „Anderes“."
+      : "Das break fehlt. Das Programm beginnt beim passenden Abschnitt und läuft durch alle Abschnitte darunter: Es gibt " + a.map(function (w) { return "„" + w + "“"; }).join(" und ").replace(" und „Zwei“ und", ", „Zwei“ und") + " aus. Gewollt war nur „" + a[0] + "“.";
+  }
+  function zeigeSprache() {
+    $("s-programm").textContent = SPRACHE[sprache].zeilen.join("\n");
+    $("s-ausgabe").textContent = ausgabe4().join("\n");
+    $("s-ausgabe").classList.toggle("fehler", ausgabe4().length > 1);
+    $("s-text").innerHTML = "<p>" + esc(text4()) + "</p>";
+    jeder("#s-sprache button", function (k) { k.classList.toggle("haupt", Number(k.dataset.sprache) === sprache); });
+    jeder("#s-x button", function (k) { k.classList.toggle("haupt", Number(k.dataset.sx) === sx); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-eingabe], [data-fassung], [data-aufruf], [data-x], [data-sprache], [data-sx]");
+    if (!k || k.disabled) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.eingabe !== undefined) { eingabe = Number(d.eingabe); zeigeWochentag(); }
+    else if (d.fassung !== undefined) { fassung = Number(d.fassung); zeigeFassung(); }
+    else if (d.aufruf !== undefined) { aufruf = Number(d.aufruf); zeigeAufruf(); }
+    else if (d.x !== undefined) { x = Number(d.x); zeigeTagless(); }
+    else if (d.sprache !== undefined) { sprache = Number(d.sprache); zeigeSprache(); }
+    else if (d.sx !== undefined) { sx = Number(d.sx); zeigeSprache(); }
+    melde(false);
+  });
+  $("w-weiter").addEventListener("click", function () { ort1 = Math.min(ort1 + 1, lauf1().length - 1); zeigeWochentag(); melde(false); });
+  $("w-ende").addEventListener("click", function () { ort1 = lauf1().length - 1; zeigeWochentag(); melde(false); });
+  $("w-vorn").addEventListener("click", function () { eingabe = null; ort1 = 0; zeigeWochentag(); melde(false); });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Aufbau und Ablauf", "Schritt 2: switch oder if", "Schritt 3: Ohne switch-Ausdruck", "Schritt 4: In anderen Sprachen", "Schritt 5: Aus der Praxis"];
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
+    if (stufe === 1) {
+      var s = lauf1(), e = s[ort1], letzter = ort1 === s.length - 1;
+      var geprueft = Object.keys(e.marken).map(Number).sort(function (a, b) { return a - b; });
+      return ["Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert.",
+        "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
+        "Werte nach dieser Anweisung: num = " + e.num + ", text = \"" + e.wert + "\".",
+        "Schon gelaufen sind die Zeilen " + nummern(einmalig(s.slice(0, ort1 + 1).map(function (y) { return y.zeile; }))) + ".",
+        geprueft.length ? "Schilder hinter den case-Abschnitten: " + geprueft.map(function (z) { return "Zeile " + z + " „" + schild(z, e.marken[z]) + "“"; }).join(", ") + ". Geprüft sind bisher " + e.v + " von 6 case-Abschnitten."
+                        : "Noch kein case-Abschnitt ist geprüft.",
+        "Ausgabe bisher: " + (e.aus.length ? e.aus.join(" ; ") : "noch keine"),
+        e.wartet ? "Das Programm wartet auf eine Eingabe. Der Student wählt sie mit einem der Knöpfe 1, 2, 3, 4, 5, 6, 7, 9 und 0. Ein Eingabefeld gibt es nicht."
+                 : letzter ? "Der Lauf ist zu Ende. „Von vorn“ beginnt neu und fragt wieder nach einer Eingabe."
+                           : "Der Lauf ist noch nicht zu Ende. Der Knopf „Nächste Anweisung“ führt die nächste Anweisung aus. Die Ausgabe am Ende: " + s[s.length - 1].aus.join(" ; ")];
+    }
+    if (stufe === 2) {
+      var f = FASSUNG[fassung], a = AUFRUF[aufruf];
+      return ["Obere Auswahl: Zu sehen ist die Zuordnung der Wochentage „" + f.name + "“. Dort steht num " + f.num + "-mal im Code. In der anderen Fassung „" + FASSUNG[1 - fassung].name + "“ steht num " + FASSUNG[1 - fassung].num + "-mal.",
+        "Untere Auswahl: Gewählt ist die Fassung „" + a.name + "“. Ihre Zeilen: " + a.zeilen.join(" ; "),
+        "Nach dieser Fassung hat text den Wert \"plus\" und aufrufe den Wert " + a.aufrufe + ". f wurde also " + a.aufrufe + "-mal aufgerufen.",
+        "Die drei Fassungen der unteren Auswahl: „if mit f()“ ergibt aufrufe = 2, „if mit Variable“ ergibt aufrufe = 1, „switch mit f()“ ergibt aufrufe = 1."];
+    }
+    if (stufe === 3) {
+      var t = tagless();
+      return ["x hat den Wert " + x + ". Wählbar sind nur die Knöpfe −5, 0 und 7."].concat(text3(t),
+        ["Gelb markiert ist Zeile " + t.zeile + ". Die Ausgabe: " + t.ausgabe]);
+    }
+    return ["Gewählt sind die Fassung „" + SPRACHE[sprache].name + "“ und x = " + sx + ". Wählbar sind nur die drei Fassungen und die Werte 1, 2 und 3.",
+      "Die Ausgabe dieser Fassung: " + ausgabe4().join(" ; "),
+      "Dazu sagt die HTML-Seite: " + text4(),
+      "Ausgeführt ist nur die Fassung in Go. Die Ausgaben der zwei Fassungen in Java folgen aus der Regel für den Fallthrough."];
+  }
+  function kurz() {
+    if (stufe === 1) { var e = lauf1()[ort1]; return "num = " + e.num + ", Zeile " + e.zeile + (e.wartet ? ", wartet auf Eingabe" : ""); }
+    if (stufe === 2) return FASSUNG[fassung].name + ", " + AUFRUF[aufruf].name;
+    if (stufe === 3) return "x = " + x;
+    if (stufe === 4) return SPRACHE[sprache].name + ", x = " + sx;
+    return "";
+  }
+  // Programmzeilen: die Programme der Demos, dazu jeder feste Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre:not([id])")).reduce(function (alle, p) {
+      return alle.concat(["---"], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    var demo = stufe === 1 ? mitNummern(LISTING)
+      : stufe === 2 ? ["Obere Auswahl, „" + FASSUNG[fassung].name + "“:"].concat(FASSUNG[fassung].zeilen, ["---", "Untere Auswahl, „" + AUFRUF[aufruf].name + "“:"], AUFRUF[aufruf].zeilen)
+      : stufe === 3 ? mitNummern(TAGLESS)
+      : stufe === 4 ? ["Fassung „" + SPRACHE[sprache].name + "“:"].concat(SPRACHE[sprache].zeilen) : [];
+    return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
+  }
+
+  zeigeWochentag();
+  zeigeFassung();
+  zeigeAufruf();
+  zeigeTagless();
+  zeigeSprache();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "switch-Anweisung in Go",
+    thema: "switch-Anweisung, Mehrfachverzweigung, switch-Ausdruck, case-Abschnitt, default-case, tagless switch, Fallthrough",
+    bezug: "Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–137",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_switch_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum prüft Go die Abschnitte unter dem Treffer nicht mehr?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
