@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Quiz K4: Zahlensysteme umrechnen</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
+    .back:hover { text-decoration:underline; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    input[type=text] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.2rem;width:11em;max-width:100%; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    li { margin:6px 0; }
+    .aufgabe { text-align:center;border:2px solid var(--blau);border-radius:12px;background:#fff;padding:18px 12px;margin:14px 0; }
+    .aufgabe .frage { color:var(--muted);margin:0 0 6px; }
+    .aufgabe .gross { font-family:Consolas,"Courier New",monospace;font-size:2.4rem;font-weight:700;overflow-wrap:anywhere; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.falsch { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft.offen { border-left-color:#9ca3af;background:#f9fafb; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .stand { font-weight:600; }
+    table.rechnung { width:auto;font-family:Consolas,"Courier New",monospace;margin-top:8px; }
+    table.rechnung td, table.rechnung th { padding:4px 12px;text-align:right; }
+    table.rechnung tr.summe td { border-top:2px solid var(--accent);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a class="back" href="go_k4_zahlensysteme_interaktiv.html">← Zurück zur Lektion „Zahlensysteme in Go“</a>
+
+  <div class="hero">
+    <h1>Quiz: Zahlensysteme umrechnen</h1>
+    <p>Die Seite stellt dir Aufgaben zu Integer-Literalen in Go. Du rechnest ein Literal in seinen Wert um oder schreibst einen Wert als Literal. Jede Aufgabe ist neu ausgewürfelt.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61.</p>
+  </div>
+
+  <div class="card">
+    <h2>Merkhilfe</h2>
+    <ul>
+      <li><strong>Binär, Präfix <code>0b</code>:</strong> Die Stellen sind von rechts 1, 2, 4, 8, 16, 32, 64 und 128 wert.</li>
+      <li><strong>Oktal, Präfix <code>0o</code> oder nur <code>0</code>:</strong> Die Stellen sind von rechts 1, 8 und 64 wert.</li>
+      <li><strong>Hexadezimal, Präfix <code>0x</code>:</strong> Die Stellen sind von rechts 1, 16 und 256 wert. Die Buchstaben <code>a</code> bis <code>f</code> stehen für 10 bis 15.</li>
+    </ul>
+    <p>Wie man rechnet, zeigt die Lektion <a href="go_k4_zahlensysteme_interaktiv.html#stellenwert">Zahlensysteme in Go</a>, Schritt 1.</p>
+  </div>
+
+  <div class="card">
+    <h2>Aufgabe</h2>
+    <div class="zeile" id="arten">
+      <span>Art der Aufgabe:</span>
+      <button type="button" data-art="wert">Literal lesen</button>
+      <button type="button" data-art="literal">Literal schreiben</button>
+    </div>
+    <div class="zeile" id="groessen">
+      <span>Werte:</span>
+      <button type="button" data-max="15">0 bis 15</button>
+      <button type="button" data-max="255">0 bis 255</button>
+      <button type="button" data-max="4095">0 bis 4095</button>
+    </div>
+
+    <div class="aufgabe">
+      <p class="frage" id="frage"></p>
+      <div class="gross" id="gross"></div>
+    </div>
+    <div class="zeile">
+      <label for="antwort" id="antwortLabel">Deine Antwort:</label>
+      <input type="text" id="antwort" maxlength="24" spellcheck="false" autocomplete="off">
+      <button type="button" class="haupt" id="pruefen">prüfen</button>
+      <button type="button" id="neu">neue Aufgabe</button>
+    </div>
+    <div class="auskunft offen" id="urteil" aria-live="polite"></div>
+    <p class="stand" id="stand"></p>
+    <div class="zeile">
+      <button type="button" id="null">Zähler auf null</button>
+    </div>
+  </div>
+
+  <p><a href="go_k4_integer_literale_quiz.html">Zum Quiz „Integer-Literale und Zahlensysteme“ mit zehn Aussagen</a></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const c = t => '<code>' + String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</code>';
+  const SYSTEME = {
+    2: { name: 'Binärsystem', kurz: 'binär', praefix: '0b' },
+    8: { name: 'Oktalsystem', kurz: 'oktal', praefix: '0o' },
+    16: { name: 'Hexadezimalsystem', kurz: 'hexadezimal', praefix: '0x' }
+  };
+  const wuerfle = n => Math.floor(Math.random() * n);
+
+  let art = 'wert', max = 255;
+  let aufgabe = null;            // { basis, wert, literal, alteNull }
+  let geprueft = false;          // jede Aufgabe zählt nur einmal
+  let richtig = 0, versucht = 0;
+
+  // Ein Integer-Literal lesen, wie Go es liest. Liefert { basis, wert } oder null.
+  function lies(text) {
+    const t = text.trim();
+    if (!/^[0-9][0-9a-zA-Z_]*$/.test(t) || t.endsWith('_') || t.includes('__')) return null;
+    let basis = 10, rest = t;
+    const m = /^0([bBoOxX])/.exec(t);
+    if (m) { basis = { b: 2, o: 8, x: 16 }[m[1].toLowerCase()]; rest = t.slice(2); }
+    else if (/^0_[bBoOxX]/.test(t)) return null;
+    else if (t.length > 1 && t[0] === '0') { basis = 8; rest = t.slice(1); }
+    const ziffern = rest.replace(/_/g, '');
+    const erlaubt = { 2: /^[01]+$/, 8: /^[0-7]+$/, 10: /^[0-9]+$/, 16: /^[0-9a-fA-F]+$/ }[basis];
+    if (!erlaubt.test(ziffern)) return null;
+    return { basis: basis, wert: parseInt(ziffern, basis) };
+  }
+
+  // Ziffer für Ziffer: Ziffer · Basis^Stelle
+  function zerlegung(ziffern, basis) {
+    const n = ziffern.length;
+    let zeilen = '<tr><th>Ziffer</th><th>Wert der Stelle</th><th>Beitrag</th></tr>', summe = 0;
+    ziffern.split('').forEach((z, i) => {
+      const zw = parseInt(z, 16), sw = Math.pow(basis, n - 1 - i);
+      summe += zw * sw;
+      zeilen += '<tr><td>' + z + (zw > 9 ? ' = ' + zw : '') + '</td><td>' + sw + '</td><td>' + zw + ' · ' + sw + ' = ' + zw * sw + '</td></tr>';
+    });
+    return '<table class="rechnung">' + zeilen + '<tr class="summe"><td colspan="2">Summe</td><td>' + summe + '</td></tr></table>';
+  }
+
+  function neueAufgabe() {
+    const basis = [2, 8, 16][wuerfle(3)], wert = wuerfle(max + 1);
+    // Bei „Literal lesen“ kommt manchmal die Oktalzahl mit der bloßen führenden Null
+    const alteNull = art === 'wert' && basis === 8 && wert > 7 && wuerfle(2) === 0;
+    aufgabe = { basis: basis, wert: wert, ziffern: wert.toString(basis), alteNull: alteNull };
+    aufgabe.literal = (alteNull ? '0' : SYSTEME[basis].praefix) + aufgabe.ziffern;
+    geprueft = false;
+    if (art === 'wert') {
+      el('frage').textContent = 'Welchen Wert hat dieses Literal in Go? Antworte mit einer Dezimalzahl.';
+      el('gross').textContent = aufgabe.literal;
+    } else {
+      el('frage').textContent = 'Schreibe diesen Wert als Literal im ' + SYSTEME[basis].name + ', mit Präfix.';
+      el('gross').textContent = wert;
+    }
+    el('antwort').value = '';
+    el('urteil').className = 'auskunft offen';
+    el('urteil').innerHTML = '<p>Trage deine Antwort ein und wähle „prüfen“.</p>';
+    el('pruefen').disabled = false;
+    el('antwort').focus();
+  }
+
+  function pruefe() {
+    if (geprueft) return;
+    const text = el('antwort').value.trim();
+    if (!text) { el('urteil').className = 'auskunft offen'; el('urteil').innerHTML = '<p>Das Feld ist leer.</p>'; return; }
+    const a = aufgabe, sys = SYSTEME[a.basis];
+    let stimmt, hinweis = '';
+    if (art === 'wert') {
+      if (!/^[0-9]+$/.test(text)) { el('urteil').className = 'auskunft offen'; el('urteil').innerHTML = '<p>Gefragt ist eine Dezimalzahl, nur aus den Ziffern 0 bis 9.</p>'; return; }
+      stimmt = parseInt(text, 10) === a.wert;
+      if (!stimmt && a.alteNull && parseInt(text, 10) === parseInt(a.ziffern, 10)) hinweis = '<p>Du hast das Literal dezimal gelesen. Die führende ' + c('0') + ' ohne Buchstaben macht es zu einer Oktalzahl.</p>';
+    } else {
+      const g = lies(text);
+      if (!g) { el('urteil').className = 'auskunft offen'; el('urteil').innerHTML = '<p>' + c(text) + ' ist in Go kein Integer-Literal. Die Aufgabe zählt noch nicht, verbessere deine Antwort.</p>'; return; }
+      stimmt = g.wert === a.wert && g.basis === a.basis;
+      if (!stimmt && g.wert === a.wert) hinweis = '<p>Der Wert stimmt, aber dein Literal steht im falschen Zahlensystem. Gefragt war das ' + sys.name + '.</p>';
+    }
+    geprueft = true; versucht++; if (stimmt) richtig++;
+    el('pruefen').disabled = true;
+    el('urteil').className = 'auskunft' + (stimmt ? '' : ' falsch');
+    el('urteil').innerHTML = '<p>' + (stimmt ? 'Richtig.' : 'Das stimmt nicht.') + ' ' + c(a.literal) + ' hat den Wert ' + a.wert + '.</p>' + hinweis +
+      (art === 'literal' && stimmt && text.replace(/_/g, '').toLowerCase() !== a.literal ? '<p>Auch deine Schreibweise ' + c(text) + ' ist richtig.</p>' : '') +
+      zerlegung(a.ziffern, a.basis);
+    zeigeStand();
+    el('neu').focus();
+  }
+
+  function zeigeStand() { el('stand').textContent = versucht ? 'Richtig: ' + richtig + ' von ' + versucht : 'Noch keine Aufgabe geprüft.'; }
+  function waehle() {
+    document.querySelectorAll('[data-art]').forEach(k => k.classList.toggle('gewaehlt', k.dataset.art === art));
+    document.querySelectorAll('[data-max]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.max) === max));
+    el('antwortLabel').textContent = art === 'wert' ? 'Dezimalzahl:' : 'Literal:';
+    neueAufgabe();
+  }
+
+  el('arten').addEventListener('click', e => { const k = e.target.closest('[data-art]'); if (k) { art = k.dataset.art; waehle(); } });
+  el('groessen').addEventListener('click', e => { const k = e.target.closest('[data-max]'); if (k) { max = Number(k.dataset.max); waehle(); } });
+  el('pruefen').addEventListener('click', pruefe);
+  el('neu').addEventListener('click', neueAufgabe);
+  el('null').addEventListener('click', () => { richtig = 0; versucht = 0; zeigeStand(); });
+  el('antwort').addEventListener('keydown', e => { if (e.key === 'Enter') { if (geprueft) neueAufgabe(); else pruefe(); } });
+
+  zeigeStand();
+  waehle();
+})();
+</script>
+</body>
+</html>
