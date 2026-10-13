@@ -3,666 +3,552 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Überlauf (Overflow) bei Ganzzahlen in Go</title>
+  <title>Überlauf bei Ganzzahlen in Go</title>
+  <link rel="stylesheet" href="../stil.css">
   <style>
-    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ok:#065f46;--ok-bg:#ecfdf5;--bad:#991b1b;--bad-bg:#fef2f2;--highlight:#fef3c7;--info:#1e40af;--info-bg:#dbeafe;--warning:#ea580c;--warning-bg:#fff7ed; }
-    * { box-sizing: border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
-    .container { max-width:1300px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#dc2626 0%,#ea580c 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(220,38,38,.25);margin-bottom:20px; }
-    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
-    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
-    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
-    h2 { margin-top:0;font-size:1.3rem;color:#dc2626;border-bottom:2px solid var(--line);padding-bottom:8px; }
-    h3 { font-size:1.1rem;margin-top:20px;margin-bottom:10px;color:var(--accent); }
-    h4 { font-size:1rem;margin-top:16px;margin-bottom:8px; }
-    p { margin:10px 0; }
-    ul,ol { margin:10px 0;padding-left:24px; }
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace; }
+    input[type=number], select { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;background:#fff; }
+    input[type=number] { width:6.5em; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
-    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.9rem; }
-    pre { margin:12px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;white-space:pre-wrap;font-family:Consolas,monospace;font-size:.88rem;overflow-x:auto;line-height:1.5; }
-    table { width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0; }
-    th,td { border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:middle; }
-    th { background:#f9fafb;font-weight:600;font-size:.92rem; }
-    tr:last-child td { border-bottom:none; }
-    .highlight { background:var(--highlight);padding:14px;border-radius:8px;border-left:4px solid #f59e0b;margin:14px 0; }
-    .info-box { background:var(--info-bg);padding:14px;border-radius:8px;border-left:4px solid var(--info);margin:14px 0; }
-    .warning-box { background:var(--bad-bg);padding:14px;border-radius:8px;border-left:4px solid var(--bad);margin:14px 0; }
-    .danger-box { background:#fef2f2;padding:14px;border-radius:8px;border:2px solid #dc2626;margin:14px 0; }
-    .success-box { background:var(--ok-bg);padding:14px;border-radius:8px;border-left:4px solid var(--ok);margin:14px 0; }
-    .note { color:var(--muted);font-size:.92rem;font-style:italic; }
-    .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
-    .back:hover { text-decoration:underline; }
-    button { border:none;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;transition:all .2s;font-size:.95rem; }
-    .btn-primary { background:#dc2626;color:#fff; }
-    .btn-primary:hover { background:#b91c1c; }
-    .btn-secondary { background:#e5e7eb;color:#111827; }
-    .btn-secondary:hover { background:#d1d5db; }
-    input[type="number"],select { border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:.95rem;font-family:Consolas,monospace;width:120px; }
-    input:focus,select:focus { outline:2px solid var(--accent);outline-offset:2px; }
-    .interactive-section { background:#f8fafc;padding:18px;border:2px solid #dc2626;border-radius:10px;margin:16px 0; }
-    .controls { display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0; }
-    .result-display { background:#fff;padding:16px;border:2px solid var(--line);border-radius:8px;margin:14px 0;font-family:Consolas,monospace; }
-    .binary-calc { background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;font-family:Consolas,monospace;font-size:1rem;line-height:1.8;margin:12px 0; }
-    .overflow-indicator { display:inline-block;padding:4px 10px;border-radius:6px;font-weight:700;font-size:.85rem;margin-left:8px; }
-    .overflow-yes { background:#fef2f2;color:#dc2626;border:1px solid #dc2626; }
-    .overflow-no { background:#ecfdf5;color:#065f46;border:1px solid #065f46; }
-    .comparison-row { display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px; }
-    .vs-divider { font-weight:700;color:#dc2626;font-size:1.1rem; }
-    .formula-box { background:#fff;padding:14px;border:1px solid var(--line);border-radius:8px;font-family:Consolas,monospace;font-size:1.05rem;margin:10px 0; }
-    .tabs { display:flex;gap:4px;margin-bottom:14px;border-bottom:2px solid var(--line); }
-    .tab { background:transparent;border:none;border-bottom:3px solid transparent;padding:10px 16px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s; }
-    .tab.active { color:#dc2626;border-bottom-color:#dc2626; }
-    .tab:hover { color:#dc2626; }
-    .tab-content { display:none; }
-    .tab-content.active { display:block; }
-    .bit-visual { display:flex;gap:4px;justify-content:center;font-family:Consolas,monospace;font-size:.9rem;margin:8px 0; }
-    .bit-digit { padding:4px 8px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;min-width:28px;text-align:center; }
-    .bit-overflow { background:#fecaca;border-color:#dc2626;font-weight:700; }
-    .bit-discarded { opacity:.4;text-decoration:line-through; }
-    .example-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:14px 0; }
-    .example-card { background:#fff;border:2px solid var(--line);border-radius:8px;padding:14px;transition:all .2s; }
-    .example-card:hover { border-color:#dc2626;box-shadow:0 4px 12px rgba(220,38,38,.15); }
-    .example-card .title { font-weight:700;color:#dc2626;margin-bottom:8px;font-size:.95rem; }
-    .example-card .code { background:#1e293b;color:#e2e8f0;padding:8px;border-radius:6px;font-family:Consolas,monospace;font-size:.85rem;margin:6px 0; }
-    .example-card .result { color:#64748b;font-size:.9rem;font-style:italic; }
-    .modulo-visual { background:#fff;padding:14px;border:2px solid var(--accent);border-radius:8px;margin:12px 0;text-align:center; }
-    .modulo-visual .step { font-family:Consolas,monospace;font-size:1.05rem;margin:6px 0; }
-    .sign-change { background:#fef2f2;padding:12px;border-radius:8px;border-left:4px solid #dc2626;margin:10px 0; }
-    .sign-change .before { color:#065f46;font-weight:700; }
-    .sign-change .after { color:#dc2626;font-weight:700; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    table.text td code { white-space:nowrap; }
+    table.rechnung { width:auto; }
+    table.rechnung td { padding:6px 14px;text-align:left; }
+    table.rechnung td.wert { font-family:Consolas,"Courier New",monospace;font-size:1.1rem;font-weight:700; }
+    table.rechnung .weg { color:#b91c1c;text-decoration:line-through; }
+    table.rechnung .bleibt { color:var(--accent); }
+    .zwei { display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:12px 0; }
+    .zwei > div { background:#fff;border:2px solid var(--blau);border-radius:8px;padding:10px 14px; }
+    .zwei h4 { margin:0 0 6px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem; }
+    .zwei ol { margin:0;padding-left:1.3em; }
+    .zwei .ueberlauf { color:#b91c1c;font-weight:600; }
+    .zwei .ergebnis { margin:8px 0 0;font-weight:700; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
   </style>
 </head>
 <body>
-<main class="container">
-  <a class="back" href="go_k4_zweierkomplement_detail.html">← Zurück zum Zweierkomplement</a>
-  
-  <section class="hero">
-    <h1>⚠️ Überlauf (Overflow) bei Ganzzahlen in Go</h1>
-    <p>Wenn Berechnungsergebnisse den Wertebereich überschreiten – ohne Fehlermeldung!<br>
-    Verstehe die Gefahr und lerne, Überläufe zu erkennen und zu vermeiden.</p>
+<div class="container">
+
+  <div class="hero">
+    <h1>Überlauf bei Ganzzahlen in Go</h1>
+    <p>Passt das Ergebnis einer Rechnung nicht in seinen Typ, rechnet Go mit einem falschen Wert weiter und meldet nichts. Die Seite zeigt, wann ein Überlauf entsteht, welcher Wert dabei herauskommt und warum man ihn leicht übersieht.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–84.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Keine Meldung</button>
+    <button type="button" class="tab" data-stufe="2">2 Ohne Vorzeichen</button>
+    <button type="button" class="tab" data-stufe="3">3 Mit Vorzeichen</button>
+    <button type="button" class="tab" data-stufe="4">4 Teilausdrücke</button>
+    <button type="button" class="tab" data-stufe="5">5 Was man dagegen tut</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Jeder Ganzzahl-Typ hat eine feste Zahl von Bits und damit einen festen Wertebereich. Ein <code>uint8</code> reicht von 0 bis 255, ein <code>int8</code> von −128 bis 127.</p>
+    <p>Ein arithmetischer Überlauf entsteht, wenn das Ergebnis einer Rechnung außerhalb dieses Wertebereichs liegt. Das richtige Ergebnis bräuchte dann mehr Bits, als der Typ hat. Go behält nur die Bits, die in den Typ passen:</p>
+<pre class="code-block">var f uint8 = 200
+fmt.Println(f + 80)    // 24</pre>
+    <p>200 + 80 ist 280. Ausgegeben wird 24. Das Programm läuft weiter, als sei nichts geschehen.</p>
+    <div class="hinweis">Go meldet einen Überlauf nicht. Es gibt keinen Abbruch und keine Warnung. Das macht den Überlauf zu einem Fehler, der schwer zu finden ist.</div>
+
+    <h3>Was aus früheren Abschnitten dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 4.3.4, Seite 63, die Typen:</strong> Welcher Typ welchen Wertebereich hat, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#typen">Zahlenkreis</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.5, Seiten 64–66, das Zweierkomplement:</strong> Wie ein Bitmuster als Zahl mit Vorzeichen gelesen wird, zeigt die Seite <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a>.</li>
+      <li><strong>Abschnitt 4.3.7.1, Seiten 69–71, der Typ eines Ergebnisses:</strong> Das Ergebnis von <code>f + 80</code> hat den Typ von <code>f</code>, hier also <code>uint8</code>.</li>
+    </ul>
+    <p>Den Überlauf als Sprung auf einem Kreis von 127 nach −128 zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3. Diese Seite rechnet die Beispiele des Kurstexts nach.</p>
+
+    <h3>Die fünf Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1, keine Meldung:</strong> Mit einer Variable entsteht der Überlauf, während das Programm läuft. Mit zwei Literalen meldet schon der Compiler einen Fehler.</li>
+      <li><strong>Schritt 2, ohne Vorzeichen:</strong> Bei <code>uint8</code> fallen die überzähligen Bits weg.</li>
+      <li><strong>Schritt 3, mit Vorzeichen:</strong> Bei <code>int8</code> kann dabei das Vorzeichen wechseln.</li>
+      <li><strong>Schritt 4, Teilausdrücke:</strong> Ein Überlauf mitten in einem Ausdruck, obwohl das Endergebnis in den Typ passen würde.</li>
+      <li><strong>Schritt 5, was man dagegen tut:</strong> Der passende Typ und eine Prüfung vor der Rechnung.</li>
+    </ul>
+    <div class="hinweis">Die Seite rechnet wie der Kurstext mit den Typen <code>uint8</code> und <code>int8</code>. Sie sind so klein, dass man jeden Überlauf nachrechnen kann. In einem echten Programm steht meist <code>int</code>. Alle Programmzeilen der Seite sind mit Go 1.26 ausgeführt.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–79.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>🚨 Das Problem: Stille Überläufe</h2>
-    
-    <div class="danger-box">
-      <strong>⚠️ Kritisch:</strong> In Go führen Überläufe zur Laufzeit zu <strong>keiner Fehlermeldung</strong>!
-      <ul style="margin:10px 0;">
-        <li>Das Programm läuft weiter mit einem <strong>falschen Ergebnis</strong></li>
-        <li>Überläufe können unbemerkt zu schwerwiegenden Bugs führen</li>
-        <li>Nur konstante Ausdrücke werden zur Compile-Zeit geprüft</li>
-      </ul>
-    </div>
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Keine Meldung</h2>
+    <p>Ob Go einen zu großen Wert bemerkt, hängt davon ab, wann der Wert feststeht.</p>
+<pre class="code-block">var f uint8 = 200      // Wertebereich 0 bis 255
+fmt.Println(f + 80)    // Überlauf, keine Meldung: 24
+f = f + 80             // Überlauf, keine Meldung
+f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
+    <ul>
+      <li><strong>Mit einer Variable, zur Laufzeit:</strong> Den Wert von <code>f</code> kennt Go erst, wenn das Programm läuft. Das Ergebnis von <code>f + 80</code> hat den Typ <code>uint8</code>. Es wird ausgerechnet, passt nicht und läuft über. Go meldet nichts.</li>
+      <li><strong>Mit zwei Literalen, beim Übersetzen:</strong> <code>200 + 80</code> enthält nur Konstanten. Der Compiler rechnet die Summe 280 selbst aus und sieht, dass sie nicht in <code>f</code> passt. Er meldet:<br><code>cannot use 200 + 80 (untyped int constant 280) as uint8 value in assignment (overflows)</code></li>
+    </ul>
+    <p>In der Meldung steht das Wort „overflows“. Gemeint ist dort aber nur: Die Konstante passt nicht in den Typ. Der Überlauf, um den es auf dieser Seite geht, ist der erste Fall. Er entsteht zur Laufzeit und bleibt ohne Meldung.</p>
 
-    <h3>Unterschied: Compile-Zeit vs. Laufzeit</h3>
-    
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
-      <div style="background:#fef2f2;padding:14px;border-radius:8px;border:2px solid #dc2626;">
-        <h4 style="margin-top:0;color:#dc2626;">❌ Compile-Zeit Fehler</h4>
-        <pre style="margin:8px 0;background:#1e293b;padding:10px;border-radius:6px;font-size:.85rem;">var f uint8
-f = 200 + 80  // Fehler!</pre>
-        <div style="font-size:.9rem;color:#dc2626;margin-top:8px;">
-          <strong>Fehlermeldung:</strong><br>
-          <code style="background:#fff;color:#dc2626;font-size:.8rem;">overflows uint8</code>
-        </div>
-        <p style="font-size:.9rem;margin-top:8px;">Da 200 + 80 = 280 konstant ist, wird es zur Compile-Zeit ausgewertet.</p>
-      </div>
-      
-      <div style="background:#fff7ed;padding:14px;border-radius:8px;border:2px solid #ea580c;">
-        <h4 style="margin-top:0;color:#ea580c;">⚠️ Laufzeit Überlauf (KEIN Fehler)</h4>
-        <pre style="margin:8px 0;background:#1e293b;padding:10px;border-radius:6px;font-size:.85rem;">var f uint8 = 200
-var result = f + 80</pre>
-        <div style="font-size:.9rem;color:#ea580c;margin-top:8px;">
-          <strong>Keine Fehlermeldung!</strong><br>
-          Ergebnis: <code style="background:#fff;">24</code> (statt 280)
-        </div>
-        <p style="font-size:.9rem;margin-top:8px;">Variable → erst zur Laufzeit bekannt → kein Fehler, nur falsches Ergebnis!</p>
-      </div>
+    <h3>Der Typ des Ergebnisses</h3>
+    <p>Der Typ von <code>f + 80</code> steht fest, sobald der Ausdruck dasteht: Er ist <code>uint8</code>, weil <code>f</code> diesen Typ hat. Es spielt keine Rolle, wohin das Ergebnis danach geht. Auch <code>fmt.Println(f + 80)</code> gibt deshalb 24 aus und nicht 280.</p>
+
+    <h3>Ausprobieren: wo der Überlauf beginnt</h3>
+    <div class="zeile" id="f-werte">
+      <span>Wert von <code>f</code>:</span>
+      <button type="button" data-f="100">100</button>
+      <button type="button" data-f="175">175</button>
+      <button type="button" data-f="176">176</button>
+      <button type="button" data-f="200">200</button>
+      <button type="button" data-f="255">255</button>
     </div>
+    <pre class="code-block" id="f-code"></pre>
+    <div class="auskunft" id="f-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–79. Die vier Zeilen und die Meldung des Compilers stammen aus dem Kurstext. Die Werte 100, 175, 176 und 255 sind eigene Beispiele.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>➕ Überlauf bei vorzeichenlosen Typen (uint8)</h2>
-    
-    <p>Bei vorzeichenlosen Typen werden arithmetische Operationen <strong>modulo 2<sup>n</sup></strong> durchgeführt 
-    (wobei n die Bit-Länge ist). Man spricht von einem <strong>"wrap around"</strong>.</p>
-    
-    <div class="info-box">
-      <strong>💡 Prinzip:</strong> Alle Bits, die über die verfügbaren n Bits hinausgehen, werden <strong>verworfen</strong>.
-      <br>Nur die n niederwertigsten Bits bilden das Ergebnis.
-    </div>
-
-    <h3>Beispiele aus dem Skript (uint8):</h3>
-    
-    <div class="example-grid">
-      <div class="example-card">
-        <div class="title">255 + 1</div>
-        <div class="code">var uA uint8 = 255<br>fmt.Println(uA + 1)</div>
-        <div class="result">Erwartet: 256<br>Ergebnis: <strong style="color:#dc2626;">0</strong></div>
-      </div>
-      
-      <div class="example-card">
-        <div class="title">130 + 140</div>
-        <div class="code">var uB uint8 = 130<br>fmt.Println(uB + 140)</div>
-        <div class="result">Erwartet: 270<br>Ergebnis: <strong style="color:#dc2626;">14</strong></div>
-      </div>
-      
-      <div class="example-card">
-        <div class="title">255 + 255</div>
-        <div class="code">var uC uint8 = 255<br>fmt.Println(uC + 255)</div>
-        <div class="result">Erwartet: 510<br>Ergebnis: <strong style="color:#dc2626;">254</strong></div>
-      </div>
-    </div>
-
-    <div class="interactive-section">
-      <h4>🎮 Interaktiv: uint8 Überlauf berechnen</h4>
-      <div class="controls">
-        <label style="font-weight:600;">Operand A:</label>
-        <input type="number" id="uint-a" min="0" max="255" value="255">
-        <label style="font-weight:600;">Operator:</label>
-        <select id="uint-op">
-          <option value="+">+</option>
-          <option value="-">-</option>
-          <option value="*">×</option>
-        </select>
-        <label style="font-weight:600;">Operand B:</label>
-        <input type="number" id="uint-b" min="0" max="255" value="1">
-        <button class="btn-primary" onclick="calculateUintOverflow()">Berechnen</button>
-      </div>
-      <div id="uint-result" style="display:none;">
-        <div class="result-display">
-          <div style="font-size:1.1rem;margin-bottom:12px;">
-            <strong>Mathematisches Ergebnis:</strong> <span id="uint-math"></span>
-            <span id="uint-overflow-badge"></span>
-          </div>
-          <div style="font-size:1.1rem;margin-bottom:12px;">
-            <strong>uint8 Ergebnis:</strong> <span id="uint-actual" style="color:#dc2626;font-weight:700;font-size:1.3rem;"></span>
-          </div>
-        </div>
-        <div class="modulo-visual">
-          <div class="step"><strong>Modulo-Berechnung:</strong></div>
-          <div class="step" id="uint-modulo" style="color:#0f766e;font-size:1.15rem;"></div>
-        </div>
-        <div class="binary-calc" id="uint-binary"></div>
-      </div>
-    </div>
-
-    <div class="success-box">
-      <strong>✨ Bewusster Einsatz:</strong> Manchmal werden Überläufe bei vorzeichenlosen Typen 
-      absichtlich genutzt, z.B. bei Hash-Funktionen, wo man Ergebnisse modulo 2<sup>n</sup> benötigt.
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>➖ Überlauf bei vorzeichenbehafteten Typen (int8)</h2>
-    
-    <p>Bei vorzeichenbehafteten Typen kann es durch den Überlauf auch zu einem <strong>Vorzeichenwechsel</strong> kommen!</p>
-    
-    <div class="warning-box">
-      <strong>⚠️ Gefahr:</strong> Ein Überlauf kann das Vorzeichen ändern (+ → − oder − → +), 
-      aber nicht jeder Überlauf führt zu einem Vorzeichenwechsel!
-    </div>
-
-    <div class="tabs">
-      <button class="tab active" data-tab="sign-change">Mit Vorzeichenwechsel</button>
-      <button class="tab" data-tab="no-sign-change">Ohne Vorzeichenwechsel</button>
-      <button class="tab" data-tab="tricky">Gefährliche Situationen</button>
-    </div>
-
-    <div class="tab-content active" id="sign-change">
-      <h3>Beispiele mit Vorzeichenwechsel:</h3>
-      
-      <div class="example-grid">
-        <div class="example-card">
-          <div class="title">127 + 1 (Plus → Minus)</div>
-          <div class="code">var iA int8 = 127<br>fmt.Println(iA + 1)</div>
-          <div class="result">Erwartet: 128<br>Ergebnis: <strong style="color:#dc2626;">-128</strong></div>
-          <div class="sign-change">
-            <span class="before">+127</span> → <span class="after">-128</span>
-          </div>
-        </div>
-        
-        <div class="example-card">
-          <div class="title">127 + 127 (Plus → Minus)</div>
-          <div class="code">var iB int8 = 127<br>fmt.Println(iB + 127)</div>
-          <div class="result">Erwartet: 254<br>Ergebnis: <strong style="color:#dc2626;">-2</strong></div>
-          <div class="sign-change">
-            <span class="before">+127</span> → <span class="after">-2</span>
-          </div>
-        </div>
-        
-        <div class="example-card">
-          <div class="title">-128 - 1 (Minus → Plus)</div>
-          <div class="code">var iC int8 = -128<br>fmt.Println(iC - 1)</div>
-          <div class="result">Erwartet: -129<br>Ergebnis: <strong style="color:#dc2626;">127</strong></div>
-          <div class="sign-change">
-            <span class="after">-128</span> → <span class="before">+127</span>
-          </div>
-        </div>
-        
-        <div class="example-card">
-          <div class="title">-128 + (-128)</div>
-          <div class="code">var iD int8 = -128<br>fmt.Println(iD + -128)</div>
-          <div class="result">Erwartet: -256<br>Ergebnis: <strong style="color:#dc2626;">0</strong></div>
-          <div class="sign-change">
-            <span class="after">-128</span> → <span style="color:#64748b;font-weight:700;">0</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="binary-calc" style="margin-top:16px;">
-<strong>Bit-Darstellung: 127 + 1 = -128</strong>
-
-  01111111  (+127)
-+ 00000001  (+1)
-----------
-<span style="color:#fca5a5;">1</span>00000000
-  ^^^^^^^^
-  10000000  = -128 (Vorzeichenbit wechselt von 0 auf 1!)
-</div>
-    </div>
-
-    <div class="tab-content" id="no-sign-change">
-      <h3>Beispiele OHNE Vorzeichenwechsel:</h3>
-      
-      <div class="warning-box">
-        <strong>⚠️ Wichtig:</strong> Nicht jeder Überlauf führt zu einem Vorzeichenwechsel! 
-        Man kann sich <strong>nicht</strong> darauf verlassen, Überläufe am Vorzeichenwechsel zu erkennen.
-      </div>
-
-      <div class="example-grid">
-        <div class="example-card">
-          <div class="title">12 × 121</div>
-          <div class="code">var iE int8 = 12<br>fmt.Println(iE * 121)</div>
-          <div class="result">Erwartet: 1452<br>Ergebnis: <strong style="color:#dc2626;">-84</strong></div>
-          <div style="margin-top:8px;color:#64748b;font-size:.85rem;">
-            Beide Faktoren positiv, aber Ergebnis negativ!
-          </div>
-        </div>
-        
-        <div class="example-card">
-          <div class="title">3 × 121</div>
-          <div class="code">var iF int8 = 3<br>fmt.Println(iF * 121)</div>
-          <div class="result">Erwartet: 363<br>Ergebnis: <strong style="color:#dc2626;">107</strong></div>
-          <div style="margin-top:8px;color:#64748b;font-size:.85rem;">
-            Überlauf, aber kein Vorzeichenwechsel!
-          </div>
-        </div>
-      </div>
-
-      <div class="binary-calc" style="margin-top:16px;">
-<strong>Bit-Darstellung: 3 × 121 = 107</strong>
-
-  00000011  (3)
-× 01111001  (121)
-----------
-101101011  (363 benötigt 9 Bits)
-  ^^^^^^^^ (nur 8 Bits verfügbar)
-  01101011  = 107 (Vorzeichen bleibt positiv!)
-</div>
-    </div>
-
-    <div class="tab-content" id="tricky">
-      <h3>Gefährliche Situationen – Leicht zu übersehen!</h3>
-      
-      <p>In diesen Beispielen liegt das mathematische Endergebnis <strong>innerhalb</strong> des Wertebereichs, 
-      aber ein Zwischenergebnis verursacht einen Überlauf:</p>
-
-      <div style="background:#fef2f2;padding:16px;border-radius:8px;margin:14px 0;">
-        <pre style="background:#1e293b;margin:10px 0;">var x int8 = 120
-
-// Reihenfolge der Auswertung ist entscheidend!
-fmt.Println(x*3/3, "vs.", x*(3/3))
-// Ausgabe: <strong style="color:#dc2626;">34 vs. 120</strong>
-
-fmt.Println(x*8/12, "vs.", x/12*8)
-// Ausgabe: <strong style="color:#dc2626;">-5 vs. 80</strong>
-
-fmt.Println((x+20)/2, "vs.", x/2+20/2)
-// Ausgabe: <strong style="color:#dc2626;">-58 vs. 70</strong></pre>
-      </div>
-
-      <div class="highlight">
-        <strong>💡 Erkenntnis:</strong> Mathematisch äquivalente Ausdrücke können aufgrund von Überläufen 
-        zu <strong>unterschiedlichen Ergebnissen</strong> führen!<br>
-        Das Distributivgesetz gilt <strong>nicht</strong> bei Überläufen: <code>(x+20)/2 ≠ x/2+20/2</code>
-      </div>
-
-      <h4>Detaillierte Erklärung: x*3/3 vs. x*(3/3)</h4>
-      <div class="comparison-row">
-        <div>
-          <strong style="color:#dc2626;">x*3/3</strong><br>
-          <div style="margin-top:8px;font-family:Consolas,monospace;font-size:.9rem;">
-            1. x*3 = 120*3 = 360<br>
-            → <span style="color:#dc2626;">Überlauf! 360 mod 256 = 104</span><br>
-            → Als int8: <strong>104</strong><br>
-            2. 104/3 = <strong style="color:#dc2626;">34</strong>
-          </div>
-        </div>
-        <div class="vs-divider">≠</div>
-        <div>
-          <strong style="color:#065f46;">x*(3/3)</strong><br>
-          <div style="margin-top:8px;font-family:Consolas,monospace;font-size:.9rem;">
-            1. 3/3 = 1<br>
-            2. x*1 = 120*1 = <strong style="color:#065f46;">120</strong><br>
-            → Kein Überlauf!
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="interactive-section">
-      <h4>🎮 Interaktiv: int8 Überlauf berechnen</h4>
-      <div class="controls">
-        <label style="font-weight:600;">Operand A:</label>
-        <input type="number" id="int-a" min="-128" max="127" value="127">
-        <label style="font-weight:600;">Operator:</label>
-        <select id="int-op">
-          <option value="+">+</option>
-          <option value="-">-</option>
-          <option value="*">×</option>
-        </select>
-        <label style="font-weight:600;">Operand B:</label>
-        <input type="number" id="int-b" min="-128" max="127" value="1">
-        <button class="btn-primary" onclick="calculateIntOverflow()">Berechnen</button>
-      </div>
-      <div id="int-result" style="display:none;">
-        <div class="result-display">
-          <div style="font-size:1.1rem;margin-bottom:12px;">
-            <strong>Mathematisches Ergebnis:</strong> <span id="int-math"></span>
-            <span id="int-overflow-badge"></span>
-          </div>
-          <div style="font-size:1.1rem;margin-bottom:12px;">
-            <strong>int8 Ergebnis:</strong> <span id="int-actual" style="color:#dc2626;font-weight:700;font-size:1.3rem;"></span>
-            <span id="int-sign-change"></span>
-          </div>
-        </div>
-        <div class="binary-calc" id="int-binary"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>🔄 Überläufe können sich ausgleichen</h2>
-    
-    <div class="info-box">
-      <strong>💡 Überraschung:</strong> Manchmal können sich mehrere Überläufe gegenseitig ausgleichen, 
-      sodass das Endergebnis trotzdem korrekt ist!
-    </div>
-
-    <div style="background:#fff;padding:16px;border:2px solid var(--accent);border-radius:8px;margin:14px 0;">
-      <h4 style="margin-top:0;">Beispiel aus dem Skript:</h4>
-      <pre style="background:#1e293b;margin:10px 0;">var x int8 = 120
-
-fmt.Println(x+20-40, "vs.", x-40+20)
-// Ausgabe: <strong style="color:#065f46;">100 vs. 100</strong>  (beide korrekt!)</pre>
-
-      <div style="margin-top:16px;">
-        <strong>Detaillierte Analyse von x+20-40:</strong>
-        <div class="binary-calc" style="margin-top:10px;">
-<strong>Schritt 1: x + 20</strong>
-  01111000  (120)
-+ 00010100  (+20)
-----------
-  10001100  = -116 (Überlauf nach oben! Erwartet: 140)
-
-<strong>Schritt 2: -116 - 40</strong>
-  10001100  (-116)
-+ 11011000  (-40 im Zweierkomplement)
-----------
-<span style="color:#fca5a5;">1</span> 01100100  = 100 (Überlauf nach unten! Erwartet: -156)
-  ^^^^^^^^
-  01100100  = <strong style="color:#065f46;">100 ✓</strong> (Beide Überläufe gleichen sich aus!)
-        </div>
-      </div>
-    </div>
-
-    <div class="warning-box">
-      <strong>⚠️ Gefahr:</strong> Von einem korrekten Endergebnis darf man <strong>nicht</strong> darauf schließen, 
-      dass keine Überläufe aufgetreten sind! Der Ausdruck <code>x+20</code> allein würde an anderer Stelle 
-      im Code zu einem falschen Ergebnis führen.
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>🛡️ Überläufe vermeiden – Best Practices</h2>
-    
-    <div class="success-box">
-      <strong>✅ Empfehlungen:</strong>
-      <ol style="margin:10px 0;">
-        <li>Verwende <code>int</code> (mind. ±2 Milliarden) oder <code>int64</code> (±9 Trillionen) wenn ausreichend</li>
-        <li>Identifiziere potentiell gefährliche Berechnungen (große Werte, Multiplikationen, Zwischenergebnisse)</li>
-        <li>Prüfe vor kritischen Operationen, ob das Ergebnis im Wertebereich liegt</li>
-        <li>Bei Durchschnittsberechnungen: Vorsicht bei der Summenbildung großer Werte</li>
-        <li>Nutze das Paket <code>math/big</code> für beliebig genaue Berechnungen</li>
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Ohne Vorzeichen</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(a + b)</code> aus, wenn <code>a</code> und <code>b</code> vom Typ <code>uint8</code> sind und beide den Wert 255 haben?
+          <details><summary>Auflösung</summary>254. Die Summe 510 braucht 9 Bits: 1 1111 1110. Das linke Bit fällt weg, es bleibt 1111 1110, und das ist 254. Als Rechnung: 510 − 256 = 254.</details></li>
+        <li>Und was ergibt 3 − 5 mit zwei Variablen vom Typ <code>uint8</code>?
+          <details><summary>Auflösung</summary>254. Einen negativen Wert kann der Typ nicht darstellen. Go rechnet auch hier modulo 256: −2 + 256 = 254.</details></li>
       </ol>
     </div>
+    <p>Das richtige Ergebnis von 255 + 1 ist 256. Dafür braucht man 9 Bits, der Typ <code>uint8</code> hat 8. Go wirft alle Bits weg, die links über die 8 Bits hinausgehen. Das Ergebnis besteht aus den 8 rechten Bits.</p>
+<pre class="code-block bits">    1111 1111    255
++   0000 0001      1
+-------------------
+  1 0000 0000    256    richtig, braucht 9 Bits
+    0000 0000      0    was in uint8 übrig bleibt</pre>
 
-    <h3>Praktische Wertebereiche:</h3>
-    <table>
-      <tr>
-        <th>Typ</th>
-        <th>Bits</th>
-        <th>Minimum</th>
-        <th>Maximum</th>
-        <th>Anwendung</th>
-      </tr>
-      <tr><td><code>int8</code></td><td>8</td><td>-128</td><td>127</td><td style="color:#dc2626;">⚠️ Sehr klein – nur für Demos!</td></tr>
-      <tr><td><code>int16</code></td><td>16</td><td>-32.768</td><td>32.767</td><td>Kleine Zahlen</td></tr>
-      <tr><td><code>int32</code></td><td>32</td><td>~-2,1 Mrd.</td><td>~2,1 Mrd.</td><td>Standard-Berechnungen</td></tr>
-      <tr style="background:#ecfdf5;"><td><code>int</code></td><td>32/64*</td><td>mind. ±2 Mrd.</td><td>mind. ±2 Mrd.</td><td><strong>✓ Empfohlen für die meisten Fälle</strong></td></tr>
-      <tr style="background:#ecfdf5;"><td><code>int64</code></td><td>64</td><td>~-9,2 × 10¹⁸</td><td>~9,2 × 10¹⁸</td><td><strong>✓ Für sehr große Werte</strong></td></tr>
+    <h3>Das Gleiche als Rechnung</h3>
+    <p>Die Bits links wegzuwerfen heißt bei einem Typ ohne Vorzeichen: Go rechnet modulo 2<sup>n</sup>. Dabei ist n die Zahl der Bits des Typs. Bei <code>uint8</code> ist n gleich 8, und 2<sup>8</sup> ist 256.</p>
+    <p>Modulo 256 heißt: Vom richtigen Ergebnis wird 256 so oft abgezogen oder dazugezählt, bis ein Wert von 0 bis 255 übrig ist. Die drei Beispiele des Kurstexts:</p>
+    <ul>
+      <li><strong>255 + 1:</strong> 256 mod 256 = 0</li>
+      <li><strong>130 + 140:</strong> 270 mod 256 = 14</li>
+      <li><strong>255 + 255:</strong> 510 mod 256 = 254</li>
+    </ul>
+    <p>Im Englischen heißt das „wrap around“: Nach 255 geht es bei 0 weiter.</p>
+
+    <h3>Ausprobieren: rechnen mit uint8</h3>
+    <div class="zeile">
+      <label for="a-u">a:</label><input type="number" id="a-u" min="0" max="255" value="255">
+      <select id="op-u" aria-label="Operator"><option value="+">+</option><option value="-">-</option><option value="*">*</option></select>
+      <label for="b-u">b:</label><input type="number" id="b-u" min="0" max="255" value="1">
+      <button type="button" class="haupt" id="los-u">rechnen</button>
+    </div>
+    <div class="zeile" id="bsp-u">
+      <span>Beispiele aus dem Kurstext:</span>
+      <button type="button" data-r="255,+,1">255 + 1</button>
+      <button type="button" data-r="130,+,140">130 + 140</button>
+      <button type="button" data-r="255,+,255">255 + 255</button>
+      <span>Eigene Beispiele:</span>
+      <button type="button" data-r="200,+,50">200 + 50</button>
+      <button type="button" data-r="3,-,5">3 − 5</button>
+      <button type="button" data-r="16,*,16">16 · 16</button>
+    </div>
+    <div class="auskunft fehler" id="fehler-u" hidden></div>
+    <pre class="code-block" id="code-u"></pre>
+    <table class="rechnung" id="rechnung-u"></table>
+    <div class="auskunft" id="urteil-u"></div>
+
+    <h3>Ein Überlauf mit Absicht</h3>
+    <p>Bei den Typen ohne Vorzeichen legt Go dieses Verhalten fest, und man darf sich darauf verlassen. Manche Programme nutzen es: Eine Hash-Funktion zum Beispiel soll immer einen Wert von 0 bis 2<sup>n</sup> − 1 liefern und rechnet deshalb absichtlich modulo 2<sup>n</sup>.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 79–80. Die drei Rechnungen 255 + 1, 130 + 140 und 255 + 255 stammen aus dem Kurstext. In der Fußnote 25 des Kurstexts wird 3 − 5 vom Überlauf unterschieden: Dort fehlt dem Typ der negative Wert, hier fehlen ihm Bits. Go rechnet in beiden Fällen modulo 256.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Mit Vorzeichen</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Was gibt <code>fmt.Println(a + b)</code> aus, wenn <code>a</code> und <code>b</code> vom Typ <code>int8</code> sind und die Werte 127 und 1 haben?
+          <details><summary>Auflösung</summary>−128. Die Summe hat das Bitmuster 1000 0000. Bei <code>int8</code> zählt das linke Bit −128.</details></li>
+        <li>12 · 121 und 3 · 121 laufen in <code>int8</code> beide über. Bei welcher Rechnung ist das Ergebnis negativ?
+          <details><summary>Auflösung</summary>Bei 12 · 121: Es kommt −84 heraus. 3 · 121 ergibt 107. Ein Überlauf ist also nicht immer am Vorzeichen zu erkennen.</details></li>
+      </ol>
+    </div>
+    <p>Auch bei <code>int8</code> behält Go die 8 rechten Bits. Der Typ liest sie aber im Zweierkomplement: Das linke Bit zählt −128. Landet beim Überlauf eine 1 im linken Bit, wird aus einer Summe zweier positiver Zahlen eine negative Zahl.</p>
+<pre class="code-block bits">    0111 1111    127
++   0000 0001      1
+-------------------
+    1000 0000    128    richtig wäre 128
+    1000 0000   -128    als int8 gelesen</pre>
+
+    <h3>Die sechs Rechnungen des Kurstexts</h3>
+    <table class="text">
+      <thead><tr><th>Rechnung mit <code>int8</code></th><th>Richtiges Ergebnis</th><th>Ergebnis in Go</th><th>Was mit dem Vorzeichen geschieht</th></tr></thead>
+      <tbody>
+        <tr><td><code>127 + 1</code></td><td>128</td><td>−128</td><td>Das Vorzeichen wechselt von Plus nach Minus.</td></tr>
+        <tr><td><code>127 + 127</code></td><td>254</td><td>−2</td><td>Das Vorzeichen wechselt von Plus nach Minus.</td></tr>
+        <tr><td><code>-128 - 1</code></td><td>−129</td><td>127</td><td>Das Vorzeichen wechselt von Minus nach Plus.</td></tr>
+        <tr><td><code>-128 + -128</code></td><td>−256</td><td>0</td><td>Das Vorzeichen wechselt von Minus nach Plus. Die 0 zählt hier zu den positiven Werten.</td></tr>
+        <tr><td><code>12 * 121</code></td><td>1452</td><td>−84</td><td>Das Vorzeichen wechselt von Plus nach Minus.</td></tr>
+        <tr><td><code>3 * 121</code></td><td>363</td><td>107</td><td>Das Vorzeichen bleibt. Das Ergebnis ist trotzdem falsch.</td></tr>
+      </tbody>
     </table>
-    <p class="note">* <code>int</code> ist platformabhängig: 32 Bit auf 32-Bit-Systemen, 64 Bit auf 64-Bit-Systemen</p>
+    <div class="hinweis">Ein unerwartetes Minus ist ein Zeichen für einen Überlauf. Ein fehlendes Minus beweist aber nichts: 3 · 121 läuft über und bleibt positiv.</div>
 
-    <h3>Beispiel: Überlauf-Prüfung vor Addition</h3>
-    <pre style="background:#1e293b;">// Sicherstellen, dass a + b nicht überläuft (int32)
-func safeAdd(a, b int32) (int32, error) {
-    if b > 0 && a > math.MaxInt32 - b {
-        return 0, errors.New("Überlauf würde auftreten")
-    }
-    if b < 0 && a < math.MinInt32 - b {
-        return 0, errors.New("Unterlauf würde auftreten")
-    }
-    return a + b, nil
-}</pre>
-
-    <div class="info-box">
-      <strong>📦 math/big Package:</strong> Für Berechnungen mit beliebiger Genauigkeit (arbitrary-precision arithmetic) 
-      stellt Go das Paket <code>math/big</code> zur Verfügung, das Ganzzahlen und Gleitkommazahlen ohne Größenbeschränkung unterstützt.
+    <h3>Ausprobieren: rechnen mit int8</h3>
+    <div class="zeile">
+      <label for="a-i">a:</label><input type="number" id="a-i" min="-128" max="127" value="127">
+      <select id="op-i" aria-label="Operator"><option value="+">+</option><option value="-">-</option><option value="*">*</option></select>
+      <label for="b-i">b:</label><input type="number" id="b-i" min="-128" max="127" value="1">
+      <button type="button" class="haupt" id="los-i">rechnen</button>
     </div>
+    <div class="zeile" id="bsp-i">
+      <span>Beispiele aus dem Kurstext:</span>
+      <button type="button" data-r="127,+,1">127 + 1</button>
+      <button type="button" data-r="127,+,127">127 + 127</button>
+      <button type="button" data-r="-128,-,1">−128 − 1</button>
+      <button type="button" data-r="-128,+,-128">−128 + −128</button>
+      <button type="button" data-r="12,*,121">12 · 121</button>
+      <button type="button" data-r="3,*,121">3 · 121</button>
+    </div>
+    <div class="auskunft fehler" id="fehler-i" hidden></div>
+    <pre class="code-block" id="code-i"></pre>
+    <table class="rechnung" id="rechnung-i"></table>
+    <div class="auskunft" id="urteil-i"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 80–81. Die sechs Rechnungen stammen aus dem Kurstext. Dort steht rechts ein Literal, zum Beispiel <code>iA + 1</code>. Die Demo rechnet mit zwei Variablen, das Ergebnis ist das gleiche.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
   </section>
 
-  <section class="card">
-    <h2>📝 Zusammenfassung</h2>
-    
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <div style="background:#fff7ed;padding:16px;border-radius:8px;border:2px solid #ea580c;">
-        <h4 style="margin-top:0;color:#ea580c;">Vorzeichenlos (unsigned)</h4>
-        <ul style="margin:8px 0;padding-left:20px;font-size:.95rem;">
-          <li>Wrap around modulo 2<sup>n</sup></li>
-          <li>Bits werden verworfen</li>
-          <li>Kein Vorzeichenwechsel möglich</li>
-          <li>Manchmal absichtlich genutzt</li>
-        </ul>
-      </div>
-      
-      <div style="background:#fef2f2;padding:16px;border-radius:8px;border:2px solid #dc2626;">
-        <h4 style="margin-top:0;color:#dc2626;">Vorzeichenbehaftet (signed)</h4>
-        <ul style="margin:8px 0;padding-left:20px;font-size:.95rem;">
-          <li>Kann Vorzeichenwechsel verursachen</li>
-          <li>Aber: Nicht immer Vorzeichenwechsel!</li>
-          <li>Zweierkomplement-Verhalten</li>
-          <li>Besonders gefährlich bei Multiplikation</li>
-        </ul>
-      </div>
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Teilausdrücke</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>x</code> hat den Typ <code>int8</code> und den Wert 120. Was ergibt <code>x*3/3</code>?
+          <details><summary>Auflösung</summary>34 und nicht 120. Go rechnet erst <code>x*3</code>. Das wäre 360 und läuft über zu 104. Danach kommt 104 / 3 = 34.</details></li>
+      </ol>
     </div>
+    <p>Go wertet einen Ausdruck Schritt für Schritt aus. Jedes Zwischenergebnis hat den Typ der Operanden und muss in diesen Typ passen. Läuft ein Zwischenergebnis über, ist das Endergebnis falsch, auch wenn es selbst bequem in den Typ gepasst hätte.</p>
+<pre class="code-block">var x int8 = 120
+fmt.Println(x*3/3, "vs.", x*(3/3))        // 34 vs. 120
+fmt.Println(x*8/12, "vs.", x/12*8)        // -5 vs. 80
+fmt.Println((x+20)/2, "vs.", x/2+20/2)    // -58 vs. 70</pre>
+    <p>Links und rechts von <code>"vs."</code> steht jedes Mal ein Ausdruck, der mathematisch das Gleiche bedeutet. Links läuft ein Teilausdruck über, rechts nicht.</p>
 
-    <div class="danger-box" style="margin-top:16px;">
-      <strong>🚨 Kritische Punkte:</strong>
-      <ul style="margin:10px 0;">
-        <li><strong>Keine Fehlermeldung</strong> zur Laufzeit – Programm läuft mit falschen Werten weiter</li>
-        <li>Mathematisch äquivalente Ausdrücke können unterschiedliche Ergebnisse liefern</li>
-        <li>Überläufe können sich ausgleichen → korrektes Endergebnis trotz Fehler in Zwischenschritten</li>
-        <li>Korrekte Endergebnisse garantieren nicht die Abwesenheit von Überläufen!</li>
-      </ul>
+    <h3>Ausprobieren: Schritt für Schritt auswerten</h3>
+    <div class="zeile" id="paare"></div>
+    <div class="zeile" id="typen">
+      <span>Typ von <code>x</code>:</span>
+      <button type="button" class="code" data-bits="8">int8</button>
+      <button type="button" class="code" data-bits="16">int16</button>
     </div>
+    <pre class="code-block" id="p-code"></pre>
+    <div class="zwei" id="p-zwei"></div>
+    <div class="auskunft" id="p-urteil"></div>
+
+    <h3>Zwei Überläufe, die sich aufheben</h3>
+    <p>Das vierte Paar der Demo zeigt einen besonders tückischen Fall. <code>x+20-40</code> liefert 100, und das ist richtig. Trotzdem ist unterwegs zweimal etwas übergelaufen: <code>x+20</code> ergibt −116 statt 140, und <code>-116 - 40</code> ergibt 100 statt −156. Der erste Überlauf geht nach oben, der zweite nach unten.</p>
+    <div class="hinweis">Ein richtiges Endergebnis beweist nicht, dass kein Teilausdruck übergelaufen ist. Wer sich nach einem Test mit <code>x+20-40</code> auf <code>x+20</code> verlässt, erlebt an anderer Stelle eine Überraschung.</div>
+    <p>Mit <code>int16</code> statt <code>int8</code> läuft in keinem der vier Paare etwas über. Dann liefern linker und rechter Ausdruck den gleichen Wert.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 82–83, mit Expertenwissen 4.14. Die vier Zeilen stammen aus dem Kurstext. Die Auswertung Schritt für Schritt steht dort nur für <code>x+20-40</code>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
   </section>
 
-  <p class="note" style="text-align:center;margin-top:24px;">
-    Kapitel 4.3 – Überlauf bei Ganzzahlen | FernUni-Kurs 01613 | Stand: 28.05.2026
-  </p>
-</main>
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Was man dagegen tut</h2>
+    <p>Die Beispiele dieser Seite sind mit Absicht klein. In der Praxis rechnet kaum jemand mit <code>int8</code>. Die meisten Ausdrücke eines Programms können gar nicht überlaufen, weil ihre Werte weit innerhalb des Wertebereichs bleiben. Auf wenige Stellen muss man achten.</p>
 
+    <h3>Den passenden Typ wählen</h3>
+    <ul>
+      <li><strong><code>int</code>:</strong> Der Typ hat mindestens 32 Bit und reicht damit mindestens bis etwa ±2 Milliarden. Für die meisten Aufgaben genügt das.</li>
+      <li><strong><code>int64</code>:</strong> Der Typ reicht bis etwa ±9 · 10<sup>18</sup>, das sind 9 Trillionen.</li>
+    </ul>
+
+    <h3>Gefährdete Stellen erkennen</h3>
+    <ul>
+      <li><strong>Große Zahlen multiplizieren:</strong> Bei einem Produkt sieht man schlecht, ob es noch in den Typ passt. Schon 100.000 · 100.000 ist größer als 2 Milliarden.</li>
+      <li><strong>Große Zwischenergebnisse:</strong> Für einen Durchschnitt werden viele Werte addiert. Die Summe kann überlaufen, obwohl der Durchschnitt selbst klein ist.</li>
+      <li><strong>Mehrere Variablen:</strong> Hängt ein Ausdruck von mehreren Variablen oder Funktionswerten ab, lässt sich sein Wert schwer vorhersagen.</li>
+    </ul>
+
+    <h3>Vor der Rechnung prüfen</h3>
+    <p>Nach einer Addition lässt sich ein Überlauf nicht mehr sicher erkennen. Man prüft deshalb vorher, ob das Ergebnis in den Typ passen wird. Für zwei positive Zahlen <code>a</code> und <code>b</code> vom Typ <code>int8</code> sieht das so aus:</p>
+<pre class="code-block">var a, b int8 = 120, 20
+if a > math.MaxInt8-b {      // 120 > 127 - 20
+    fmt.Println("Die Summe passt nicht in int8.")
+} else {
+    fmt.Println(a + b)
+}
+// Ausgabe: Die Summe passt nicht in int8.</pre>
+    <p>Die Bedingung stellt <code>a + b &gt; 127</code> so um, dass auf keiner Seite etwas überlaufen kann. <code>math.MaxInt8</code> ist die Konstante für den größten Wert des Typs, also 127. Mit <code>a</code> gleich 100 gibt das Programm 120 aus.</p>
+    <div class="hinweis">Im Kurstext steht nur, dass man vor einer solchen Addition prüfen kann. Das Programm dazu ist eine Ergänzung des Mentors. Die <code>if</code>-Anweisung wird in Abschnitt 5.5.1 behandelt, dazu gibt es die Seite <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</div>
+
+    <h3>Wenn kein Typ reicht</h3>
+    <p>Für ganze Zahlen beliebiger Größe gibt es in der Standardbibliothek das Paket <code>math/big</code>. Im Kurstext wird es im Expertenwissen 4.15 genannt und nicht weiter verwendet.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen</a> fragt nach den Grenzen der Ganzzahl-Typen.</li>
+      <li><strong>Der Überlauf am Kreis:</strong> Die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3, zeigt den Sprung von 127 nach −128.</li>
+      <li><strong>Der Übertrag im Addierer:</strong> Wohin das neunte Bit im Rechenwerk fällt, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#addierer">Rechenwerk</a>, Schritt 4.</li>
+      <li><strong>Ein Überlauf in einer Schleife:</strong> Die Seite <a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a> rechnet Fakultäten und prüft vor jeder Multiplikation, ob das Produkt noch passt.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 83–84, mit Expertenwissen 4.15. Das Beispiel 100.000 · 100.000 und das Programm mit <code>math.MaxInt8</code> stehen nicht im Kurstext.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
 <script>
-// Tab-System
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.getAttribute('data-tab');
-    const parent = tab.closest('.card');
-    parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    parent.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(target).classList.add('active');
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const c = t => '<code>' + String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</code>';
+  const minus = n => n < 0 ? '−' + (-n) : String(n);        // −9 mit echtem Minuszeichen
+  const vierer = s => s.replace(/(.{4})(?=.)/g, '$1 ');     // 1111 0111
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#int8
+  const ANKER = ['worum', 'laufzeit', 'uint8', 'int8', 'teilausdruecke', 'vorbeugen'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // Was von einem Ergebnis in einem Typ mit n Bit übrig bleibt
+  const mod = (w, m) => ((w % m) + m) % m;
+  const ohneVz = (w, bits) => mod(w, 2 ** bits);
+  const mitVz = (w, bits) => { const r = mod(w, 2 ** bits); return r >= 2 ** (bits - 1) ? r - 2 ** bits : r; };
+
+  // ---------- Schritt 1: f + 80 ----------
+  let f = 200;
+  function zeigeF(wert) {
+    f = wert;
+    const richtig = f + 80, erg = ohneVz(richtig, 8);
+    document.querySelectorAll('[data-f]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.f) === f));
+    el('f-code').textContent = 'var f uint8 = ' + f + '\nfmt.Println(f + 80)    // ' + erg;
+    el('f-urteil').classList.toggle('fehler', richtig > 255);
+    el('f-urteil').innerHTML = richtig > 255
+      ? '<p>' + f + ' + 80 ist ' + richtig + '. Das liegt über 255. Überlauf: Go gibt ' + erg + ' aus und meldet nichts.</p><p>' + richtig + ' − 256 = ' + erg + '</p>'
+      : '<p>' + f + ' + 80 ist ' + richtig + '. Das passt in ' + c('uint8') + '. Kein Überlauf.</p>' + (f === 175 ? '<p>255 ist der größte Wert des Typs. Mit 176 läuft die Rechnung über.</p>' : '');
+    melde(false);
+  }
+  el('f-werte').addEventListener('click', e => { const k = e.target.closest('[data-f]'); if (k) zeigeF(Number(k.dataset.f)); });
+
+  // ---------- Schritt 2 und 3: ein Rechner für uint8 und einer für int8 ----------
+  const TYP = {
+    u: { name: 'uint8', min: 0, max: 255, lies: w => ohneVz(w, 8) },
+    i: { name: 'int8', min: -128, max: 127, lies: w => mitVz(w, 8) }
+  };
+  const R = { u: { a: 255, op: '+', b: 1, fehler: '' }, i: { a: 127, op: '+', b: 1, fehler: '' } };
+  const ZEICHEN = { '+': '+', '-': '−', '*': '·' };
+  function rechne(t, a, op, b) {
+    const typ = TYP[t], r = R[t];
+    const gut = z => Number.isInteger(z) && z >= typ.min && z <= typ.max;
+    if (!gut(a) || !gut(b)) {
+      r.fehler = 'Der Typ ' + typ.name + ' reicht von ' + minus(typ.min) + ' bis ' + typ.max + '. Gib für a und b ganze Zahlen aus diesem Bereich ein.';
+      el('fehler-' + t).textContent = r.fehler; el('fehler-' + t).hidden = false;
+      melde(false); return;
+    }
+    r.fehler = ''; el('fehler-' + t).hidden = true;
+    r.a = a; r.op = op; r.b = b;
+    el('a-' + t).value = a; el('b-' + t).value = b; el('op-' + t).value = op;
+    const richtig = op === '+' ? a + b : op === '-' ? a - b : a * b;
+    const erg = typ.lies(richtig), ueber = richtig < typ.min || richtig > typ.max;
+    const sechzehn = mod(richtig, 65536).toString(2).padStart(16, '0'), links = sechzehn.slice(0, 8), rechts = sechzehn.slice(8);
+    r.richtig = richtig; r.erg = erg; r.ueber = ueber; r.links = vierer(links); r.rechts = vierer(rechts);
+    r.wechsel = ueber && (richtig < 0) !== (erg < 0);
+    el('code-' + t).textContent = 'var a ' + typ.name + ' = ' + a + '\nvar b ' + typ.name + ' = ' + b + '\nfmt.Println(a ' + op + ' b)    // ' + erg;
+    let zeilen = '<tr><td>Richtiges Ergebnis von ' + minus(a) + ' ' + ZEICHEN[op] + ' ' + minus(b) + '</td><td class="wert">' + minus(richtig) + '</td></tr>' +
+      '<tr><td>Das richtige Ergebnis mit 16 Bit' + (t === 'i' || richtig < 0 ? ', im Zweierkomplement' : '') + '</td><td class="wert"><span class="' + (ueber ? 'weg' : '') + '">' + vierer(links) + '</span> <span class="bleibt">' + vierer(rechts) + '</span></td></tr>' +
+      '<tr><td>Die 8 rechten Bits, die in ' + c(typ.name) + ' passen</td><td class="wert"><span class="bleibt">' + vierer(rechts) + '</span></td></tr>' +
+      '<tr><td>Diese 8 Bits als ' + c(typ.name) + ' gelesen</td><td class="wert">' + minus(erg) + '</td></tr>';
+    if (t === 'u') zeilen += '<tr><td>Als Rechnung modulo 256</td><td class="wert">' + (richtig < 0 ? '(' + minus(richtig) + ')' : richtig) + ' mod 256 = ' + erg + '</td></tr>';
+    el('rechnung-' + t).innerHTML = zeilen;
+    el('urteil-' + t).classList.toggle('fehler', ueber);
+    let urteil;
+    if (!ueber) urteil = '<p>Kein Überlauf. ' + minus(richtig) + ' liegt im Wertebereich von ' + c(typ.name) + ', die 8 linken Bits tragen nichts bei.</p>';
+    else if (t === 'u') urteil = '<p>Überlauf. ' + minus(richtig) + ' liegt außerhalb von 0 bis 255. Die durchgestrichenen Bits fallen weg. Go gibt ' + erg + ' aus und meldet nichts.</p>';
+    else urteil = '<p>Überlauf. ' + minus(richtig) + ' liegt außerhalb von −128 bis 127. Die durchgestrichenen Bits fallen weg. Go gibt ' + minus(erg) + ' aus und meldet nichts.</p><p>' +
+      (r.wechsel ? 'Das Vorzeichen wechselt: Richtig wäre ein ' + (richtig < 0 ? 'negativer' : 'positiver') + ' Wert, heraus kommt ' + (erg < 0 ? 'ein negativer.' : erg === 0 ? 'die 0.' : 'ein positiver.')
+        : 'Das Vorzeichen bleibt. Am Vorzeichen ist dieser Überlauf nicht zu erkennen.') + '</p>';
+    el('urteil-' + t).innerHTML = urteil;
+    melde(false);
+  }
+  ['u', 'i'].forEach(t => {
+    const lies = () => rechne(t, Number(el('a-' + t).value), el('op-' + t).value, Number(el('b-' + t).value));
+    el('los-' + t).addEventListener('click', lies);
+    ['a-' + t, 'b-' + t].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') lies(); }));
+    el('bsp-' + t).addEventListener('click', e => { const k = e.target.closest('[data-r]'); if (k) { const p = k.dataset.r.split(','); rechne(t, Number(p[0]), p[1], Number(p[2])); } });
   });
-});
 
-// uint8 Overflow Calculator
-function calculateUintOverflow() {
-  const a = parseInt(document.getElementById('uint-a').value);
-  const b = parseInt(document.getElementById('uint-b').value);
-  const op = document.getElementById('uint-op').value;
-  
-  let mathResult;
-  switch(op) {
-    case '+': mathResult = a + b; break;
-    case '-': mathResult = a - b; break;
-    case '*': mathResult = a * b; break;
+  // ---------- Schritt 4: zwei Ausdrücke, die mathematisch das Gleiche bedeuten ----------
+  // Ein Schritt ist [links, Operator, rechts]. 'x' ist die Variable, '#' das letzte Zwischenergebnis,
+  // 'k' die Konstante, die der Compiler vorher ausgerechnet hat: ['k', Text, Wert].
+  const X = 120;
+  const PAARE = [
+    { l: { text: 'x*3/3', s: [['x', '*', 3], ['#', '/', 3]] }, r: { text: 'x*(3/3)', s: [['k', '3/3', 1], ['x', '*', 'k']] } },
+    { l: { text: 'x*8/12', s: [['x', '*', 8], ['#', '/', 12]] }, r: { text: 'x/12*8', s: [['x', '/', 12], ['#', '*', 8]] } },
+    { l: { text: '(x+20)/2', s: [['x', '+', 20], ['#', '/', 2]] }, r: { text: 'x/2+20/2', s: [['x', '/', 2], ['k', '20/2', 10], ['#', '+', 'k']] } },
+    { l: { text: 'x+20-40', s: [['x', '+', 20], ['#', '-', 40]] }, r: { text: 'x-40+20', s: [['x', '-', 40], ['#', '+', 20]] } }
+  ];
+  let paar = 0, bits = 8;
+  const OPZ = { '+': '+', '-': '−', '*': '·', '/': ':' };
+  // Wertet einen Ausdruck aus. Liefert die Sätze zu jedem Schritt, das Ergebnis und die Zahl der Überläufe.
+  function werteAus(ausdruck) {
+    const typ = 'int' + bits, min = -(2 ** (bits - 1)), max = 2 ** (bits - 1) - 1;
+    let erg = X, konst = 0, ueberlaeufe = 0;
+    const saetze = ausdruck.s.map(s => {
+      if (s[0] === 'k') { konst = s[2]; return { text: s[1] + ' enthält nur Konstanten. Der Compiler rechnet es vorher aus: ' + s[2] + '.', ueber: false }; }
+      const l = s[0] === 'x' ? X : erg, r = s[2] === 'k' ? konst : s[2];
+      const richtig = s[1] === '+' ? l + r : s[1] === '-' ? l - r : s[1] === '*' ? l * r : Math.trunc(l / r);
+      const neu = mitVz(richtig, bits), ueber = richtig < min || richtig > max;
+      if (ueber) ueberlaeufe++;
+      erg = neu;
+      return { text: minus(l) + ' ' + OPZ[s[1]] + ' ' + minus(r) + ' = ' + minus(richtig) + '. ' +
+        (ueber ? 'Das liegt außerhalb von ' + minus(min) + ' bis ' + max + '. Überlauf: Als ' + typ + ' bleibt ' + minus(neu) + '.' : 'Kein Überlauf.') +
+        (s[1] === '/' && l % r !== 0 ? ' Die Division zweier ganzer Zahlen schneidet die Nachkommastellen ab.' : ''), ueber: ueber };
+    });
+    return { saetze: saetze, erg: erg, ueberlaeufe: ueberlaeufe };
   }
-  
-  const uint8Result = ((mathResult % 256) + 256) % 256;
-  const hasOverflow = mathResult < 0 || mathResult > 255;
-  
-  document.getElementById('uint-math').textContent = mathResult;
-  document.getElementById('uint-overflow-badge').innerHTML = hasOverflow 
-    ? '<span class="overflow-indicator overflow-yes">ÜBERLAUF</span>'
-    : '<span class="overflow-indicator overflow-no">OK</span>';
-  document.getElementById('uint-actual').textContent = uint8Result;
-  
-  // Modulo calculation
-  if (hasOverflow) {
-    const modCalc = mathResult >= 0 
-      ? `${mathResult} mod 256 = ${uint8Result}`
-      : `(${mathResult} mod 256 + 256) mod 256 = ${uint8Result}`;
-    document.getElementById('uint-modulo').textContent = modCalc;
-  } else {
-    document.getElementById('uint-modulo').textContent = 'Kein Überlauf – Ergebnis liegt im Wertebereich';
+  let p4 = null;
+  el('paare').innerHTML = PAARE.map((p, i) => '<button type="button" class="code" data-paar="' + i + '">' + p.l.text + '  vs.  ' + p.r.text + '</button>').join('');
+  function zeigePaar(i, b) {
+    paar = i; bits = b;
+    const p = PAARE[i], l = werteAus(p.l), r = werteAus(p.r), typ = 'int' + bits;
+    p4 = { l: l, r: r };
+    document.querySelectorAll('[data-paar]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.paar) === i));
+    document.querySelectorAll('#typen [data-bits]').forEach(k => k.classList.toggle('gewaehlt', Number(k.dataset.bits) === bits));
+    el('p-code').textContent = 'var x ' + typ + ' = ' + X + '\nfmt.Println(' + p.l.text + ', "vs.", ' + p.r.text + ')    // ' + l.erg + ' vs. ' + r.erg;
+    const kasten = (a, w) => '<div><h4>' + a.text + '</h4><ol>' + w.saetze.map(s => '<li' + (s.ueber ? ' class="ueberlauf"' : '') + '>' + s.text + '</li>').join('') + '</ol><p class="ergebnis">Wert des Ausdrucks: ' + minus(w.erg) + '</p></div>';
+    el('p-zwei').innerHTML = kasten(p.l, l) + kasten(p.r, r);
+    const n = l.ueberlaeufe + r.ueberlaeufe;
+    el('p-urteil').classList.toggle('fehler', n > 0);
+    el('p-urteil').innerHTML = n === 0 ? '<p>Mit ' + c(typ) + ' läuft kein Teilausdruck über. Beide Ausdrücke liefern ' + minus(l.erg) + '.</p>'
+      : l.erg === r.erg ? '<p>Beide Ausdrücke liefern ' + minus(l.erg) + ', und das ist richtig. Im linken Ausdruck sind aber ' + l.ueberlaeufe + ' Teilausdrücke übergelaufen. Die Überläufe heben sich auf.</p>'
+      : '<p>Der linke Ausdruck liefert ' + minus(l.erg) + ', der rechte ' + minus(r.erg) + '. Richtig ist ' + minus(r.erg) + '. Im linken Ausdruck läuft ein Teilausdruck über.</p>';
+    melde(false);
   }
-  
-  // Binary visualization
-  if (op === '+' || op === '-') {
-    const binA = a.toString(2).padStart(8, '0');
-    const binB = Math.abs(b).toString(2).padStart(8, '0');
-    const signB = op === '+' ? '+' : (b >= 0 ? '-' : '+');
-    
-    let fullResult;
-    if (op === '+') {
-      fullResult = (a + b).toString(2);
-    } else {
-      fullResult = (a - b).toString(2);
-    }
-    
-    const binResult = uint8Result.toString(2).padStart(8, '0');
-    
-    let html = `<strong>Bit-Darstellung:</strong>\n\n`;
-    html += `  ${binA}  (${a})\n`;
-    html += `${signB} ${binB}  (${b})\n`;
-    html += `----------\n`;
-    
-    if (hasOverflow && fullResult.length > 8) {
-      html += `  ${fullResult}\n`;
-      html += `  ${''.padStart(fullResult.length - 8, '^')}<span style="color:#fca5a5;">${'^'.repeat(Math.min(8, fullResult.length))}</span>\n`;
-      html += `  ${binResult}  = ${uint8Result} (${fullResult.length - 8} Bit(s) verworfen!)`;
-    } else {
-      html += `  ${binResult}  = ${uint8Result}`;
-    }
-    
-    document.getElementById('uint-binary').innerHTML = html;
-  } else {
-    document.getElementById('uint-binary').innerHTML = '<strong>Multiplikation:</strong> Bit-Darstellung zu komplex, siehe Modulo-Berechnung oben.';
-  }
-  
-  document.getElementById('uint-result').style.display = 'block';
-}
+  el('paare').addEventListener('click', e => { const k = e.target.closest('[data-paar]'); if (k) zeigePaar(Number(k.dataset.paar), bits); });
+  el('typen').addEventListener('click', e => { const k = e.target.closest('[data-bits]'); if (k) zeigePaar(paar, Number(k.dataset.bits)); });
 
-// int8 Overflow Calculator
-function calculateIntOverflow() {
-  const a = parseInt(document.getElementById('int-a').value);
-  const b = parseInt(document.getElementById('int-b').value);
-  const op = document.getElementById('int-op').value;
-  
-  let mathResult;
-  switch(op) {
-    case '+': mathResult = a + b; break;
-    case '-': mathResult = a - b; break;
-    case '*': mathResult = a * b; break;
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Keine Meldung', 'Schritt 2: Ohne Vorzeichen', 'Schritt 3: Mit Vorzeichen', 'Schritt 4: Teilausdrücke', 'Schritt 5: Was man dagegen tut'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+
+  function standRechner(t) {
+    const typ = TYP[t], r = R[t];
+    return [r.fehler ? 'Die Seite meldet: ' + r.fehler + ' Die Rechnung darunter gehört noch zu den vorigen Werten.' : 'Die Demo rechnet mit zwei Variablen vom Typ ' + typ.name + '.',
+      'Eingestellt ist a = ' + r.a + ', b = ' + r.b + ', Operator ' + r.op + '. Die Zeile lautet fmt.Println(a ' + r.op + ' b), Go gibt ' + r.erg + ' aus.',
+      'Das richtige Ergebnis ist ' + r.richtig + '. Mit 16 Bit geschrieben: ' + r.links + ' ' + r.rechts + '. Die 8 rechten Bits ' + r.rechts + ' bleiben, als ' + typ.name + ' gelesen sind sie ' + r.erg + '.',
+      (t === 'u' ? 'Als Rechnung modulo 256: ' + r.richtig + ' mod 256 = ' + r.erg + '. ' : '') + (r.ueber ? 'Das ist ein Überlauf.' : 'Das ist kein Überlauf.') +
+        (t === 'i' && r.ueber ? (r.wechsel ? ' Das Vorzeichen wechselt.' : ' Das Vorzeichen bleibt.') : ''),
+      'Die Seite sagt dazu: ' + glatt(el('urteil-' + t).innerText),
+      'Handgriffe: für a und b ganze Zahlen von ' + typ.min + ' bis ' + typ.max + ' eintragen, einen der Operatoren +, - und * wählen und „rechnen“ wählen, oder einen der Knöpfe mit Beispielen wählen. Eine Division und einen anderen Typ gibt es in dieser Demo nicht.'];
   }
-  
-  // int8: -128 to 127
-  let int8Result = mathResult;
-  while (int8Result > 127) int8Result -= 256;
-  while (int8Result < -128) int8Result += 256;
-  
-  const hasOverflow = mathResult < -128 || mathResult > 127;
-  const signChanged = (mathResult >= 0 && int8Result < 0) || (mathResult < 0 && int8Result >= 0);
-  
-  document.getElementById('int-math').textContent = mathResult;
-  document.getElementById('int-overflow-badge').innerHTML = hasOverflow 
-    ? '<span class="overflow-indicator overflow-yes">ÜBERLAUF</span>'
-    : '<span class="overflow-indicator overflow-no">OK</span>';
-  document.getElementById('int-actual').textContent = int8Result;
-  
-  if (hasOverflow && signChanged) {
-    const originalSign = mathResult >= 0 ? '+' : '−';
-    const newSign = int8Result >= 0 ? '+' : '−';
-    document.getElementById('int-sign-change').innerHTML = 
-      `<span style="display:inline-block;margin-left:12px;padding:6px 12px;background:#fef2f2;border-radius:6px;color:#dc2626;font-size:0.9rem;"><strong>Vorzeichenwechsel:</strong> ${originalSign} → ${newSign}</span>`;
-  } else if (hasOverflow) {
-    document.getElementById('int-sign-change').innerHTML = 
-      '<span style="display:inline-block;margin-left:12px;padding:6px 12px;background:#fff7ed;border-radius:6px;color:#ea580c;font-size:0.9rem;">Überlauf ohne Vorzeichenwechsel</span>';
-  } else {
-    document.getElementById('int-sign-change').textContent = '';
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Der Codeblock ist fest und lässt sich nicht ausführen. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return ['Gewählt ist f = ' + f + '. Die Zeilen lauten: var f uint8 = ' + f + ' ; fmt.Println(f + 80). Go gibt ' + ohneVz(f + 80, 8) + ' aus.',
+      'Die Seite sagt dazu: ' + glatt(el('f-urteil').innerText),
+      'Die Ausgaben für alle fünf Werte: f = 100 liefert 180, f = 175 liefert 255, f = 176 liefert 0, f = 200 liefert 24, f = 255 liefert 79.',
+      'Handgriffe: einen der fünf Werte 100, 175, 176, 200 und 255 für f wählen. Der Summand 80 ist fest.'];
+    if (stufe === 2) return standRechner('u');
+    if (stufe === 3) return standRechner('i');
+    const p = PAARE[paar], typ = 'int' + bits;
+    const seite = (a, w) => 'Ausdruck ' + a.text + ': ' + w.saetze.map((s, k) => (k + 1) + '. ' + s.text).join(' ') + ' Wert des Ausdrucks: ' + w.erg + '.';
+    return ['Gewählt ist das Paar ' + p.l.text + ' vs. ' + p.r.text + '. x hat den Typ ' + typ + ' und den Wert 120.',
+      seite(p.l, p4.l), seite(p.r, p4.r),
+      'Die Seite sagt dazu: ' + glatt(el('p-urteil').innerText),
+      'Handgriffe: eines der vier Paare wählen, für x den Typ int8 oder int16 wählen. Der Wert 120 ist fest. Eigene Ausdrücke lassen sich nicht eingeben.'];
   }
-  
-  // Binary visualization for int8
-  if (op === '+' || op === '-') {
-    const binA = (a >= 0 ? a : 256 + a).toString(2).padStart(8, '0');
-    const binB = (Math.abs(b) >= 0 ? Math.abs(b) : 256 + Math.abs(b)).toString(2).padStart(8, '0');
-    const signB = op === '+' ? '+' : (b >= 0 ? '-' : '+');
-    
-    const binResult = (int8Result >= 0 ? int8Result : 256 + int8Result).toString(2).padStart(8, '0');
-    
-    let html = `<strong>Bit-Darstellung (Zweierkomplement):</strong>\n\n`;
-    html += `  ${binA}  (${a})\n`;
-    html += `${signB} ${binB}  (${b})\n`;
-    html += `----------\n`;
-    html += `  ${binResult}  = ${int8Result}`;
-    
-    if (hasOverflow) {
-      html += ` (Überlauf!)`;
-      if (signChanged) {
-        html += `\n\n<span style="color:#fca5a5;">Das Vorzeichenbit (Bit 7) hat gewechselt!</span>`;
-      }
-    }
-    
-    document.getElementById('int-binary').innerHTML = html;
-  } else {
-    document.getElementById('int-binary').innerHTML = '<strong>Multiplikation:</strong> Komplexe Bit-Operation, siehe Ergebnis oben.';
-  }
-  
-  document.getElementById('int-result').style.display = 'block';
-}
+  const kurzStand = () => stufe === 1 ? 'f = ' + f : stufe === 2 ? R.u.a + ' ' + R.u.op + ' ' + R.u.b + ' in uint8' : stufe === 3 ? R.i.a + ' ' + R.i.op + ' ' + R.i.b + ' in int8'
+    : stufe === 4 ? PAARE[paar].l.text + ' mit int' + bits : '';
+
+  zeigeF(200);
+  rechne('u', 255, '+', 1);
+  rechne('i', 127, '+', 1);
+  zeigePaar(0, 8);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Überlauf bei Ganzzahlen in Go',
+    thema: 'arithmetischer Überlauf, uint8, int8, modulo, wrap around, Vorzeichenwechsel, Zweierkomplement',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–84',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_overflow_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text, pre.bits',
+    // Die schriftlichen Rechnungen mit Bits sind kein Go und gehen deshalb mit dem Text mit
+    zeilen: () => Array.from(el('stufe-' + stufe).querySelectorAll('pre:not(.bits)')).flatMap(p => p.textContent.split(String.fromCharCode(10))).map(t => t.trimEnd()).filter(Boolean),
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum meldet Go den Überlauf nicht?'
+  });
+  angemeldet = true;
+})();
 </script>
 </body>
 </html>
