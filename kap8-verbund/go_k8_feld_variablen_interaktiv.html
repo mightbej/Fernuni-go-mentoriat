@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verbund-Variablen und Feld-Variablen in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Verbund-Variablen und Feld-Variablen in Go</h1>
+    <p>Jedes Feld eines Verbunds ist selbst eine Variable. Ein Programm liest sie, weist ihr einen Wert zu und kann ihre Adresse nehmen. Die Seite zeigt das an der Verbund-Variable <code>anna</code> aus dem Kurstext.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.2.3, Seiten 204–205.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Punkt-Notation</button>
+    <button type="button" class="tab" data-stufe="2">2 Wert oder Zeiger</button>
+    <button type="button" class="tab" data-stufe="3">3 Ein Verbund als Ganzes</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Zwei Begriffe aus Abschnitt 8.2.3 des Kurstexts tragen diese Lektion:</p>
+    <ul>
+      <li><strong>Verbund-Variable:</strong> eine Variable eines Verbund-Typs, zum Beispiel <code>anna</code> vom Typ <code>person</code>.</li>
+      <li><strong>Feld-Variable:</strong> ein Feld einer Verbund-Variable, zum Beispiel <code>anna.ort</code>. Sie ist eine Variable vom Typ des Felds, hier <code>string</code>.</li>
+    </ul>
+    <p>Der Wert einer Verbund-Variable setzt sich aus den Werten ihrer Felder zusammen. Die gleiche Sicht kennst du vom Array: Auch ein Element <code>a[i]</code> ist eine Variable.</p>
+    <p>Alle Beispiele verwenden diesen Typ:</p>
+    <pre class="code-block">type person struct {
+    vorname     string
+    nachname    string
+    gebJahr     int
+    ort         string
+    verheiratet bool
+}</pre>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 8.2 und 8.2.1, Typ und Literal:</strong> Die Lektion <a href="go_k8_verbund_interaktiv.html">Verbund in Go</a> zeigt die Definition des Typs und das Verbund-Literal.</li>
+      <li><strong>Abschnitt 6.1, indizierte Variable:</strong> Die Lektion <a href="../kap6-arrays/go_k6_arrays_interaktiv.html#index">Arrays in Go</a> zeigt in Schritt 2 den Zugriff auf ein Element.</li>
+      <li><strong>Abschnitt 7.4, Zeiger:</strong> Schritt 2 dieser Lektion braucht <code>&amp;</code> und <code>*</code>. Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#operatoren">Zeiger in Go</a> erklärt beide in Schritt 2.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Punkt-Notation</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>anna.nachname</code> hat den Wert <code>"Schmidt"</code>. Welchen Wert hat das Feld nach <code>anna.nachname += "-Schiller"</code>?
+          <details><summary>Auflösung</summary><code>"Schmidt-Schiller"</code>. Das Feld ist eine Variable vom Typ <code>string</code>, und <code>+=</code> hängt an einen String an.</details></li>
+      </ol>
+    </div>
+    <p>Auf ein Feld greift ein Programm mit der <strong>Punkt-Notation</strong> zu: Name der Verbund-Variable, ein Punkt, Name des Felds. <code>anna.nachname</code> ist der Bezeichner der Feld-Variable <code>nachname</code> im Verbund <code>anna</code>.</p>
+    <p>Mit diesem Bezeichner geht alles, was mit jeder anderen Variable geht: Das Programm liest ihren Wert in einem Ausdruck und weist ihr einen neuen Wert zu.</p>
+
+    <ol class="programm" id="p-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="p-weiter">nächste Anweisung</button>
+      <button type="button" id="p-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="p-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="p-bild"></div>
+    <div id="p-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="p-ausgabe"></div>
+    <div class="auskunft" id="p-urteil"></div>
+
+    <h3>Was der Compiler nicht annimmt</h3>
+    <div class="spalte" id="f-wahl"></div>
+    <p><strong>Meldung des Compilers</strong></p>
+    <div class="konsole" id="f-ausgabe"></div>
+    <div class="auskunft" id="f-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.3, Seite 204. Das Programm der Demo stammt aus dem Kurstext, die letzte Zeile ist ergänzt. Die drei Zeilen mit Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Wert eines Felds oder Zeiger auf das Feld</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>heimat</code> enthält eine Kopie von <code>anna.ort</code>, <code>pHeimat</code> enthält die Adresse von <code>anna.ort</code>. Dann läuft <code>anna.ort = "München"</code>. Was liefern <code>heimat</code> und <code>*pHeimat</code>?
+          <details><summary>Auflösung</summary><code>heimat</code> liefert weiter <code>"Hamburg"</code>, die Kopie ändert sich nicht. <code>*pHeimat</code> liefert <code>"München"</code>, denn der Zeiger führt zum Feld selbst.</details></li>
+      </ol>
+    </div>
+    <p>Eine Verbund-Variable und jedes ihrer Felder sind <strong>adressierbar</strong>: Der Adressoperator <code>&amp;</code> liefert einen Zeiger auf den Verbund oder auf ein Feld.</p>
+    <p>Wer mit einem Feld arbeitet, muss wie bei jeder Variable unterscheiden:</p>
+    <ul>
+      <li><strong>Der Wert des Felds:</strong> <code>var heimat string = anna.ort</code> legt eine Kopie des Werts ab. Danach hat <code>heimat</code> mit dem Verbund nichts mehr zu tun.</li>
+      <li><strong>Das Feld selbst:</strong> <code>var pHeimat *string = &amp;anna.ort</code> legt die Adresse der Feld-Variable ab. <code>*pHeimat</code> ist das Feld <code>anna.ort</code>.</li>
+    </ul>
+    <p>Die Demo beginnt mit dem Stand am Ende von Schritt 1. Die Variable <code>anna</code> hat den Wert <code>{Anna Schmidt-Schiller 1966 Hamburg true}</code>.</p>
+
+    <ol class="programm" id="z-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
+      <button type="button" id="z-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="z-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="z-bild"></div>
+    <div id="z-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="z-ausgabe"></div>
+    <div class="auskunft" id="z-urteil"></div>
+    <p>Der Hauptspeicher unter dem Rahmen zeigt den Unterschied als Zellen: <code>heimat</code> hat eigene Zellen ab der Adresse 200, dorthin wurde der Wert kopiert. <code>pHeimat</code> hat 8 Zellen, in denen die Zahl 140 steht. Das ist im Modell die Adresse des Felds <code>ort</code> im Verbund <code>anna</code>, der bei Zelle 100 beginnt. Die Adressen sind erfunden.</p>
+    <p>Das Gleiche gilt in beiden Richtungen: Eine Änderung am Feld ist über den Zeiger sichtbar, und eine Zuweisung über den Zeiger ändert das Feld. Die Kopie <code>heimat</code> bleibt bei beidem außen vor.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.3, Seiten 204–205. Das Programm stammt aus dem Kurstext, ohne zwei der fünf Ausgaben. Der Wert eines Zeigers steht auf dieser Seite in Worten da.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Ein Verbund als Ganzes</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Nach <code>kopie := anna</code> läuft <code>kopie.ort = "Bonn"</code>. Welchen Wert hat <code>anna.ort</code> danach?
+          <details><summary>Auflösung</summary>Den alten Wert, <code>"Ulm"</code>. <code>kopie</code> ist eine eigene Variable mit eigenen Feldern.</details></li>
+      </ol>
+    </div>
+    <p>Was für ein Feld gilt, gilt für den ganzen Verbund: Eine Zuweisung kopiert den Wert. Der Wert eines Verbunds besteht aus den Werten aller Felder, also kopiert die Zuweisung alle Felder.</p>
+
+    <ol class="programm" id="k-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="k-weiter">nächste Anweisung</button>
+      <button type="button" id="k-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="k-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="k-bild"></div>
+    <div id="k-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="k-ausgabe"></div>
+    <div class="auskunft" id="k-urteil"></div>
+    <p>Die Tupel-Zuweisung <code>personA, personB = personB, personA</code> aus Abschnitt 8.1 des Kurstexts nutzt das: Sie tauscht zwei Verbünde mit allen Feldern in einer Anweisung.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Zeiger auf den ganzen Verbund:</strong> Die Lektion <a href="go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde</a> zeigt <code>pPer.nachname</code>.</li>
+      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a> zeigt, an welcher Adresse jedes Feld liegt.</li>
+      <li><strong>Quiz:</strong> Das <a href="S212_verbund_felder_demo_quiz.html">Quiz zu Verbund-Variablen und Feld-Variablen</a>.</li>
+    </ul>
+    <p class="quelle">Im Kurstext steht in Abschnitt 8.2.3: Der Wert einer Verbund-Variable setzt sich aus den Werten ihrer Felder zusammen. Das Programm mit <code>kopie</code> ist ein eigenes Beispiel dazu, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#punkt
+  const ANKER = ['worum', 'punkt', 'feldzeiger', 'kopie'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Punkt-Notation', 'Schritt 2: Wert eines Felds oder Zeiger auf das Feld', 'Schritt 3: Ein Verbund als Ganzes'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? 'freigegeben' : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const PN = ['vorname', 'nachname', 'gebJahr', 'ort', 'verheiratet'];
+  const P = (nachname, ort, verh) => FELDER(PN, ['"Anna"', '"' + nachname + '"', 1966, '"' + ort + '"', verh]);
+
+  // ---------- Schritt 1: Punkt-Notation ----------
+  const DP = ablauf('p', ['var anna = person{"Anna", "Schmidt", 1966, "Hamburg", false}', 'anna.nachname += "-Schiller"', 'anna.verheiratet = true', 'fmt.Println(anna.nachname, anna.verheiratet)', 'fmt.Println(anna)'], [
+    { z: 1, satz: 'anna ist eine Verbund-Variable vom Typ person. Ihre fünf Felder sind fünf Feld-Variablen.', rahmen: [R('main', [V('anna', P('Schmidt', 'Hamburg', false), 1)])], aus: '' },
+    { z: 2, satz: 'anna.nachname ist eine Variable vom Typ string. Die Zuweisung hängt "-Schiller" an ihren Wert an. Die anderen vier Felder ändern sich nicht.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Hamburg', false), 0, [1])])], aus: '' },
+    { z: 3, satz: 'anna.verheiratet ist eine Variable vom Typ bool. Sie bekommt den Wert true.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Hamburg', true), 0, [4])])], aus: '' },
+    { z: 4, satz: 'In einem Ausdruck liefert anna.nachname den Wert des Felds. Das Programm gibt zwei Feld-Werte aus.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Hamburg', true), 0, [1, 4])])], aus: 'Schmidt-Schiller true' },
+    { z: 5, satz: 'Der Wert des ganzen Verbunds besteht aus den Werten seiner Felder. Zwei davon sind jetzt andere als im Literal.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Hamburg', true))])], aus: 'Schmidt-Schiller true' + NL + '{Anna Schmidt-Schiller 1966 Hamburg true}' }
+  ], 'Noch ist keine Anweisung ausgeführt. Die fünf Zeilen stehen im Rumpf von main.');
+
+  const WF = wahl('f', [
+    { code: 'fmt.Println(anna.name)', fehler: true, aus: 'anna.name undefined (type person has no field or method name)', satz: 'Der Typ person hat kein Feld mit dem Namen name. Die Namen der Felder stehen in der Definition des Typs.' },
+    { code: 'anna.gebJahr = "1966"', fehler: true, aus: 'cannot use "1966" (untyped string constant) as int value in assignment', satz: 'Das Feld gebJahr ist eine Variable vom Typ int. Ein String passt nicht hinein.' },
+    { code: 'fmt.Println(person.ort)', fehler: true, aus: 'person.ort undefined (type person has no method ort)', satz: 'person ist der Typ und keine Variable. Ein Feld gibt es erst an einer Variable des Typs, zum Beispiel anna.ort.' }
+  ], false);
+
+  // Die Speichersicht zu Schritt 2: Der Verbund beginnt im Modell bei Zelle 100, sein Feld ort bei Zelle 140
+  const SP_Z = { orte: { 'main.anna': [100, 'person', null], 'main.heimat': [200, 'string', null], 'main.pHeimat': [300, '*string', 8] }, ziele: { 'Adresse von anna.ort': 140 } };
+  // ---------- Schritt 2: heimat und pHeimat ----------
+  const ADR = 'Adresse von anna.ort', A0 = '{Anna Schmidt-Schiller 1966 ';
+  const zeig = (ort, heimat, ph, neu, m) => [R('main', [V('anna', P('Schmidt-Schiller', ort, true), 0, m)].concat(heimat === null ? [] : [V('heimat', '"' + heimat + '"', neu === 'h')], ph ? [V('pHeimat', ADR, neu === 'p')] : []))];
+  const DZ = ablauf('z', ['var heimat string = anna.ort', 'var pHeimat *string = &anna.ort', 'fmt.Println(heimat, *pHeimat, heimat == *pHeimat)', 'anna.ort = "München"', 'fmt.Println(heimat, *pHeimat, heimat == *pHeimat)', '*pHeimat = "Ulm"', 'heimat = "Kiel"', 'fmt.Println(anna)'], [
+    { z: 1, satz: 'heimat ist eine neue Variable vom Typ string. Sie bekommt eine Kopie des Werts von anna.ort: "Hamburg".', rahmen: zeig('Hamburg', 'Hamburg', false, 'h'), aus: '' },
+    { z: 2, satz: '&anna.ort liefert die Adresse der Feld-Variable. pHeimat zeigt jetzt auf das Feld ort im Verbund anna.', rahmen: zeig('Hamburg', 'Hamburg', true, 'p', [3]), aus: '' },
+    { z: 3, satz: 'heimat liefert die Kopie, *pHeimat liefert den Wert des Felds. Beide sind "Hamburg", der Vergleich liefert true.', rahmen: zeig('Hamburg', 'Hamburg', true), aus: 'Hamburg Hamburg true' },
+    { z: 4, satz: 'Die Zuweisung ändert das Feld im Verbund. heimat ist davon nicht betroffen.', rahmen: zeig('München', 'Hamburg', true, '', [3]), aus: 'Hamburg Hamburg true' },
+    { z: 5, satz: 'heimat liefert weiter "Hamburg". *pHeimat liefert "München", denn der Zeiger führt zum Feld selbst. Der Vergleich liefert false.', rahmen: zeig('München', 'Hamburg', true), aus: 'Hamburg Hamburg true' + NL + 'Hamburg München false' },
+    { z: 6, satz: '*pHeimat ist die Feld-Variable anna.ort. Die Zuweisung ändert das Feld und damit den Verbund, ohne den Namen anna zu nennen.', rahmen: zeig('Ulm', 'Hamburg', true, '', [3]), aus: 'Hamburg Hamburg true' + NL + 'Hamburg München false' },
+    { z: 7, satz: 'Die Zuweisung ändert nur die Variable heimat. Auf den Verbund hat sie keine Wirkung.', rahmen: zeig('Ulm', 'Kiel', true, 'h'), aus: 'Hamburg Hamburg true' + NL + 'Hamburg München false' },
+    { z: 8, satz: 'Im Verbund steht "Ulm", der Wert aus der Zuweisung über den Zeiger. "Kiel" steht nur in heimat.', rahmen: zeig('Ulm', 'Kiel', true), aus: 'Hamburg Hamburg true' + NL + 'Hamburg München false' + NL + A0 + 'Ulm true}' }
+  ], 'Noch ist keine Anweisung ausgeführt. anna hat den Wert {Anna Schmidt-Schiller 1966 Hamburg true}.', SP_Z);
+
+  // ---------- Schritt 3: kopie := anna ----------
+  const DK = ablauf('k', ['kopie := anna', 'kopie.ort = "Bonn"', 'fmt.Println(anna.ort, kopie.ort)'], [
+    { z: 1, satz: 'kopie ist eine neue Verbund-Variable. Die Zuweisung kopiert alle fünf Feld-Werte von anna hinein. Von hier an gibt es zwei Verbünde mit den gleichen Werten.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Ulm', true)), V('kopie', P('Schmidt-Schiller', 'Ulm', true), 1)])], aus: '' },
+    { z: 2, satz: 'kopie.ort ist ein Feld von kopie. Die Zuweisung ändert nur dieses Feld. anna.ort ist eine andere Variable.', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Ulm', true)), V('kopie', P('Schmidt-Schiller', 'Bonn', true), 0, [3])])], aus: '' },
+    { z: 3, satz: 'anna.ort hat weiter den Wert "Ulm", kopie.ort hat den Wert "Bonn".', rahmen: [R('main', [V('anna', P('Schmidt-Schiller', 'Ulm', true), 0, [3]), V('kopie', P('Schmidt-Schiller', 'Bonn', true), 0, [3])])], aus: 'Ulm Bonn' }
+  ], 'Noch ist keine Anweisung ausgeführt. anna hat den Wert {Anna Schmidt-Schiller 1966 Ulm true}, den Stand am Ende von Schritt 2.');
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMOS = [null, DP, DZ, DK];
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    const s = standAblauf(DEMOS[stufe]).concat('Ein Verbund steht in seinem Kasten als Liste seiner Felder mit Name und Wert. Grün ist ein Feld, das die letzte Anweisung gelesen oder geändert hat.');
+    if (stufe === 1) return s.concat(['Unter „Was der Compiler nicht annimmt“:'], standWahl(WF));
+    if (stufe === 2) s.push('Im Rahmen steht der Wert des Zeigers pHeimat in Worten: „Adresse von anna.ort“. Im Hauptspeicher darunter steht dafür die Zahl 140. Das Feld ort liegt im Modell 40 Zellen hinter dem Anfang des Verbunds anna bei Zelle 100.');
+    return s;
+  }
+  const kurzStand = () => DEMOS[stufe] ? kurzVon(DEMOS[stufe]) : '';
+  const programmZeilen = () => zeilenVon(DEMOS[stufe]);
+
+  DP.zeichne(); WF.zeichne(); DZ.zeichne(); DK.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Verbund-Variablen und Feld-Variablen in Go',
+    thema: 'Verbund-Variable, Feld-Variable, Punkt-Notation, adressierbar, Zeiger auf ein Feld, Kopie eines Verbunds',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.2.3, Seiten 204–205',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_feld_variablen_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo, die Zeilen stehen im Rumpf von main:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ändert sich heimat nicht mit?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
