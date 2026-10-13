@@ -6,12 +6,22 @@
   <title>Strings: Bytes und Zeichen in Go</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
-    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#b45309;--ein:#0f766e;--ein-bg:#d1fae5;--mehr:#b45309;--mehr-bg:#ffedd5;--wahl:#1e40af;--wahl-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--ein:#0f766e;--ein-bg:#d1fae5;--mehr:#b45309;--mehr-bg:#ffedd5;--wahl:#1e40af;--wahl-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
     .container { max-width:1200px; }
-    body { background:radial-gradient(circle at 18% -12%,#ffedd5 0%,#f7f9fc 46%); }
-    .hero { background:linear-gradient(135deg,#b45309 0%,#0f766e 100%);box-shadow:0 10px 24px rgba(180,83,9,.25); }
     h2 { color:var(--accent); }
     .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button:disabled { opacity:.5;cursor:default; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
@@ -67,30 +77,78 @@
 
   <div class="hero">
     <h1>Strings: Bytes und Zeichen</h1>
-    <p>Ein String in Go ist eine Folge von Bytes. Ein Zeichen kann ein Byte belegen oder bis zu vier. Deshalb hat „Tür" drei Zeichen und die Länge 4. Kurstext Kapitel 4.6, String Datentyp.</p>
+    <p>Ein String in Go ist eine Folge von Bytes. Ein Zeichen kann ein Byte belegen oder bis zu vier. Deshalb hat „Tür“ drei Zeichen und die Länge 4.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.6.2, Seiten 102–107.</p>
   </div>
 
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Ein String als Byte-Reihe</button>
+    <button type="button" class="tab" data-stufe="2">2 Mit Zeichen arbeiten</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
   <div class="card">
-    <h2>Was die Seite zeigt</h2>
-    <p>Go speichert jedes Zeichen eines Strings im Format UTF-8. Die 128 ASCII-Zeichen brauchen je ein Byte. Alle anderen Unicode-Zeichen brauchen zwei bis vier Bytes, zum Beispiel ü und ß je zwei.</p>
-    <p>Drei Dinge in Go zählen Bytes und nicht Zeichen: Die Funktion <code>len(s)</code> liefert die Zahl der Bytes. Der Index-Ausdruck <code>s[i]</code> liefert ein einzelnes Byte. Der Slice-Ausdruck <code>s[low:high]</code> schneidet nach Bytes. Wer mit Zeichen rechnet, bekommt bei Umlauten falsche Ergebnisse.</p>
+    <h2>Worum es geht</h2>
+    <p>Go speichert jedes Zeichen eines Strings im Format UTF-8:</p>
+    <ul>
+      <li><strong>ASCII-Zeichen:</strong> Die 128 ASCII-Zeichen brauchen je ein Byte.</li>
+      <li><strong>Alle anderen Unicode-Zeichen:</strong> Sie brauchen zwei bis vier Bytes, zum Beispiel ü und ß je zwei.</li>
+    </ul>
+
+    <h3>Was in Go Bytes zählt</h3>
+    <ul>
+      <li><strong><code>len(s)</code>:</strong> Die Funktion liefert die Zahl der Bytes.</li>
+      <li><strong><code>s[i]</code>:</strong> Der Index-Ausdruck liefert ein einzelnes Byte.</li>
+      <li><strong><code>s[low:high]</code>:</strong> Der Slice-Ausdruck schneidet nach Bytes.</li>
+    </ul>
+    <p>Wer dabei mit Zeichen rechnet, bekommt bei Umlauten falsche Ergebnisse.</p>
+
+    <h3>Was Zeichen zählt</h3>
     <p>Wer mit Zeichen arbeiten will, wandelt den String in ein <code>[]rune</code> um. Darin ist jedes Element genau ein Zeichen, und der Index zählt Zeichen. Ein Schnitt kann dann kein Zeichen mehr zerteilen.</p>
-    <p>Die Seite legt den String als Reihe von Bytes hin. Über jedem Byte steht das Zeichen, zu dem es gehört, darunter sein Index im String. Ganz oben steht der Index desselben Zeichens im <code>[]rune</code>. So sieht man beide Zählweisen übereinander.</p>
-  </div>
 
+    <h3>Was aus früheren Kapiteln dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 3.3.7, Seite 36, Strings ausgeben und verketten:</strong> Dort kommt der Typ <code>string</code> zum ersten Mal vor.</li>
+      <li><strong>Abschnitt 4.3.4, Seite 63, der Typ <code>uint8</code>:</strong> Ein Byte ist eine ganze Zahl von 0 bis 255. Dazu gibt es die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+      <li><strong>Abschnitt 4.6.1, Seiten 99–102, String-Literale:</strong> Dazu gibt es die Seite <a href="go_k4_strings_interaktiv.html">Strings in Go</a>.</li>
+    </ul>
+
+    <h3>Die zwei Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1</strong> legt einen String als Reihe von Bytes hin. Über jedem Byte steht das Zeichen, zu dem es gehört, darunter sein Index.</li>
+      <li><strong>Schritt 2</strong> zeigt, wie man mit <code>[]rune</code> Zeichen zählt und schneidet.</li>
+    </ul>
+    <div class="hinweis">Die Ausgaben der festen Programme auf dieser Seite sind mit Go 1.26 nachgeprüft. In der Demo rechnet der Browser. Auf der Seite selbst läuft kein Go.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2, Seiten 102–105. Der Typ <code>[]rune</code> kommt im Kurstext nicht vor, er ist eine Ergänzung des Mentors.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
   <div class="card">
-    <h2>Die Typen string, byte und rune in Go</h2>
+    <h2>Ein String als Byte-Reihe</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Welchen Wert liefert <code>len("Tür")</code>?
+          <details><summary>Auflösung</summary>4. Das ü belegt zwei Bytes, T und r je eines.</details></li>
+        <li>Welchen Substring liefert <code>"Tür"[1:3]</code>?
+          <details><summary>Auflösung</summary>„ü“. Die Bytes mit Index 1 und 2 bilden zusammen das ü. Der obere Index 3 gehört nicht mehr dazu.</details></li>
+        <li>Mit welchem Slice-Ausdruck bekommt man aus „Tür“ das r?
+          <details><summary>Auflösung</summary><code>"Tür"[3:4]</code>. Das r ist das vierte Byte, nicht das dritte.</details></li>
+        <li>Was liefert <code>"Tür"[1:2]</code>?
+          <details><summary>Auflösung</summary>Ein einzelnes Byte mit dem Wert 195, die erste Hälfte des ü. Das ist kein gültiges Zeichen. Go meldet keinen Fehler, die Konsole zeigt dafür meist das Ersatzzeichen �.</details></li>
+        <li>Der String ist „Abo“. Welchen Wert und welchen Typ hat <code>s[0]</code>?
+          <details><summary>Auflösung</summary>Den Wert 65 und den Typ <code>byte</code>. <code>s[0]</code> ist kein String. Deshalb übersetzt Go <code>"H" + s[0]</code> nicht.</details></li>
+      </ol>
+    </div>
+
+    <h3>Wie viele Bytes ein Zeichen braucht</h3>
     <div class="tabellenrahmen">
-    <table>
-      <thead><tr><th>Typ</th><th>Was ein Wert dieses Typs ist</th><th>Wo er auf dieser Seite vorkommt</th></tr></thead>
-      <tbody>
-        <tr><td><code>string</code></td><td>eine Folge von Bytes beliebiger Länge</td><td>der ganze String <code>s</code> und jeder Substring <code>s[low:high]</code></td></tr>
-        <tr><td><code>byte</code></td><td>ein Byte, anderer Name für <code>uint8</code></td><td>der Wert von <code>s[i]</code></td></tr>
-        <tr><td><code>rune</code></td><td>die Unicode-Nummer eines Zeichens, anderer Name für <code>int32</code></td><td>die Nummer unter jedem Zeichen, zum Beispiel U+00FC für ü</td></tr>
-        <tr><td><code>[]rune</code></td><td>eine Folge von Runen, also eine Folge ganzer Zeichen</td><td><code>r := []rune(s)</code>, dann zählen <code>len(r)</code>, <code>r[i]</code> und <code>r[a:b]</code> Zeichen</td></tr>
-      </tbody>
-    </table>
-    <table>
+    <table class="text">
       <thead><tr><th>Zeichen</th><th>Beispiele</th><th>Bytes in UTF-8</th></tr></thead>
       <tbody>
         <tr><td>ASCII-Zeichen</td><td class="zahl">A b 7 ? Leerzeichen</td><td>1</td></tr>
@@ -100,32 +158,8 @@
       </tbody>
     </table>
     </div>
-    <p class="quelle">Nach Kurstext, Abschnitt 4.6. Der Typ <code>[]rune</code> kommt dort nicht vor, er ist eine Ergänzung.</p>
-  </div>
 
-  <div class="card">
-    <h2>Mit Zeichen statt mit Bytes arbeiten</h2>
-    <p>Die Umwandlung <code>[]rune(s)</code> zerlegt den String in seine Zeichen. Die Umwandlung <code>string(…)</code> macht aus Runen wieder einen String.</p>
-<pre>s := "Maßstab"
-r := []rune(s)
-
-fmt.Println(len(s))         // 8, Bytes
-fmt.Println(len(r))         // 7, Zeichen
-fmt.Println(string(r[2]))   // ß
-fmt.Println(string(r[3:7])) // stab
-fmt.Println(s[3:7])         // schneidet durch das ß</pre>
-    <p>Auch die Schleife mit <code>range</code> läuft zeichenweise über einen String. Der Index, den sie liefert, ist aber die Position des ersten Bytes:</p>
-<pre>for i, z := range "Tür" {
-    fmt.Println(i, string(z))
-}
-// 0 T
-// 1 ü
-// 3 r</pre>
-    <div class="hinweis">Ein <code>[]rune</code> belegt für jedes Zeichen 4 Bytes, auch für ein a, und die Umwandlung kopiert den ganzen Text. Deshalb ist der String in Go die sparsame Form und <code>[]rune</code> die bequeme.</div>
-  </div>
-
-  <div class="card">
-    <h2>Ausprobieren</h2>
+    <h3>Ausprobieren: Bytes auswählen</h3>
     <div class="zeile">
       <label for="eingabe">String</label>
       <input id="eingabe" type="text" value="Tür" maxlength="24" aria-label="String">
@@ -154,30 +188,80 @@ fmt.Println(s[3:7])         // schneidet durch das ß</pre>
     <div class="anzeige" id="anzeige"></div>
     <div id="meldung"></div>
     <div id="gocode"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2, Seiten 102–105, und Abschnitt 4.6.2.1, Seiten 105–107. Die Zeilen mit <code>[]rune</code> gehen über den Kurstext hinaus.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-2">
   <div class="card">
-    <h2>Erst vorhersagen, dann ausprobieren</h2>
-    <ol>
-      <li>Welchen Wert liefert <code>len("Tür")</code>?
-        <details><summary>Auflösung</summary>4. Das ü belegt zwei Bytes, T und r je eines.</details></li>
-      <li>Welchen Substring liefert <code>"Tür"[1:3]</code>?
-        <details><summary>Auflösung</summary>„ü". Die Bytes mit Index 1 und 2 bilden zusammen das ü. Der obere Index 3 gehört nicht mehr dazu.</details></li>
-      <li>Mit welchem Slice-Ausdruck bekommt man aus „Tür" das r?
-        <details><summary>Auflösung</summary><code>"Tür"[3:4]</code>. Das r ist das vierte Byte, nicht das dritte.</details></li>
-      <li>Was liefert <code>"Tür"[1:2]</code>?
-        <details><summary>Auflösung</summary>Ein einzelnes Byte mit dem Wert 195, die erste Hälfte des ü. Das ist kein gültiges Zeichen. Go meldet keinen Fehler, die Konsole zeigt dafür meist das Ersatzzeichen �.</details></li>
-      <li>Wie viele Bytes und wie viele Zeichen hat „Grüße"?
-        <details><summary>Auflösung</summary>7 Bytes und 5 Zeichen. <code>len(s)</code> liefert 7, <code>len([]rune(s))</code> und <code>utf8.RuneCountInString(s)</code> liefern 5.</details></li>
-      <li>Der String ist „Maßstab". Was liefert <code>s[3:7]</code>, und wie bekommt man „stab", ohne Bytes zu zählen?
-        <details><summary>Auflösung</summary><code>s[3:7]</code> beginnt mit der zweiten Hälfte des ß und liefert <code>"\x9fsta"</code>. Mit <code>r := []rune(s)</code> liefert <code>string(r[3:7])</code> den String „stab". Das s ist das vierte Zeichen, also Index 3.</details></li>
-      <li>Der String ist „Abo". Welchen Wert und welchen Typ hat <code>s[0]</code>?
-        <details><summary>Auflösung</summary>Den Wert 65 und den Typ <code>byte</code>. <code>s[0]</code> ist kein String. Deshalb übersetzt Go <code>"H" + s[0]</code> nicht.</details></li>
-    </ol>
+    <h2>Mit Zeichen arbeiten</h2>
+    <div class="frage"><strong>Erst vorhersagen, dann nachlesen</strong>
+      <ol>
+        <li>Wie viele Bytes und wie viele Zeichen hat „Grüße“?
+          <details><summary>Auflösung</summary>7 Bytes und 5 Zeichen. <code>len(s)</code> liefert 7, <code>len([]rune(s))</code> und <code>utf8.RuneCountInString(s)</code> liefern 5.</details></li>
+        <li>Der String ist „Maßstab“. Was liefert <code>s[3:7]</code>, und wie bekommt man „stab“, ohne Bytes zu zählen?
+          <details><summary>Auflösung</summary><code>s[3:7]</code> beginnt mit der zweiten Hälfte des ß und liefert <code>"\x9fsta"</code>. Mit <code>r := []rune(s)</code> liefert <code>string(r[3:7])</code> den String „stab“. Das s ist das vierte Zeichen, also Index 3.</details></li>
+      </ol>
+    </div>
+
+    <h3>Die Typen string, byte und rune</h3>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <thead><tr><th>Typ</th><th>Was ein Wert dieses Typs ist</th><th>Wo er auf dieser Seite vorkommt</th></tr></thead>
+      <tbody>
+        <tr><td><code>string</code></td><td>Er ist eine Folge von Bytes beliebiger Länge.</td><td>Der ganze String <code>s</code> und jeder Substring <code>s[low:high]</code> haben diesen Typ.</td></tr>
+        <tr><td><code>byte</code></td><td>Er ist ein Byte. <code>byte</code> ist ein anderer Name für <code>uint8</code>.</td><td>Der Wert von <code>s[i]</code> hat diesen Typ.</td></tr>
+        <tr><td><code>rune</code></td><td>Er ist die Unicode-Nummer eines Zeichens. <code>rune</code> ist ein anderer Name für <code>int32</code>.</td><td>Die Nummer unter jedem Zeichen in Schritt 1 ist eine Rune, zum Beispiel U+00FC für ü.</td></tr>
+        <tr><td><code>[]rune</code></td><td>Er ist eine Folge von Runen, also eine Folge ganzer Zeichen.</td><td>Nach <code>r := []rune(s)</code> zählen <code>len(r)</code>, <code>r[i]</code> und <code>r[a:b]</code> Zeichen.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Umwandeln und zurück</h3>
+    <ul>
+      <li><strong><code>[]rune(s)</code></strong> zerlegt den String in seine Zeichen.</li>
+      <li><strong><code>string(…)</code></strong> macht aus Runen wieder einen String.</li>
+    </ul>
+<pre>s := "Maßstab"
+r := []rune(s)
+
+fmt.Println(len(s))         // 8, Bytes
+fmt.Println(len(r))         // 7, Zeichen
+fmt.Println(string(r[2]))   // ß
+fmt.Println(string(r[3:7])) // stab
+fmt.Println(s[3:7])         // schneidet durch das ß</pre>
+
+    <h3>Zeichenweise durch einen String</h3>
+    <p>Auch die Schleife mit <code>range</code> läuft zeichenweise über einen String. Der Index, den sie liefert, ist aber die Position des ersten Bytes:</p>
+<pre>for i, z := range "Tür" {
+    fmt.Println(i, string(z))
+}
+// 0 T
+// 1 ü
+// 3 r</pre>
+    <p>Die Schleife mit <code>range</code> wird im Kurstext in Abschnitt 6.2 bei den Arrays behandelt.</p>
+    <div class="hinweis">Ein <code>[]rune</code> belegt für jedes Zeichen 4 Bytes, auch für ein a, und die Umwandlung kopiert den ganzen Text. Deshalb ist der String in Go die sparsame Form und <code>[]rune</code> die bequeme.</div>
+
+    <p>So geht es weiter:</p>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_string_typ_quiz.html">Quiz zum Typ string</a> und der <a href="go_k4_strings_selbsttest_quiz.html">Selbsttest zu den Strings</a> fragen den Stoff von Abschnitt 4.6 ab.</li>
+      <li><strong>Literale und Operationen:</strong> String-Literale, Verkettung und Unveränderbarkeit stehen auf der Seite <a href="go_k4_strings_interaktiv.html">Strings in Go</a>.</li>
+    </ul>
+    <p class="quelle">Der Typ <code>[]rune</code> und die zwei Programme dieses Schritts stehen nicht in Abschnitt 4.6 des Kurstexts. Sie sind eine Ergänzung des Mentors.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   const el = id => document.getElementById(id);
@@ -185,6 +269,24 @@ fmt.Println(s[3:7])         // schneidet durch das ß</pre>
   const hex2 = b => b.toString(16).padStart(2, '0');
   const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const st = { s: 'Tür', bytes: null, zeichen: [], low: 1, high: 3, anker: null, ankerZ: null };
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#bytes
+  const ANKER = ['worum', 'bytes', 'zeichen'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
 
   // Zerlegt den String in Zeichen mit ihren Bytes
   function zerlege(s) {
@@ -250,13 +352,14 @@ fmt.Println(s[3:7])         // schneidet durch das ß</pre>
     el('low').value = st.low; el('high').value = st.high;
     el('low').max = N; el('high').max = N;
     berichte();
+    melde(false);
   }
 
   function berichte() {
     const N = st.bytes.length, lit = alsLiteral(st.bytes).text;
     const teil = alsLiteral(st.bytes.slice(st.low, st.high));
     const zeilen = [['len(s)', '<span class="gross">' + N + '</span> Bytes'],
-                    ['len(r)', '<span class="gross">' + st.zeichen.length + '</span> Zeichen &nbsp;mit r := []rune(s). Dasselbe liefert utf8.RuneCountInString(s).']];
+                    ['len(r)', '<span class="gross">' + st.zeichen.length + '</span> Zeichen &nbsp;mit r := []rune(s). Das Gleiche liefert utf8.RuneCountInString(s).']];
     const code = [['var s string = ' + lit, ''], ['r := []rune(s)', ''], ['fmt.Println(len(s))', String(N)], ['fmt.Println(len(r))', String(st.zeichen.length)]];
     let meldung = '', schnitt = false;
     if (N === 0) {
@@ -333,7 +436,43 @@ fmt.Println(s[3:7])         // schneidet durch das ß</pre>
   };
   ['low', 'high'].forEach(id => el(id).addEventListener('keydown', e => { if (e.key === 'Enter') el('setze').click(); }));
 
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein String als Byte-Reihe', 'Schritt 2: Mit Zeichen arbeiten'];
+  const glatt = t => t.replace(/\s+/g, ' ').trim();
+
+  function standSaetze() {
+    if (stufe !== 1) return ['Dieser Schritt hat keine Demo. Die Codeblöcke sind fest.'];
+    const N = st.bytes.length;
+    const paare = Array.from(el('anzeige').children), angaben = [];
+    for (let k = 0; k + 1 < paare.length; k += 2) angaben.push(glatt(paare[k].textContent) + ' zeigt ' + glatt(paare[k + 1].textContent));
+    return ['Der String s ist ' + alsLiteral(st.bytes).text + '. Er hat ' + N + ' Bytes und ' + st.zeichen.length + ' Zeichen.',
+      'Die Zeichen mit ihren Bytes, von links nach rechts: ' + st.zeichen.map((z, k) => 'Zeichen ' + (z.ch === ' ' ? 'Leerzeichen' : z.ch) + ' (Index ' + k + ' in []rune) belegt ' +
+        (z.n === 1 ? 'das Byte mit Index ' + z.start : 'die Bytes mit Index ' + z.start + ' bis ' + (z.start + z.n - 1)) + ', Werte ' + Array.from(st.bytes.slice(z.start, z.start + z.n)).join(' und ')).join(' ; ') + '.',
+      'Ausgewählt und blau markiert ist der Bereich low = ' + st.low + ', high = ' + st.high + '. Das Byte mit Index high gehört nicht mehr dazu.',
+      'Unter der Byte-Reihe steht: ' + angaben.join(' ; '),
+      'Die Seite sagt dazu: ' + glatt(el('meldung').textContent),
+      el('fehler').textContent ? 'Die Seite meldet: ' + el('fehler').textContent : 'Die Seite zeigt keine Fehlermeldung.',
+      'Handgriffe: einen String mit höchstens 24 Zeichen eintragen und „anzeigen“ wählen, einen der Knöpfe Tür, Maßstab, anrufen, Grüße, ∞ und 😀 wählen, ein Byte oder ein Zeichen anklicken, low und high eintragen und „Bereich setzen“ wählen. Es muss gelten: 0 ≤ low ≤ high ≤ ' + N + '.'];
+  }
+  const kurzStand = () => stufe === 1 ? 's = ' + alsLiteral(st.bytes).text + ', s[' + st.low + ':' + st.high + ']' : '';
+
   lade('Tür', 1, 3);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Strings: Bytes und Zeichen in Go',
+    thema: 'String, Byte, UTF-8, len, Index-Ausdruck, Slice-Ausdruck, rune',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.6.2, Seiten 102–107',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum hat Tür die Länge 4?'
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
