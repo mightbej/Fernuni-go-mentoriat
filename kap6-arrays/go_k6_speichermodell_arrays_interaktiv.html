@@ -9,6 +9,15 @@
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
     .container { max-width:1200px; }
     .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
@@ -105,15 +114,39 @@
 
   <div class="hero">
     <h1>Speichermodell: Arrays</h1>
-    <p>Ein Array hat einen Namen und viele Elemente. In der Tabelle steht nur der Anfang. Die Adresse eines Elements rechnet der Rechner aus dem Index aus. Kurstext Kapitel 6, Arrays.</p>
+    <p>Ein Array hat einen Namen und viele Elemente. In der Tabelle steht nur der Anfang. Die Adresse eines Elements rechnet der Rechner aus dem Index aus.</p>
+    <p>Kurstext v3.0.6, Kapitel 6 und Abschnitt 6.1, Seiten 151–155.</p>
   </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Die Adresse eines Elements</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Programm im Speicher</button>
+    <button type="button" class="tab" data-stufe="3">Aufgaben</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
 
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
     <p>Ein Array ist eine Reihe gleich großer Elemente, die lückenlos hintereinander liegen. Die Tabelle bekommt für das ganze Array eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Elements.</p>
     <p>Im Typ <code>[4]int16</code> steckt alles, was der Rechner braucht: Das Array hat 4 Elemente, und jedes Element ist ein <code>int16</code> mit 2 Zellen.</p>
+    <p>Die Seite geht in zwei Schritten vor. Schritt 1 zeigt die Rechnung, mit der der Rechner ein Element findet. Schritt 2 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Danach folgen fünf Aufgaben.</p>
+    <p>Zwei HTML-Seiten gehen dieser voraus:</p>
+    <ul>
+      <li>Das Modell mit Zellen, Adressen und Tabelle: <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell: Name, Typ und Adresse</a> zeigt es an einzelnen Variablen.</li>
+      <li>Arrays in Go: <a href="go_k6_arrays_interaktiv.html">Arrays in Go</a> zeigt Array-Literal, Index und Schleifen.</li>
+    </ul>
+    <div class="hinweis">Das Modell vereinfacht. Die Wörter „Zelle“ und „Tabelle des Rechners“ gehören zum Modell dieser Seite. Im Kurstext steht zu Arrays im Speicher nur ein Satz in einer Fußnote: Die Länge eines Arrays ist nicht sein Speicherplatz.</div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
 
   <div class="card">
     <h2>Wie der Rechner ein Element findet</h2>
@@ -131,12 +164,21 @@
       </tbody>
     </table>
     </div>
-    <p>Im Hauptspeicher unten sind die Elemente abwechselnd hell und dunkel gefärbt.</p>
+    <p>Der Rechner braucht für jedes Element eine einzige Rechnung, gleich an welcher Stelle es steht. Deshalb ist der Zugriff auf <code>a[3]</code> so schnell wie der Zugriff auf <code>a[0]</code>.</p>
+    <p>Die Rechnung zeigt auch, warum die Zählung bei 0 beginnt: Der Index sagt, wie viele Elemente vor dem gesuchten liegen.</p>
+    <p class="quelle">Die Rechnung steht nicht im Kurstext. Dort wird in Abschnitt 6.1 auf den Seiten 154–155 der Index eingeführt.</p>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
 
   <div class="card">
     <h2>Ausprobieren</h2>
-    <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>.</p>
+    <p>Das Programm läuft Zeile für Zeile. Die Zeilen stehen im Rumpf von <code>main</code>. Im Hauptspeicher sind die Elemente des Arrays abwechselnd hell und dunkel gefärbt.</p>
     <ol class="programm" id="programm"></ol>
     <div class="zeile">
       <button id="weiter" class="haupt" type="button">nächste Zeile ausführen</button>
@@ -183,9 +225,16 @@
 
     </div>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu den Aufgaben</button>
+  </div>
+  </section>
 
+  <section class="stufe" id="stufe-3">
   <div class="card">
     <h2>Erst vorhersagen, dann ausprobieren</h2>
+    <p>Die Aufgaben 1 bis 3 und 5 gehören zu Schritt 1, Aufgabe 4 gehört zu Schritt 2.</p>
     <ol>
       <li>Wie viele Zellen reserviert <code>var a [4]int16</code>? Wie viele Zeilen bekommt die Tabelle?
         <details><summary>Antwort</summary>8 Zellen, denn 4 Elemente brauchen je 2 Zellen. Die Tabelle bekommt eine Zeile.</details></li>
@@ -201,7 +250,7 @@
   </div>
 
   <div class="card">
-    <h2>Dasselbe Modell auf vier Seiten</h2>
+    <h2>Das Modell auf vier Seiten</h2>
     <p>Hauptspeicher, Tabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
     <ol class="seiten">
       <li><a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4)</a></li>
@@ -210,9 +259,15 @@
       <li><a href="../kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8)</a></li>
     </ol>
   </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
 
 </div>
 
+<script src="../kurslotse.js"></script>
 <script>
 (function () {
   "use strict";
@@ -231,6 +286,11 @@
   var FLAECHE = ["#d1fae5", "#dbeafe", "#fef3c7", "#fce7f3", "#ede9fe"];
 
   var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
+  var ANKER = ["worum", "adresse", "speicher", "aufgaben"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
 
   function $(id) { return document.getElementById(id); }
   function bits(b) { return b.toString(2).padStart(8, "0"); }
@@ -415,7 +475,7 @@
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "dasselbe Bitmuster" : "dieselben Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -569,6 +629,7 @@
     $("weiter").disabled = schritt >= PROGRAMM.length || abgebrochen;
     $("zurueck").disabled = schritt === 0;
     requestAnimationFrame(zeichnePfeile);
+    melde(false);
   }
 
   function zeichneProgramm() {
@@ -735,7 +796,91 @@
   $("zurueck").addEventListener("click", zurueck);
   $("vorn").addEventListener("click", vonVorn);
   window.addEventListener("resize", zeichnePfeile);
+
+  // ---- Reiter ----
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (x) { x.classList.toggle("active", x.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) { history.replaceState(null, "", "#" + ANKER[nummer]); window.scrollTo({ top: 0, behavior: "smooth" }); }
+    requestAnimationFrame(zeichnePfeile);
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (k) zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Die Adresse eines Elements", "Schritt 2: Ein Programm im Speicher", "Aufgaben"];
+  function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
+  function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
+
+  function standSaetze() {
+    if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 1) return ["Dieser Schritt hat keine Demo. Die Tabelle mit den vier Rechnungen ist fest. In diesem Schritt lässt sich nichts ausprobieren."];
+    if (stufe === 3) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf Schritt 1 und auf die Demo in Schritt 2.",
+      "Die Antwort einer Aufgabe ist verdeckt, bis der Student „Antwort“ aufklappt."];
+    var belegt = [];
+    for (var i = 0; i < ANZAHL; i++) if (eintragBei(START + i)) belegt.push("Zelle " + (START + i) + " enthält " + bits(zellen[i]));
+    var zeilen = tabelle.map(function (e) {
+      return "Name " + (e.name || "ohne Namen") + ", Typ " + e.typ + ", Adresse " + e.adr + ", " + zellenWort(e.n) + ", Wert " + ausgabeWert(e);
+    });
+    var elemente = [];
+    tabelle.forEach(function (e) {
+      if (e.teile.length > 1) e.teile.forEach(function (t) {
+        elemente.push(e.name + t.anhang + " liegt an der Adresse " + t.adr + ", belegt " + bereich(t.adr, t.n) + " und hat den Wert " + wertBei(t.adr, t.typ));
+      });
+    });
+    return [
+      schritt === 0 ? "Noch ist keine Zeile des Programms ausgeführt." :
+        "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code,
+      abgebrochen ? "Das Programm ist abgebrochen. Es lässt sich nur mit „eine Zeile zurück“ oder „von vorn“ fortsetzen." :
+        schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + PROGRAMM[schritt].code,
+      zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+      elemente.length ? "Die Elemente des Arrays: " + elemente.join(" ; ") + "." : "",
+      belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
+        "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
+      "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
+      "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
+      "Ein Bit, das der Student von Hand umschaltet, ändert den Inhalt der Zelle sofort. Die Tabelle ändert sich dabei nicht.",
+      "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten. Das Programm lässt sich nicht ändern."
+    ].filter(Boolean);
+  }
+  function kurzStand() {
+    if (stufe !== 2) return "";
+    return schritt === 0 ? "keine Zeile ausgeführt" : "Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code;
+  }
+  // Die Programmzeilen von Schritt 2 stehen in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 2) return [];
+    return PROGRAMM.map(function (z, i) {
+      return (i + 1) + "  " + z.code + (i === schritt - 1 ? "   // zuletzt ausgeführt" : i < schritt ? "   // ausgeführt" : "");
+    });
+  }
+
   vonVorn();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Speichermodell: Arrays in Go",
+    thema: "Array, Hauptspeicher, Zelle, Adresse, Index, Element, int16",
+    bezug: "Kurstext v3.0.6, Kapitel 6 und Abschnitt 6.1, Seiten 151–155",
+    beschreibung: "../kurslotse/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h2, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .hinweis, .formel, .card > .tabellenrahmen table",
+    zeilen: programmZeilen,
+    zeilenTitel: "Programm von Schritt 2, die Zeilen stehen im Rumpf von main:",
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: "Warum steht a[2] nicht in der Tabelle?"
+  });
+  angemeldet = true;
 })();
 </script>
 </body>
