@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skriptlotse: Beschreibung und Anleitung</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    li { margin:6px 0; }
+    .hinweis { margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+    /* Kasten zur Weitergabe: steht in „Worum es geht“ und beim Herunterladen */
+    .nur-kurs { border:2px solid #b91c1c;background:#fef2f2;border-radius:8px;padding:12px 16px;margin:14px 0; }
+    .nur-kurs p { margin:0 0 8px; } .nur-kurs p:last-child { margin-bottom:0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Skriptlotse</h1>
+    <p>Der Skriptlotse unterstützt dich beim Lesen des Kurstexts. Die Seite beschreibt, was er tut, und führt dich in vier Schritten vom Herunterladen bis zur ersten Frage.</p>
+    <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
+    <button type="button" class="tab" data-stufe="2">2 Schlüssel einrichten</button>
+    <button type="button" class="tab" data-stufe="3">3 Lesen und fragen</button>
+    <button type="button" class="tab" data-stufe="4">4 Hervorheben</button>
+    <button type="button" class="tab" data-stufe="5">Gut zu wissen</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Der Skriptlotse unterstützt dich beim Lesen des Kurstexts. Er ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist.</p>
+    <p>Du markierst im Kurstext eine Stelle, die du nicht verstehst, und stellst deine Frage dazu. Der Skriptlotse beantwortet sie und schlägt dir die Erklärungen und Beispiele vor, die wir auch im Mentoriat verwenden.</p>
+
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Skriptlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält den Kurstext der FernUniversität.</p>
+    </div>
+
+    <h3>Was du auf dem Bildschirm siehst</h3>
+    <ul>
+      <li><strong>Links:</strong> der Kurstext als PDF. Du blätterst, suchst und markierst wie in jedem PDF.</li>
+      <li><strong>Rechts:</strong> die Spalte des Skriptlotsen mit deiner Frage und der Antwort.</li>
+      <li><strong>Unter der Antwort:</strong> der Abschnitt im Kurstext und Links auf die HTML-Seiten des Mentoriats, auf denen du den Stoff ausprobieren kannst.</li>
+    </ul>
+
+    <h3>Was du brauchst</h3>
+    <ul>
+      <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Du musst nichts installieren, das Programm läuft auf deinem eigenen Rechner.</li>
+      <li><strong>Paket:</strong> eine ZIP-Datei mit etwa 21 MB aus Moodle. Schritt 1 zeigt, wo sie liegt.</li>
+      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Schritt 2 zeigt, wie du ihn einrichtest.</li>
+    </ul>
+
+    <div class="hinweis">Der Skriptlotse ist ein privates Angebot deines Mentors. Verbindlich sind allein der Kurstext und Moodle der FernUniversität. Das Sprachmodell kann sich irren.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Herunterladen und starten</h2>
+
+    <h3>Das Paket in Moodle holen</h3>
+    <p>Das Paket liegt in Moodle, im Beitrag deines Mentors im Forum des Mentoriats. Dort steht es in der Tabelle „Die Lotsen zum Kurs“ unter „ZIP herunterladen“.</p>
+    <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Skriptlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält den Kurstext der FernUniversität.</p>
+    </div>
+
+    <h3>Den Ordner entpacken</h3>
+    <ol>
+      <li>Klick mit der rechten Maustaste auf die ZIP-Datei und wähle „Alle extrahieren“.</li>
+      <li>Wähle einen Ort, den du wiederfindest, zum Beispiel „Dokumente“.</li>
+    </ol>
+    <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
+    <p>Im Ordner <code>skriptlotse</code> liegen die Anleitung, der Kurstext als PDF, die Nutzungsbedingungen und <code>start.bat</code>. Die Ordner <code>programm</code> und <code>Lizenzen</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
+
+    <h3>Den Skriptlotsen starten</h3>
+    <ol>
+      <li>Öffne den entpackten Ordner <code>skriptlotse</code>.</li>
+      <li>Mach einen Doppelklick auf <code>start.bat</code>.</li>
+    </ol>
+    <p>Es öffnet sich ein schwarzes Fenster, und dein Browser zeigt die Adresse <code>http://localhost:8615</code>. Das schwarze Fenster ist das Programm. Lass es offen, solange du mit dem Skriptlotsen arbeitest.</p>
+    <div class="hinweis">Windows kann beim ersten Start warnen, weil das Programm von keinem Hersteller signiert ist. Klick in diesem Fall auf „Weitere Informationen“ und dann auf „Trotzdem ausführen“.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Den Schlüssel für KI:connect einrichten</h2>
+    <p>KI:connect ist der KI-Dienst der Hochschulen in Nordrhein-Westfalen. Als Student der FernUniversität darfst du ihn nutzen. Der Skriptlotse stellt deine Fragen dort, und dafür braucht er deinen persönlichen Schlüssel. Du richtest ihn einmal ein.</p>
+    <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen dieselben Schritte:</p>
+    <ol>
+      <li>Öffne <a href="https://chat.kiconnect.nrw" target="_blank" rel="noopener">chat.kiconnect.nrw</a>, wähle „FernUniversität in Hagen“ und melde dich an.</li>
+      <li>Klick unten links auf deinen Namen und dann auf „API-Schlüsselverwaltung“.</li>
+      <li>Gib einen Namen ein, zum Beispiel „mentoriat“, und klick auf „Schlüssel erstellen“.</li>
+      <li>Kopiere den Schlüssel. KI:connect zeigt ihn nur einmal an.</li>
+      <li>Füge den Schlüssel auf der Seite des Skriptlotsen ein und klick auf „Prüfen und übernehmen“.</li>
+    </ol>
+
+    <h3>Was mit dem Schlüssel geschieht</h3>
+    <ul>
+      <li><strong>Er bleibt bei dir:</strong> Der Schlüssel bleibt auf deinem Rechner. Das Programm schickt ihn nur an KI:connect.</li>
+      <li><strong>Er ist persönlich:</strong> Gib den Schlüssel niemandem weiter.</li>
+      <li><strong>Er gilt für alle Lotsen:</strong> Derselbe Schlüssel gilt auch für den Kurslotsen und den Klausurenlotsen.</li>
+    </ul>
+
+    <h3>Ohne Schlüssel</h3>
+    <p>Mit „Ohne Schlüssel weiter“ kannst du den Kurstext lesen, durchsuchen und farbig hervorheben. Die Erklärungen fehlen dann.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Lesen und fragen</h2>
+    <ul>
+      <li><strong>Lesen:</strong> Links blätterst, zoomst und suchst du wie in jedem PDF. Die Suche öffnest du mit Strg+F.</li>
+      <li><strong>Erklären lassen:</strong> Markiere mit der Maus eine Stelle im Text. Sie erscheint rechts über dem Eingabefeld. Klick auf „Erklären“.</li>
+      <li><strong>Beispiel zeigen:</strong> Der Skriptlotse gibt ein eigenes kleines Beispiel zur markierten Stelle.</li>
+      <li><strong>Eigene Frage:</strong> Tipp deine Frage in das Feld und drück die Eingabetaste. Das geht mit und ohne markierte Stelle.</li>
+      <li><strong>Links unter der Antwort:</strong> „Dazu im Mentoriat“ führt zu HTML-Seiten, auf denen du den Stoff ausprobieren kannst.</li>
+      <li><strong>Spalte schließen:</strong> Der Knopf „»“ oben rechts schließt den Skriptlotsen, damit das PDF die ganze Breite hat. Die Lasche am rechten Rand öffnet ihn wieder.</li>
+    </ul>
+    <div class="hinweis">Der Skriptlotse sieht keine Abbildungen. Fragst du nach einer Abbildung, dann beschreib ihm, was du siehst.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Stellen farbig hervorheben</h2>
+    <ol>
+      <li>Markiere eine Stelle im PDF und klick auf den kleinen Stift, der an der Stelle erscheint.</li>
+      <li>Klick die farbige Stelle an, um die Farbe zu ändern oder die Hervorhebung zu entfernen.</li>
+      <li>Speichere mit Strg+S oder mit dem Knopf „Markierungen speichern“ oben rechts über dem PDF.</li>
+    </ol>
+    <p>Der Skriptlotse legt deine Hervorhebungen in der Datei <code>Kurstext_markiert.pdf</code> neben dem Kurstext ab und zeigt beim nächsten Start diese Datei. Das PDF des Lehrstuhls bleibt unverändert.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu „Gut zu wissen“</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Gut zu wissen</h2>
+
+    <h3>Beenden und wieder starten</h3>
+    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>start.bat</code>. Der Skriptlotse öffnet das PDF auf der Seite, die du zuletzt gelesen hast.</p>
+    <p>Meldet das schwarze Fenster „Die Adresse ist belegt“, dann läuft der Skriptlotse schon in einem anderen Fenster.</p>
+
+    <h3>Was du wissen musst</h3>
+    <ul>
+      <li><strong>Was dein Rechner verlässt:</strong> Die markierte Stelle und deine Frage gehen an KI:connect. Das PDF und deine Hervorhebungen bleiben auf deinem Rechner.</li>
+      <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
+      <li><strong>Nicht weitergeben:</strong> Der Ordner enthält den Kurstext der FernUniversität. Er ist nur für Teilnehmer dieses Kurses bestimmt. Genaueres steht in den Nutzungsbedingungen.</li>
+      <li><strong>Einsendeaufgaben:</strong> Der Skriptlotse löst sie nicht für dich.</li>
+      <li><strong>Fehler und Fragen:</strong> Bring sie ins Mentoriat mit.</li>
+    </ul>
+
+    <h3>Nutzungsbedingungen und fremde Software</h3>
+    <ul>
+      <li><strong>Nutzungsbedingungen:</strong> Wer den Skriptlotsen nutzen darf und was nicht erlaubt ist, steht in der Datei <code>Nutzungsbedingungen.txt</code> im Ordner. Du öffnest sie mit einem Doppelklick.</li>
+      <li><strong>Fremde Software:</strong> Das PDF zeigt der Skriptlotse mit PDF.js von Mozilla und weiteren Mitwirkenden, lizenziert unter der Apache License, Version 2.0. Die Lizenztexte liegen im Ordner <code>Lizenzen</code>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel #schluessel.
+  var ANKER = ["worum", "starten", "schluessel", "fragen", "hervorheben", "wissen"];
+
+  function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
+
+  function zeigeStufe(nummer, nachOben) {
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (!k) return;
+    var d = k.dataset;
+    zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>
