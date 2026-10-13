@@ -14,6 +14,8 @@ Für alle Schritte gilt:
 - `pa[i]` ist die Kurzschreibweise für `(*pa)[i]`. Das steht in Hinweis 7.4 des Kurstexts. Ohne Klammern wäre `*pa[i]` falsch: Go meldet `invalid operation: cannot indirect pa[i] (variable of type int)`.
 - Eine Funktion, die eine Variable außerhalb ihres Rumpfs ändert, hat einen Seiteneffekt. Das steht in Abschnitt 7.4.1.
 - Auch ein Zeiger wird als Kopie übergeben. Kopiert wird eine Adresse und kein Element.
+- Unter den Rahmen der Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger, in ihm steht die Zahl 100, die Adresse des Arrays. Die Adressen sind erfunden. Ein `int` und ein Zeiger belegen im Modell je 8 Zellen. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
+- Die Blöcke in Schritt 3: `a` in den Zellen 100 bis 179, `i` von `main` ab 180. `pa` von `isGreater` oder `swap` in den Zellen 188 bis 195 mit dem Inhalt 100, der Parameter `i` ab 196.
 - Die Funktionen `isGreater` und `swap` stehen nicht im Kurstext. Das Muster ist `negToZeroPointer` in Listing 7.2.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.

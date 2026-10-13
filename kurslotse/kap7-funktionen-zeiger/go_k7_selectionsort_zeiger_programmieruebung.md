@@ -14,6 +14,8 @@ Für alle Schritte gilt:
 - `pa[i]` ist die Kurzschreibweise für `(*pa)[i]`. Das steht in Hinweis 7.4 des Kurstexts.
 - In `findMin` steht `len(*pa)`: Der Stern führt vom Zeiger zum Array, `len` liefert dessen Länge 10. Go erlaubt auch `len(pa)` mit dem Zeiger selbst. Diese Schreibweise steht nicht im Kurstext, die Seite verwendet sie nicht.
 - Auch ein Zeiger wird als Kopie übergeben. Kopiert wird eine Adresse und kein Element.
+- Unter den Rahmen der Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger, in ihm steht die Zahl 100, die Adresse des Arrays. Die Adressen sind erfunden. Ein `int` und ein Zeiger belegen im Modell je 8 Zellen. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
+- Die Blöcke in Schritt 3: `a` in den Zellen 100 bis 179, `pos` und `minIndex` von `main` ab 180 und 188. `pa` von `findMin` oder `swap` in den Zellen 196 bis 203 mit dem Inhalt 100, die übrigen Parameter und Variablen der Funktion ab 204 und 212.
 - Selection Sort kommt im Kurstext nicht vor. Das Muster für die Zeiger ist `negToZeroPointer` in Listing 7.2.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.

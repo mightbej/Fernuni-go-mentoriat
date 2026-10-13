@@ -13,6 +13,8 @@ Für alle Schritte gilt:
 - Die Funktionen `isGreater(pa *[10]int, i int) bool` und `swap(pa *[10]int, i int)` stammen aus der Programmierübung „Bubble Sort mit Zeigern“. Die innere Schleife bleibt eine Schleife.
 - Das Verfahren ändert sich nicht: 45 Vergleiche, 23 Tausche. Die Funktion `bubbleSort` läuft zehnmal, mit `n` von 10 bis 1.
 - `bubbleSort` ist direkt rekursiv, linear rekursiv und endrekursiv: Ein Aufruf enthält höchstens einen rekursiven Aufruf, und dieser ist die letzte Operation.
+- Unter den Rahmen der Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger, in ihm steht die Zahl 100, die Adresse des Arrays. Die Adressen sind erfunden. Ein `int` und ein Zeiger belegen im Modell je 8 Zellen. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
+- Die Blöcke in Schritt 2: `a` in den Zellen 100 bis 179. Jeder Aufruf von `bubbleSort` belegt 16 Zellen, 8 für `pa` und 8 für `n`: der Aufruf mit n gleich 10 die Zellen 180 bis 195, der mit n gleich 9 die Zellen 196 bis 211, und so weiter bis zum Aufruf mit n gleich 1 in den Zellen 324 bis 339. In jedem `pa` steht 100. Warten zehn Aufrufe, sind 160 Zellen belegt.
 - Im Kurstext steht: Bei Endrekursion muss kein Variablenwert gespeichert werden. Der Go-Compiler nutzt das zurzeit nicht aus, jeder Aufruf belegt Speicher. Die Demo zeigt deshalb für jeden Aufruf einen Rahmen.
 - Eine rekursive Fassung von Bubblesort kommt im Kurstext nicht vor. Bubblesort steht dort in Abschnitt 8.4.2, mit zwei Schleifen und einem Array von Verbunden.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
