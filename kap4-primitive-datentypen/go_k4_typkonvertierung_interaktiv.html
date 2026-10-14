@@ -1,956 +1,611 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Typkonvertierung - Interaktiv</title>
-    <link rel="stylesheet" href="../stil.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            min-height: 100vh;
-        }
-
-        .hero p {
-            opacity: 0.95;
-        }
-
-        .section {
-            margin-bottom: 50px;
-        }
-
-        .section h2 {
-            margin-bottom: 20px;
-        }
-
-        .section h3 {
-            margin: 30px 0 15px 0;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab-button.active {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-        }
-
-        .tab-button:hover:not(.active) {
-            background: #d1d5db;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            margin: 20px 0;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #fef3c715 0%, #fbbf2415 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid #0f766e;
-        }
-
-        .warning-box {
-            background: #fee2e2;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid #dc2626;
-            color: #991b1b;
-        }
-
-        .success-box {
-            margin: 15px 0;
-            border: 2px solid #10b981;
-            color: #065f46;
-        }
-
-        .interactive-area {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .input-group {
-            margin: 15px 0;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: 'Courier New', monospace;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: #0f766e;
-        }
-
-        button {
-            background: #0f766e;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px 5px 10px 0;
-        }
-
-        button:hover {
-            background: #115e59;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: slideIn 0.5s;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .result.success {
-            background: #d1fae5;
-            border: 2px solid #10b981;
-            color: #065f46;
-        }
-
-        .result.info {
-            background: #dbeafe;
-            border: 2px solid #3b82f6;
-            color: #1e40af;
-        }
-
-        .result.warning {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            color: #92400e;
-        }
-
-        .result.error {
-            background: #fee2e2;
-            border: 2px solid #dc2626;
-            color: #991b1b;
-        }
-
-        code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-        }
-
-        .code-block {
-            margin: 15px 0;
-            line-height: 1.5;
-        }
-
-        .code-block .keyword { color: #c678dd; }
-        .code-block .string { color: #98c379; }
-        .code-block .comment { color: #5c6370; font-style: italic; }
-        .code-block .function { color: #61afef; }
-        .code-block .number { color: #d19a66; }
-        .code-block .type { color: #e5c07b; }
-
-        .conversion-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-
-        .conversion-box {
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            min-width: 150px;
-        }
-
-        .conversion-box.int {
-            background: #dbeafe;
-            border: 2px solid #3b82f6;
-            color: #1e40af;
-        }
-
-        .conversion-box.float {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            color: #92400e;
-        }
-
-        .conversion-arrow {
-            font-size: 2em;
-            color: #0f766e;
-            font-weight: bold;
-        }
-
-        .type-label {
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .value-display {
-            font-size: 1.5em;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .comparison-item {
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
-        }
-
-        .comparison-item.correct {
-            background: #d1fae5;
-            border-color: #10b981;
-        }
-
-        .comparison-item.incorrect {
-            background: #fee2e2;
-            border-color: #dc2626;
-        }
-
-        table {
-            margin: 20px 0;
-        }
-
-        th {
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        .quiz-container {
-            margin-top: 30px;
-        }
-
-        .quiz-question {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .quiz-question h4 {
-            color: #0f766e;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .quiz-option {
-            padding: 15px;
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quiz-option:hover {
-            background: #f3f4f6;
-            border-color: #0f766e;
-        }
-
-        .quiz-option.selected {
-            background: #fef3c7;
-            border-color: #0f766e;
-        }
-
-        .quiz-option.correct {
-            background: #d1fae5;
-            border-color: #10b981;
-        }
-
-        .quiz-option.incorrect {
-            background: #fee2e2;
-            border-color: #ef4444;
-        }
-
-        .quiz-feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .quiz-feedback.show {
-            display: block;
-        }
-
-        .quiz-score {
-            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1.5em;
-            margin: 30px 0;
-            display: none;
-        }
-
-        .quiz-score.show {
-            display: block;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #6b7280;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .back-link:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
-        }
-
-        .example-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .example-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #0f766e;
-        }
-
-        .step-by-step {
-            margin: 20px 0;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-
-        .step {
-            padding: 10px;
-            margin: 10px 0;
-            background: white;
-            border-radius: 6px;
-            border-left: 3px solid #3b82f6;
-        }
-
-        .step-number {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            background: #3b82f6;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--gleit:#0f766e;--gleit-bg:#d1fae5;--ganz:#1e40af;--ganz-bg:#dbeafe;--rot:#dc2626;--highlight:#fef3c7; }
+    .container { max-width:1200px; }
+    .hero p { opacity:.96; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    h3 { margin:18px 0 8px; }
+    .card > ul { margin:8px 0 12px 22px; }
+    .card > ul li { margin:4px 0; }
+    code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .hinweis { margin:12px 0; }
+    .erklaerung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#f0fdfa;margin:12px 0; }
+    .erklaerung p { margin:0 0 8px; } .erklaerung p:last-child { margin:0; }
+    .fehler { color:var(--rot);font-weight:600; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    button.zeilenknopf { font-family:Consolas,monospace;font-weight:400; }
+    input[type="number"] { border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:1rem;font-family:Consolas,monospace;width:96px;background:#fff; }
+    input[type="range"] { flex:1;min-width:200px;accent-color:var(--accent); }
+    input:focus,button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0; }
+    .zeile label,.zeile .name { color:var(--muted);font-size:.95rem; }
+    .zeile .abstand { width:14px; }
+    .tabellenrahmen { overflow-x:auto; }
+    table.text { margin:12px 0;font-size:.95rem; }
+    table.text th,table.text td { vertical-align:top; }
+    table.text th { font-weight:600; }
+    table.text td:first-child { white-space:nowrap; }
+    table.text tr.betont td { background:var(--highlight); }
+    table.text tr.anders td { background:#fef2f2; }
+    .feld { padding:16px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow-x:auto; }
+    .legende { color:var(--muted);font-size:.88rem;text-align:center;margin-top:10px; }
+
+    /* Schritt 1: ein Ausdruck, zerlegt in seine zwei Seiten */
+    .zerlegung { display:flex;justify-content:center;align-items:stretch;gap:14px;flex-wrap:wrap; }
+    .kasten { min-width:150px;padding:12px 16px;border-radius:10px;border:2px solid var(--line);background:#fff;text-align:center; }
+    .kasten .wert { font-family:Consolas,monospace;font-size:1.5rem;font-weight:700; }
+    .kasten .art { font-size:.88rem;color:var(--muted); }
+    .kasten .wird { margin-top:6px;font-family:Consolas,monospace;font-weight:700; }
+    .kasten.ganz { border-color:var(--ganz);background:var(--ganz-bg); }
+    .kasten.gleit { border-color:var(--gleit);background:var(--gleit-bg); }
+    .kasten.angepasst { border-style:dashed;border-width:3px; }
+    .zeichen { align-self:center;font-family:Consolas,monospace;font-size:1.8rem;font-weight:700;color:var(--muted); }
+    .wertzeile { text-align:center;font-family:Consolas,monospace;font-size:1.3rem;margin-top:16px; }
+    .wertzeile strong { color:var(--accent);font-size:1.6rem; }
+
+    /* Schritt 3: Zahlenstrahl */
+    #strahl { display:block;width:100%;min-width:640px;height:auto; }
+    #strahl text { font-family:Consolas,monospace;font-size:13px;fill:#4b5563; }
+    #strahl text.marke { font-size:15px;font-weight:700; }
+
+    /* Schritt 4: drei Rechnungen nebeneinander */
+    .rechnungen { display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px; }
+    .rechnung { padding:14px;border-radius:10px;border:2px solid var(--line);background:#fff; }
+    .rechnung.ganz { border-color:var(--ganz); }
+    .rechnung.gleit { border-color:var(--gleit); }
+    .rechnung.denkfehler { border-color:var(--rot); }
+    .rechnung h3 { margin:0 0 8px;font-family:Consolas,monospace;font-size:1.05rem; }
+    .rechnung ol { margin:0 0 8px 22px; }
+    .rechnung li { margin:5px 0; }
+    .rechnung .ende { font-family:Consolas,monospace;font-size:1.2rem;font-weight:700; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .nav { display:flex;justify-content:space-between;gap:10px;margin:6px 0 18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>🔄 Go Typkonvertierung</h1>
-            <p>Implizite Typanpassung und explizite Typkonvertierung zwischen int und float64</p>
-        </div>
+<div class="container">
 
-        <div class="content">
-            <!-- Implizite Typanpassung -->
-            <div class="section">
-                <h2>1️⃣ Implizite Typanpassung</h2>
-                
-                <div class="card">
-                    <h3>Strikte Typisierung in Go</h3>
-                    <p>Go hat ein <strong>sehr striktes Typsystem</strong>. Implizite Typanpassungen gibt es nur in Ausnahmefällen:</p>
-                    
-                    <div class="highlight-box">
-                        <strong>✅ Erlaubt: Implizite Anpassung von konstanten Ausdrücken</strong>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>Konstante Integer-Ausdrücke</strong> (Literale, Berechnungen mit Literalen)</li>
-                            <li><strong>Ganzzahlige, konstante Floating-Point-Ausdrücke</strong></li>
-                        </ul>
-                    </div>
+  <div class="hero">
+    <h1>Typkonvertierung</h1>
+    <p>In Go müssen beide Operanden eines Operators denselben Typ haben. Die Seite zeigt, wann Go den Typ selbst anpasst und wann das Programm ihn mit <code>float64(a)</code> oder <code>int(f)</code> umwandeln muss.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.7, Seiten 109–111.</p>
+  </div>
 
-                    <div class="code-block"><span class="comment">// ✅ Implizite Anpassung konstanter Ausdrücke</span>
-<span class="keyword">var</span> g <span class="type">float64</span> = <span class="number">9</span>           <span class="comment">// int-Literal → float64</span>
-g = g / <span class="number">2</span>
-fmt.Println(g)                 <span class="comment">// 4.5</span>
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Implizite Typanpassung</button>
+    <button type="button" class="tab" data-stufe="2">2 Explizite Typkonvertierung</button>
+    <button type="button" class="tab" data-stufe="3">3 Abschneiden</button>
+    <button type="button" class="tab" data-stufe="4">4 Division</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
 
-fmt.Println(<span class="number">3</span> * <span class="number">10</span> / g)        <span class="comment">// 6.666666666666667</span>
-fmt.Println(<span class="number">6</span> * <span class="number">0.25</span>)           <span class="comment">// 1.5</span>
-fmt.Println(<span class="number">15.0</span> / <span class="number">2.0</span>)         <span class="comment">// 7.5</span>
-fmt.Println(<span class="number">15.0</span> / <span class="number">2</span>)           <span class="comment">// 7.5 (2 → 2.0)</span>
-fmt.Println(<span class="number">15</span> / <span class="number">2.0</span>)           <span class="comment">// 7.5 (15 → 15.0)</span>
-fmt.Println(<span class="number">15</span> / <span class="number">2</span>)             <span class="comment">// 7 (ganzzahlige Division!)</span></div>
+  <section class="stufe active" id="stufe-0">
+    <div class="card">
+      <h2>Was die Seite zeigt</h2>
+      <p>Ein binärer Operator wie <code>+</code>, <code>*</code> oder <code>/</code> verbindet zwei Operanden. In Go müssen beide Operanden denselben Typ haben. Das folgende Programm übersetzt Go deshalb nicht:</p>
+      <pre>var a int = 25
+var f float64 = 1.7
+fmt.Println(f * a)</pre>
+      <p>Der Compiler meldet: <code>invalid operation: f * a (mismatched types float64 and int)</code>. Auf Deutsch: Die Typen <code>float64</code> und <code>int</code> passen nicht zusammen.</p>
 
-                    <div class="code-block"><span class="comment">// ✅ Ganzzahlige float-Ausdrücke</span>
-<span class="keyword">var</span> i <span class="type">int</span> = <span class="number">5.0</span>              <span class="comment">// zulässig, da ganzzahlig</span>
-i = <span class="number">2.5</span> * <span class="number">2.4</span>                <span class="comment">// zulässig: 2.5 * 2.4 = 6.0</span>
-fmt.Println(i)               <span class="comment">// 6</span></div>
+      <h3>Warum Go so streng ist</h3>
+      <p>Ältere Programmiersprachen wandeln Werte stillschweigend um. Das ergibt kurze Programme und versteckte Fehler. Go ist eine streng typisierte Programmiersprache: Wer einen Wert in einen anderen Typ umwandeln will, schreibt das ins Programm. Besprochen wurde das in Abschnitt 2.4 des Kurstexts, Seiten 11–12. Dazu gibt es Schritt 2 der Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#begriffe">Variablen, Typen und Speicher</a>.</p>
 
-                    <div class="warning-box">
-                        <strong>❌ NICHT erlaubt: Implizite Anpassung von Variablen</strong><br>
-                        Variablen werden <strong>niemals</strong> implizit konvertiert!
-                    </div>
+      <h3>Zwei Wege zu zwei gleichen Typen</h3>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Name des Wegs</th><th>Wer den Typ ändert</th><th>Für welche Ausdrücke der Weg offen ist</th><th>Beispiel</th></tr></thead>
+        <tbody>
+          <tr><td>implizite Typanpassung</td><td>Der Compiler passt den Typ selbst an. Im Programm steht davon nichts.</td><td>Der Weg ist nur für konstante Ausdrücke offen, zum Beispiel für das Literal <code>2</code>.</td><td>In <code>g / 2</code> hat <code>g</code> den Typ <code>float64</code>. Go rechnet mit <code>2.0</code>.</td></tr>
+          <tr><td>explizite Typkonvertierung</td><td>Das Programm verlangt die Umwandlung mit <code>T(a)</code>.</td><td>Der Weg ist für jeden Ausdruck offen, auch für eine Variable.</td><td><code>float64(a)</code> liefert den Wert von <code>a</code> als <code>float64</code>.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Ein konstanter Ausdruck besteht nur aus Literalen und Konstanten. Sein Wert steht beim Übersetzen fest. Beispiele sind <code>9</code>, <code>2.5</code> und <code>3 * 10</code>. Der Ausdruck <code>3 * a</code> mit einer Variablen <code>a</code> ist kein konstanter Ausdruck.</p>
 
-                    <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
-<span class="keyword">var</span> f <span class="type">float64</span> = <span class="number">1.7</span>
+      <h3>Die vier Schritte</h3>
+      <ul>
+        <li><strong>Schritt 1, implizite Typanpassung:</strong> Welche Ausdrücke passt Go selbst an?</li>
+        <li><strong>Schritt 2, explizite Typkonvertierung:</strong> Wie schreibt man <code>T(a)</code>, und was liefert der Ausdruck?</li>
+        <li><strong>Schritt 3, Abschneiden:</strong> Was geschieht mit den Nachkommastellen bei <code>int(f)</code>?</li>
+        <li><strong>Schritt 4, Division:</strong> Warum liefert <code>float64(a / b)</code> ein anderes Ergebnis als <code>float64(a) / float64(b)</code>?</li>
+      </ul>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" disabled>Zurück</button>
+      <button type="button" class="knopf aktiv" data-gehe="1">Weiter zu Schritt 1</button>
+    </div>
+  </section>
 
-<span class="comment">// ❌ FEHLER: Typ einer Variablen wird nie implizit angepasst</span>
-<span class="comment">// fmt.Println(0.75 * a)</span>
-<span class="comment">// fmt.Println(f * a)</span></div>
-                </div>
+  <section class="stufe" id="stufe-1">
+    <div class="card">
+      <h2>Schritt 1: Implizite Typanpassung</h2>
+      <p>Go passt den Typ eines Ausdrucks nur in zwei Fällen selbst an:</p>
+      <ul>
+        <li><strong>Konstanter Integer-Ausdruck neben einem Floating-Point-Typ:</strong> In <code>g / 2</code> hat <code>g</code> den Typ <code>float64</code>. Go macht aus dem Integer-Literal <code>2</code> den Wert <code>2.0</code>.</li>
+        <li><strong>Ganzzahliger, konstanter Floating-Point-Ausdruck für eine Integer-Variable:</strong> <code>var i int = 5.0</code> ist zulässig, weil 5.0 keine Nachkommastellen hat. Go speichert 5.</li>
+      </ul>
+      <p>Der Typ einer Variablen wird nie angepasst. Das erste Beispiel dafür kam schon in Listing 3.2 vor: Im Ausdruck <code>32 + tempC*1.8</code> hat der rechte Operand den Typ <code>float64</code>, und Go macht aus <code>32</code> den Wert <code>32.0</code>.</p>
 
-                <div class="interactive-area">
-                    <h4>Implizite Typanpassung Tester</h4>
-                    <div class="input-group">
-                        <label>Ausdruck eingeben:</label>
-                        <input type="text" id="implicitExpr" placeholder="z.B. 15 / 2 oder 15.0 / 2" value="15 / 2">
-                    </div>
-                    <button onclick="testImplicitConversion()">Auswerten</button>
-                    <div id="implicitResult" class="result"></div>
-                </div>
-            </div>
+      <h3>Die Beispiele des Kurstexts</h3>
+      <pre>var g float64 = 9
+g = g / 2
+fmt.Println(g)          // 4.5
+fmt.Println(3 * 10 / g) // 6.666666666666667
+fmt.Println(6 * 0.25)   // 1.5
+fmt.Println(15.0 / 2.0) // 7.5
+fmt.Println(15.0 / 2)   // 7.5
+fmt.Println(15 / 2.0)   // 7.5
+fmt.Println(15 / 2)     // 7
 
-            <!-- Explizite Typkonvertierung -->
-            <div class="section">
-                <h2>2️⃣ Explizite Typkonvertierung</h2>
-                
-                <div class="card">
-                    <h3>Syntax: T(a)</h3>
-                    <p>Eine Typkonvertierung wird durchgeführt, indem der Ausdruck <code>a</code> in runde Klammern gesetzt und ihm der Typname <code>T</code> vorangestellt wird.</p>
-                    
-                    <div class="highlight-box">
-                        <strong>Syntax:</strong> <code>T(ausdruck)</code><br><br>
-                        <strong>Beispiele:</strong><br>
-                        • <code>float64(25)</code> – int → float64<br>
-                        • <code>int(3.7)</code> – float64 → int (Nachkommastellen werden abgeschnitten!)<br>
-                        • <code>float64(a)</code> – int-Variable → float64<br>
-                        • <code>int(f)</code> – float64-Variable → int
-                    </div>
+var i int = 5.0
+i = 2.5 * 2.4
+fmt.Println(i)          // 6</pre>
 
-                    <div class="warning-box">
-                        <strong>⚠️ Wichtig:</strong><br>
-                        • Eine Typkonvertierung ist <strong>keine Anweisung</strong>, sondern ein Ausdruck<br>
-                        • Die Konvertierung betrifft nur den <strong>Wert des Ausdrucks</strong>, nicht die Variable selbst<br>
-                        • Bei float→int werden <strong>Nachkommastellen abgeschnitten</strong> (nicht gerundet!)
-                    </div>
+      <h3>Eine Zeile zerlegen</h3>
+      <p>Wähle eine Zeile. Die Darstellung zeigt ihre zwei Seiten mit Typ und markiert die Seite, die Go anpasst.</p>
+      <div class="zeile" id="zeilenwahl"></div>
+      <div class="feld">
+        <div class="zerlegung" id="zerlegung"></div>
+        <div class="wertzeile" id="wertZ"></div>
+        <div class="legende">Blau steht ein Ausdruck mit ganzzahligem Typ, grün ein Ausdruck mit Floating-Point-Typ. Gestrichelt umrandet ist der Ausdruck, dessen Typ Go anpasst. Unter ihm steht, womit Go rechnet.</div>
+      </div>
+      <div class="erklaerung" id="erklZ"></div>
+      <div class="hinweis">Warum ein Literal wie <code>9</code> sich anpassen lässt, wird in Abschnitt 5.2 des Kurstexts behandelt: Ein Literal hat zunächst keinen festen Typ. Dazu gibt es Schritt 4 der Seite <a href="../kap5-anweisungen/go_k5_konstanten_interaktiv.html#untyped">Konstanten</a>.</div>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="0">Zurück zu „Worum es geht“</button>
+      <button type="button" class="knopf aktiv" data-gehe="2">Weiter zu Schritt 2</button>
+    </div>
+  </section>
 
-                    <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
-<span class="keyword">var</span> f <span class="type">float64</span> = <span class="number">1.7</span>
+  <section class="stufe" id="stufe-2">
+    <div class="card">
+      <h2>Schritt 2: Explizite Typkonvertierung</h2>
+      <p>Für eine Variable gibt es keine implizite Typanpassung. Das Programm muss den Wert selbst umwandeln. Die Schreibweise heißt Typkonvertierung, englisch type conversion:</p>
+      <pre>T(a)</pre>
+      <ul>
+        <li><strong><code>T</code>:</strong> der Name des Typs, den der Wert bekommen soll, zum Beispiel <code>float64</code> oder <code>int</code>.</li>
+        <li><strong><code>a</code>:</strong> der Ausdruck, dessen Wert umgewandelt wird. Er steht in runden Klammern.</li>
+        <li><strong>Beispiel:</strong> <code>float64(a)</code> liefert den Wert von <code>a</code> als <code>float64</code>. Hat <code>a</code> den Wert 25, dann hat <code>float64(a)</code> den Wert 25.0.</li>
+      </ul>
+      <p>Eine Typkonvertierung sieht aus wie ein Funktionsaufruf. Sie ist ein Ausdruck und keine Anweisung: Sie liefert einen Wert, mit dem das Programm weiterrechnet.</p>
 
-<span class="comment">// ✅ Explizite Konvertierung von int nach float64</span>
-fmt.Println(<span class="number">0.75</span> * <span class="function">float64</span>(a))   <span class="comment">// 18.75 == 0.75 * 25.0</span>
+      <h3>Ausprobieren</h3>
+      <div class="zeile">
+        <label for="a2">a</label><input id="a2" type="number" data-wert="a" min="-99" max="99" step="1">
+        <span class="abstand"></span>
+        <label for="f2">f</label><input id="f2" type="number" data-wert="f" min="-9.9" max="9.9" step="0.1">
+        <span class="abstand"></span>
+        <span class="name">Beispiele</span>
+        <button type="button" data-setze="a=25,f10=17">a = 25, f = 1.7 wie im Kurstext</button>
+        <button type="button" data-setze="a=3,f10=11">a = 3, f = 1.1</button>
+        <button type="button" data-setze="a=-4,f10=-28">a = -4, f = -2.8</button>
+      </div>
+      <div id="codeK"></div>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Ausdruck</th><th>Was Go mit dem Ausdruck macht</th><th>Wert und Typ des Ausdrucks</th></tr></thead>
+        <tbody id="tabK"></tbody>
+      </table>
+      </div>
 
-<span class="comment">// ✅ Beide Varianten möglich:</span>
-fmt.Println(f * <span class="function">float64</span>(a))       <span class="comment">// 42.5 == 1.7 * 25.0</span>
-fmt.Println(<span class="function">int</span>(f) * a)           <span class="comment">// 25 == 1 * 25</span>
+      <h3>Die Variable behält ihren Wert</h3>
+      <p>Die Typkonvertierung <code>int(f)</code> wandelt nur den Wert um, den der Ausdruck liefert. Die Variable <code>f</code> bleibt, wie sie ist. Das zeigt die vorletzte Ausgabe im Programm. Erst die Zuweisung <code>f = float64(a)</code> gibt <code>f</code> einen neuen Wert.</p>
+      <div class="hinweis" id="hinweisK"></div>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="1">Zurück zu Schritt 1</button>
+      <button type="button" class="knopf aktiv" data-gehe="3">Weiter zu Schritt 3</button>
+    </div>
+  </section>
 
-<span class="comment">// ✅ Zuweisung mit Konvertierung</span>
-f = <span class="function">float64</span>(a)                   <span class="comment">// f = 25.0</span></div>
-                </div>
+  <section class="stufe" id="stufe-3">
+    <div class="card">
+      <h2>Schritt 3: Abschneiden</h2>
+      <p>Ein Wert vom Typ <code>int</code> hat keine Nachkommastellen. Bei der Konvertierung von <code>float64</code> nach <code>int</code> schneidet Go die Nachkommastellen ab. Go rundet dabei nicht.</p>
+      <div class="zeile">
+        <label for="f3">f</label><input id="f3" type="number" data-wert="f" min="-9.9" max="9.9" step="0.1">
+        <input id="regler" type="range" min="-99" max="99" step="1" aria-label="f mit dem Regler einstellen">
+      </div>
+      <div class="zeile">
+        <span class="name">Beispiele</span>
+        <button type="button" data-setze="f10=17">f = 1.7 wie im Kurstext</button>
+        <button type="button" data-setze="f10=39">f = 3.9</button>
+        <button type="button" data-setze="f10=-28">f = -2.8</button>
+        <button type="button" data-setze="f10=-9">f = -0.9</button>
+        <button type="button" data-setze="f10=50">f = 5.0</button>
+      </div>
+      <div class="feld">
+        <svg id="strahl" viewBox="0 0 760 104" role="img" aria-label="Zahlenstrahl von −10 bis 10 mit f und int(f)"></svg>
+        <div class="legende">Der grüne Punkt ist <code>f</code>, der blaue Ring ist <code>int(f)</code>. Der Pfeil zeigt vom grünen Punkt zum blauen Ring. Er zeigt immer in Richtung 0.</div>
+      </div>
+      <div id="codeA"></div>
+      <div class="erklaerung" id="erklA"></div>
+      <div class="tabellenrahmen">
+      <table class="text">
+        <thead><tr><th>Verfahren</th><th>Was das Verfahren tut</th><th>Ergebnis für den eingestellten Wert von f</th></tr></thead>
+        <tbody id="tabA"></tbody>
+      </table>
+      </div>
+      <div class="hinweis">Die Seite konvertiert hier eine Variable. Den Ausdruck <code>int(3.7)</code> mit einem Literal übersetzt Go nicht. Der Compiler meldet: <code>cannot convert 3.7 (untyped float constant) to type int</code>. Zulässig ist <code>int(5.0)</code>, weil 5.0 keine Nachkommastellen hat. Das ist die Regel aus Schritt 1.</div>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="2">Zurück zu Schritt 2</button>
+      <button type="button" class="knopf aktiv" data-gehe="4">Weiter zu Schritt 4</button>
+    </div>
+  </section>
 
-                <div class="interactive-area">
-                    <h4>Interaktiver Typkonverter</h4>
-                    <div class="input-group">
-                        <label>Wert eingeben:</label>
-                        <input type="text" id="convertValue" placeholder="z.B. 25 oder 3.7" value="25">
-                    </div>
-                    <div class="input-group">
-                        <label>Von Typ:</label>
-                        <select id="fromType">
-                            <option value="int">int</option>
-                            <option value="float64">float64</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Nach Typ:</label>
-                        <select id="toType">
-                            <option value="float64">float64</option>
-                            <option value="int">int</option>
-                        </select>
-                    </div>
-                    <button onclick="convertType()">Konvertieren</button>
-                    <div id="convertResult" class="result"></div>
-                </div>
-            </div>
+  <section class="stufe" id="stufe-4">
+    <div class="card">
+      <h2>Schritt 4: Division</h2>
+      <p>Der Operator <code>/</code> rechnet je nach Typ seiner Operanden verschieden:</p>
+      <ul>
+        <li><strong>Zwei Operanden vom Typ <code>int</code>:</strong> Go teilt ganzzahlig. Das Ergebnis ist der Ganzzahlquotient, die Nachkommastellen fallen weg. <code>25 / 10</code> liefert 2.</li>
+        <li><strong>Zwei Operanden vom Typ <code>float64</code>:</strong> Go liefert den rationalen Quotienten. <code>25.0 / 10.0</code> liefert 2.5.</li>
+      </ul>
+      <p>Wer den rationalen Quotienten zweier Integer-Variablen braucht, konvertiert beide Variablen, bevor er teilt.</p>
+      <div class="zeile">
+        <label for="a4">a</label><input id="a4" type="number" data-wert="a" min="-99" max="99" step="1">
+        <span class="abstand"></span>
+        <label for="b4">b</label><input id="b4" type="number" data-wert="b" min="-99" max="99" step="1">
+        <span class="abstand"></span>
+        <span class="name">Beispiele</span>
+        <button type="button" data-setze="a=25,b=10">25 und 10 wie im Kurstext</button>
+        <button type="button" data-setze="a=7,b=2">7 und 2</button>
+        <button type="button" data-setze="a=-7,b=2">-7 und 2</button>
+        <button type="button" data-setze="a=20,b=5">20 und 5</button>
+      </div>
+      <div class="rechnungen" id="rechnungen"></div>
+      <div class="legende">Jede der drei Rechnungen setzt zuerst die Werte von a und b ein und rechnet dann von innen nach außen. Blau umrandet ist die ganzzahlige Division, grün der rationale Quotient, rot der Denkfehler.</div>
+      <div id="codeD"></div>
+      <div class="erklaerung" id="erklD"></div>
+      <div class="hinweis">Eine einzelne Konvertierung genügt nicht: <code>float64(a) / b</code> übersetzt Go nicht, weil der linke Operand den Typ <code>float64</code> hat und der rechte den Typ <code>int</code>.</div>
+      <p>Wie Go eine Gleitkommazahl speichert und warum dabei Rundungsfehler entstehen, zeigt die Seite <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</p>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="5">Weiter zu Schritt 5</button>
+    </div>
+  </section>
 
-            <!-- Float → Int Konvertierung -->
-            <div class="section">
-                <h2>3️⃣ Float → Int: Nachkommastellen abschneiden</h2>
-                
-                <div class="card">
-                    <h3>Abschneiden, nicht Runden!</h3>
-                    <p>Bei der Konvertierung von <code>float64</code> nach <code>int</code> werden die <strong>Nachkommastellen einfach abgeschnitten</strong> (nicht gerundet).</p>
-                    
-                    <div class="warning-box">
-                        <strong>⚠️ Achtung: Abschneiden, nicht Runden!</strong><br><br>
-                        <code>int(3.9)</code> = 3 (nicht 4!)<br>
-                        <code>int(7.1)</code> = 7<br>
-                        <code>int(-2.8)</code> = -2 (nicht -3!)
-                    </div>
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
 
-                    <div class="example-grid">
-                        <div class="example-card">
-                            <strong>Positive Zahlen:</strong><br>
-                            <code>int(1.7)</code> → 1<br>
-                            <code>int(3.14159)</code> → 3<br>
-                            <code>int(9.99)</code> → 9
-                        </div>
-                        <div class="example-card">
-                            <strong>Negative Zahlen:</strong><br>
-                            <code>int(-1.7)</code> → -1<br>
-                            <code>int(-3.14)</code> → -3<br>
-                            <code>int(-9.99)</code> → -9
-                        </div>
-                        <div class="example-card">
-                            <strong>Grenzfälle:</strong><br>
-                            <code>int(0.9)</code> → 0<br>
-                            <code>int(-0.9)</code> → 0<br>
-                            <code>int(5.0)</code> → 5
-                        </div>
-                    </div>
-                </div>
-
-                <div class="interactive-area">
-                    <h4>Float → Int Konverter</h4>
-                    <div class="input-group">
-                        <label>Float-Wert eingeben:</label>
-                        <input type="number" step="0.1" id="floatValue" placeholder="z.B. 3.7" value="3.7">
-                    </div>
-                    <button onclick="floatToInt()">Nach int konvertieren</button>
-                    <div id="floatToIntResult" class="result"></div>
-                </div>
-            </div>
-
-            <!-- Division: Ganzzahlig vs. Rational -->
-            <div class="section">
-                <h2>4️⃣ Division: Ganzzahlig vs. Rational</h2>
-                
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('division', 0)">Ganzzahlige Division</button>
-                    <button class="tab-button" onclick="switchTab('division', 1)">Rationaler Quotient</button>
-                    <button class="tab-button" onclick="switchTab('division', 2)">Häufige Fehler</button>
-                </div>
-
-                <div id="division-0" class="tab-content active">
-                    <div class="card">
-                        <h3>Ganzzahlige Division (int / int)</h3>
-                        <p>Division zweier <code>int</code>-Werte liefert den <strong>Ganzzahlquotienten</strong>.</p>
-                        
-                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
-<span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
-
-<span class="comment">// Division zweier Integers → Ganzzahlquotient</span>
-fmt.Println(a / b)    <span class="comment">// 2 (nicht 2.5!)</span></div>
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Ausdruck</th>
-                                    <th>Ergebnis</th>
-                                    <th>Erklärung</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>25 / 10</code></td>
-                                    <td>2</td>
-                                    <td>Ganzzahlquotient</td>
-                                </tr>
-                                <tr>
-                                    <td><code>15 / 2</code></td>
-                                    <td>7</td>
-                                    <td>7.5 abgeschnitten</td>
-                                </tr>
-                                <tr>
-                                    <td><code>10 / 3</code></td>
-                                    <td>3</td>
-                                    <td>3.333... abgeschnitten</td>
-                                </tr>
-                                <tr>
-                                    <td><code>7 / 10</code></td>
-                                    <td>0</td>
-                                    <td>0.7 abgeschnitten</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="division-1" class="tab-content">
-                    <div class="card">
-                        <h3>Rationaler Quotient (float64 / float64)</h3>
-                        <p>Für den "echten" Quotienten müssen beide Operanden nach <code>float64</code> konvertiert werden.</p>
-                        
-                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
-<span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
-
-<span class="comment">// ✅ Beide Operanden konvertieren</span>
-fmt.Println(<span class="function">float64</span>(a) / <span class="function">float64</span>(b))   <span class="comment">// 2.5</span></div>
-
-                        <div class="success-box">
-                            <strong>✅ Korrekt:</strong><br>
-                            <code>float64(a) / float64(b)</code><br><br>
-                            Beide Operanden werden zu <code>float64</code> konvertiert, dann wird die Division durchgeführt.
-                        </div>
-
-                        <div class="step-by-step">
-                            <strong>Schrittweise Auswertung:</strong>
-                            <div class="step">
-                                <span class="step-number">1</span>
-                                <code>float64(25) / float64(10)</code>
-                            </div>
-                            <div class="step">
-                                <span class="step-number">2</span>
-                                <code>25.0 / 10.0</code>
-                            </div>
-                            <div class="step">
-                                <span class="step-number">3</span>
-                                <code>2.5</code> ✅
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="division-2" class="tab-content">
-                    <div class="card">
-                        <h3>Häufige Fehler</h3>
-                        
-                        <div class="warning-box">
-                            <strong>❌ Häufiger Fehler: float64(a / b)</strong><br><br>
-                            Dieser Ausdruck berechnet <strong>zuerst</strong> den Ganzzahlquotienten und konvertiert dann das Ergebnis!
-                        </div>
-
-                        <div class="comparison-grid">
-                            <div class="comparison-item incorrect">
-                                <strong>❌ FALSCH:</strong><br>
-                                <code>float64(a / b)</code>
-                                <div class="step-by-step" style="margin-top: 15px;">
-                                    <div class="step">
-                                        <span class="step-number">1</span>
-                                        <code>25 / 10</code> → 2
-                                    </div>
-                                    <div class="step">
-                                        <span class="step-number">2</span>
-                                        <code>float64(2)</code> → 2.0 ❌
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comparison-item correct">
-                                <strong>✅ RICHTIG:</strong><br>
-                                <code>float64(a) / float64(b)</code>
-                                <div class="step-by-step" style="margin-top: 15px;">
-                                    <div class="step">
-                                        <span class="step-number">1</span>
-                                        <code>float64(25)</code> → 25.0
-                                    </div>
-                                    <div class="step">
-                                        <span class="step-number">2</span>
-                                        <code>25.0 / 10.0</code> → 2.5 ✅
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="code-block"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">25</span>
-<span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span>
-
-<span class="comment">// ❌ FALSCH: Erst Division, dann Konvertierung</span>
-fmt.Println(<span class="function">float64</span>(a / b))              <span class="comment">// 2.0 (nicht 2.5!)</span>
-
-<span class="comment">// ✅ RICHTIG: Erst Konvertierung, dann Division</span>
-fmt.Println(<span class="function">float64</span>(a) / <span class="function">float64</span>(b))   <span class="comment">// 2.5</span></div>
-                    </div>
-                </div>
-
-                <div class="interactive-area">
-                    <h4>Divisions-Rechner</h4>
-                    <div class="input-group">
-                        <label>Zähler (int):</label>
-                        <input type="number" id="divNumerator" placeholder="z.B. 25" value="25">
-                    </div>
-                    <div class="input-group">
-                        <label>Nenner (int):</label>
-                        <input type="number" id="divDenominator" placeholder="z.B. 10" value="10">
-                    </div>
-                    <button onclick="calculateDivision()">Berechnen</button>
-                    <div id="divisionResult" class="result"></div>
-                </div>
-            </div>
-
-            <!-- Verweis auf das Quiz -->
-            <div class="section">
-                <h2>🎯 Alles verstanden?</h2>
-                <p>Das Quiz zu dieser Seite steht auf einer eigenen Seite:</p>
-                <ul style="margin: 15px 0 0 25px;">
-                    <li><a href="go_k4_typkonvertierung_selbsttest_quiz.html">Selbsttest: Typkonvertierung</a>, 10 Fragen mit je vier Antworten</li>
-                    <li><a href="go_k4_typkonvertierung_quiz.html">Quizrunde richtig oder falsch: Typkonvertierung</a></li>
-                </ul>
-            </div>
-
-            <a href="go_k4_quiz_hub.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
-        </div>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Implizite Typanpassung</td><td>4.7, Seite 109<br>4.1, Seiten 46–47: gleicher Typ beider Operanden</td><td>Die Programmzeilen stammen aus dem Kurstext.</td><td>Die Zerlegung jeder Zeile in zwei Kästen gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Explizite Typkonvertierung</td><td>4.7, Seiten 109–110</td><td>Das Programm folgt den Beispielen des Kurstexts.</td><td>Die zwei Ausgaben von <code>f</code> am Ende hat die Lektion ergänzt.</td></tr>
+      <tr><td>3 Abschneiden</td><td>4.7, Seite 110</td><td>Das Abschneiden der Nachkommastellen und das Beispiel <code>f = 1.7</code> stammen aus dem Kurstext.</td><td>Die Werte 3.9, −2.8, −0.9 und 5.0 und das Bild mit dem Pfeil gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Division</td><td>4.7, Seiten 110–111<br>4.3.7.1, Seiten 69–71: ganzzahlige Division</td><td>Die Division mit Konvertierung und die ganzzahlige Division stammen aus dem Kurstext.</td><td>Die Auswertung von innen nach außen mit farbigen Rahmen gibt die Lektion dazu.</td></tr>
+    </table>
     </div>
 
-    <script>
-        // Tab-Verwaltung
-        function switchTab(group, index) {
-            const buttons = document.querySelectorAll(`button[onclick^="switchTab('${group}'"]`);
-            const contents = document.querySelectorAll(`[id^="${group}-"]`);
-            
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', i === index);
-            });
-            
-            contents.forEach((content, i) => {
-                content.classList.toggle('active', i === index);
-            });
-        }
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.4, Seiten 11–12, Konversion:</strong> Go ist streng typisiert und wandelt Werte nicht von selbst in einen anderen Typ um. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#begriffe">Variablen, Typen und Speicher</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 4.4, Seiten 85–92, Gleitkommazahlen:</strong> Lektion: <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</li>
+      <li><strong>Anwendung:</strong> Die <a href="../kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html">Programmierübung Zahlenraten</a> teilt mit <code>float64(gesamtVersuche) / float64(anzahlSiege)</code>.</li>
+    </ul>
+  </div>
+  <div class="nav">
+      <button type="button" class="knopf" data-gehe="4">Zurück zu Schritt 4</button>
+      <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
+    </div>
+  </section>
 
-        // Implizite Typanpassung testen
-        function testImplicitConversion() {
-            const expr = document.getElementById('implicitExpr').value.trim();
-            const result = document.getElementById('implicitResult');
-            
-            try {
-                // Einfacher Parser für Basis-Ausdrücke
-                const evaluated = eval(expr);
-                const isInteger = Number.isInteger(evaluated);
-                const hasOnlyLiterals = !expr.match(/[a-zA-Z]/);
-                
-                result.className = 'result show info';
-                result.innerHTML = `
-                    <strong>Ausdruck:</strong> <code>${expr}</code><br>
-                    <strong>Ergebnis:</strong> ${evaluated}<br>
-                    <strong>Typ:</strong> ${isInteger ? 'integer' : 'float'}<br>
-                    <div style="margin-top: 15px; padding: 10px; background: ${hasOnlyLiterals ? '#d1fae5' : '#fef3c7'}; border-radius: 6px;">
-                        ${hasOnlyLiterals ? 
-                            '✅ Nur Literale → Implizite Typanpassung möglich' : 
-                            '⚠️ Enthält möglicherweise Variablen → Explizite Konvertierung nötig'}
-                    </div>
-                `;
-            } catch (e) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Ungültiger Ausdruck`;
-            }
-        }
+  <div class="card">
+    <h2>Zum Quiz</h2>
+    <p>Die Aufgaben zu dieser Seite stehen auf zwei eigenen Seiten:</p>
+    <ul>
+      <li><a href="go_k4_typkonvertierung_selbsttest_quiz.html">Selbsttest: Typkonvertierung</a>, 10 Fragen mit je vier Antworten</li>
+      <li><a href="go_k4_typkonvertierung_quiz.html">Quizrunde richtig oder falsch: Typkonvertierung</a></li>
+    </ul>
+  </div>
 
-        // Typkonvertierung
-        function convertType() {
-            const value = parseFloat(document.getElementById('convertValue').value);
-            const fromType = document.getElementById('fromType').value;
-            const toType = document.getElementById('toType').value;
-            const result = document.getElementById('convertResult');
-            
-            if (isNaN(value)) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Ungültiger Wert`;
-                return;
-            }
-            
-            let originalValue = value;
-            let convertedValue;
-            let code;
-            
-            if (fromType === 'int' && toType === 'float64') {
-                originalValue = Math.floor(value);
-                convertedValue = originalValue;
-                code = `float64(${originalValue})`;
-            } else if (fromType === 'float64' && toType === 'int') {
-                convertedValue = Math.trunc(value);
-                code = `int(${value})`;
-            } else {
-                result.className = 'result show info';
-                result.innerHTML = `<strong>Hinweis:</strong> Keine Konvertierung nötig (gleicher Typ)`;
-                return;
-            }
-            
-            result.className = 'result show success';
-            result.innerHTML = `
-                <div class="conversion-visual">
-                    <div class="conversion-box ${fromType}">
-                        <div class="type-label">${fromType}</div>
-                        <div class="value-display">${originalValue}</div>
-                    </div>
-                    <div class="conversion-arrow">→</div>
-                    <div class="conversion-box ${toType}">
-                        <div class="type-label">${toType}</div>
-                        <div class="value-display">${convertedValue}</div>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; text-align: center;">
-                    <strong>Code:</strong> <code>${code}</code>
-                </div>
-                ${fromType === 'float64' && toType === 'int' ? 
-                    '<div style="margin-top: 10px; padding: 10px; background: #fef3c7; border-radius: 6px;">⚠️ Nachkommastellen wurden abgeschnitten!</div>' : ''}
-            `;
-        }
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
 
-        // Float → Int
-        function floatToInt() {
-            const value = parseFloat(document.getElementById('floatValue').value);
-            const result = document.getElementById('floatToIntResult');
-            
-            if (isNaN(value)) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Ungültiger Wert`;
-                return;
-            }
-            
-            const intValue = Math.trunc(value);
-            const wasRounded = value !== intValue;
-            
-            result.className = 'result show info';
-            result.innerHTML = `
-                <div class="conversion-visual">
-                    <div class="conversion-box float">
-                        <div class="type-label">float64</div>
-                        <div class="value-display">${value}</div>
-                    </div>
-                    <div class="conversion-arrow">→</div>
-                    <div class="conversion-box int">
-                        <div class="type-label">int</div>
-                        <div class="value-display">${intValue}</div>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; text-align: center;">
-                    <strong>Code:</strong> <code>int(${value})</code> = ${intValue}
-                </div>
-                ${wasRounded ? 
-                    `<div style="margin-top: 10px; padding: 10px; background: #fef3c7; border-radius: 6px;">
-                        ⚠️ Nachkommastellen ${Math.abs(value - intValue).toFixed(10)} wurden abgeschnitten (nicht gerundet!)
-                    </div>` : 
-                    '<div style="margin-top: 10px; padding: 10px; background: #d1fae5; border-radius: 6px;">✅ Ganzzahliger Wert, keine Nachkommastellen</div>'}
-            `;
-        }
+</div>
 
-        // Division berechnen
-        function calculateDivision() {
-            const a = parseInt(document.getElementById('divNumerator').value);
-            const b = parseInt(document.getElementById('divDenominator').value);
-            const result = document.getElementById('divisionResult');
-            
-            if (isNaN(a) || isNaN(b) || b === 0) {
-                result.className = 'result show warning';
-                result.innerHTML = `<strong>Fehler:</strong> Ungültige Eingabe${b === 0 ? ' (Division durch 0!)' : ''}`;
-                return;
-            }
-            
-            const intResult = Math.floor(a / b);
-            const floatResult = a / b;
-            const wrongResult = Math.trunc(a / b);
-            
-            result.className = 'result show info';
-            result.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
-                    <div style="padding: 20px; background: #dbeafe; border: 2px solid #3b82f6; border-radius: 10px;">
-                        <strong>Ganzzahlige Division:</strong><br>
-                        <code style="font-size: 1.2em; display: block; margin: 10px 0;">${a} / ${b}</code>
-                        <div style="font-size: 1.5em; font-weight: bold; margin: 10px 0;">${intResult}</div>
-                        <div style="font-size: 0.9em; color: #1e40af;">int / int → int</div>
-                    </div>
-                    <div style="padding: 20px; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 10px;">
-                        <strong>Rationaler Quotient:</strong><br>
-                        <code style="font-size: 1.2em; display: block; margin: 10px 0;">float64(${a}) / float64(${b})</code>
-                        <div style="font-size: 1.5em; font-weight: bold; margin: 10px 0;">${floatResult}</div>
-                        <div style="font-size: 0.9em; color: #92400e;">float64 / float64 → float64</div>
-                    </div>
-                </div>
-                <div style="padding: 15px; background: #fee2e2; border: 2px solid #dc2626; border-radius: 10px; margin-top: 15px;">
-                    <strong>❌ Häufiger Fehler:</strong><br>
-                    <code>float64(${a} / ${b})</code> = ${wrongResult}.0<br>
-                    <div style="font-size: 0.9em; margin-top: 5px;">
-                        Erst wird die ganzzahlige Division durchgeführt (${intResult}), dann wird konvertiert (${intResult}.0)
-                    </div>
-                </div>
-            `;
-        }
-    </script>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  // Ein float64-Wert, wie fmt.Println ihn ausgibt. Go zeigt auch die negative Null.
+  const aus = v => Object.is(v, -0) ? '-0' : String(v);
+  // Derselbe Wert mit Dezimalpunkt, damit man ihm den Typ float64 ansieht: 25 wird 25.0
+  const mitPunkt = v => Number.isInteger(v) ? (Object.is(v, -0) ? '-0.0' : v.toFixed(1)) : String(v);
+  const runden = v => Math.sign(v) * Math.round(Math.abs(v));          // kaufmännisch, auch bei negativen Zahlen
+
+  // Zustand: zeile ist die gewählte Zeile in Schritt 1. a und b sind int, f ist float64 und steht hier in Zehnteln.
+  const Z = { zeile: 1, a: 25, b: 10, f10: 17 };
+  const f = () => Z.f10 / 10;
+
+  // ---------- Schritt 1 ----------
+  // l und r: die zwei Seiten der Zeile mit Text, Art und Farbe. neu: die Seite, die Go anpasst, und womit Go dann rechnet.
+  const ZEILEN = [
+    { code: 'var g float64 = 9', l: ['g', 'Variable vom Typ float64', 'gleit'], op: '=', r: ['9', 'Integer-Literal', 'ganz'], neu: 'r', wird: '9.0',
+      wert: 'g = 9.0', satz: 'Die Variable g hat den Typ float64, rechts steht das Integer-Literal 9. Go passt den Typ des Literals an und speichert 9.0 in g.' },
+    { code: 'g = g / 2', l: ['g', 'Variable vom Typ float64, Wert 9.0', 'gleit'], op: '/', r: ['2', 'Integer-Literal', 'ganz'], neu: 'r', wird: '2.0',
+      wert: '9.0 / 2.0 = 4.5', satz: 'Der linke Operand g hat den Typ float64, der rechte ist das Integer-Literal 2. Go rechnet mit 2.0. Die Division liefert 4.5, und g bekommt diesen Wert.' },
+    { code: '3 * 10 / g', l: ['3 * 10', 'konstanter Integer-Ausdruck, Wert 30', 'ganz'], op: '/', r: ['g', 'Variable vom Typ float64, Wert 4.5', 'gleit'], neu: 'l', wird: '30.0',
+      wert: '30.0 / 4.5 = 6.666666666666667', satz: 'Der linke Operand 3 * 10 besteht nur aus Literalen, er ist ein konstanter Integer-Ausdruck mit dem Wert 30. Der rechte Operand g hat den Typ float64. Go rechnet mit 30.0.' },
+    { code: '6 * 0.25', l: ['6', 'Integer-Literal', 'ganz'], op: '*', r: ['0.25', 'Floating-Point-Literal', 'gleit'], neu: 'l', wird: '6.0',
+      wert: '6.0 * 0.25 = 1.5', satz: 'Links steht ein Integer-Literal, rechts ein Floating-Point-Literal. Go rechnet mit 6.0.' },
+    { code: '15.0 / 2.0', l: ['15.0', 'Floating-Point-Literal', 'gleit'], op: '/', r: ['2.0', 'Floating-Point-Literal', 'gleit'], neu: '',
+      wert: '15.0 / 2.0 = 7.5', satz: 'Beide Operanden sind Floating-Point-Literale. Go muss nichts anpassen und liefert den rationalen Quotienten 7.5.' },
+    { code: '15.0 / 2', l: ['15.0', 'Floating-Point-Literal', 'gleit'], op: '/', r: ['2', 'Integer-Literal', 'ganz'], neu: 'r', wird: '2.0',
+      wert: '15.0 / 2.0 = 7.5', satz: 'Links steht ein Floating-Point-Literal, rechts ein Integer-Literal. Go rechnet mit 2.0.' },
+    { code: '15 / 2.0', l: ['15', 'Integer-Literal', 'ganz'], op: '/', r: ['2.0', 'Floating-Point-Literal', 'gleit'], neu: 'l', wird: '15.0',
+      wert: '15.0 / 2.0 = 7.5', satz: 'Links steht ein Integer-Literal, rechts ein Floating-Point-Literal. Go rechnet mit 15.0.' },
+    { code: '15 / 2', l: ['15', 'Integer-Literal', 'ganz'], op: '/', r: ['2', 'Integer-Literal', 'ganz'], neu: '',
+      wert: '15 / 2 = 7', satz: 'Beide Operanden sind Integer-Literale. Go passt nichts an und teilt ganzzahlig. Der Quotient 7.5 verliert seine Nachkommastellen, das Ergebnis ist 7.' },
+    { code: 'var i int = 5.0', l: ['i', 'Variable vom Typ int', 'ganz'], op: '=', r: ['5.0', 'Floating-Point-Literal, Wert ganzzahlig', 'gleit'], neu: 'r', wird: '5',
+      wert: 'i = 5', satz: 'Die Variable i hat den Typ int, rechts steht das Floating-Point-Literal 5.0. Sein Wert hat keine Nachkommastellen. Deshalb passt Go den Typ des Literals an und speichert 5 in i.' },
+    { code: 'i = 2.5 * 2.4', l: ['i', 'Variable vom Typ int', 'ganz'], op: '=', r: ['2.5 * 2.4', 'konstanter Floating-Point-Ausdruck, Wert 6', 'gleit'], neu: 'r', wird: '6',
+      wert: 'i = 6', satz: 'Der Ausdruck 2.5 * 2.4 besteht nur aus Literalen. Der Compiler rechnet ihn beim Übersetzen aus und erhält genau 6. Der Wert hat keine Nachkommastellen, deshalb passt Go den Typ an und speichert 6 in i.' },
+    { code: 'var k int = 2.5', l: ['k', 'Variable vom Typ int', 'ganz'], op: '=', r: ['2.5', 'Floating-Point-Literal, Wert nicht ganzzahlig', 'gleit'], neu: '', eigen: true,
+      fehler: 'cannot use 2.5 (untyped float constant) as int value in variable declaration (truncated)',
+      satz: 'Diese Zeile ist eine Gegenprobe der Seite und steht nicht im Kurstext. Der Wert 2.5 hat Nachkommastellen. Go passt den Typ nicht an und übersetzt die Zeile nicht.' }
+  ];
+
+  function kasten(q, angepasst, wird) {
+    return '<div class="kasten ' + q[2] + (angepasst ? ' angepasst' : '') + '"><div class="wert">' + esc(q[0]) + '</div><div class="art">' + esc(q[1]) + '</div>' +
+      (angepasst ? '<div class="wird">Go rechnet mit ' + esc(wird) + '</div>' : '') + '</div>';
+  }
+  function zeigeZeile() {
+    const q = ZEILEN[Z.zeile];
+    el('zeilenwahl').innerHTML = ZEILEN.map((p, i) =>
+      '<button type="button" class="zeilenknopf' + (i === Z.zeile ? ' aktiv' : '') + '" data-zeile="' + i + '">' + esc(p.code) + '</button>').join('');
+    el('zerlegung').innerHTML = kasten(q.l, q.neu === 'l', q.wird) + '<div class="zeichen">' + esc(q.op) + '</div>' + kasten(q.r, q.neu === 'r', q.wird);
+    el('wertZ').innerHTML = q.fehler ? '<span class="fehler">Go übersetzt die Zeile nicht.</span>' : '<strong>' + esc(q.wert) + '</strong>';
+    el('erklZ').innerHTML = '<p>' + c(q.code) + ': ' + esc(q.satz) + '</p>' + (q.fehler ? '<p>Meldung des Compilers: ' + c(q.fehler) + '</p>' : '');
+  }
+
+  // ---------- Schritt 2 ----------
+  // Ein Programm als pre. Jede Zeile ist [Anweisung] oder [Anweisung, Ausgabe], die Ausgaben stehen bündig hinter //.
+  function programm(zeilen) {
+    const breite = Math.max(...zeilen.filter(q => q[1] !== undefined).map(q => q[0].length)) + 1;
+    return '<pre>' + esc(zeilen.map(q => q[1] === undefined ? q[0] : q[0].padEnd(breite) + '// ' + q[1]).join('\n')) + '</pre>';
+  }
+
+  function zeigeKonvertierung() {
+    const a = Z.a, fw = f(), fa = a, ganzF = Math.trunc(fw) || 0;
+    const p1 = 0.75 * fa, p2 = fw * fa, p3 = ganzF * a;
+    el('codeK').innerHTML = programm([
+      ['var a int = ' + a], ['var f float64 = ' + mitPunkt(fw)], [''],
+      ['// fmt.Println(0.75 * a)', 'Fehler beim Übersetzen'],
+      ['fmt.Println(0.75 * float64(a))', aus(p1)],
+      ['// fmt.Println(f * a)', 'Fehler beim Übersetzen'],
+      ['fmt.Println(f * float64(a))', aus(p2)],
+      ['fmt.Println(int(f) * a)', p3],
+      ['fmt.Println(f)', aus(fw)],
+      ['f = float64(a)'],
+      ['fmt.Println(f)', aus(fa)]
+    ]);
+    const reihe = (ausdruck, was, wert, klasse) => '<tr' + (klasse ? ' class="' + klasse + '"' : '') + '><td>' + c(ausdruck) + '</td><td>' + was + '</td><td>' + wert + '</td></tr>';
+    el('tabK').innerHTML =
+      reihe('0.75 * a', 'Go übersetzt den Ausdruck nicht. Der Typ der Variablen <code>a</code> wird nie angepasst. Also müsste das Literal <code>0.75</code> zum Typ <code>int</code> passen, und das geht nur bei einem ganzzahligen Wert. Meldung des Compilers: ' + c('0.75 (untyped float constant) truncated to int') + '. Das Wort <code>truncated</code> heißt abgeschnitten: Go müsste von 0.75 die Nachkommastellen abschneiden und lehnt das ab.','<span class="fehler">Der Ausdruck hat keinen Wert.</span>', 'anders') +
+      reihe('0.75 * float64(a)', 'Go wandelt zuerst den Wert von <code>a</code> um: ' + c('float64(' + a + ')') + ' liefert ' + c(mitPunkt(fa)) + '. Dann rechnet Go ' + c('0.75 * ' + mitPunkt(fa)) + '.', 'Der Wert ist ' + c(aus(p1)) + ', der Typ ist <code>float64</code>.') +
+      reihe('f * a', 'Go übersetzt den Ausdruck nicht. Meldung des Compilers: ' + c('invalid operation: f * a (mismatched types float64 and int)'), '<span class="fehler">Der Ausdruck hat keinen Wert.</span>', 'anders') +
+      reihe('f * float64(a)', 'Go rechnet ' + c(mitPunkt(fw) + ' * ' + mitPunkt(fa)) + '. Beide Operanden haben den Typ <code>float64</code>.', 'Der Wert ist ' + c(aus(p2)) + ', der Typ ist <code>float64</code>.') +
+      reihe('int(f) * a', 'Go wandelt zuerst den Wert von <code>f</code> um: ' + c('int(' + mitPunkt(fw) + ')') + ' liefert ' + c(ganzF) + '. Dann rechnet Go ' + c(ganzF + ' * ' + a) + '. Beide Operanden haben den Typ <code>int</code>.', 'Der Wert ist ' + c(p3) + ', der Typ ist <code>int</code>.');
+    const genau = Math.round(Z.f10 * a) / 10;                          // das Ergebnis, wie man es von Hand rechnet
+    el('hinweisK').innerHTML = p2 === genau
+      ? 'Die zwei zulässigen Wege liefern verschiedene Werte: ' + c('f * float64(a)') + ' rechnet mit den Nachkommastellen von <code>f</code> und liefert ' + c(aus(p2)) + '. ' + c('int(f) * a') + ' schneidet sie vorher ab und liefert ' + c(p3) + '. Welcher Weg richtig ist, hängt von der Aufgabe ab.'
+      : 'Von Hand gerechnet ergibt ' + mitPunkt(fw) + ' · ' + a + ' den Wert ' + aus(genau) + '. Go gibt ' + c(aus(p2)) + ' aus. Der Unterschied ist ein Rundungsfehler: Der Typ <code>float64</code> kann ' + mitPunkt(fw) + ' nicht genau speichern. Mehr dazu zeigt die Seite <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.';
+  }
+
+  // ---------- Schritt 3 ----------
+  function zeigeAbschneiden() {
+    const fw = f(), n = Math.trunc(fw) || 0, ab = Math.floor(fw), rund = runden(fw);
+    const x = v => 30 + (v + 10) * 35, y = 52;
+    let s = '<defs><marker id="spitze" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#111827"/></marker></defs>' +
+      '<line x1="' + x(-10) + '" y1="' + y + '" x2="' + x(10) + '" y2="' + y + '" stroke="#9ca3af" stroke-width="2"/>';
+    for (let v = -10; v <= 10; v++) {
+      s += '<line x1="' + x(v) + '" y1="' + (y - (v === 0 ? 9 : 6)) + '" x2="' + x(v) + '" y2="' + (y + (v === 0 ? 9 : 6)) + '" stroke="' + (v === 0 ? '#111827' : '#9ca3af') + '" stroke-width="' + (v === 0 ? 3 : 2) + '"/>' +
+        '<text x="' + x(v) + '" y="' + (y + 24) + '" text-anchor="middle">' + v + '</text>';
+    }
+    if (fw !== n) s += '<line x1="' + x(fw) + '" y1="' + (y - 16) + '" x2="' + x(n) + '" y2="' + (y - 16) + '" stroke="#111827" stroke-width="2" marker-end="url(#spitze)"/>';
+    s += '<circle cx="' + x(n) + '" cy="' + y + '" r="10" fill="#fff" stroke="#1e40af" stroke-width="3"/>' +
+      '<circle cx="' + x(fw) + '" cy="' + y + '" r="5" fill="#0f766e"/>' +
+      '<text class="marke" x="' + x(fw) + '" y="' + (y - 26) + '" text-anchor="middle" style="fill:#0f766e">f = ' + mitPunkt(fw) + '</text>' +
+      '<text class="marke" x="' + x(n) + '" y="' + (y + 46) + '" text-anchor="middle" style="fill:#1e40af">int(f) = ' + n + '</text>';
+    el('strahl').innerHTML = s;
+
+    el('codeA').innerHTML = programm([
+      ['var f float64 = ' + mitPunkt(fw)], ['var n int = int(f)'],
+      ['fmt.Println(n)', n], ['fmt.Println(f)', aus(fw)]
+    ]);
+    el('erklA').innerHTML = fw === n
+      ? '<p>' + c('f') + ' hat den Wert ' + c(mitPunkt(fw)) + ' und keine Nachkommastellen. ' + c('int(f)') + ' liefert ' + c(n) + '. Hier fällt nichts weg.</p>'
+      : '<p>' + c('f') + ' hat den Wert ' + c(mitPunkt(fw)) + '. ' + c('int(f)') + ' schneidet die Nachkommastellen ab und liefert ' + c(n) + '. ' +
+        (n !== rund ? 'Gerundet wäre das Ergebnis ' + c(rund) + '. ' : 'Runden liefert bei diesem Wert dasselbe. ') +
+        (fw < 0 ? 'Bei einer negativen Zahl ist das Ergebnis größer als <code>f</code>: Der Pfeil zeigt nach rechts, in Richtung 0. Abrunden ginge nach links und ergäbe ' + c(ab) + '.' : 'Bei einer positiven Zahl ist das Ergebnis kleiner als <code>f</code>: Der Pfeil zeigt nach links, in Richtung 0.') + '</p>' +
+        '<p>Die zweite Ausgabe zeigt: <code>f</code> hat weiter den Wert ' + c(aus(fw)) + '.</p>';
+    el('tabA').innerHTML =
+      '<tr class="betont"><td>Abschneiden mit <code>int(f)</code></td><td>Go streicht die Nachkommastellen. Das Ergebnis liegt näher an 0 als <code>f</code> oder ist gleich <code>f</code>.</td><td>' + c(n) + '</td></tr>' +
+      '<tr><td>Abrunden</td><td>Abrunden geht zur nächsten ganzen Zahl, die nicht größer ist als <code>f</code>.</td><td>' + c(ab) + '</td></tr>' +
+      '<tr><td>Runden</td><td>Runden geht zur nächstgelegenen ganzen Zahl.</td><td>' + c(rund) + '</td></tr>';
+  }
+
+  // ---------- Schritt 4 ----------
+  function zeigeDivision() {
+    const a = Z.a, b = Z.b, ganz = Math.trunc(a / b) || 0, rational = a / b, geht = a % b === 0;
+    const rechnung = (klasse, kopf, schritte, ende) => '<div class="rechnung ' + klasse + '"><h3>' + esc(kopf) + '</h3><ol>' +
+      schritte.map(t => '<li>' + t + '</li>').join('') + '</ol><div class="ende">' + ende + '</div></div>';
+    el('rechnungen').innerHTML =
+      rechnung('ganz', 'a / b', [
+        'Werte einsetzen: ' + c(a + ' / ' + b),
+        'Beide Operanden haben den Typ <code>int</code>. Go teilt ganzzahlig' + (geht ? ', und die Division geht auf.' : ': Vom Quotienten ' + aus(rational) + ' fallen die Nachkommastellen weg.')
+      ], 'Wert ' + ganz + ', Typ int') +
+      rechnung('gleit', 'float64(a) / float64(b)', [
+        'Werte einsetzen: ' + c('float64(' + a + ') / float64(' + b + ')'),
+        'Beide Konvertierungen ausführen: ' + c(mitPunkt(a) + ' / ' + mitPunkt(b)),
+        'Beide Operanden haben den Typ <code>float64</code>. Go liefert den rationalen Quotienten.'
+      ], 'Wert ' + aus(rational) + ', Typ float64') +
+      rechnung(geht ? 'gleit' : 'denkfehler', 'float64(a / b)', [
+        'Werte einsetzen: ' + c('float64(' + a + ' / ' + b + ')'),
+        'Zuerst rechnet Go den Ausdruck in der Klammer aus. Dort stehen zwei Operanden vom Typ <code>int</code>, also teilt Go ganzzahlig: ' + c('float64(' + ganz + ')'),
+        'Erst jetzt konvertiert Go. Aus ' + ganz + ' wird ' + mitPunkt(ganz) + '.' + (geht ? '' : ' Die Nachkommastellen sind schon in der Klammer weggefallen.')
+      ], 'Wert ' + mitPunkt(ganz) + ', Typ float64');
+    el('codeD').innerHTML = programm([
+      ['var a int = ' + a], ['var b int = ' + b],
+      ['fmt.Println(a / b)', ganz],
+      ['fmt.Println(float64(a) / float64(b))', aus(rational)],
+      ['fmt.Println(float64(a / b))', aus(ganz)]
+    ]);
+    el('erklD').innerHTML = (geht
+      ? '<p>Bei ' + a + ' und ' + b + ' geht die Division auf. Alle drei Ausdrücke liefern denselben Zahlenwert, und der Denkfehler fällt nicht auf. Mit 25 und 10 oder mit 7 und 2 zeigt er sich.</p>'
+      : '<p>' + c('float64(a / b)') + ' liefert ' + mitPunkt(ganz) + ' und nicht ' + aus(rational) + '. Die Klammer bestimmt die Reihenfolge: Erst teilt Go ganzzahlig, dann konvertiert es. Für den rationalen Quotienten muss die Konvertierung vor der Division stehen.</p>') +
+      '<p><code>fmt.Println</code> gibt einen <code>float64</code>-Wert ohne Nachkommastellen ohne Dezimalpunkt aus. Der Wert ' + mitPunkt(ganz) + ' erscheint in der Ausgabe als ' + c(aus(ganz)) + '.</p>' +
+      (a / b < 0 && !geht ? '<p>Auch bei einem negativen Quotienten schneidet die ganzzahlige Division ab: Aus ' + aus(rational) + ' wird ' + ganz + ', das Ergebnis rückt in Richtung 0.</p>' : '');
+  }
+
+  // ---------- Reiter ----------
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#division
+  const ANKER = ['worum', 'anpassung', 'konvertierung', 'abschneiden', 'division', 'kurstext'];
+  let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== aktuell;
+    aktuell = nummer;
+    if (gewechselt) Kurslotse.schrittGewechselt();                     // die Antworten gehören zum Schritt davor
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
+    if (nachOben) {
+      history.replaceState(null, '', '#' + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Bedienung ----------
+  // a und b: ganze Zahlen von −99 bis 99, b ohne die 0. f: −9.9 bis 9.9 mit einer Nachkommastelle.
+  const GRENZE = 99;
+  function zeigeAlles(ausser) {
+    zeigeZeile(); zeigeKonvertierung(); zeigeAbschneiden(); zeigeDivision();
+    document.querySelectorAll('[data-wert]').forEach(i => {
+      if (i !== ausser) i.value = i.dataset.wert === 'f' ? f().toFixed(1) : Z[i.dataset.wert];
+    });
+    if (el('regler') !== ausser) el('regler').value = Z.f10;
+    Kurslotse.standGeaendert();
+  }
+  document.addEventListener('click', ev => {
+    const t = ev.target;
+    let k;
+    if ((k = t.closest('[data-stufe], [data-gehe]'))) {
+      zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+      return;
+    }
+    if ((k = t.closest('[data-zeile]'))) {
+      Z.zeile = Number(k.dataset.zeile);
+    } else if ((k = t.closest('[data-setze]'))) {
+      k.dataset.setze.split(',').forEach(p => { const q = p.split('='); Z[q[0]] = Number(q[1]); });
+    } else return;
+    zeigeAlles();
+  });
+  document.addEventListener('input', ev => {
+    const i = ev.target;
+    if (i.id === 'regler') { Z.f10 = Number(i.value); zeigeAlles(i); return; }
+    if (!i.dataset || !i.dataset.wert || i.value === '') return;
+    const name = i.dataset.wert, v = Number(i.value);
+    if (name === 'f') {
+      const zehntel = Math.round(v * 10);
+      if (Math.abs(v * 10 - zehntel) > 1e-9 || Math.abs(zehntel) > GRENZE) return;
+      Z.f10 = zehntel;
+    } else {
+      if (!Number.isInteger(v) || Math.abs(v) > GRENZE || (name === 'b' && v === 0)) return;
+      Z[name] = v;
+    }
+    zeigeAlles(i);
+  });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Implizite Typanpassung', 'Schritt 2: Explizite Typkonvertierung', 'Schritt 3: Abschneiden', 'Schritt 4: Division', 'Schritt 5: Bezug zum Kurstext'];
+
+  // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
+  function standSaetze() {
+    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
+    const a = Z.a, b = Z.b, fw = f(), t = [];
+    if (aktuell === 0) {
+      t.push('Dieser Schritt hat keine Demo.');
+    } else if (aktuell === 1) {
+      const q = ZEILEN[Z.zeile];
+      t.push('Zum Zerlegen gewählt ist die Zeile: ' + q.code,
+        'Linker Kasten: ' + q.l[0] + ', ' + q.l[1] + '. Rechter Kasten: ' + q.r[0] + ', ' + q.r[1] + '. Dazwischen steht ' + q.op + '.',
+        q.neu ? 'Gestrichelt umrandet ist der ' + (q.neu === 'l' ? 'linke' : 'rechte') + ' Kasten. Go passt seinen Typ an und rechnet mit ' + q.wird + '.' : 'Kein Kasten ist gestrichelt umrandet. Go passt in dieser Zeile keinen Typ an.',
+        q.fehler ? 'Go übersetzt die Zeile nicht. Meldung des Compilers: ' + q.fehler : 'Unter den Kästen steht: ' + q.wert + '.',
+        q.satz);
+    } else if (aktuell === 2) {
+      const n = Math.trunc(fw) || 0;
+      t.push('a hat den Typ int und den Wert ' + a + '. f hat den Typ float64 und den Wert ' + mitPunkt(fw) + '.',
+        '0.75 * a und f * a übersetzt Go nicht.',
+        '0.75 * float64(a) liefert ' + aus(0.75 * a) + ' vom Typ float64.',
+        'f * float64(a) liefert ' + aus(fw * a) + ' vom Typ float64.',
+        'int(f) liefert ' + n + ', int(f) * a liefert ' + n * a + ' vom Typ int.',
+        'Nach int(f) hat f weiter den Wert ' + aus(fw) + '. Nach der Zuweisung f = float64(a) hat f den Wert ' + mitPunkt(a) + ', Println gibt ' + aus(a) + ' aus.');
+    } else if (aktuell === 3) {
+      const n = Math.trunc(fw) || 0;
+      t.push('f hat den Typ float64 und den Wert ' + mitPunkt(fw) + '.', 'int(f) liefert ' + n + '. f behält den Wert ' + mitPunkt(fw) + '.',
+        'Abrunden ergäbe ' + Math.floor(fw) + ', Runden ergäbe ' + runden(fw) + '.',
+        fw === n ? 'Auf dem Zahlenstrahl liegt der grüne Punkt im blauen Ring, es gibt keinen Pfeil.' : 'Auf dem Zahlenstrahl zeigt der Pfeil vom grünen Punkt bei ' + mitPunkt(fw) + ' nach ' + (fw > 0 ? 'links' : 'rechts') + ' zum blauen Ring bei ' + n + '.');
+    } else {
+      const ganz = Math.trunc(a / b) || 0;
+      t.push('a und b haben den Typ int. a hat den Wert ' + a + ', b hat den Wert ' + b + '.',
+        'Linke Rechnung, blau: a / b liefert ' + ganz + ' vom Typ int.',
+        'Mittlere Rechnung, grün: float64(a) / float64(b) liefert ' + aus(a / b) + ' vom Typ float64.',
+        'Rechte Rechnung, ' + (a % b === 0 ? 'grün' : 'rot') + ': float64(a / b) liefert ' + mitPunkt(ganz) + ' vom Typ float64, Println gibt ' + aus(ganz) + ' aus.',
+        a % b === 0 ? 'Die Division geht auf, deshalb liefern alle drei Ausdrücke denselben Zahlenwert.' : 'Die Division geht nicht auf.');
+    }
+    return t;
+  }
+  // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
+  function kurz() {
+    return ['ohne Demo', 'Zeile: ' + ZEILEN[Z.zeile].code, 'a = ' + Z.a + ', f = ' + mitPunkt(f()), 'f = ' + mitPunkt(f()), 'a = ' + Z.a + ', b = ' + Z.b][aktuell];
+  }
+
+  zeigeAlles();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go',
+    thema: 'Typkonvertierung',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.7, Seiten 109–111',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.md',
+    reiter: () => ANKER[aktuell],
+    schritt: () => SCHRITTE[aktuell],
+    sichtbar: () => el('stufe-' + aktuell),
+    text: '.card > p:not(.quelle), .card > ul, .legende, .hinweis, .erklaerung, .rechnung, table.text',
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: 'Warum liefert float64(a / b) nicht 2.5?'
+  });
+})();
+</script>
 </body>
 </html>
