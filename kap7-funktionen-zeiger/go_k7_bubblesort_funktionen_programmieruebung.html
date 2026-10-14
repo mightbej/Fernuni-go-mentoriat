@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -136,7 +135,6 @@ func isGreater(a [10]int, i int) bool {
     a[i], a[i+1] = a[i+1], a[i]
 }</pre>
     <p>Die Länge 10 steht im Typ des Parameters. Die Funktion nimmt nur Arrays vom Typ <code>[10]int</code> an. Ein Array mit zwölf Elementen hat einen anderen Typ.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.4 und Abschnitt 7.1, Seiten 163–165. Die Funktion <code>isGreater</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -166,7 +164,6 @@ func swap(a [10]int, i int) [10]int {
 }</pre>
     <p>Die Zeile liest sich so: Ist das Element am Index <code>i</code> größer als sein Nachbar, dann tausche die zwei.</p>
     <div class="hinweis">Das Muster ist das gleiche wie bei <code>negToZeroValue</code> in Listing 7.1 des Kurstexts: Die Funktion ändert ihre Kopie und gibt sie zurück.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170. Die Funktion <code>swap</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -195,7 +192,7 @@ func swap(a [10]int, i int) [10]int {
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="b-ausgabe"></div>
     <div class="auskunft" id="b-urteil"></div>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo zeigt die Schleife nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
+    <p>Die Demo zeigt die Schleife nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -265,7 +262,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
       <li>Schreibe eine Funktion <code>isSorted(a [10]int) bool</code>, die prüft, ob das Array aufsteigend sortiert ist.</li>
       <li>Lagere einen ganzen Durchgang in eine Funktion aus. Welche Parameter braucht sie, und was gibt sie zurück?</li>
     </ul>
-    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+    <p>Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
