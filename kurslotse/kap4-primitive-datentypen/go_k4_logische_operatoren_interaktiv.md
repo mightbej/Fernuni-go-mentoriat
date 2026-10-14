@@ -2,7 +2,7 @@
 
 Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft. Sie gehört zu Abschnitt 4.5.2 des Kurstexts und zu Abschnitt 4.1.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -113,7 +113,6 @@ Reiter: verknuepfen
 - Die Werte: `x >= 0 && x <= 9` ist `true` für 0, 5 und 9 und `false` für −3 und 12. Die zwei anderen Ausdrücke sind `true` für −3 und 12 und `false` für 0, 5 und 9.
 - `0 <= x <= 9` übersetzt Go bei keinem Wert von `x`. Die Meldung: `invalid operation: 0 <= x <= 9 (mismatched types untyped bool and untyped int)`. Go rechnet von links, `0 <= x` ist ein Wahrheitswert, und der lässt sich nicht mit 9 vergleichen.
 - Der Teil „Zwei Vergleiche hintereinander“ zeigt die zwei Zeilen des Kurstexts: `5 != 7 != (2 != 2)` und `4 > 2 == (5 < 9)`. Beide sind `true`, und beide brauchen die Klammern.
-- Der Schritt endet mit Links zu zwei Quizseiten und zu den Seiten „Wahrheitswerte und Kurzschluss-Auswertung“, „if-Anweisung in Go“ und „for-Anweisung mit Bedingung in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -127,3 +126,34 @@ Reiter: verknuepfen
 - 4.1.2
 - 4.5.2
 - 4.5.1
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Sechs Operatoren, 4.5.2, Seiten 96–98: Sprachvergleich 4.17; 4.1, Seiten 45–52: Operatoren: Die neun Ausdrücke, die Go übersetzt, stammen aus dem Kurstext. Die drei Ausdrücke, die Go nicht übersetzt, und die Meldungen des Compilers gibt die Lektion dazu.
+  - 2 Strings vergleichen, 4.5.2, Seiten 96–98: Die fünf Beispiele der ersten Reihe stammen aus dem Kurstext. Dort steht auch, dass Kleinbuchstaben höher gewertet werden als Großbuchstaben und diese höher als Ziffern. Die Nummern der Zeichen und die Beispiele mit Umlauten gibt die Lektion dazu.
+  - 3 Vergleiche verknüpfen, 4.1.2, Seiten 50–52: Bindungsstärken; 4.5.2, Seiten 96–98: Klammerung: Die Tabelle der Bindungsstärken und die zwei Zeilen zur Klammerung stammen aus dem Kurstext. Die Bereichsprüfung mit x, der Ausdruck 0 <= x <= 9 und die Meldung des Compilers gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 3.3.6, Seiten 35–36, Bindungsstärken: Dort steht zum ersten Mal, dass Punkt vor Strich gilt. Eine Lektion gibt es nicht, dazu gibt es das Quiz Auswertungsreihenfolge und Bindungsstärken.
+  - Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung: Lektion: Wahrheitswerte und Kurzschluss-Auswertung.
+  - Abschnitt 5.5.1, Seiten 129–132, Bedingung: Lektion: if-Anweisung in Go.
+- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Wahrheitswerte und Kurzschluss-Auswertung“, „if-Anweisung in Go“ und „for-Anweisung mit Bedingung in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 3.3.6
+- 4.1
+- 4.1.2
+- 4.5.1
+- 4.5.2
+- 5.5.1

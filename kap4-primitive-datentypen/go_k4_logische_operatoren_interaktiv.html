@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace; }
     input[type=text] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;width:10em;max-width:100%; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -58,6 +57,7 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -74,6 +74,7 @@
     <button type="button" class="tab" data-stufe="1">1 Sechs Operatoren</button>
     <button type="button" class="tab" data-stufe="2">2 Strings vergleichen</button>
     <button type="button" class="tab" data-stufe="3">3 Vergleiche verknüpfen</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -111,7 +112,6 @@ fmt.Println(alter >= 6 &amp;&amp; alter &lt; 18)    // true</pre>
       <li><strong>Schritt 3, Vergleiche verknüpfen:</strong> Bereiche prüfen mit <code>&amp;&amp;</code> und <code>||</code>, und warum <code>0 &lt;= x &lt;= 9</code> in Go nicht geht.</li>
     </ul>
     <div class="hinweis">Die Ausdrücke auf dieser Seite sind mit Go 1.26 ausgeführt. Werte und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5, Seite 93, und Abschnitt 4.5.2, Seiten 96–98. Das Beispiel mit <code>alter</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -157,7 +157,6 @@ var t = "Hallo " + "Welt"</pre>
 
     <h3>bool ist keine Zahl</h3>
     <p>Go wandelt einen Wahrheitswert nie von selbst in eine Zahl um und eine Zahl nie in einen Wahrheitswert. In C++ gilt 0 als <code>false</code> und jede andere Zahl als <code>true</code>. In Go muss in einer Bedingung ein boolescher Ausdruck stehen: Statt <code>if x</code> schreibt man <code>if x != 0</code>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5.2, Seiten 96–98, mit dem Sprachvergleich 4.17, und Abschnitt 4.1, Seiten 45–52. Die neun Ausdrücke der Demo, die Go übersetzt, stammen aus dem Kurstext. Die drei Ausdrücke, die Go nicht übersetzt, und die Meldungen des Compilers stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -230,7 +229,6 @@ var t = "Hallo " + "Welt"</pre>
       <li><strong>Ziffern als Zeichen:</strong> <code>"10" &lt; "9"</code> ist wahr, obwohl die Zahl 10 größer ist als die Zahl 9.</li>
     </ul>
     <p>Wie ein String im Speicher liegt und warum ein Umlaut zwei Bytes braucht, zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5.2, Seiten 96–98. Die fünf Beispiele der ersten Reihe stammen aus dem Kurstext. Dort steht, dass Kleinbuchstaben höher gewertet werden als Großbuchstaben und diese höher als Ziffern. Die Nummern der Zeichen und die Beispiele mit Umlauten stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -284,6 +282,33 @@ var t = "Hallo " + "Welt"</pre>
 <pre class="code-block">5 != 7 != (2 != 2)    // true:  true != false
 4 &gt; 2 == (5 &lt; 9)      // true:  true == true</pre>
     <p>Ohne die Klammern würde Go in der ersten Zeile <code>5 != 7</code> auswerten und den Wahrheitswert dann mit der Zahl 2 vergleichen. Das übersetzt Go nicht.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Sechs Operatoren</td><td>4.5.2, Seiten 96–98: Sprachvergleich 4.17<br>4.1, Seiten 45–52: Operatoren</td><td>Die neun Ausdrücke, die Go übersetzt, stammen aus dem Kurstext.</td><td>Die drei Ausdrücke, die Go nicht übersetzt, und die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Strings vergleichen</td><td>4.5.2, Seiten 96–98</td><td>Die fünf Beispiele der ersten Reihe stammen aus dem Kurstext. Dort steht auch, dass Kleinbuchstaben höher gewertet werden als Großbuchstaben und diese höher als Ziffern.</td><td>Die Nummern der Zeichen und die Beispiele mit Umlauten gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Vergleiche verknüpfen</td><td>4.1.2, Seiten 50–52: Bindungsstärken<br>4.5.2, Seiten 96–98: Klammerung</td><td>Die Tabelle der Bindungsstärken und die zwei Zeilen zur Klammerung stammen aus dem Kurstext.</td><td>Die Bereichsprüfung mit <code>x</code>, der Ausdruck <code>0 &lt;= x &lt;= 9</code> und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 3.3.6, Seiten 35–36, Bindungsstärken:</strong> Dort steht zum ersten Mal, dass Punkt vor Strich gilt. Eine Lektion gibt es nicht, dazu gibt es das Quiz <a href="../kap3-einfuehrung/go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Auswertungsreihenfolge und Bindungsstärken</a>.</li>
+      <li><strong>Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung:</strong> Lektion: <a href="go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, Bedingung:</strong> Lektion: <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -291,10 +316,9 @@ var t = "Hallo " + "Welt"</pre>
       <li><strong>Kurzschluss-Auswertung:</strong> Wann Go den rechten Operanden von <code>&amp;&amp;</code> und <code>||</code> gar nicht mehr auswertet, zeigt die Seite <a href="go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
       <li><strong>Bedingungen im Programm:</strong> Wo ein boolescher Ausdruck gebraucht wird, zeigen die Seiten <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a> und <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.1.2, Seiten 50–52, mit den Bindungsstärken, und Abschnitt 4.5.2, Seiten 96–98, mit den zwei Zeilen zur Klammerung. Die Bereichsprüfung mit <code>x</code>, der Ausdruck <code>0 &lt;= x &lt;= 9</code> und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -313,7 +337,7 @@ var t = "Hallo " + "Welt"</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#strings
-  const ANKER = ['worum', 'operatoren', 'strings', 'verknuepfen'];
+  const ANKER = ['worum', 'operatoren', 'strings', 'verknuepfen', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -439,10 +463,11 @@ var t = "Hallo " + "Welt"</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Sechs Operatoren', 'Schritt 2: Strings vergleichen', 'Schritt 3: Vergleiche verknüpfen'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Sechs Operatoren', 'Schritt 2: Strings vergleichen', 'Schritt 3: Vergleiche verknüpfen', 'Schritt 4: Bezug zum Kurstext'];
   const glatt = t => t.replace(/\s+/g, ' ').trim();
 
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. Der Codeblock ist fest. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) {
       const w = WAHL[wahl];
