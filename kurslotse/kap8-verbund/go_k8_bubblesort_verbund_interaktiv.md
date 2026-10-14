@@ -2,7 +2,7 @@
 
 Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2 des Kurstexts: Sie sortiert ein Array von Verbünden des Typs `person` aufsteigend nach dem Feld `name`. Die Seite gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.4.2, Seiten 225–226.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -133,7 +133,6 @@ Reiter: aufwand
 - Zur ersten Aufgabe: Der Weg führt über eine Variable vom Typ `bool`, die sich merkt, ob im Durchgang vertauscht wurde. Mit dem Abbruch läuft nach dem sechsten Durchgang noch der siebte, er bleibt ohne Vertauschung. Der achte und der neunte Durchgang entfallen, das spart 3 von 45 Vergleichen.
 - Zur zweiten Aufgabe: Es ändert sich nur der Vergleich, `a[i].telefonnummer > a[i+1].telefonnummer`.
 - Zur dritten Aufgabe: Das Zeichen `>` im Vergleich entscheidet.
-- Unter „Wie es weitergeht“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
@@ -145,3 +144,34 @@ Reiter: aufwand
 
 - 8.4.2
 - 8.4.1
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Namen vergleichen, 8.4.1 und 8.4.2, Seiten 221–226: Der Typ person stammt aus Listing 8.1. Die zehn Einträge und die fünf Vergleiche sind eigene Beispiele, geprüft mit Go 1.26.
+  - 2 Die Funktion, 8.4.2, Seite 226: Listing 8.2: Listing 8.2 stammt unverändert aus dem Kurstext. Die Lektion gibt nichts dazu.
+  - 3 Durchgang für Durchgang, 8.4.2, Seite 226: Listing 8.2: Die Funktion aus Listing 8.2 stammt aus dem Kurstext. Die Zahl der Vergleiche und der Vertauschungen ist mit Go 1.26 gezählt. Die Adressen gehören zum Modell der Lektion.
+  - 4 Aufwand, 8.4.2, Seiten 225–226: Die Formel, die quadratische Laufzeit und die Übungsaufgabe zum Abbruch stehen im Kurstext. Die Tabelle und die zwei weiteren Aufgaben sind ergänzt.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Kapitel 6, Seiten 151–162, Bubble Sort auf einem Array aus Zahlen: Lektion: Sortieren mit Bubble Sort.
+  - Abschnitt 7.3, Seiten 171–172, Zeiger auf ein Array: Lektion: Bubble Sort mit Zeigern.
+  - Abschnitt 4.5.2, Seiten 96–98, Strings vergleichen: Lektion: Logische Operatoren und Vergleiche in Go, Schritt 2.
+  - Ohne Abschnitt im Kurstext, Laufzeit: Wie die Zahl der Schritte mit der Datenmenge wächst, zeigt der Exkurs Wie die Laufzeit mit der Datenmenge wächst.
+- Unter „Wie es weitergeht“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 4.5.2
+- 7.3
+- 8.4.1
+- 8.4.2
