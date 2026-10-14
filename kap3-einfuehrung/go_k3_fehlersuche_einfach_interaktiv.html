@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fehlersuche: drei kurze Go-Programme</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Fehlersuche: drei kurze Go-Programme</h1>
+    <p>Jedes der drei Programme enthält einen Fehler. Du suchst ihn erst selbst, liest dann die Meldung des Compilers und siehst die Korrektur.</p>
+    <p>Kurstext v3.0.6, Abschnitt 3.3 und 3.4, Seiten 25–41.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Argumente trennen</button>
+    <button type="button" class="tab" data-stufe="2">2 Text und Zahl</button>
+    <button type="button" class="tab" data-stufe="3">3 Die Klammer nach if</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Ein Go-Programm läuft erst, wenn der Compiler es übersetzt hat. Findet er einen Fehler, übersetzt er nicht und schreibt eine Meldung. Wer diese Meldung lesen kann, findet den Fehler schnell.</p>
+
+    <h3>So liest du eine Meldung</h3>
+    <div class="konsole">.\main.go:10:28: syntax error: unexpected literal 4 in argument list; possibly missing comma or )</div>
+    <ul>
+      <li><strong><code>.\main.go</code>:</strong> Die Datei, in der der Compiler den Fehler bemerkt hat.</li>
+      <li><strong><code>10</code>:</strong> Die Zeile in dieser Datei.</li>
+      <li><strong><code>28</code>:</strong> Die Spalte, also das wievielte Zeichen in der Zeile.</li>
+      <li><strong>Der Rest:</strong> Was der Compiler an dieser Stelle gefunden hat und was er erwartet hätte. Die Meldungen sind englisch.</li>
+    </ul>
+    <p>Die Meldung nennt die Stelle, an der der Compiler nicht mehr weiterkam. Der Fehler selbst steht dort oder kurz davor.</p>
+
+    <h3>So arbeitest du mit den drei Programmen</h3>
+    <ul>
+      <li><strong>Lesen:</strong> Lies das Programm und überlege, was falsch ist.</li>
+      <li><strong>Übersetzen:</strong> Mit „weiter“ erscheint die Meldung des Compilers.</li>
+      <li><strong>Korrigieren:</strong> Mit dem nächsten „weiter“ erscheint das korrigierte Programm mit seiner Ausgabe.</li>
+      <li><strong>Selbst ausprobieren:</strong> „Diese Fassung kopieren“ legt das Programm in die Zwischenablage. Füge es in deinen Editor ein und übersetze es mit <code>go run</code>.</li>
+    </ul>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.7, Fehler:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html#fehler">Höhere und niedrigere Programmiersprachen</a>, Schritt 4, erklärt, welche Fehler der Compiler findet und welche nicht.</li>
+      <li><strong>Schwierigere Programme:</strong> Die Lektion <a href="go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Programme mit mehreren Fehlern</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Argumente trennen</h3>
+    <p>Das Programm soll die Fläche eines Rechtecks mit den Seiten 3 und 4 ausgeben. Lies es, bevor du „weiter“ wählst: In welcher Zeile steckt der Fehler?</p>
+    <ol class="programm" id="a-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">weiter</button>
+      <button type="button" id="a-zurueck">zurück</button>
+      <button type="button" id="a-vorn">von vorn</button>
+      <button type="button" id="a-kopieren">Diese Fassung kopieren</button>
+    </div>
+    <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
+    <div class="konsole" id="a-ausgabe"></div>
+    <div class="auskunft" id="a-urteil"></div>
+    <ul>
+      <li><strong>Parameter:</strong> Die Funktion <code>rechteck</code> hat zwei Parameter, <code>a</code> und <code>b</code>. Sie stehen in der Deklaration, durch ein Komma getrennt.</li>
+      <li><strong>Argumente:</strong> Beim Aufruf bekommt jeder Parameter einen Wert, sein Argument. Auch die Argumente sind durch ein Komma getrennt.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.4, Seiten 37–41. Das Programm ist ein eigenes Beispiel nach Listing 3.3. Die Meldung ist die von Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Text und Zahl</h3>
+    <p>Das Programm soll „Temperatur in C: 22“ ausgeben. Lies es, bevor du „weiter“ wählst: Was stört den Compiler?</p>
+    <ol class="programm" id="b-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="b-weiter">weiter</button>
+      <button type="button" id="b-zurueck">zurück</button>
+      <button type="button" id="b-vorn">von vorn</button>
+      <button type="button" id="b-kopieren">Diese Fassung kopieren</button>
+    </div>
+    <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
+    <div class="konsole" id="b-ausgabe"></div>
+    <div class="auskunft" id="b-urteil"></div>
+    <ul>
+      <li><strong><code>+</code> mit zwei Strings:</strong> Der Operator hängt den rechten String an den linken. Das heißt Verkettung.</li>
+      <li><strong><code>+</code> mit String und Zahl:</strong> Das gibt es in Go nicht. Beide Operanden müssen den gleichen Typ haben.</li>
+      <li><strong>Mehrere Argumente:</strong> <code>fmt.Println</code> nimmt beliebig viele Argumente von beliebigem Typ, gibt sie nacheinander aus und setzt ein Leerzeichen dazwischen.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.7, Seite 36. Das Programm ist ein eigenes Beispiel nach Listing 3.2. Die Meldung ist die von Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Die Klammer nach if</h3>
+    <p>Das Programm soll „positiv“ ausgeben, wenn <code>x</code> größer als 0 ist. Jedes Zeichen des Programms ist richtig. Lies es, bevor du „weiter“ wählst: Was ist trotzdem falsch?</p>
+    <ol class="programm" id="c-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="c-weiter">weiter</button>
+      <button type="button" id="c-zurueck">zurück</button>
+      <button type="button" id="c-vorn">von vorn</button>
+      <button type="button" id="c-kopieren">Diese Fassung kopieren</button>
+    </div>
+    <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
+    <div class="konsole" id="c-ausgabe"></div>
+    <div class="auskunft" id="c-urteil"></div>
+    <p>Der Grund ist eine Besonderheit von Go. In der Grammatik von Go endet jede Anweisung mit einem Semikolon. Der Programmierer lässt es weg, und der Compiler fügt es am Ende einer Zeile selbst ein, wenn dort eine Anweisung zu Ende sein könnte.</p>
+    <p>Die Zeile <code>if x &gt; 0</code> endet mit dem Literal <code>0</code>. Dort könnte eine Anweisung zu Ende sein, also setzt der Compiler ein Semikolon. Die öffnende Klammer in der nächsten Zeile kommt für ihn zu spät.</p>
+    <div class="hinweis">Eine öffnende Klammer <code>{</code> oder <code>(</code> steht in Go nie am Anfang einer neuen Zeile. Sie steht am Ende der Zeile davor.</div>
+    <p>Die Anweisung <code>if</code> selbst wird in Kapitel 5 behandelt, in der Lektion <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Mehrere Fehler in einem Programm:</strong> Die Lektion <a href="go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Programme mit mehreren Fehlern</a>. Dort gibt es auch Fehler, die der Compiler nicht findet.</li>
+      <li><strong>Quiz:</strong> <a href="go_implizite_semikolons_quiz.html">Implizite Semikolons</a>, <a href="go_parameter_argument_quiz.html">Parameter und Argument</a> und <a href="go_ausgabe_verkettung_string_quiz.html">Ausgabe und String-Verkettung</a>.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.2, Seiten 27–29, mit Expertenwissen 3.5. Im Kurstext steht für diesen Fehler die Meldung „unexpected semicolon or newline before {“. Go 1.26 meldet den Fehler nach <code>if</code> mit dem Wortlaut der Demo.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#argumente
+  const ANKER = ['worum', 'argumente', 'text', 'klammer'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Argumente trennen', 'Schritt 2: Text und Zahl', 'Schritt 3: Die Klammer nach if'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? (v.totText || 'freigegeben') : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + (D.speicher.ziele && D.speicher.ziele[p[1]] !== undefined ? D.speicher.ziele[p[1]] : p[1])).join(', ') + '}' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      if (D.nach) D.nach(z);   // eigenes Bild der Seite zu diesem Zustand
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // ---------- Ein Programm in mehreren Fassungen ----------
+  // liste: Einträge mit zeilen (Programm), mark (Nummern hervorgehobener Zeilen), aus (Meldung oder Ausgabe), fehler, laufzeit, titel, satz.
+  // Der Student geht von Fassung zu Fassung: fehlerhaftes Programm, Meldung des Compilers, Korrektur, nächste Meldung.
+  function fassungen(kurz, liste) {
+    const F = { i: 0, liste: liste };
+    F.zeichne = function () {
+      const x = liste[F.i];
+      el(kurz + '-programm').innerHTML = x.zeilen.map((t, k) => '<li class="' + (x.mark && x.mark.indexOf(k + 1) >= 0 ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = '<p><strong>' + esc((F.i + 1) + ' von ' + liste.length + ': ' + x.titel) + '</strong></p><p>' + esc(x.satz) + '</p>';
+      el(kurz + '-weiter').disabled = F.i === liste.length - 1;
+      el(kurz + '-zurueck').disabled = F.i === 0;
+      melde(false);
+    };
+    el(kurz + '-weiter').addEventListener('click', () => { if (F.i < liste.length - 1) { F.i++; F.zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (F.i > 0) { F.i--; F.zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { F.i = 0; F.zeichne(); });
+    el(kurz + '-kopieren').addEventListener('click', () => { const k = el(kurz + '-kopieren');
+      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Diese Fassung kopieren'; }, 1500); }); });
+    return F;
+  }
+  function standFassungen(F) {
+    const x = F.liste[F.i];
+    return ['Die Demo zeigt ein Programm in ' + F.liste.length + ' Fassungen nacheinander. Zu sehen ist Fassung ' + (F.i + 1) + ': ' + x.titel + '.',
+      x.mark && x.mark.length ? 'Gelb hervorgehoben ist Zeile ' + x.mark.join(' und ') + ': ' + x.mark.map(n => x.zeilen[n - 1].trim()).join(' | ') : 'Keine Zeile ist hervorgehoben.',
+      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt diese Fassung nicht. Die Meldung des Compilers: ') : 'Go übersetzt diese Fassung. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
+      'Die Seite sagt dazu: ' + x.satz,
+      F.i === 0 ? 'Der Student hat das Programm noch nicht übersetzt und soll die Fehler jetzt selbst suchen. Die Fehler und ihre Zeilen werden in dieser Fassung nicht genannt. Auf die Frage nach den Fehlern folgt ein einziger Hinweis, wonach er suchen kann, und die Aufforderung, „weiter“ zu wählen.' : '',
+      F.i === F.liste.length - 1 ? 'Das ist die letzte Fassung.' : 'Die nächste Fassung heißt: ' + F.liste[F.i + 1].titel + '.',
+      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann eine Fassung kopieren und im eigenen Editor übersetzen.'].filter(Boolean);
+  }
+  const zeilenFassung = F => F ? F.liste[F.i].zeilen.map((t, i) => (i + 1) + '  ' + t) : [];
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  const P = s => s.split(NL);
+  const KOPF = 'package main' + NL + NL + 'import "fmt"' + NL + NL;
+
+  // ---------- Schritt 1 ----------
+  const A0 = P(KOPF + 'func rechteck(a int, b int) int {' + NL + '    return a * b' + NL + '}' + NL + NL + 'func main() {' + NL + '    fmt.Println(rechteck(3 4))' + NL + '}');
+  const A1 = A0.map(z => z.replace('3 4', '3, 4'));
+  const FA = fassungen('a', [
+    { zeilen: A0, titel: 'Das Programm lesen', satz: 'Noch ist nichts übersetzt. Suche den Fehler selbst und wähle dann „weiter“.' },
+    { zeilen: A0, mark: [10], fehler: true, aus: '.\\main.go:10:28: syntax error: unexpected literal 4 in argument list; possibly missing comma or )', titel: 'Übersetzen', satz: 'Der Compiler meldet Zeile 10, Spalte 28. Dort steht die 4. Er hat nach der 3 ein Komma oder die schließende Klammer erwartet und sagt das auch: „possibly missing comma or )“.' },
+    { zeilen: A1, mark: [10], aus: '12', titel: 'Korrigieren', satz: 'Zwischen den zwei Argumenten steht jetzt ein Komma. Das Programm läuft und gibt 12 aus.' }
+  ]);
+
+  // ---------- Schritt 2 ----------
+  const B0 = P(KOPF + 'func main() {' + NL + '    var tempC int = 22' + NL + '    fmt.Println("Temperatur in C: " + tempC)' + NL + '}');
+  const B1 = B0.map(z => z.replace('"Temperatur in C: " + tempC', '"Temperatur in C:", tempC'));
+  const FB = fassungen('b', [
+    { zeilen: B0, titel: 'Das Programm lesen', satz: 'Noch ist nichts übersetzt. Suche den Fehler selbst und wähle dann „weiter“.' },
+    { zeilen: B0, mark: [7], fehler: true, aus: '.\\main.go:7:17: invalid operation: "Temperatur in C: " + tempC (mismatched types untyped string and int)', titel: 'Übersetzen', satz: 'Der Compiler meldet eine unzulässige Operation in Zeile 7. In Klammern steht der Grund: „mismatched types“, die Typen passen nicht zusammen. Links vom + steht ein String, rechts eine Variable vom Typ int.' },
+    { zeilen: B1, mark: [7], aus: 'Temperatur in C: 22', titel: 'Korrigieren', satz: 'Text und Zahl sind jetzt zwei Argumente von fmt.Println, getrennt durch ein Komma. Das Leerzeichen zwischen dem Doppelpunkt und der 22 setzt fmt.Println selbst, im String steht es deshalb nicht mehr.' }
+  ]);
+
+  // ---------- Schritt 3 ----------
+  const C0 = P(KOPF + 'func main() {' + NL + '    var x int = 5' + NL + '    if x > 0' + NL + '    {' + NL + '        fmt.Println("positiv")' + NL + '    }' + NL + '}');
+  const C1 = P(KOPF + 'func main() {' + NL + '    var x int = 5' + NL + '    if x > 0 {' + NL + '        fmt.Println("positiv")' + NL + '    }' + NL + '}');
+  const FC = fassungen('c', [
+    { zeilen: C0, titel: 'Das Programm lesen', satz: 'Noch ist nichts übersetzt. Suche den Fehler selbst und wähle dann „weiter“.' },
+    { zeilen: C0, mark: [7], fehler: true, aus: '.\\main.go:7:13: syntax error: unexpected newline, expected { after if clause', titel: 'Übersetzen', satz: 'Der Compiler meldet das Ende von Zeile 7: Dort steht ein Zeilenumbruch, „newline“, und er hat nach der Bedingung von if die Klammer { erwartet.' },
+    { zeilen: C1, mark: [7], aus: 'positiv', titel: 'Korrigieren', satz: 'Die öffnende Klammer steht jetzt am Ende von Zeile 7. Das Programm läuft und gibt „positiv“ aus.' }
+  ]);
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMO = () => stufe === 1 ? FA : stufe === 2 ? FB : stufe === 3 ? FC : null;
+  const standSaetze = () => DEMO() ? standFassungen(DEMO()) : ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  const kurzStand = () => DEMO() ? 'Fassung ' + (DEMO().i + 1) + ' von ' + DEMO().liste.length : '';
+
+  FA.zeichne(); FB.zeichne(); FC.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Fehlersuche: drei kurze Go-Programme',
+    thema: 'Meldungen des Compilers lesen, Syntaxfehler, Argumente und Komma, Verkettung von Strings, implizite Semikolons, öffnende Klammer',
+    bezug: 'Kurstext v3.0.6, Abschnitt 3.3 und 3.4, Seiten 25–41',
+    beschreibung: '../kurslotse/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis',
+    zeilen: () => zeilenFassung(DEMO()),
+    zeilenTitel: 'Das Programm in der Fassung, die gerade zu sehen ist:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Was bedeutet „mismatched types“?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
