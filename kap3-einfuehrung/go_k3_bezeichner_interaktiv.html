@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -96,6 +95,7 @@
     <button type="button" class="tab" data-stufe="2">2 Groß und klein</button>
     <button type="button" class="tab" data-stufe="3">3 Schlüsselwörter</button>
     <button type="button" class="tab" data-stufe="4">4 Vorgegebene Bezeichner</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -123,6 +123,7 @@
       <li><strong>Schritt 2:</strong> Groß- und Kleinbuchstaben und was ein großer Anfangsbuchstabe bewirkt.</li>
       <li><strong>Schritt 3:</strong> Die 25 Schlüsselwörter.</li>
       <li><strong>Schritt 4:</strong> Vorgegebene Bezeichner wie <code>int</code> und <code>true</code> und der leere Bezeichner <code>_</code>.</li>
+      <li><strong>Schritt 5:</strong> Was aus dem Kurstext stammt und wo das Thema im Kurstext noch vorkommt.</li>
     </ul>
   </div>
   <div class="zeile schritte">
@@ -153,7 +154,6 @@
     <div class="konsole" id="r-ausgabe"></div>
     <div class="auskunft" id="r-urteil"></div>
     <div class="hinweis">Bei einem unzulässigen Namen sagt der Compiler nicht „dieser Bezeichner ist ungültig“. Er liest so weit, wie die Zeichen einen Bezeichner ergeben, und meldet das erste Zeichen, das danach nicht passt.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 30–31. Die Regeln und die Beispiele <code>größe</code>, <code>_intern</code> und <code>24stunden</code> stammen aus dem Kurstext. Die übrigen Namen sind eigene Beispiele. Alle Meldungen sind die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -183,7 +183,6 @@ fmt.Println(tempc)</pre>
       <li><strong>Kleiner Anfangsbuchstabe:</strong> Der Bezeichner gilt nur im eigenen Paket. Beispiel: <code>tempC</code> im Programm des Kurstexts.</li>
     </ul>
     <div class="hinweis">Die Konvention des Kurstexts: Ein Bezeichner beginnt genau dann mit einem Großbuchstaben, wenn er exportiert werden soll. Die Programme des Kurses exportieren nichts, ihre Bezeichner beginnen deshalb mit einem Kleinbuchstaben.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seite 31. Das Beispiel mit <code>tempC</code> und <code>tempc</code> nennt der Kurstext, die zwei Meldungen sind die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -208,7 +207,6 @@ fmt.Println(tempc)</pre>
     <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
     <div class="konsole" id="k-ausgabe"></div>
     <div class="auskunft" id="k-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 31–32. Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die vier Zeilen der Auswahl sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -243,17 +241,44 @@ fmt.Println(tempc)</pre>
 
     <h3>Der leere Bezeichner</h3>
     <p>Der Unterstrich allein, <code>_</code>, ist nach den zwei Regeln ein zulässiger Bezeichner. Er heißt <strong>leerer Bezeichner</strong> und hat eine besondere Aufgabe: Er ist ein Platzhalter für einen Wert, den das Programm nicht braucht. Lesen lässt sich aus ihm nichts. Im Kurstext kommt er später an den Stellen vor, an denen er gebraucht wird.</p>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Quiz:</strong> <a href="go_bezeichner_schluesselwoerter_quiz.html">Bezeichner und Schlüsselwörter</a>.</li>
-      <li><strong>Fehler suchen:</strong> Die Lektion <a href="go_k3_fehlersuche_einfach_interaktiv.html">Fehlersuche: drei kurze Go-Programme</a> zeigt, wie eine Meldung des Compilers aufgebaut ist.</li>
-      <li><strong>Datentypen:</strong> Die vorgegebenen Typen behandelt Kapitel 4, zum Beispiel die Lektion <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a> zu den Ganzzahlen.</li>
-    </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 31–32. Die drei Listen und die Warnung stammen aus dem Kurstext. Die vier Zeilen der Auswahl sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Alle vier Schritte gehören zu Abschnitt 3.3.4 des Kurstexts. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen und trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was die Lektion dazugibt</th></tr>
+      <tr><td>1 Zwei Regeln</td><td>3.3.4, Seiten 30–31</td><td>Die zwei Regeln, die Unicode-Buchstaben und die Namen <code>größe</code>, <code>_intern</code> und <code>24stunden</code> stammen aus dem Kurstext.</td><td>Die übrigen elf Namen und alle Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Groß und klein</td><td>3.3.4, Seite 31</td><td>Das Beispiel mit <code>tempC</code> und <code>tempc</code>, der Export und die Konvention zum großen Anfangsbuchstaben stammen aus dem Kurstext.</td><td>Die zwei Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Schlüsselwörter</td><td>3.3.4, Seiten 31–32</td><td>Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext.</td><td>Die grüne Markierung der vier Schlüsselwörter und die vier Zeilen der Auswahl mit ihren Meldungen gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Vorgegebene Bezeichner</td><td>3.3.4, Seiten 31–32</td><td>Die drei Listen der vorgegebenen Bezeichner, die Warnung und der leere Bezeichner stammen aus dem Kurstext.</td><td>Die vier Zeilenpaare der Auswahl mit ihren Ausgaben und Meldungen gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Variablen:</strong> Eine Variable hat einen Namen, einen Typ und einen Platz im Speicher. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–19, Token:</strong> Der Compiler zerlegt ein Programm in Wörter. Lektion: <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html">Höhere und niedrigere Programmiersprachen</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 3.1, Seite 21, Pakete:</strong> Ein Paket fasst Funktionen zusammen, damit andere Programme sie importieren können. Ein anderes Programm erreicht davon nur, was mit einem Großbuchstaben beginnt. Eine Lektion dazu gibt es noch nicht.</li>
+      <li><strong>Abschnitt 4.3.4, Seite 63, Integer-Datentypen:</strong> Die vorgegebenen Typen wie <code>int8</code> und <code>uint8</code>. Lektion: <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+      <li><strong>Abschnitt 5.1, Seiten 113–114, Deklaration:</strong> Wie ein Bezeichner mit einer Variable verbunden wird. Lektion: <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Fehler suchen:</strong> Die Lektion <a href="go_k3_fehlersuche_einfach_interaktiv.html">Fehlersuche: drei kurze Go-Programme</a> zeigt, wie eine Meldung des Compilers aufgebaut ist.</li>
+      <li><strong>Quiz:</strong> <a href="go_bezeichner_schluesselwoerter_quiz.html">Bezeichner und Schlüsselwörter</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -272,8 +297,8 @@ fmt.Println(tempc)</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#regeln
-  const ANKER = ['worum', 'regeln', 'gross', 'schluessel', 'vorgegeben'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Regeln', 'Schritt 2: Groß und klein', 'Schritt 3: Schlüsselwörter', 'Schritt 4: Vorgegebene Bezeichner'];
+  const ANKER = ['worum', 'regeln', 'gross', 'schluessel', 'vorgegeben', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Regeln', 'Schritt 2: Groß und klein', 'Schritt 3: Schlüsselwörter', 'Schritt 4: Vorgegebene Bezeichner', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };

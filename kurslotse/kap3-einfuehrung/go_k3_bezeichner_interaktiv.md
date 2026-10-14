@@ -2,7 +2,7 @@
 
 Die Seite erklärt, welche Namen Go für Variablen, Funktionen und Typen zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner. Sie gehört zu Kapitel 3 des Kurstexts, Abschnitt 3.3.4, Seiten 30–32.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt. Schritt 1 bis 4 erklären Abschnitt 3.3.4, Schritt 5 ordnet sie dem Kurstext zu.
 
 Für alle Schritte gilt:
 
@@ -129,7 +129,6 @@ Reiter: vorgegeben
 - Paar 4: `var _ int = 5` und `fmt.Println(_)`. Die Meldung: `cannot use _ as value or type`.
 - Ein gelber Kasten warnt: einem vorgegebenen Bezeichner keine neue Bedeutung geben.
 - Der Abschnitt „Der leere Bezeichner“ sagt: `_` ist ein Platzhalter für einen Wert, den das Programm nicht braucht. Der Kurstext geht später darauf ein. Ein Beispiel dafür steht auf der Seite nicht.
-- Unter „Wie es weitergeht“ stehen Links auf das Quiz „Bezeichner und Schlüsselwörter“, auf die Lektion „Fehlersuche: drei kurze Go-Programme“ und auf den Zahlenkreis.
 
 ### Handgriffe
 
@@ -139,3 +138,37 @@ Reiter: vorgegeben
 ### Abschnitte des Kurstexts
 
 - 3.3.4
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was die Lektion dazugibt.
+- Schritt 1, Abschnitt 3.3.4, Seiten 30–31: Die zwei Regeln, die Unicode-Buchstaben und die Namen `größe`, `_intern` und `24stunden` stammen aus dem Kurstext. Die übrigen elf Namen und alle Meldungen gibt die Lektion dazu.
+- Schritt 2, Abschnitt 3.3.4, Seite 31: Das Beispiel `tempC` und `tempc`, der Export und die Konvention stammen aus dem Kurstext. Die zwei Meldungen gibt die Lektion dazu.
+- Schritt 3, Abschnitt 3.3.4, Seiten 31–32: Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die grüne Markierung und die vier Zeilen der Auswahl gibt die Lektion dazu.
+- Schritt 4, Abschnitt 3.3.4, Seiten 31–32: Die drei Listen, die Warnung und der leere Bezeichner stammen aus dem Kurstext. Die vier Zeilenpaare gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen fünf Abschnitte:
+  - 2.2, Seiten 8–10, Variablen: Lektion „Variablen, Typen und Speicher“.
+  - 2.7, Seiten 17–19, Token: Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 3.
+  - 3.1, Seite 21, Pakete: Eine Lektion gibt es nicht.
+  - 4.3.4, Seite 63, Integer-Datentypen: Lektion „Zahlenkreis“.
+  - 5.1, Seiten 113–114, Deklaration: Lektion „Variablendeklaration in Go“.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Fehlersuche: drei kurze Go-Programme“ und auf das Quiz „Bezeichner und Schlüsselwörter“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 3.3.4
+- 2.2
+- 2.7
+- 3.1
+- 4.3.4
+- 5.1
