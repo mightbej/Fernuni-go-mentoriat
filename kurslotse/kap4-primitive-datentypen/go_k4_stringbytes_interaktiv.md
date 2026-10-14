@@ -2,7 +2,7 @@
 
 Die Seite zeigt, dass ein String in Go eine Folge von Bytes ist und dass ein Zeichen ein bis vier Bytes belegt. Sie legt einen String als Reihe von Bytes hin und zeigt, was `len(s)`, `s[i]` und `s[low:high]` liefern. Der zweite Schritt zeigt den Typ `[]rune`, mit dem man Zeichen zählt. Die Seite gehört zu Abschnitt 4.6.2 des Kurstexts.
 
-Die Seite hat drei Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -92,16 +92,44 @@ Reiter: zeichen
 - Die Schleife mit `range` wird im Kurstext erst in Abschnitt 6.2 behandelt.
 - „Grüße“ hat 7 Bytes und 5 Zeichen. `utf8.RuneCountInString(s)` zählt die Zeichen, ohne den String umzuwandeln.
 - Ein gelber Kasten sagt: Ein `[]rune` belegt 4 Bytes je Zeichen, und die Umwandlung kopiert den ganzen Text.
-- Der Schritt endet mit Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Ob `[]rune` in der Klausur vorkommt, lässt sich deshalb nicht sagen. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
 ### Handgriffe
 
 - In diesem Schritt lässt sich nichts einstellen. Die zwei Codeblöcke sind fest und lassen sich nicht ausführen.
 - Die Auflösungen der zwei Fragen aufklappen.
+
+### Abschnitte des Kurstexts
+
+- 4.6.2
+- 4.6.2.1
+
+## Schritt 3: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Ein String als Byte-Reihe, 4.6.2, Seiten 102–105: String-Datentyp; 4.6.2.1, Seiten 105–107: Zugriff auf Teile: Der String als Folge von Bytes, die Länge und der Zugriff mit einem Index stammen aus dem Kurstext. Die Zeilen mit []rune gehen über den Kurstext hinaus.
+  - 2 Mit Zeichen arbeiten, kein Abschnitt: Aus Abschnitt 4.6 stammt nichts. Der Typ []rune und die zwei Programme sind eine Ergänzung des Mentors.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Zeichenketten: Variablen können auch Zeichenketten sein, mit eigenen Operationen. Lektion: Variablen, Typen und Speicher.
+  - Abschnitt 3.3.7, Seite 36, Strings: Eine Lektion gibt es nicht, dazu gibt es das Quiz Ausgabe und String-Verkettung.
+  - Abschnitt 4.6.1, Seiten 99–102, String-Literale: Lektion: Strings in Go.
+- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 2“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
 - Den Links zu den zwei Quizseiten und zur Seite „Strings in Go“ folgen. Alle sind eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
+- 2.2
+- 3.3.7
+- 4.6.1
 - 4.6.2
 - 4.6.2.1
