@@ -2,7 +2,7 @@
 
 Die Seite zeigt, was ein Array in Go ist und wie man damit arbeitet: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices. Die Seite gehört zu Kapitel 6 des Kurstexts, Abschnitte 6 bis 6.4.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -180,13 +180,48 @@ Reiter: slices
 - Der Teil „Was dahinter steckt“: Ein Slice benutzt intern ein Array fester Größe. `len` liefert die Länge des Slice, `cap` die Kapazität, also die Größe des internen Arrays. Reicht der Platz nicht, legt Go ein größeres Array an und kopiert die Elemente.
 - Die Zahl 6 für die Kapazität stammt aus einem Lauf mit Go 1.26. Im Kurstext steht keine Zahl. Wie viel Platz Go schafft, legt die Sprache nicht fest.
 - Ein gelber Kasten sagt: Im Kurstext werden Slices nur in Abschnitt 6.4 gezeigt. Alle Beispiele des Kurses verwenden Arrays.
-- Der Schritt endet mit Links zum Quiz zu den Arrays, zur Seite „Speichermodell: Arrays“ und zu zwei Programmierübungen zum Sortieren. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
 - In diesem Schritt lässt sich nichts ausprobieren. Der Codeblock ist fest und lässt sich nicht ausführen.
-- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 6.4
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Array und Literal, 6, Seiten 151–154: Die ersten fünf Deklarationen der Demo stammen aus dem Kurstext. Die Deklaration von kurz steht dort als lotto mit sechs Werten. Die vier Deklarationen danach und die Meldungen des Compilers gibt die Lektion dazu.
+  - 2 Index, 6.1, Seiten 154–155: Das Array mit 11, 22, 33 und 44 und die zwei falschen Zugriffe stammen aus dem Kurstext. Dort greifen die Zugriffe auf lotto zu, mit den Indizes 10 und 8. Im Kurstext endet die Meldung des Compilers mit [0:4]. Go 1.26 nennt für lotto die Länge 6: [0:6].
+  - 3 Durchlaufen, 6.2, Seiten 156–159: Hinweis 6.1: Die ersten vier Fassungen der Demo stammen aus dem Kurstext. Die fünfte Fassung mit v = 99 steht im Kurstext nur als Satz und nicht als Programm.
+  - 4 Zwei Dimensionen, 6.3, Seiten 160–162: Beide Matrizen und beide Programme stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
+  - 5 Slices, 6.4, Seite 162: Das Programm stammt aus dem Kurstext. Die Ausgabe 6 für die Kapazität stammt aus einem Lauf mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, zusammengesetzte Typen: Aus mehreren Werten des gleichen Typs lässt sich ein neuer Typ bauen, zum Beispiel ein Vektor. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Abschnitt 4.6.2.1, Seiten 105–107, Index bei Strings: Auch ein String hat Elemente mit Index, seine Bytes. Lektion: Strings: Bytes und Zeichen.
+  - Abschnitt 5.5.3.2, Seiten 142–146, for-Klausel: Mit ihr läuft der Index durch das Array. Lektion: for-Anweisung mit for-Klausel in Go.
+  - Abschnitt 7.2, Seiten 169–170, Array als Argument: Eine Funktion bekommt eine Kopie des ganzen Arrays. Lektion: Das Kopier-Problem.
+- Unter „Wie es weitergeht“ stehen Links zum Quiz zu den Arrays, zur Seite „Speichermodell: Arrays“ und zu zwei Programmierübungen zum Sortieren. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.6.2.1
+- 5.5.3.2
+- 6.1
+- 6.2
+- 6.3
+- 6.4
+- 7.2
