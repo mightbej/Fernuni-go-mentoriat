@@ -156,7 +156,6 @@ Reiter: programm
 - Der Teil „So startest du das Programm“: einen leeren Ordner anlegen, darin die Datei `bubblesort.go`, das Programm hineinkopieren, im Terminal `go run bubblesort.go` eingeben.
 - Der Teil „Zum Weiterdenken“ stellt drei Aufgaben ohne Lösung: früher aufhören, wenn nichts mehr getauscht wird. Absteigend sortieren. Die Länge auf 20 ändern.
 - Fragt der Student nach einer dieser drei Aufgaben, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm. Hinweise: Für das frühe Aufhören merkt sich das Programm in einer Variable vom Typ `bool`, ob ein Durchgang getauscht hat. Für absteigend dreht sich der Vergleich um. Für die Länge 20 ändert sich nur die Zahl im Typ, weil überall sonst `len(a)` steht.
-- Der Schritt endet mit Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
 
 ### Handgriffe
 
@@ -179,6 +178,8 @@ Reiter: kurstext
 - Die Tabelle nennt sechs Abschnitte des Kurstexts und was das Programm daraus verwendet: 5.3.2 Tupel-Zuweisung, 5.5.1 if-Anweisung, 5.5.3.2 for-Klausel, 6 Arrays, 6.1 Index-Position, 6.2 Durchlaufen eines Arrays.
 - Der Teil „Bubble Sort im Kurstext“: Im Kurstext wird Bubblesort in Abschnitt 8.4.2 behandelt, Seiten 225–226. Dort sortiert die Funktion `bubblesort` ein Array von Verbunden nach dem Namen und bekommt einen Zeiger auf das Array. Die Übung nimmt das Verfahren vorweg, mit ganzen Zahlen und ohne Funktion.
 - Der Teil „Was über den Kurstext hinausgeht“: die Ausgabe mit `%d` und `%v` und das Paket `math/rand`.
+- Der Reiter nennt außerdem: Abschnitt 8.4.2 nennt die Zahl der Vergleiche. Schritt 1 folgt der Begründung des Arrays in Kapitel 6, Seite 151, mit den Variablen z1 bis z6 der Lottoziehung. Alle Programme der Übung sind eigene Beispiele.
+- Unter „Wie es weitergeht“ stehen Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
 
 ### Handgriffe
 
