@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .zeile .etikett { min-width:8.5em;color:var(--muted);font-size:.92rem; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -130,6 +129,7 @@
     <button type="button" class="tab" data-stufe="4">4 Guthaben ohne Vorzeichen</button>
     <button type="button" class="tab" data-stufe="5">5 Überweisen</button>
     <button type="button" class="tab" data-stufe="6">6 Wer darf sperren?</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -226,7 +226,6 @@ return</pre></div>
       <li><strong>Größe:</strong> Ein <code>int</code> und ein Zeiger belegen im Modell je 8 Zellen. Ein <code>block</code> belegt 16 Zellen, eine <code>blockkette</code> 8.</li>
       <li><strong>Reihenfolge:</strong> Die Blöcke liegen im Speicher in der Reihenfolge, in der sie entstanden sind. Die Kette liest man vom Kopf aus rückwärts: 3, 2, 1, 0.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236: Güterzug und Listing 9.1. Die Blockchain kommt im Kurstext nicht vor. Die Typen und die Funktion sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -283,7 +282,6 @@ func fingerabdruckText(text string) uint32 {
     <div class="tabellenrahmen"><table class="text rechnung" id="h-tabelle"></table></div>
 
     <div class="hinweis"><strong>32 Bit sind zu wenig.</strong> Es gibt nur rund 4,3 Milliarden verschiedene Werte vom Typ <code>uint32</code>. Ein Programm, das der Reihe nach „Alice an Bob: 26“, „Alice an Bob: 27“ und so weiter durchrechnet, findet einen zweiten Text mit dem Hashwert von „Alice an Bob: 25“. Auf einem gewöhnlichen Rechner hat ein Go-Programm dafür knapp zehn Minuten gebraucht. Es fand „Alice an Bob: 9403879403“, die letzte Vorlage oben. Beide Texte haben den Hashwert <code>4e3c6e66</code>. Echte Blockchains verwenden deshalb Hashfunktionen mit 256 Bit, Bitcoin zum Beispiel SHA-256. In Go gibt es dafür das Paket <code>crypto/sha256</code>. Es verlangt den Text als Slice, und Slices verwendet der Kurs nicht.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Seiten 66–68, Abschnitt 4.3.7, Seiten 69–78, und Abschnitt 4.3.8, Seiten 78–84. FNV-1a ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo. Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -355,7 +353,7 @@ func ketteGültig(k *blockkette) bool {
     <div id="f-kette"></div>
     <div class="auskunft" id="f-urteil"></div>
     <div class="hinweis">Bei Bitcoin kommt eine Hürde hinzu: Für jeden Block muss ein Rechner eine teure Rechenaufgabe lösen. Wer einen alten Block fälscht, müsste das für ihn und für jeden späteren Block wiederholen, schneller als alle anderen Rechner zusammen. Dieses Verfahren heißt Proof of Work. Die Lektion zeigt es nicht.</div>
-    <p class="quelle">Die Blockchain und die Funktionen sind eigene Beispiele, geprüft mit Go 1.26. Die Adressen sind erfunden.</p>
+    <p>Die Adressen sind erfunden.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -392,7 +390,6 @@ sender.guthaben = sender.guthaben - betrag</pre>
     return false, "Überlauf verhindert"
 }</pre>
     <p>Ist die Summe kleiner als der alte Wert, ist sie übergelaufen. Bei vorzeichenlosen Typen ist diese Prüfung sicher, weil Go modulo 2^64 rechnet. Am Ende von Abschnitt 4.3.8 steht, dass man vor einer gefährdeten Addition prüfen sollte, ob das Ergebnis im Wertebereich liegt.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Hinweis 4.7, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84. Die Werte sind mit Go 1.26 geprüft.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -449,7 +446,6 @@ func kontoSuchen(k *blockkette, name string) *konto {
     </div>
     <div class="auskunft" id="u-urteil"></div>
     <div id="u-zustand"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1, Seiten 163–168, zwei Rückgabewerte, und Abschnitt 7.4, Seiten 173–178, Adresse eines Array-Elements. Die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -558,15 +554,52 @@ Block 2 geändert, Kette gültig: false</div>
       <li><strong>Ein viertes Konto:</strong> Dora soll ein Konto bekommen. Welche Zeilen des Programms musst du ändern?</li>
       <li><strong>Nachrechnen:</strong> Ändere in <code>main</code> den Eintrag in Block 2 und berechne danach die Hashwerte von Block 2 bis zum Kopf neu. Was gibt <code>ketteGültig</code> jetzt aus, und woran merkt ein anderer Rechner die Fälschung trotzdem?</li>
     </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Die Blockchain kommt im Kurstext nicht vor. Die Tabelle nennt zu jedem Schritt, an welchen Abschnitt des Kurstexts er anknüpft.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Der umgedrehte Güterzug</td><td>9.2, Seiten 229–236: Güterzug und Listing 9.1</td><td>Die Kette mit <code>kopf</code> und Zeigern folgt der Liste aus Listing 9.1.</td><td>Die Typen und die Funktion sind eigene Beispiele, geprüft mit Go 1.26.</td></tr>
+      <tr><td>2 Der Fingerabdruck</td><td>4.3.6, Seiten 66–68<br>4.3.7, Seiten 69–78<br>4.3.8, Seiten 78–84</td><td>Die Ganzzahl-Typen, die Operatoren auf Bit-Ebene und der Überlauf stammen aus dem Kurstext.</td><td>FNV-1a ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo. Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26.</td></tr>
+      <tr><td>3 Hash statt Zeiger</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Blockchain und die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.</td></tr>
+      <tr><td>4 Guthaben ohne Vorzeichen</td><td>4.3.6, Seiten 66–68: Hinweis 4.7<br>4.3.8, Seiten 78–84</td><td>Hinweis 4.7 und der Überlauf stammen aus dem Kurstext.</td><td>Die Werte sind mit Go 1.26 geprüft.</td></tr>
+      <tr><td>5 Überweisen</td><td>7.1, Seiten 163–168: zwei Rückgabewerte<br>7.4, Seiten 173–178: Adresse eines Array-Elements</td><td>Zwei Rückgabewerte und die Adresse eines Array-Elements stammen aus dem Kurstext.</td><td>Die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.</td></tr>
+      <tr><td>6 Wer darf sperren?</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Funktionen und das Programm sind eigene Beispiele, geprüft mit Go 1.26.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Liste:</strong> Lektion: <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+      <li><strong>Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren:</strong> <code>^</code> in der Hashfunktion. Lektion: <a href="../kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+      <li><strong>Abschnitt 7.1, Seiten 163–165, zwei Rückgabewerte:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html">Funktionen in Go</a>.</li>
+      <li><strong>Ohne Abschnitt im Kurstext, Tether:</strong> Wie echtes digitales Geld mit den gleichen Bausteinen arbeitet, zeigt der Exkurs <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Die Blockchain:</strong> Sie kommt im Kurstext nicht vor.</li>
+    </ul>
+
     <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Abschluss:</strong> Die Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a> führt von diesem Modell zu Bitcoin, Ethereum und dem Vertrag von USDT.</li>
       <li><strong>Abschnitt 9.3:</strong> Die Lektion <a href="go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
     </ul>
-    <p class="quelle">Die Funktionen und das Programm sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -584,8 +617,8 @@ Block 2 geändert, Kette gültig: false</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#hash
-  const ANKER = ['worum', 'zug', 'hash', 'kette', 'guthaben', 'ueberweisen', 'sperren'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der umgedrehte Güterzug', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Hash statt Zeiger', 'Schritt 4: Guthaben ohne Vorzeichen', 'Schritt 5: Überweisen', 'Schritt 6: Wer darf sperren?'];
+  const ANKER = ['worum', 'zug', 'hash', 'kette', 'guthaben', 'ueberweisen', 'sperren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der umgedrehte Güterzug', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Hash statt Zeiger', 'Schritt 4: Guthaben ohne Vorzeichen', 'Schritt 5: Überweisen', 'Schritt 6: Wer darf sperren?', 'Schritt 7: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -894,6 +927,7 @@ Block 2 geändert, Kette gültig: false</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 7) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) return DZ.standSaetze();
     if (stufe === 2) return standHash();

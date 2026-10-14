@@ -2,7 +2,7 @@
 
 Die Seite ist die Vertiefung zur Lektion „Blockchain: eine verkettete Liste mit Fingerabdruck“, ein Exkurs zu Kapitel 9. Die leichte Fassung zeigt das Gleiche ohne Rechnung Byte für Byte und ohne die Funktionen im Wortlaut. Sie baut eine kleine Blockchain mit dem Stoff des Kurses in Go nach: eine verkettete Liste, in der jeder neue Block vorn ankommt und auf den älteren zeigt, eine Hashfunktion mit 32 Bit, Guthaben im Typ `uint64`, Überweisungen zwischen drei Konten und die Rechte eines Herausgebers. Das ganze Programm liegt als `blockchain.go` im Ordner `go` neben der Seite.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -197,7 +197,6 @@ Reiter: sperren
 - Unter „Was das Programm zeigt“: Die Kette ist technisch in Ordnung, und trotzdem entscheidet eine einzige Stelle, wer zahlen darf. Solche Funktionen stehen im Vertrag des Stablecoins USDT von Tether. Ein Link führt zur Lektion „Vom Eisenbahnzug in den Maschinenraum von Tether“.
 - Unter „Das ganze Programm“ steht ein Link auf `blockchain.go` und die Ausgabe des Programms mit Go 1.26. `main` spielt die Schritte 5 und 6 durch und ändert am Ende den Eintrag in Block 2. Die letzten zwei Zeilen der Ausgabe: „Kette gültig: true“ und „Block 2 geändert, Kette gültig: false“.
 - Unter „Zum Weiterdenken“ stehen drei Aufgaben ohne Lösung: eine Funktion `entsperren` schreiben, ein viertes Konto für Dora, und nach dem Ändern von Block 2 alle Hashwerte bis zum Kopf neu berechnen. Zur zweiten Aufgabe: Die Länge des Arrays in `blockkette` und die Zeilen in `main` ändern sich. Zur dritten: `ketteGültig` gibt dann `true` zurück, aber der Kopf hat einen anderen Hashwert als bei den anderen Rechnern.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion zu Tether und auf „Binäre Suchbäume in Go“.
 
 ### Handgriffe
 
@@ -211,3 +210,42 @@ Reiter: sperren
 
 - 7.4.1
 - 8.2.4
+
+## Schritt 7: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Der umgedrehte Güterzug, 9.2, Seiten 229–236: Güterzug und Listing 9.1: Die Kette mit kopf und Zeigern folgt der Liste aus Listing 9.1. Die Typen und die Funktion sind eigene Beispiele, geprüft mit Go 1.26.
+  - 2 Der Fingerabdruck, 4.3.6, Seiten 66–68; 4.3.7, Seiten 69–78; 4.3.8, Seiten 78–84: Die Ganzzahl-Typen, die Operatoren auf Bit-Ebene und der Überlauf stammen aus dem Kurstext. FNV-1a ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo. Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26.
+  - 3 Hash statt Zeiger, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Blockchain und die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.
+  - 4 Guthaben ohne Vorzeichen, 4.3.6, Seiten 66–68: Hinweis 4.7; 4.3.8, Seiten 78–84: Hinweis 4.7 und der Überlauf stammen aus dem Kurstext. Die Werte sind mit Go 1.26 geprüft.
+  - 5 Überweisen, 7.1, Seiten 163–168: zwei Rückgabewerte; 7.4, Seiten 173–178: Adresse eines Array-Elements: Zwei Rückgabewerte und die Adresse eines Array-Elements stammen aus dem Kurstext. Die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.
+  - 6 Wer darf sperren?, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Funktionen und das Programm sind eigene Beispiele, geprüft mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 9.2, Seiten 229–236, verkettete Liste: Lektion: Verkettete Listen in Go.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Lektion: Überlauf bei Ganzzahlen in Go.
+  - Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren: ^ in der Hashfunktion. Lektion: Rechenwerk.
+  - Abschnitt 7.1, Seiten 163–165, zwei Rückgabewerte: Lektion: Funktionen in Go.
+  - Ohne Abschnitt im Kurstext, Tether: Wie echtes digitales Geld mit den gleichen Bausteinen arbeitet, zeigt der Exkurs Vom Eisenbahnzug in den Maschinenraum von Tether.
+- Unter „Was über den Kurstext hinausgeht“ steht:
+  - Die Blockchain: Sie kommt im Kurstext nicht vor.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektion zu Tether und auf „Binäre Suchbäume in Go“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 6“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 4.3.6
+- 4.3.7
+- 4.3.7.2.1
+- 4.3.8
+- 7.1
+- 7.4
+- 9.2
