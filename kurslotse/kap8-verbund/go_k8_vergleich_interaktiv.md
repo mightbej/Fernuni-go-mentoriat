@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.2.5, Seite 208.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -105,7 +105,6 @@ Reiter: speicher
 - Ein gelber Kasten sagt, wo das Modell vereinfacht: Für Ganzzahlen gilt genau, dass ein gleicher Wert ein gleiches Bitmuster hat. Go vergleicht Feld für Feld nach den Regeln des Feld-Typs. Bei einem Feld vom Typ `string` vergleicht Go die Zeichen der zwei Strings und nicht die Zellen der Variable.
 - Auch bei Gleitkommazahlen stimmt die Gleichung von Wert und Bitmuster nicht immer: +0 und −0 haben verschiedene Bitmuster und sind gleich. Das steht nicht auf der Seite.
 - Die Speichersicht steht nicht im Kurstext. Sie ist eine Ergänzung des Mentors.
-- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Verbünde und Funktionen“, ein Satz zum Sortieren mit dem Vergleich eines Felds nach Abschnitt 8.4 und das Quiz.
 
 ### Handgriffe
 
@@ -118,3 +117,31 @@ Reiter: speicher
 
 - 8.2.5
 - 4.3.5
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Feld für Feld, 8.2.5, Seite 208: Das Programm stammt aus dem Kurstext. Die Demo gibt die Lektion dazu.
+  - 2 Wert oder Variable, 8.2.5, Seite 208: Die Vergleiche 1 und 3 stammen aus dem Kurstext. Die anderen fünf Vergleiche und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.
+  - 3 Im Speicher, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Speichersicht steht nicht im Kurstext. Das Modell zeigt die Lektion „Speichermodell: Verbund“ ausführlich.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 4.5.2, Seiten 96–98, Vergleichsoperatoren: == und != für primitive Typen. Lektion: Logische Operatoren und Vergleiche in Go.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Verbünde und Funktionen“, ein Satz zum Sortieren mit dem Vergleich eines Felds nach Abschnitt 8.4 und das Quiz.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 4.5.2
+- 7.3
+- 7.4
+- 8.2.5
