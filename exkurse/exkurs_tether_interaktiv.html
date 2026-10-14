@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vom Eisenbahnzug in den Maschinenraum von Tether</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--rot:#b91c1c;--rot-bg:#fef2f2; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .card p code, .card li code, .frage code { overflow-wrap:anywhere; }
+    .zahlen { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0; }
+    .zahl { border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff; }
+    .zahl small { display:block;color:var(--muted); }
+    .zahl strong { display:block;font-size:1.35rem;color:var(--blau); }
+    .zahl span { display:block;font-size:.9rem;color:var(--muted); }
+    .uebersetzung { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0; }
+    .uebersetzung > div { min-width:0; }
+    .uebersetzung > div > p { margin:4px 0;font-weight:600;color:var(--muted);font-size:.92rem; }
+    @media (max-width: 760px) { .uebersetzung { grid-template-columns:1fr; } }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Vom Eisenbahnzug in den Maschinenraum von Tether</h1>
+    <p>Am Ende des Kurses kannst du ein Programm lesen, das echtes Geld verwaltet: den digitalen Dollar USDT, zusammen rund 184 Milliarden US-Dollar. Du brauchst dafür nur, was du im Kurs gelernt hast.</p>
+    <p>Exkurs zum Abschluss des Kurses. Er setzt die Lektion zur Blockchain und Abschnitt 9.2 voraus, Seiten 229–236. Zahlen vom 14.10.2026.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Bitcoin, Ethereum und Tether</button>
+    <button type="button" class="tab" data-stufe="2">2 Das Programm von USDT lesen</button>
+    <button type="button" class="tab" data-stufe="3">3 Wer hat die Kontrolle?</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Im Kurstext beginnt Kapitel 9 mit einem Güterzug: Jeder Wagon hängt am nächsten. Daraus wurde eine verkettete Liste. In der Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a> wurde daraus ein Kassenbuch, das auf vielen Rechnern zugleich liegt.</p>
+    <p>Diese Lektion geht den letzten Schritt. Sie zeigt ein echtes Programm, das so ein Kassenbuch führt, und wo darin steht, wer ein Konto sperren darf. Das ist der Maschinenraum im Titel.</p>
+    <h3>Was du dafür aus dem Kurs brauchst</h3>
+    <ul>
+      <li><strong>Typen:</strong> vorzeichenlose Ganzzahlen wie <code>uint64</code> aus Kapitel 4.</li>
+      <li><strong>Bedingungen:</strong> <code>if</code> aus Kapitel 5.</li>
+      <li><strong>Funktionen:</strong> mit Parametern, aus Kapitel 7.</li>
+      <li><strong>Verbünde und Listen:</strong> aus Kapitel 8 und 9.</li>
+    </ul>
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Was Bitcoin, Ethereum und Tether sind.</li>
+      <li><strong>Schritt 2:</strong> Du findest das Programm von USDT im Internet und liest darin die Sperrliste.</li>
+      <li><strong>Schritt 3:</strong> Wer entscheidet, wer zahlen darf? Tether, der Staat und der digitale Euro.</li>
+    </ul>
+    <div class="hinweis">Nichts davon steht im Kurstext. Die Lektion ist ein Exkurs des Mentors. Sie erklärt, wie diese Programme gebaut sind. Sie rät nicht dazu, Kryptowährungen zu kaufen oder zu verkaufen.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Bitcoin, Ethereum und Tether</h3>
+    <h3>Bitcoin</h3>
+    <p>Bitcoin ist digitales Geld ohne Bank, es gibt es seit 2009. Wer wem wie viele Bitcoin überwiesen hat, steht in einem gemeinsamen Kassenbuch, der Blockchain. So wie in der Lektion zur Blockchain: Blöcke mit Einträgen, jeder Block mit dem Fingerabdruck seines Vorgängers.</p>
+    <h3>Ethereum</h3>
+    <p>Ethereum ist eine zweite Blockchain, es gibt sie seit 2015. In ihren Blöcken stehen nicht nur Überweisungen, sondern auch Programme. Jeder Rechner im Netz führt diese Programme aus und kommt zum gleichen Ergebnis. So gelten die Regeln eines Programms überall gleich.</p>
+    <p>Ein solches Programm heißt <strong>Smart Contract</strong>, wörtlich „kluger Vertrag“: Es legt Regeln fest wie ein Vertrag, und es setzt sie selbst durch. Diese Lektion sagt einfach „Programm“.</p>
+    <h3>Tether und USDT</h3>
+    <p>Das Unternehmen Tether gibt einen digitalen Dollar heraus. Er heißt <strong>USDT</strong>. Ein USDT soll immer einen US-Dollar wert sein. Solche digitalen Dollar heißen <strong>Stablecoins</strong>, auf Deutsch etwa „stabile Münzen“.</p>
+    <p>USDT hat keine eigene Blockchain. Es ist ein Programm auf Ethereum und auf anderen Blockchains. Dieses Programm führt das Kassenbuch: Wer hat wie viele USDT? Es ist das Gegenstück zu den Konten und zur Funktion <code>überweisen</code> aus der Lektion zur Blockchain.</p>
+    <div class="zahlen">
+      <div class="zahl"><small>Wert aller USDT</small><strong>184 Mrd. $</strong><span>laut CoinGecko und DefiLlama</span></div>
+      <div class="zahl"><small>Anteil an allen Stablecoins</small><strong>rund 60 %</strong><span>alle Stablecoins zusammen rund 300 Mrd. $</span></div>
+    </div>
+    <p>In der EU ist USDT nach den Regeln für Kryptowerte nicht zugelassen. Große Börsen haben den Handel damit für Kunden in der EU 2025 eingestellt oder eingeschränkt. In Deutschland wacht die BaFin über solche Geschäfte.</p>
+    <p class="quelle">Stand 14.10.2026. Quellen: CoinGecko, DefiLlama, <a href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica" target="_blank" rel="noopener">ESMA zu den Regeln für Kryptowerte (MiCA)</a>, <a href="https://www.gesetze-im-internet.de/kmag/__3.html" target="_blank" rel="noopener">§ 3 Kryptomärkteaufsichtsgesetz</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Das Programm von USDT lesen</h3>
+    <div class="frage"><strong>Erst überlegen, dann ausprobieren</strong>
+      <ol>
+        <li>In der Lektion zur Blockchain ist jedes Konto ein Verbund mit den Feldern <code>name</code> und <code>guthaben</code>. Welches Feld braucht ein Konto zusätzlich, damit das Programm es sperren kann?
+          <details><summary>Auflösung</summary>Ein Feld vom Typ <code>bool</code>, in der Lektion heißt es <code>gesperrt</code>. Das Programm von USDT hat dafür eine Liste mit dem Namen <code>isBlackListed</code>, auf Deutsch „steht auf der schwarzen Liste“.</details></li>
+      </ol>
+    </div>
+    <p>Der Programmtext von USDT ist öffentlich. Er ist in der Sprache <strong>Solidity</strong> geschrieben. Solidity sieht anders aus als Go, aber es kennt die gleichen Begriffe: Variablen mit Typ, Zuweisungen, Bedingungen und Funktionen.</p>
+    <h3>So findest du den Programmtext</h3>
+    <ol>
+      <li>Öffne <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code" target="_blank" rel="noopener">die Seite von USDT bei Etherscan</a>. Etherscan ist eine Webseite, die anzeigt, was in der Blockchain Ethereum steht.</li>
+      <li>Der Link öffnet den Reiter „Contract“. Dort steht der Programmtext. Der grüne Haken mit „Source Code Verified“ bedeutet: Etherscan hat diesen Text selbst übersetzt und das Ergebnis mit dem Programm in der Blockchain verglichen. Es ist also wirklich der Text des Programms, das läuft.</li>
+      <li>Suche auf der Seite mit Strg+F nach <code>isBlackListed</code>. Dort steht die Sperrliste.</li>
+    </ol>
+    <h3>Solidity neben Go</h3>
+    <p>Wähle eine Zeile aus dem Programm von USDT. Rechts steht, wie du das Gleiche in Go schreiben würdest, so wie in der Lektion zur Blockchain.</p>
+    <div class="zeile" id="w-wahl"></div>
+    <div class="uebersetzung">
+      <div><p>Solidity, aus dem Programm von USDT</p><pre class="code-block" id="w-sol"></pre></div>
+      <div><p>Ungefähr das Gleiche in Go</p><pre class="code-block" id="w-go"></pre></div>
+    </div>
+    <div class="auskunft" id="w-urteil"></div>
+    <h3>Was du gefunden hast</h3>
+    <ul>
+      <li><strong>Eine Sperrliste:</strong> Zu jedem Konto merkt sich das Programm, ob es gesperrt ist.</li>
+      <li><strong>Ein Eigentümer:</strong> Nur Tether darf Konten auf die Liste setzen.</li>
+      <li><strong>Eine Prüfung beim Überweisen:</strong> Ein gesperrtes Konto kann nichts mehr überweisen.</li>
+      <li><strong>Vernichten:</strong> Eine weitere Funktion, <code>destroyBlackFunds</code>, setzt das Guthaben eines gesperrten Kontos auf 0.</li>
+    </ul>
+    <p>Das sind die gleichen Regeln wie in der Lektion zur Blockchain, Schritt 4. Nur verwaltet dieses Programm echtes Geld.</p>
+    <p class="quelle">Die Zeilen sind wörtlich aus dem Programmtext auf Etherscan übernommen, abgerufen am 14.10.2026. Der Programmtext trägt keinen Lizenzvermerk.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Wer hat die Kontrolle?</h3>
+    <div class="frage"><strong>Erst überlegen, dann lesen</strong>
+      <ol>
+        <li>Bitcoin wurde gebaut, damit keine Bank eine Zahlung verhindern kann. Wer kann nach Schritt 2 eine Zahlung in USDT verhindern?
+          <details><summary>Auflösung</summary>Tether, als Eigentümer des Programms. Die Blockchain Ethereum gehört niemandem allein, das Programm von USDT schon.</details></li>
+      </ol>
+    </div>
+    <h3>Die Sperrliste wird benutzt</h3>
+    <ul>
+      <li><strong>Eingefrorenes Geld:</strong> Tether gibt an, bis September 2026 USDT im Wert von mehr als 5 Milliarden US-Dollar gesperrt zu haben, in Zusammenarbeit mit Behörden aus 70 Ländern.</li>
+      <li><strong>Gesperrte Konten:</strong> Eine Zählung der Firma BlockSec kam im Juli 2026 auf fast 10.000 gesperrte Konten.</li>
+    </ul>
+    <h3>Der Staat greift über Tether zu</h3>
+    <p>Ein Staat kann das Programm nicht selbst ändern. Er kann aber Tether verpflichten. In den USA gilt dafür seit Juli 2025 ein Gesetz, der GENIUS Act: Wer dort digitale Dollar herausgibt, muss technisch in der Lage sein, sie auf Anordnung eines Gerichts oder einer Behörde zu sperren oder zu vernichten. Die Sperrliste aus Schritt 2 ist genau diese Fähigkeit.</p>
+    <p>Das hat zwei Seiten:</p>
+    <ul>
+      <li><strong>Schutz:</strong> Gestohlenes Geld lässt sich stoppen, bevor es weiterwandert.</li>
+      <li><strong>Macht:</strong> Eine einzige Stelle entscheidet, wessen Geld nicht mehr zählt.</li>
+    </ul>
+    <h3>Und der digitale Euro?</h3>
+    <p>Die Europäische Zentralbank bereitet einen digitalen Euro vor, als digitales Bargeld. Was im Oktober 2026 feststeht:</p>
+    <ul>
+      <li><strong>Noch nicht beschlossen:</strong> Das Gesetz dazu wird noch verhandelt. Frühestens 2029 könnte es den digitalen Euro geben.</li>
+      <li><strong>Keine Blockchain:</strong> Das Kassenbuch sollen die Zentralbanken des Euroraums an zentraler Stelle führen.</li>
+      <li><strong>Kein programmiertes Geld:</strong> Ein digitaler Euro soll nicht vorschreiben, wofür man ihn ausgibt.</li>
+      <li><strong>Sperren:</strong> Sperren würden die Banken, wie bei einem Girokonto heute, zum Beispiel wenn jemand auf einer Liste mit Sanktionen der EU steht.</li>
+    </ul>
+    <div class="frage"><strong>Zum Diskutieren</strong>
+      <ol>
+        <li>Bei USDT entscheidet Tether, wer gesperrt wird. Wer entscheidet beim digitalen Euro?</li>
+        <li>Bei USDT kann jeder die Regeln im Programmtext nachlesen. Beim digitalen Euro stehen sie in einem Gesetz. Was ist dir lieber, und warum?</li>
+      </ol>
+    </div>
+    <h3>Was du jetzt kannst</h3>
+    <p>Du hast im Programm von USDT Typen, Bedingungen und Funktionen wiedererkannt. Wer imperative Programme lesen kann, kann selbst nachprüfen, welche Regeln in digitalem Geld stecken und wer sie ändern darf.</p>
+    <p class="quelle">Quellen: <a href="https://tether.io/news/tether-has-supported-nearly-550-million-in-iran-linked-usdt-freezes-as-u-s-expands-sanctions-campaign/" target="_blank" rel="noopener">Tether, 28.09.2026</a>, <a href="https://blocksec.com/blog/usdt-blacklist-explained-2026" target="_blank" rel="noopener">BlockSec, 26.07.2026</a>, <a href="https://www.govinfo.gov/content/pkg/PLAW-119publ27/html/PLAW-119publ27.htm" target="_blank" rel="noopener">GENIUS Act</a>, <a href="https://www.ecb.europa.eu/euro/digital_euro/faqs/html/ecb.faq_digital_euro.en.html" target="_blank" rel="noopener">EZB: Fragen zum digitalen Euro</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const NL = String.fromCharCode(10);
+
+  // ---------- Reiter ----------
+  const ANKER = ['worum', 'netze', 'lesen', 'kontrolle'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitcoin, Ethereum und Tether', 'Schritt 2: Das Programm von USDT lesen', 'Schritt 3: Wer hat die Kontrolle?'];
+  let stufe = 0;
+  let angemeldet = false;
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Schritt 2: Solidity neben Go ----------
+  // sol: wörtlich aus dem Programmtext von USDT. go: so ähnlich in der Lektion zur Blockchain.
+  const WOERTER = [
+    { kurz: 'Guthaben', sol: 'mapping(address => uint) public balances;', go: 'type konto struct {\n    name     string\n    guthaben uint64\n}', satz: 'Zu jedem Konto merkt sich das Programm ein Guthaben. Ein Konto heißt in Solidity Adresse, address. uint ist eine vorzeichenlose Ganzzahl wie uint64 in Go, nur mit 256 Bit.' },
+    { kurz: 'Sperrliste', sol: 'mapping (address => bool) public isBlackListed;', go: 'type konto struct {\n    name     string\n    guthaben uint64\n    gesperrt bool\n}', satz: 'Zu jedem Konto merkt sich das Programm einen Wahrheitswert: gesperrt oder nicht. In Go ist das ein Feld vom Typ bool im Verbund konto.' },
+    { kurz: 'Konto sperren', sol: 'function addBlackList (address _evilUser) public onlyOwner {\n    isBlackListed[_evilUser] = true;\n    AddedBlackList(_evilUser);\n}', go: 'func sperren(betroffen *konto) {\n    betroffen.gesperrt = true\n}', satz: 'Eine Funktion mit einem Parameter, dem Konto. Im Rumpf steht eine Zuweisung: Für dieses Konto wird true eingetragen, es ist gesperrt. Die letzte Zeile trägt die Sperre in die Blockchain ein, damit jeder sie sehen kann. onlyOwner in der Kopfzeile heißt: Nur der Eigentümer darf die Funktion aufrufen.' },
+    { kurz: 'Absender prüfen', sol: 'require(!isBlackListed[msg.sender]);', go: 'if von.gesperrt {\n    return false\n}', satz: 'Diese Zeile steht am Anfang der Funktion zum Überweisen. require heißt „verlange“: Ist die Bedingung falsch, bricht die Überweisung ab. ! ist das logische NICHT aus Kapitel 4. msg.sender ist das Konto, das gerade überweisen will.' },
+    { kurz: 'Nur der Eigentümer', sol: 'modifier onlyOwner() {\n    require(msg.sender == owner);\n    _;\n}', go: 'if aufrufer != herausgeber {\n    return false\n}', satz: 'Hier steht, was onlyOwner bedeutet: Wer die Funktion aufruft, muss der Eigentümer sein, owner. Sonst bricht der Aufruf ab. Eigentümer des Programms ist Tether.' }
+  ];
+  let w = 0;
+  function zeichneWoerter() {
+    el('w-wahl').innerHTML = WOERTER.map((x, k) => '<button type="button" class="' + (k === w ? 'gewaehlt' : '') + '" data-i="' + k + '">' + esc(x.kurz) + '</button>').join('');
+    el('w-sol').textContent = WOERTER[w].sol;
+    el('w-go').textContent = WOERTER[w].go;
+    el('w-urteil').innerHTML = '<p>' + esc(WOERTER[w].satz) + '</p>';
+    melde(false);
+  }
+  el('w-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { w = Number(k.dataset.i); zeichneWoerter(); } });
+  const standWoerter = () => ['Gewählt ist „' + WOERTER[w].kurz + '“. Wählbar sind fünf Zeilen: ' + WOERTER.map(x => x.kurz).join(', ') + '.',
+    'Links steht der Text aus dem Programm von USDT in Solidity, wörtlich: ' + WOERTER[w].sol.split(NL).join(' '),
+    'Rechts steht ungefähr das Gleiche in Go: ' + WOERTER[w].go.split(NL).join(' '),
+    'Die Seite sagt dazu: ' + WOERTER[w].satz,
+    'Handgriff: eine der fünf Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+
+  // ---------- Kurslotse ----------
+  const standSaetze = () => stufe === 2 ? standWoerter() : ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  const kurzStand = () => stufe === 2 ? WOERTER[w].kurz : '';
+  const programmZeilen = () => stufe === 2 ? ['Solidity aus dem Programm von USDT:'].concat(WOERTER[w].sol.split(NL), ['Ungefähr das Gleiche in Go:'], WOERTER[w].go.split(NL)) : [];
+
+  zeichneWoerter();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Vom Eisenbahnzug in den Maschinenraum von Tether',
+    thema: 'Blockchain, Bitcoin, Ethereum, Smart Contract, Stablecoin, Tether, USDT, Solidity, Sperrliste, digitaler Euro',
+    bezug: 'Exkurs zum Abschluss des Kurses, über den Kurstext hinaus. Setzt Abschnitt 9.2 voraus, Seiten 229–236',
+    beschreibung: '../kurslotse/exkurse/exkurs_tether_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol, .card > .frage, .hinweis, .zahlen',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programmtext im sichtbaren Schritt:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Was bedeutet onlyOwner?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
