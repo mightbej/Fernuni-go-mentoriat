@@ -2,7 +2,7 @@
 
 Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge`. Sie gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.5, Seiten 185–193.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -163,7 +163,6 @@ Reiter: terminierung
 - Die Werte der Abstiegsfunktion für den Anfang 9: 11, 10, 7, 6, 5, 4, 2, 1.
 - Im Kurstext wird der Abstieg für vier Fälle nachgerechnet. Die Seite nennt die vier Fälle und rechnet sie nicht vor.
 - Unter „Was geschieht, wenn eine Rekursion nicht endet“ steht die Funktion `ohneEnde` ohne Zweig für das Ende. Go bricht ab mit `runtime: goroutine stack exceeds 1000000000-byte limit` und `fatal error: stack overflow`. Das steht nicht im Kurstext.
-- Unter „Wie es weitergeht“ stehen vier Punkte: die Programmierübung „Bubble Sort rekursiv“, der Exkurs „Laufzeit und Datenmenge“, der Ausblick auf Kapitel 9 und das Quiz zu Kapitel 7.
 
 ### Handgriffe
 
@@ -174,3 +173,41 @@ Reiter: terminierung
 ### Abschnitte des Kurstexts
 
 - 7.5.5
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Iterativ und rekursiv, 7.5, Seite 185; 7.5.1, Seiten 185–187: Die zwei Funktionen zur Fakultät stammen aus dem Kurstext. Die Funktion main ist eine Ergänzung. Mit Go 1.26 nachgerechnet: 20! passt noch in int64, 21! nicht mehr.
+  - 2 Endrekursion, 7.5.2, Seiten 187–188: Die zwei Funktionen stammen aus dem Kurstext. Die Funktion main ist eine Ergänzung.
+  - 3 Fibonacci-Zahlen, 7.5.3, Seiten 188–189: Die zwei Funktionen stammen aus dem Kurstext. Die Zahlen der Aufrufe und der Baum stehen nicht im Kurstext, sie sind mit Go 1.26 gezählt.
+  - 4 Türme von Hanoi, 7.5.4, Seiten 189–191: Die Funktionen und die Ausgabe für vier Scheiben stammen aus dem Kurstext. Die Zahl der Züge, 2^n − 1, steht nicht im Kurstext.
+  - 5 Terminierung, 7.5.5, Seiten 191–193: Die Funktion zahlenfolge, die Abstiegsfunktion und die Folgen für 9 und 22 stammen aus dem Kurstext. Die Funktion ohneEnde und die Meldung von Go sind eine Ergänzung, geprüft mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.6, Seiten 15–17, Rekursion: Ein Unterprogramm ruft sich selbst auf, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 4.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Warum 21! nicht mehr in int64 passt. Lektion: Überlauf bei Ganzzahlen in Go.
+  - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: Listing 8.1 sucht rekursiv. Lektion: Binäre Suche in einem Verbund-Array.
+  - Abschnitt 9.3, Seite 237, binäre Bäume: Suchen und Einfügen im Baum sind rekursiv. Lektion: Binäre Suchbäume in Go.
+- Unter „Wie es weitergeht“ stehen vier Punkte: die Programmierübung „Bubble Sort rekursiv“, der Exkurs „Laufzeit und Datenmenge“, der Ausblick auf Kapitel 9 und das Quiz zu Kapitel 7.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.6
+- 4.3.8
+- 7.5
+- 7.5.1
+- 7.5.2
+- 7.5.3
+- 7.5.4
+- 7.5.5
+- 8.4.1
+- 9.3

@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -87,6 +86,7 @@
     <button type="button" class="tab" data-stufe="3">3 Fibonacci-Zahlen</button>
     <button type="button" class="tab" data-stufe="4">4 Türme von Hanoi</button>
     <button type="button" class="tab" data-stufe="5">5 Terminierung</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <!-- ===================== Worum es geht ===================== -->
@@ -169,7 +169,6 @@
       <li><strong>Speicher:</strong> Die rekursive Fassung hat keine Variablen <code>i</code> und <code>fac</code>. Sie spart trotzdem keinen Speicher, denn für jeden wartenden Aufruf bleibt ein Wert von <code>n</code> gespeichert.</li>
       <li><strong>Tabelle:</strong> Eine Funktion für die Fakultät nimmt man in der Praxis aus einer Tabelle. Die Werte wachsen so schnell, dass nur wenige in einen Ganzzahltyp passen.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5 und 7.5.1, Seiten 185–187. Die zwei Funktionen stammen aus dem Kurstext. Die Funktion <code>main</code> der Demo ist eine Ergänzung. Mit Go 1.26 nachgerechnet: 20! ist 2432902008176640000 und passt noch in <code>int64</code>, 21! passt nicht mehr.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -212,7 +211,6 @@
       <li><strong><code>iter</code> rechnet auf dem Hinweg:</strong> Bei <code>k</code> gleich 1 steht das ganze Ergebnis in <code>e</code>. Auf dem Rückweg reicht jeder Aufruf den Wert 24 nur weiter.</li>
     </ul>
     <p>Das <code>else</code> nach dem <code>return</code> ist in <code>iter</code> überflüssig, weil die Funktion im if-Zweig schon endet. Im Kurstext steht es der Klarheit wegen.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.2, Seiten 187–188. Die zwei Funktionen stammen aus dem Kurstext. Die Funktion <code>main</code> der Demo ist eine Ergänzung.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -267,7 +265,6 @@
     <div class="tabellenrahmen"><table class="text" id="fi-tabelle"></table></div>
     <div class="baum" id="fi-baum"></div>
     <p>Die Funktion rechnet viel, und sie rechnet das Gleiche mehrmals: Für das gleiche Argument läuft sie immer wieder, obwohl der Wert schon einmal berechnet war. Die rekursive Fassung ist elegant geschrieben und nicht effizient.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.3, Seiten 188–189. Die zwei Funktionen stammen aus dem Kurstext. Die Zahlen der Aufrufe und der Baum stehen dort nicht, sie sind mit Go 1.26 gezählt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -335,7 +332,6 @@
     }
 }</pre>
     <p>Keine dieser Funktionen ruft sich selbst auf. <code>moveAB</code> ruft aber <code>moveAC</code> auf, und <code>moveAC</code> ruft wieder <code>moveAB</code> auf. Ein solcher Selbstaufruf über einen Umweg heißt <strong>indirekte Rekursion</strong>. Sie ist schwerer zu erkennen als die direkte, weil sich viele Funktionen im Kreis aufrufen können.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.4, Seiten 189–191. Die Funktionen stammen aus dem Kurstext, dort steht auch die Ausgabe für vier Scheiben. Die Zahl der Züge, 2<sup>n</sup> − 1, steht dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -394,6 +390,36 @@
 }</pre>
     <div class="konsole">runtime: goroutine stack exceeds 1000000000-byte limit
 fatal error: stack overflow</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Iterativ und rekursiv</td><td>7.5, Seite 185<br>7.5.1, Seiten 185–187</td><td>Die zwei Funktionen zur Fakultät stammen aus dem Kurstext.</td><td>Die Funktion <code>main</code> ist eine Ergänzung. Mit Go 1.26 nachgerechnet: 20! passt noch in <code>int64</code>, 21! nicht mehr.</td></tr>
+      <tr><td>2 Endrekursion</td><td>7.5.2, Seiten 187–188</td><td>Die zwei Funktionen stammen aus dem Kurstext.</td><td>Die Funktion <code>main</code> ist eine Ergänzung.</td></tr>
+      <tr><td>3 Fibonacci-Zahlen</td><td>7.5.3, Seiten 188–189</td><td>Die zwei Funktionen stammen aus dem Kurstext.</td><td>Die Zahlen der Aufrufe und der Baum stehen nicht im Kurstext, sie sind mit Go 1.26 gezählt.</td></tr>
+      <tr><td>4 Türme von Hanoi</td><td>7.5.4, Seiten 189–191</td><td>Die Funktionen und die Ausgabe für vier Scheiben stammen aus dem Kurstext.</td><td>Die Zahl der Züge, 2<sup>n</sup> − 1, steht nicht im Kurstext.</td></tr>
+      <tr><td>5 Terminierung</td><td>7.5.5, Seiten 191–193</td><td>Die Funktion <code>zahlenfolge</code>, die Abstiegsfunktion und die Folgen für 9 und 22 stammen aus dem Kurstext.</td><td>Die Funktion <code>ohneEnde</code> und die Meldung von Go sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Rekursion:</strong> Ein Unterprogramm ruft sich selbst auf, ohne Go. Lektion: <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#rekursion">Unterprogramme und Funktionen</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Warum 21! nicht mehr in <code>int64</code> passt. Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+      <li><strong>Abschnitt 8.4.1, Seiten 221–225, binäre Suche:</strong> Listing 8.1 sucht rekursiv. Lektion: <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a>.</li>
+      <li><strong>Abschnitt 9.3, Seite 237, binäre Bäume:</strong> Suchen und Einfügen im Baum sind rekursiv. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -402,10 +428,9 @@ fatal error: stack overflow</div>
       <li><strong>Kapitel 9:</strong> Rekursive Funktionen bearbeiten dort rekursive Datenstrukturen, zum Beispiel binäre Bäume.</li>
       <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.5.5, Seiten 191–193. Die Funktion <code>zahlenfolge</code> und die Abstiegsfunktion stammen aus dem Kurstext, dort stehen die Folgen für 9 und 22. Die Funktion <code>ohneEnde</code> und die Meldung von Go sind eine Ergänzung, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -424,8 +449,8 @@ fatal error: stack overflow</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#fakultaet
-  const ANKER = ['worum', 'fakultaet', 'endrekursion', 'fibonacci', 'hanoi', 'terminierung'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Iterativ und rekursiv', 'Schritt 2: Endrekursion', 'Schritt 3: Fibonacci-Zahlen', 'Schritt 4: Türme von Hanoi', 'Schritt 5: Terminierung'];
+  const ANKER = ['worum', 'fakultaet', 'endrekursion', 'fibonacci', 'hanoi', 'terminierung', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Iterativ und rekursiv', 'Schritt 2: Endrekursion', 'Schritt 3: Fibonacci-Zahlen', 'Schritt 4: Türme von Hanoi', 'Schritt 5: Terminierung', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -639,6 +664,7 @@ fatal error: stack overflow</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1 || stufe === 2) return standAblauf(stufe === 1 ? DF : DE).concat('Jeder Aufruf hat einen eigenen Rahmen. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste Aufruf steht zuletzt.');
     if (stufe === 3) {
@@ -684,7 +710,7 @@ fatal error: stack overflow</div>
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
