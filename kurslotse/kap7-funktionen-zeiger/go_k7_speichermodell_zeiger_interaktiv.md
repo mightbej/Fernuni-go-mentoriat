@@ -2,7 +2,7 @@
 
 Die Seite zeigt, was ein Zeiger im Hauptspeicher ist: eine Variable, in deren Zellen die Adresse einer anderen Variable steht. Sie zeigt die drei Schreibweisen `&b`, `*p` und `new(int32)` und führt ein Programm Zeile für Zeile aus. Die Seite gehört zu Kapitel 7 des Kurstexts, zu Abschnitt 7.4 und zu Abschnitt 7.4.5. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -137,4 +137,33 @@ Reiter: aufgaben
 
 - 7.4
 - 7.4.3
+- 7.4.5
+
+## Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Drei Schreibweisen, 7.4, Seiten 173–174; 7.4.5, Seiten 183–184: new: Die Operatoren & und * und die Funktion new stammen aus dem Kurstext. Was der Rechner dabei mit Tabelle und Zellen tut, steht nicht im Kurstext.
+  - 2 Ein Programm im Speicher, 7.4, Seiten 173–178: Zeiger, Adresse und Dereferenzieren stammen aus dem Kurstext. Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.
+  - Aufgaben, kein eigener Abschnitt: Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2. Die Aufgaben gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherplatz: Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 4.3.4, Seite 63, Größe der Typen: Lektion: Speichermodell.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu „Aufgaben““ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.4
+- 7.3
+- 7.4
 - 7.4.5
