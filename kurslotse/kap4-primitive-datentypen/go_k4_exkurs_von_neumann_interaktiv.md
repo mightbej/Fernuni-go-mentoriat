@@ -2,7 +2,7 @@
 
 Die Seite gibt die Orientierung für Kapitel 4 des Kurstexts. Sie zeigt einen Rechner aus vier Werken: Steuerwerk, Rechenwerk, Speicherwerk, Ein- und Ausgabe. Sie ordnet die zwei Teile eines Datentyps je einem Werk zu: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk.
 
-Die Seite hat drei Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -93,7 +93,6 @@ Reiter: werke
 - Auskunft zum Speicherwerk: Es hält die Werte der Variablen und das Programm als Bitmuster. Der Typ einer Variable legt fest, wie viele Bits sie braucht und welche Werte hineinpassen. Das steht für die Ganzzahlen in Abschnitt 4.3.4. Ein Link führt zur Seite „Speichermodell“.
 - Auskunft zu „Ein- und Ausgabe“: Über die Eingabe kommen Daten in den Rechner, über die Ausgabe verlassen sie ihn. Die Funktion `fmt.Printf` gibt Werte aus, das steht in Abschnitt 4.2.
 - Unter dem grünen Kasten steht ein Hinweis: Auch das Programm liegt als Bitmuster im Speicherwerk. Einem Bitmuster sieht man nicht an, ob es eine Zahl, ein Zeichen oder eine Anweisung bedeutet.
-- Am Ende steht ein Link zur Seite „Speichermodell“.
 
 ### Handgriffe
 
@@ -107,3 +106,33 @@ Reiter: werke
 - 4.2
 - 4.3.4
 - 4.3.7.2
+
+## Schritt 3: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.2, Seiten 8–10: Speichern; 2.3, Seiten 10–11: Rechnen; 4.1, Seite 45: Datentyp: Speichern und Rechnen stammen aus Kapitel 2. Dass ein Datentyp aus Wertebereich und Operationen besteht, steht in Abschnitt 4.1. Die Zuordnung zu den Werken des Rechners gibt die Lektion dazu.
+  - 1 Eine Anweisung läuft durch den Rechner, 2.3, Seiten 10–11: Ausdruck und Zuweisung; 2.7, Seiten 17–19: Maschinensprache: Dass der Rechner Bitmuster in andere Bitmuster umwandelt, steht in Abschnitt 2.3. Der Rechner nach von Neumann mit vier Werken und der Ablauf von a = a + 4 stehen nicht im Kurstext.
+  - 2 Die vier Werke, 4.3.4, Seite 63: Ganzzahl-Typen; 4.1, Seiten 45–52: Operatoren; 4.2, Seiten 53–58: fmt.Printf; Kapitel 5: Anweisungen: Zu jedem Werk nennt die Lektion den Abschnitt, in dem sein Teil der Arbeit in Go vorkommt. Die vier Werke selbst stehen nicht im Kurstext.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speichern: Eine Variable belegt Speicherplatz aus Speicherelementen mit 0 oder 1. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 2.7, Seiten 17–19, Maschinensprache: Lektion: Höhere und niedrigere Programmiersprachen.
+- Unter „Wie es weitergeht“ steht ein Link zur Seite „Speichermodell“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 2“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 2.3
+- 2.7
+- 4.1
+- 4.2
+- 4.3.4

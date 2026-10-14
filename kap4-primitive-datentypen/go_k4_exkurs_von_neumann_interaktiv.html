@@ -15,7 +15,6 @@
     button:disabled { opacity:.5;cursor:default; }
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     .tabellenrahmen { overflow-x:auto; }
     table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
     th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
@@ -64,6 +63,7 @@
     <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
     <button type="button" class="tab" data-stufe="1">1 Eine Anweisung läuft durch den Rechner</button>
     <button type="button" class="tab" data-stufe="2">2 Die vier Werke</button>
+    <button type="button" class="tab" data-stufe="3">3 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -87,7 +87,6 @@
     <p>Diese Aufteilung in Speichern und Rechnen geht auf John von Neumann zurück. Er hat sie 1945 beschrieben, und fast jeder heutige Rechner ist so gebaut.</p>
     <p>Die Seite geht in zwei Schritten vor. Schritt 1 schickt die Anweisung <code>a = a + 4</code> durch den Rechner. Schritt 2 zeigt die vier Werke einzeln und nennt zu jedem den Abschnitt des Kurstexts. Jeder Schritt hat oben einen Reiter.</p>
     <p>Danach folgt Kapitel 4 dieser Aufteilung: erst die Typen und wie ihre Werte gespeichert sind, dann die Operationen auf diesen Werten.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, Abschnitt 2.3, Seiten 10–11, und Abschnitt 4.1, Seite 45.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -142,10 +141,38 @@
     </div>
     <div class="auskunft" id="auskunft"></div>
     <div class="hinweis">Auch das Programm liegt als Bitmuster im Speicherwerk. Einem Bitmuster sieht man nicht an, ob es eine Zahl, ein Zeichen oder eine Anweisung bedeutet.</div>
-    <p>So geht es weiter: Die Seite <a href="go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wie das Speicherwerk die Werte der einzelnen Typen ablegt. Danach kommen die Operationen aus Abschnitt 4.1.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Bezug zum Kurstext</h2>
+    <p>Der Exkurs ist das Bild zu zwei Abschnitten aus Kapitel 2 und verbindet sie mit Kapitel 4. Die Tabelle nennt zu jedem Schritt die Abschnitte und Seiten zum Nachlesen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.2, Seiten 8–10: Speichern<br>2.3, Seiten 10–11: Rechnen<br>4.1, Seite 45: Datentyp</td><td>Speichern und Rechnen stammen aus Kapitel 2. Dass ein Datentyp aus Wertebereich und Operationen besteht, steht in Abschnitt 4.1.</td><td>Die Zuordnung zu den Werken des Rechners gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Eine Anweisung läuft durch den Rechner</td><td>2.3, Seiten 10–11: Ausdruck und Zuweisung<br>2.7, Seiten 17–19: Maschinensprache</td><td>Dass der Rechner Bitmuster in andere Bitmuster umwandelt, steht in Abschnitt 2.3.</td><td>Der Rechner nach von Neumann mit vier Werken und der Ablauf von <code>a = a + 4</code> stehen nicht im Kurstext.</td></tr>
+      <tr><td>2 Die vier Werke</td><td>4.3.4, Seite 63: Ganzzahl-Typen<br>4.1, Seiten 45–52: Operatoren<br>4.2, Seiten 53–58: <code>fmt.Printf</code><br>Kapitel 5: Anweisungen</td><td>Zu jedem Werk nennt die Lektion den Abschnitt, in dem sein Teil der Arbeit in Go vorkommt.</td><td>Die vier Werke selbst stehen nicht im Kurstext.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speichern:</strong> Eine Variable belegt Speicherplatz aus Speicherelementen mit 0 oder 1. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–19, Maschinensprache:</strong> Lektion: <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html">Höhere und niedrigere Programmiersprachen</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Die Seite <a href="go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wie das Speicherwerk die Werte der einzelnen Typen ablegt. Danach kommen die Operationen aus Abschnitt 4.1.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -162,7 +189,7 @@
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#ablauf
-  var ANKER = ["worum", "ablauf", "werke"];
+  var ANKER = ["worum", "ablauf", "werke", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -268,12 +295,13 @@
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Eine Anweisung läuft durch den Rechner", "Schritt 2: Die vier Werke"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Eine Anweisung läuft durch den Rechner", "Schritt 2: Die vier Werke", "Schritt 3: Bezug zum Kurstext"];
   var NAMEN = { steuer: "Steuerwerk", rechen: "Rechenwerk", speicher: "Speicherwerk", ea: "Ein- und Ausgabe" };
   var PROGRAMM = ["a = a + 4", "fmt.Println(a)"];
   var LETZTER = ABLAUF.length - 1;
 
   function standSaetze() {
+    if (stufe === 3) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 2) return [gewaehlt ? "Gewählt und gelb unterlegt ist das Werk: " + NAMEN[gewaehlt] + "." : "Noch ist kein Werk gewählt."];
     var s = ABLAUF[schritt];
