@@ -51,6 +51,7 @@
     /* Was das Programm auf den Bildschirm schreibt */
     .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
     .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -69,6 +70,7 @@
     <button type="button" class="tab" data-stufe="3">3 Die Laufvariable</button>
     <button type="button" class="tab" data-stufe="4">4 Eine Schleife, vier Schreibweisen</button>
     <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -102,7 +104,6 @@ for i &lt;= 10 {
       <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
     </ul>
     <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 142–143. Die zwei Programme mit <code>fmt.Println(i * i)</code> sind gekürzte Fassungen der Programme im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -148,7 +149,6 @@ for i &lt;= 10 {
       <li><strong><code>[1]</code>:</strong> Gemeint ist das erste Argument hinter dem Text, also <code>i</code>. Deshalb kann <code>i</code> zweimal ausgegeben werden, obwohl es nur einmal in der Liste steht.</li>
     </ul>
     <p><code>%3v</code> gibt danach das nächste Argument aus, also <code>i*i</code>, mit mindestens drei Zeichen Platz.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–144. Die drei Meldungen des Compilers und die Erklärung der Formatangabe stehen nicht in diesem Abschnitt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -191,7 +191,6 @@ for i &lt;= 10 {
     <h3>Das Ende genau betrachtet</h3>
     <p>Nach dem letzten Schleifendurchlauf läuft die Post-Anweisung noch einmal. In der Fassung des Kurstexts hat <code>i</code> im zehnten Schleifendurchlauf den Wert 10. Danach erhöht <code>i++</code> den Wert auf 11. Erst die nächste Prüfung <code>11 &lt;= 10</code> ergibt <code>false</code> und beendet die Schleife.</p>
     <p>Die Schleifenbedingung wird also elfmal geprüft, der Schleifenrumpf läuft zehnmal.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–144.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -237,7 +236,6 @@ for i &lt;= 10 {
       <li><strong>Ausgabe:</strong> 17 Zeilen. Die erste ist <code>i, j: 0 100</code>, die letzte <code>i, j: 16 20</code>. Danach hat <code>i</code> den Wert 17 und <code>j</code> den Wert 15, und <code>17 &lt; 15</code> ergibt <code>false</code>.</li>
     </ul>
     <p>Solche Schleifen kommen bei höherdimensionalen Arrays vor, die in Abschnitt 6.3 behandelt werden.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 143–145, mit dem Expertenwissen 5.15. Die drei Programme der Demo und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -263,7 +261,6 @@ for i &lt;= 10 {
     <p>Eine Schleife, deren Bedingung immer <code>true</code> ist, wirkt zunächst sinnlos. Gebraucht wird sie in Programmen, die auf Dauer laufen und immer wieder Daten einlesen oder ausgeben. Eine solche Schleife heißt auf Englisch event loop.</p>
     <p>Weil die Bedingung nie <code>false</code> ergibt, muss die Schleife auf anderem Weg enden: mit <code>break</code> oder mit dem Ende des ganzen Programms durch <code>os.Exit(0)</code>. Zu <code>break</code> gibt es die Seite <a href="go_k5_break_interaktiv.html">break-Anweisung</a>.</p>
     <p>Die dritte Art der for-Anweisung, die mit <code>range</code>, wird in Abschnitt 6.2 bei den Arrays behandelt.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.2, Seiten 145–146, mit dem Expertenwissen 5.16. Die vier Programme sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -298,11 +295,43 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     <p>Beim Herunterzählen ändern sich der Startwert, der Vergleich und die Post-Anweisung. In der zweiten Fassung ist der Vergleich stehen geblieben: <code>10 &lt;= 1</code> ergibt schon bei der ersten Prüfung <code>false</code>, und die Schleife läuft nie.</p>
     <p>Die Prüffrage ist die gleiche wie bei der for-Anweisung mit Bedingung: Ergibt die Schleifenbedingung am Anfang <code>true</code>, und sorgt die Post-Anweisung dafür, dass sie irgendwann <code>false</code> ergibt?</p>
 
-    <p>Zum Abschluss: Das <a href="151_go_k5_for_klausel_quiz.html">Quiz zur for-Anweisung mit for-Klausel</a> fragt den Stoff von Abschnitt 5.5.3.2 ab.</p>
-    <p class="quelle">Faustregeln zur for-Anweisung mit Bedingung stehen auf der Seite <a href="go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</p>
+    <p>Faustregeln zur for-Anweisung mit Bedingung stehen auf der Seite <a href="go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Die for-Klausel</td><td>5.5.3.2, Seiten 143–144</td><td>Init-Anweisung, Schleifenbedingung und Post-Anweisung stammen aus dem Kurstext.</td><td>Die drei Meldungen des Compilers und die Erklärung der Formatangabe gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Der Ablauf</td><td>5.5.3.2, Seiten 143–144: Listing 5.6</td><td>Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext.</td><td>Die Fassung mit <code>i &lt;= 3</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Die Laufvariable</td><td>5.5.3.2, Seiten 143–145: Expertenwissen 5.15</td><td>Dass die Laufvariable nur in der for-Anweisung gilt und einen kurzen Namen wie <code>i</code> bekommt, steht im Kurstext. Das Expertenwissen 5.15 zeigt Init- und Post-Anweisung mit mehreren Variablen.</td><td>Die drei Programme der Demo und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Eine Schleife, vier Schreibweisen</td><td>5.5.3.2, Seiten 145–146: Expertenwissen 5.16</td><td>Dass Teile der for-Klausel fehlen dürfen, steht im Expertenwissen 5.16.</td><td>Die vier Programme sind eigene Beispiele.</td></tr>
+      <tr><td>5 Aus der Praxis</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Faustregeln stammen aus der Praxis des Mentors.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen:</strong> Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 5.4, Seite 129, einfache Anweisungen:</strong> Was als Init-Anweisung und Post-Anweisung stehen darf. Lektion: <a href="go_k5_zuweisungen_interaktiv.html#einfach">Zuweisungen in Go</a>, Schritt 5.</li>
+      <li><strong>Abschnitt 5.5.3.1, Seiten 138–142, for mit Bedingung:</strong> Lektion: <a href="go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>.</li>
+      <li><strong>Abschnitt 6.2, Seiten 156–159, Arrays durchlaufen:</strong> Die for-Klausel zählt den Index eines Arrays hoch. Lektion: <a href="../kap6-arrays/go_k6_arrays_interaktiv.html#durchlaufen">Arrays in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Das <a href="151_go_k5_for_klausel_quiz.html">Quiz zur for-Anweisung mit for-Klausel</a> fragt den Stoff von Abschnitt 5.5.3.2 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -332,7 +361,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#ablauf
-  var ANKER = ["worum", "klausel", "ablauf", "laufvariable", "varianten", "praxis"];
+  var ANKER = ["worum", "klausel", "ablauf", "laufvariable", "varianten", "praxis", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -494,9 +523,10 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Die for-Klausel", "Schritt 2: Der Ablauf", "Schritt 3: Die Laufvariable", "Schritt 4: Eine Schleife, vier Schreibweisen", "Schritt 5: Aus der Praxis"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Die for-Klausel", "Schritt 2: Der Ablauf", "Schritt 3: Die Laufvariable", "Schritt 4: Eine Schleife, vier Schreibweisen", "Schritt 5: Aus der Praxis", "Schritt 6: Bezug zum Kurstext"];
 
   function standSaetze() {
+    if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
     if (stufe === 1) {
@@ -558,7 +588,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     reiter: function () { return ANKER[stufe]; },
     schritt: function () { return SCHRITTE[stufe]; },
     sichtbar: function () { return $("stufe-" + stufe); },
-    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis, table.text",
     zeilen: zeilen,
     zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
     stand: standSaetze,

@@ -2,7 +2,7 @@
 
 Die Seite erklärt die Schleife, die zählt: `for`, eine for-Klausel aus Init-Anweisung, Schleifenbedingung und Post-Anweisung, und einen Schleifenrumpf. Sie führt das Programm zu den Quadratzahlen aus Listing 5.6 Anweisung für Anweisung aus. Sie gehört zu Abschnitt 5.5.3.2 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -171,7 +171,6 @@ Reiter: praxis
 - Faustregel 2, die Laufvariable ändert nur die Post-Anweisung: Eine Schleife `for i := 1; i <= 10; i++` mit einem zusätzlichen `i++` im Schleifenrumpf gibt 1, 3, 5, 7 und 9 aus. Wer in Schritten von 2 zählen will, schreibt `i += 2` in die Post-Anweisung.
 - Faustregel 3, wer herunterzählt, dreht alle drei Teile um: `for i := 10; i >= 1; i--` läuft zehnmal. `for i := 10; i <= 1; i--` läuft kein einziges Mal, weil `10 <= 1` schon bei der ersten Prüfung `false` ergibt.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
-- Der Schritt endet mit einem Link zum Quiz.
 
 ### Handgriffe
 
@@ -181,3 +180,36 @@ Reiter: praxis
 ### Abschnitte des Kurstexts
 
 - 5.5.3.2
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Die for-Klausel, 5.5.3.2, Seiten 143–144: Init-Anweisung, Schleifenbedingung und Post-Anweisung stammen aus dem Kurstext. Die drei Meldungen des Compilers und die Erklärung der Formatangabe gibt die Lektion dazu.
+  - 2 Der Ablauf, 5.5.3.2, Seiten 143–144: Listing 5.6: Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext. Die Fassung mit i <= 3 gibt die Lektion dazu.
+  - 3 Die Laufvariable, 5.5.3.2, Seiten 143–145: Expertenwissen 5.15: Dass die Laufvariable nur in der for-Anweisung gilt und einen kurzen Namen wie i bekommt, steht im Kurstext. Das Expertenwissen 5.15 zeigt Init- und Post-Anweisung mit mehreren Variablen. Die drei Programme der Demo und die Meldung des Compilers gibt die Lektion dazu.
+  - 4 Eine Schleife, vier Schreibweisen, 5.5.3.2, Seiten 145–146: Expertenwissen 5.16: Dass Teile der for-Klausel fehlen dürfen, steht im Expertenwissen 5.16. Die vier Programme sind eigene Beispiele.
+  - 5 Aus der Praxis, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Faustregeln stammen aus der Praxis des Mentors.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 5.4, Seite 129, einfache Anweisungen: Was als Init-Anweisung und Post-Anweisung stehen darf. Lektion: Zuweisungen in Go, Schritt 5.
+  - Abschnitt 5.5.3.1, Seiten 138–142, for mit Bedingung: Lektion: for-Anweisung mit Bedingung in Go.
+  - Abschnitt 6.2, Seiten 156–159, Arrays durchlaufen: Die for-Klausel zählt den Index eines Arrays hoch. Lektion: Arrays in Go.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur for-Anweisung mit for-Klausel“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 5.4
+- 5.5.3.1
+- 5.5.3.2
+- 6.2
