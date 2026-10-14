@@ -1,6 +1,6 @@
 # Exkurs: Von der Problemstellung zum Go-Programm
 
-Die Seite zeigt an einem Zahlenratespiel, wie ein Programm entsteht: Aus einer Idee wird in sechs Stufen eine immer genauere Spezifikation. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text, den der Student einem Sprachmodell gibt. Auf Stufe 6 ist sie ein Go-Programm. Die Seite ist ein Exkurs des Mentoriats zu Kapitel 5 und steht nicht im Kurstext.
+Die Seite zeigt an einem Zahlenratespiel, wie ein Programm entsteht: Aus einer Idee wird in sechs Stufen eine immer genauere Spezifikation. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text, den der Student einem Sprachmodell gibt. Auf Stufe 6 ist sie ein Go-Programm. Die Seite ist ein Exkurs des Mentoriats zu Kapitel 3 und steht nicht im Kurstext. Der Mentor zeigt sie in der Sitzung zu Kapitel 3. Das Go-Programm in Stufe 6 braucht die Anweisungen aus Kapitel 5, die Programmierübung „Zahlenraten mit Statistik“ zu Kapitel 5 baut es Schritt für Schritt auf.
 
 Die Seite hat sieben Reiter. Sichtbar ist immer nur eine Stufe.
 
@@ -93,7 +93,7 @@ Reiter: versuche
 - 7 Versuche reichen für jeden Bereich bis 127. Ab 128 Zahlen braucht man einen achten Versuch.
 - Der grüne Kasten legt fest: höchstens 7 Versuche. Nach dem siebten Fehlversuch ist die Runde verloren, und der Spieler erfährt die Zahl.
 - Die Spezifikation hat drei Absätze. Der dritte ist grün unterlegt und neu.
-- Das Halbieren heißt in der Informatik binäre Suche. Im Kurstext kommt sie bei der Suche in einem sortierten Array vor.
+- Das Halbieren heißt in der Informatik binäre Suche. Im Kurstext kommt sie in Abschnitt 8.4.1 bei der Suche in einem sortierten Array vor. Ein Absatz unter der Tabelle sagt das und verlinkt die Lektion „Binäre Suche in einem Verbund-Array“. Die Lektion gehört zu Kapitel 8 und setzt Funktionen, Zeiger und Verbünde voraus.
 
 ### Handgriffe
 
@@ -165,7 +165,7 @@ Reiter: programm
 - Die Tabelle „Vom Ablauf zum Programm“ hat drei Spalten: Schritt im Ablauf, Anweisung in Go, Abschnitt im Kurstext. Sie hat neun Zeilen.
 - Die Zuordnung: Grenzen zu `const ( MAX_VERSUCHE = 7 … )` und 5.2. Drei Werte über alle Runden zu `var ( … )` außerhalb von `main` und 5.1.3. Wiederholung je Runde zu `for { … }` und 5.5.3. Zufallszahl zu `zielZahl := rand.Intn(…)` und 5.1.2. Schleife der Tipps zu `for versuchsZaehler < MAX_VERSUCHE { … }` und 5.5.3.1. Vergleich zu `if … else if … else` und 5.5.1. Verlassen der Schleife zu `break` und 5.5.3.3. Durchschnitt zu `float64(gesamtVersuche) / float64(anzahlSiege)` und 4.7. Wertung zu `switch { case durchschnitt <= 3.0: … }` und 5.5.2.
 - Diese Stufe hat keine Spezifikation zum Kopieren. Das ganze Go-Programm steht auf der Seite „Programmierübung: Zahlenraten mit Statistik“, der Link steht unter der Tabelle.
-- Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt.
+- Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt. Ein Satz verlinkt die Lektion „Binäre Suche in einem Verbund-Array“, dort kommt das Halbieren aus Stufe 3 wieder vor.
 - Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
 
 ### Handgriffe

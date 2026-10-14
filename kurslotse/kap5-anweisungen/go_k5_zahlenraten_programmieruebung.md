@@ -1,6 +1,6 @@
 # Programmierübung: Zahlenraten mit Statistik
 
-Die Seite baut ein Go-Programm in sieben Schritten auf: ein Zahlenratespiel über mehrere Runden mit Statistik und Wertung. Sie setzt den Exkurs „Von der Problemstellung zum Go-Programm“ fort, dessen Ablauf aus Stufe 5 hier zu Go wird. Das Programm braucht fast alle Anweisungen aus Kapitel 5 des Kurstexts.
+Die Seite baut ein Go-Programm in sieben Schritten auf: ein Zahlenratespiel über mehrere Runden mit Statistik und Wertung. Sie setzt den Exkurs „Von der Problemstellung zum Go-Programm“ zu Kapitel 3 fort, dessen Ablauf aus Stufe 5 hier zu Go wird. Das Programm braucht fast alle Anweisungen aus Kapitel 5 des Kurstexts.
 
 Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 

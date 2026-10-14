@@ -180,6 +180,7 @@
             <table id="halb-tabelle"></table>
             <p id="halb-reihe" class="legende"></p>
             <p>7 Versuche reichen sicher für jeden Bereich bis 127. Ab 128 Zahlen braucht man einen achten Versuch. Probiert es im Feld oben aus.</p>
+            <p>Diese Art zu raten heißt <strong>binäre Suche</strong>. In Abschnitt 8.4.1 des Kurstexts sucht ein Programm so einen Namen in einem sortierten Telefonbuch. Dazu gibt es die Lektion <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html#idee">Binäre Suche in einem Verbund-Array</a>.</p>
             <div class="festlegen">
                 <h3>Was wir festlegen</h3>
                 <p>Der Spieler hat höchstens 7 Versuche. Wer immer die Mitte tippt, gewinnt damit jede Runde. Wer planlos rät, verliert oft. Nach dem siebten Fehlversuch ist die Runde verloren, und der Spieler erfährt die Zahl.</p>
@@ -306,7 +307,7 @@
                 <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>4.7</td></tr>
                 <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>5.5.2</td></tr>
             </table>
-            <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
+            <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="../kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
         </div>
         <div class="card">
             <h2>Was wir gesehen haben</h2>
@@ -315,7 +316,7 @@
                 <li>Was wir offen gelassen haben, hat die Entwicklungsabteilung entschieden, und oft anders, als wir wollten.</li>
                 <li>Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt.</li>
             </ul>
-            <p>Das Halbieren aus Stufe 3 begegnet uns im Kurstext wieder, wenn ein Programm in einem sortierten Array sucht. Denselben Weg von der Idee zum Programm gehen wir als Nächstes beim Sortieren: <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a>.</p>
+            <p>Das Halbieren aus Stufe 3 begegnet uns im Kurstext wieder, wenn ein Programm in einem sortierten Array sucht: in der Lektion <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a>. Denselben Weg von der Idee zum Programm gehen wir als Nächstes beim Sortieren: <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a>.</p>
         </div>
         <div class="nav">
             <button class="knopf grau" data-gehe="5">Zurück</button>
@@ -323,7 +324,7 @@
         </div>
     </section>
 
-    <footer>Diese Seite ist ein Exkurs zu Kapitel 5. <a href="../index.html">Zurück zur Startseite</a></footer>
+    <footer>Diese Seite ist ein Exkurs zu Kapitel 3. Das Go-Programm in Stufe 6 braucht die Anweisungen aus Kapitel 5. <a href="../index.html">Zurück zur Startseite</a></footer>
 </div>
 
 <script src="../kurslotse.js"></script>
@@ -487,7 +488,7 @@
         titel: "Exkurs: Von der Problemstellung zum Go-Programm",
         thema: "Zahlenraten, Spezifikation, Entwicklungsprozess, Ablauf, Halbieren",
         bezug: "Kurstext v3.0.6, Kapitel 5, Seiten 113–149",
-        beschreibung: "../kurslotse/kap5-anweisungen/exkurs_von_problem_zu_code.md",
+        beschreibung: "../kurslotse/kap3-einfuehrung/exkurs_von_problem_zu_code.md",
         reiter: () => ANKER[stufe],
         schritt: () => SCHRITTE[stufe],
         sichtbar: () => document.getElementById("stufe-" + stufe),
