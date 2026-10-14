@@ -1,0 +1,75 @@
+{
+ "stand": "2026-10-14T16:51",
+ "programme": [
+  {
+   "pfad": "kap8-verbund/go/S207_struct_demo.go",
+   "titel": "Grundlegende struct-Definition (zeilenweise - üblich und übersichtlich)",
+   "datei": "S207_struct_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "657590c5f212487cc7e0af214990868b9a67dc778ced520daa14236440dba4c2"
+  },
+  {
+   "pfad": "kap8-verbund/go/S212_verbund_felder_demo.go",
+   "titel": "Verbund-Variablen und Punkt-Notation",
+   "datei": "S212_verbund_felder_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "69060cf1d284714d66c16cee608f078a5fb3433e76078a2a33d1a2763d92b8ee"
+  },
+  {
+   "pfad": "kap8-verbund/go/S214_zeiger_auf_verbund_demo.go",
+   "titel": "Zeiger auf Verbünde und Verbund-Literale (Abschnitt 8.2.4)",
+   "datei": "S214_zeiger_auf_verbund_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "b6095c45494d668037cc288fed2a5e699dd5c4b9df56df4cc5d2df424f03dcb4"
+  },
+  {
+   "pfad": "kap8-verbund/go/S216_verbund_vergleich_demo.go",
+   "titel": "Vergleich von Verbund-Variablen (Abschnitt 8.2.x)",
+   "datei": "S216_verbund_vergleich_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "80e2775810da444ae3e1e3a173f5ce183de1ac262c13dfb73a478f9388136e29"
+  },
+  {
+   "pfad": "kap8-verbund/go/S219_verbund_parameter_demo.go",
+   "titel": "Verbund-Parameter - Call-by-Value vs. Call-by-Reference",
+   "datei": "S219_verbund_parameter_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "7d9c6cfdb71a298b8394e0956653d1a6bd60419b8622ecb8d6aacb8248ded06e"
+  },
+  {
+   "pfad": "kap8-verbund/go/S224_rekursive_verbunde_demo.go",
+   "titel": "Rekursive Verbund-Typen (Abschnitt 8.3.1)",
+   "datei": "S224_rekursive_verbunde_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "0f3925daf8301b758a558761a01d9d3aba02164e8e5158bd983668f1d5b28348"
+  },
+  {
+   "pfad": "kap8-verbund/go/S225_anonyme_felder_demo.go",
+   "titel": "Anonyme Felder und eingebettete Verbünde (Abschnitt 8.3.2)",
+   "datei": "S225_anonyme_felder_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "263294419cfb33fb9d7646a680651015bc96c3eef674d16811a4150a267ce61f"
+  },
+  {
+   "pfad": "kap8-verbund/go/S230_binaere_suche_demo.go",
+   "titel": "Binäre Suche in Verbund-Arrays (Abschnitt 8.4.1)",
+   "datei": "S230_binaere_suche_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "2604f8fd0a2f622e41623edcf76ce45db599cc4542bb275c5a3c74bfa7827673"
+  },
+  {
+   "pfad": "kap9-dynamische-datenstrukturen/go/blockchain.go",
+   "titel": "Von der verketteten Liste zur Blockchain",
+   "datei": "blockchain",
+   "gruppe": "Programme des Mentoriats zu Kapitel 9",
+   "sha256": "979d50d044394a39dc291fe800f5c4f855f0d692169f60d95dd0236a478116f0"
+  },
+  {
+   "pfad": "exkurse/go/laufzeit_vergleiche_zaehlen.go",
+   "titel": "Wie die Laufzeit mit der Datenmenge wächst",
+   "datei": "laufzeit_vergleiche_zaehlen",
+   "gruppe": "Programme des Mentoriats zu den Exkursen",
+   "sha256": "aaec514bd15fa3bfd3d536dfb9d9943a2e83cf10be893fb59f1f0d945f00b233"
+  }
+ ]
+}
