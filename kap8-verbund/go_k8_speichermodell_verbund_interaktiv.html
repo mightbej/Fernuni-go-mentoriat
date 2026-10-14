@@ -18,7 +18,6 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
-    .quelle { color:#4b5563;font-size:.88rem;margin:8px 0 0; }
     h3 { margin:18px 0 8px; }
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
@@ -38,7 +37,6 @@
     .hinweis { margin:12px 0; }
     ol { padding-left:22px; } li { margin:8px 0; }
     details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
     .seiten { margin:0;padding-left:22px; }
     .seiten .hier { font-weight:700; }
 
@@ -124,6 +122,7 @@
     <button type="button" class="tab" data-stufe="1">1 Der Bauplan des Typs</button>
     <button type="button" class="tab" data-stufe="2">2 Ein Programm im Speicher</button>
     <button type="button" class="tab" data-stufe="3">Aufgaben</button>
+    <button type="button" class="tab" data-stufe="4">Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -167,7 +166,6 @@
     <div class="formel">Adresse des Feldes = Adresse des Verbunds + Abstand des Feldes</div>
     <p>Beispiel: Liegt eine Variable <code>s</code> vom Typ <code>student</code> an der Adresse 100, dann liegt <code>s.semester</code> an der Adresse 100 + 4 = 104 und <code>s.note</code> an der Adresse 100 + 6 = 106. Der ganze Verbund belegt 4 + 2 + 1 + 1 = 8 Zellen.</p>
     <p>Im Hauptspeicher von Schritt 2 sind die Felder abwechselnd hell und dunkel gefärbt.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2, Seiten 199–200. Der Typ <code>student</code> ist ein eigenes Beispiel. Der Bauplan mit den Abständen steht nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -262,6 +260,33 @@
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zum Bezug zum Kurstext</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Der Bauplan des Typs</td><td>8.2, Seiten 199–200</td><td>Der Verbund-Typ mit Feldern verschiedener Typen stammt aus dem Kurstext.</td><td>Der Typ <code>student</code> ist ein eigenes Beispiel. Der Bauplan mit den Abständen steht nicht im Kurstext.</td></tr>
+      <tr><td>2 Ein Programm im Speicher</td><td>8.2, Seiten 199–200<br>8.2.3, Seiten 204–205</td><td>Deklaration und Zugriff mit Punkt-Notation stammen aus dem Kurstext.</td><td>Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.</td></tr>
+      <tr><td>Aufgaben</td><td>kein eigener Abschnitt</td><td>Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2.</td><td>Die Aufgaben gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Datenverbund:</strong> Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a>, Schritt 3.</li>
+      <li><strong>Kapitel 6, Seiten 151–162, Arrays im Speicher:</strong> Lektion: <a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a>.</li>
+      <li><strong>Abschnitt 8.2.3, Seiten 204–205, Feld-Variablen:</strong> Lektion: <a href="go_k8_feld_variablen_interaktiv.html">Verbund-Variablen und Feld-Variablen in Go</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu „Aufgaben“</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -288,7 +313,7 @@
 
   var zellen, tabelle, frei, schritt, verlauf, marke, text, auswahl, abgebrochen;
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
-  var ANKER = ["worum", "bauplan", "speicher", "aufgaben"];
+  var ANKER = ["worum", "bauplan", "speicher", "aufgaben", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
@@ -820,12 +845,13 @@
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Der Bauplan des Typs", "Schritt 2: Ein Programm im Speicher", "Aufgaben"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Der Bauplan des Typs", "Schritt 2: Ein Programm im Speicher", "Aufgaben", "Bezug zum Kurstext"];
   function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
   function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
   var einzeilig = function (code) { return glatt(code.split(String.fromCharCode(10)).join(" ")); };
 
   function standSaetze() {
+    if (stufe === 4) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
     if (stufe === 1) return ["Dieser Schritt hat keine Demo. Die Tabelle mit dem Bauplan ist fest. In diesem Schritt lässt sich nichts ausprobieren."];
     if (stufe === 3) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf Schritt 1 und auf die Demo in Schritt 2.",

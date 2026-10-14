@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wie ein Verbund im Hauptspeicher liegt: Die Felder liegen lückenlos hintereinander, die Tabelle des Rechners nennt nur den Anfang, und ein Bauplan des Typs sagt, wo jedes Feld beginnt. Die Seite gehört zu Kapitel 8 des Kurstexts, zu Abschnitt 8.2 und 8.2.3. Sie ist die vierte von vier HTML-Seiten mit dem gleichen Modell.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -125,5 +125,32 @@ Reiter: aufgaben
 
 ### Abschnitte des Kurstexts
 
+- 8.2
+- 8.2.3
+
+## Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Der Bauplan des Typs, 8.2, Seiten 199–200: Der Verbund-Typ mit Feldern verschiedener Typen stammt aus dem Kurstext. Der Typ student ist ein eigenes Beispiel. Der Bauplan mit den Abständen steht nicht im Kurstext.
+  - 2 Ein Programm im Speicher, 8.2, Seiten 199–200; 8.2.3, Seiten 204–205: Deklaration und Zugriff mit Punkt-Notation stammen aus dem Kurstext. Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.
+  - Aufgaben, kein eigener Abschnitt: Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2. Die Aufgaben gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Kapitel 6, Seiten 151–162, Arrays im Speicher: Lektion: Speichermodell: Arrays.
+  - Abschnitt 8.2.3, Seiten 204–205, Feld-Variablen: Lektion: Verbund-Variablen und Feld-Variablen in Go.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu „Aufgaben““ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
 - 8.2
 - 8.2.3
