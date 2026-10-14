@@ -20,7 +20,6 @@
     input.kurz { max-width:9em; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .rahmen { display:flex;align-items:center;gap:4px;flex:1 1 20em;max-width:40em;font-family:Consolas,"Courier New",monospace;font-size:1.3rem;font-weight:700; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -56,6 +55,7 @@
     .speicher .kasten { min-width:180px;display:flex;justify-content:space-between;gap:14px;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:8px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.05rem; }
     .speicher .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
     .speicher .kasten.leer { border-style:dashed;border-color:#9ca3af;color:var(--muted); }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -74,6 +74,7 @@
     <button type="button" class="tab" data-stufe="3">3 Unicode-Nummern</button>
     <button type="button" class="tab" data-stufe="4">4 Verketten</button>
     <button type="button" class="tab" data-stufe="5">5 Unveränderbar</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -112,7 +113,6 @@ fmt.Println(text)    // grüne Wiese</pre>
       <li><strong>Schritt 5, unveränderbar:</strong> Warum <code>s[0] = 85</code> nicht geht.</li>
     </ul>
     <div class="hinweis">Die Programmzeilen auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go, in Schritt 1 bis 3 rechnet der Browser.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–102.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -166,7 +166,6 @@ fmt.Println(text)    // grüne Wiese</pre>
       <div class="konsole" id="l-konsole"></div>
       <div class="feld" id="l-feld"></div>
     </div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 99–100. Das erste und das zweite Beispiel der Demo stammen aus dem Kurstext. Die Meldungen des Compilers stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -204,7 +203,6 @@ fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</p
     <div class="zeile" id="wert-bsp"><span>Beispiele:</span></div>
     <div class="feld" id="w-feld"></div>
     <div class="auskunft" id="w-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seiten 100–102. Der Satz mit dem Backslash, der Pfad und das Programm mit <code>htmlCode</code> stammen aus dem Kurstext, das Programm ist hier gekürzt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -247,7 +245,6 @@ fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</p
     </div>
     <div class="hinweis">Die Escape-Sequenzen <code>\u</code> und <code>\U</code> gelten nur im interpretierten String-Literal. Im rohen Literal <code>`∞`</code> stehen sechs gewöhnliche Zeichen.</div>
     <p>Wie viele Bytes ein Zeichen im Speicher belegt und warum <code>len("∞")</code> den Wert 3 hat, zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.1, Seite 99. Die Nummern 221E und 1F600 und die Zeile mit <code>fmt.Println</code> stammen aus dem Kurstext. Die anderen Nummern sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -276,7 +273,6 @@ fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</p
       <li><strong>Teile herausgreifen:</strong> <code>s[i]</code> und <code>s[low:high]</code>. Das zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html#bytes">Strings: Bytes und Zeichen</a>, Schritt 1.</li>
     </ul>
     <p>Minus, Mal und Geteilt gibt es für Strings nicht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2.2, Seite 107. Die Ausdrücke <code>"hoch" + "springen"</code> und <code>"das Quadrat von 12 ist " + (12 * 12)</code> stammen aus dem Kurstext. Die drei anderen Zeilen der Demo und die Meldung des Compilers stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -318,6 +314,35 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
 
     <h3>Was die Regel bringt</h3>
     <p>Weil kein String sich ändern kann, dürfen sich Kopien eines Strings den gleichen Platz im Arbeitsspeicher teilen. Bei <code>b = a</code> muss Go die Zeichen nicht noch einmal ablegen. Das gilt auch für einen Substring wie <code>s[1:]</code>. Im Kurstext steht das als Expertenwissen 4.19.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Der Backslash</td><td>4.6.1, Seiten 99–100</td><td>Das erste und das zweite Beispiel der Demo stammen aus dem Kurstext.</td><td>Die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Rohe Literale</td><td>4.6.1, Seiten 100–102</td><td>Der Satz mit dem Backslash, der Pfad und das Programm mit <code>htmlCode</code> stammen aus dem Kurstext.</td><td>Die Lektion kürzt das Programm.</td></tr>
+      <tr><td>3 Unicode-Nummern</td><td>4.6.1, Seite 99</td><td>Die Nummern 221E und 1F600 und die Zeile mit <code>fmt.Println</code> stammen aus dem Kurstext.</td><td>Die anderen Nummern sind eigene Beispiele.</td></tr>
+      <tr><td>4 Verketten</td><td>4.6.2.2, Seite 107</td><td>Die Ausdrücke <code>"hoch" + "springen"</code> und <code>"das Quadrat von 12 ist " + (12 * 12)</code> stammen aus dem Kurstext.</td><td>Die drei anderen Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Unveränderbar</td><td>4.6.2.2, Seiten 107–108: Expertenwissen 4.19</td><td>Das Beispiel mit „Ohr“ und das Programm mit „Sommer“ stammen aus dem Kurstext.</td><td>Die Meldung des Compilers und die Zeile <code>s = "U" + s[1:]</code> gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Konkatenation:</strong> Für Zeichenketten gibt es eigene Operationen, zum Beispiel das Aneinanderhängen. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 3.3.7, Seite 36, Verkettung:</strong> Der Operator <code>+</code> mit zwei Strings in Listing 3.2. Lektion: <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html#text">Fehlersuche: drei kurze Go-Programme</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 5.3, Seiten 126–128, Zuweisung:</strong> <code>a += "zeit"</code>. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -325,10 +350,9 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
       <li><strong>Bytes und Zeichen:</strong> Die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a> zeigt, wie ein String im Speicher liegt.</li>
       <li><strong>Zuweisung:</strong> Was <code>a = a + "zeit"</code> und die Kurzform <code>a += "zeit"</code> tun, zeigt die Seite <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.6.2.2, Seiten 107–108, mit Expertenwissen 4.19. Das Beispiel mit „Ohr“ und das Programm mit „Sommer“ stammen aus dem Kurstext. Die Meldung des Compilers und die Zeile <code>s = "U" + s[1:]</code> stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -349,7 +373,7 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#roh
-  const ANKER = ['worum', 'backslash', 'roh', 'unicode', 'verketten', 'unveraenderbar'];
+  const ANKER = ['worum', 'backslash', 'roh', 'unicode', 'verketten', 'unveraenderbar', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -551,11 +575,12 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Backslash', 'Schritt 2: Rohe Literale', 'Schritt 3: Unicode-Nummern', 'Schritt 4: Verketten', 'Schritt 5: Unveränderbar'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Backslash', 'Schritt 2: Rohe Literale', 'Schritt 3: Unicode-Nummern', 'Schritt 4: Verketten', 'Schritt 5: Unveränderbar', 'Schritt 6: Bezug zum Kurstext'];
   const glatt = t => t.replace(/\s+/g, ' ').trim();
   const sichtbarGemacht = w => Array.from(w).map(z => z === '\n' ? '[Zeilenumbruch]' : z === '\t' ? '[Tabulator]' : SCHILD[z.codePointAt(0)] ? '[' + SCHILD[z.codePointAt(0)] + ']' : z).join('');
 
   function standSaetze() {
+    if (stufe === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. Der Codeblock ist fest. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) {
       const g = s1.gelesen, griffe = 'Handgriffe: zwischen den zwei Anführungszeichen einen Text mit höchstens 70 Zeichen eintragen und „lesen“ wählen, oder einen der sechs Knöpfe mit Beispielen wählen. Die äußeren Anführungszeichen stehen fest neben dem Feld und werden nicht mit eingetragen.';

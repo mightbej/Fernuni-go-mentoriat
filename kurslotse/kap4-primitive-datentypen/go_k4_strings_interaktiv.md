@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wie man einen String im Quelltext schreibt und was man mit Strings tun kann. Schritt 1 bis 3 behandeln die String-Literale: den Backslash als Escape-Zeichen, das rohe String-Literal und die Unicode-Nummern. Schritt 4 zeigt die Verkettung mit `+`. Schritt 5 zeigt, dass ein String unveränderbar ist. Die Seite gehört zu den Abschnitten 4.6.1 und 4.6.2.2 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -171,7 +171,6 @@ Reiter: unveraenderbar
 - Der Ablauf: Nach Zeile 1 hat `a` den Wert „Sommer“. Nach Zeile 2 hat auch `b` den Wert „Sommer“. Nach Zeile 3 hat `a` den Wert „Sommerzeit“, `b` hat weiter „Sommer“. Zeile 4 gibt `Sommerzeit` aus, Zeile 5 gibt `Sommer` aus.
 - Die Verkettung ändert keinen String. Sie baut aus zwei Strings einen neuen und weist ihn `a` zu.
 - Der Teil „Was die Regel bringt“ nennt das Expertenwissen 4.19: Kopien eines Strings und Substrings können sich den gleichen Platz im Arbeitsspeicher teilen.
-- Der Schritt endet mit Links zu zwei Quizseiten und zu den Seiten „Strings: Bytes und Zeichen“ und „Zuweisungen in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -185,3 +184,35 @@ Reiter: unveraenderbar
 
 - 4.6.2.2
 - 4.6.2.1
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Der Backslash, 4.6.1, Seiten 99–100: Das erste und das zweite Beispiel der Demo stammen aus dem Kurstext. Die Meldungen des Compilers gibt die Lektion dazu.
+  - 2 Rohe Literale, 4.6.1, Seiten 100–102: Der Satz mit dem Backslash, der Pfad und das Programm mit htmlCode stammen aus dem Kurstext. Die Lektion kürzt das Programm.
+  - 3 Unicode-Nummern, 4.6.1, Seite 99: Die Nummern 221E und 1F600 und die Zeile mit fmt.Println stammen aus dem Kurstext. Die anderen Nummern sind eigene Beispiele.
+  - 4 Verketten, 4.6.2.2, Seite 107: Die Ausdrücke "hoch" + "springen" und "das Quadrat von 12 ist " + (12 * 12) stammen aus dem Kurstext. Die drei anderen Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.
+  - 5 Unveränderbar, 4.6.2.2, Seiten 107–108: Expertenwissen 4.19: Das Beispiel mit „Ohr“ und das Programm mit „Sommer“ stammen aus dem Kurstext. Die Meldung des Compilers und die Zeile s = "U" + s[1:] gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Konkatenation: Für Zeichenketten gibt es eigene Operationen, zum Beispiel das Aneinanderhängen. Lektion: Variablen, Typen und Speicher.
+  - Abschnitt 3.3.7, Seite 36, Verkettung: Der Operator + mit zwei Strings in Listing 3.2. Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 2.
+  - Abschnitt 5.3, Seiten 126–128, Zuweisung: a += "zeit". Lektion: Zuweisungen in Go.
+- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Strings: Bytes und Zeichen“ und „Zuweisungen in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 3.3.7
+- 4.6.1
+- 4.6.2.2
+- 5.3
