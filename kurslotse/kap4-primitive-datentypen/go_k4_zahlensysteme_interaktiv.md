@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird. Schritt 1 zerlegt ein Integer-Literal in seine Ziffern und rechnet den Wert aus. Schritt 2 zeigt, welche Schreibweisen Go annimmt. Schritt 3 zeigt die Ausgabe mit `fmt.Printf`. Die Seite gehört zu den Abschnitten 4.3.1 und 4.3.2 des Kurstexts.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -105,15 +105,44 @@ Reiter: printf
 - Für 78 lauten die Ausgaben `78:  1001110  116  4e`, dann `78:  0b1001110 0116 0x4e`, dann `78:  1001110  0o116  4E`.
 - Im Kurstext gibt die dritte Zeile die Variable `b` mit dem Wert 163 aus und liefert `163:  10100011  0o243  A3`. Auf der Seite geben alle drei Zeilen `a` aus.
 - `fmt.Println` gibt eine ganze Zahl immer dezimal aus.
-- Der Schritt endet mit Links zu zwei Quizseiten und zu den Seiten „Zahlenkreis“, „Zweierkomplement“ und „Rechenwerk“. Das Quiz „Zahlensysteme umrechnen“ würfelt Aufgaben aus: ein binäres, oktales oder hexadezimales Literal in eine Dezimalzahl umrechnen oder einen Wert als Literal schreiben. Das Quiz zu den Integer-Literalen stellt zehn Aussagen zur Wahl. Welche Aussagen das sind, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
 - Einen der fünf Werte wählen.
 - Ein eigener Wert und ein eigenes Verb lassen sich nicht eingeben.
-- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 4.3.2
 - 4.2
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Stellenwert, 4.3.1, Seiten 59–61: Die Beispiele auf den Knöpfen stammen aus dem Kurstext. Die Zerlegung in Stellen und das Teilen mit Rest rechnet die Lektion vor.
+  - 2 Literale in Go, 4.3.1, Seiten 59–61: Hinweis 4.6: Die fehlerhaften Literale _42, 42_, 4__2 und 0_x42 nennt der Kurstext. Die Meldungen des Compilers, die Literale 08 und 0b102 und der Rat, eine Oktalzahl mit 0o zu schreiben, gibt die Lektion dazu.
+  - 3 Ausgabe mit Printf, 4.3.2, Seiten 62–63; 4.2, Seiten 53–58: fmt.Printf: Die Werte 78 und 163 und die drei Zeilen mit fmt.Printf stammen aus dem Kurstext. Die Werte 42, 255 und 62 sind eigene Beispiele.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 3.3.5, Seiten 33–35, Fußnote 14: Der Wert 10 ließe sich auch als 0b1010 oder 0xA schreiben. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 4.2, Seiten 53–58, fmt.Printf: Eine Lektion dazu gibt es noch nicht.
+  - Abschnitt 4.3.3, Seite 63, Literal und Wert: Lektion: Speichermodell, Schritt 2.
+- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Zahlenkreis“, „Zweierkomplement“ und „Rechenwerk“. Das Quiz „Zahlensysteme umrechnen“ würfelt Aufgaben aus: ein binäres, oktales oder hexadezimales Literal in eine Dezimalzahl umrechnen oder einen Wert als Literal schreiben. Das Quiz zu den Integer-Literalen stellt zehn Aussagen zur Wahl. Welche Aussagen das sind, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 3.3.5
+- 4.2
+- 4.3.1
+- 4.3.2
+- 4.3.3

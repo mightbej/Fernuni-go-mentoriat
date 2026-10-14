@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace; }
     input[type=text] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;width:16em;max-width:100%; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -43,6 +42,7 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -59,6 +59,7 @@
     <button type="button" class="tab" data-stufe="1">1 Stellenwert</button>
     <button type="button" class="tab" data-stufe="2">2 Literale in Go</button>
     <button type="button" class="tab" data-stufe="3">3 Ausgabe mit Printf</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -92,7 +93,6 @@
       <li><strong>Schritt 3, Ausgabe mit Printf:</strong> Die Verben <code>%b</code>, <code>%o</code> und <code>%x</code> geben einen Wert binär, oktal und hexadezimal aus.</li>
     </ul>
     <div class="hinweis">Die Beispiele auf dieser Seite sind mit Go 1.26 ausgeführt. Werte, Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go, in Schritt 1 rechnet der Browser.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -150,7 +150,6 @@
       <div id="teilen"></div>
     </div>
     <p>Die gleiche Umrechnung an einer einzelnen Speicherzelle, Bit für Bit, zeigt die Seite <a href="go_k4_speichermodell_interaktiv.html#schreibweisen">Speichermodell</a>, Schritt 2.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61. Die Beispiele auf den Knöpfen stehen im Kurstext. Die Zerlegung in Stellen und das Teilen mit Rest werden im Kurstext nicht vorgerechnet.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -193,7 +192,6 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
     <div class="zeile" id="wahl"></div>
     <pre class="code-block" id="w-zeile"></pre>
     <div class="auskunft" id="w-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.1, Seiten 59–61, mit Hinweis 4.6. Die Literale <code>_42</code>, <code>42_</code>, <code>4__2</code> und <code>0_x42</code> werden im Kurstext als fehlerhaft genannt. Die Meldungen des Compilers, die Literale <code>08</code> und <code>0b102</code> und der Rat, eine Oktalzahl mit <code>0o</code> zu schreiben, stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -230,6 +228,33 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
     <h3>Die drei Zeilen des Kurstexts</h3>
     <pre class="code-block" id="printf"></pre>
     <p>Die dritte Zeile gibt im Kurstext die Variable <code>b</code> aus, die mit <code>0b1010_0011</code> den Wert 163 bekommt. An der Ausgabe ist das nicht mehr zu sehen: Go merkt sich nur den Wert und nicht, in welchem Zahlensystem er im Quelltext stand.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Stellenwert</td><td>4.3.1, Seiten 59–61</td><td>Die Beispiele auf den Knöpfen stammen aus dem Kurstext.</td><td>Die Zerlegung in Stellen und das Teilen mit Rest rechnet die Lektion vor.</td></tr>
+      <tr><td>2 Literale in Go</td><td>4.3.1, Seiten 59–61: Hinweis 4.6</td><td>Die fehlerhaften Literale <code>_42</code>, <code>42_</code>, <code>4__2</code> und <code>0_x42</code> nennt der Kurstext.</td><td>Die Meldungen des Compilers, die Literale <code>08</code> und <code>0b102</code> und der Rat, eine Oktalzahl mit <code>0o</code> zu schreiben, gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Ausgabe mit Printf</td><td>4.3.2, Seiten 62–63<br>4.2, Seiten 53–58: <code>fmt.Printf</code></td><td>Die Werte 78 und 163 und die drei Zeilen mit <code>fmt.Printf</code> stammen aus dem Kurstext.</td><td>Die Werte 42, 255 und 62 sind eigene Beispiele.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 3.3.5, Seiten 33–35, Fußnote 14:</strong> Der Wert 10 ließe sich auch als <code>0b1010</code> oder <code>0xA</code> schreiben. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 4.2, Seiten 53–58, <code>fmt.Printf</code>:</strong> Eine Lektion dazu gibt es noch nicht.</li>
+      <li><strong>Abschnitt 4.3.3, Seite 63, Literal und Wert:</strong> Lektion: <a href="go_k4_speichermodell_interaktiv.html#schreibweisen">Speichermodell</a>, Schritt 2.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -239,10 +264,9 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
       <li><strong>Negative Zahlen:</strong> Wie Go eine negative Zahl als Bitmuster ablegt, zeigt die Seite <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a>.</li>
       <li><strong>Rechnen mit Bits:</strong> Wie der Rechner zwei Bitmuster addiert und subtrahiert, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.2, Seiten 62–63. Die Werte 78 und 163 und die drei Zeilen mit <code>fmt.Printf</code> stammen aus dem Kurstext. Die Werte 42, 255 und 62 sind eigene Beispiele. <code>fmt.Printf</code> selbst wird in Abschnitt 4.2 ab Seite 53 eingeführt.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -258,7 +282,7 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#literale
-  const ANKER = ['worum', 'stellenwert', 'literale', 'printf'];
+  const ANKER = ['worum', 'stellenwert', 'literale', 'printf', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -417,10 +441,11 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Stellenwert', 'Schritt 2: Literale in Go', 'Schritt 3: Ausgabe mit Printf'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Stellenwert', 'Schritt 2: Literale in Go', 'Schritt 3: Ausgabe mit Printf', 'Schritt 4: Bezug zum Kurstext'];
   const glatt = t => t.replace(/\s+/g, ' ').trim();
 
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) {
       const g = s1.gelesen, kopf = 'Im Eingabefeld steht ' + s1.text.trim() + '.';
