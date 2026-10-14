@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kurslotse: Beschreibung und Anleitung</title>
+  <!-- Diese Seite schreibt lotsenanleitung.py im Modul lotsen aus anleitung.py im Ordner des Lotsen. Nicht von Hand ändern. -->
   <link rel="stylesheet" href="../stil.css">
   <style>
     :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
@@ -35,14 +36,14 @@
 
   <div class="hero">
     <h1>Kurslotse</h1>
-    <p>Der Kurslotse unterstützt dich auf den interaktiven Seiten des Mentoriats. Die Seite beschreibt, was er tut, und führt dich in drei Schritten vom Herunterladen bis zur ersten Frage.</p>
+    <p>Der Kurslotse unterstützt dich auf den interaktiven Seiten des Mentoriats. Die Seite beschreibt, was er tut, und führt dich in 3 Schritten vom Herunterladen bis zur Arbeit mit ihm.</p>
     <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
   </div>
 
   <div class="tabs">
     <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
     <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
-    <button type="button" class="tab" data-stufe="2">2 Schlüssel einrichten</button>
+    <button type="button" class="tab" data-stufe="2">2 Schlüssel und Kurstext einrichten</button>
     <button type="button" class="tab" data-stufe="3">3 Verbinden und fragen</button>
     <button type="button" class="tab" data-stufe="4">Gut zu wissen</button>
   </div>
@@ -51,37 +52,26 @@
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Kurslotse unterstützt dich auf den interaktiven Seiten des Mentoriats. Er ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist.</p>
-    <p>Viele Seiten des Mentoriats führen dich in Schritten durch ein Thema, zum Beispiel durch die if-Anweisung. Verstehst du einen Schritt nicht, stellst du dem Kurslotsen deine Frage. Er weiß, welchen Schritt du gerade siehst und was du dort eingestellt hast, und er kennt den Kurstext.</p>
-
+    <p>Viele Seiten des Mentoriats führen dich in Schritten durch ein Thema, zum Beispiel durch die if-Anweisung. Verstehst du einen Schritt nicht, stellst du dem Kurslotsen deine Frage.</p>
+    <p>Er weiß, welchen Schritt du gerade siehst und was du dort eingestellt hast. Und er kennt den Kurstext.</p>
     <div class="nur-kurs">
       <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Kurslotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
-      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
-      <p>Der Grund: Das Paket enthält den Kurstext der FernUniversität.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität, und das Paket ist für diesen Kurs eingerichtet.</p>
     </div>
-
     <h3>Was du auf dem Bildschirm siehst</h3>
     <ul>
       <li><strong>Links:</strong> die interaktive Seite des Mentoriats, wie du sie kennst.</li>
       <li><strong>Rechts:</strong> die Spalte des Kurslotsen mit deiner Frage und der Antwort.</li>
-      <li><strong>Unter der Antwort:</strong> der Abschnitt im Kurstext, auf den sich die Antwort stützt. Darunter stehen Links auf andere Seiten des Mentoriats zu diesem Abschnitt.</li>
-      <li><strong>Eine Stelle markieren:</strong> Markierst du links einen Satz oder eine Programmzeile, dann erscheint die Stelle über dem Eingabefeld und geht mit deiner nächsten Frage mit. Es genügt ein Stück wie <code>&amp;y</code>: Der Kurslotse bekommt die ganze Zeile oder den ganzen Satz dazu.</li>
+      <li><strong>Unter der Antwort:</strong> der Abschnitt im Kurstext und Links auf andere Seiten des Mentoriats zu diesem Abschnitt.</li>
     </ul>
-
-    <h3>Seiten mit dem Kurslotsen</h3>
-    <p>Eine Seite mit dem Kurslotsen erkennst du am Knopf „Kurslotsen verbinden“ unten rechts. Drei Beispiele:</p>
-    <ul>
-      <li><a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a> zu Kapitel 4</li>
-      <li><a href="../kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a> zu Kapitel 4</li>
-      <li><a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a> zu Kapitel 5</li>
-    </ul>
-
     <h3>Was du brauchst</h3>
     <ul>
-      <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Der Kurslotse läuft als kleines Programm auf deinem eigenen Rechner.</li>
-      <li><strong>Paket:</strong> eine ZIP-Datei aus Moodle. Schritt 1 zeigt, wo sie liegen wird.</li>
-      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Schritt 2 zeigt, wie du ihn einrichtest.</li>
+      <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Du musst nichts installieren. Der Kurslotse läuft als kleines Programm auf deinem eigenen Rechner.</li>
+      <li><strong>Paket:</strong> die ZIP-Datei <code>kurslotse.zip</code> mit etwa 6 MB aus Moodle.</li>
+      <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal.</li>
+      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen.</li>
     </ul>
-
     <div class="hinweis">Der Kurslotse ist ein privates Angebot deines Mentors. Verbindlich sind allein der Kurstext und Moodle der FernUniversität. Die Seiten des Mentoriats funktionieren auch ohne den Kurslotsen. Das Sprachmodell kann sich irren.</div>
   </div>
   <div class="zeile schritte">
@@ -89,32 +79,50 @@
     <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Schritt 1: Herunterladen und starten</h2>
-    <div class="hinweis">Das Paket des Kurslotsen folgt in den nächsten Tagen. Die Schritte zum Entpacken und Starten stehen hier, sobald es in Moodle liegt.</div>
-
-    <h3>Wo das Paket liegen wird</h3>
-    <p>Das Paket kommt nach Moodle, in den Beitrag deines Mentors im Forum des Mentoriats. Dort steht es in der Tabelle „Die Lotsen zum Kurs“.</p>
+    <h3>Die zwei Dateien in Moodle holen</h3>
+    <p>Beide Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
+    <ul>
+      <li><strong><code>kurslotse.zip</code>:</strong> das Paket des Kurslotsen. Es steht in der Tabelle unter „ZIP herunterladen“.</li>
+      <li><strong><code>lotsen-kurstext.zip</code>:</strong> der Kurstext für alle Lotsen. Die Datei steht über der Tabelle. Hast du sie schon für einen anderen Lotsen eingerichtet, brauchst du sie nicht noch einmal.</li>
+    </ul>
     <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
     <div class="nur-kurs">
       <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Kurslotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
-      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
-      <p>Der Grund: Das Paket enthält den Kurstext der FernUniversität.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität, und das Paket ist für diesen Kurs eingerichtet.</p>
     </div>
+
+    <h3>Den Ordner entpacken</h3>
+    <ol>
+      <li>Klick mit der rechten Maustaste auf <code>kurslotse.zip</code> und wähle „Alle extrahieren“.</li>
+      <li>Wähle einen Ort, den du wiederfindest, zum Beispiel „Dokumente“.</li>
+    </ol>
+    <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
+    <p>Die Datei <code>lotsen-kurstext.zip</code> entpackst du nicht. Sie bleibt, wie sie ist. Hast du sie noch für keinen anderen Lotsen eingerichtet, lade sie aus Moodle. Du brauchst sie beim Einrichten des Kurstexts.</p>
+    <p>Im Ordner <code>kurslotse</code> liegen die Anleitung, die Nutzungsbedingungen und <code>start.bat</code>. Den Ordner <code>programm</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
+
+    <h3>Den Kurslotsen starten</h3>
+    <ol>
+      <li>Öffne den entpackten Ordner <code>kurslotse</code>.</li>
+      <li>Mach einen Doppelklick auf <code>start.bat</code>.</li>
+    </ol>
+    <p>Es öffnet sich ein schwarzes Fenster, und dein Browser zeigt die Adresse <code>http://localhost:8614</code>. Das schwarze Fenster ist das Programm. Lass es offen, solange du mit dem Kurslotsen arbeitest.</p>
+    <div class="hinweis">Windows kann beim ersten Start warnen, weil das Programm von keinem Hersteller signiert ist. Klick in diesem Fall auf „Weitere Informationen“ und dann auf „Trotzdem ausführen“.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
     <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-2">
   <div class="card">
-    <h2>Schritt 2: Den Schlüssel für KI:connect einrichten</h2>
+    <h2>Schritt 2: Schlüssel und Kurstext einrichten</h2>
+    <h3>Den Schlüssel für KI:connect einrichten</h3>
     <p>KI:connect ist der KI-Dienst der Hochschulen in Nordrhein-Westfalen. Als Student der FernUniversität darfst du ihn nutzen. Der Kurslotse stellt deine Fragen dort, und dafür braucht er deinen persönlichen Schlüssel. Du richtest ihn einmal ein.</p>
-    <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen dieselben Schritte:</p>
+    <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen die gleichen Schritte:</p>
     <ol>
       <li>Öffne <a href="https://chat.kiconnect.nrw" target="_blank" rel="noopener">chat.kiconnect.nrw</a>, wähle „FernUniversität in Hagen“ und melde dich an.</li>
       <li>Klick unten links auf deinen Namen und dann auf „API-Schlüsselverwaltung“.</li>
@@ -122,54 +130,87 @@
       <li>Kopiere den Schlüssel. KI:connect zeigt ihn nur einmal an.</li>
       <li>Füge den Schlüssel auf der Seite des Kurslotsen ein und klick auf „Prüfen und übernehmen“.</li>
     </ol>
-
     <h3>Was mit dem Schlüssel geschieht</h3>
     <ul>
       <li><strong>Er bleibt bei dir:</strong> Der Schlüssel bleibt auf deinem Rechner. Das Programm schickt ihn nur an KI:connect.</li>
       <li><strong>Er ist persönlich:</strong> Gib den Schlüssel niemandem weiter.</li>
-      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für den Skriptlotsen oder den Klausurenlotsen eingerichtet, findet ihn der Kurslotse von selbst.</li>
+      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für einen anderen Lotsen eingerichtet, findet ihn der Kurslotse von selbst.</li>
     </ul>
+    <h3>Ohne Schlüssel</h3>
+    <p>Mit „Ohne Schlüssel weiter“ kommst du zu den Seiten des Mentoriats. Die Spalte des Kurslotsen antwortet dann nicht.</p>
+
+    <h3>Den Kurstext für die Lotsen einrichten</h3>
+    <p>Der Kurslotse schlägt zu deiner Frage im Kurstext nach. So nennt er dir den Abschnitt und die HTML-Seiten des Mentoriats dazu. Dafür braucht er die Datei <code>lotsen-kurstext.zip</code>. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
+    <p>Nach dem Schlüssel zeigt der Browser die Seite „Kurstext für die Lotsen einrichten“:</p>
+    <ol>
+      <li>Klick auf „Datei auswählen“ und wähle die Datei <code>lotsen-kurstext.zip</code>. Du brauchst sie nicht zu entpacken.</li>
+      <li>Klick auf „Übernehmen“.</li>
+    </ol>
+    <p>Hast du schon einen anderen Lotsen eingerichtet, erscheint diese Seite nicht.</p>
+    <p>Mit „Ohne Kurstext weiter“ beantwortet der Kurslotse deine Fragen auch. Er nennt dann keinen Abschnitt und keine Seiten des Mentoriats.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
     <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-3">
   <div class="card">
-    <h2>Schritt 3: Verbinden und fragen</h2>
+    <h2>Schritt 3: Auf einer Seite des Mentoriats fragen</h2>
+    <p>Ist alles eingerichtet, zeigt der Browser die Startseite des Mentoriats. Von dort aus arbeitest du:</p>
     <ol>
-      <li>Starte den Kurslotsen auf deinem Rechner und lass sein Fenster offen.</li>
-      <li>Öffne eine Seite des Mentoriats, die den Kurslotsen hat.</li>
-      <li>Klick unten rechts auf „Kurslotsen verbinden“. Dein Browser kann fragen, ob die Seite auf deinen eigenen Rechner zugreifen darf. Erlaube es.</li>
+      <li>Lass das schwarze Fenster des Kurslotsen offen.</li>
+      <li>Öffne eine Seite des Mentoriats, die den Kurslotsen hat. Du erkennst sie am Knopf „Kurslotsen verbinden“ unten rechts.</li>
+      <li>Klick auf „Kurslotsen verbinden“. Dein Browser kann fragen, ob die Seite auf deinen eigenen Rechner zugreifen darf. Erlaube es.</li>
       <li>Klick auf „Kurslotsen fragen“. Rechts öffnet sich die Spalte des Kurslotsen.</li>
       <li>Tipp deine Frage in das Feld und drück die Eingabetaste.</li>
     </ol>
 
+    <h3>Seiten mit dem Kurslotsen</h3>
+    <p>Drei Beispiele:</p>
+    <ul>
+      <li><a href="https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html" target="_blank" rel="noopener">Zahlenkreis</a> zu Kapitel 4</li>
+      <li><a href="https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html" target="_blank" rel="noopener">Bitverschiebung</a> zu Kapitel 4</li>
+      <li><a href="https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html" target="_blank" rel="noopener">if-Anweisung in Go</a> zu Kapitel 5</li>
+    </ul>
+
     <h3>Wie der Dialog arbeitet</h3>
     <ul>
       <li><strong>Er kennt deinen Schritt:</strong> Der Kurslotse weiß, welchen Schritt der Seite du siehst und was du dort eingestellt hast. Du kannst fragen: „Warum ist das Ergebnis hier negativ?“</li>
+      <li><strong>Eine Stelle markieren:</strong> Markierst du links einen Satz oder eine Programmzeile, erscheint die Stelle über dem Eingabefeld. Sie geht mit deiner nächsten Frage mit. Es genügt ein Stück wie <code>&amp;y</code>, der Kurslotse bekommt die ganze Zeile dazu.</li>
+      <li><strong>Unter der Antwort:</strong> Dort stehen der Abschnitt im Kurstext und Links auf andere Seiten des Mentoriats zu diesem Abschnitt.</li>
       <li><strong>Er beginnt mit jedem Schritt neu:</strong> Wechselst du den Schritt, leert sich der Dialog.</li>
       <li><strong>Kopieren und Leeren:</strong> Mit „Kopieren“ nimmst du den Dialog in die Zwischenablage, mit „Leeren“ beginnst du neu.</li>
-      <li><strong>Er erklärt die Seite:</strong> Der Dialog ist für Fragen zum sichtbaren Schritt gedacht. Lange Diskussionen gehören ins Mentoriat oder ins Forum.</li>
+      <li><strong>Spalte schließen:</strong> Der Knopf „×“ oben rechts schließt die Spalte. Der Knopf „Kurslotsen fragen“ unten rechts öffnet sie wieder.</li>
     </ul>
+    <div class="hinweis">Der Dialog ist für Fragen zum sichtbaren Schritt gedacht. Lange Diskussionen gehören ins Mentoriat oder ins Forum.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
     <button type="button" class="haupt" data-gehe="4">Weiter zu „Gut zu wissen“</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-4">
   <div class="card">
     <h2>Gut zu wissen</h2>
+    <h3>Beenden und wieder starten</h3>
+    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>start.bat</code>.</p>
+    <p>Meldet das schwarze Fenster „Die Adresse ist belegt“, dann läuft der Kurslotse schon in einem anderen Fenster.</p>
+
+    <h3>Was du wissen musst</h3>
     <ul>
-      <li><strong>Was dein Rechner verlässt:</strong> Deine Frage, der sichtbare Schritt der Seite und sein Stand gehen an KI:connect. Alles andere bleibt auf deinem Rechner.</li>
+      <li><strong>Was dein Rechner verlässt:</strong> Deine Frage, der sichtbare Schritt der Seite mit seinem Stand und eine markierte Stelle gehen an KI:connect. Alles andere bleibt auf deinem Rechner.</li>
+      <li><strong>Was das Programm aus dem Netz holt:</strong> Bei jedem Start holt es von den HTML-Seiten des Mentoriats die Liste, welche HTML-Seite zu welchem Abschnitt des Kurstexts gehört. So erscheinen neue HTML-Seiten ohne neues Paket.</li>
       <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
-      <li><strong>Nicht weitergeben:</strong> Das Paket enthält den Kurstext der FernUniversität. Es ist nur für Teilnehmer dieses Kurses bestimmt.</li>
+      <li><strong>Nicht weitergeben:</strong> Die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität, und das Paket ist für diesen Kurs eingerichtet. Beide sind nur für Teilnehmer dieses Kurses bestimmt. Genaueres steht in den Nutzungsbedingungen.</li>
+      <li><strong>Nur mit offenem Fenster:</strong> Die Spalte des Kurslotsen erscheint auf den Seiten des Mentoriats nur, solange sein schwarzes Fenster offen ist.</li>
       <li><strong>Einsendeaufgaben:</strong> Der Kurslotse löst sie nicht für dich.</li>
       <li><strong>Fehler und Fragen:</strong> Bring sie ins Mentoriat mit.</li>
+    </ul>
+
+    <h3>Nutzungsbedingungen</h3>
+    <ul>
+      <li><strong>Nutzungsbedingungen:</strong> Wer den Kurslotsen nutzen darf und was nicht erlaubt ist, steht in der Datei <code>Nutzungsbedingungen.txt</code> im Ordner. Du öffnest sie mit einem Doppelklick.</li>
     </ul>
   </div>
   <div class="zeile schritte">
@@ -182,7 +223,7 @@
 <script>
 (function () {
   "use strict";
-  // Jede Stufe hat eine eigene Adresse, zum Beispiel #fragen.
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel #schluessel.
   var ANKER = ["worum", "starten", "schluessel", "fragen", "wissen"];
 
   function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
