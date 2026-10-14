@@ -169,7 +169,7 @@ Reiter: vorbeugen
 - Unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
 - Ein gelber Kasten sagt: Im Kurstext steht nur, dass man vor der Addition prüfen kann. Das Programm ist eine Ergänzung des Mentors.
 - Der Teil „Wenn kein Typ reicht“ nennt das Paket `math/big` aus dem Expertenwissen 4.15.
-- Der Schritt endet mit Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“ und „break-Anweisung in Go“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+- Der Schritt endet mit Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“, „Vertiefung: Blockchain in Go“ und „break-Anweisung in Go“. Der Exkurs zur Blockchain zeigt in Schritt 2 eine Hashfunktion, die den Überlauf von `uint32` bewusst einsetzt, und in Schritt 4 das Ergebnis von 75 − 76 im Typ `uint64`. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
