@@ -2,7 +2,7 @@
 
 Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen `einfügen`, `suchen`, `istWertInBaum`, `baumAusgeben` und `summeDesBaums` aus dem Kurstext und die drei Fälle beim Löschen. Sie gehört zu Kapitel 9 des Kurstexts, Abschnitt 9.3, Seiten 237–244.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -183,7 +183,6 @@ Reiter: loeschen
 - Der Weg zum Ersatz: von der 88 einmal nach links zur 57, dann nach rechts zur 71. Dort geht es rechts nicht weiter. Die 71 ist der größte Wert im linken Teilbaum.
 - Ebenso ginge der kleinste Wert im rechten Teilbaum, hier die 93.
 - Go-Code zum Löschen steht im Kurstext nicht und auf der Seite nicht. Fragt der Student danach, bekommt er die drei Fälle erklärt und kein fertiges Programm.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektionen „Verkettete Listen in Go“ und „Rekursion in Go“ und auf den Exkurs zur Laufzeit.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
@@ -193,4 +192,40 @@ Reiter: loeschen
 
 ### Abschnitte des Kurstexts
 
+- 9.3.2
+
+## Schritt 7: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Begriffe, 9.3, Seite 237: Die Begriffe und der Baum aus Abbildung 9.5 stammen aus dem Kurstext. Das Beispiel mit der Höhe 20 ist ergänzt.
+  - 2 Der Suchbaum, 9.3.1, Seiten 238–240: Abbildungen 9.5 bis 9.7; 9.3.2, Seite 240: Die Ordnung im Suchbaum und die drei Reihenfolgen auf Seite 240 stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
+  - 3 Einfügen, 9.3.2, Seiten 240–242: Listing 9.2: Typ, Funktion und die sieben Zeilen der Demo stammen aus Listing 9.2. Der Abbruch mit nil ist mit Go 1.26 geprüft. Die Adressen gehören zum Modell der Lektion, ein Knoten belegt darin 24 Zellen.
+  - 4 Suchen, 9.3.2, Seiten 240–243: Listing 9.2: Beide Funktionen stammen aus Listing 9.2. Die Zahl der Aufrufe ist mit Go 1.26 gezählt.
+  - 5 Durchlaufen, 9.3.2, Seiten 241–244: baumAusgeben steht in Listing 9.2, summeDesBaums und die Zwischensummen stehen am Ende des Abschnitts. Die Demo gibt die Lektion dazu.
+  - 6 Löschen, 9.3.2, Seite 243: Der Baum aus Abbildung 9.6 und das Löschen der 88 stammen aus dem Kurstext. Die zwei Bilder vor und nach dem Löschen gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 7.5, Seiten 185–193, Rekursion: Einfügen, Suchen und Durchlaufen sind rekursiv. Lektion: Rekursion in Go.
+  - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: Auch dort halbiert jeder Schritt den Suchbereich. Lektion: Binäre Suche in einem Verbund-Array.
+  - Abschnitt 8.3.1, Seiten 215–216, rekursive Verbund-Typen: Ein Verbund hat ein Feld mit einem Zeiger auf den eigenen Typ. Lektion: Rekursive Verbund-Typen in Go, Schritt 4.
+  - Abschnitt 9.2, Seiten 229–236, verkettete Liste: Lektion: Verkettete Listen in Go.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektionen „Verkettete Listen in Go“ und „Rekursion in Go“ und auf den Exkurs zur Laufzeit.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 6“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 7.5
+- 8.3.1
+- 8.4.1
+- 9.2
+- 9.3
+- 9.3.1
 - 9.3.2

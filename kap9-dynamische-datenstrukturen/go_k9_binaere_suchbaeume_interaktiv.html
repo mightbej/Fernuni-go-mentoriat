@@ -104,6 +104,7 @@
     <button type="button" class="tab" data-stufe="4">4 Suchen</button>
     <button type="button" class="tab" data-stufe="5">5 Durchlaufen</button>
     <button type="button" class="tab" data-stufe="6">6 Löschen</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -172,7 +173,6 @@
       </tbody>
     </table></div>
     <p>Die Zahl der Knoten wächst exponentiell mit der Höhe. Ein Baum der Höhe 20 fasst mehr als eine Million Knoten, und zu jedem führt ein Pfad mit höchstens 20 Knoten. Darauf beruht die schnelle Suche.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3, Seite 237. Der Baum im Bild ist der Baum aus Abbildung 9.5. Das Beispiel mit der Höhe 20 ist ergänzt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -205,7 +205,6 @@
       <li><strong>Extrem balanciert:</strong> Alle Blätter haben die gleiche Höhe.</li>
       <li><strong>Entartet:</strong> Die Höhe des Baums ist gleich der Zahl seiner Elemente. Der Baum arbeitet wie eine verkettete Liste.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.1 und 9.3.2, Seiten 238–240, mit den Abbildungen 9.5 bis 9.7. Die drei Reihenfolgen stehen auf Seite 240.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -268,7 +267,7 @@ type knoten struct {
     <div id="e-speicher"></div>
     <div class="auskunft" id="e-urteil"></div>
     <p>Die Knoten liegen im Hauptspeicher in der Reihenfolge, in der sie erzeugt wurden. Die Form des Baums steht allein in den Zeigern, wie bei der Liste.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Listing 9.2, Datei <code>suchbaum.go</code>, Seiten 240–242. Typ, Funktion und die sieben Zeilen der Demo stammen aus dem Kurstext. Der Abbruch mit <code>nil</code> ist mit Go 1.26 geprüft. Die Adressen gehören zum Modell dieser HTML-Seite, ein Knoten belegt darin 24 Zellen.</p>
+    <p class="quelle">Listing 9.2, <code>suchbaum.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 9.3.2, Seiten 240–242. Typ, Funktion und die sieben Zeilen der Demo stammen aus dem Listing.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -323,7 +322,6 @@ func istWertInBaum(wurzel *knoten, suchwert int) bool {
       </tbody>
     </table></div>
     <p>In einem balancierten Baum mit n Knoten braucht die Suche etwa log<sub>2</sub>(n) Schritte, bei einer Million Knoten etwa 20. In einem entarteten Baum sind es bis zu n. Wie ein Baum beim Einfügen balanciert bleibt, ist Stoff des Moduls Algorithmen und Datenstrukturen.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Listing 9.2, Seiten 240–243. Beide Funktionen stammen aus dem Listing. Die Zahl der Aufrufe ist mit Go 1.26 gezählt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -376,7 +374,6 @@ func summeDesBaums(wurzel *knoten) int {
       <li><strong>Wurzel 36:</strong> 36 + 17 + 351 = 404.</li>
     </ul>
     <p>Hier kommt der Knoten vor seinen Teilbäumen an die Reihe. Diese Reihenfolge heißt <strong>Pre-Order</strong>. Für die Summe ist die Reihenfolge gleichgültig.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Seiten 241–244. <code>baumAusgeben</code> steht in Listing 9.2, <code>summeDesBaums</code> und die Zwischensummen stehen am Ende des Abschnitts.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -408,6 +405,37 @@ func summeDesBaums(wurzel *knoten) int {
     </div>
     <p>Der Wert 71 überschreibt den Wert 88. Danach wird der alte Knoten 71 gelöscht. Er ist hier ein Blatt. Im Allgemeinen hat er höchstens ein Kind, und zwar ein linkes, sodass einer der zwei leichten Fälle vorliegt.</p>
     <p>Go-Code dazu steht im Kurstext nicht: Die Idee ist einfach, das Programm braucht aber viele Sonderfälle.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Begriffe</td><td>9.3, Seite 237</td><td>Die Begriffe und der Baum aus Abbildung 9.5 stammen aus dem Kurstext.</td><td>Das Beispiel mit der Höhe 20 ist ergänzt.</td></tr>
+      <tr><td>2 Der Suchbaum</td><td>9.3.1, Seiten 238–240: Abbildungen 9.5 bis 9.7<br>9.3.2, Seite 240</td><td>Die Ordnung im Suchbaum und die drei Reihenfolgen auf Seite 240 stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Einfügen</td><td>9.3.2, Seiten 240–242: Listing 9.2</td><td>Typ, Funktion und die sieben Zeilen der Demo stammen aus Listing 9.2.</td><td>Der Abbruch mit <code>nil</code> ist mit Go 1.26 geprüft. Die Adressen gehören zum Modell der Lektion, ein Knoten belegt darin 24 Zellen.</td></tr>
+      <tr><td>4 Suchen</td><td>9.3.2, Seiten 240–243: Listing 9.2</td><td>Beide Funktionen stammen aus Listing 9.2.</td><td>Die Zahl der Aufrufe ist mit Go 1.26 gezählt.</td></tr>
+      <tr><td>5 Durchlaufen</td><td>9.3.2, Seiten 241–244</td><td><code>baumAusgeben</code> steht in Listing 9.2, <code>summeDesBaums</code> und die Zwischensummen stehen am Ende des Abschnitts.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+      <tr><td>6 Löschen</td><td>9.3.2, Seite 243</td><td>Der Baum aus Abbildung 9.6 und das Löschen der 88 stammen aus dem Kurstext.</td><td>Die zwei Bilder vor und nach dem Löschen gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 7.5, Seiten 185–193, Rekursion:</strong> Einfügen, Suchen und Durchlaufen sind rekursiv. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Abschnitt 8.4.1, Seiten 221–225, binäre Suche:</strong> Auch dort halbiert jeder Schritt den Suchbereich. Lektion: <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a>.</li>
+      <li><strong>Abschnitt 8.3.1, Seiten 215–216, rekursive Verbund-Typen:</strong> Ein Verbund hat ein Feld mit einem Zeiger auf den eigenen Typ. Lektion: <a href="../kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html#kette">Rekursive Verbund-Typen in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Liste:</strong> Lektion: <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -415,10 +443,9 @@ func summeDesBaums(wurzel *knoten) int {
       <li><strong>Rekursion:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a> zeigt, wie der Rechner bei jedem Aufruf einen eigenen Rahmen anlegt.</li>
       <li><strong>Laufzeit:</strong> Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a> stellt log<sub>2</sub>(n) neben n und n².</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.3.2, Seite 243. Die zwei Bilder zeigen den Baum aus Abbildung 9.6 vor und nach dem Löschen der 88.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -437,8 +464,8 @@ func summeDesBaums(wurzel *knoten) int {
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#begriffe
-  const ANKER = ['worum', 'begriffe', 'suchbaum', 'einfuegen', 'suchen', 'durchlaufen', 'loeschen'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Begriffe', 'Schritt 2: Der Suchbaum', 'Schritt 3: Einfügen', 'Schritt 4: Suchen', 'Schritt 5: Durchlaufen', 'Schritt 6: Löschen'];
+  const ANKER = ['worum', 'begriffe', 'suchbaum', 'einfuegen', 'suchen', 'durchlaufen', 'loeschen', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Begriffe', 'Schritt 2: Der Suchbaum', 'Schritt 3: Einfügen', 'Schritt 4: Suchen', 'Schritt 5: Durchlaufen', 'Schritt 6: Löschen', 'Schritt 7: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -668,6 +695,7 @@ func summeDesBaums(wurzel *knoten) int {
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const T96 = 'Der Baum aus Schritt 3, das ist der Baum aus Abbildung 9.6: ' + baumText(B96);
   function standSaetze() {
+    if (stufe === 7) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) return ['Das Bild zeigt den Baum aus Abbildung 9.5: ' + baumText(B95)].concat(standWahl(WB, 'der Knoten'), ['Gelb ist im Bild der Pfad von der Wurzel, grün der gewählte Knoten.']);
     if (stufe === 2) return standWahl(WF, 'die Reihenfolge').concat(['Der Baum im Bild: ' + baumText(baue(WF.liste[WF.i].folge))]);
