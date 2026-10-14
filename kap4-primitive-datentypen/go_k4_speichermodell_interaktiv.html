@@ -34,7 +34,6 @@
     .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
     ol { padding-left:22px; } li { margin:8px 0; }
     details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
     .seiten { margin:0;padding-left:22px; }
     .seiten .hier { font-weight:700; }
 
@@ -142,6 +141,7 @@
     <button type="button" class="tab" data-stufe="2">2 Ein Wert, mehrere Schreibweisen</button>
     <button type="button" class="tab" data-stufe="3">3 Ein Bitmuster, mehrere Werte</button>
     <button type="button" class="tab" data-stufe="4">Aufgaben</button>
+    <button type="button" class="tab" data-stufe="5">Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -180,7 +180,6 @@
       </tbody>
     </table>
     </div>
-    <p class="quelle">Ganzzahl-Typen nach Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -273,7 +272,6 @@
     </div>
     <div class="hinweis">Auch eine führende <code>0</code> ohne Buchstaben leitet eine Oktalzahl ein. Das Literal <code>0173</code> hat den Wert 123, das Literal <code>173</code> den Wert 173. Der Kurstext warnt davor in Abschnitt 4.3.1.</div>
     <p>Mehr zu den Zahlensystemen steht auf der Seite <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitte 4.3.1 bis 4.3.3, Seiten 59–63.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -358,6 +356,35 @@
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zum Bezug zum Kurstext</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.2, Seiten 8–10: Speicherplatz<br>4.3.4, Seite 63: Ganzzahl-Typen</td><td>Dass eine Variable Speicherplatz aus Speicherelementen belegt, steht in Abschnitt 2.2. Die Tabelle der Ganzzahl-Typen stammt aus Abschnitt 4.3.4.</td><td>Zellen mit Adressen und die Tabelle des Rechners mit Name, Typ und Adresse gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Name, Typ und Adresse</td><td>2.2, Seiten 8–10<br>4.3.4, Seite 63</td><td>Die Typen und ihre Größe in Bit stammen aus dem Kurstext.</td><td>Der Hauptspeicher mit den Zellen 100 bis 131 und das Programm Zeile für Zeile gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Ein Wert, mehrere Schreibweisen</td><td>4.3.1 bis 4.3.3, Seiten 59–63: Literale</td><td>Literale in vier Zahlensystemen und der Unterschied zwischen Literal und Wert stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Ein Bitmuster, mehrere Werte</td><td>2.2, Seiten 8–10<br>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Dass der Typ festlegt, wie die Bits gelesen werden, steht in Abschnitt 2.2.</td><td>Das Lesen derselben Zelle als <code>int8</code>, <code>uint8</code>, Zeichen und <code>bool</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>Aufgaben</td><td>kein eigener Abschnitt</td><td>Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 bis 3.</td><td>Die Aufgaben gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Variable als Speicherplatz:</strong> Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, Datentyp:</strong> Der Typ einer Variable legt ihren Wertebereich fest. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 4.3.5, Seiten 64–66, Zweierkomplement:</strong> Lektion: <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu „Aufgaben“</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -386,7 +413,7 @@
   // Schritt 2 und 3 teilen sich eine einzelne Zelle.
   var probe = 123, lesart = "int8";
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#typen
-  var ANKER = ["worum", "speicher", "schreibweisen", "typen", "aufgaben"];
+  var ANKER = ["worum", "speicher", "schreibweisen", "typen", "aufgaben", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   function melde(gewechselt) { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } }
@@ -988,11 +1015,12 @@
   window.addEventListener("resize", zeichnePfeile);
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Name, Typ und Adresse", "Schritt 2: Ein Wert, mehrere Schreibweisen", "Schritt 3: Ein Bitmuster, mehrere Werte", "Aufgaben"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Name, Typ und Adresse", "Schritt 2: Ein Wert, mehrere Schreibweisen", "Schritt 3: Ein Bitmuster, mehrere Werte", "Aufgaben", "Bezug zum Kurstext"];
   function glatt(t) { return t.replace(/\s+/g, " ").trim(); }
   function textVon(id) { return glatt($(id).innerText || $(id).textContent); }
 
   function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
     if (stufe === 4) return ["Dieser Schritt hat keine Demo. Die Aufgaben beziehen sich auf die Demos in Schritt 1, 2 und 3.",
       "Die Antwort einer Aufgabe ist verdeckt, bis der Student „Antwort“ aufklappt."];

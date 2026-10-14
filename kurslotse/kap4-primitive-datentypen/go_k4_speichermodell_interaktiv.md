@@ -2,7 +2,7 @@
 
 Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ legt fest, wie viele Zellen zur Variable gehören und wie ihre Bits zu lesen sind. Schritt 1 führt ein Programm mit acht Zeilen aus und zeigt dabei Hauptspeicher und Tabelle des Rechners. Schritt 2 zeigt einen Wert in vier Schreibweisen. Schritt 3 liest ein Bitmuster mit vier verschiedenen Typen. Die Seite gehört zu Abschnitt 2.2 und zu den Abschnitten 4.3.1 bis 4.3.4 des Kurstexts.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -161,3 +161,35 @@ Reiter: aufgaben
 - 2.2
 - 4.3.1
 - 4.3.4
+
+## Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.2, Seiten 8–10: Speicherplatz; 4.3.4, Seite 63: Ganzzahl-Typen: Dass eine Variable Speicherplatz aus Speicherelementen belegt, steht in Abschnitt 2.2. Die Tabelle der Ganzzahl-Typen stammt aus Abschnitt 4.3.4. Zellen mit Adressen und die Tabelle des Rechners mit Name, Typ und Adresse gibt die Lektion dazu.
+  - 1 Name, Typ und Adresse, 2.2, Seiten 8–10; 4.3.4, Seite 63: Die Typen und ihre Größe in Bit stammen aus dem Kurstext. Der Hauptspeicher mit den Zellen 100 bis 131 und das Programm Zeile für Zeile gibt die Lektion dazu.
+  - 2 Ein Wert, mehrere Schreibweisen, 4.3.1 bis 4.3.3, Seiten 59–63: Literale: Literale in vier Zahlensystemen und der Unterschied zwischen Literal und Wert stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
+  - 3 Ein Bitmuster, mehrere Werte, 2.2, Seiten 8–10; 4.3.5, Seiten 64–66: Zweierkomplement: Dass der Typ festlegt, wie die Bits gelesen werden, steht in Abschnitt 2.2. Das Lesen derselben Zelle als int8, uint8, Zeichen und bool gibt die Lektion dazu.
+  - Aufgaben, kein eigener Abschnitt: Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 bis 3. Die Aufgaben gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Variable als Speicherplatz: Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 3.3.3, Seiten 29–30, Datentyp: Der Typ einer Variable legt ihren Wertebereich fest. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 4.3.5, Seiten 64–66, Zweierkomplement: Lektion: Zweierkomplement.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu „Aufgaben““ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 3.3.3
+- 4.3.1
+- 4.3.3
+- 4.3.4
+- 4.3.5
