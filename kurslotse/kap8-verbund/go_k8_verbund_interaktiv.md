@@ -2,7 +2,7 @@
 
 Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ mit `struct` und `type` deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.1 bis 8.2.2, Seiten 195–203.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -131,7 +131,6 @@ Reiter: ausgabe
 - `fmt.Println(anna)` und `fmt.Printf("%v\n", anna)` geben `{Anna Schmidt 1966 Hamburg false}` aus.
 - `fmt.Printf("%+v\n", anna)` gibt `{vorname:Anna nachname:Schmidt gebJahr:1966 ort:Hamburg verheiratet:false}` aus.
 - `fmt.Printf("%#v\n", anna)` gibt `main.person{vorname:"Anna", nachname:"Schmidt", gebJahr:1966, ort:"Hamburg", verheiratet:false}` aus.
-- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
 
 ### Handgriffe
 
@@ -140,4 +139,36 @@ Reiter: ausgabe
 
 ### Abschnitte des Kurstexts
 
+- 8.2.2
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Wozu ein Verbund, 8.1, Seiten 195–198: Die Schleife und der Tausch personA, personB = personB, personA stammen aus dem Kurstext. Dort sind die Feldnamen in Abschnitt 8.1 groß geschrieben. Das Programm der Demo ist ein eigenes Beispiel zu diesem Tausch.
+  - 2 Verbund-Typ, 8.2, Seiten 199–200: Alle Definitionen stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
+  - 3 Null-Wert und Literale, 8.2.1, Seiten 201–202; Hinweis 8.1, Seite 203: Die Zeilen 1 bis 3 stammen aus dem Kurstext. Die Zeilen 4 bis 9 und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.
+  - 4 Ausgabe, 8.2.2, Seiten 202–203: Die Zeilen und ihre Ausgaben stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Abschnitt 5.1, Seiten 113–114, Deklaration: Ein Verbund-Typ steht in einer Deklaration an der Stelle von int. Lektion: Variablendeklaration in Go.
+  - Kapitel 6, Seiten 151–154, Array-Literal: Das Verbund-Literal ähnelt dem Array-Literal. Lektion: Arrays in Go, Schritt 1.
+- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 5.1
+- 8.1
+- 8.2
+- 8.2.1
 - 8.2.2
