@@ -102,6 +102,15 @@ button.code.gewaehlt {
     color: #111827;
 }
 
+/* Auf einem schmalen Bildschirm bricht ein Knopf mit Code um, statt die Seite breiter zu machen als den Bildschirm. */
+@media (max-width: 600px) {
+    button.code {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        max-width: 100%;
+    }
+}
+
 /* Code im Text. */
 code {
     background: #eef2f7;
