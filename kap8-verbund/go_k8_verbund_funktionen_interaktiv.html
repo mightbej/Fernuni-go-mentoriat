@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -74,6 +73,7 @@
     .blockreihe .leer { color:var(--muted);font-size:.9rem; }
     .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
     .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -91,6 +91,7 @@
     <button type="button" class="tab" data-stufe="2">2 Linke Seite</button>
     <button type="button" class="tab" data-stufe="3">3 Zeiger als Parameter</button>
     <button type="button" class="tab" data-stufe="4">4 Kopie als Parameter</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -150,7 +151,6 @@
     <p>Der Hauptspeicher unter den Rahmen zeigt die zwei Verbünde ab den Adressen 100 und 200. Die Funktion bekommt in <code>p1</code> und <code>p2</code> je 8 Zellen mit einer dieser zwei Zahlen und gibt die Zahl 100 zurück. Die Adressen sind erfunden.</p>
     <p>Die lange Schreibweise der Zeile 12 dereferenziert den Rückgabewert mit Stern und Klammern:</p>
     <pre class="code-block">(*werIstÄlter(&amp;otto1, &amp;otto2)).nachname += " senior"</pre>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.6, Seiten 208–209. Das Programm stammt aus dem Kurstext. Der Typ <code>person</code> hat die fünf Felder <code>vorname</code>, <code>nachname</code>, <code>gebJahr</code>, <code>ort</code> und <code>verheiratet</code>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -179,7 +179,6 @@
     <p><strong>Ausgabe oder Meldung</strong></p>
     <div class="konsole" id="w-ausgabe"></div>
     <div class="auskunft" id="w-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.6, Seite 209. Alle vier Zeilen stammen aus dem Kurstext. Die Meldung des Compilers zur vierten Zeile stammt aus einem Lauf mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -217,7 +216,6 @@
     <div class="konsole" id="z-ausgabe"></div>
     <div class="auskunft" id="z-urteil"></div>
     <p>Im Hauptspeicher unter den Rahmen gibt es den Verbund nur einmal, ab der Adresse 100. Der Parameter <code>a</code> belegt 8 Zellen, in denen die Zahl 100 steht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.7, Seite 210. Das Programm stammt aus dem Kurstext. Dort steht das Literal über sechs Zeilen.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -255,6 +253,34 @@
       <li><strong>Die Funktion liest nur, und der Verbund ist groß:</strong> oft auch Zeiger. Die Kopie des ganzen Verbunds kostet Speicherplatz und Rechenzeit, und in einer Schleife über viele große Verbünde merkt man das.</li>
       <li><strong>Die Funktion soll den Verbund auf keinen Fall ändern können:</strong> Kopie. Dann ist der Verbund des Aufrufers sicher, auch wenn der Rumpf durch einen Programmierfehler ein Feld ändert. Ein solcher Fehler bleibt dann aber leicht lange unbemerkt.</li>
     </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Zeiger als Rückgabe</td><td>8.2.6, Seiten 208–209</td><td>Das Programm stammt aus dem Kurstext. Der Typ <code>person</code> hat die fünf Felder <code>vorname</code>, <code>nachname</code>, <code>gebJahr</code>, <code>ort</code> und <code>verheiratet</code>.</td><td>Die Demo mit Rahmen und Hauptspeicher gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Linke Seite</td><td>8.2.6, Seite 209</td><td>Alle vier Zeilen stammen aus dem Kurstext.</td><td>Die Meldung des Compilers zur vierten Zeile stammt aus einem Lauf mit Go 1.26.</td></tr>
+      <tr><td>3 Zeiger als Parameter</td><td>8.2.7, Seite 210</td><td>Das Programm stammt aus dem Kurstext. Dort steht das Literal über sechs Zeilen.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Kopie als Parameter</td><td>8.2.7, Seiten 210–211</td><td>Das Programm und die drei Fälle stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 7.2, Seiten 169–170, Kopie des Arguments:</strong> Eine Funktion bekommt eine Kopie. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a>, Schritt 5.</li>
+      <li><strong>Abschnitt 7.4.2, Seite 180, Zeiger als Rückgabe:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#rueckgabe">Zeiger in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 7.2, Seiten 169–170, wie viel kopiert wird:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -262,10 +288,9 @@
       <li><strong>Die Kopie bei Arrays:</strong> Der Exkurs <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, was die Kopie beim Sortieren kostet.</li>
       <li><strong>Quiz:</strong> Das <a href="S219_verbund_parameter_demo_quiz.html">Quiz zu Verbund-Parametern</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.7, Seiten 210–211. Das Programm und die drei Fälle stammen aus dem Kurstext.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -284,8 +309,8 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#rueckgabe
-  const ANKER = ['worum', 'rueckgabe', 'links', 'zeiger', 'kopie'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund-Zeiger als Rückgabe', 'Schritt 2: Was links vom Gleichheitszeichen stehen darf', 'Schritt 3: Ein Zeiger als Parameter', 'Schritt 4: Eine Kopie als Parameter'];
+  const ANKER = ['worum', 'rueckgabe', 'links', 'zeiger', 'kopie', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund-Zeiger als Rückgabe', 'Schritt 2: Was links vom Gleichheitszeichen stehen darf', 'Schritt 3: Ein Zeiger als Parameter', 'Schritt 4: Eine Kopie als Parameter', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -460,6 +485,7 @@
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const DEMOS = [null, DR, null, DZ, DK];
   function standSaetze() {
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 2) return standWahl(WW).concat('Vor der gewählten Zeile gilt: otto1 ist {Otto Meier 1895 Bonn false}, otto2 ist {Otto Meier 1930 Bonn false}. Die Ausgabe ist die von fmt.Println(otto1) nach der Zeile.');
     return standAblauf(DEMOS[stufe]).concat('Ein Verbund steht in seinem Kasten als Liste seiner Felder. Der Wert eines Zeigers steht in Worten da, zum Beispiel „Adresse von golf“.');
@@ -477,7 +503,7 @@
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
