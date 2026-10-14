@@ -2,7 +2,7 @@
 
 Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.2.3, Seiten 204–205.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -106,7 +106,6 @@ Reiter: kopie
 - Nach der ersten Zeile stehen zwei Verbünde mit den gleichen Werten im Rahmen. Die zweite Zeile ändert nur `kopie`. Die Ausgabe ist `Ulm Bonn`.
 - Ein Satz verweist auf den Tausch `personA, personB = personB, personA` aus Abschnitt 8.1.
 - Das Programm mit `kopie` steht nicht im Kurstext. Es ist ein eigenes Beispiel zum Satz, dass sich der Wert einer Verbund-Variable aus den Werten ihrer Felder zusammensetzt.
-- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
 
 ### Handgriffe
 
@@ -117,3 +116,33 @@ Reiter: kopie
 
 - 8.2.3
 - 8.1
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Punkt-Notation, 8.2.3, Seite 204: Das Programm der Demo stammt aus dem Kurstext, bis auf die letzte Zeile. Die letzte Zeile und die drei Zeilen mit Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.
+  - 2 Wert oder Zeiger, 8.2.3, Seiten 204–205: Das Programm stammt aus dem Kurstext, ohne zwei der fünf Ausgaben. Der Wert eines Zeigers steht in der Lektion in Worten da.
+  - 3 Ein Verbund als Ganzes, 8.2.3, Seiten 204–205: Dass sich der Wert einer Verbund-Variable aus den Werten ihrer Felder zusammensetzt, steht im Kurstext. Das Programm mit kopie ist ein eigenes Beispiel, geprüft mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+  - Abschnitt 6.1, Seiten 154–155, Index: Ein Array-Element spricht man mit dem Index an, ein Feld mit seinem Namen. Lektion: Arrays in Go, Schritt 2.
+- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 6.1
+- 7.3
+- 7.4
+- 8.2.3
