@@ -42,6 +42,7 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -58,12 +59,13 @@
     <button type="button" class="tab" data-stufe="1">1 Bitcoin, Ethereum und Tether</button>
     <button type="button" class="tab" data-stufe="2">2 Das Programm von USDT lesen</button>
     <button type="button" class="tab" data-stufe="3">3 Wer hat die Kontrolle?</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
   <div class="card">
     <h3>Worum es geht</h3>
-    <p>Im Kurstext beginnt Kapitel 9 mit einem Güterzug: Jeder Wagon hängt am nächsten. Daraus wurde eine verkettete Liste. In der Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a> wurde daraus ein Kassenbuch, das auf vielen Rechnern zugleich liegt.</p>
+    <p>In Abschnitt 9.2 des Kurstexts steht ein Güterzug: Jeder Wagon hängt am nächsten. Daraus wurde eine verkettete Liste. In der Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a> wurde daraus ein Kassenbuch, das auf vielen Rechnern zugleich liegt.</p>
     <p>Diese Lektion geht den letzten Schritt. Sie zeigt ein echtes Programm, das so ein Kassenbuch führt, und wo darin steht, wer ein Konto sperren darf. Das ist der Maschinenraum im Titel.</p>
     <h3>Was du dafür aus dem Kurs brauchst</h3>
     <ul>
@@ -102,7 +104,6 @@
       <div class="zahl"><small>Anteil an allen Stablecoins</small><strong>rund 60 %</strong><span>alle Stablecoins zusammen rund 300 Mrd. $</span></div>
     </div>
     <p>In der EU ist USDT nach den Regeln für Kryptowerte nicht zugelassen. Große Börsen haben den Handel damit für Kunden in der EU 2025 eingestellt oder eingeschränkt. In Deutschland wacht die BaFin über solche Geschäfte.</p>
-    <p class="quelle">Stand 14.10.2026. Quellen: CoinGecko, DefiLlama, <a href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica" target="_blank" rel="noopener">ESMA zu den Regeln für Kryptowerte (MiCA)</a>, <a href="https://www.gesetze-im-internet.de/kmag/__3.html" target="_blank" rel="noopener">§ 3 Kryptomärkteaufsichtsgesetz</a>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -133,6 +134,7 @@
       <div><p>Solidity, aus dem Programm von USDT</p><pre class="code-block" id="w-sol"></pre></div>
       <div><p>Ungefähr das Gleiche in Go</p><pre class="code-block" id="w-go"></pre></div>
     </div>
+    <p class="quelle">Auszug aus dem Programmtext von USDT auf Etherscan, wörtlich übernommen, abgerufen am 14.10.2026. Dort stehen die Auszüge in diesen Zeilen: Guthaben in Zeile 103, Sperrliste in Zeile 275, Konto sperren in den Zeilen 277 bis 280, Absender prüfen in Zeile 337, Nur der Eigentümer in den Zeilen 55 bis 58. Der Programmtext trägt keinen Lizenzvermerk.</p>
     <div class="auskunft" id="w-urteil"></div>
     <h3>Was du gefunden hast</h3>
     <ul>
@@ -142,7 +144,6 @@
       <li><strong>Vernichten:</strong> Eine weitere Funktion, <code>destroyBlackFunds</code>, setzt das Guthaben eines gesperrten Kontos auf 0.</li>
     </ul>
     <p>Das sind die gleichen Regeln wie in der Lektion zur Blockchain, Schritt 4. Nur verwaltet dieses Programm echtes Geld.</p>
-    <p class="quelle">Die Zeilen sind wörtlich aus dem Programmtext auf Etherscan übernommen, abgerufen am 14.10.2026. Der Programmtext trägt keinen Lizenzvermerk.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -187,10 +188,54 @@
     </div>
     <h3>Was du jetzt kannst</h3>
     <p>Du hast im Programm von USDT Typen, Bedingungen und Funktionen wiedererkannt. Wer imperative Programme lesen kann, kann selbst nachprüfen, welche Regeln in digitalem Geld stecken und wer sie ändern darf.</p>
-    <p class="quelle">Quellen: <a href="https://tether.io/news/tether-has-supported-nearly-550-million-in-iran-linked-usdt-freezes-as-u-s-expands-sanctions-campaign/" target="_blank" rel="noopener">Tether, 28.09.2026</a>, <a href="https://blocksec.com/blog/usdt-blacklist-explained-2026" target="_blank" rel="noopener">BlockSec, 26.07.2026</a>, <a href="https://www.govinfo.gov/content/pkg/PLAW-119publ27/html/PLAW-119publ27.htm" target="_blank" rel="noopener">GENIUS Act</a>, <a href="https://www.ecb.europa.eu/euro/digital_euro/faqs/html/ecb.faq_digital_euro.en.html" target="_blank" rel="noopener">EZB: Fragen zum digitalen Euro</a>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Der Exkurs geht über den Kurstext hinaus. Die Tabelle nennt zu jedem Schritt die Stellen im Kurstext, an die er anknüpft, mit den Seiten zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was der Exkurs dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>9.2, Seite 229</td><td>Der Güterzug und die verkettete Liste stammen aus dem Kurstext. Unter „Was du dafür aus dem Kurs brauchst“ stehen Begriffe aus Kapitel 4, 5, 7, 8 und 9.</td><td>Die Blockchain als Kassenbuch auf vielen Rechnern steht nicht im Kurstext. Sie stammt aus der Lektion „Blockchain: eine verkettete Liste mit Fingerabdruck“.</td></tr>
+      <tr><td>1 Bitcoin, Ethereum und Tether</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Bitcoin, Ethereum, Smart Contract, Stablecoin und USDT stehen nicht im Kurstext, ebenso die Zahlen und die Regeln der EU. Die Quellen stehen unter „Was über den Kurstext hinausgeht“.</td></tr>
+      <tr><td>2 Das Programm von USDT lesen</td><td>4.3.4, Seite 63<br>4.5, Seite 93<br>4.5.2, Seiten 96–98<br>5.5.1, Seiten 129–132<br>7.1, Seiten 163–165<br>8.2, Seiten 199–200<br>8.2.4, Seiten 205–206: Hinweis 8.2<br>8.2.7, Seiten 210–211</td><td>Aus dem Kurstext stammen alle Bausteine der Zeilen in Go und ihrer Erklärung: der Verbund-Typ <code>konto</code>, die Typen <code>uint64</code> und <code>bool</code>, <code>if</code> mit <code>return</code>, das logische NICHT <code>!</code>, der Vergleich <code>!=</code> und eine Funktion mit einem Zeiger auf einen Verbund als Parameter. In Abschnitt 4.3.4 steht auch der Wertebereich eines vorzeichenlosen Typs mit n Bit: 0 bis 2<sup>n</sup> − 1. Für <code>uint</code> in Solidity ist n = 256.</td><td>Solidity, Etherscan und das Programm von USDT stehen nicht im Kurstext. Die Zeilen in Go sind ein eigenes Gegenstück im Stil der Lektion zur Blockchain. <code>mapping</code> ordnet in Solidity jedem Konto einen Wert zu. Go kennt dafür <code>map</code>, das im Kurs nicht vorkommt.</td></tr>
+      <tr><td>3 Wer hat die Kontrolle?</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Zahlen zu den Sperren, der GENIUS Act und der digitale Euro stehen nicht im Kurstext. Die Quellen stehen unter „Was über den Kurstext hinausgeht“.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, bedingte Anweisung:</strong> Ohne Go wird gezeigt, wie <code>IF</code> eine Anweisung nur unter einer Bedingung ausführt. Genauso prüft das Programm von USDT mit <code>require</code>, ob ein Konto gesperrt ist. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Datenverbund:</strong> Ohne Go wird das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer gezeigt. Ein Konto mit Name, Guthaben und Sperre ist ein solcher Verbund. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Unterprogramme und Funktionen:</strong> Aufruf, Parameter und Rückgabe ohne Go. Lektion: <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#funktion">Unterprogramme und Funktionen</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 3.4, Seiten 37–41, Funktionen in einem Go-Programm:</strong> Parameter, Rückgabewert und <code>return</code> an Listing 3.3. Eine Lektion zu diesem Abschnitt gibt es nicht. Die Lektion <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html#quader">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a> übt sie in Schritt 1.</li>
+      <li><strong>Abschnitt 4.3.6, Seiten 66–68, Hinweis 4.7:</strong> Im Hinweis wird davor gewarnt, einen vorzeichenlosen Typ für Werte zu nehmen, die nur positiv sein sollen. Ergibt eine Rechnung doch eine negative Zahl, springt der Wert unbemerkt an das obere Ende des Wertebereichs. Das Programm von USDT nimmt für Guthaben trotzdem <code>uint</code>. Lektionen: <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html#guthaben">Blockchain: eine verkettete Liste mit Fingerabdruck</a>, Schritt 3, und <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Ein Programm, das Geld verwaltet, muss vor jeder Rechnung prüfen, ob das Ergebnis in den Typ passt. Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html#vorbeugen">Überlauf bei Ganzzahlen in Go</a>, Schritt 5.</li>
+      <li><strong>Kapitel 6, Seiten 151–154, Arrays:</strong> In der Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html#ueberweisen">Vertiefung: Blockchain in Go</a>, Schritt 5, stehen die Konten in einem Array <code>[3]konto</code>. Das Programm von USDT ordnet jedem Konto mit <code>mapping</code> ein Guthaben zu. Lektion zu Arrays: <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+      <li><strong>Abschnitt 7.3 und 7.4.1, Seiten 171–172 und 178–180, Zeiger als Parameter:</strong> Die Funktion <code>sperren</code> bekommt einen Zeiger auf das Konto. So ändert sie das Konto selbst und keine Kopie. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#parameter">Zeiger in Go</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Listen:</strong> Aus der Liste wird in zwei Lektionen eine Blockchain: <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a> und <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html">Vertiefung: Blockchain in Go</a>. Wer ein Konto sperren darf, steht in der Vertiefung in Schritt 6. Die Liste selbst wird in der Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a> gezeigt.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Bitcoin, Ethereum und Smart Contract, Schritt 1:</strong> Blockchains und Programme in einer Blockchain kommen im Kurs nicht vor.</li>
+      <li><strong>USDT und Stablecoins, Schritt 1:</strong> Die Zahlen haben den Stand 14.10.2026. Sie stammen von CoinGecko und DefiLlama.</li>
+      <li><strong>Regeln in der EU, Schritt 1:</strong> Quellen sind <a href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica" target="_blank" rel="noopener">ESMA zu den Regeln für Kryptowerte (MiCA)</a> und <a href="https://www.gesetze-im-internet.de/kmag/__3.html" target="_blank" rel="noopener">§ 3 Kryptomärkteaufsichtsgesetz</a>.</li>
+      <li><strong>Solidity und Etherscan, Schritt 2:</strong> Die Sprache Solidity und die Webseite Etherscan kommen im Kurs nicht vor. Die Zeilen aus dem Programm von USDT sind wörtlich übernommen, abgerufen am 14.10.2026.</li>
+      <li><strong>Die Sperrliste in Gebrauch, Schritt 3:</strong> Die Zahlen stammen von <a href="https://tether.io/news/tether-has-supported-nearly-550-million-in-iran-linked-usdt-freezes-as-u-s-expands-sanctions-campaign/" target="_blank" rel="noopener">Tether, 28.09.2026</a> und <a href="https://blocksec.com/blog/usdt-blacklist-explained-2026" target="_blank" rel="noopener">BlockSec, 26.07.2026</a>.</li>
+      <li><strong>GENIUS Act, Schritt 3:</strong> Das Gesetz der USA gilt seit Juli 2025. Wortlaut: <a href="https://www.govinfo.gov/content/pkg/PLAW-119publ27/html/PLAW-119publ27.htm" target="_blank" rel="noopener">GENIUS Act</a>.</li>
+      <li><strong>Digitaler Euro, Schritt 3:</strong> Das Gesetz dazu ist im Oktober 2026 nicht beschlossen. Quelle: <a href="https://www.ecb.europa.eu/euro/digital_euro/faqs/html/ecb.faq_digital_euro.en.html" target="_blank" rel="noopener">EZB: Fragen zum digitalen Euro</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -206,8 +251,8 @@
   const NL = String.fromCharCode(10);
 
   // ---------- Reiter ----------
-  const ANKER = ['worum', 'netze', 'lesen', 'kontrolle'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitcoin, Ethereum und Tether', 'Schritt 2: Das Programm von USDT lesen', 'Schritt 3: Wer hat die Kontrolle?'];
+  const ANKER = ['worum', 'netze', 'lesen', 'kontrolle', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitcoin, Ethereum und Tether', 'Schritt 2: Das Programm von USDT lesen', 'Schritt 3: Wer hat die Kontrolle?', 'Schritt 4: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -248,7 +293,10 @@
     'Handgriff: eine der fünf Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
 
   // ---------- Kurslotse ----------
-  const standSaetze = () => stufe === 2 ? standWoerter() : ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
+    return stufe === 2 ? standWoerter() : ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
   const kurzStand = () => stufe === 2 ? WOERTER[w].kurz : '';
   const programmZeilen = () => stufe === 2 ? ['Solidity aus dem Programm von USDT:'].concat(WOERTER[w].sol.split(NL), ['Ungefähr das Gleiche in Go:'], WOERTER[w].go.split(NL)) : [];
 
@@ -262,7 +310,7 @@
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol, .card > .frage, .hinweis, .zahlen',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol, .card > .frage, .hinweis, .zahlen, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programmtext im sichtbaren Schritt:',
     stand: standSaetze,
