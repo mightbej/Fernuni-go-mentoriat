@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -138,7 +137,6 @@ func swap(pa *[10]int, i int, j int) {
       <li><strong>Rumpf:</strong> <code>pa[i]</code> ist die Kurzschreibweise für <code>(*pa)[i]</code>.</li>
       <li><strong>Rückgabe:</strong> Sie entfällt. Die Funktion ändert das Array ihres Aufrufers. Das ist ein Seiteneffekt.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, Hinweis 7.4, Seite 177, und Abschnitt 7.4.1, Seiten 178–180. Die Funktion <code>swap</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -172,7 +170,6 @@ func findMin(pa *[10]int, pos int) int {
       <li><strong>Elemente:</strong> <code>pa[i]</code> und <code>pa[minIndex]</code> in der Kurzschreibweise.</li>
     </ul>
     <p>Die Rückgabe bleibt. Die Funktion liefert weiter einen Index, und ein Index ist ein <code>int</code>. Ein Zeiger als Parameter und eine Rückgabe schließen sich nicht aus, das zeigt auch die Funktion <code>incr</code> in Abschnitt 7.4.1 des Kurstexts.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Hinweis 7.4, Seite 177. Die Funktion <code>findMin</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -204,7 +201,7 @@ func findMin(pa *[10]int, pos int) int {
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="s-ausgabe"></div>
     <div class="auskunft" id="s-urteil"></div>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo zeigt die Schleifen nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
+    <p>Die Demo zeigt die Schleifen nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -284,7 +281,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
       <li>Schreibe <code>findMin</code> so um, dass sie einen Zeiger auf das kleinste Element zurückgibt, also einen Wert vom Typ <code>*int</code>.</li>
       <li>Was meldet Go, wenn im Aufruf <code>swap(a, pos, minIndex)</code> das Zeichen <code>&amp;</code> fehlt?</li>
     </ul>
-    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+    <p>Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
