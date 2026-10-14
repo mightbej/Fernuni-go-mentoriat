@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blockchain: eine verkettete Liste mit Fingerabdruck</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7;--rot:#b91c1c;--rot-bg:#fef2f2; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:var(--rot);background:var(--rot-bg); }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em;font-size:.92rem; }
+    .nebeneinander { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .nebeneinander > div { min-width:0; }
+    .nebeneinander > div > p { margin:4px 0;font-weight:600;color:var(--muted);font-size:.92rem; }
+    @media (max-width: 760px) { .nebeneinander { grid-template-columns:1fr; } }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Blockkarten wie die Liste in Listing 9.1: kopf, dann der neueste Block, jeder Pfeil ist ein Zeiger auf den Vorgänger */
+    .karten { display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:10px 0; }
+    .karte { border:2px solid var(--blau);border-radius:10px;background:#fff;padding:7px 10px;min-width:150px;font-size:.92rem; }
+    .karte h4 { margin:0 0 4px;font-size:.95rem;color:var(--blau); }
+    .karte div { font-family:Consolas,"Courier New",monospace;overflow-wrap:anywhere; }
+    .karte div i { font-style:normal;color:var(--muted);font-family:"Segoe UI",Tahoma,sans-serif; }
+    .karte .geaendert { background:var(--aktiv-bg);border-radius:4px; }
+    .karte .falsch { background:var(--rot-bg);color:var(--rot);border-radius:4px;font-weight:700; }
+    .karte.schlecht { border-color:var(--rot); }
+    .karte.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .karte.kopfmarke { border-color:#7c3aed;background:#f5f3ff;min-width:auto;align-self:center;font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .karten .pfeil { align-self:center;color:var(--muted);font-family:Consolas,"Courier New",monospace; }
+    .ergebnis { font-family:Consolas,"Courier New",monospace;font-size:1.25rem;font-weight:700;color:var(--blau); }
+
+    /* Konten */
+    .konten { display:flex;flex-wrap:wrap;gap:8px;margin:10px 0; }
+    .konto { border:2px solid var(--accent);border-radius:10px;background:#fff;padding:6px 12px;min-width:110px; }
+    .konto b { display:block; }
+    .konto span { font-family:Consolas,"Courier New",monospace;font-size:1.1rem; }
+    .konto small { display:block;color:var(--muted); }
+    .konto.gesperrt { border-color:var(--rot);background:var(--rot-bg); }
+    .konto.gesperrt small { color:var(--rot);font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Blockchain: eine verkettete Liste mit Fingerabdruck</h1>
+    <p>Hinter Bitcoin steckt eine Datenstruktur, die du aus Kapitel 9 kennst: eine verkettete Liste. Dazu kommen ein Fingerabdruck für jeden Block und Guthaben in einem vorzeichenlosen Typ aus Kapitel 4.</p>
+    <p>Exkurs zu Kapitel 9. Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236, und Abschnitt 4.3.6, Seiten 66–68.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Eine Kette von Blöcken</button>
+    <button type="button" class="tab" data-stufe="2">2 Der Fingerabdruck</button>
+    <button type="button" class="tab" data-stufe="3">3 Guthaben als uint</button>
+    <button type="button" class="tab" data-stufe="4">4 Regeln als Programm</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Eine Bank führt für jedes Konto ein Kassenbuch: Wer hat wem wie viel überwiesen? Bei Bitcoin gibt es keine Bank. Das Kassenbuch liegt als Kopie auf vielen tausend Rechnern zugleich. Dieses gemeinsame Kassenbuch heißt <strong>Blockchain</strong>, auf Deutsch Kette von Blöcken. Bitcoin gibt es seit 2009.</p>
+    <p>In dieser Lektion baust du ein kleines Modell davon. Drei Personen haben ein Konto: Alice, Bob und Charlie. Bezahlt wird in Coins, der Geldeinheit des Modells. Ein Eintrag im Kassenbuch lautet zum Beispiel „Alice an Bob: 25“: Alice überweist Bob 25 Coins.</p>
+    <h3>Was du aus dem Kurs schon kennst</h3>
+    <ul>
+      <li><strong>Die verkettete Liste, Abschnitt 9.2:</strong> Die Einträge stehen in Blöcken, und jeder Block zeigt mit einem Zeiger auf den Block davor. Die Lektion <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+      <li><strong>Vorzeichenlose Typen, Abschnitt 4.3.6:</strong> Guthaben stehen in einem Typ wie <code>uint64</code>. Die Lektion <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+    </ul>
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Blöcke werden zu einer Kette verbunden, wie die Wagons des Güterzugs im Kurstext.</li>
+      <li><strong>Schritt 2:</strong> Jeder Block bekommt einen Fingerabdruck. Damit fällt auf, wenn jemand einen alten Eintrag ändert.</li>
+      <li><strong>Schritt 3:</strong> Guthaben als <code>uint64</code>, und was bei 75 − 76 geschieht.</li>
+      <li><strong>Schritt 4:</strong> Überweisungen und Sperren als Funktionen mit <code>if</code>.</li>
+    </ul>
+    <div class="hinweis">Blockchain und Fingerabdruck kommen im Kurstext nicht vor. Diese Lektion ist ein Exkurs des Mentors. Wer jede Funktion ausgeschrieben und nachgerechnet sehen will, findet sie in der <a href="go_k9_blockchain_vertiefung_interaktiv.html">Vertiefung</a>. Wie echte Programme auf einer Blockchain aussehen, zeigt die Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Eine Kette von Blöcken</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Kette hat einen Zeiger <code>kopf</code> auf den neuesten Block. Ein neuer Block soll dazukommen und auf den bisher neuesten zeigen. Welche zwei Zuweisungen braucht das? Tipp: der erste Fall von <code>elementEinfügen</code> in Listing 9.1.
+          <details><summary>Auflösung</summary>Erst <code>neuer.vorgänger = k.kopf</code>, dann <code>k.kopf = neuer</code>. In umgekehrter Reihenfolge ginge die Adresse des bisher neuesten Blocks verloren.</details></li>
+      </ol>
+    </div>
+    <p>Im Güterzug des Kurstexts hängt jeder Wagon mit einer Kupplung am nächsten. Eine Blockchain ist genauso gebaut, mit einem Unterschied: Ein neuer Block kommt immer ans Ende der Zeit, eingefügt wird nie in der Mitte. Seine Kupplung zeigt auf den Block, der vor ihm kam, seinen <strong>Vorgänger</strong>. Der erste Block hat keinen Vorgänger, sein Zeiger ist <code>nil</code>.</p>
+    <pre class="code-block">type block struct {
+    eintrag   string // zum Beispiel "Alice an Bob: 25"
+    vorgänger *block
+}
+
+type blockkette struct {
+    kopf *block // der neueste Block
+}</pre>
+    <h3>Blöcke anhängen</h3>
+    <p>Hänge nacheinander vier Einträge an. Das Bild zeichnet die Kette wie die Liste in der Lektion zu Kapitel 9: vorn <code>kopf</code>, direkt dahinter der neueste Block, ganz hinten der älteste mit <code>nil</code>. Jeder Pfeil ist ein Zeiger <code>vorgänger</code>. Ein neuer Block schiebt sich also immer zwischen <code>kopf</code> und den bisher neuesten Block.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" id="k-weiter">Block anhängen</button>
+      <button type="button" id="k-vorn">von vorn</button>
+    </div>
+    <div id="k-kette"></div>
+    <div class="auskunft" id="k-urteil"></div>
+    <p>Wie die Blöcke im Hauptspeicher liegen, zeigt die <a href="go_k9_blockchain_vertiefung_interaktiv.html#zug">Vertiefung</a>, Schritt 1.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236: Güterzug und Listing 9.1. Die Typen sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Der Fingerabdruck</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Kette liegt auf vielen tausend Rechnern. Kann ein Block seinen Vorgänger dort mit einer Speicheradresse benennen?
+          <details><summary>Auflösung</summary>Nein. Eine Adresse gilt nur im laufenden Programm auf einem Rechner. Auf einem anderen Rechner liegt der Block an einer anderen Stelle.</details></li>
+      </ol>
+    </div>
+    <p>Jeder Block bekommt deshalb einen <strong>Fingerabdruck</strong>: eine Zahl, die ein Programm aus dem Eintrag berechnet. Fachleute sagen <strong>Hashwert</strong>. Er hat zwei Eigenschaften:</p>
+    <ul>
+      <li><strong>Gleicher Eintrag, gleiche Zahl:</strong> Jeder Rechner berechnet aus dem gleichen Eintrag den gleichen Hashwert.</li>
+      <li><strong>Ein Zeichen anders, ganz andere Zahl:</strong> Die zwei Hashwerte haben nichts mehr gemeinsam.</li>
+    </ul>
+    <p>Die Hashfunktion des Modells rechnet mit dem Typ <code>uint32</code> und lässt den Überlauf bewusst zu. Im Kurstext steht in Abschnitt 4.3.8, dass man das bei einer Hashfunktion so macht. Die Hashwerte stehen hexadezimal da, mit acht Ziffern.</p>
+    <p>Wähle einen Eintrag:</p>
+    <div class="zeile" id="h-wahl"></div>
+    <div class="auskunft" id="h-urteil"></div>
+
+    <h3>Ein Block merkt sich den Fingerabdruck seines Vorgängers</h3>
+    <p>Jeder Block trägt zwei Hashwerte: seinen eigenen in <code>hash</code> und den seines Vorgängers in <code>vorgängerHash</code>. Der eigene Hashwert wird aus dem Eintrag und aus <code>vorgängerHash</code> berechnet.</p>
+    <p>Die Kette unten hat vier Blöcke, vorn <code>kopf</code> und der neueste Block 3, ganz hinten Block 0. Unter <code>vorgängerHash</code> steht auf jeder Karte, von welchem Block der Wert stammt. Alice hat Bob in Block 2 25 Coins überwiesen. Später ändert sie den Eintrag und behauptet, es seien nur 5 gewesen. Gelb ist ihre Änderung, rot die Stelle, an der die Fälschung auffällt.</p>
+    <div class="zeile" id="f-wahl"></div>
+    <div id="f-kette"></div>
+    <div class="auskunft" id="f-urteil"></div>
+    <p>Die Rechnung der Hashfunktion Byte für Byte und weitere Stufen der Fälschung zeigt die <a href="go_k9_blockchain_vertiefung_interaktiv.html#hash">Vertiefung</a>, Schritt 2 und 3.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–84. Die Hashfunktion heißt FNV-1a, alle Hashwerte sind mit Go 1.26 berechnet.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Guthaben als uint</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Alice hat 75 Coins im Typ <code>uint64</code>. Ein Programm zieht 76 ab, ohne vorher zu prüfen. Was steht danach im Guthaben?
+          <details><summary>Auflösung</summary>18446744073709551615, die größte Zahl des Typs <code>uint64</code>. Go meldet nichts.</details></li>
+      </ol>
+    </div>
+    <p>Ein Guthaben kann nicht negativ sein. Deshalb liegt es nahe, einen vorzeichenlosen Typ zu nehmen:</p>
+    <pre class="code-block">type konto struct {
+    name     string
+    guthaben uint64
+    gesperrt bool
+}</pre>
+    <p>Genau davor wird im Kurstext in Hinweis 4.7 gewarnt: Ergibt eine Rechnung eine negative Zahl, springt der Wert unbemerkt an das obere Ende des Wertebereichs. Diesen Sprung über die Null zeigt der <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3.</p>
+    <p>Echte Blockchains verwenden trotzdem vorzeichenlose Typen, oft sogar mit 256 Bit. Darum muss jedes Programm prüfen, bevor es abzieht.</p>
+    <h3>Abziehen mit und ohne Prüfung</h3>
+    <p>Alice hat 75 Coins. Wähle den Betrag.</p>
+    <div class="zeile" id="g-wahl"></div>
+    <div class="nebeneinander">
+      <div><p>Ohne Prüfung</p><pre class="code-block">guthaben = guthaben - betrag</pre><div class="konsole" id="g-ohne"></div></div>
+      <div><p>Mit Prüfung</p><pre class="code-block">if betrag &gt; guthaben {
+    // ablehnen
+} else {
+    guthaben = guthaben - betrag
+}</pre><div class="konsole" id="g-mit"></div></div>
+    </div>
+    <div class="auskunft" id="g-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Hinweis 4.7, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84. Die Werte sind mit Go 1.26 geprüft.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Regeln als Programm</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Alice ist gesperrt und will Bob 10 Coins überweisen. Was muss die Funktion <code>überweisen</code> prüfen, bevor sie bucht?
+          <details><summary>Auflösung</summary>Ob der Absender gesperrt ist, und ob sein Guthaben reicht. Erst wenn beide Prüfungen bestanden sind, bucht sie und hängt einen Block an.</details></li>
+      </ol>
+    </div>
+    <p>Die Regeln des Kassenbuchs sind Funktionen mit <code>if</code>. Eine Überweisung prüft erst und bucht dann:</p>
+    <pre class="code-block">func überweisen(k *blockkette, von *konto, an *konto, betrag uint64) bool {
+    if von.gesperrt {
+        return false
+    }
+    if betrag &gt; von.guthaben {
+        return false
+    }
+    von.guthaben = von.guthaben - betrag
+    an.guthaben = an.guthaben + betrag
+    blockAnhängen(k, fmt.Sprintf("%s an %s: %d", von.name, an.name, betrag))
+    return true
+}</pre>
+    <p>Wer darf ein Konto sperren? In diesem Modell nur der <strong>Herausgeber</strong>, also die Stelle, die die Coins ausgegeben hat. Die Sperre landet als eigener Block in der Kette. Jeder kann sie also sehen, aufheben kann sie niemand außer dem Herausgeber.</p>
+    <h3>Ausprobieren</h3>
+    <p>Am Anfang hat Alice 75 Coins, Bob 45 und Charlie 10.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" data-tu="ab">Alice überweist Bob 25</button>
+      <button type="button" class="haupt" data-tu="sperren">Herausgeber sperrt Alice</button>
+      <button type="button" class="haupt" data-tu="ac">Alice überweist Charlie 10</button>
+      <button type="button" class="haupt" data-tu="bc">Bob überweist Charlie 100</button>
+      <button type="button" id="s-vorn">von vorn</button>
+    </div>
+    <div class="auskunft" id="s-urteil"></div>
+    <div id="s-zustand"></div>
+    <h3>Was das Modell zeigt</h3>
+    <p>Die Kette ist technisch in Ordnung, und trotzdem entscheidet eine einzige Stelle, wer zahlen darf. Genau solche Funktionen stehen im Programm des digitalen Dollars USDT. Du liest sie in der Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</p>
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Vertiefung:</strong> Die Lektion <a href="go_k9_blockchain_vertiefung_interaktiv.html">Vertiefung: Blockchain in Go</a> schreibt jede Funktion aus, rechnet die Hashwerte Byte für Byte nach und enthält das ganze Programm <a href="go/blockchain.go">blockchain.go</a>.</li>
+      <li><strong>Abschnitt 9.3:</strong> Die Lektion <a href="go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
+    </ul>
+    <p class="quelle">Die Funktion ist ein eigenes Beispiel. Sie ist kürzer als in der Vertiefung: Dort sucht <code>überweisen</code> die Konten selbst und gibt eine Meldung zurück.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const NL = String.fromCharCode(10);
+
+  // ---------- Reiter ----------
+  const ANKER = ['worum', 'kette', 'hash', 'guthaben', 'regeln'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Kette von Blöcken', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Guthaben als uint', 'Schritt 4: Regeln als Programm'];
+  let stufe = 0;
+  let angemeldet = false;
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Hashfunktion FNV-1a mit 32 Bit, wie in blockchain.go ----------
+  const UTF8 = new TextEncoder();
+  function fnv(text) { let h = 2166136261; UTF8.encode(text).forEach(b => { h = (h ^ b) >>> 0; h = Math.imul(h, 16777619) >>> 0; }); return h; }
+  const hex8 = h => h.toString(16).padStart(8, '0');
+  const fingerabdruck = b => fnv(b.nummer + '|' + b.eintrag + '|' + hex8(b.vh));
+  const EINTRAEGE = ['Herausgeber an Alice: 100', 'Herausgeber an Bob: 30', 'Alice an Bob: 25', 'Bob an Charlie: 10'];
+  function echteKette(eintraege) {
+    const B = []; let vh = 0;
+    eintraege.forEach((e, i) => { const b = { nummer: i, eintrag: e, vh: vh, geaendert: [] }; b.h = fingerabdruck(b); B.push(b); vh = b.h; });
+    return B;
+  }
+  // Karten wie die Liste in Listing 9.1: kopf, dann der neueste Block, am Ende nil oder der Hinweis auf ältere Blöcke
+  function karten(B, opt) {
+    opt = opt || {};
+    return '<div class="karten"><span class="karte kopfmarke">kopf</span>' + B.slice().reverse().map(b => {
+      const falsch = opt.falsch && opt.falsch.block === b.nummer ? opt.falsch.feld : '';
+      const kl = f => (b.geaendert.indexOf(f) >= 0 ? 'geaendert' : '') + (falsch === f ? ' falsch' : '');
+      return '<div class="karte' + (falsch ? ' schlecht' : '') + (b === opt.neu ? ' neu' : '') + '"><h4>Block ' + b.nummer + '</h4><div class="' + kl('eintrag') + '">' + esc(b.eintrag) + '</div>' +
+        (opt.hashes ? '<div class="' + kl('hash') + '"><i>hash</i> ' + hex8(b.h) + '</div><div class="' + kl('vorgängerHash') + '"><i>vorgängerHash</i> ' + hex8(b.vh) + '</div><div><i>' + (b.nummer ? '= hash von Block ' + (b.nummer - 1) + ', rechts daneben' : 'kein Vorgänger') + '</i></div>' : '') + '</div>';
+    }).map(k => '<span class="pfeil">→</span>' + k).join('') + '<span class="pfeil">→ ' + (opt.ende || 'nil') + '</span></div>';
+  }
+
+  // ---------- Schritt 1: Blöcke anhängen ----------
+  let kAnzahl = 0;
+  function zeichneKette() {
+    const B = echteKette(EINTRAEGE.slice(0, kAnzahl));
+    el('k-kette').innerHTML = kAnzahl ? karten(B, { neu: B[kAnzahl - 1] }) : '<div class="karten"><span class="karte kopfmarke">kopf</span><span class="pfeil">enthält nil: Die Kette ist leer.</span></div>';
+    el('k-urteil').innerHTML = '<p>' + esc(kAnzahl === 0 ? 'Die Kette ist leer, kopf ist nil.' :
+      kAnzahl === 1 ? 'Block 0 mit „' + EINTRAEGE[0] + '“ ist der erste Block. Sein Zeiger vorgänger bekommt den alten Wert von kopf, also nil. Dann zeigt kopf auf Block 0.' :
+      'Block ' + (kAnzahl - 1) + ' mit „' + EINTRAEGE[kAnzahl - 1] + '“ kommt dazu. Sein Zeiger vorgänger bekommt den alten Wert von kopf, die Adresse von Block ' + (kAnzahl - 2) + '. Dann zeigt kopf auf Block ' + (kAnzahl - 1) + '. Kein älterer Block geht verloren: Vom kopf aus führen die Zeiger bis Block 0.') + '</p>';
+    el('k-weiter').disabled = kAnzahl === EINTRAEGE.length;
+    melde(false);
+  }
+  el('k-weiter').addEventListener('click', () => { if (kAnzahl < EINTRAEGE.length) { kAnzahl++; zeichneKette(); } });
+  el('k-vorn').addEventListener('click', () => { kAnzahl = 0; zeichneKette(); });
+  const standKette = () => ['Angehängt sind ' + kAnzahl + ' von 4 Blöcken. Die vier Einträge der Reihe nach: ' + EINTRAEGE.join('; ') + '.',
+    kAnzahl ? 'Im Bild, vorn kopf, dann der neueste Block, jeder Pfeil ist ein Zeiger vorgänger: kopf → ' + EINTRAEGE.slice(0, kAnzahl).map((e, i) => 'Block ' + i + ' „' + e + '“').reverse().join(' → ') + ' → nil.' : 'Die Kette ist leer, kopf ist nil.',
+    'Die Seite sagt dazu: ' + el('k-urteil').textContent,
+    'Handgriffe: „Block anhängen“ und „von vorn“. Die Einträge lassen sich nicht ändern. Die Karten zeigen keine Adressen und keine Hashwerte.'];
+
+  // ---------- Schritt 2: Hashwert und Fälschung ----------
+  const VORLAGEN = ['Alice an Bob: 25', 'Alice an Bob: 5', 'alice an Bob: 25', 'Alice an Bob: 26'];
+  let hText = VORLAGEN[0];
+  function zeichneHash() {
+    el('h-wahl').innerHTML = VORLAGEN.map(v => '<button type="button" class="code' + (v === hText ? ' gewaehlt' : '') + '" data-v="' + esc(v) + '">' + esc(v) + '</button>').join('');
+    el('h-urteil').innerHTML = '<p>„' + esc(hText) + '“ hat den Hashwert <span class="ergebnis">' + hex8(fnv(hText)) + '</span>.</p>' +
+      (hText === VORLAGEN[0] ? '' : '<p>Zum Vergleich: „' + esc(VORLAGEN[0]) + '“ hat ' + hex8(fnv(VORLAGEN[0])) + '. Die zwei Texte unterscheiden sich in einem Zeichen, und ' + gleiche(hex8(fnv(hText)), hex8(fnv(VORLAGEN[0]))) + '.</p>');
+    melde(false);
+  }
+  function gleiche(a, b) { let n = 0; for (let i = 0; i < 8; i++) if (a[i] === b[i]) n++; return n === 0 ? 'keine Ziffer stimmt an der gleichen Stelle überein' : 'nur ' + n + ' von 8 Ziffern stimmen zufällig an der gleichen Stelle überein'; }
+  el('h-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { hText = k.dataset.v; zeichneHash(); } });
+  const ECHT = echteKette(EINTRAEGE);
+  let gefaelscht = false;
+  function kette2() {
+    const B = ECHT.map(b => Object.assign({}, b, { geaendert: [] }));
+    if (gefaelscht) { B[2].eintrag = 'Alice an Bob: 5'; B[2].h = fingerabdruck(B[2]); B[2].geaendert.push('eintrag', 'hash'); }
+    return B;
+  }
+  function zeichneFaelschen() {
+    el('f-wahl').innerHTML = ['Kette unverändert', 'Alice ändert Block 2'].map((t, k) => '<button type="button" class="code' + ((k === 1) === gefaelscht ? ' gewaehlt' : '') + '" data-i="' + k + '">' + t + '</button>').join('');
+    const B = kette2();
+    el('f-kette').innerHTML = karten(B, { hashes: true, falsch: gefaelscht ? { block: 3, feld: 'vorgängerHash' } : null });
+    el('f-urteil').className = 'auskunft' + (gefaelscht ? ' fehler' : '');
+    el('f-urteil').innerHTML = gefaelscht ?
+      '<p>Alice hat den Eintrag in Block 2 geändert und seinen Hashwert neu berechnet: ' + hex8(B[2].h) + ' statt ' + hex8(ECHT[2].h) + '. In Block 3 steht aber weiter der alte Wert ' + hex8(ECHT[2].h) + ' als vorgängerHash. Die zwei Zahlen passen nicht zusammen, die Fälschung fällt auf.</p><p>Um das zu verbergen, müsste Alice auch Block 3 ändern und jeden Block danach, und das auf Tausenden von Rechnern mit einer Kopie der Kette.</p>' :
+      '<p>Jeder Block trägt in vorgängerHash den Hashwert seines Vorgängers. Im Bild ist das der Block rechts daneben. Alle Zahlen passen zusammen.</p>';
+    melde(false);
+  }
+  el('f-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { gefaelscht = k.dataset.i === '1'; zeichneFaelschen(); } });
+  function standHash() {
+    const B = kette2();
+    return ['Erste Demo: Gewählt ist der Eintrag „' + hText + '“ mit dem Hashwert ' + hex8(fnv(hText)) + '. Die vier Einträge zur Wahl und ihre Hashwerte, mit Go berechnet: ' + VORLAGEN.map(v => '„' + v + '“ ' + hex8(fnv(v))).join(', ') + '.',
+      'Zweite Demo: ' + (gefaelscht ? 'Gewählt ist „Alice ändert Block 2“.' : 'Gewählt ist „Kette unverändert“.') + ' Die Karten, vorn kopf, dann der neueste Block, jeder Pfeil ist ein Zeiger auf den Vorgänger: ' + B.slice().reverse().map(b => 'Block ' + b.nummer + ' {eintrag: „' + b.eintrag + '“, hash: ' + hex8(b.h) + ', vorgängerHash: ' + hex8(b.vh) + '}').join(' → ') + ' → nil. Unter vorgängerHash steht auf jeder Karte, von welchem Block der Wert stammt: dem Block rechts daneben.',
+      gefaelscht ? 'Gelb sind in Block 2 der Eintrag und hash. Rot ist vorgängerHash in Block 3: Er passt nicht mehr zum hash von Block 2.' : 'Alle Zahlen passen zusammen, nichts ist rot.',
+      'Die Seite sagt dazu: ' + el('f-urteil').textContent,
+      'Handgriffe: einen der vier Einträge wählen, und „Kette unverändert“ oder „Alice ändert Block 2“ wählen. Einen eigenen Text kann der Student hier nicht eingeben, das geht in der Vertiefung.'];
+  }
+
+  // ---------- Schritt 3: Abziehen ----------
+  const BETRAEGE = [25, 75, 76, 100];
+  let g = 0;
+  const MOD64 = 1n << 64n;
+  function zeichneGuthaben() {
+    const b = BETRAEGE[g], ohne = ((75n - BigInt(b)) % MOD64 + MOD64) % MOD64;
+    el('g-wahl').innerHTML = BETRAEGE.map((x, k) => '<button type="button" class="code' + (k === g ? ' gewaehlt' : '') + '" data-i="' + k + '">betrag = ' + x + '</button>').join('');
+    el('g-ohne').textContent = 'guthaben: ' + ohne.toString();
+    el('g-mit').textContent = b > 75 ? 'abgelehnt' + NL + 'guthaben: 75' : 'guthaben: ' + (75 - b);
+    el('g-urteil').className = 'auskunft' + (b > 75 ? ' fehler' : '');
+    el('g-urteil').innerHTML = '<p>' + esc(b > 75 ? '75 − ' + b + ' ergäbe −' + (b - 75) + '. Der Typ uint64 hat keine negativen Zahlen, der Wert springt an das obere Ende: ' + ohne.toString() + '. Mit Prüfung wird die Überweisung abgelehnt, und Alice behält 75 Coins.' : 'Der Betrag ist nicht größer als das Guthaben. Beide Fassungen ziehen ab, Alice hat danach ' + (75 - b) + ' Coins.') + '</p>';
+    melde(false);
+  }
+  el('g-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { g = Number(k.dataset.i); zeichneGuthaben(); } });
+  const standGuthaben = () => ['Alice hat 75 Coins im Typ uint64. Gewählt ist betrag = ' + BETRAEGE[g] + '. Wählbar sind 25, 75, 76 und 100.',
+    'Ohne Prüfung steht danach im Guthaben: ' + el('g-ohne').textContent.replace('guthaben: ', '') + '. Mit Prüfung: ' + el('g-mit').textContent.split(NL).join(', ') + '.',
+    'Die Seite sagt dazu: ' + el('g-urteil').textContent,
+    'Mit Go geprüft: 75 − 76 ergibt 18446744073709551615, 75 − 100 ergibt 18446744073709551591.'];
+
+  // ---------- Schritt 4: Überweisen und Sperren ----------
+  let S;
+  function vonVorn() { S = { konten: { Alice: { g: 75, gesperrt: false }, Bob: { g: 45, gesperrt: false }, Charlie: { g: 10, gesperrt: false } }, B: echteKette(EINTRAEGE), letzte: '', ok: true, neu: false }; }
+  vonVorn();
+  function anhaengen(e) { const kopf = S.B[S.B.length - 1]; const b = { nummer: kopf.nummer + 1, eintrag: e, vh: kopf.h, geaendert: [] }; b.h = fingerabdruck(b); S.B.push(b); }
+  function ueberweisen(von, an, betrag) {
+    const v = S.konten[von], a = S.konten[an];
+    if (v.gesperrt) return [false, von + ' ist gesperrt. überweisen gibt false zurück, bevor etwas gebucht wird. Kein Block entsteht.'];
+    if (betrag > v.g) return [false, von + ' hat nur ' + v.g + ' Coins. betrag > von.guthaben ist wahr, überweisen gibt false zurück. Kein Block entsteht.'];
+    v.g -= betrag; a.g += betrag; anhaengen(von + ' an ' + an + ': ' + betrag);
+    return [true, 'Gebucht: ' + von + ' hat jetzt ' + v.g + ' Coins, ' + an + ' ' + a.g + '. Ein neuer Block steht vorn, direkt hinter kopf.'];
+  }
+  const AKTION = {
+    ab: ['Alice überweist Bob 25', () => ueberweisen('Alice', 'Bob', 25)],
+    sperren: ['Herausgeber sperrt Alice', () => { S.konten.Alice.gesperrt = true; anhaengen('Herausgeber sperrt Alice'); return [true, 'Alice ist gesperrt. Die Sperre steht als eigener Block in der Kette.']; }],
+    ac: ['Alice überweist Charlie 10', () => ueberweisen('Alice', 'Charlie', 10)],
+    bc: ['Bob überweist Charlie 100', () => ueberweisen('Bob', 'Charlie', 100)]
+  };
+  function zeichneSim() {
+    const n = S.B.length, zeige = S.B.slice(Math.max(0, n - 4));
+    el('s-urteil').className = 'auskunft' + (S.ok ? '' : ' fehler');
+    el('s-urteil').innerHTML = '<p>' + esc(S.letzte || 'Noch ist nichts geschehen. Klicke auf einen der Knöpfe.') + '</p>';
+    el('s-zustand').innerHTML = '<div class="konten">' + Object.keys(S.konten).map(k => '<div class="konto' + (S.konten[k].gesperrt ? ' gesperrt' : '') + '"><b>' + k + '</b><span>' + S.konten[k].g + '</span><small>' + (S.konten[k].gesperrt ? 'gesperrt' : 'nicht gesperrt') + '</small></div>').join('') + '</div>' +
+      '<p><strong>Kette</strong>, die neuesten ' + zeige.length + ' von ' + n + ' Blöcken</p>' + karten(zeige, { neu: S.neu ? S.B[n - 1] : null, ende: n > 4 ? (n - 4) + ' ältere Blöcke bis Block 0 → nil' : 'nil' });
+    melde(false);
+  }
+  document.querySelectorAll('[data-tu]').forEach(k => k.addEventListener('click', () => {
+    const a = AKTION[k.dataset.tu], laenge = S.B.length, r = a[1]();
+    S.ok = r[0]; S.letzte = a[0] + ': ' + r[1]; S.neu = S.B.length > laenge; zeichneSim();
+  }));
+  el('s-vorn').addEventListener('click', () => { vonVorn(); zeichneSim(); });
+  const standSim = () => ['Die Knöpfe: „Alice überweist Bob 25“, „Herausgeber sperrt Alice“, „Alice überweist Charlie 10“, „Bob überweist Charlie 100“ und „von vorn“. Am Anfang hat Alice 75, Bob 45, Charlie 10, und die Kette hat die vier Blöcke aus Schritt 2.',
+    'Die Konten jetzt: ' + Object.keys(S.konten).map(k => k + ' ' + S.konten[k].g + (S.konten[k].gesperrt ? ', gesperrt' : ', nicht gesperrt')).join(' ; ') + '.',
+    'Die Kette hat ' + S.B.length + ' Blöcke, vom ältesten zum neuesten: ' + S.B.map(b => 'Block ' + b.nummer + ' „' + b.eintrag + '“').join(', ') + '. Im Bild stehen kopf und die neuesten vier, der neueste vorn.',
+    S.letzte ? 'Der letzte Klick: ' + S.letzte : 'Noch ist nichts geschehen.',
+    'Die Funktion überweisen auf der Seite ist kürzer als in der Vertiefung: Sie bekommt Zeiger auf die zwei Konten und gibt nur bool zurück. Eine Funktion zum Entsperren gibt es nicht.'];
+
+  // ---------- Kurslotse ----------
+  function standSaetze() {
+    if (stufe === 1) return standKette();
+    if (stufe === 2) return standHash();
+    if (stufe === 3) return standGuthaben();
+    if (stufe === 4) return standSim();
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 1 ? kAnzahl + ' von 4 Blöcken' : stufe === 2 ? '„' + hText + '“, ' + (gefaelscht ? 'Block 2 gefälscht' : 'Kette unverändert') : stufe === 3 ? '75 − ' + BETRAEGE[g] : stufe === 4 ? Object.keys(S.konten).map(k => k + ' ' + S.konten[k].g + (S.konten[k].gesperrt ? ' gesperrt' : '')).join(', ') : '';
+
+  zeichneKette(); zeichneHash(); zeichneFaelschen(); zeichneGuthaben(); zeichneSim();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Blockchain: eine verkettete Liste mit Fingerabdruck',
+    thema: 'Blockchain, verkettete Liste, Block, Vorgänger, Hashwert, Fingerabdruck, uint64, Guthaben, Überweisung, Sperre',
+    bezug: 'Exkurs zu Kapitel 9. Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236; Abschnitt 4.3.6, Seiten 66–68',
+    beschreibung: '../kurslotse/kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, pre.code-block, .nebeneinander > div > p',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum fällt die Änderung in Block 2 auf?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
