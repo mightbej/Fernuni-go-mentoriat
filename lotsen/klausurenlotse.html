@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Klausurenlotse: Beschreibung und Anleitung</title>
+  <!-- Diese Seite schreibt lotsenanleitung.py im Modul lotsen aus anleitung.py im Ordner des Lotsen. Nicht von Hand ändern. -->
   <link rel="stylesheet" href="../stil.css">
   <style>
     :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
@@ -35,7 +36,7 @@
 
   <div class="hero">
     <h1>Klausurenlotse</h1>
-    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Die Seite beschreibt, was er tut, und führt dich in vier Schritten vom Herunterladen bis zur ersten Aufgabe.</p>
+    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Die Seite beschreibt, was er tut, und führt dich in 4 Schritten vom Herunterladen bis zur Arbeit mit ihm.</p>
     <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
   </div>
 
@@ -43,7 +44,7 @@
     <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
     <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
     <button type="button" class="tab" data-stufe="2">2 Schlüssel und Kurstext einrichten</button>
-    <button type="button" class="tab" data-stufe="3">3 Die Aufgabenformen</button>
+    <button type="button" class="tab" data-stufe="3">3 Aufgaben bearbeiten</button>
     <button type="button" class="tab" data-stufe="4">4 Den Klausurenlotsen fragen</button>
     <button type="button" class="tab" data-stufe="5">Gut zu wissen</button>
   </div>
@@ -52,30 +53,27 @@
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Er stellt dir Aufgaben aus den fünf Klausuren vom Sommersemester 2024 bis zum Sommersemester 2026, in den sechs Aufgabenformen, die in diesen Klausuren vorkommen.</p>
-    <p>Du löst eine Aufgabe und lässt deine Antwort prüfen. Zu jeder Aufgabe kannst du nachfragen. Bei der Aufgabenform „Was passiert?“ schreibt dir ein Sprachmodell auf Knopfdruck neue Aufgaben im Stil der Klausuren.</p>
-
+    <p>Du löst eine Aufgabe und lässt deine Antwort prüfen. Zu jeder Aufgabe kannst du nachfragen. Der Klausurenlotse ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist.</p>
     <div class="nur-kurs">
       <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Klausurenlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
-      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
       <p>Der Grund: Das Paket enthält Aufgaben aus alten Klausuren, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität.</p>
     </div>
-
     <h3>Was du auf dem Bildschirm siehst</h3>
     <ul>
       <li><strong>Oben:</strong> die Auswahl der Aufgabenform und der Aufgabe.</li>
       <li><strong>Links:</strong> die Aufgabe mit den Feldern für deine Antwort.</li>
-      <li><strong>Rechts:</strong> die Spalte „Klausurenlotse“. Dort stellst du Fragen zur Aufgabe und bekommst Antworten mit Stellen aus dem Kurstext.</li>
+      <li><strong>Rechts:</strong> die Spalte „Klausurenlotse“. Dort stellst du Fragen zur Aufgabe.</li>
+      <li><strong>Unter der Antwort:</strong> der Abschnitt im Kurstext und Links auf die HTML-Seiten des Mentoriats, auf denen du den Stoff ausprobieren kannst.</li>
     </ul>
-
     <h3>Was du brauchst</h3>
     <ul>
       <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Das Programm läuft auf deinem eigenen Rechner.</li>
       <li><strong>Go:</strong> Der Klausurenlotse rechnet bei „Was passiert?“ und bei „Lücken füllen“ mit Go. Für den Kurs installierst du Go ohnehin. Ohne Go laufen das Quiz und die Aufgaben mit freiem Text.</li>
-      <li><strong>Paket:</strong> eine ZIP-Datei aus Moodle. Schritt 1 zeigt, wo sie liegen wird.</li>
-      <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal. Schritt 2 zeigt, wie du sie einrichtest.</li>
-      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Schritt 2 zeigt, wie du ihn einrichtest. Das Quiz läuft auch ohne Schlüssel.</li>
+      <li><strong>Paket:</strong> die ZIP-Datei <code>klausurenlotse.zip</code> mit etwa 7 MB aus Moodle.</li>
+      <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal.</li>
+      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Das Quiz läuft auch ohne Schlüssel.</li>
     </ul>
-
     <div class="hinweis">Der Klausurenlotse ist ein privates Angebot deines Mentors. Verbindlich sind allein der Kurstext und Moodle der FernUniversität. Welche Aufgaben in deiner Klausur stehen, weiß der Klausurenlotse nicht. Das Sprachmodell kann sich irren.</div>
   </div>
   <div class="zeile schritte">
@@ -83,31 +81,56 @@
     <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Schritt 1: Herunterladen und starten</h2>
-    <div class="hinweis">Das Paket des Klausurenlotsen folgt in den nächsten Tagen. Die Schritte zum Entpacken und Starten stehen hier, sobald es in Moodle liegt.</div>
-
-    <h3>Wo das Paket liegen wird</h3>
-    <p>Das Paket kommt nach Moodle, in den Beitrag deines Mentors im Forum des Mentoriats. Dort steht es in der Tabelle „Die Lotsen zum Kurs“.</p>
+    <h3>Die zwei Dateien in Moodle holen</h3>
+    <p>Beide Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
+    <ul>
+      <li><strong><code>klausurenlotse.zip</code>:</strong> das Paket des Klausurenlotsen. Es steht in der Tabelle unter „ZIP herunterladen“.</li>
+      <li><strong><code>lotsen-kurstext.zip</code>:</strong> der Kurstext für alle Lotsen. Die Datei steht über der Tabelle. Hast du sie schon für einen anderen Lotsen eingerichtet, brauchst du sie nicht noch einmal.</li>
+    </ul>
     <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
     <div class="nur-kurs">
       <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Klausurenlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
-      <p>Du darfst das Paket nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
       <p>Der Grund: Das Paket enthält Aufgaben aus alten Klausuren, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität.</p>
     </div>
+
+    <h3>Den Ordner entpacken</h3>
+    <ol>
+      <li>Klick mit der rechten Maustaste auf <code>klausurenlotse.zip</code> und wähle „Alle extrahieren“.</li>
+      <li>Wähle einen Ort, den du wiederfindest, zum Beispiel „Dokumente“.</li>
+    </ol>
+    <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
+    <p>Die Datei <code>lotsen-kurstext.zip</code> entpackst du nicht. Sie bleibt, wie sie ist. Hast du sie noch für keinen anderen Lotsen eingerichtet, lade sie aus Moodle. Du brauchst sie beim Einrichten des Kurstexts.</p>
+    <p>Im Ordner <code>klausurenlotse</code> liegen die Anleitung, die Nutzungsbedingungen und <code>start.bat</code>. Den Ordner <code>programm</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
+
+    <h3>Prüfen, ob Go installiert ist</h3>
+    <p>Der Klausurenlotse rechnet mit Go. Bei „Was passiert?“ führt er die Funktion der Aufgabe aus, bei „Lücken füllen“ dein ergänztes Programm. Dafür braucht er Go auf deinem Rechner. Für den Kurs installierst du Go ohnehin.</p>
+    <ol>
+      <li>Drück die Windows-Taste, tipp <code>cmd</code> und drück die Eingabetaste.</li>
+      <li>Tipp <code>go version</code> und drück die Eingabetaste.</li>
+    </ol>
+    <p>Antwortet das Fenster mit einer Zeile wie <code>go version go1.22 windows/amd64</code>, ist Go installiert. Antwortet es, der Befehl sei nicht gefunden, dann installiere Go von <a href="https://go.dev/dl/" target="_blank" rel="noopener">go.dev/dl</a> und starte den Rechner neu.</p>
+    <p>Ohne Go laufen das Quiz, die Kurzfragen, „Pseudocode umformen“ und „Verhalten begründen“. „Was passiert?“ und „Lücken füllen“ laufen ohne Go nicht.</p>
+
+    <h3>Den Klausurenlotsen starten</h3>
+    <ol>
+      <li>Öffne den entpackten Ordner <code>klausurenlotse</code>.</li>
+      <li>Mach einen Doppelklick auf <code>start.bat</code>.</li>
+    </ol>
+    <p>Es öffnet sich ein schwarzes Fenster, und dein Browser zeigt die Adresse <code>http://localhost:8613</code>. Das schwarze Fenster ist das Programm. Lass es offen, solange du mit dem Klausurenlotsen arbeitest.</p>
+    <div class="hinweis">Windows kann beim ersten Start warnen, weil das Programm von keinem Hersteller signiert ist. Klick in diesem Fall auf „Weitere Informationen“ und dann auf „Trotzdem ausführen“.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
     <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-2">
   <div class="card">
     <h2>Schritt 2: Schlüssel und Kurstext einrichten</h2>
-
     <h3>Den Schlüssel für KI:connect einrichten</h3>
     <p>KI:connect ist der KI-Dienst der Hochschulen in Nordrhein-Westfalen. Als Student der FernUniversität darfst du ihn nutzen. Der Klausurenlotse stellt deine Fragen dort, und dafür braucht er deinen persönlichen Schlüssel. Du richtest ihn einmal ein.</p>
     <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen die gleichen Schritte:</p>
@@ -118,14 +141,12 @@
       <li>Kopiere den Schlüssel. KI:connect zeigt ihn nur einmal an.</li>
       <li>Füge den Schlüssel auf der Seite des Klausurenlotsen ein und klick auf „Prüfen und übernehmen“.</li>
     </ol>
-
     <h3>Was mit dem Schlüssel geschieht</h3>
     <ul>
       <li><strong>Er bleibt bei dir:</strong> Der Schlüssel bleibt auf deinem Rechner. Das Programm schickt ihn nur an KI:connect.</li>
       <li><strong>Er ist persönlich:</strong> Gib den Schlüssel niemandem weiter.</li>
-      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für den Skriptlotsen oder den Kurslotsen eingerichtet, findet ihn der Klausurenlotse von selbst.</li>
+      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für einen anderen Lotsen eingerichtet, findet ihn der Klausurenlotse von selbst.</li>
     </ul>
-
     <h3>Ohne Schlüssel</h3>
     <p>Mit „Ohne Schlüssel weiter“ bleiben die Aufgaben, die berechneten Ergebnisse, das Quiz und die Musterantworten. Es fehlen die Antworten des Klausurenlotsen, die neuen Aufgaben und die Beurteilung deiner Texte.</p>
 
@@ -144,10 +165,9 @@
     <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-3">
   <div class="card">
-    <h2>Schritt 3: Die Aufgabenformen</h2>
+    <h2>Schritt 3: Eine Aufgabe bearbeiten</h2>
     <p>Du wählst erst die Aufgabenform und dann die Aufgabe. Bei jeder Aufgabenform prüft der Klausurenlotse deine Antwort auf eine andere Art.</p>
 
     <h3>Was passiert?</h3>
@@ -167,7 +187,7 @@
     <h3>Lücken füllen</h3>
     <ul>
       <li><strong>Aufgabe:</strong> Der Rahmen einer Funktion ist vorgegeben, du ergänzt die Lücken. Diese Aufgabenform bringt in der Klausur den größten Teil der Punkte.</li>
-      <li><strong>Prüfung:</strong> Go setzt deine Lücken in den Rahmen ein, übersetzt das Programm und führt es aus. Die Ausgaben vergleicht es mit denen der Musterlösung. Eine andere Schreibweise mit denselben Ergebnissen gilt als richtig.</li>
+      <li><strong>Prüfung:</strong> Go setzt deine Lücken in den Rahmen ein, übersetzt das Programm und führt es aus. Die Ausgaben vergleicht es mit denen der Musterlösung. Eine andere Schreibweise mit den gleichen Ergebnissen gilt als richtig.</li>
     </ul>
 
     <h3>Kurzfragen, Pseudocode umformen, Verhalten begründen</h3>
@@ -182,14 +202,14 @@
     <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-4">
   <div class="card">
     <h2>Schritt 4: Den Klausurenlotsen fragen</h2>
     <p>Rechts neben der Aufgabe steht die Spalte „Klausurenlotse“. Dort beantwortet das Sprachmodell deine Fragen zur Aufgabe, die du gerade siehst.</p>
     <ul>
       <li><strong>Fragen:</strong> Tipp deine Frage in das Feld, zum Beispiel „Warum ist der zweite Aufruf 0?“, und drück die Eingabetaste.</li>
-      <li><strong>Stellen aus dem Kurstext:</strong> Zu jeder Frage sucht der Klausurenlotse passende Stellen im Kurstext. Unter der Antwort stehen die Abschnitte, auf die sie sich stützt.</li>
+      <li><strong>Eine Stelle markieren:</strong> Markiere mit der Maus eine Stelle in der Aufgabe, zum Beispiel eine Zeile der Funktion. Sie erscheint rechts über dem Eingabefeld und geht mit deiner Frage mit. Das Kreuz daneben verwirft sie.</li>
+      <li><strong>Unter der Antwort:</strong> Dort stehen die Abschnitte des Kurstexts, auf die sich die Antwort stützt, und Links auf die HTML-Seiten des Mentoriats zu diesen Abschnitten.</li>
       <li><strong>Kopieren und Leeren:</strong> Mit „Kopieren“ nimmst du den Dialog in die Zwischenablage, mit „Leeren“ beginnst du neu.</li>
       <li><strong>Spalte schließen:</strong> Der Knopf „×“ oben rechts schließt die Spalte, damit die Aufgabe die ganze Breite hat. Der Knopf „Klausurenlotsen fragen“ unten rechts öffnet sie wieder.</li>
       <li><strong>Beim Quiz:</strong> Bis zum Prüfen ist die Spalte gesperrt und sagt dir das auch. Der Klausurenlotse kennt die Musterlösung und könnte dir sonst die Kreuze verraten. Nach „Prüfen“ beantwortet er deine Fragen.</li>
@@ -200,18 +220,28 @@
     <button type="button" class="haupt" data-gehe="5">Weiter zu „Gut zu wissen“</button>
   </div>
   </section>
-
   <section class="stufe" id="stufe-5">
   <div class="card">
     <h2>Gut zu wissen</h2>
+    <h3>Beenden und wieder starten</h3>
+    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>start.bat</code>.</p>
+    <p>Meldet das schwarze Fenster „Die Adresse ist belegt“, dann läuft der Klausurenlotse schon in einem anderen Fenster.</p>
+
+    <h3>Was du wissen musst</h3>
     <ul>
       <li><strong>Was dein Rechner verlässt:</strong> Die Aufgabe, deine Antwort und deine Frage gehen an KI:connect. Alles andere bleibt auf deinem Rechner.</li>
       <li><strong>Was das Programm aus dem Netz holt:</strong> Bei jedem Start holt es von den HTML-Seiten des Mentoriats die Liste, welche HTML-Seite zu welchem Abschnitt des Kurstexts gehört. So erscheinen neue HTML-Seiten ohne neues Paket.</li>
       <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
-      <li><strong>Nicht weitergeben:</strong> Das Paket enthält Aufgaben aus den Klausuren, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität. Beide sind nur für Teilnehmer dieses Kurses bestimmt.</li>
+      <li><strong>Nicht weitergeben:</strong> Das Paket enthält Aufgaben aus alten Klausuren, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität. Beide sind nur für Teilnehmer dieses Kurses bestimmt. Genaueres steht in den Nutzungsbedingungen.</li>
       <li><strong>Erzeugte Aufgaben:</strong> Eine Aufgabe, die das Sprachmodell geschrieben hat, kann leichter oder schwerer sein als eine Aufgabe der Klausur. Ihre Ergebnisse stimmen, weil Go sie ausrechnet.</li>
       <li><strong>Neue Aufgaben nur bei „Was passiert?“:</strong> Bei den anderen fünf Aufgabenformen stammen Aufgabe und Musterlösung aus den Klausuren. Eine Lösung, die das Sprachmodell selbst schreibt, könnte falsch sein.</li>
+      <li><strong>Einsendeaufgaben:</strong> Der Klausurenlotse löst sie nicht für dich.</li>
       <li><strong>Fehler und Fragen:</strong> Bring sie ins Mentoriat mit.</li>
+    </ul>
+
+    <h3>Nutzungsbedingungen</h3>
+    <ul>
+      <li><strong>Nutzungsbedingungen:</strong> Wer den Klausurenlotsen nutzen darf und was nicht erlaubt ist, steht in der Datei <code>Nutzungsbedingungen.txt</code> im Ordner. Du öffnest sie mit einem Doppelklick.</li>
     </ul>
   </div>
   <div class="zeile schritte">
@@ -224,7 +254,7 @@
 <script>
 (function () {
   "use strict";
-  // Jede Stufe hat eine eigene Adresse, zum Beispiel #aufgaben.
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel #schluessel.
   var ANKER = ["worum", "starten", "schluessel", "aufgaben", "fragen", "wissen"];
 
   function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
