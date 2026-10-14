@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -161,7 +160,7 @@ telbuch := [6]person{
     <div class="konsole" id="j-ausgabe"></div>
     <div class="auskunft" id="j-urteil"></div>
     <p>Die Funktion <code>indexÄlteste</code> unterscheidet sich in einem Zeichen: Sie vergleicht mit <code>&gt;</code>. Sie steht in Schritt 4.</p>
-    <p class="quelle">Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26. Das Muster ist <code>findMin</code> aus der Programmierübung Selection Sort mit Zeigern. Der Zeiger auf das Array folgt Listing 8.2 des Kurstexts v3.0.6, Seite 226.</p>
+    <p>Das Muster ist <code>findMin</code> aus der Programmierübung <a href="../kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -194,7 +193,6 @@ telbuch := [6]person{
       <li><strong>Vergleich nach einem Feld:</strong> <code>a[i].name == a[j].name</code> vergleicht nur die Namen. <code>a[i] == a[j]</code> wäre nur <code>true</code>, wenn alle drei Felder übereinstimmen.</li>
       <li><strong>Aufwand:</strong> Sechs Einträge ergeben 5 + 4 + 3 + 2 + 1 = 15 Vergleiche. Das ist die gleiche Formel wie bei Bubblesort, n · (n − 1) / 2.</li>
     </ul>
-    <p class="quelle">Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26. Der Vergleich von Verbünden steht im Kurstext v3.0.6 in Abschnitt 8.2.5, Seite 208, die Formel in Abschnitt 8.4.2, Seite 225.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -229,7 +227,7 @@ telbuch := [6]person{
       <li><strong><code>i, j = i+1, j-1</code>:</strong> Eine Tupel-Zuweisung ändert beide Indizes nach jedem Durchlauf.</li>
       <li><strong><code>a[i], a[j] = a[j], a[i]</code>:</strong> Die gleiche Tupel-Zuweisung wie in <code>bubblesort</code> vertauscht zwei ganze Verbünde.</li>
     </ul>
-    <p class="quelle">Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26. Die Tupel-Zuweisung steht im Kurstext v3.0.6 in Abschnitt 5.3.2, Seiten 128–129. Die Adressen gehören zum Modell dieser HTML-Seite.</p>
+    <p>Die Adressen gehören zum Modell dieser HTML-Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -327,7 +325,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
       <li><strong>Gleiches Alter:</strong> Zwei Personen sind gleich alt. Welche von beiden liefert <code>indexJüngste</code>, und welches Zeichen müsstest du ändern, damit die Funktion die andere liefert?</li>
       <li><strong>Ohne Zeiger:</strong> Ändere den Parameter von <code>umkehren</code> in <code>a [6]person</code> und den Aufruf in <code>umkehren(telbuch)</code>. Sage die Ausgabe vorher.</li>
     </ul>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel, übersetzt und ausgeführt mit Go 1.26.</p>
+    <p>Das Programm ist übersetzt und ausgeführt mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -349,7 +347,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
         <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Der Parameter <code>a *[6]person</code> und <code>len(a)</code> folgen der Funktion <code>bubblesort</code>.</td></tr>
       </tbody>
     </table></div>
-    <p>Die Funktionen <code>indexJüngste</code>, <code>indexÄlteste</code>, <code>zähleDoppelte</code> und <code>umkehren</code> kommen im Kurstext nicht vor.</p>
+    <p>Die Funktionen <code>indexJüngste</code>, <code>indexÄlteste</code>, <code>zähleDoppelte</code> und <code>umkehren</code> kommen im Kurstext nicht vor. Sie sind eigene Beispiele, geprüft mit Go 1.26. Der Zeiger auf das Array folgt Listing 8.2, Seite 226. Die Formel für die Zahl der Vergleiche in Schritt 2 steht in Abschnitt 8.4.2, Seite 225.</p>
 
     <h3>Wie es weitergeht</h3>
     <ul>
