@@ -149,6 +149,7 @@ telbuch := [6]person{
       </ol>
     </div>
     <p>Die Funktion merkt sich in <code>minIndex</code> den Index der jüngsten Person, die sie bisher gesehen hat. Sie beginnt mit dem Index 0 und vergleicht das Alter jedes weiteren Eintrags mit dem Alter am gemerkten Index.</p>
+    <div class="rahmenreihe" id="j-main"></div>
     <ol class="programm" id="j-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="j-weiter">nächste Anweisung</button>
@@ -156,7 +157,6 @@ telbuch := [6]person{
       <button type="button" id="j-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="j-bild"></div>
-    <div id="j-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="j-ausgabe"></div>
     <div class="auskunft" id="j-urteil"></div>
@@ -179,6 +179,7 @@ telbuch := [6]person{
       </ol>
     </div>
     <p>Die Funktion vergleicht jeden Eintrag mit jedem späteren. Die äußere Schleife wählt einen Eintrag <code>i</code>, die innere läuft über alle Einträge <code>j</code> dahinter. So kommt jedes Paar genau einmal an die Reihe.</p>
+    <div class="rahmenreihe" id="z-main"></div>
     <ol class="programm" id="z-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
@@ -186,7 +187,6 @@ telbuch := [6]person{
       <button type="button" id="z-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="z-bild"></div>
-    <div id="z-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="z-ausgabe"></div>
     <div class="auskunft" id="z-urteil"></div>
@@ -213,6 +213,7 @@ telbuch := [6]person{
     </div>
     <p>Die Funktion führt zwei Indizes: <code>i</code> läuft von vorn, <code>j</code> von hinten. Solange <code>i</code> kleiner ist als <code>j</code>, vertauscht sie die zwei Elemente und rückt beide Indizes zur Mitte.</p>
     <p>Die Funktion ändert das Array von <code>main</code>. Deshalb braucht sie den Zeiger: Mit einem Parameter vom Typ <code>[6]person</code> würde sie eine Kopie umkehren, und das Array von <code>main</code> bliebe, wie es ist.</p>
+    <div class="rahmenreihe" id="u-main"></div>
     <ol class="programm" id="u-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="u-weiter">nächste Anweisung</button>
@@ -220,7 +221,6 @@ telbuch := [6]person{
       <button type="button" id="u-vorn">von vorn</button>
     </div>
     <div class="rahmenreihe" id="u-bild"></div>
-    <div id="u-speicher"></div>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="u-ausgabe"></div>
     <div class="auskunft" id="u-urteil"></div>
@@ -503,8 +503,6 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
   const START = [['Meier', 4711, 34], ['Becker', 5522, 58], ['Koch', 7745, 19], ['Meier', 9081, 41], ['Arnold', 3310, 27], ['Becker', 1234, 63]];
   const zelle = p => '{' + p.join(' ') + '}';
   const TB = (a, m) => V('telbuch', a.map(zelle), 0, m);
-  const ZIEL = { 'Adresse von telbuch': 100 };
-  const orte = (f, liste) => { const o = { 'main.telbuch': [100, '[6]person', null], [f + '.a']: [400, '*[6]person', 8] }; liste.forEach((n, k) => { o[f + '.' + n] = [408 + 8 * k, 'int', 8]; }); return o; };
 
   // ---------- Schritt 1: die jüngste Person ----------
   const DJ = (function () {
@@ -518,9 +516,8 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
       lauf.push({ z: kleiner ? 5 : 4, satz: 'i ist ' + i + '. a[' + i + '].alter ist ' + START[i][2] + ', a[' + mi + '].alter ist ' + START[mi][2] + '. ' + START[i][2] + ' < ' + START[mi][2] + ' ist ' + kleiner + '. ' + (kleiner ? 'minIndex wird ' + i + '.' : 'minIndex bleibt ' + mi + '.'), rahmen: bild(kleiner ? i : mi, i, [i, mi], kleiner), aus: '' });
       if (kleiner) mi = i;
     }
-    lauf.push({ z: 8, satz: 'Die Schleife ist zu Ende. Die Funktion liefert den Index 2 zurück. main liest damit telbuch[2].name und telbuch[2].alter aus dem Array selbst.', rahmen: [R('main', [TB(START, [2]), V('j', 2, 1)]), WEG('indexJüngste')], aus: 'Jüngste Person: Koch 19' });
-    const o = orte('indexJüngste', ['minIndex', 'i']); o['main.j'] = [300, 'int', 8];
-    return ablauf('j', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht j := indexJüngste(&telbuch).', { orte: o, ziele: ZIEL });
+    lauf.push({ z: 8, satz: 'Die Schleife ist zu Ende. Die Funktion liefert den Index 2 zurück. main liest damit telbuch[2].name und telbuch[2].alter aus dem Array selbst.', rahmen: [R('main', [TB(START, [2])]), WEG('indexJüngste')], aus: 'Jüngste Person: Koch 19' });
+    return ablauf('j', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht j := indexJüngste(&telbuch).');
   })();
 
   // ---------- Schritt 2: doppelte Namen ----------
@@ -537,7 +534,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
         (treffer.length ? 'Am Index ' + treffer[0] + ' steht der gleiche Name. anzahl wird ' + anz + '.' : 'Kein Name ist gleich.') + ' Bisher: ' + vergleiche + ' Vergleiche.', rahmen: bild(anz, i, [i].concat(treffer), treffer.length > 0), aus: '' });
     }
     lauf.push({ z: 10, satz: 'Die Funktion liefert 2 zurück: Meier an den Indizes 0 und 3, Becker an den Indizes 1 und 5.', rahmen: [R('main', [TB(START, [0, 3, 1, 5])]), WEG('zähleDoppelte')], aus: 'Paare mit gleichem Namen: 2' });
-    return ablauf('z', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht fmt.Println("Paare mit gleichem Namen:", zähleDoppelte(&telbuch)).', { orte: orte('zähleDoppelte', ['anzahl', 'i']), ziele: ZIEL });
+    return ablauf('z', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht fmt.Println("Paare mit gleichem Namen:", zähleDoppelte(&telbuch)).');
   })();
 
   // ---------- Schritt 3: umkehren ----------
@@ -545,7 +542,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
     const zeilen = ['func umkehren(a *[6]person) {', '    for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {', '        a[i], a[j] = a[j], a[i]', '    }', '}'];
     const a = START.slice();
     const bild = (i, j, m) => [R('main', [TB(a, m)]), R('umkehren', [V('a', 'Adresse von telbuch')].concat(i === undefined ? [] : [V('i', i), V('j', j)]))];
-    const lauf = [{ z: 1, satz: 'main ruft umkehren(&telbuch) auf. Der Parameter a bekommt die Adresse des Arrays, im Hauptspeicher die Zahl 100.', rahmen: bild(), aus: '' },
+    const lauf = [{ z: 1, satz: 'main ruft umkehren(&telbuch) auf. Der Parameter a bekommt die Adresse des Arrays.', rahmen: bild(), aus: '' },
       { z: 2, satz: 'i beginnt bei 0, j bei len(a)-1, also 5. Die Bedingung i < j ist erfüllt.', rahmen: bild(0, 5, [0, 5]), aus: '' }];
     for (let i = 0, j = 5; i < j; i++, j--) {
       const x = a[i]; a[i] = a[j]; a[j] = x;
@@ -553,7 +550,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
       lauf.push({ z: 2, satz: 'i wird ' + (i + 1) + ', j wird ' + (j - 1) + '. ' + (i + 1 < j - 1 ? 'Die Bedingung i < j ist erfüllt.' : 'Die Bedingung i < j ist nicht mehr erfüllt, die Schleife endet.'), rahmen: bild(i + 1, j - 1, i + 1 < j - 1 ? [i + 1, j - 1] : undefined), aus: '' });
     }
     lauf.push({ z: 5, satz: 'Die Funktion kehrt zurück. Sie hat keine Rückgabe und braucht keine: Das Array von main ist umgekehrt.', rahmen: [R('main', [TB(a)]), WEG('umkehren')], aus: 'Umgekehrt: [' + a.map(zelle).join(' ') + ']' });
-    return ablauf('u', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht umkehren(&telbuch), danach fmt.Println("Umgekehrt:", telbuch).', { orte: orte('umkehren', ['i', 'j']), ziele: ZIEL });
+    return ablauf('u', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. In main steht umkehren(&telbuch), danach fmt.Println("Umgekehrt:", telbuch).');
   })();
 
   // ---------- Kurslotse ----------
@@ -561,12 +558,22 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
   const DEMO = () => stufe === 1 ? DJ : stufe === 2 ? DZ : stufe === 3 ? DU : null;
   function standSaetze() {
     const D = DEMO();
-    if (D) return standAblauf(D).concat(['Ein Element des Arrays steht im Bild als {Name Telefonnummer Alter}. Grün sind die Elemente, die der letzte Schritt gelesen oder getauscht hat.']);
+    if (D) return standAblauf(D).filter(s => s.indexOf('Zu sehen ist ein leerer Rahmen') !== 0).concat(['Über dem Programm steht von Anfang an der Rahmen von main mit dem Telefonbuch. Der Rahmen der Funktion steht unter den Knöpfen.'], ['Ein Element des Arrays steht im Bild als {Name Telefonnummer Alter}. Grün sind die Elemente, die der letzte Schritt gelesen oder getauscht hat.']);
     return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
   }
   const kurzStand = () => DEMO() ? kurzVon(DEMO()) : '';
   const programmZeilen = () => zeilenVon(DEMO());
 
+  // Der Rahmen von main mit dem Telefonbuch steht von Anfang an über dem Programm.
+  // Darunter, unter den Knöpfen, steht nur der Rahmen der Funktion. So springt das Programm beim Klicken nicht.
+  const mainRahmen = a => '<div class="rahmen"><h4>Funktion <code>main</code></h4><div class="kasten"><span>telbuch</span><span class="feld">' + a.map(p => '<span>' + esc(zelle(p)) + '</span>').join('') + '</span></div></div>';
+  [[DJ, 'j'], [DZ, 'z'], [DU, 'u']].forEach(([D, k]) => {
+    D.nach = z => {
+      const r = el(k + '-bild').querySelector('.rahmen');
+      if (z && r) { el(k + '-main').innerHTML = ''; el(k + '-main').appendChild(r); }
+      else { if (r) r.remove(); el(k + '-main').innerHTML = mainRahmen(START); }
+    };
+  });
   DJ.zeichne(); DZ.zeichne(); DU.zeichne();
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({

@@ -11,7 +11,8 @@ Für alle Schritte gilt:
 - Jede Funktion bekommt einen Zeiger auf das Array, `a *[6]person`. Der Aufruf lautet zum Beispiel `indexJüngste(&telbuch)`. Kopiert wird eine Adresse und kein Verbund. Das Muster ist `bubblesort(a *[10]person)` in Listing 8.2.
 - `len(a)` liefert auch für einen Zeiger auf ein Array dessen Länge, hier 6. `a[i]` ist die Kurzschreibweise für `(*a)[i]`.
 - In den Demos steht ein Element des Arrays als `{Name Telefonnummer Alter}`, zum Beispiel `{Meier 4711 34}`. Grün sind die Elemente, die der letzte Schritt gelesen oder getauscht hat.
-- Unter den Rahmen jeder Demo steht der „Hauptspeicher“ des Modells: `telbuch` ab Zelle 100, der Zeiger `a` der Funktion in den Zellen 400 bis 407 mit dem Inhalt 100, ihre übrigen Variablen ab 408 und 416. Die Adressen sind erfunden.
+- Jede Demo zeigt über dem Programm von Anfang an den Rahmen von `main` mit dem Telefonbuch, auch bevor eine Anweisung ausgeführt ist. Darunter stehen das Programm und die drei Knöpfe. Unter den Knöpfen steht der Rahmen der Funktion mit dem Zeiger `a` und ihren übrigen Variablen, dann die Ausgabe und ein Kasten mit einem Satz.
+- Einen Hauptspeicher mit Zellen und Adressen zeigt diese Übung nicht. Sie arbeitet eine Ebene über dem Speichermodell. Die Speichersicht für Zeiger auf ein Array steht in den Programmierübungen zu Kapitel 7.
 - Die Ausgabe des ganzen Programms: „Jüngste Person: Koch 19“, „Älteste Person: Becker 63“, „Paare mit gleichem Namen: 2“ und „Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Becker 5522 58} {Meier 4711 34}]“.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays. Ein Element aus einem Array zu entfernen, zeigt die Seite deshalb nicht.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben. Das Programm ist mit Go 1.26 übersetzt und ausgeführt.
@@ -44,7 +45,8 @@ Reiter: juengste
 ### Aufbau der Darstellung
 
 - Oben steht ein blauer Kasten „Erst vorhersagen, dann ausprobieren“ mit einer Frage und einer aufklappbaren „Auflösung“.
-- Die Demo zeigt die neun Zeilen von `indexJüngste`. Darunter stehen die drei Knöpfe „nächste Anweisung“, „eine Anweisung zurück“ und „von vorn“, Rahmen für `main` und `indexJüngste`, der Hauptspeicher, die Ausgabe und ein Kasten mit einem Satz.
+- Über dem Programm steht der Rahmen von `main` mit dem Telefonbuch. Darunter stehen die neun Zeilen von `indexJüngste`, die drei Knöpfe „nächste Anweisung“, „eine Anweisung zurück“ und „von vorn“, der Rahmen von `indexJüngste`, die Ausgabe und ein Kasten mit einem Satz.
+- Die Variable `j` aus `main`, die den Rückgabewert aufnimmt, steht nicht im Rahmen von `main`. Der Rückgabewert 2 steht im Satz des letzten Schritts und in der Ausgabe.
 - Die Funktion merkt sich in `minIndex` den Index der jüngsten Person bisher. Sie beginnt bei 0 und vergleicht `a[i].alter < a[minIndex].alter` für i von 1 bis 5.
 - Der Lauf: 58 < 34 ist false. 19 < 34 ist true, `minIndex` wird 2. 41 < 19, 27 < 19 und 63 < 19 sind false. Die Funktion liefert 2.
 - Die Demo hat 8 Schritte. Die Ausgabe am Ende ist „Jüngste Person: Koch 19“.
