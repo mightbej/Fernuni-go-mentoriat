@@ -2,7 +2,7 @@
 
 Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu Funktionen dazukommt: Funktionen mit mehreren Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie. Sie gehört zu Kapitel 7 des Kurstexts, Seiten 163–170.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -169,7 +169,6 @@ Reiter: kopie
 - Der Ablauf hat zwölf Schritte: `nums` anlegen mit `[8 -5 6 -3 -7 1 -4 3 -9 2]`. `nums` ausgeben. Aufruf: Der Parameter `a` bekommt eine Kopie aller zehn Elemente. Dann setzt die Schleife nacheinander `a[1]`, `a[3]`, `a[4]`, `a[6]` und `a[8]` auf 0. Dann `return a`. Dann legt `main` die Rückgabe in `posNums` ab, wieder als Kopie. Dann gibt `main` `nums` aus, unverändert. Dann gibt `main` `posNums` aus: `[8 0 6 0 0 1 0 3 0 2]`.
 - Die Demo überspringt die Durchläufe der Schleife, in denen das Element nicht negativ ist.
 - Unter „Was daran stört“ steht: Das Array wird zweimal kopiert. Sprachen wie Pascal haben Referenzparameter, die Übergabe heißt dort call-by-reference. Go hat sie nicht, in Go übergibt man einen Zeiger.
-- Unter „Wie es weitergeht“ stehen vier Links: die Lektion „Zeiger in Go“, der Exkurs „Das Kopier-Problem“, die Programmierübung „Bubble Sort mit Funktionen“ und das Quiz zu Kapitel 7.
 
 ### Handgriffe
 
@@ -181,3 +180,37 @@ Reiter: kopie
 
 - 7.2
 - 7.3
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Mehrere Rückgaben, 7.1, Seiten 163–164: Die Funktion divMitRest stammt aus dem Kurstext. Die Funktion main setzt zwei Zeilen aus Abschnitt 7.1.1 ein. Die Demo gibt die Lektion dazu.
+  - 2 Signatur, 7.1, Seiten 164–165: Die sieben Funktionen stammen aus dem Kurstext. Die Schreibweise des Typs, zum Beispiel func(int, int) int, steht nicht im Kurstext. So gibt fmt.Printf mit %T den Typ einer Funktion aus.
+  - 3 Rückgabe-Tupel, 7.1.1, Seite 166: Die Zeilen 1 bis 4 stammen aus dem Kurstext. Dort steht in Zeile 3 und 4 eine Zuweisung mit =, weil die Variablen schon deklariert sind. Die Zeilen 5 bis 8 und die Meldungen des Compilers sind eine Ergänzung, geprüft mit Go 1.26.
+  - 4 Fehler melden, 7.1.2, Seiten 166–168: Das Programm mit fmt.Scan und seine zwei Ausgaben stammen aus dem Kurstext. Die Funktion safeAdd ist eine Ergänzung, ausgeführt mit Go 1.26.
+  - 5 Kopie des Arguments, 7.2, Seiten 169–170: Listing 7.1: Listing 7.1 stammt aus dem Kurstext. Die Lektion lässt die Zeilen mit package und import und die Kommentare weg.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.6, Seiten 15–17, Unterprogramme und Funktionen: Aufruf, Parameter und Rückgabe ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 3.
+  - Abschnitt 3.4, Seiten 37–41, Funktionen in einem Go-Programm: Parameter, Rückgabewert und return an Listing 3.3. Eine Lektion zu diesem Abschnitt gibt es nicht. Die Lektion Fehlersuche: drei Go-Programme mit mehreren Fehlern übt sie in Schritt 1.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Den Überlauf meldet safeAdd. Lektion: Überlauf bei Ganzzahlen in Go, Schritt 5.
+- Unter „Wie es weitergeht“ stehen vier Links: die Lektion „Zeiger in Go“, der Exkurs „Das Kopier-Problem“, die Programmierübung „Bubble Sort mit Funktionen“ und das Quiz zu Kapitel 7.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.6
+- 3.4
+- 4.3.8
+- 7.1
+- 7.1.1
+- 7.1.2
+- 7.2
