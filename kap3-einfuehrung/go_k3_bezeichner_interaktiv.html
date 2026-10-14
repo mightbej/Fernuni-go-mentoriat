@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bezeichner und Schlüsselwörter in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block.tot { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:var(--muted); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    .spalte button.code { white-space:pre-wrap; }
+    .wortliste { display:flex;flex-wrap:wrap;gap:6px;margin:10px 0; }
+    .wortliste code { border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:#f8fafc; }
+    .wortliste code.bekannt { border-color:var(--accent);background:#ecfdf5;font-weight:700; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Bezeichner und Schlüsselwörter in Go</h1>
+    <p>Jede Variable, jede Funktion und jeder Typ hat einen Namen. Welche Namen Go zulässt, regeln zwei Sätze und eine Liste von 25 Wörtern.</p>
+    <p>Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 30–32.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Zwei Regeln</button>
+    <button type="button" class="tab" data-stufe="2">2 Groß und klein</button>
+    <button type="button" class="tab" data-stufe="3">3 Schlüsselwörter</button>
+    <button type="button" class="tab" data-stufe="4">4 Vorgegebene Bezeichner</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Variablen, Konstanten, Typen und Funktionen heißen zusammen <strong>Programmelemente</strong>. Der Name eines Programmelements heißt <strong>Bezeichner</strong>. Bei der <strong>Deklaration</strong> wird ein Programmelement mit seinem Bezeichner verbunden. Danach spricht das Programm es über diesen Bezeichner an.</p>
+    <pre class="code-block">var tempC float64 = 22</pre>
+    <p>Diese Zeile aus dem Programm des Kurstexts enthält drei Arten von Wörtern:</p>
+    <ul>
+      <li><strong><code>var</code>:</strong> Ein Schlüsselwort. Es gehört fest zur Sprache und leitet die Deklaration einer Variable ein.</li>
+      <li><strong><code>tempC</code>:</strong> Ein Bezeichner, den der Programmierer gewählt hat.</li>
+      <li><strong><code>float64</code>:</strong> Ein vorgegebener Bezeichner. Go bringt ihn mit, er steht für einen Datentyp.</li>
+    </ul>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Variablen:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
+      <li><strong>Abschnitt 2.7, Token:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html">Höhere und niedrigere Programmiersprachen</a> zeigt in Schritt 3, wie der Compiler ein Programm in Wörter zerlegt.</li>
+      <li><strong>Abschnitt 5.1, Deklaration:</strong> Die Lektion <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Die zwei Regeln für einen Bezeichner. Du prüfst vierzehn Namen.</li>
+      <li><strong>Schritt 2:</strong> Groß- und Kleinbuchstaben und was ein großer Anfangsbuchstabe bewirkt.</li>
+      <li><strong>Schritt 3:</strong> Die 25 Schlüsselwörter.</li>
+      <li><strong>Schritt 4:</strong> Vorgegebene Bezeichner wie <code>int</code> und <code>true</code> und der leere Bezeichner <code>_</code>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Zwei Regeln</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Welche dieser vier Namen lässt Go als Bezeichner zu: <code>alter2</code>, <code>2alter</code>, <code>mein-name</code>, <code>größe</code>?
+          <details><summary>Auflösung</summary><code>alter2</code> und <code>größe</code>. <code>2alter</code> beginnt mit einer Ziffer. In <code>mein-name</code> steht ein Minuszeichen, und das ist weder Buchstabe noch Ziffer noch Unterstrich.</details></li>
+      </ol>
+    </div>
+    <p>Als Bezeichner ist jede Zeichenfolge zulässig, die zwei Regeln erfüllt und kein Schlüsselwort ist:</p>
+    <ul>
+      <li><strong>Erstes Zeichen:</strong> Es ist ein Buchstabe oder der Unterstrich <code>_</code>.</li>
+      <li><strong>Übrige Zeichen:</strong> Jedes ist ein Buchstabe, eine Ziffer oder der Unterstrich.</li>
+    </ul>
+    <p>Buchstaben sind dabei alle Buchstaben des Unicode-Zeichensatzes, also auch ä, ö, ü und ß.</p>
+    <p>Wähle einen Namen. Die Demo setzt ihn in ein kleines Programm ein und zeigt, was Go dazu sagt.</p>
+    <div class="zeile" id="r-wahl"></div>
+    <pre class="code-block" id="r-programm"></pre>
+    <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
+    <div class="konsole" id="r-ausgabe"></div>
+    <div class="auskunft" id="r-urteil"></div>
+    <div class="hinweis">Bei einem unzulässigen Namen sagt der Compiler nicht „dieser Bezeichner ist ungültig“. Er liest so weit, wie die Zeichen einen Bezeichner ergeben, und meldet das erste Zeichen, das danach nicht passt.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 30–31. Die Regeln und die Beispiele <code>größe</code>, <code>_intern</code> und <code>24stunden</code> stammen aus dem Kurstext. Die übrigen Namen sind eigene Beispiele. Alle Meldungen sind die von Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Groß und klein</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Funktion zur Ausgabe heißt <code>fmt.Println</code>, mit großem P. Warum beginnt sie mit einem Großbuchstaben?
+          <details><summary>Auflösung</summary>Sie liegt im Paket <code>fmt</code> und wird von einem anderen Paket aus aufgerufen. Das geht nur bei Bezeichnern mit großem Anfangsbuchstaben.</details></li>
+      </ol>
+    </div>
+    <p>Go unterscheidet Groß- und Kleinbuchstaben. <code>tempC</code> und <code>tempc</code> sind zwei verschiedene Bezeichner:</p>
+    <pre class="code-block">var tempC int = 22
+fmt.Println(tempc)</pre>
+    <div class="konsole">.\main.go:6:9: declared and not used: tempC
+.\main.go:7:17: undefined: tempc</div>
+    <p>Der Compiler meldet zwei Fehler: Die Variable <code>tempC</code> ist deklariert und wird nie verwendet, und einen Bezeichner <code>tempc</code> kennt er nicht.</p>
+
+    <h3>Der große Anfangsbuchstabe</h3>
+    <ul>
+      <li><strong>Großer Anfangsbuchstabe:</strong> Der Bezeichner wird <strong>exportiert</strong>. Auch andere Pakete können auf ihn zugreifen. Beispiel: <code>Println</code> im Paket <code>fmt</code>.</li>
+      <li><strong>Kleiner Anfangsbuchstabe:</strong> Der Bezeichner gilt nur im eigenen Paket. Beispiel: <code>tempC</code> im Programm des Kurstexts.</li>
+    </ul>
+    <div class="hinweis">Die Konvention des Kurstexts: Ein Bezeichner beginnt genau dann mit einem Großbuchstaben, wenn er exportiert werden soll. Die Programme des Kurses exportieren nichts, ihre Bezeichner beginnen deshalb mit einem Kleinbuchstaben.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seite 31. Das Beispiel mit <code>tempC</code> und <code>tempc</code> nennt der Kurstext, die zwei Meldungen sind die von Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Schlüsselwörter</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Wort <code>func</code> besteht nur aus Buchstaben. Darf eine Variable so heißen?
+          <details><summary>Auflösung</summary>Nein. <code>func</code> ist ein Schlüsselwort. Der Compiler erwartet dahinter die Deklaration einer Funktion.</details></li>
+      </ol>
+    </div>
+    <p>Ein <strong>Schlüsselwort</strong> ist von der Sprache fest vorgegeben und hat eine feste Bedeutung. Schlüsselwörter dürfen nicht als Bezeichner verwendet werden und heißen deshalb auch <strong>reservierte Wörter</strong>. Go hat 25 davon:</p>
+    <div class="wortliste" id="k-liste"></div>
+    <p>Grün sind die vier Schlüsselwörter, die bis Abschnitt 3.3.4 im Kurstext vorgekommen sind: <code>package</code>, <code>import</code>, <code>func</code> und <code>var</code>. Die Schlüsselwörter <code>chan</code>, <code>defer</code>, <code>go</code>, <code>interface</code>, <code>map</code>, <code>select</code> und <code>goto</code> braucht der Kurs nicht.</p>
+    <p>Wähle eine Zeile.</p>
+    <div class="spalte" id="k-wahl"></div>
+    <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
+    <div class="konsole" id="k-ausgabe"></div>
+    <div class="auskunft" id="k-urteil"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 31–32. Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die vier Zeilen der Auswahl sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Vorgegebene Bezeichner</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>int</code> steht nicht in der Liste der 25 Schlüsselwörter. Übersetzt Go die Zeile <code>var int int = 5</code>?
+          <details><summary>Auflösung</summary>Ja. <code>int</code> ist ein vorgegebener Bezeichner und kein reserviertes Wort. Die Zeile deklariert eine Variable mit dem Namen <code>int</code>. Danach steht <code>int</code> in diesem Block nicht mehr für den Datentyp.</details></li>
+      </ol>
+    </div>
+    <p>Neben den Schlüsselwörtern bringt Go <strong>vorgegebene Bezeichner</strong> mit. Sie gehören zu Programmelementen, die fest in die Sprache eingebaut sind:</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Art des Programmelements</th><th>Vorgegebene Bezeichner</th></tr></thead>
+      <tbody>
+        <tr><td>Datentypen</td><td><code>any bool byte comparable complex64 complex128 error float32 float64 int int8 int16 int32 int64 rune string uint uint8 uint16 uint32 uint64 uintptr</code></td></tr>
+        <tr><td>Eingebaute Funktionen</td><td><code>append cap clear close complex copy delete imag len make max min new panic print println real recover</code></td></tr>
+        <tr><td>Konstanten</td><td><code>true false iota nil</code></td></tr>
+      </tbody>
+    </table></div>
+    <p>Ein vorgegebener Bezeichner ist ein Bezeichner und kein reserviertes Wort. Ein Programm darf ihn deshalb neu deklarieren. Wähle eine Zeile und sieh, wohin das führt.</p>
+    <div class="spalte" id="v-wahl"></div>
+    <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
+    <div class="konsole" id="v-ausgabe"></div>
+    <div class="auskunft" id="v-urteil"></div>
+    <div class="hinweis">Gib einem vorgegebenen Bezeichner keine neue Bedeutung. Im Kurstext steht dazu: Das ruft schwer zu entdeckende Probleme hervor und führt den Leser des Programms in die Irre.</div>
+
+    <h3>Der leere Bezeichner</h3>
+    <p>Der Unterstrich allein, <code>_</code>, ist nach den zwei Regeln ein zulässiger Bezeichner. Er heißt <strong>leerer Bezeichner</strong> und hat eine besondere Aufgabe: Er ist ein Platzhalter für einen Wert, den das Programm nicht braucht. Lesen lässt sich aus ihm nichts. Im Kurstext kommt er später an den Stellen vor, an denen er gebraucht wird.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> <a href="go_bezeichner_schluesselwoerter_quiz.html">Bezeichner und Schlüsselwörter</a>.</li>
+      <li><strong>Fehler suchen:</strong> Die Lektion <a href="go_k3_fehlersuche_einfach_interaktiv.html">Fehlersuche: drei kurze Go-Programme</a> zeigt, wie eine Meldung des Compilers aufgebaut ist.</li>
+      <li><strong>Datentypen:</strong> Die vorgegebenen Typen behandelt Kapitel 4, zum Beispiel die Lektion <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a> zu den Ganzzahlen.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 31–32. Die drei Listen und die Warnung stammen aus dem Kurstext. Die vier Zeilen der Auswahl sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#regeln
+  const ANKER = ['worum', 'regeln', 'gross', 'schluessel', 'vorgegeben'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Regeln', 'Schritt 2: Groß und klein', 'Schritt 3: Schlüsselwörter', 'Schritt 4: Vorgegebene Bezeichner'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (hervorgehobene Indizes) }.
+  // Ein Verbund als Wert: { f: [[Feldname, Wert], …] }. FELDER(namen, werte) baut ihn.
+  const istVerbund = w => w !== null && typeof w === 'object' && !Array.isArray(w) && w.f;
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) + (v.tot ? ' (unerreichbar)' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht einer Demo. speicher = { orte: { 'main.x': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von x': 100, … } }.
+  // Der Schlüssel eines Orts ist der Name der Funktion, ein Punkt und der Name der Variable. Variablen ohne gültigen
+  // Bezeichner haben den Schlüssel '~.Name'. Ein Ort darf eine Funktion der Nummer des Schritts sein.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      let ort = D.speicher.orte[(r.titel ? '~' : r.name) + '.' + v.n];
+      if (typeof ort === 'function') ort = ort(D.stand);
+      if (!ort) return;
+      const ziel = D.speicher.ziele && D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], n: ort[2], name: r.titel ? 'ohne Namen' : v.n, wo: r.titel ? '' : r.name, neu: v.neu, tot: v.tot, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: v.tot ? (v.totText || 'freigegeben') : ziel !== undefined ? String(ziel) : v.w === 'nil' ? 'nil' : istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + (D.speicher.ziele && D.speicher.ziele[p[1]] !== undefined ? D.speicher.ziele[p[1]] : p[1])).join(', ') + '}' : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + (b.wo ? b.name + ' in ' + b.wo : b.name) + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, zeilen, lauf, anfang, speicher) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang, speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name) + (r.weg ? ', beendet' : '')) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + (v.tot ? ' tot' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' :
+          Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : r.titel ? 'keine Variable' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      if (el(kurz + '-speicher')) el(kurz + '-speicher').innerHTML = !speicher ? '' : '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + (b.tot ? ' tot' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      if (D.nach) D.nach(z);   // eigenes Bild der Seite zu diesem Zustand
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      D.speicher ? (speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.') : '',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ].filter(Boolean);
+  }
+  // Ein Knopf mit data-kopiere legt den Text eines Programms in die Zwischenablage
+  document.querySelectorAll('[data-kopiere]').forEach(k => k.addEventListener('click', () => {
+    navigator.clipboard.writeText(el(k.dataset.kopiere).textContent).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Programm kopieren'; }, 1500); });
+  }));
+  // ---------- Eine Auswahl fester Zeilen ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz. Die Knöpfe stehen in kurz-wahl,
+  // die Ausgabe in kurz-ausgabe, der Satz in kurz-urteil.
+  function wahl(kurz, liste, mitNummer) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + (mitNummer ? (k + 1) + '  ' : '') + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      if (el(kurz + '-ausgabe')) el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab.' : 'Go übersetzt die Zeile nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W, was) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist ' + (was || 'die Zeile') + ' ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code,
+      x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
+      'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+  }
+  // ---------- Ein Programm in mehreren Fassungen ----------
+  // liste: Einträge mit zeilen (Programm), mark (Nummern hervorgehobener Zeilen), aus (Meldung oder Ausgabe), fehler, laufzeit, titel, satz.
+  // Der Student geht von Fassung zu Fassung: fehlerhaftes Programm, Meldung des Compilers, Korrektur, nächste Meldung.
+  function fassungen(kurz, liste) {
+    const F = { i: 0, liste: liste };
+    F.zeichne = function () {
+      const x = liste[F.i];
+      el(kurz + '-programm').innerHTML = x.zeilen.map((t, k) => '<li class="' + (x.mark && x.mark.indexOf(k + 1) >= 0 ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = '<p><strong>' + esc((F.i + 1) + ' von ' + liste.length + ': ' + x.titel) + '</strong></p><p>' + esc(x.satz) + '</p>';
+      el(kurz + '-weiter').disabled = F.i === liste.length - 1;
+      el(kurz + '-zurueck').disabled = F.i === 0;
+      melde(false);
+    };
+    el(kurz + '-weiter').addEventListener('click', () => { if (F.i < liste.length - 1) { F.i++; F.zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (F.i > 0) { F.i--; F.zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { F.i = 0; F.zeichne(); });
+    el(kurz + '-kopieren').addEventListener('click', () => { const k = el(kurz + '-kopieren');
+      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Diese Fassung kopieren'; }, 1500); }); });
+    return F;
+  }
+  function standFassungen(F) {
+    const x = F.liste[F.i];
+    return ['Die Demo zeigt ein Programm in ' + F.liste.length + ' Fassungen nacheinander. Zu sehen ist Fassung ' + (F.i + 1) + ': ' + x.titel + '.',
+      x.mark && x.mark.length ? 'Gelb hervorgehoben ist Zeile ' + x.mark.join(' und ') + ': ' + x.mark.map(n => x.zeilen[n - 1].trim()).join(' | ') : 'Keine Zeile ist hervorgehoben.',
+      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt diese Fassung nicht. Die Meldung des Compilers: ') : 'Go übersetzt diese Fassung. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
+      'Die Seite sagt dazu: ' + x.satz,
+      F.i === F.liste.length - 1 ? 'Das ist die letzte Fassung.' : 'Die nächste Fassung heißt: ' + F.liste[F.i + 1].titel + '.',
+      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann eine Fassung kopieren und im eigenen Editor übersetzen.'];
+  }
+  const zeilenFassung = F => F ? F.liste[F.i].zeilen.map((t, i) => (i + 1) + '  ' + t) : [];
+  // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
+  function zeilenVon(D) {
+    if (!D) return [];
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  const kurzVon = D => D.stand ? 'Schritt ' + D.stand + ' von ' + D.lauf.length : 'nichts ausgeführt';
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+
+  // ---------- Schritt 1: vierzehn Namen ----------
+  // Jeder Name steht in einem kleinen Programm in Zeile 6 und 7. Die Meldungen sind mit Go 1.26 erzeugt.
+  const OK = 'Go übersetzt das Programm. Der Name ist ein zulässiger Bezeichner: ';
+  const WR = wahl('r', [
+    { code: 'alter2', aus: '5', satz: OK + 'Er beginnt mit einem Buchstaben, die Ziffer steht am Ende.' },
+    { code: '2alter', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected literal 2, expected name', satz: 'Das erste Zeichen ist eine Ziffer. Der Compiler liest die 2 als Zahl, als Literal, und hat an dieser Stelle einen Namen erwartet.' },
+    { code: '24stunden', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected literal 24, expected name', satz: 'Das ist das Beispiel des Kurstexts. Der Name beginnt mit einer Ziffer. Der Compiler liest 24 als Zahl.' },
+    { code: 'name_vorname', aus: '5', satz: OK + 'Der Unterstrich ist an jeder Stelle erlaubt.' },
+    { code: '_intern', aus: '5', satz: OK + 'Auch das erste Zeichen darf ein Unterstrich sein.' },
+    { code: 'mein-name', fehler: true, aus: '.\\main.go:6:13: syntax error: unexpected -, expected type', satz: 'Der Compiler liest mein als Bezeichner der Variable. Danach erwartet er einen Typ und findet das Minuszeichen. Für Go ist mein-name eine Subtraktion und kein Name.' },
+    { code: 'mein name', fehler: true, aus: '.\\main.go:6:19: syntax error: unexpected name int at end of statement', satz: 'Das Leerzeichen beendet den Bezeichner. Der Compiler liest mein als Namen der Variable und name als ihren Typ. Das Wort int dahinter kommt für ihn unerwartet.' },
+    { code: 'user.name', fehler: true, aus: '.\\main.go:6:13: syntax error: unexpected ., expected type', satz: 'Der Punkt gehört nicht zu einem Bezeichner. Er trennt in Go zwei Bezeichner, zum Beispiel in fmt.Println.' },
+    { code: 'a$', fehler: true, aus: '.\\main.go:6:10: invalid character U+0024 \'$\'', satz: 'Das Zeichen $ kommt in der Sprache Go gar nicht vor. Der Compiler meldet ein ungültiges Zeichen.' },
+    { code: 'größe', aus: '5', satz: OK + 'ö und ß sind Buchstaben. Das Beispiel stammt aus dem Kurstext.' },
+    { code: 'π', aus: '5', satz: OK + 'Auch ein griechischer Buchstabe ist ein Buchstabe des Unicode-Zeichensatzes.' },
+    { code: 'x', aus: '5', satz: OK + 'Ein einzelner Buchstabe genügt.' },
+    { code: 'HTTPServer', aus: '5', satz: OK + 'Großbuchstaben sind Buchstaben. Was der große Anfangsbuchstabe bewirkt, steht in Schritt 2.' },
+    { code: 'konto123', aus: '5', satz: OK + 'Hinter dem ersten Zeichen dürfen beliebig viele Ziffern stehen.' }
+  ]);
+  const zeichneWR = WR.zeichne;
+  WR.zeichne = function () { const n = WR.liste[WR.i].code; el('r-programm').textContent = 'package main' + NL + NL + 'import "fmt"' + NL + NL + 'func main() {' + NL + '    var ' + n + ' int = 5' + NL + '    fmt.Println(' + n + ')' + NL + '}'; zeichneWR(); };
+
+  // ---------- Schritt 3: Schlüsselwörter ----------
+  const WORTE = ['break', 'case', 'chan', 'const', 'continue', 'default', 'defer', 'else', 'fallthrough', 'for', 'func', 'go', 'goto', 'if', 'import', 'interface', 'map', 'package', 'range', 'return', 'select', 'struct', 'switch', 'type', 'var'];
+  el('k-liste').innerHTML = WORTE.map(w => '<code class="' + (['package', 'import', 'func', 'var'].indexOf(w) >= 0 ? 'bekannt' : '') + '">' + w + '</code>').join('');
+  const WK = wahl('k', [
+    { code: 'var func int = 5', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected keyword func, expected name', satz: 'Der Compiler erkennt func als Schlüsselwort, „keyword“, und hat einen Namen erwartet.' },
+    { code: 'var var int = 5', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected keyword var, expected name', satz: 'Auch var ist reserviert. Hinter dem ersten var muss ein Bezeichner stehen.' },
+    { code: 'var go! int = 5', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected keyword go, expected name', satz: 'Hier wären zwei Regeln verletzt. Der Compiler kommt nur bis zur ersten: go ist ein Schlüsselwort. Das Ausrufezeichen erreicht er gar nicht.' },
+    { code: 'var funktion int = 5', aus: '5', satz: 'funktion ist kein Schlüsselwort. Reserviert ist nur die genaue Buchstabenfolge func.' }
+  ], true);
+
+  // ---------- Schritt 4: vorgegebene Bezeichner ----------
+  const WV = wahl('v', [
+    { code: 'var int int = 5' + NL + 'fmt.Println(int)', aus: '5', satz: 'Go übersetzt das Programm. Es gibt jetzt eine Variable mit dem Namen int und dem Wert 5. Beim zweiten int der Zeile galt noch der Datentyp.' },
+    { code: 'var int int = 5' + NL + 'var y int = 7', fehler: true, aus: '.\\main.go:7:11: int (local variable) is not a type', satz: 'Die zweite Zeile scheitert. In diesem Block ist int jetzt eine lokale Variable und kein Typ mehr. Die Meldung steht in einer Zeile, die für sich genommen fehlerfrei aussieht.' },
+    { code: 'var true int = 5' + NL + 'fmt.Println(true)', aus: '5', satz: 'Auch true lässt sich neu deklarieren. Das Programm gibt 5 aus, wo ein Leser true erwartet.' },
+    { code: 'var _ int = 5' + NL + 'fmt.Println(_)', fehler: true, aus: '.\\main.go:7:17: cannot use _ as value or type', satz: 'Die Deklaration mit dem leeren Bezeichner ist zulässig. Lesen lässt sich der Wert aber nicht: Der leere Bezeichner ist ein Platzhalter und keine Variable.' }
+  ], true);
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 1) return ['Die Demo setzt den gewählten Namen in ein Programm ein: Zeile 6 lautet var NAME int = 5, Zeile 7 lautet fmt.Println(NAME).'].concat(standWahl(WR, 'der Name'), ['Handgriff: einen der vierzehn festen Namen wählen. Einen eigenen Namen kann der Student nicht eingeben.']);
+    if (stufe === 3) return ['Über der Auswahl steht die Liste der 25 Schlüsselwörter. Grün sind package, import, func und var.', 'Die gewählte Zeile steht im Programm als Zeile 6, in Zeile 7 folgt die Ausgabe der Variable.'].concat(standWahl(WK));
+    if (stufe === 4) return ['Jede Auswahl hat zwei Zeilen. Sie stehen im Programm als Zeile 6 und 7 im Rumpf von main.'].concat(standWahl(WV, 'das Zeilenpaar'));
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 1 ? WR.liste[WR.i].code : stufe === 3 ? WK.liste[WK.i].code : stufe === 4 ? WV.liste[WV.i].code.split(NL)[0] : '';
+
+  WR.zeichne(); WK.zeichne(); WV.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Bezeichner und Schlüsselwörter in Go',
+    thema: 'Bezeichner, Programmelement, Deklaration, Regeln für Bezeichner, Groß- und Kleinschreibung, Export, Schlüsselwort, vorgegebener Bezeichner, leerer Bezeichner',
+    bezug: 'Kurstext v3.0.6, Abschnitt 3.3.4, Seiten 30–32',
+    beschreibung: '../kurslotse/kap3-einfuehrung/go_k3_bezeichner_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: () => [],
+    zeilenTitel: '',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum meldet Go bei mein-name „expected type“?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
