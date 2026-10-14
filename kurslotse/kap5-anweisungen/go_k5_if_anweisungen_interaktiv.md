@@ -2,7 +2,7 @@
 
 Die Seite erklärt die if-Anweisung in Go: die einfache Form mit Bedingung und Block, die Verzweigung mit `else` und die Kette mit `else if`. Sie führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus. Sie gehört zu Abschnitt 5.5.1 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -182,3 +182,37 @@ Reiter: praxis
 
 - 5.5.1
 - 4.5
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 if und Block, 5.5.1, Seiten 129–132: Sprachvergleiche 5.9 und 5.10: Die if-Anweisung mit Block und die Sprachvergleiche stammen aus dem Kurstext. Das Programm mit alter ist ein eigenes Beispiel.
+  - 2 else, 5.5.1, Seiten 129–132: Die if-Anweisung mit else stammt aus dem Kurstext. Das Programm mit alter ist ein eigenes Beispiel.
+  - 3 else if, 5.5.1, Seiten 129–132: Die Kette mit else if stammt aus dem Kurstext. Das Programm mit punkte ist ein eigenes Beispiel.
+  - 4 Schaltjahr, 5.5.1, Seiten 129–132: Listing 5.2 und Exkurs 5.8 zu fmt.Scan: Listing 5.2 zum Schaltjahr stammt aus dem Kurstext. Die falsche Reihenfolge mit vertauschten Zeilen 18, 20 und 22 gibt die Lektion dazu.
+  - 5 Aus der Praxis, 4.5, Seiten 93–98: &&, || und !: Die Operatoren für zusammengesetzte Bedingungen stammen aus Abschnitt 4.5. Die Faustregeln stammen aus der Praxis des Mentors.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm: Die Verzweigung als Bild. Lektion: Größter gemeinsamer Teiler.
+  - Abschnitt 3.3.2, Seiten 27–29, Klammer nach if: Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 3.
+  - Abschnitt 4.5.2, Seiten 96–98, Vergleiche: Lektion: Logische Operatoren und Vergleiche in Go.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zu den if-Anweisungen“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.5
+- 3.3.2
+- 4.5
+- 4.5.2
+- 5.5.1
