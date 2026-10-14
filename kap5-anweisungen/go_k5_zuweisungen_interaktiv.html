@@ -169,6 +169,7 @@ z = z - (2 + 3)</pre>
 y += 5       // entspricht y = y + 5
 z -= 2 + 3   // entspricht z = z - (2 + 3)</pre>
     <p>Der Operator <code>*=</code> verbindet den Zuweisungsoperator <code>=</code> mit dem Multiplikationsoperator <code>*</code>. Die Variable links ist zugleich der linke Operand der Multiplikation. Der Ausdruck rechts ist der rechte Operand.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <tr><th>Kurze Schreibweise</th><th>Lange Schreibweise</th><th>Was die Zuweisung tut</th></tr>
       <tr><td><code>x *= 8</code></td><td><code>x = x * 8</code></td><td>Sie multipliziert <code>x</code> mit 8.</td></tr>
@@ -177,6 +178,7 @@ z -= 2 + 3   // entspricht z = z - (2 + 3)</pre>
       <tr><td><code>x += 8</code></td><td><code>x = x + 8</code></td><td>Sie erhöht <code>x</code> um 8.</td></tr>
       <tr><td><code>x -= 8</code></td><td><code>x = x - 8</code></td><td>Sie verringert <code>x</code> um 8.</td></tr>
     </table>
+    </div>
 
     <h3>Die rechte Seite gehört zusammen</h3>
     <p>Die dritte Zeile oben verdient einen zweiten Blick. <code>z -= 2 + 3</code> entspricht <code>z = z - (2 + 3)</code>, mit Klammern. Go wertet erst den ganzen Ausdruck rechts aus, hier zu 5, und zieht dann 5 von <code>z</code> ab.</p>

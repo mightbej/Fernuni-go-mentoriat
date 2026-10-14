@@ -186,7 +186,9 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
     </div>
     <div class="auskunft fehler" id="fehler-u" hidden></div>
     <pre class="code-block" id="code-u"></pre>
+    <div class="tabellenrahmen">
     <table class="rechnung" id="rechnung-u"></table>
+    </div>
     <div class="auskunft" id="urteil-u"></div>
 
     <h3>Ein Überlauf mit Absicht</h3>
@@ -217,6 +219,7 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
     1000 0000   -128    als int8 gelesen</pre>
 
     <h3>Die sechs Rechnungen des Kurstexts</h3>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Rechnung mit <code>int8</code></th><th>Richtiges Ergebnis</th><th>Ergebnis in Go</th><th>Was mit dem Vorzeichen geschieht</th></tr></thead>
       <tbody>
@@ -228,6 +231,7 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
         <tr><td><code>3 * 121</code></td><td>363</td><td>107</td><td>Das Vorzeichen bleibt. Das Ergebnis ist trotzdem falsch.</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="hinweis">Ein unerwartetes Minus ist ein Zeichen für einen Überlauf. Ein fehlendes Minus beweist aber nichts: 3 · 121 läuft über und bleibt positiv.</div>
 
     <h3>Ausprobieren: rechnen mit int8</h3>
@@ -248,7 +252,9 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
     </div>
     <div class="auskunft fehler" id="fehler-i" hidden></div>
     <pre class="code-block" id="code-i"></pre>
+    <div class="tabellenrahmen">
     <table class="rechnung" id="rechnung-i"></table>
+    </div>
     <div class="auskunft" id="urteil-i"></div>
   </div>
   <div class="zeile schritte">

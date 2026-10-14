@@ -82,6 +82,7 @@
         </div>
         <div class="card">
             <h2>Die sechs Stufen</h2>
+            <div class="tabellenrahmen">
             <table>
                 <tr><th>Stufe</th><th>Was hat uns am Spiel davor nicht gefallen?</th><th>Was legen wir fest?</th></tr>
                 <tr><td>1 Spielidee</td><td>Es gibt noch kein Spiel.</td><td>Wir legen fest, wer rät und welche Rückmeldung er bekommt.</td></tr>
@@ -91,6 +92,7 @@
                 <tr><td>5 Ablauf</td><td>Jede Gruppe bekam einen anderen Ablauf und andere Meldungen.</td><td>Wir legen jeden Schritt fest.</td></tr>
                 <tr><td>6 Go-Programm</td><td>Das Spiel lief nur, solange das Sprachmodell mitspielte.</td><td>Wir legen alles fest, in Go.</td></tr>
             </table>
+            </div>
             <p>Kurstext v3.0.6: Das Spiel braucht die Anweisungen aus Kapitel 5, Seiten 113–149.</p>
             <p>Der letzte Reiter ordnet jede Anweisung des Go-Programms einem Abschnitt des Kurstexts zu.</p>
         </div>
@@ -180,7 +182,9 @@
                 <input type="number" id="obergrenze" min="2" max="1000000" value="100">
                 <span class="ergebnis" id="halb-ergebnis"></span>
             </div>
+            <div class="tabellenrahmen">
             <table id="halb-tabelle"></table>
+            </div>
             <p id="halb-reihe" class="legende"></p>
             <p>7 Versuche reichen sicher für jeden Bereich bis 127. Ab 128 Zahlen braucht man einen achten Versuch. Probiert es im Feld oben aus.</p>
             <p>Diese Art zu raten heißt <strong>binäre Suche</strong>. In Abschnitt 8.4.1 des Kurstexts sucht ein Programm so einen Namen in einem sortierten Telefonbuch. Dazu gibt es die Lektion <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html#idee">Binäre Suche in einem Verbund-Array</a>.</p>
@@ -221,6 +225,7 @@
             <div class="festlegen">
                 <h3>Was wir festlegen</h3>
                 <p>Das Spiel läuft über mehrere Runden, bis der Spieler aufhört. Es zählt die gewonnenen Runden, die verlorenen Runden und die Versuche aus den gewonnenen Runden. Aus dem Durchschnitt der Versuche ergibt sich die Wertung:</p>
+                <div class="tabellenrahmen">
                 <table>
                     <tr><th>Durchschnitt der Versuche in gewonnenen Runden</th><th>Wertung</th></tr>
                     <tr><td>Der Durchschnitt liegt bei höchstens 3,0.</td><td>Meister</td></tr>
@@ -228,6 +233,7 @@
                     <tr><td>Der Durchschnitt liegt bei höchstens 5,5.</td><td>Fortgeschritten</td></tr>
                     <tr><td>Der Durchschnitt liegt über 5,5.</td><td>Anfänger</td></tr>
                 </table>
+                </div>
             </div>
             <h3>Unsere Spezifikation</h3>
             <div class="spez" id="spez-4"></div>
@@ -298,6 +304,7 @@
                 <p>Wir schreiben den Ablauf aus Stufe 5 in Go. Jeder Schritt des Ablaufs hat eine Entsprechung im Programm. Der Go-Compiler entscheidet nichts für uns: Was wir nicht hinschreiben, geschieht nicht.</p>
             </div>
             <h3>Vom Ablauf zum Programm</h3>
+            <div class="tabellenrahmen">
             <table>
                 <tr><th>Schritt im Ablauf aus Stufe 5</th><th>Anweisung in Go</th></tr>
                 <tr><td>Das Spiel kennt die Grenzen 1, 100 und 7.</td><td><code>const ( MAX_VERSUCHE = 7 … )</code></td></tr>
@@ -310,6 +317,7 @@
                 <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td></tr>
                 <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td></tr>
             </table>
+            </div>
             <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="../kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
         </div>
         <div class="card">

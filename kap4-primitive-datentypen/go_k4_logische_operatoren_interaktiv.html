@@ -122,6 +122,7 @@ fmt.Println(alter >= 6 &amp;&amp; alter &lt; 18)    // true</pre>
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Schritt 1: Sechs Operatoren</h2>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Operator</th><th>Wann der Ausdruck <code>true</code> ist</th><th>Für welche Typen es den Operator gibt</th></tr></thead>
       <tbody>
@@ -133,6 +134,7 @@ fmt.Println(alter >= 6 &amp;&amp; alter &lt; 18)    // true</pre>
         <tr><td><code>&gt;=</code></td><td>Der linke Wert ist größer als der rechte oder gleich.</td></tr>
       </tbody>
     </table>
+    </div>
     <p><code>&lt;=</code> und <code>&gt;=</code> stehen für die Zeichen ≤ und ≥ der Mathematik. Das Gleichheitszeichen steht immer hinten.</p>
 
     <h3>Drei Regeln</h3>
@@ -186,6 +188,7 @@ var t = "Hallo " + "Welt"</pre>
 
     <h3>Welches Zeichen größer ist</h3>
     <p>Jedes Zeichen hat eine Nummer. Das Zeichen mit der größeren Nummer ist das größere.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Zeichen</th><th>Nummern</th><th>Beispiel</th></tr></thead>
       <tbody>
@@ -196,6 +199,7 @@ var t = "Hallo " + "Welt"</pre>
         <tr><td>Die Umlaute und das <code>ß</code></td><td>Sie haben Nummern über 122.</td><td>Das <code>ä</code> hat die Nummer 228, das <code>Ä</code> die Nummer 196.</td></tr>
       </tbody>
     </table>
+    </div>
     <p>Daraus folgt: Ziffern sind kleiner als Großbuchstaben, und Großbuchstaben sind kleiner als Kleinbuchstaben.</p>
 
     <h3>Ausprobieren: zwei Strings vergleichen</h3>
@@ -218,7 +222,7 @@ var t = "Hallo " + "Welt"</pre>
       <button type="button" class="code" data-q="Haus" data-r="haus">Haus, haus</button>
       <button type="button" class="code" data-q="Go" data-r="Go">Go, Go</button>
     </div>
-    <div style="overflow-x:auto"><table class="zeichen" id="s-zeichen"></table></div>
+    <div style="overflow-x:auto"><div class="tabellenrahmen"><table class="zeichen" id="s-zeichen"></table></div></div>
     <pre class="code-block" id="s-code"></pre>
     <div class="auskunft" id="s-urteil"></div>
 
