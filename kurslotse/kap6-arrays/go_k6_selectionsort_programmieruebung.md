@@ -180,13 +180,11 @@ Reiter: vergleich
 - Beide Verfahren brauchen für n Elemente n · (n − 1) / 2 Vergleiche. Bei doppelt so vielen Elementen sind es etwa viermal so viele. Für große Datenmengen sind beide zu langsam. Ein Link führt zum Exkurs zur Laufzeit.
 - Selection Sort tauscht höchstens einmal je Runde. Das zählt, wenn ein Tausch teuer ist.
 - Selection Sort braucht auch für ein schon sortiertes Array alle Vergleiche.
-- Der Schritt endet mit einem Link zur HTML-Seite „Selection Sort mit Funktionen“ in Kapitel 7 und nennt Quicksort und Mergesort als schnellere Verfahren, die im Kurstext nicht behandelt werden.
 - Die Schreibweise O(n²) steht nicht auf dieser Seite. Sie wird im Exkurs zur Laufzeit erklärt.
 
 ### Handgriffe
 
 - In diesem Schritt lässt sich nichts ausprobieren.
-- Den Links folgen.
 
 ### Abschnitte des Kurstexts
 
@@ -202,10 +200,13 @@ Reiter: kurstext
 - Die Tabelle nennt fünf Abschnitte des Kurstexts und was das Programm daraus verwendet: 5.3.2 Tupel-Zuweisung, 5.5.1 if-Anweisung, 5.5.3.2 for-Klausel, 6 Arrays, 6.1 Index-Position.
 - Der Teil „Selection Sort im Kurstext“: Selection Sort kommt im Kurstext nicht vor. Das einzige Sortierverfahren dort ist Bubblesort in Abschnitt 8.4.2. In Abschnitt 8.4.2 steht, dass der Vorkurs zwei einfache Sortierverfahren vorgestellt hat. Welche das sind, steht dort nicht.
 - Der Teil „Was über den Kurstext hinausgeht“: das Verfahren selbst, der Vergleich mit Bubble Sort und die Ausgabe mit `%d` und `%v`.
+- Der Reiter nennt außerdem: In Abschnitt 8.4.2 steht nur, dass der Vorkurs zwei einfache Sortierverfahren vorgestellt hat, und die Zahl der Vergleiche von Bubblesort. Alle Programme sind eigene Beispiele. Die Variable heißt minIndex, weil es seit Go 1.21 eine eingebaute Funktion min gibt.
+- Unter „Wie es weitergeht“ steht ein Link zur HTML-Seite „Selection Sort mit Funktionen“ in Kapitel 7 und nennt Quicksort und Mergesort als schnellere Verfahren, die im Kurstext nicht behandelt werden.
 
 ### Handgriffe
 
 - In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links folgen.
 
 ### Abschnitte des Kurstexts
 

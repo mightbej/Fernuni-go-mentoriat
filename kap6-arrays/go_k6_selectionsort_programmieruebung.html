@@ -17,7 +17,6 @@
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .legende { color:var(--muted);font-size:.9rem; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -59,6 +58,7 @@
     .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
     .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
     .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -147,7 +147,6 @@ Runde 3:  Der kleinste Wert im Rest ist 9. Er wird mit der 19 an der Stelle 2 ge
       <li><strong>Suchen:</strong> Das Programm muss wissen, wo der kleinste Wert steht. Dafür merkt es sich seinen Index. Das ist Schritt 2.</li>
       <li><strong>Wiederholen:</strong> Die Runde läuft für <code>pos</code> gleich 0, dann 1, dann 2 und so weiter. Das ist Schritt 4.</li>
     </ul>
-    <p class="quelle">Selection Sort kommt im Kurstext nicht vor. In Abschnitt 8.4.2 steht, dass der Vorkurs zwei einfache Sortierverfahren vorgestellt hat.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -192,7 +191,6 @@ fmt.Println("Kleinster Wert:", a[minIndex])            // 3</pre>
     <div class="array" id="s-array"></div>
     <div class="farben"><span class="f0">Dieses Element wird gerade mit dem Kandidaten verglichen.</span><span class="f1">Hier steht der Kandidat, das kleinste Element bisher.</span></div>
     <div class="auskunft" id="s-urteil"></div>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel. Seit Go 1.21 gibt es eine eingebaute Funktion <code>min</code>. Die Variable heißt deshalb <code>minIndex</code> und nicht <code>min</code>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -238,7 +236,6 @@ a[pos], a[minIndex] = a[minIndex], a[pos]
 fmt.Println("Nach Runde 2:", a)    // [3 7 19 88 42 25 71 14 60 9]</pre>
     <p>Die zwei Runden unterscheiden sich in einer einzigen Zahl: dem Wert von <code>pos</code>. Daraus wird in Schritt 4 die äußere Schleife.</p>
     <p>In Runde 2 steht der kleinste Wert des Rests, die 7, schon an der Stelle 1. Dann ist <code>minIndex</code> gleich <code>pos</code>, und das Programm tauscht das Element mit sich selbst. Das ist erlaubt und ändert nichts.</p>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -287,7 +284,6 @@ fmt.Println("Nach Runde 2:", a)    // [3 7 19 88 42 25 71 14 60 9]</pre>
     <p>Ausgabe des Programms:</p>
     <div class="konsole" id="g-ausgabe"></div>
     <div class="auskunft" id="g-urteil"></div>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -331,7 +327,6 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
       <li>Lass das Programm zählen, wie oft es vergleicht und wie oft es tauscht, und gib beide Zahlen am Ende aus.</li>
       <li>Was geschieht, wenn du die Zeile <code>if minIndex != pos {</code> und ihre schließende Klammer löschst?</li>
     </ul>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -343,6 +338,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
   <div class="card">
     <h2>Schritt 6: Vergleich mit Bubble Sort</h2>
     <p>Beide Verfahren arbeiten mit den gleichen Mitteln: Array, Index, zwei verschachtelte Schleifen, ein Vergleich, ein Tausch. Sie setzen sie verschieden ein.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Frage</th><th>Bubble Sort</th><th>Selection Sort</th></tr></thead>
       <tbody>
@@ -353,6 +349,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
         <tr><td>Wie viele Tausche braucht es für die zehn Zahlen?</td><td>Es braucht 23 Tausche.</td><td>Es braucht 7 Tausche.</td></tr>
       </tbody>
     </table>
+    </div>
 
     <h3>Gleich viele Vergleiche</h3>
     <p>Beide Verfahren vergleichen in der ersten Runde neunmal, in der zweiten achtmal, in der letzten einmal. Das sind 9 + 8 + … + 1 = 45 Vergleiche, für n Elemente n · (n − 1) / 2. Bei doppelt so vielen Elementen sind es etwa viermal so viele. Für große Datenmengen sind beide Verfahren deshalb zu langsam. Mehr dazu steht im <a href="../exkurse/exkurs_laufzeit_wachstum.html">Exkurs: Wie die Laufzeit mit der Datenmenge wächst</a>.</p>
@@ -362,13 +359,6 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 
     <h3>Kein Vorteil bei einem sortierten Array</h3>
     <p>Selection Sort sucht in jeder Runde den ganzen Rest ab, auch wenn das Array schon sortiert ist. Es braucht immer alle 45 Vergleiche.</p>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Mit Funktionen:</strong> In Kapitel 7 wird das gleiche Programm in Funktionen zerlegt: <a href="../kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html">Selection Sort mit Funktionen</a>.</li>
-      <li><strong>Schnellere Verfahren:</strong> Verfahren wie Quicksort und Mergesort kommen mit viel weniger Vergleichen aus. Sie brauchen Funktionen und meist Rekursion. Im Kurstext werden sie nicht behandelt.</li>
-    </ul>
-    <p class="quelle">Die Zahl der Vergleiche von Bubblesort steht im Kurstext in Abschnitt 8.4.2, Seiten 225–226. Der Vergleich der zwei Verfahren und die Zahlen 23 und 7 stehen dort nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
@@ -380,6 +370,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
   <div class="card">
     <h2>Schritt 7: Bezug zum Kurstext</h2>
     <p>Das Programm verwendet nur Stoff aus Kapitel 5 und 6. Die Tabelle nennt, was aus welchem Abschnitt stammt.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
       <tbody>
@@ -390,14 +381,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
         <tr><td>6.1 Index-Position in einem Array</td><td>154–155</td><td>Das Programm verwendet Index-Ausdrücke mit den Variablen <code>i</code>, <code>pos</code> und <code>minIndex</code> und die Funktion <code>len</code>.</td></tr>
       </tbody>
     </table>
+    </div>
 
     <h3>Selection Sort im Kurstext</h3>
-    <p>Selection Sort kommt im Kurstext nicht vor. Das einzige Sortierverfahren dort ist Bubblesort in Abschnitt 8.4.2. Die Übung ist eine Ergänzung des Mentors: Sie zeigt an einem zweiten Verfahren, dass man die gleiche Aufgabe mit den gleichen Mitteln auf verschiedene Weise lösen kann.</p>
+    <p>Selection Sort kommt im Kurstext nicht vor. Das einzige Sortierverfahren dort ist Bubblesort in Abschnitt 8.4.2. Die Übung ist eine Ergänzung des Mentors: Sie zeigt an einem zweiten Verfahren, dass man die gleiche Aufgabe mit den gleichen Mitteln auf verschiedene Weise lösen kann. In Abschnitt 8.4.2 steht nur, dass der Vorkurs zwei einfache Sortierverfahren vorgestellt hat, und dort steht die Zahl der Vergleiche von Bubblesort.</p>
 
     <h3>Was über den Kurstext hinausgeht</h3>
     <ul>
       <li><strong>Das Verfahren selbst</strong> und der Vergleich mit Bubble Sort.</li>
       <li><strong>Die Ausgabe mit <code>%d</code> und <code>%v</code>:</strong> <code>fmt.Printf</code> wird in Abschnitt 4.2 eingeführt. <code>%v</code> gibt das ganze Array aus.</li>
+      <li><strong>Die Programme:</strong> Alle Programme der Übung sind eigene Beispiele.</li>
+      <li><strong>Der Name <code>minIndex</code>:</strong> Seit Go 1.21 gibt es eine eingebaute Funktion <code>min</code>. Die Variable heißt deshalb nicht <code>min</code>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Mit Funktionen:</strong> In Kapitel 7 wird das gleiche Programm in Funktionen zerlegt: <a href="../kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html">Selection Sort mit Funktionen</a>.</li>
+      <li><strong>Schnellere Verfahren:</strong> Verfahren wie Quicksort und Mergesort kommen mit viel weniger Vergleichen aus. Sie brauchen Funktionen und meist Rekursion. Im Kurstext werden sie nicht behandelt.</li>
     </ul>
   </div>
   <div class="zeile schritte">
