@@ -106,6 +106,15 @@
             margin: 14px 0;
         }
 
+        /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .tab { cursor: pointer; font-family: inherit; }
+        .tab.active { border-color: #0f766e; }
+        .stufe { display: none; }
+        .stufe.active { display: block; }
+        .schritte { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin: 0 0 24px; }
+        button:disabled { opacity: .5; cursor: default; }
+
         .code-block .kommentar {
             color: #9ca3af;
         }
@@ -119,8 +128,15 @@
             <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4, Seiten 221–226</p>
         </div>
 
-        <!-- ===================== Grundlagen ===================== -->
-        <section class="card" data-bereich="grundlagen">
+        <div class="tabs">
+            <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+            <button type="button" class="tab" data-stufe="1">1 Vergleiche zählen</button>
+            <button type="button" class="tab" data-stufe="2">2 Woher die Formeln kommen</button>
+            <button type="button" class="tab" data-stufe="3">3 Die Kurve erkennen</button>
+        </div>
+
+        <section class="stufe active" id="stufe-0">
+        <div class="card">
             <h2>Worum es geht</h2>
             <p>Wie lange ein Programm läuft, hängt vom Rechner ab. Wie viele Schritte es macht, hängt nur vom Algorithmus und von der Datenmenge ab. Diese Seite zählt deshalb Schritte. Als Schritt gilt ein Vergleich zweier Werte, zum Beispiel <code>a[i] &gt; a[i+1]</code>. Die Datenmenge ist die Zahl der Elemente im Array und heißt <code>n</code>.</p>
             <p>Im Kurstext kommt die Frage an zwei Stellen vor:</p>
@@ -128,9 +144,9 @@
                 <li><strong>Abschnitt 8.4.1, Seite 222, binäre Suche:</strong> Ein Array mit n Elementen kann nur log₂ n mal halbiert werden. Die Laufzeit wird dort logarithmisch genannt.</li>
                 <li><strong>Abschnitt 8.4.2, Seite 225, Bubblesort:</strong> Die Zahl der Vergleiche beträgt n · (n − 1) / 2. Die Laufzeit wird dort quadratisch genannt.</li>
             </ul>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="grundlagen">
+        <div class="card">
             <h2>Fünf Kurven</h2>
             <p>Nach rechts wächst das Array, nach oben wächst die Zahl der Schritte. Jede Kurve ist ausgerechnet, der Ausschnitt reicht bis n = 30 und bis 100 Schritte.</p>
             <svg id="bild-grundlagen" class="schaubild" viewBox="0 0 760 420" role="img" aria-label="Schaubild mit fünf Kurven: O(1) bleibt bei einem Schritt, O(log n) steigt kaum, O(n) steigt gleichmäßig, O(n log n) steigt etwas steiler, O(n²) verlässt den Ausschnitt schon bei n = 15."></svg>
@@ -183,10 +199,15 @@
             <div class="info-box">
                 <strong>Die Schreibweise O(…)</strong> nennt nur, wie die Zahl der Schritte wächst. O(n²) heißt: Wird das Array zehnmal so groß, braucht der Algorithmus etwa hundertmal so viele Schritte. Im Kurstext stehen dafür die Wörter „logarithmisch“ und „quadratisch“.
             </div>
+        </div>
+        <div class="schritte">
+            <button type="button" class="btn-secondary" disabled>Zurück</button>
+            <button type="button" class="btn-primary" data-gehe="1">Weiter zu Schritt 1</button>
+        </div>
         </section>
 
-        <!-- ===================== Ausprobieren ===================== -->
-        <section class="card" data-bereich="ausprobieren">
+        <section class="stufe" id="stufe-1">
+        <div class="card">
             <h2>Vergleiche zählen</h2>
             <p>Die Seite füllt ein Array mit n gemischten Zahlen und lässt vier Algorithmen wirklich laufen. Jeder Algorithmus zählt seine Vergleiche. Die gezählten Werte erscheinen als Punkte auf der gestrichelten Linie bei n.</p>
             <p>Gesucht wird ein Wert, der im Array fehlt. Das ist für beide Suchen der ungünstigste Fall.</p>
@@ -227,9 +248,9 @@
                     <li><strong>n verdoppeln:</strong> Von n = 100 auf n = 200 bekommt die lineare Suche 100 Vergleiche dazu, die binäre Suche einen, Bubble Sort 14.950.</li>
                 </ul>
             </div>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="ausprobieren">
+        <div class="card">
             <h2>So zählt das Programm</h2>
             <p>Der Zähler steht in der inneren Schleife, direkt vor dem Vergleich. Hier ist Bubble Sort für ein Array mit <code>anzahl</code> Elementen:</p>
 <div class="code-block">func bubbleSort(a *[maxAnzahl]int, anzahl int) (vergleiche, vertauschungen int) {
@@ -247,10 +268,15 @@
     return
 }</div>
             <p>Das ganze Go-Programm mit allen vier Algorithmen liegt im Repository: <a href="https://github.com/mightbej/Fernuni-go-mentoriat/blob/main/exkurse/go/laufzeit_vergleiche_zaehlen.go">laufzeit_vergleiche_zaehlen.go</a>. Es gibt für n = 10, 100 und 1000 dieselben Zahlen aus wie diese Seite.</p>
+        </div>
+        <div class="schritte">
+            <button type="button" class="btn-secondary" data-gehe="0">Zurück zu „Worum es geht“</button>
+            <button type="button" class="btn-primary" data-gehe="2">Weiter zu Schritt 2</button>
+        </div>
         </section>
 
-        <!-- ===================== Vertiefung ===================== -->
-        <section class="card" data-bereich="vertiefung">
+        <section class="stufe" id="stufe-2">
+        <div class="card">
             <h2>Woher die Formeln kommen</h2>
             <ul>
                 <li><strong>Bubble Sort:</strong> Der erste Durchgang vergleicht n − 1 Nachbarn, der zweite n − 2, der letzte einen. Die Summe (n − 1) + (n − 2) + … + 1 ergibt n · (n − 1) / 2. Die Herleitung steht im Kurstext in Abschnitt 8.4.2 auf Seite 225.</li>
@@ -258,9 +284,9 @@
                 <li><strong>Lineare Suche:</strong> Fehlt der Wert, sieht die Suche jedes der n Elemente einmal an.</li>
                 <li><strong>Binäre Suche:</strong> Jeder Blick in die Mitte halbiert den Rest. Aus 1000 Elementen werden 500, 250, 125, 62, 31, 15, 7, 3, 1. Nach zehn Blicken ist nichts mehr übrig. Das Array muss dafür sortiert sein.</li>
             </ul>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="vertiefung">
+        <div class="card">
             <h2>Was die Schreibweise O(…) weglässt</h2>
             <p>Bubble Sort braucht n · (n − 1) / 2 Vergleiche und heißt trotzdem O(n²). Die Schreibweise lässt zwei Dinge weg:</p>
             <ul>
@@ -284,19 +310,24 @@
                 </table>
             </div>
             <p>Beide Spalten wachsen von Zeile zu Zeile etwa auf das Hundertfache. Nur das hält O(n²) fest.</p>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="vertiefung">
+        <div class="card">
             <h2>Drei Feinheiten</h2>
             <ul>
                 <li><strong>Gleiche Kurve, verschiedene Arbeit:</strong> Bubble Sort und Selection Sort brauchen gleich viele Vergleiche. Bei den Vertauschungen liegen sie weit auseinander. Selection Sort vertauscht höchstens n − 1 mal. Bei Bubble Sort kann die Zahl der Vertauschungen so groß werden wie die Zahl der Vergleiche, so steht es im Kurstext auf Seite 225.</li>
                 <li><strong>Bubble Sort mit Abbruch:</strong> Kommt in einem Durchgang keine Vertauschung vor, ist das Array sortiert. Bricht das Programm dann ab, braucht es für ein schon sortiertes Array nur n − 1 Vergleiche. Im Kurstext ist diese Erweiterung auf Seite 226 als Übungsaufgabe gestellt.</li>
                 <li><strong>Kleine Arrays:</strong> Die Kurven sagen etwas über große n. Bei n = 4 braucht Bubble Sort 6 Vergleiche, und 4 · log₂ 4 ist 8. Erst ab n = 7 liegt O(n²) über O(n log n).</li>
             </ul>
+        </div>
+        <div class="schritte">
+            <button type="button" class="btn-secondary" data-gehe="1">Zurück zu Schritt 1</button>
+            <button type="button" class="btn-primary" data-gehe="3">Weiter zu Schritt 3</button>
+        </div>
         </section>
 
-        <!-- ===================== Faustregeln ===================== -->
-        <section class="card" data-bereich="faustregeln">
+        <section class="stufe" id="stufe-3">
+        <div class="card">
             <h2>Die Kurve am Programm erkennen</h2>
             <ul>
                 <li><strong>Keine Schleife über das Array:</strong> Das Programm braucht gleich viele Schritte für jedes n, also O(1). Beispiel: <code>a[i] = 5</code>.</li>
@@ -304,9 +335,9 @@
                 <li><strong>Zwei geschachtelte Schleifen über das Array:</strong> Das Programm braucht O(n²) Schritte. Beispiel: Bubble Sort und Selection Sort.</li>
                 <li><strong>Der Rest wird in jedem Schritt halbiert:</strong> Das Programm braucht O(log n) Schritte. Beispiel: die binäre Suche.</li>
             </ul>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="faustregeln">
+        <div class="card">
             <h2>Was geschieht, wenn das Array zehnmal so groß wird</h2>
             <div class="tabelle-rahmen">
                 <table>
@@ -330,20 +361,28 @@
             <div class="success-box">
                 <strong>In Zeit umgerechnet:</strong> Angenommen, ein Rechner schafft eine Milliarde Vergleiche in der Sekunde. Eine Million Elemente sortiert Bubble Sort dann in gut acht Minuten. Ein Verfahren mit O(n log n) braucht dafür zwei Hundertstelsekunden.
             </div>
-        </section>
+        </div>
 
-        <section class="card" data-bereich="faustregeln">
+        <div class="card">
             <h2>Wo die Algorithmen erklärt sind</h2>
             <ul>
                 <li><strong>Bubble Sort:</strong> <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Programmierübung: Sortieren mit Bubble Sort</a></li>
                 <li><strong>Selection Sort:</strong> <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Programmierübung: Sortieren mit Selection Sort</a></li>
                 <li><strong>Kopieraufwand beim Sortieren:</strong> <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a></li>
+                <li><strong>Bubblesort im Kurstext, Abschnitt 8.4.2:</strong> <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a></li>
+                <li><strong>Suchen in etwa log₂ n Schritten:</strong> <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a></li>
+                <li><strong>Einfügen ohne Verschieben:</strong> <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a></li>
                 <li><strong>Binäre Suche als Go-Programm:</strong> <a href="https://github.com/mightbej/Fernuni-go-mentoriat/blob/main/kap8-verbund/go/S230_binaere_suche_demo.go">S230_binaere_suche_demo.go</a></li>
             </ul>
+        </div>
+        <div class="schritte">
+            <button type="button" class="btn-secondary" data-gehe="2">Zurück zu Schritt 2</button>
+            <button type="button" class="btn-secondary" disabled>Weiter</button>
+        </div>
         </section>
     </div>
 
-    <script src="../bereiche.js"></script>
+    <script src="../kurslotse.js"></script>
     <script>
         (function () {
             const NS = "http://www.w3.org/2000/svg";
@@ -506,10 +545,30 @@
                 return vergleiche;
             }
 
-            // ---- Bereich Grundlagen: festes Schaubild ----
+            // ---- Reiter ----
+            // Jeder Schritt hat eine eigene Adresse, zum Beispiel …wachstum.html#ausprobieren. Die Adressen sind die der früheren Bereiche.
+            const ANKER = ["grundlagen", "ausprobieren", "vertiefung", "faustregeln"];
+            const SCHRITTE = ["Worum es geht", "Schritt 1: Vergleiche zählen", "Schritt 2: Woher die Formeln kommen", "Schritt 3: Die Kurve erkennen"];
+            let stufe = 0;
+            let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+            let letzter = null;       // was die Demo zuletzt gezählt hat, für den Kurslotsen
+            const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+            function zeigeStufe(nummer, nachOben) {
+                const gewechselt = nummer !== stufe;
+                stufe = nummer;
+                document.querySelectorAll(".stufe").forEach(s => s.classList.toggle("active", s.id === "stufe-" + nummer));
+                document.querySelectorAll(".tab").forEach(k => k.classList.toggle("active", Number(k.dataset.stufe) === nummer));
+                if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+                if (nachOben) { history.replaceState(null, "", "#" + ANKER[nummer]); window.scrollTo({ top: 0, behavior: "smooth" }); }
+            }
+            const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+            document.querySelectorAll("[data-stufe], [data-gehe]").forEach(k => k.addEventListener("click", () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+            window.addEventListener("hashchange", () => zeigeStufe(stufeAusAdresse(), false));
+
+            // ---- Worum es geht: festes Schaubild ----
             zeichne(document.getElementById("bild-grundlagen"), 30, 100, 0, []);
 
-            // ---- Bereich Ausprobieren ----
+            // ---- Schritt 1: Vergleiche zählen ----
             const reglerN = document.getElementById("regler-n");
             const reglerY = document.getElementById("regler-y");
             const Y_MIN = 20, Y_MAX = 550000;
@@ -569,14 +628,18 @@
                 const dezimal = w => w.toLocaleString("de-DE", { maximumFractionDigits: 1 });
                 const koerper = document.getElementById("ergebnis");
                 while (koerper.firstChild) koerper.removeChild(koerper.firstChild);
-                [
+                const daten = [
                     ["Zugriff auf a[i]", konstant, "1", ohneProgramm, ohneProgramm],
                     ["Binäre Suche", log, "log₂ " + zahl(n) + " = " + dezimal(log2(n)), binaer, ohneTausch],
                     ["Lineare Suche", lin, "n = " + zahl(n), linear, ohneTausch],
                     ["Mergesort", nlogn, "n · log₂ n = " + zahl(n * log2(n)), ohneProgramm, ohneProgramm],
                     ["Bubble Sort", quadrat, "n · (n − 1) / 2 = " + zahl(quadrat.f(n)), bubble.vergleiche, bubble.vertauschungen],
                     ["Selection Sort", quadrat, "n · (n − 1) / 2 = " + zahl(quadrat.f(n)), selection.vergleiche, selection.vertauschungen]
-                ].forEach(z => koerper.appendChild(zeile(z)));
+                ];
+                daten.forEach(z => koerper.appendChild(zeile(z)));
+                const wert = z => typeof z === "number" ? zahl(z) : z;
+                letzter = { n: n, yMax: yMax, draussen: draussen, zeilen: daten.map(z => z[0] + ": Kurve " + z[1].name + ", Schritte nach der Formel " + z[2] + ", gezählte Vergleiche: " + wert(z[3]) + ", gezählte Vertauschungen: " + wert(z[4])) };
+                melde(false);
             }
 
             reglerN.addEventListener("input", aktualisiere);
@@ -592,6 +655,38 @@
 
             reglerY.value = yZuRegler(yMax);
             aktualisiere();
+
+            // ---- Kurslotse ----
+            // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+            function standSaetze() {
+                if (stufe === 0) return ["Zu sehen ist ein festes Schaubild mit den fünf Kurven. Der Ausschnitt reicht bis n = 30 und bis 100 Schritte. In diesem Schritt lässt sich nichts verstellen."];
+                if (stufe === 1) return [
+                    "Der Regler für die Größe des Arrays steht auf n = " + zahl(letzter.n) + ". Er reicht von 2 bis 1.000.",
+                    "Die senkrechte Achse des Schaubilds reicht bis " + zahl(letzter.yMax) + " Vergleiche. Die waagrechte Achse reicht immer bis n = 1.000.",
+                    "Die Tabelle unter dem Schaubild: " + letzter.zeilen.join(" ; ") + ".",
+                    letzter.draussen.length ? "Oberhalb des Ausschnitts liegt der Punkt für: " + letzter.draussen.join(", ") + ". Die senkrechte Achse ist dafür zu klein eingestellt." : "Alle drei gezählten Punkte liegen im Ausschnitt.",
+                    "Eine gestrichelte senkrechte Linie steht bei n = " + zahl(letzter.n) + ". Auf ihr liegen drei Punkte: binäre Suche, lineare Suche, und ein gemeinsamer Punkt für Bubble Sort und Selection Sort.",
+                    "Handgriffe: den Regler „Größe des Arrays“ schieben, den Regler für die senkrechte Achse schieben, den Knopf zum Anpassen der Achse wählen. Eigene Zahlen für das Array kann der Student nicht eingeben."
+                ];
+                return ["Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren."];
+            }
+            zeigeStufe(stufeAusAdresse(), false);
+            Kurslotse.einrichten({
+                titel: "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+                thema: "Laufzeit, Schritte zählen, Schreibweise O(…), konstant, logarithmisch, linear, quadratisch, lineare und binäre Suche, Bubble Sort, Selection Sort",
+                bezug: "Kurstext v3.0.6, Abschnitt 8.4, Seiten 221–226",
+                beschreibung: "../kurslotse/exkurse/exkurs_laufzeit_wachstum.md",
+                reiter: () => ANKER[stufe],
+                schritt: () => SCHRITTE[stufe],
+                sichtbar: () => document.getElementById("stufe-" + stufe),
+                text: ".card > h2, .card > p, .card > ul, .info-box, .success-box, .hinweis, table",
+                zeilen: () => [],
+                zeilenTitel: "",
+                stand: standSaetze,
+                kurz: () => stufe === 1 ? "n = " + zahl(letzter.n) : "",
+                beispiel: "Warum heißt Bubble Sort O(n²), wenn es n · (n − 1) / 2 Vergleiche sind?"
+            });
+            angemeldet = true;
         })();
     </script>
 </body>
