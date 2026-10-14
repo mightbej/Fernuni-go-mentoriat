@@ -2,7 +2,7 @@
 
 Die Seite stellt alle Bitmuster eines Ganzzahl-Typs auf einen Kreis. Ein Zeiger zeigt auf ein Bitmuster. Addieren bewegt den Zeiger im Uhrzeigersinn, Subtrahieren gegen den Uhrzeigersinn. Der Kreis zeigt entweder ein Modell mit 4 Bit oder 8 Bit, und 8 Bit sind in Go die Typen `uint8` und `int8`.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Der Kreis ist in Schritt 1, Schritt 2 und Schritt 3 derselbe: Die Zahl der Bits, die Lesart mit oder ohne Vorzeichen und die Stelle des Zeigers bleiben beim Wechsel des Schritts erhalten.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt. Der Kreis ist in Schritt 1, Schritt 2 und Schritt 3 derselbe: Die Zahl der Bits, die Lesart mit oder ohne Vorzeichen und die Stelle des Zeigers bleiben beim Wechsel des Schritts erhalten.
 
 Den Code auf der Seite kann der Student nicht ändern und nicht ausführen. Die Seite schreibt die Programmzeilen selbst, nachdem der Student in Schritt 3 gerechnet hat.
 
@@ -143,3 +143,35 @@ Reiter: typen
 ### Abschnitte des Kurstexts
 
 - 4.3.4
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Bitmuster und Wert, 4.3.5, Seiten 64–66: Die Wertigkeit der Bits und der Wert als Summe der Wertigkeiten stammen aus dem Kurstext. Der Kreis und das Modell mit 4 Bit gibt die Lektion dazu.
+  - 2 Vorzeichen, 4.3.5, Seiten 64–66: Zweierkomplement: Das Zweierkomplement mit der negativen Wertigkeit des vordersten Bits stammt aus dem Kurstext. Die Färbung der Werte auf dem Kreis gibt die Lektion dazu.
+  - 3 Überlauf, 4.3.8, Seiten 78–84: Der arithmetische Überlauf stammt aus dem Kurstext. Die Nahtstelle auf dem Kreis und das Programm zur Rechnung gibt die Lektion dazu.
+  - 4 Die Typen in Go, 4.3.4, Seite 63: Die Tabelle der Ganzzahl-Typen stammt aus dem Kurstext. Die gelbe Markierung des Typs, den der Kreis gerade zeigt, gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherelemente: Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 2.3, Seiten 10–11, Wertebereich: Bei großen Zahlen kann ein Ergebnis zu groß für den Wertebereich sein. Lektion: Überlauf bei Ganzzahlen in Go, Schritt 4.
+  - Abschnitt 4.3.1, Seiten 59–61, Literale: Lektion: Zahlensysteme in Go.
+- Unter „Wie es weitergeht“ stehen Links auf: „Zweierkomplement“, „Quiz zu den Wertebereichen der Ganzzahl-Typen“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 2.3
+- 4.3.1
+- 4.3.4
+- 4.3.5
+- 4.3.8

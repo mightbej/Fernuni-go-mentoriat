@@ -45,7 +45,6 @@
     td:nth-child(3),td:nth-child(4) { font-family:Consolas,monospace; }
     tr.trenner td { border-top:2px solid #cbd5e1; }
     tr.gewaehlt td { background:var(--highlight);font-weight:700; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
 
     /* Bitmuster unter dem Kreis */
     .bitfeld { margin-top:14px;padding:14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;text-align:center; }
@@ -108,6 +107,7 @@
     <button type="button" class="tab" data-stufe="2">2 Vorzeichen</button>
     <button type="button" class="tab" data-stufe="3">3 Überlauf</button>
     <button type="button" class="tab" data-stufe="4">4 Die Typen in Go</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -202,7 +202,6 @@
         </div>
 
       </div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66.</p>
     </div>
     <div class="nav">
       <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -222,7 +221,6 @@
       <div class="hinweis"><strong>Erst vorhersagen, dann ausprobieren:</strong> 8 Bit, Bitmuster <code>1111 1111</code>. Zwischen „ohne Vorzeichen“ und „mit Vorzeichen“ umschalten. Was ändert sich, was bleibt?
         <details><summary>Auflösung</summary>Das Bitmuster und die Stelle des Zeigers bleiben. Der Wert wechselt von 255 auf −1, und die Nahtstelle wandert von oben nach unten. Der Typ legt fest, was die Bits bedeuten.</details></div>
       <div id="platz-2"></div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66.</p>
     </div>
     <div class="nav">
       <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -248,7 +246,6 @@
       </div>
       <div id="platz-3"></div>
       <div class="hinweis">Go meldet den Überlauf zur Laufzeit nicht. Das Programm rechnet mit dem falschen Wert weiter. Nur bei Konstanten prüft der Compiler: <code>var x int8 = 127 + 1</code> wird nicht übersetzt.</div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–84.</p>
     </div>
     <div class="nav">
       <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -279,10 +276,43 @@
         </tbody>
       </table>
       </div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63.</p>
     </div>
     <div class="nav">
       <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" data-gehe="5">Weiter zu Schritt 5</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Bitmuster und Wert</td><td>4.3.5, Seiten 64–66</td><td>Die Wertigkeit der Bits und der Wert als Summe der Wertigkeiten stammen aus dem Kurstext.</td><td>Der Kreis und das Modell mit 4 Bit gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Vorzeichen</td><td>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Das Zweierkomplement mit der negativen Wertigkeit des vordersten Bits stammt aus dem Kurstext.</td><td>Die Färbung der Werte auf dem Kreis gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Überlauf</td><td>4.3.8, Seiten 78–84</td><td>Der arithmetische Überlauf stammt aus dem Kurstext.</td><td>Die Nahtstelle auf dem Kreis und das Programm zur Rechnung gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Die Typen in Go</td><td>4.3.4, Seite 63</td><td>Die Tabelle der Ganzzahl-Typen stammt aus dem Kurstext.</td><td>Die gelbe Markierung des Typs, den der Kreis gerade zeigt, gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherelemente:</strong> Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Wertebereich:</strong> Bei großen Zahlen kann ein Ergebnis zu groß für den Wertebereich sein. Lektion: <a href="go_k4_overflow_interaktiv.html#teilausdruecke">Überlauf bei Ganzzahlen in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.1, Seiten 59–61, Literale:</strong> Lektion: <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Zweierkomplement:</strong> Die Lektion <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a> zeigt, wie man eine Zahl negiert.</li>
+      <li><strong>Quiz:</strong> <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen der Ganzzahl-Typen</a>.</li>
+    </ul>
+  </div>
+  <div class="nav">
+      <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
       <button type="button" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
@@ -480,7 +510,7 @@
 
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#ueberlauf
-  const ANKER = ['worum', 'bitmuster', 'vorzeichen', 'ueberlauf', 'typen'];
+  const ANKER = ['worum', 'bitmuster', 'vorzeichen', 'ueberlauf', 'typen', 'kurstext'];
   let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
     const gewechselt = nummer !== aktuell;
@@ -506,10 +536,11 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitmuster und Wert', 'Schritt 2: Mit und ohne Vorzeichen', 'Schritt 3: Überlauf', 'Schritt 4: Die Ganzzahl-Typen in Go'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitmuster und Wert', 'Schritt 2: Mit und ohne Vorzeichen', 'Schritt 3: Überlauf', 'Schritt 4: Die Ganzzahl-Typen in Go', 'Schritt 5: Bezug zum Kurstext'];
 
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function standSaetze() {
+    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     const acht = st.n === 8, lesart = st.signed ? 'mit Vorzeichen' : 'ohne Vorzeichen';
     if (aktuell === 0) return ['Unter „Worum es geht“ ist kein Kreis zu sehen.'];
     if (aktuell === 4) return [acht
