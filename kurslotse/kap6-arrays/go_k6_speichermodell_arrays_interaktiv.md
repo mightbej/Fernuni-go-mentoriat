@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wie ein Array im Hauptspeicher liegt. Ein Array hat einen Namen und viele Elemente. In der Tabelle des Rechners steht nur der Anfang, die Adresse eines Elements rechnet der Rechner aus dem Index aus. Die Seite gehört zu Kapitel 6 des Kurstexts und zu Abschnitt 6.1. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Modell.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -121,4 +121,32 @@ Reiter: aufgaben
 
 ### Abschnitte des Kurstexts
 
+- 6.1
+
+## Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 6, Seiten 151–154: Das Array als Reihe von Elementen des gleichen Typs unter einem Namen stammt aus dem Kurstext. Zellen mit Adressen und die Tabelle des Rechners mit einer Zeile für das ganze Array gibt die Lektion dazu.
+  - 1 Die Adresse eines Elements, 6.1, Seiten 154–155: Index: Der Index, der bei 0 beginnt, stammt aus dem Kurstext. Die Rechnung, mit der der Rechner die Adresse eines Elements findet, steht nicht im Kurstext.
+  - 2 Ein Programm im Speicher, 6, Seiten 151–154; 6.1, Seiten 154–155: Deklaration und Zugriff mit Index stammen aus dem Kurstext. Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.
+  - Aufgaben, kein eigener Abschnitt: Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2. Die Aufgaben gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, zusammengesetzte Typen: Aus mehreren Werten des gleichen Typs lässt sich ein neuer Typ bauen, zum Beispiel ein Vektor. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Abschnitt 4.3.4, Seite 63, Größe der Typen: Wie viele Zellen ein Element belegt. Lektion: Speichermodell.
+  - Abschnitt 6.1, Seiten 154–155, Index: Lektion: Arrays in Go, Schritt 2.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu „Aufgaben““ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.4
 - 6.1
