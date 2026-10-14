@@ -2,7 +2,7 @@
 
 Die Seite ist ein Exkurs. Sie rechnet an einer Funktion `swap` aus, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger. Sie gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.2 und 7.3, Seiten 169–172.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -100,7 +100,6 @@ Reiter: zeiger
 - Der Wert des Zeigers steht in Worten da: „Adresse von a“.
 - Eine Tabelle vergleicht `swap` mit einer Kopie und `swap` mit einem Zeiger in fünf Zeilen. Die letzte Zeile: Fehlt bei der Kopie `a =`, bleibt das Array unverändert, und Go meldet nichts. Fehlt beim Zeiger `&`, übersetzt Go das Programm nicht. Die Meldung lautet `cannot use a (variable of type [10]int) as *[10]int value in argument to swap`.
 - Ein gelber Kasten sagt: Auch der Zeiger wird kopiert. Die Kopie einer Adresse ist immer gleich groß.
-- Unter „Wie es weitergeht“ stehen Links auf die vier Programmierübungen: Bubble Sort und Selection Sort, je mit Funktionen und mit Zeigern.
 
 ### Handgriffe
 
@@ -111,3 +110,32 @@ Reiter: zeiger
 
 - 7.3
 - 7.4
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Ein Tausch, zwei Kopien, 7.2, Seiten 169–170: Listing 7.1: Das Muster von negToZeroValue in Listing 7.1 stammt aus dem Kurstext. Die Funktion swap ist ein eigenes Beispiel nach diesem Muster.
+  - 2 Wie viel kopiert wird, 7.2, Seiten 169–170: Das Beispiel [1000][1000]int mit 1.000.000 Elementen je Aufruf stammt aus dem Kurstext. Die Rechnung steht nicht im Kurstext. Die Zahlen 45, 23, 9 und 7 stammen aus den Programmierübungen zu Kapitel 6.
+  - 3 Mit einem Zeiger, 7.3, Seiten 171–172: Listing 7.2; Hinweis 7.4, Seite 177: Das Muster von negToZeroPointer in Listing 7.2 und Hinweis 7.4 stammen aus dem Kurstext. Die Funktion swap ist ein eigenes Beispiel. Die Meldung zu einem fehlenden & stammt von Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.6, Seiten 15–17, Vertauschen: Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 1.
+  - Abschnitt 5.3.2, Seiten 128–129, Tupel-Zuweisung: a, b = b, a. Lektion: Zuweisungen in Go, Schritt 4.
+  - Kapitel 6, Seiten 151–162, Arrays: Die zwei Sortierverfahren mit ihren Zahlen der Vergleiche und Tausche. Lektion: Sortieren mit Bubble Sort.
+- Unter „Wie es weitergeht“ stehen Links auf die vier Programmierübungen: Bubble Sort und Selection Sort, je mit Funktionen und mit Zeigern.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.6
+- 5.3.2
+- 7.2
+- 7.3

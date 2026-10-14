@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -92,6 +91,7 @@
     <button type="button" class="tab" data-stufe="1">1 Ein Tausch, zwei Kopien</button>
     <button type="button" class="tab" data-stufe="2">2 Wie viel kopiert wird</button>
     <button type="button" class="tab" data-stufe="3">3 Mit einem Zeiger</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <!-- ===================== Worum es geht ===================== -->
@@ -149,7 +149,6 @@
     <div class="auskunft" id="t-urteil"></div>
     <p>Die Funktion ändert zwei Elemente. Kopiert hat der Rechner dafür zwanzig.</p>
     <p>Der Hauptspeicher unter den Rahmen zeigt, was das im Modell heißt: Ein <code>int</code> belegt 8 Zellen, das Array <code>a</code> also die 80 Zellen von 100 bis 179. Für den Parameter der Funktion kommen die 80 Zellen von 180 bis 259 dazu, und der Rechner füllt sie mit einer Kopie. Die Adressen sind erfunden.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170. Die Funktion <code>swap</code> ist ein eigenes Beispiel nach dem Muster von <code>negToZeroValue</code> in Listing 7.1.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -182,7 +181,6 @@
       <li><strong>Selection Sort:</strong> 9 Runden und 7 Tausche. Das sind 9 · 10 + 7 · 20 = 230 kopierte Elemente.</li>
     </ul>
     <p>Die Zahl der kopierten Elemente wächst schneller als die Länge des Arrays. Was das bedeutet, zeigt der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Laufzeit und Datenmenge</a>.</p>
-    <p class="quelle">Die Rechnung steht nicht im Kurstext. Dort steht in Abschnitt 7.2 das Beispiel <code>[1000][1000]int</code> mit 1.000.000 Elementen je Aufruf. Die Zahlen 45, 23, 9 und 7 stammen aus den Programmierübungen zu Kapitel 6.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -233,16 +231,42 @@
       </tbody>
     </table></div>
     <div class="hinweis">Auch der Zeiger wird kopiert, denn Go kennt nur call-by-value. Die Kopie einer Adresse ist aber immer gleich groß, gleich wie lang das Array ist.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Ein Tausch, zwei Kopien</td><td>7.2, Seiten 169–170: Listing 7.1</td><td>Das Muster von <code>negToZeroValue</code> in Listing 7.1 stammt aus dem Kurstext.</td><td>Die Funktion <code>swap</code> ist ein eigenes Beispiel nach diesem Muster.</td></tr>
+      <tr><td>2 Wie viel kopiert wird</td><td>7.2, Seiten 169–170</td><td>Das Beispiel <code>[1000][1000]int</code> mit 1.000.000 Elementen je Aufruf stammt aus dem Kurstext.</td><td>Die Rechnung steht nicht im Kurstext. Die Zahlen 45, 23, 9 und 7 stammen aus den Programmierübungen zu Kapitel 6.</td></tr>
+      <tr><td>3 Mit einem Zeiger</td><td>7.3, Seiten 171–172: Listing 7.2<br>Hinweis 7.4, Seite 177</td><td>Das Muster von <code>negToZeroPointer</code> in Listing 7.2 und Hinweis 7.4 stammen aus dem Kurstext.</td><td>Die Funktion <code>swap</code> ist ein eigenes Beispiel. Die Meldung zu einem fehlenden <code>&amp;</code> stammt von Go 1.26.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Vertauschen:</strong> Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#aufruf">Unterprogramme und Funktionen</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 5.3.2, Seiten 128–129, Tupel-Zuweisung:</strong> <code>a, b = b, a</code>. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html#tupel">Zuweisungen in Go</a>, Schritt 4.</li>
+      <li><strong>Kapitel 6, Seiten 151–162, Arrays:</strong> Die zwei Sortierverfahren mit ihren Zahlen der Vergleiche und Tausche. Lektion: <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Sortieren mit Bubble Sort</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Mit Kopie:</strong> Die Programmierübungen <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> und <a href="go_k7_selectionsort_funktionen_programmieruebung.html">Selection Sort mit Funktionen</a> zerlegen die Sortierprogramme in Funktionen mit Wertübergabe.</li>
       <li><strong>Mit Zeiger:</strong> Die Programmierübungen <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a> stellen sie auf Zeiger um.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Hinweis 7.4, Seite 177. Die Funktion <code>swap</code> ist ein eigenes Beispiel nach dem Muster von <code>negToZeroPointer</code> in Listing 7.2. Die Meldung zu einem fehlenden <code>&amp;</code> lautet in Go 1.26: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -261,8 +285,8 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#tausch
-  const ANKER = ['worum', 'tausch', 'zaehlen', 'zeiger'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Tausch, zwei Kopien', 'Schritt 2: Wie viel kopiert wird', 'Schritt 3: Mit einem Zeiger'];
+  const ANKER = ['worum', 'tausch', 'zaehlen', 'zeiger', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Tausch, zwei Kopien', 'Schritt 2: Wie viel kopiert wird', 'Schritt 3: Mit einem Zeiger', 'Schritt 4: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -438,6 +462,7 @@
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) return standAblauf(DT);
     if (stufe === 3) return standAblauf(DP).concat('Der Wert des Zeigers pa steht auf der Seite in Worten: „Adresse von a“.');
