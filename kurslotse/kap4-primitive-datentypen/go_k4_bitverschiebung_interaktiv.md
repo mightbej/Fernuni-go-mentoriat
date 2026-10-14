@@ -2,7 +2,7 @@
 
 Die Seite zeigt, was die Operatoren `<<` und `>>` mit den Bits einer Ganzzahl tun und was das für den Wert der Zahl bedeutet. Sie rechnet mit `uint8` und `int8`, wie die Beispiele des Kurstexts.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Der Wert von a gilt unter „Worum es geht“, in Schritt 1 und in Schritt 2 gemeinsam: Wer ihn dort ändert, sieht ihn in den beiden anderen wieder.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt. Der Wert von a gilt unter „Worum es geht“, in Schritt 1 und in Schritt 2 gemeinsam: Wer ihn dort ändert, sieht ihn in den beiden anderen wieder.
 
 Den Code auf der Seite kann der Student nicht ändern und nicht ausführen. Die Seite schreibt die Programmzeilen selbst und passt sie an, wenn der Student ein Bit umschaltet.
 
@@ -122,5 +122,38 @@ Reiter: komma
 
 ### Abschnitte des Kurstexts
 
+- 4.4.2
+- 4.4.3
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Schieben, 4.3.7.2.2, Seite 75: Schiebe-Operatoren; 4.1, Seite 46, Fußnote 4: Typen der Operanden: Die Operatoren << und >>, die Beispiele mit 13 und −13 und die Regel zu den Typen der Operanden stammen aus dem Kurstext. Das anklickbare Bitmuster mit den nachgerückten und den weggefallenen Bits gibt die Lektion dazu.
+  - 2 Verdoppeln und halbieren, 4.3.7.2.2, Seiten 75–77: Tabelle 4.2 und Fußnote 23: Die Ergebnisse für 13 und −13 stehen in Tabelle 4.2. Dass >> und / bei negativen Zahlen verschieden runden, steht in Fußnote 23. Die rot markierten Ergebnisse mit Überlauf gibt die Lektion dazu.
+  - 3 Bits setzen, 4.3.7.2.2, Seite 78: Expertenwissen 4.13: Der Ausdruck 1 << i und das Zusammenfügen mit | stammen aus dem Expertenwissen 4.13. Die Demo, die zu einem Bitmuster den Ausdruck zeigt, gibt die Lektion dazu.
+  - 4 Komma schieben, 4.4.2, Seite 87: Gleitkomma-Typen; 4.4.3, Seite 88: Normalisieren: Mantisse, Exponent und das Normalisieren stammen aus dem Kurstext. Den Vergleich zwischen dem Schieben von Bits und dem Wandern des Kommas zieht die Lektion.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, Rechnen: Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: Exkurs: Speichern und Rechnen im Rechner.
+  - Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren: &, | und ^. Lektion: Rechenwerk.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Was mit dem Bit geschieht, das links hinausgeschoben wird. Lektion: Überlauf bei Ganzzahlen in Go.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur Bitverschiebung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 4.1
+- 4.3.7.2.1
+- 4.3.7.2.2
+- 4.3.8
 - 4.4.2
 - 4.4.3

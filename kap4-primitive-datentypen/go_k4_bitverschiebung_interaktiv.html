@@ -97,6 +97,7 @@
     <button type="button" class="tab" data-stufe="2">2 Verdoppeln und halbieren</button>
     <button type="button" class="tab" data-stufe="3">3 Bits setzen</button>
     <button type="button" class="tab" data-stufe="4">4 Komma schieben</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -139,7 +140,6 @@
       </table>
       </div>
       <p>Die Seite rechnet mit <code>uint8</code> und <code>int8</code>, wie die Beispiele des Kurstexts. Bei der arithmetischen Verschiebung behält eine negative Zahl ihr Vorzeichen. Ein Beispiel: −13 ist als <code>int8</code> 1111 0011. Mit einer nachgeschobenen Eins wird daraus 1111 1001, also −7. Mit einer nachgeschobenen Null wäre es 0111 1001, also 121.</p>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seite 75. Die Regel zu den Typen der Operanden steht in Abschnitt 4.1, Seite 46, Fußnote 4.</p>
     </div>
     <div class="nav">
       <button type="button" class="knopf" disabled>Zurück</button>
@@ -197,7 +197,6 @@
       <p id="doppelt"></p>
       <p>Wie das Rechenwerk <code>a + a</code> Stelle für Stelle ausrechnet, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>. Was beim Überlauf geschieht, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</p>
       <div class="hinweis">Bei einer negativen Zahl liefern <code>&gt;&gt;</code> und <code>/</code> verschiedene Ergebnisse, wenn die Division nicht aufgeht. Die Verschiebung rundet ab, also zur kleineren Zahl hin: Aus −6,5 wird −7. Die Division mit <code>/</code> schneidet die Stellen hinter dem Komma ab: Aus −6,5 wird −6.</div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seiten 75–77, mit Tabelle 4.2 und Fußnote 23.</p>
     </div>
     <div class="nav">
       <button type="button" class="knopf" data-gehe="1">Zurück zu Schritt 1</button>
@@ -214,7 +213,6 @@
         <div class="legende">Ein Klick auf ein Bit schaltet es um. Der Ausdruck darunter erzeugt genau dieses Bitmuster.</div>
       </div>
       <div id="codeM"></div>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.3.7.2.2, Seite 78, Expertenwissen 4.13.</p>
     </div>
     <div class="nav">
       <button type="button" class="knopf" data-gehe="2">Zurück zu Schritt 2</button>
@@ -249,10 +247,42 @@
       <p>Jeder Schritt im Exponenten verdoppelt oder halbiert den Wert, so wie <code>&lt;&lt; 1</code> und <code>&gt;&gt; 1</code> bei einer Ganzzahl. Der Unterschied liegt im Komma. Bei einer Ganzzahl steht es fest hinter dem letzten Bit. Ein Bit, das beim Schieben nach rechts über das Komma rückt, fällt weg. Bei einer Gleitkommazahl wandert das Komma, und die Mantisse behält ihre acht Bits.</p>
       <p>Der Kurstext beschreibt die Bewegung auch in der anderen Richtung. Nach einer Subtraktion kann die Mantisse mit Nullen beginnen. Dann schiebt der Rechner ihre Ziffern nach links, bis vorn wieder eine Eins steht, und zieht für jede Stelle 1 vom Exponenten ab. Das heißt Normalisieren.</p>
       <p>Das ganze Modell mit Vorzeichen, Lücken zwischen den Zahlen und Rundungsfehlern zeigt die Seite <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</p>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 4.4.2, Seite 87, und Abschnitt 4.4.3, Seite 88.</p>
     </div>
     <div class="nav">
       <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="5">Weiter zu Schritt 5</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Schieben</td><td>4.3.7.2.2, Seite 75: Schiebe-Operatoren<br>4.1, Seite 46, Fußnote 4: Typen der Operanden</td><td>Die Operatoren <code>&lt;&lt;</code> und <code>&gt;&gt;</code>, die Beispiele mit 13 und −13 und die Regel zu den Typen der Operanden stammen aus dem Kurstext.</td><td>Das anklickbare Bitmuster mit den nachgerückten und den weggefallenen Bits gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Verdoppeln und halbieren</td><td>4.3.7.2.2, Seiten 75–77: Tabelle 4.2 und Fußnote 23</td><td>Die Ergebnisse für 13 und −13 stehen in Tabelle 4.2. Dass <code>&gt;&gt;</code> und <code>/</code> bei negativen Zahlen verschieden runden, steht in Fußnote 23.</td><td>Die rot markierten Ergebnisse mit Überlauf gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Bits setzen</td><td>4.3.7.2.2, Seite 78: Expertenwissen 4.13</td><td>Der Ausdruck <code>1 &lt;&lt; i</code> und das Zusammenfügen mit <code>|</code> stammen aus dem Expertenwissen 4.13.</td><td>Die Demo, die zu einem Bitmuster den Ausdruck zeigt, gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Komma schieben</td><td>4.4.2, Seite 87: Gleitkomma-Typen<br>4.4.3, Seite 88: Normalisieren</td><td>Mantisse, Exponent und das Normalisieren stammen aus dem Kurstext.</td><td>Den Vergleich zwischen dem Schieben von Bits und dem Wandern des Kommas zieht die Lektion.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Rechnen:</strong> Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</li>
+      <li><strong>Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren:</strong> <code>&amp;</code>, <code>|</code> und <code>^</code>. Lektion: <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Was mit dem Bit geschieht, das links hinausgeschoben wird. Lektion: <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> <a href="go_k4_bitverschiebung_quiz.html">Quiz zur Bitverschiebung</a>.</li>
+    </ul>
+  </div>
+  <div class="nav">
+      <button type="button" class="knopf" data-gehe="4">Zurück zu Schritt 4</button>
       <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
@@ -460,7 +490,7 @@
 
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#komma
-  const ANKER = ['worum', 'schieben', 'verdoppeln', 'bits-setzen', 'komma'];
+  const ANKER = ['worum', 'schieben', 'verdoppeln', 'bits-setzen', 'komma', 'kurstext'];
   let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
     const gewechselt = nummer !== aktuell;
@@ -517,10 +547,11 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Bitmuster schieben', 'Schritt 2: Verdoppeln und halbieren', 'Schritt 3: Einzelne Bits setzen mit 1 << i', 'Schritt 4: Das Komma schieben'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Bitmuster schieben', 'Schritt 2: Verdoppeln und halbieren', 'Schritt 3: Einzelne Bits setzen mit 1 << i', 'Schritt 4: Das Komma schieben', 'Schritt 5: Bezug zum Kurstext'];
 
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function stand() {
+    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     const a = Z.a, w = wert(a), t = [];
     const als = v => mitLuecke(v) + ' = ' + wert(v);
     if (aktuell <= 2) t.push('a hat den Typ ' + Z.typ + ', das Bitmuster ' + mitLuecke(a) + ' und den Wert ' + w + '.');
