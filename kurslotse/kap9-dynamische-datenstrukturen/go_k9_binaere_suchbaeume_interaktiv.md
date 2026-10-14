@@ -29,7 +29,7 @@ Reiter: worum
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Der Text nennt den Grund für den Suchbaum: In der Liste ist das Suchen der Stelle teuer.
-- Unter „Was dazugehört“ stehen Links auf die Lektionen „Verkettete Listen in Go“, „Rekursive Verbund-Typen“ und „Rekursion in Go“. Zur binären Suche aus Abschnitt 8.4.1 steht ein Satz ohne Link.
+- Unter „Was dazugehört“ stehen Links auf die Lektionen „Verkettete Listen in Go“, „Rekursive Verbund-Typen“, „Rekursion in Go“ und „Binäre Suche in einem Verbund-Array“ zu Abschnitt 8.4.1.
 - Unter „Die Schritte“ steht je ein Satz zu den sechs Schritten.
 
 ### Handgriffe

@@ -98,7 +98,7 @@
   <section class="stufe active" id="stufe-0">
   <div class="card">
     <h3>Worum es geht</h3>
-    <p>Die binäre Suche aus Abschnitt 8.4.1 findet einen Namen im Telefonbuch schnell. Sie setzt voraus, dass das Array nach dem Feld <code>name</code> sortiert ist. Ist es das nicht, muss das Programm erst sortieren.</p>
+    <p>Die <a href="go_k8_binaere_suche_interaktiv.html">binäre Suche</a> aus Abschnitt 8.4.1 findet einen Namen im Telefonbuch schnell. Sie setzt voraus, dass das Array nach dem Feld <code>name</code> sortiert ist. Ist es das nicht, muss das Programm erst sortieren.</p>
     <p>Das Sortierverfahren des Kurstexts ist <strong>Bubblesort</strong>: Er vergleicht benachbarte Elemente und vertauscht sie, wenn sie in der falschen Reihenfolge stehen. Neu gegenüber den Programmierübungen zu Kapitel 6 und 7 ist, was sortiert wird. Ein Element ist hier ein Verbund mit Name und Telefonnummer, und verglichen wird nur ein Feld.</p>
 
     <h3>Was dazugehört</h3>
@@ -241,7 +241,7 @@ func bubblesort(a *[10]person) {
       </tbody>
     </table></div>
     <p>Die Zahl der Vergleiche liegt in der Größenordnung von n². Bubblesort hat <strong>quadratische Laufzeit</strong>. Die Zahl der Vertauschungen kann im ungünstigsten Fall genauso groß werden. Das Telefonbuch aus Schritt 3 braucht 24 Vertauschungen.</p>
-    <p>Die binäre Suche aus Abschnitt 8.4.1 braucht für tausend sortierte Einträge etwa zehn Vergleiche. Das Sortieren davor kostet mit Bubblesort fast eine halbe Million. Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a> stellt beide Wachstumsarten nebeneinander.</p>
+    <p>Die <a href="go_k8_binaere_suche_interaktiv.html">binäre Suche</a> aus Abschnitt 8.4.1 braucht für tausend sortierte Einträge etwa zehn Vergleiche. Das Sortieren davor kostet mit Bubblesort fast eine halbe Million. Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a> stellt beide Wachstumsarten nebeneinander.</p>
 
     <h3>Zum Weiterdenken</h3>
     <p>Im Kurstext steht eine Übungsaufgabe: Kommt in einem Durchgang keine Vertauschung vor, ist das Array sortiert, und die äußere Schleife kann abbrechen. Zu den Aufgaben gibt es hier keine Lösung.</p>

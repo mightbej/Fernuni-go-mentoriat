@@ -15,7 +15,7 @@ Für alle Schritte gilt:
 - Sortiert lautet das Telefonbuch: Arnold 3310, Becker 5522, Fischer 6398, Huber 4456, Koch 7745, Lange 8127, Meier 4711, Schulz 1234, Wagner 9081, Zimmer 2063.
 - Go vergleicht zwei Strings Byte für Byte. Großbuchstaben haben kleinere Werte als Kleinbuchstaben. Ein Umlaut belegt zwei Bytes mit Werten über 127.
 - In den Programmierübungen zu Kapitel 6 und 7 heißt das Verfahren „Bubble Sort“ und sortiert ein Array vom Typ `[10]int`. Im Kurstext heißt es „Bubblesort“. Gemeint ist das gleiche Verfahren.
-- Die binäre Suche aus Abschnitt 8.4.1 setzt ein sortiertes Array voraus. Eine HTML-Seite zur binären Suche gibt es nicht.
+- Die binäre Suche aus Abschnitt 8.4.1 setzt ein sortiertes Array voraus. Die Lektion „Binäre Suche in einem Verbund-Array“ erklärt sie, mit dem gleichen Telefonbuch in sortierter Form.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben. Alle Ausgaben, Meldungen und Zahlen sind mit Go 1.26 geprüft.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays. `sort.Slice` und das Paket `sort` kommen im Kurs nicht vor.
 - Zu den Aufgaben unter „Zum Weiterdenken“ gibt es auf der Seite keine Lösung. Fragt der Student danach, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
@@ -28,7 +28,7 @@ Reiter: worum
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
-- Der Text nennt den Anlass: Die binäre Suche braucht ein sortiertes Array.
+- Der Text nennt den Anlass: Die binäre Suche braucht ein sortiertes Array. Das Wort „binäre Suche“ verlinkt die Lektion „Binäre Suche in einem Verbund-Array“.
 - Unter „Was dazugehört“ stehen Links auf die Programmierübungen „Sortieren mit Bubble Sort“ und „Bubble Sort mit Zeigern“, auf die Lektionen „Verbund-Variablen und Feld-Variablen“, „Zeiger in Go“ und „Strings: Bytes und Zeichen“ und auf den Exkurs „Das Kopier-Problem“.
 
 ### Handgriffe

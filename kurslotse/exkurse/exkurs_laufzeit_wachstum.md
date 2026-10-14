@@ -95,7 +95,7 @@ Reiter: faustregeln
 - Die Faustregeln stehen nicht im Kurstext.
 - Eine Tabelle zeigt, was bei zehnfacher Größe des Arrays geschieht, mit den Schritten bei n = 1000 und bei n = 1.000.000.
 - Ein grüner Kasten rechnet in Zeit um: Bei einer Milliarde Vergleichen in der Sekunde sortiert Bubble Sort eine Million Elemente in gut acht Minuten, ein Verfahren mit O(n log n) in zwei Hundertstelsekunden.
-- Die Karte „Wo die Algorithmen erklärt sind“ verlinkt die Programmierübungen zu Bubble Sort und Selection Sort, den Exkurs „Das Kopier-Problem“, die Lektionen „Bubblesort auf einem Verbund-Array“, „Binäre Suchbäume in Go“ und „Verkettete Listen in Go“ und das Go-Programm zur binären Suche.
+- Die Karte „Wo die Algorithmen erklärt sind“ verlinkt die Programmierübungen zu Bubble Sort und Selection Sort, den Exkurs „Das Kopier-Problem“, die Lektionen „Bubblesort auf einem Verbund-Array“, „Binäre Suche in einem Verbund-Array“, „Binäre Suchbäume in Go“ und „Verkettete Listen in Go“ und das Go-Programm zur binären Suche.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
