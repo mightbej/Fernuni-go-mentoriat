@@ -2,7 +2,7 @@
 
 Die Seite ist ein Exkurs zu Kapitel 9 für Studenten im ersten Semester. Sie zeigt in vier Schritten, dass hinter einer Blockchain Stoff aus dem Kurs steckt: eine verkettete Liste aus Abschnitt 9.2 und vorzeichenlose Ganzzahlen aus Kapitel 4. Die Seite bleibt an der Oberfläche. Wer jede Funktion ausgeschrieben und nachgerechnet sehen will, findet sie in der Lektion „Vertiefung: Blockchain in Go“.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -119,7 +119,6 @@ Reiter: regeln
 - Der Text: Sperren darf nur der Herausgeber. Die Sperre landet als eigener Block in der Kette.
 - Die Demo: Am Anfang hat Alice 75, Bob 45, Charlie 10, und die Kette hat die vier Blöcke aus Schritt 2. Vier Knöpfe: „Alice überweist Bob 25“, „Herausgeber sperrt Alice“, „Alice überweist Charlie 10“, „Bob überweist Charlie 100“, dazu „von vorn“. Ein Kasten erklärt den letzten Klick. Darunter stehen die drei Konten und die neuesten vier Blöcke.
 - Unter „Was das Modell zeigt“: Eine einzige Stelle entscheidet, wer zahlen darf. Solche Funktionen stehen im Programm des digitalen Dollars USDT, Link auf die Lektion zu Tether.
-- Unter „Wie es weitergeht“ stehen Links auf die Vertiefung mit dem Programm `blockchain.go` und auf „Binäre Suchbäume in Go“.
 - Die Funktion auf dieser Seite ist kürzer als in der Vertiefung. Dort sucht `überweisen` die Konten selbst und gibt zusätzlich eine Meldung zurück.
 
 ### Handgriffe
@@ -132,3 +131,36 @@ Reiter: regeln
 
 - 5.5.1
 - 7.4.1
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Eine Kette von Blöcken, 9.2, Seiten 229–236: Güterzug und Listing 9.1: Die Kette mit kopf und Zeigern folgt der Liste aus Listing 9.1. Die Typen sind eigene Beispiele, geprüft mit Go 1.26.
+  - 2 Der Fingerabdruck, 4.3.8, Seiten 78–84: Überlauf: Der Überlauf, auf dem die Hashfunktion beruht, wird in Abschnitt 4.3.8 behandelt. Die Hashfunktion FNV-1a steht nicht im Kurstext, die Lektion rechnet sie nicht vor. Alle Hashwerte sind mit Go 1.26 berechnet.
+  - 3 Guthaben als uint, 4.3.6, Seiten 66–68: Hinweis 4.7; 4.3.8, Seiten 78–84: Hinweis 4.7 und der Überlauf stammen aus dem Kurstext. Die Werte sind mit Go 1.26 geprüft.
+  - 4 Regeln als Programm, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Funktion ist ein eigenes Beispiel.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 9.2, Seiten 229–236, verkettete Liste: Lektion: Verkettete Listen in Go.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Lektion: Überlauf bei Ganzzahlen in Go.
+  - Vertiefung: Die gleiche Kette mit Hashfunktion, Speichersicht und Sperrliste zeigt die Lektion Vertiefung: Blockchain in Go.
+  - Ohne Abschnitt im Kurstext, Tether: Wie echtes digitales Geld mit den gleichen Bausteinen arbeitet, zeigt der Exkurs Vom Eisenbahnzug in den Maschinenraum von Tether.
+- Unter „Was über den Kurstext hinausgeht“ steht:
+  - Die Blockchain: Sie kommt im Kurstext nicht vor.
+  - FNV-1a: Die Hashfunktion ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo.
+- Unter „Wie es weitergeht“ stehen Links auf die Vertiefung mit dem Programm `blockchain.go` und auf „Binäre Suchbäume in Go“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 4.3.6
+- 4.3.8
+- 9.2

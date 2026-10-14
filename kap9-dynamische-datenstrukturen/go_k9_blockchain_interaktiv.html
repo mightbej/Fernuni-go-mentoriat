@@ -17,7 +17,6 @@
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -62,6 +61,7 @@
     .konto small { display:block;color:var(--muted); }
     .konto.gesperrt { border-color:var(--rot);background:var(--rot-bg); }
     .konto.gesperrt small { color:var(--rot);font-weight:700; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -79,6 +79,7 @@
     <button type="button" class="tab" data-stufe="2">2 Der Fingerabdruck</button>
     <button type="button" class="tab" data-stufe="3">3 Guthaben als uint</button>
     <button type="button" class="tab" data-stufe="4">4 Regeln als Programm</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -133,7 +134,6 @@ type blockkette struct {
     <div id="k-kette"></div>
     <div class="auskunft" id="k-urteil"></div>
     <p>Wie die Blöcke im Hauptspeicher liegen, zeigt die <a href="go_k9_blockchain_vertiefung_interaktiv.html#zug">Vertiefung</a>, Schritt 1.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236: Güterzug und Listing 9.1. Die Typen sind eigene Beispiele, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -167,7 +167,6 @@ type blockkette struct {
     <div id="f-kette"></div>
     <div class="auskunft" id="f-urteil"></div>
     <p>Die Rechnung der Hashfunktion Byte für Byte und weitere Stufen der Fälschung zeigt die <a href="go_k9_blockchain_vertiefung_interaktiv.html#hash">Vertiefung</a>, Schritt 2 und 3.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–84. Die Hashfunktion heißt FNV-1a, alle Hashwerte sind mit Go 1.26 berechnet.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -204,7 +203,6 @@ type blockkette struct {
 }</pre><div class="konsole" id="g-mit"></div></div>
     </div>
     <div class="auskunft" id="g-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Hinweis 4.7, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84. Die Werte sind mit Go 1.26 geprüft.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -248,15 +246,51 @@ type blockkette struct {
     <div id="s-zustand"></div>
     <h3>Was das Modell zeigt</h3>
     <p>Die Kette ist technisch in Ordnung, und trotzdem entscheidet eine einzige Stelle, wer zahlen darf. Genau solche Funktionen stehen im Programm des digitalen Dollars USDT. Du liest sie in der Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Blockchain kommt im Kurstext nicht vor. Die Tabelle nennt zu jedem Schritt, an welchen Abschnitt des Kurstexts er anknüpft.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Eine Kette von Blöcken</td><td>9.2, Seiten 229–236: Güterzug und Listing 9.1</td><td>Die Kette mit <code>kopf</code> und Zeigern folgt der Liste aus Listing 9.1.</td><td>Die Typen sind eigene Beispiele, geprüft mit Go 1.26.</td></tr>
+      <tr><td>2 Der Fingerabdruck</td><td>4.3.8, Seiten 78–84: Überlauf</td><td>Der Überlauf, auf dem die Hashfunktion beruht, wird in Abschnitt 4.3.8 behandelt.</td><td>Die Hashfunktion FNV-1a steht nicht im Kurstext, die Lektion rechnet sie nicht vor. Alle Hashwerte sind mit Go 1.26 berechnet.</td></tr>
+      <tr><td>3 Guthaben als uint</td><td>4.3.6, Seiten 66–68: Hinweis 4.7<br>4.3.8, Seiten 78–84</td><td>Hinweis 4.7 und der Überlauf stammen aus dem Kurstext.</td><td>Die Werte sind mit Go 1.26 geprüft.</td></tr>
+      <tr><td>4 Regeln als Programm</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Funktion ist ein eigenes Beispiel.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Liste:</strong> Lektion: <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+      <li><strong>Vertiefung:</strong> Die gleiche Kette mit Hashfunktion, Speichersicht und Sperrliste zeigt die Lektion <a href="go_k9_blockchain_vertiefung_interaktiv.html">Vertiefung: Blockchain in Go</a>.</li>
+      <li><strong>Ohne Abschnitt im Kurstext, Tether:</strong> Wie echtes digitales Geld mit den gleichen Bausteinen arbeitet, zeigt der Exkurs <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Die Blockchain:</strong> Sie kommt im Kurstext nicht vor.</li>
+      <li><strong>FNV-1a:</strong> Die Hashfunktion ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo.</li>
+    </ul>
+
     <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Vertiefung:</strong> Die Lektion <a href="go_k9_blockchain_vertiefung_interaktiv.html">Vertiefung: Blockchain in Go</a> schreibt jede Funktion aus, rechnet die Hashwerte Byte für Byte nach und enthält das ganze Programm <a href="go/blockchain.go">blockchain.go</a>.</li>
       <li><strong>Abschnitt 9.3:</strong> Die Lektion <a href="go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
     </ul>
-    <p class="quelle">Die Funktion ist ein eigenes Beispiel. Sie ist kürzer als in der Vertiefung: Dort sucht <code>überweisen</code> die Konten selbst und gibt eine Meldung zurück.</p>
+    <p>Die Funktion ist kürzer als in der Vertiefung: Dort sucht <code>überweisen</code> die Konten selbst und gibt eine Meldung zurück.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -272,8 +306,8 @@ type blockkette struct {
   const NL = String.fromCharCode(10);
 
   // ---------- Reiter ----------
-  const ANKER = ['worum', 'kette', 'hash', 'guthaben', 'regeln'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Kette von Blöcken', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Guthaben als uint', 'Schritt 4: Regeln als Programm'];
+  const ANKER = ['worum', 'kette', 'hash', 'guthaben', 'regeln', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Kette von Blöcken', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Guthaben als uint', 'Schritt 4: Regeln als Programm', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -425,6 +459,7 @@ type blockkette struct {
 
   // ---------- Kurslotse ----------
   function standSaetze() {
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 1) return standKette();
     if (stufe === 2) return standHash();
     if (stufe === 3) return standGuthaben();
@@ -443,7 +478,7 @@ type blockkette struct {
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, pre.code-block, .nebeneinander > div > p',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, pre.code-block, .nebeneinander > div > p, table.text',
     stand: standSaetze,
     kurz: kurzStand,
     beispiel: 'Warum fällt die Änderung in Block 2 auf?'
