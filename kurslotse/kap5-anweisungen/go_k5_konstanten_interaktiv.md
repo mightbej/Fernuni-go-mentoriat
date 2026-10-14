@@ -164,12 +164,13 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Konstante und Literal: Eine Konstante ist ein Name für einen Wert, der sich nie ändert. Ein Literal ist der Wert selbst. Lektion: Variablen, Typen und Speicher, Schritt 2.
   - Abschnitt 3.3.3, Seiten 29–30, die erste Konstante: const nullpunkt float64 = -273.15 in Listing 3.2. Eine Lektion zu diesem Abschnitt gibt es nicht.
   - Abschnitt 4.7, Seiten 109–111, implizite Typanpassung: Lektion: Typkonvertierung.
-- Unter „Wie es weitergeht“ stehen Links auf: „Typkonvertierung“, „Quiz zu den Konstanten“.
+- Unter „Wie es weitergeht“ stehen zwei Links: zur Seite „Typkonvertierung“ und zum Quiz zu den Konstanten.
 
 ### Handgriffe
 
 - Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
 - In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links zur Seite „Typkonvertierung“ und zum Quiz folgen. Beide sind eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 

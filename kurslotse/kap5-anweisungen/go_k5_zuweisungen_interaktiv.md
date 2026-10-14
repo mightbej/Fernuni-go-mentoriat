@@ -208,7 +208,7 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Zuweisung: Ein Ausdruck wird ausgewertet und sein Wert einer Variable zugewiesen. Lektion: Exkurs: Speichern und Rechnen im Rechner, Schritt 1.
   - Abschnitt 2.6, Seiten 15–17, Vertauschen: Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 1.
   - Abschnitt 4.6.2.2, Seiten 107–108, Verketten: a += "zeit". Lektion: Strings in Go, Schritt 4.
-- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zu den Zuweisungen“.
+- Unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

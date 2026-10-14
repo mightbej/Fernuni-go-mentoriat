@@ -199,7 +199,7 @@ Reiter: kurstext
   - Abschnitt 5.4, Seite 129, einfache Anweisungen: Was als Init-Anweisung und Post-Anweisung stehen darf. Lektion: Zuweisungen in Go, Schritt 5.
   - Abschnitt 5.5.3.1, Seiten 138–142, for mit Bedingung: Lektion: for-Anweisung mit Bedingung in Go.
   - Abschnitt 6.2, Seiten 156–159, Arrays durchlaufen: Die for-Klausel zählt den Index eines Arrays hoch. Lektion: Arrays in Go.
-- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur for-Anweisung mit for-Klausel“.
+- Unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 

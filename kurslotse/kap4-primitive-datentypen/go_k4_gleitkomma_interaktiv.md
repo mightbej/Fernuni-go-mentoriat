@@ -149,7 +149,7 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, FLOAT: Eine Gleitkommazahl ist eine Näherung einer reellen Zahl. Ihre Operationen arbeiten anders als die für ganze Zahlen, auch wenn sie gleich heißen. Lektion: Exkurs: Speichern und Rechnen im Rechner.
   - Abschnitt 3.3.3, Seiten 29–30, float64: Die Variable tempC hat den Typ float64, eine Näherung der reellen Zahlen mit 64 Bit. Eine Lektion zu diesem Abschnitt gibt es nicht.
   - Abschnitt 4.7, Seiten 109–111, Typkonvertierung: Lektion: Typkonvertierung.
-- Unter „Wie es weitergeht“ stehen einem Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+- Unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

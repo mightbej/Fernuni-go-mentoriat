@@ -216,7 +216,7 @@ Reiter: kurstext
   - Abschnitt 3.3.3, Seiten 29–30, die erste Deklaration: var tempC float64 in Listing 3.2, mit dem Null-Wert 0. Eine Lektion zu diesem Abschnitt gibt es nicht.
   - Abschnitt 3.3.4, Seiten 30–32, Bezeichner: Welche Namen eine Variable haben darf. Lektion: Bezeichner und Schlüsselwörter in Go.
   - Abschnitt 3.4, Seiten 37–41, Gültigkeitsbereich: Lektion: Fehlersuche: drei Go-Programme mit mehreren Fehlern, Schritt 1.
-- Unter „Wie es weitergeht“ stehen Links auf: „Selbsttest zur Variablendeklaration“.
+- Unter „Wie es weitergeht“ steht ein Link zum Selbsttest. Welche Fragen der Selbsttest stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

@@ -185,7 +185,7 @@ Reiter: kurstext
   - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Warum die Fakultät geprüft wird. Lektion: Überlauf bei Ganzzahlen in Go.
   - Abschnitt 5.5.3.2, Seiten 142–146, Endlosschleife for {: Sie endet nur mit break. Lektion: for-Anweisung mit for-Klausel in Go, Schritt 4.
   - Abschnitt 5.5.2, Seiten 133–137, switch: Ein break in einer switch-Anweisung verlässt nur diese. Lektion: switch-Anweisung in Go.
-- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur break-Anweisung“.
+- Unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

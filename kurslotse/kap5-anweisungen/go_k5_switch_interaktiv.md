@@ -208,7 +208,7 @@ Reiter: kurstext
   - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
   - Abschnitt 5.5.1, Seiten 129–132, if-Anweisung: Lektion: if-Anweisung in Go.
   - Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung: Warum f() in einer Kette aus else if mehrmals aufgerufen wird. Lektion: Wahrheitswerte und Kurzschluss-Auswertung.
-- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur switch-Anweisung“.
+- Unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 
