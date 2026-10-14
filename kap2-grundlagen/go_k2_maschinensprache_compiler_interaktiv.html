@@ -21,7 +21,6 @@
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .zeile label, .zeile .name { color:var(--muted);font-size:.95rem; }
     .zaehler { color:var(--muted);font-size:.95rem;margin-left:6px; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     .tabellenrahmen { overflow-x:auto; }
     table { margin:12px 0;font-size:.95rem; }
     th, td { vertical-align:top; }
@@ -136,6 +135,7 @@
     <button type="button" class="tab" data-stufe="2">2 Compiler und Interpreter</button>
     <button type="button" class="tab" data-stufe="3">3 Token und Syntax</button>
     <button type="button" class="tab" data-stufe="4">4 Fehler</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -229,7 +229,6 @@ Ausgabe n</div>
       <li><strong>Es hängt vom Prozessor ab:</strong> Ein anderer Prozessortyp hat andere Befehle und andere Befehlscodes. Dasselbe Programm sieht dort anders aus.</li>
     </ul>
     <p>Dieselben Sprünge zeigt das Flussdiagramm auf der Seite <a href="go_k2_ggt_darstellung_interaktiv.html#flussdiagramm">Größter gemeinsamer Teiler, Schritt 2</a>. Wie Blöcke den Sprung ersetzen, zeigt die Seite <a href="go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung, Schritt 3</a>.</p>
-    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–18. Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind eigene Zutaten. Das Programm in höherer Sprache stammt aus Abschnitt 2.5, Seite 13.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -295,7 +294,6 @@ Ausgabe n</div>
     <ul>
       <li><strong>Go wird übersetzt:</strong> Der Befehl <code>go run</code> übersetzt ein Go-Programm und startet es gleich danach. Er kommt in Abschnitt 3.2 zum ersten Mal vor, Seiten 22–24.</li>
     </ul>
-    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 18. Die Eingaben 6 und 4 und die Zählung der gelesenen Zeilen sind eigene Zutaten.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -353,7 +351,6 @@ Ausgabe n</div>
       <li><strong>Namen und Schlüsselwörter:</strong> Abschnitt 3.3.4, Seiten 30–32, nennt die Regeln für Namen in Go und die 25 Schlüsselwörter. Dazu gibt es die Lektion <a href="../kap3-einfuehrung/go_k3_bezeichner_interaktiv.html">Bezeichner und Schlüsselwörter</a> und das <a href="../kap3-einfuehrung/go_bezeichner_schluesselwoerter_quiz.html">Quiz: Bezeichner und Schlüsselwörter</a>.</li>
       <li><strong>Reihenfolge der Auswertung:</strong> Abschnitt 3.3.6, Seiten 35–36. Dazu gibt es das <a href="../kap3-einfuehrung/go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Quiz: Auswertungsreihenfolge und Bindungsstärken</a>.</li>
     </ul>
-    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 18. Das Beispiel <code>a + b</code> und das Wort <code>IF</code> stammen aus dem Kurstext. Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen sind eigene Zutaten.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -422,10 +419,43 @@ Ausgabe n</div>
       <li><strong>Fehler in Go-Programmen suchen:</strong> Dazu gibt es die Lektionen <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html">Fehlersuche: drei kurze Go-Programme</a> und <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a>.</li>
       <li><strong>Schleifen, die nicht enden:</strong> Die Schleife mit Bedingung wird in Abschnitt 5.5.3.1 behandelt, Seiten 138–142. Dazu gibt es die Seite <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a>.</li>
     </ul>
-    <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 2.7, Seite 19. Die drei fehlerhaften Fassungen und die Eingaben sind eigene Zutaten. Im Kurstext folgt an dieser Stelle noch das Halteproblem. Die Seite lässt es aus.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt. Der Stoff von Kapitel 2 kommt im Kurstext zweimal wieder: in Kapitel 3 kurz an Go-Programmen und in den Kapiteln 4 bis 9 ausführlich. Die Liste unter der Tabelle nennt diese Stellen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.7, Seiten 17–18<br>2.5, Seite 13</td><td>Maschinensprache, höhere Programmiersprache und Compiler stammen aus Abschnitt 2.7. Das Beispielprogramm stammt aus Abschnitt 2.5.</td><td>Das Bild vom Programm über den Compiler zum Prozessor gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Maschinensprache</td><td>2.7, Seiten 17–18<br>2.5, Seite 13</td><td>Dass ein Befehl aus Befehlscode und Argumenten besteht, verschieden lang ist und dass Maschinensprache Sprungbefehle hat, stammt aus dem Kurstext. Das Programm in höherer Sprache stammt aus Abschnitt 2.5.</td><td>Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind für die Lektion erfunden.</td></tr>
+      <tr><td>2 Compiler und Interpreter</td><td>2.7, Seite 18</td><td>Compiler, Interpreter und die Zwischensprache mit n + m statt n · m Compilern stammen aus dem Kurstext.</td><td>Die Eingaben 6 und 4, die Zählung der gelesenen Zeilen und das Bild mit den Strichen gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Token und Syntax</td><td>2.7, Seiten 18–19</td><td>Der Vergleich mit einem Übersetzer von Deutsch nach Englisch, Syntax und Semantik, Token, lexikalische und syntaktische Analyse, das Beispiel <code>a + b</code> und das Wort <code>IF</code> stammen aus dem Kurstext.</td><td>Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Fehler</td><td>2.7, Seite 19</td><td>Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext.</td><td>Die drei fehlerhaften Fassungen und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm:</strong> Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: <a href="go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>.</li>
+      <li><strong>Abschnitt 3.2, Seiten 22–24, go run:</strong> Der Befehl übersetzt ein Go-Programm und startet es gleich danach. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 3.3.2, Seiten 27–29, die erste Meldung des Compilers:</strong> Steht die Klammer <code>{</code> in einer neuen Zeile, lehnt der Compiler das Programm mit <code>syntax error</code> ab. Lektion: <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html#klammer">Fehlersuche: drei kurze Go-Programme</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 3.3.4, Seiten 30–32, Token in Go:</strong> Die Regeln für Namen und die 25 Schlüsselwörter. Lektion: <a href="../kap3-einfuehrung/go_k3_bezeichner_interaktiv.html">Bezeichner und Schlüsselwörter in Go</a>.</li>
+      <li><strong>Abschnitt 3.3.6, Seiten 35–36, Punkt vor Strich:</strong> In Go wird wie in <code>x ← a + 2 · b</code> zuerst multipliziert. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Fehler in Go-Programmen suchen:</strong> Die Lektionen <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html">Fehlersuche: drei kurze Go-Programme</a> und <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a> üben das an Programmen aus Kapitel 3. Die zweite zeigt in Schritt 2 auch einen semantischen Fehler, den der Compiler nicht meldet.</li>
+      <li><strong>Abschnitt 5.5.3, Seiten 137–138, Endlosschleife:</strong> Lektion: <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html#begriffe">for-Anweisung mit Bedingung in Go</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 7.5.5, Seiten 191–193, Terminierung:</strong> Wann rekursive Aufrufe zu einem Ende kommen. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html#terminierung">Rekursion in Go</a>, Schritt 5.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" data-gehe="0">Zum Anfang</button>
   </div>
   </section>
@@ -800,7 +830,7 @@ Ausgabe n</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#token
-  const ANKER = ['worum', 'maschine', 'uebersetzen', 'token', 'fehler'];
+  const ANKER = ['worum', 'maschine', 'uebersetzen', 'token', 'fehler', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;                                              // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   function melde(gewechselt) {
@@ -856,11 +886,12 @@ Ausgabe n</div>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Maschinensprache', 'Schritt 2: Compiler und Interpreter', 'Schritt 3: Token und Syntax', 'Schritt 4: Fehler'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Maschinensprache', 'Schritt 2: Compiler und Interpreter', 'Schritt 3: Token und Syntax', 'Schritt 4: Fehler', 'Schritt 5: Bezug zum Kurstext'];
   const wert = v => v === null ? 'kein Wert' : v;
 
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function standSaetze() {
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 1) {
       const k = POS[1], t = ['Im Speicher stehen 25 Bytes. Adresse und Bitmuster: ' + BYTES.map((v, a) => a + ': ' + bin(v)).join(', ') + '.'];
       t.push(k + ' von ' + BEFEHLE.length + ' Befehlen sind zerlegt.');

@@ -2,7 +2,7 @@
 
 Die Seite gehört zu Abschnitt 2.7 des Kurstexts. Sie zeigt, wie ein Programm in Maschinensprache aussieht, wie Compiler und Interpreter ein Programm aus einer höheren Sprache ausführbar machen, wie ein Compiler eine Anweisung in Token und Aufbau zerlegt und welche Fehler beim Übersetzen und beim Laufen auffallen.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -161,3 +161,42 @@ Reiter: fehler
 - 2.7
 - 3.3.2
 - 5.5.3.1
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.7, Seiten 17–18; 2.5, Seite 13: Maschinensprache, höhere Programmiersprache und Compiler stammen aus Abschnitt 2.7. Das Beispielprogramm stammt aus Abschnitt 2.5. Das Bild vom Programm über den Compiler zum Prozessor gibt die Lektion dazu.
+  - 1 Maschinensprache, 2.7, Seiten 17–18; 2.5, Seite 13: Dass ein Befehl aus Befehlscode und Argumenten besteht, verschieden lang ist und dass Maschinensprache Sprungbefehle hat, stammt aus dem Kurstext. Das Programm in höherer Sprache stammt aus Abschnitt 2.5. Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind für die Lektion erfunden.
+  - 2 Compiler und Interpreter, 2.7, Seite 18: Compiler, Interpreter und die Zwischensprache mit n + m statt n · m Compilern stammen aus dem Kurstext. Die Eingaben 6 und 4, die Zählung der gelesenen Zeilen und das Bild mit den Strichen gibt die Lektion dazu.
+  - 3 Token und Syntax, 2.7, Seiten 18–19: Der Vergleich mit einem Übersetzer von Deutsch nach Englisch, Syntax und Semantik, Token, lexikalische und syntaktische Analyse, das Beispiel a + b und das Wort IF stammen aus dem Kurstext. Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen gibt die Lektion dazu.
+  - 4 Fehler, 2.7, Seite 19: Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext. Die drei fehlerhaften Fassungen und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm: Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: Größter gemeinsamer Teiler.
+  - Abschnitt 3.2, Seiten 22–24, go run: Der Befehl übersetzt ein Go-Programm und startet es gleich danach. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 3.3.2, Seiten 27–29, die erste Meldung des Compilers: Steht die Klammer { in einer neuen Zeile, lehnt der Compiler das Programm mit syntax error ab. Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 3.
+  - Abschnitt 3.3.4, Seiten 30–32, Token in Go: Die Regeln für Namen und die 25 Schlüsselwörter. Lektion: Bezeichner und Schlüsselwörter in Go.
+  - Abschnitt 3.3.6, Seiten 35–36, Punkt vor Strich: In Go wird wie in x ← a + 2 · b zuerst multipliziert. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Fehler in Go-Programmen suchen: Die Lektionen Fehlersuche: drei kurze Go-Programme und Fehlersuche: drei Go-Programme mit mehreren Fehlern üben das an Programmen aus Kapitel 3. Die zweite zeigt in Schritt 2 auch einen semantischen Fehler, den der Compiler nicht meldet.
+  - Abschnitt 5.5.3, Seiten 137–138, Endlosschleife: Lektion: for-Anweisung mit Bedingung in Go, Schritt 1.
+  - Abschnitt 7.5.5, Seiten 191–193, Terminierung: Wann rekursive Aufrufe zu einem Ende kommen. Lektion: Rekursion in Go, Schritt 5.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.5
+- 2.7
+- 3.2
+- 3.3.2
+- 3.3.4
+- 3.3.6
+- 5.5.3
+- 7.5.5
