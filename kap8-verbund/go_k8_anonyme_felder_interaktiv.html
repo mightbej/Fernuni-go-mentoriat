@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -74,6 +73,7 @@
     .blockreihe .leer { color:var(--muted);font-size:.9rem; }
     .kasten.tot { border-style:dashed;border-color:#9ca3af;color:var(--muted);background:#f3f4f6; }
     .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -90,6 +90,7 @@
     <button type="button" class="tab" data-stufe="1">1 Drei Varianten</button>
     <button type="button" class="tab" data-stufe="2">2 Zugriff</button>
     <button type="button" class="tab" data-stufe="3">3 Literale</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -133,7 +134,6 @@
 
     <h3>Im Speicher sind alle drei gleich</h3>
     <p>Ein Rad besteht in jeder der drei Varianten aus vier Werten vom Typ <code>int</code>: x, y, Radius und Speichen. Im Hauptspeicher liegen sie hintereinander, bei 8 Zellen je <code>int</code> sind das 32 Zellen. Die Varianten unterscheiden sich nur darin, unter welchem Namen das Programm die Zellen anspricht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.2, Seiten 216–218. Alle Deklarationen und Zugriffe stammen aus dem Kurstext. Der Absatz zum Speicher ist eine Ergänzung.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -184,7 +184,6 @@ type rad struct {
 r.kreis.x = 5       // anonymes Feld kreis angegeben
 r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
     <div class="hinweis">Zwei anonyme Felder des gleichen Typs in einem Verbund sind nicht erlaubt. Beide hätten den gleichen Namen, und der kurze Zugriff wäre nicht eindeutig. Auf <code>type doppelt struct { punkt; punkt }</code> meldet Go: <code>punkt redeclared</code>.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.2, Seiten 218–219. Die Typen, die Zuweisungen und die Ausgabe mit <code>%+v</code> stammen aus dem Kurstext. Die Zeilen 7 und 8 der Demo und die Meldung des Compilers sind ergänzt, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -222,6 +221,32 @@ r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
     },
     speichen: 4,
 }</pre>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Drei Varianten</td><td>8.3.2, Seiten 216–218</td><td>Alle Deklarationen und Zugriffe stammen aus dem Kurstext.</td><td>Der Absatz zum Speicher ist eine Ergänzung.</td></tr>
+      <tr><td>2 Zugriff</td><td>8.3.2, Seiten 218–219</td><td>Die Typen, die Zuweisungen und die Ausgabe mit <code>%+v</code> stammen aus dem Kurstext.</td><td>Die Zeilen 7 und 8 der Demo und die Meldung des Compilers sind ergänzt, geprüft mit Go 1.26.</td></tr>
+      <tr><td>3 Literale</td><td>8.3.2, Seiten 219–220</td><td>Die Literale 1 bis 3 stammen aus dem Kurstext.</td><td>Die Literale 4 und 5 mit den Meldungen des Compilers sind ergänzt, geprüft mit Go 1.26.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 8.3, Seiten 212–214, hierarchische Verbünde:</strong> Ein Verbund als benanntes Feld. Lektion: <a href="go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde: ein Verbund als Feld</a>.</li>
+      <li><strong>Abschnitt 8.2.2, Seiten 202–203, Ausgabe:</strong> <code>%+v</code> gibt Feldnamen mit aus. Lektion: <a href="go_k8_verbund_interaktiv.html">Verbund in Go</a>, Schritt 4.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -229,10 +254,9 @@ r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
       <li><strong>Algorithmen auf Verbünden:</strong> Abschnitt 8.4 des Kurstexts zeigt die binäre Suche und Bubblesort auf einem Array von Verbünden.</li>
       <li><strong>Go-Programm:</strong> <code>S225_anonyme_felder_demo.go</code> liegt im Ordner <code>go</code> dieses Kapitels.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.2, Seiten 219–220. Die Literale 1 bis 3 stammen aus dem Kurstext. Die Literale 4 und 5 mit den Meldungen des Compilers sind ergänzt, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -251,8 +275,8 @@ r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#varianten
-  const ANKER = ['worum', 'varianten', 'zugriff', 'literale'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Flach, hierarchisch, eingebettet', 'Schritt 2: Zugriff über anonyme Felder', 'Schritt 3: Literale'];
+  const ANKER = ['worum', 'varianten', 'zugriff', 'literale', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Flach, hierarchisch, eingebettet', 'Schritt 2: Zugriff über anonyme Felder', 'Schritt 3: Literale', 'Schritt 4: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -409,6 +433,7 @@ r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) { const x = WV.liste[WV.i]; return ['Gewählt ist ' + x.code + '. Die Seite zeigt dazu diese Deklarationen und Zugriffe: ' + x.aus.split(NL).filter(Boolean).join(' | '), 'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der drei Varianten wählen.']; }
     if (stufe === 2) return standAblauf(DZ).concat('Der Kasten von r nennt jedes der vier int mit seinem ganzen Weg: kreis.punkt.x, kreis.punkt.y, kreis.radius und speichen.');
@@ -427,7 +452,7 @@ r.kreis.punkt.x = 5 // anonyme Felder kreis und punkt angegeben</pre>
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programm der Demo, die Zeilen stehen im Rumpf von main:',
     stand: standSaetze,

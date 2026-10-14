@@ -2,7 +2,7 @@
 
 Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ und ohne Namen deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.3.2, Seiten 216–220.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -102,7 +102,6 @@ Reiter: literale
   4. `r = rad{x: 5}` meldet `unknown field x in struct literal of type rad`.
   5. `r = rad{kreis{punkt{22, 33}, 55}}` meldet `too few values in struct literal of type rad`.
 - Darunter steht das zweite Literal über mehrere Zeilen, wie im Kurstext.
-- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
 
 ### Handgriffe
 
@@ -114,3 +113,30 @@ Reiter: literale
 
 - 8.3.2
 - 8.2.1
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Drei Varianten, 8.3.2, Seiten 216–218: Alle Deklarationen und Zugriffe stammen aus dem Kurstext. Der Absatz zum Speicher ist eine Ergänzung.
+  - 2 Zugriff, 8.3.2, Seiten 218–219: Die Typen, die Zuweisungen und die Ausgabe mit %+v stammen aus dem Kurstext. Die Zeilen 7 und 8 der Demo und die Meldung des Compilers sind ergänzt, geprüft mit Go 1.26.
+  - 3 Literale, 8.3.2, Seiten 219–220: Die Literale 1 bis 3 stammen aus dem Kurstext. Die Literale 4 und 5 mit den Meldungen des Compilers sind ergänzt, geprüft mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 8.3, Seiten 212–214, hierarchische Verbünde: Ein Verbund als benanntes Feld. Lektion: Hierarchische Verbünde: ein Verbund als Feld.
+  - Abschnitt 8.2.2, Seiten 202–203, Ausgabe: %+v gibt Feldnamen mit aus. Lektion: Verbund in Go, Schritt 4.
+- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 8.2.2
+- 8.3
+- 8.3.2
