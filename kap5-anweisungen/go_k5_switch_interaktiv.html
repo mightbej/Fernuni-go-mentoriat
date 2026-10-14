@@ -48,6 +48,7 @@
     /* Was das Programm auf den Bildschirm schreibt */
     .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
     .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -66,6 +67,7 @@
     <button type="button" class="tab" data-stufe="3">3 Ohne switch-Ausdruck</button>
     <button type="button" class="tab" data-stufe="4">4 In anderen Sprachen</button>
     <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -98,7 +100,6 @@ default:
       <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
     </ul>
     <div class="hinweis">Die Go-Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–137.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -165,7 +166,6 @@ default:
       <li><strong>Platz des default-case:</strong> Er darf an jeder Stelle zwischen den case-Abschnitten stehen. Üblich ist das Ende.</li>
     </ul>
     <p>Im Kurstext wird noch eine zweite Form der switch-Anweisung erwähnt, die nach einem Typ verzweigt. Sie gehört nicht zum Stoff des Kurses.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 133–134. Die zwei Meldungen des Compilers und das Beispiel mit <code>wort</code> stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -210,7 +210,6 @@ func f() int {
     <div class="auskunft" id="f-text"></div>
     <p>Mehrfache Aufrufe kosten Zeit. Schlimmer ist ein Aufruf mit Seiteneffekt: Liefert <code>f</code> nicht jedes Mal den gleichen Wert oder ändert sie etwas, wie hier die Variable <code>aufrufe</code>, dann verhält sich die if-Anweisung mit <code>f()</code> anders als gedacht.</p>
     <p>Funktionen mit Rückgabewert werden in Abschnitt 3.4 kurz und in Kapitel 7 ausführlich behandelt. Globale Variablen stehen auf der Seite <a href="go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration</a>, Schritt 3.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seiten 134–136, mit dem Expertenwissen 5.11. Die Funktion <code>f</code> mit dem Zähler ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -255,7 +254,6 @@ func f() int {
 
     <h3>Mit und ohne switch-Ausdruck nicht mischen</h3>
     <p>Steht ein switch-Ausdruck da, gehört in den case-Abschnitt ein Wert und keine Bedingung. Zu <code>switch x {</code> mit <code>case x &lt; 0:</code> meldet der Compiler <code>cannot convert x &lt; 0 (untyped bool value) to type int</code>. Go würde den Wert von <code>x</code> mit <code>true</code> oder <code>false</code> vergleichen, und das passt vom Typ nicht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seite 135. Die Fassung mit <code>if</code> und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -294,7 +292,6 @@ func f() int {
       <li><strong>Go:</strong> Der switch-Ausdruck darf jeden Typ haben, und die case-Ausdrücke dürfen beliebige Ausdrücke sein.</li>
       <li><strong>Manche andere Sprachen:</strong> Der switch-Ausdruck ist auf bestimmte primitive Typen beschränkt, oder die case-Ausdrücke müssen konstant sein. Dort dient <code>switch</code> deshalb meist nur für einfache Vergleiche mit ganzen Zahlen oder Strings.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.2, Seite 137, mit dem Sprachvergleich 5.12. Die drei Programme sind eigene Beispiele. Ausgeführt ist die Fassung in Go. Die Ausgaben der zwei Fassungen in Java folgen aus der Regel für den Fallthrough.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -355,11 +352,42 @@ default:
     <p>Go nimmt den ersten case-Ausdruck, der <code>true</code> ergibt. In der ersten Fassung ist das für jede Temperatur unter 25 der erste Abschnitt. Für −5 gibt sie „angenehm“ aus, die Abschnitte „kühl“ und „frostig“ erreicht das Programm nie.</p>
     <p>Bei Bedingungen, die einander einschließen, steht die engste zuerst. Bei einer switch-Anweisung mit switch-Ausdruck stellt sich die Frage nicht: Dort kann jeder Wert nur in einem case-Abschnitt stehen.</p>
 
-    <p>Zum Abschluss: Das <a href="138_go_k5_switch_quiz.html">Quiz zur switch-Anweisung</a> fragt den Stoff von Abschnitt 5.5.2 ab.</p>
-    <p class="quelle">Faustregeln zur if-Anweisung stehen auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5.</p>
+    <p>Faustregeln zur if-Anweisung stehen auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Aufbau und Ablauf</td><td>5.5.2, Seiten 133–134: Listing 5.3</td><td>Listing 5.3 zu den Wochentagen stammt aus dem Kurstext.</td><td>Die zwei Meldungen des Compilers und das Beispiel mit <code>wort</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>2 switch oder if</td><td>5.5.2, Seiten 134–136: Expertenwissen 5.11</td><td>Der Vergleich von switch und if und das Expertenwissen 5.11 stammen aus dem Kurstext.</td><td>Die Funktion <code>f</code> mit dem Zähler ist ein eigenes Beispiel.</td></tr>
+      <tr><td>3 Ohne switch-Ausdruck</td><td>5.5.2, Seite 135</td><td>Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext.</td><td>Die Fassung mit if und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>4 In anderen Sprachen</td><td>5.5.2, Seite 137: Sprachvergleich 5.12</td><td>Der Sprachvergleich mit dem Fallthrough stammt aus dem Kurstext.</td><td>Die drei Programme sind eigene Beispiele.</td></tr>
+      <tr><td>5 Aus der Praxis</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Faustregeln stammen aus der Praxis des Mentors.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen:</strong> Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, if-Anweisung:</strong> Lektion: <a href="go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</li>
+      <li><strong>Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung:</strong> Warum <code>f()</code> in einer Kette aus <code>else if</code> mehrmals aufgerufen wird. Lektion: <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Das <a href="138_go_k5_switch_quiz.html">Quiz zur switch-Anweisung</a> fragt den Stoff von Abschnitt 5.5.2 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -390,7 +418,7 @@ default:
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#tagless
-  var ANKER = ["worum", "aufbau", "vergleich", "tagless", "sprachen", "praxis"];
+  var ANKER = ["worum", "aufbau", "vergleich", "tagless", "sprachen", "praxis", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -605,9 +633,10 @@ default:
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Aufbau und Ablauf", "Schritt 2: switch oder if", "Schritt 3: Ohne switch-Ausdruck", "Schritt 4: In anderen Sprachen", "Schritt 5: Aus der Praxis"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Aufbau und Ablauf", "Schritt 2: switch oder if", "Schritt 3: Ohne switch-Ausdruck", "Schritt 4: In anderen Sprachen", "Schritt 5: Aus der Praxis", "Schritt 6: Bezug zum Kurstext"];
 
   function standSaetze() {
+    if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
     if (stufe === 1) {
@@ -674,7 +703,7 @@ default:
     reiter: function () { return ANKER[stufe]; },
     schritt: function () { return SCHRITTE[stufe]; },
     sichtbar: function () { return $("stufe-" + stufe); },
-    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis, table.text",
     zeilen: zeilen,
     zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
     stand: standSaetze,

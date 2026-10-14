@@ -2,7 +2,7 @@
 
 Die Seite erklärt die Mehrfachverzweigung mit `switch`. Sie führt das Programm zur Zuordnung der Wochentage aus Listing 5.3 Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Unterschied zu Java und C++. Sie gehört zu Abschnitt 5.5.2 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -181,7 +181,6 @@ Reiter: praxis
 - Faustregel 2, der default-case fängt den Wert ab, an den niemand gedacht hat: eine switch-Anweisung ohne default-case mit `case 1:` und `case 6, 7:`. Bei `num` gleich 9 tut sie nichts, und das Programm gibt „9 ist  zugeordnet.“ mit leerem Text aus.
 - Faustregel 3, ohne switch-Ausdruck entscheidet die Reihenfolge: Mit `case t < 25:` an erster Stelle gibt das Programm für −5 „angenehm“ aus. Mit `case t < 0:` an erster Stelle gibt es „frostig“ aus. Die engste Bedingung steht zuerst.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
-- Der Schritt endet mit einem Link zum Quiz.
 
 ### Handgriffe
 
@@ -190,4 +189,35 @@ Reiter: praxis
 
 ### Abschnitte des Kurstexts
 
+- 5.5.2
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Aufbau und Ablauf, 5.5.2, Seiten 133–134: Listing 5.3: Listing 5.3 zu den Wochentagen stammt aus dem Kurstext. Die zwei Meldungen des Compilers und das Beispiel mit wort gibt die Lektion dazu.
+  - 2 switch oder if, 5.5.2, Seiten 134–136: Expertenwissen 5.11: Der Vergleich von switch und if und das Expertenwissen 5.11 stammen aus dem Kurstext. Die Funktion f mit dem Zähler ist ein eigenes Beispiel.
+  - 3 Ohne switch-Ausdruck, 5.5.2, Seite 135: Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext. Die Fassung mit if und die Meldung des Compilers gibt die Lektion dazu.
+  - 4 In anderen Sprachen, 5.5.2, Seite 137: Sprachvergleich 5.12: Der Sprachvergleich mit dem Fallthrough stammt aus dem Kurstext. Die drei Programme sind eigene Beispiele.
+  - 5 Aus der Praxis, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Faustregeln stammen aus der Praxis des Mentors.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 5.5.1, Seiten 129–132, if-Anweisung: Lektion: if-Anweisung in Go.
+  - Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung: Warum f() in einer Kette aus else if mehrmals aufgerufen wird. Lektion: Wahrheitswerte und Kurzschluss-Auswertung.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur switch-Anweisung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 4.5.1
+- 5.5.1
 - 5.5.2
