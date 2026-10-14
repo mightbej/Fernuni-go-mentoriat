@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Konstanten in Go: ein fester Wert mit Namen</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { margin:12px 0;font-size:.95rem; }
+    th, td { vertical-align:top; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    .hinweis { margin:12px 0; }
+    .feld { display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0;font-size:.95rem; }
+    .feld .was { color:var(--muted); }
+    .feld .wie { font-family:Consolas,"Courier New",monospace;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere; }
+    .feld .wie.fehler { color:#b91c1c; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Schritt 3: Jede Zahl 12 ist ein Knopf. Schritt 4: Eine Zeile ist markiert. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .programm button.zahl { font-family:inherit;font-size:inherit;line-height:1.2;padding:0 6px;background:#334155;color:#fff;border-color:#64748b; }
+    .programm button.zahl:hover { background:#475569; }
+    .programm button.zahl.geaendert { border-color:#f87171;color:#fecaca; }
+    .programm .treffer, .programm button.zahl.treffer { background:var(--aktiv-bg);color:#111827;border-color:var(--aktiv);box-shadow:0 0 0 2px var(--aktiv);border-radius:6px; }
+    .programm span.treffer { padding:0 3px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Konstanten in Go</h1>
+    <p>Eine Konstante ist ein Name für einen festen Wert. Die Seite zeigt, wie Go eine Konstante deklariert, wozu sie dient und welchen Typ sie hat.</p>
+    <p>Kurstext v3.0.6, Abschnitt 5.2, Seiten 124–126.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Deklaration</button>
+    <button type="button" class="tab" data-stufe="2">2 Wozu eine Konstante</button>
+    <button type="button" class="tab" data-stufe="3">3 Die Zahl 12 suchen</button>
+    <button type="button" class="tab" data-stufe="4">4 Nicht-typisierte Konstanten</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Eine Konstante verbindet einen Namen mit einem Wert, der sich im ganzen Programm nicht ändert. Beispiel: <code>const monateImJahr = 12</code>.</p>
+    <p>Konstanten kamen im Kurstext schon dreimal vor, bevor sie in Abschnitt 5.2 vollständig behandelt werden:</p>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seite 9, der Begriff:</strong> Eine Konstante ist eine Variable, deren Wert nie verändert wird. Das Beispiel dort ist die Zahl Pi. Der Wert, der wörtlich im Programm steht, heißt Literal. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#begriffe">Variablen, Typen und Speicher</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, die erste Konstante in Go:</strong> Im ersten Go-Programm des Kurstexts steht die Deklaration <code>const nullpunkt float64 = -273.15</code>.</li>
+      <li><strong>Abschnitt 4.1, Seiten 45–52, der konstante Ausdruck:</strong> Ein Ausdruck aus Literalen und Konstanten hat einen festen Wert. Der Compiler rechnet ihn schon beim Übersetzen aus. Beispiel: <code>8 + 7</code>.</li>
+    </ul>
+    <p>Die Seite geht in vier Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> zeigt die Deklaration: mit Typ, ohne Typ, mehrere Konstanten in einer Klammer. Dazu kommt der Vergleich mit der Variable.</li>
+      <li><strong>Schritt 2</strong> nennt die vier Zwecke, für die im Kurstext eine Konstante empfohlen wird.</li>
+      <li><strong>Schritt 3</strong> ist eine Aufgabe zum vierten Zweck: In einem Programm steht fünfmal die Zahl 12, und nur dreimal sind die Monate im Jahr gemeint.</li>
+      <li><strong>Schritt 4</strong> behandelt das Expertenwissen 5.6: Eine Konstante ohne Typangabe hat noch keinen der Typen <code>int</code>, <code>uint8</code> oder <code>float64</code>.</li>
+    </ul>
+    <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Die Deklaration</h2>
+    <p>Eine Konstante wird fast so deklariert wie eine Variable in der ausführlichen Form. Es gibt zwei Unterschiede:</p>
+    <ul>
+      <li><strong>Schlüsselwort:</strong> Die Deklaration beginnt mit <code>const</code>, bei einer Variable mit <code>var</code>.</li>
+      <li><strong>Wert:</strong> Der Wert muss in der Deklaration stehen. Er lässt sich später nicht ändern.</li>
+    </ul>
+    <p>Wie bei der Variable darf der Typ fehlen. Die ausführliche Deklaration einer Variable zeigt die Seite <a href="go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration</a>.</p>
+
+    <h3>Vier Fassungen zum Ausprobieren</h3>
+    <p>Jeder Knopf zeigt eine Fassung der Deklaration von <code>maxAnzahl</code>. Darunter steht, was Go daraus macht: eine Ausgabe oder eine Meldung des Compilers.</p>
+    <div class="zeile" id="d-knoepfe">
+      <button type="button" data-dekl="0">mit Typ</button>
+      <button type="button" data-dekl="1">ohne Typ</button>
+      <button type="button" data-dekl="2">ohne Wert</button>
+      <button type="button" data-dekl="3">Wert später ändern</button>
+    </div>
+    <pre class="code-block" id="d-programm"></pre>
+    <div class="feld">
+      <span class="was" id="d-art"></span><span class="wie" id="d-ergebnis"></span>
+    </div>
+    <div class="auskunft" id="d-text"></div>
+
+    <h3>Mehrere Konstanten in einer Klammer</h3>
+    <p>Mehrere Konstanten lassen sich in einer Klammer hinter <code>const</code> zusammenfassen. So stehen die mathematischen Konstanten im Paket <code>math</code> von Go. Der Auszug zeigt sieben davon:</p>
+<pre class="code-block">const (
+    E   = 2.71828182845904523536028747135266249775724709369995957496696763
+    Pi  = 3.14159265358979323846264338327950288419716939937510582097494459
+    Phi = 1.61803398874989484820458683436563811772030917980576286213544862
+
+    Ln2    = 0.693147180559945309417232121458176568075500134360255254120680009
+    Log2E  = 1 / Ln2
+    Ln10   = 2.30258509299404568401799145468436420760110148862877297603332790
+    Log10E = 1 / Ln10
+)</pre>
+    <p class="quelle">Auszug aus dem Paket <code>math</code> von Go, im Kurstext in Abschnitt 5.2 abgedruckt.</p>
+    <p>In der Zeile <code>Log2E = 1 / Ln2</code> steht rechts eine Rechnung mit einer anderen Konstante. Das ist erlaubt, weil <code>1 / Ln2</code> ein konstanter Ausdruck ist: Der Compiler kennt beide Werte und rechnet das Ergebnis beim Übersetzen aus.</p>
+
+    <h3>Konstante und Variable im Vergleich</h3>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Eigenschaft</th><th>Bei einer Konstante</th><th>Bei einer Variable</th></tr></thead>
+      <tbody>
+        <tr><td>Schlüsselwort der Deklaration</td><td>Die Deklaration beginnt mit <code>const</code>.</td><td>Die ausführliche Deklaration beginnt mit <code>var</code>.</td></tr>
+        <tr><td>Wert in der Deklaration</td><td>Der Wert muss dastehen.</td><td>Der Wert darf fehlen. Die Variable bekommt dann den Null-Wert ihres Typs.</td></tr>
+        <tr><td>Zuweisung nach der Deklaration</td><td>Eine Zuweisung ist ein Fehler, den der Compiler meldet.</td><td>Eine Zuweisung überschreibt den Wert.</td></tr>
+        <tr><td>Typ in der Deklaration</td><td>Der Typ darf fehlen.</td><td>Der Typ darf fehlen, wenn ein Wert dasteht.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Welchen Typ eine Konstante ohne Typangabe hat, zeigt Schritt 4.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Wozu eine Konstante</h2>
+    <p>Im Kurstext werden vier Zwecke genannt. Zu jedem gehört dort eine Konstante als Beispiel.</p>
+
+    <h3>1. Der Name ist verständlicher als die Zahl</h3>
+    <p>Beispiel ist <code>math.Pi</code>. Die zwei Zeilen berechnen denselben Umfang eines Kreises:</p>
+<pre class="code-block">umfang := 2 * math.Pi * radius
+umfang := 2 * 3.141592653589793 * radius</pre>
+    <p>In der ersten Zeile sagt der Name, welche Zahl gemeint ist. In der zweiten muss der Leser die Ziffernfolge erkennen und auf Tippfehler prüfen.</p>
+
+    <h3>2. Ein häufig gebrauchter Wert wird nicht jedes Mal neu berechnet</h3>
+    <p>Beispiel ist <code>math.Log10E</code>, der Logarithmus der eulerschen Zahl zur Basis 10, etwa 0,43429. Das Paket <code>math</code> deklariert ihn als <code>Log10E = 1 / Ln10</code>. Der Compiler rechnet die Division einmal beim Übersetzen aus. Ein Programm, das den Wert hundertmal braucht, dividiert kein einziges Mal.</p>
+
+    <h3>3. Der Wert lässt sich an einer Stelle ändern</h3>
+    <p>Beispiel ist <code>const maxAnzahl = 500</code>. Steht im Programm überall der Name, genügt für einen neuen Höchstwert eine Änderung in der Deklaration. Steht überall die Zahl 500, muss jede Stelle einzeln geändert werden, und eine vergessene Stelle rechnet mit dem alten Wert weiter.</p>
+
+    <h3>4. Der Name sagt, was die Zahl bedeutet</h3>
+    <p>Beispiel ist <code>const monateImJahr = 12</code>. Dieser Wert ändert sich nie, eine zentrale Stelle zum Ändern braucht er also nicht. Die Konstante lohnt sich aus einem anderen Grund: In einem Programm kann die Zahl 12 an mehreren Stellen stehen und Verschiedenes bedeuten.</p>
+    <ul>
+      <li><strong>Monate im Jahr:</strong> <code>jahresgehalt := monatsgehalt * 12</code></li>
+      <li><strong>Stunden auf der Uhr:</strong> <code>stunde = stunde - 12</code></li>
+    </ul>
+    <p>Wer überall <code>monateImJahr</code> schreibt, findet später alle Stellen, an denen die Monate gemeint sind, und nur diese. Schritt 3 zeigt das an einem Programm.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Die Zahl 12 suchen</h2>
+    <p>Die Aufgabe stammt aus dem Kurstext: Angenommen, ein Jahr hätte 13 Monate. An welchen Stellen muss sich das Programm ändern?</p>
+    <p>Das Programm rechnet drei Werte aus:</p>
+    <ul>
+      <li><strong>Jahresgehalt:</strong> Das Monatsgehalt von 3000 wird mit der Zahl der Monate multipliziert.</li>
+      <li><strong>Monatsbeitrag:</strong> Ein Jahresbeitrag von 1560 wird durch die Zahl der Monate geteilt.</li>
+      <li><strong>Stunde auf der Uhr:</strong> Aus 15 Uhr wird 3 Uhr, weil das Zifferblatt nur 12 Stunden hat.</li>
+    </ul>
+    <p>Das Programm gibt es in zwei Fassungen. In der einen steht die Zahl der Monate als Literal <code>12</code> im Programm, in der anderen als Konstante <code>monateImJahr</code>.</p>
+    <div class="zeile" id="s-fassung">
+      <button type="button" data-fassung="literal">Fassung mit Literal 12</button>
+      <button type="button" data-fassung="konstante">Fassung mit Konstante monateImJahr</button>
+    </div>
+    <div class="zeile">
+      <button type="button" data-suche="12">nach 12 suchen</button>
+      <button type="button" data-suche="monateImJahr">nach monateImJahr suchen</button>
+      <button type="button" data-suche="">Suche aufheben</button>
+      <button type="button" id="s-vorn">von vorn</button>
+    </div>
+    <p>Jede Zahl 12 im Programm ist ein Knopf: Ein Klick macht aus ihr eine 13, ein zweiter Klick wieder eine 12.</p>
+    <ol class="programm" id="s-programm"></ol>
+    <div class="feld">
+      <span class="was">Treffer der Suche</span><span class="wie" id="s-treffer"></span>
+      <span class="was">Ausgabe des Programms</span><span class="wie" id="s-ausgabe"></span>
+    </div>
+    <div class="auskunft" id="s-text"></div>
+
+    <h3>Was die Aufgabe zeigt</h3>
+    <ul>
+      <li><strong>Mit Literal:</strong> Die Suche nach 12 findet fünf Stellen. Bei jeder muss der Leser entscheiden, ob die Monate gemeint sind oder die Uhr.</li>
+      <li><strong>Mit Konstante:</strong> Die Suche nach <code>monateImJahr</code> findet die Deklaration und die drei Stellen, an denen die Monate gemeint sind. Geändert wird nur die Deklaration.</li>
+    </ul>
+
+    <h3>Faustregeln</h3>
+    <ul>
+      <li><strong>Bedeutung:</strong> Ein Wert, der im Programm etwas Bestimmtes bedeutet und mehrfach vorkommt, bekommt eine Konstante.</li>
+      <li><strong>Name:</strong> Der Name nennt die Bedeutung, zum Beispiel <code>monateImJahr</code>. Ein Name wie <code>zwoelf</code> hilft nicht.</li>
+      <li><strong>Gruppe:</strong> Konstanten, die zusammengehören, stehen in einer Klammer.</li>
+      <li><strong>Variable:</strong> Ein Wert, der sich im Lauf des Programms ändert, ist eine Variable.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Nicht-typisierte Konstanten</h2>
+    <p>Dieser Schritt gehört zum Expertenwissen 5.6 des Kurstexts. Er beantwortet die Frage aus Schritt 1: Welchen Typ hat <code>const maxAnzahl = 500</code>?</p>
+
+    <h3>Auch ein Literal ist eine Konstante</h3>
+    <p>In Go heißt jeder Ausdruck mit festem Wert Konstante. Dazu gehören die Literale <code>736</code> und <code>0.6589</code>.</p>
+    <p>Ein solches Literal hat noch keinen der Typen, die eine Variable haben kann. Es hat einen eigenen Typ:</p>
+    <ul>
+      <li><strong>untyped integer:</strong> Das ist der Typ eines Integer-Literals wie <code>736</code>.</li>
+      <li><strong>untyped float:</strong> Das ist der Typ eines Floating-Point-Literals wie <code>0.6589</code>.</li>
+    </ul>
+    <p>Das englische Wort dafür ist „untyped constant“, im Kurstext steht „nicht-typisierte Konstante“.</p>
+
+    <h3>Der Typ richtet sich nach der Umgebung</h3>
+    <p>Ein Wert vom Typ untyped integer nimmt den Typ an, den die Stelle verlangt, an der er steht. Verlangt die Stelle keinen bestimmten Typ, wird er zu <code>int</code>. Dieser Typ heißt Standardtyp.</p>
+    <p>Das Programm verwendet das Literal <code>88</code> an drei Stellen. Jeder Knopf wählt eine davon:</p>
+    <div class="zeile" id="k-knoepfe">
+      <button type="button" data-kontext="0">a + 88</button>
+      <button type="button" data-kontext="1">b + 88</button>
+      <button type="button" data-kontext="2">%T mit 88</button>
+    </div>
+    <ol class="programm" id="k-programm"></ol>
+    <div class="feld">
+      <span class="was">Typ von 88 an dieser Stelle</span><span class="wie" id="k-typ"></span>
+    </div>
+    <div class="auskunft" id="k-text"></div>
+
+    <h3>Eine benannte Konstante ohne Typ</h3>
+    <p>Für eine benannte Konstante gilt dasselbe wie für das Literal, das ihr zugewiesen wird:</p>
+    <ul>
+      <li><strong>Ohne Typangabe:</strong> <code>const maxAnzahl = 500</code> hat den Typ untyped integer. Der Typ passt sich erst bei der Verwendung an.</li>
+      <li><strong>Mit Typangabe:</strong> <code>const maxAnzahl int = 500</code> hat den Typ <code>int</code> und behält ihn.</li>
+    </ul>
+    <p>Der Unterschied zeigt sich, sobald die Konstante auf einen anderen Typ trifft:</p>
+<pre class="code-block">const ohneTyp = 500
+const mitTyp int = 500
+
+var x float64 = ohneTyp // erlaubt: 500 wird zu float64
+var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
+    <div class="feld">
+      <span class="was">Meldung des Compilers zur letzten Zeile</span><span class="wie fehler">cannot use mitTyp (constant 500 of type int) as float64 value in variable declaration</span>
+    </div>
+    <p>So war es schon in Schritt 3: Die Konstante <code>monateImJahr</code> hat dort keine Typangabe. Sie wird mit dem <code>float64</code>-Wert <code>monatsgehalt</code> multipliziert und an anderer Stelle als <code>int</code> ausgegeben.</p>
+
+    <h3>Der Compiler rechnet genauer als float64</h3>
+    <p>Eine nicht-typisierte Konstante ist an keinen Wertebereich gebunden, wie ihn <code>int32</code> oder <code>float64</code> haben. Daraus folgt:</p>
+    <ul>
+      <li><strong>Genauigkeit beim Übersetzen:</strong> Der Compiler rechnet mit nicht-typisierten Konstanten auf mindestens 256 Bit genau.</li>
+      <li><strong>Viele Ziffern:</strong> <code>math.Pi</code> ist deshalb mit mehr als 60 Dezimalziffern deklariert. Ein <code>float64</code> hält nur etwa 16 Dezimalziffern.</li>
+      <li><strong>Rechnung nur aus Konstanten:</strong> Ein Ausdruck wie <code>2 * math.Pi</code> enthält nur Konstanten. Der Compiler rechnet ihn mit der hohen Genauigkeit aus.</li>
+      <li><strong>Verwendung:</strong> Erst wenn das Ergebnis mit einer Variable zusammentrifft, wird es an deren Typ angepasst, zum Beispiel an <code>float64</code>. Dabei gehen die überzähligen Ziffern verloren.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Deklaration</td><td>5.2, Seite 124</td><td>Die Deklaration mit <code>const</code> und der Auszug aus dem Paket <code>math</code> stammen aus dem Kurstext.</td><td>Die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Wozu eine Konstante</td><td>5.2, Seiten 124–125</td><td>Die Gründe für eine Konstante stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Die Zahl 12 suchen</td><td>5.2, Seite 125</td><td>Die Aufgabe, ein Jahr mit 13 Monaten anzunehmen, stammt aus dem Kurstext.</td><td>Das Programm mit der Zahl 12 an fünf Stellen ist ein eigenes Beispiel.</td></tr>
+      <tr><td>4 Nicht-typisierte Konstanten</td><td>5.2, Seiten 125–126: Expertenwissen 5.6</td><td>Die fünf Programmzeilen stammen aus dem Expertenwissen 5.6.</td><td>Die Auswahl der Zeilen mit dem Typ, den Go jeweils annimmt, gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Konstante und Literal:</strong> Eine Konstante ist ein Name für einen Wert, der sich nie ändert. Ein Literal ist der Wert selbst. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#begriffe">Variablen, Typen und Speicher</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, die erste Konstante:</strong> <code>const nullpunkt float64 = -273.15</code> in Listing 3.2. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 4.7, Seiten 109–111, implizite Typanpassung:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Implizite Typanpassung:</strong> Wann Go den Typ eines konstanten Ausdrucks von selbst anpasst, steht in Abschnitt 4.7, Seiten 109–111. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+      <li><strong>Quiz:</strong> Das <a href="127_go_k5_konstanten_quiz.html">Quiz zu den Konstanten</a> hat zehn Fragen zu Abschnitt 5.2.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function c(s) { return "<code>" + esc(s) + "</code>"; }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+  function nummern(liste) { return liste.length < 2 ? String(liste[0]) : liste.slice(0, -1).join(", ") + " und " + liste[liste.length - 1]; }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#suchen
+  var ANKER = ["start", "deklaration", "wozu", "suchen", "untyped", "kurstext"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 1: vier Fassungen der Deklaration ----
+  // Ausgaben und Meldungen stammen aus Läufen mit Go 1.26.
+
+  var DEKL = [
+    { name: "mit Typ", zeilen: ["const maxAnzahl int = 500", "fmt.Println(maxAnzahl)"], fehler: false, ergebnis: "500",
+      text: "<p>Hinter dem Namen steht der Typ " + c("int") + ", hinter " + c("=") + " der Wert. So ist auch die ausführliche Deklaration einer Variable aufgebaut, nur mit " + c("var") + ".</p>" },
+    { name: "ohne Typ", zeilen: ["const maxAnzahl = 500", "fmt.Println(maxAnzahl)"], fehler: false, ergebnis: "500",
+      text: "<p>Der Typ fehlt, das ist erlaubt. Die Ausgabe ist dieselbe.</p><p>Welchen Typ " + c("maxAnzahl") + " jetzt hat, zeigt Schritt 4.</p>" },
+    { name: "ohne Wert", zeilen: ["const maxAnzahl int"], fehler: true, ergebnis: "missing init expr for maxAnzahl",
+      text: "<p>Der Wert fehlt. Der Compiler übersetzt das Programm nicht. Seine Meldung heißt auf Deutsch: Für " + c("maxAnzahl") + " fehlt der Ausdruck, der den Anfangswert liefert.</p>" +
+        "<p>Bei einer Variable wäre " + c("var maxAnzahl int") + " erlaubt. Sie bekäme den Null-Wert 0 und könnte später einen anderen Wert bekommen. Eine Konstante kann das nicht, deshalb muss ihr Wert sofort dastehen.</p>" },
+    { name: "Wert später ändern", zeilen: ["const maxAnzahl = 500", "maxAnzahl = 600"], fehler: true, ergebnis: "cannot assign to maxAnzahl (neither addressable nor a map index expression)",
+      text: "<p>Die zweite Zeile ist eine Zuweisung an die Konstante. Der Compiler übersetzt das Programm nicht. Der Anfang seiner Meldung heißt auf Deutsch: " + c("maxAnzahl") + " lässt sich nichts zuweisen.</p>" +
+        "<p>In der Klammer nennt der Compiler, was links von " + c("=") + " stehen darf, zum Beispiel eine Variable. Eine Konstante gehört nicht dazu.</p>" }
+  ];
+  var dekl = 0;
+
+  function zeigeDekl() {
+    var d = DEKL[dekl];
+    $("d-programm").textContent = d.zeilen.join("\n");
+    $("d-art").textContent = d.fehler ? "Meldung des Compilers" : "Ausgabe";
+    $("d-ergebnis").textContent = d.ergebnis;
+    $("d-ergebnis").classList.toggle("fehler", d.fehler);
+    $("d-text").innerHTML = d.text;
+    jeder("#d-knoepfe button", function (k) { k.classList.toggle("haupt", Number(k.dataset.dekl) === dekl); });
+  }
+
+  // ---- Schritt 3: ein Programm mit der Zahl 12, als Literal und als Konstante ----
+  // Ein Teil einer Zeile ist Text, eine Zahl mit Schlüssel (ein Knopf) oder der Name monateImJahr.
+
+  function Z(schluessel) { return { zahl: schluessel }; }
+  var NAME = { name: "monateImJahr" };
+  var ZEILEN = {
+    literal: [
+      ["package main"], [""], ["import \"fmt\""], [""], ["func main() {"],
+      ["    monatsgehalt := 3000.0"],
+      ["    jahresgehalt := monatsgehalt * ", Z("gehalt")],
+      ["    monatsbeitrag := 1560.0 / ", Z("beitrag")],
+      ["    stunde := 15"],
+      ["    if stunde > ", Z("vergleich"), " {"],
+      ["        stunde = stunde - ", Z("abzug")],
+      ["    }"],
+      ["    fmt.Println(jahresgehalt, monatsbeitrag, stunde)"],
+      ["    fmt.Println(\"Monate im Jahr:\", ", Z("ausgabe"), ")"],
+      ["}"]
+    ],
+    konstante: [
+      ["package main"], [""], ["import \"fmt\""], [""], ["func main() {"],
+      ["    const ", NAME, " = ", Z("dekl")],
+      ["    monatsgehalt := 3000.0"],
+      ["    jahresgehalt := monatsgehalt * ", NAME],
+      ["    monatsbeitrag := 1560.0 / ", NAME],
+      ["    stunde := 15"],
+      ["    if stunde > ", Z("vergleich"), " {"],
+      ["        stunde = stunde - ", Z("abzug")],
+      ["    }"],
+      ["    fmt.Println(jahresgehalt, monatsbeitrag, stunde)"],
+      ["    fmt.Println(\"Monate im Jahr:\", ", NAME, ")"],
+      ["}"]
+    ]
+  };
+  var MONATE = { literal: ["gehalt", "beitrag", "ausgabe"], konstante: ["dekl"] };   // hier bedeutet die Zahl die Monate im Jahr
+  var UHR = ["vergleich", "abzug"];                                                  // hier bedeutet sie die Stunden auf der Uhr
+  var FASSUNG = { literal: "Fassung mit Literal 12", konstante: "Fassung mit Konstante monateImJahr" };
+  var fassung = "literal";
+  var wert, suche;
+
+  function vonVorn() {
+    wert = { literal: { gehalt: 12, beitrag: 12, vergleich: 12, abzug: 12, ausgabe: 12 }, konstante: { dekl: 12, vergleich: 12, abzug: 12 } };
+    suche = "";
+  }
+  function teilText(teil) {
+    return typeof teil === "string" ? teil : teil.name ? teil.name : String(wert[fassung][teil.zahl]);
+  }
+  function istTreffer(teil) {
+    if (!suche || typeof teil === "string") return false;
+    return teil.name ? suche === teil.name : suche === String(wert[fassung][teil.zahl]);
+  }
+  // Die Programmzeilen als Text, vor jeder Zeile ihre Nummer
+  function programmZeilen() {
+    return ZEILEN[fassung].map(function (zeile, i) { return (i + 1 < 10 ? " " : "") + (i + 1) + "  " + zeile.map(teilText).join(""); });
+  }
+  // Die Nummern der Zeilen, in denen ein Teil die Prüfung besteht
+  function zeilenMit(pruefe) {
+    var liste = [];
+    ZEILEN[fassung].forEach(function (zeile, i) { if (zeile.some(function (t) { return typeof t !== "string" && pruefe(t); })) liste.push(i + 1); });
+    return liste;
+  }
+  function zeileVon(schluessel) { return zeilenMit(function (t) { return t.zahl === schluessel; })[0]; }
+  // Was das Programm mit den eingestellten Zahlen ausgibt
+  function ausgabe() {
+    var w = wert[fassung], m = fassung === "literal" ? w : { gehalt: w.dekl, beitrag: w.dekl, ausgabe: w.dekl };
+    var stunde = 15;
+    if (stunde > w.vergleich) stunde = stunde - w.abzug;
+    return { stunde: stunde, text: (3000 * m.gehalt) + " " + (1560 / m.beitrag) + " " + stunde + "\nMonate im Jahr: " + m.ausgabe };
+  }
+  function trefferSatz() {
+    if (!suche) return "Es läuft keine Suche.";
+    var zeilen = zeilenMit(istTreffer);
+    if (!zeilen.length) return "Die Suche nach " + suche + " findet in dieser Fassung keine Stelle.";
+    return "Die Suche nach " + suche + " findet " + (zeilen.length === 1 ? "eine Stelle, in Zeile " : zeilen.length + " Stellen, in den Zeilen ") + nummern(zeilen) + ".";
+  }
+  // Wie weit die Aufgabe „13 Monate“ gelöst ist, in Sätzen
+  function bewertung() {
+    var w = wert[fassung], monate = MONATE[fassung];
+    var k = monate.filter(function (s) { return w[s] === 13; }).length;
+    var uhr = UHR.filter(function (s) { return w[s] === 13; });
+    var saetze = [];
+    if (k === 0 && !uhr.length) return ["Das Programm rechnet überall mit 12. Die Aufgabe: Ein Jahr soll 13 Monate haben, die Uhr behält ihre 12 Stunden."];
+    if (fassung === "konstante") {
+      if (k) saetze.push("Die Deklaration in Zeile " + zeileVon("dekl") + " nennt jetzt den Wert 13. Diese eine Änderung wirkt an allen drei Stellen, an denen monateImJahr verwendet wird: in den Zeilen " +
+        nummern(zeilenMit(function (t) { return !!t.name; }).slice(1)) + ".");
+    } else if (k === monate.length) {
+      saetze.push("Alle drei Stellen, an denen die 12 für die Monate stand, sind geändert: die Zeilen " + nummern(monate.map(zeileVon)) + ".");
+    } else if (k) {
+      saetze.push("Erst " + (k === 1 ? "eine" : k) + " von drei Stellen, an denen die 12 für die Monate steht, " + (k === 1 ? "ist" : "sind") + " geändert. Das Programm rechnet jetzt an einer Stelle mit 13 Monaten und an einer anderen mit 12.");
+    }
+    if (uhr.length) {
+      saetze.push("Die Uhr ist verstellt: In Zeile " + nummern(uhr.map(zeileVon)) + " steht jetzt 13, dort sind aber die Stunden auf der Uhr gemeint." +
+        (ausgabe().stunde !== 3 ? " Aus 15 Uhr wird jetzt " + ausgabe().stunde + " Uhr statt 3 Uhr." : " Für 15 Uhr fällt das noch nicht auf, bei 13 Uhr rechnet das Programm falsch."));
+    } else if (k === monate.length) {
+      saetze.push(fassung === "literal"
+        ? "Die Aufgabe ist gelöst. Dafür war bei fünf Stellen mit 12 einzeln zu entscheiden, was die Zahl bedeutet."
+        : "Die Aufgabe ist gelöst. Dafür genügte eine Änderung.");
+    }
+    return saetze;
+  }
+  function zeigeSuche() {
+    $("s-programm").innerHTML = ZEILEN[fassung].map(function (zeile, i) {
+      return "<li><span class=\"nr\">" + (i + 1) + "</span>" + zeile.map(function (teil) {
+        var treffer = istTreffer(teil) ? " treffer" : "";
+        if (typeof teil === "string") return esc(teil);
+        if (teil.name) return "<span class=\"name" + treffer + "\">" + teil.name + "</span>";
+        var z = wert[fassung][teil.zahl];
+        return "<button type=\"button\" class=\"zahl" + treffer + (z === 13 ? " geaendert" : "") + "\" data-zahl=\"" + teil.zahl + "\" aria-label=\"Zahl " + z + " in Zeile " + (i + 1) + ", ändern\">" + z + "</button>";
+      }).join("") + "</li>";
+    }).join("");
+    $("s-treffer").textContent = suche ? "Suche nach " + suche + ": " + zeilenMit(istTreffer).length : "keine Suche";
+    $("s-ausgabe").textContent = ausgabe().text;
+    $("s-text").innerHTML = "<p>" + esc(trefferSatz()) + "</p>" + bewertung().map(function (s) { return "<p>" + esc(s) + "</p>"; }).join("");
+    jeder("#s-fassung button", function (k) { k.classList.toggle("haupt", k.dataset.fassung === fassung); });
+  }
+
+  // ---- Schritt 4: das Literal 88 an drei Stellen ----
+
+  var KONTEXT_ZEILEN = ["var a uint8 = 20", "var b int64 = 20", "fmt.Println(a + 88) // 108", "fmt.Println(b + 88) // 108", "fmt.Printf(\"Der Typ ist %T.\\n\", 88) // Der Typ ist int."];
+  var KONTEXT = [
+    { name: "a + 88", zeile: 3, typ: "uint8",
+      text: "<p>" + c("a") + " hat den Typ " + c("uint8") + ". Beide Operanden von " + c("+") + " müssen denselben Typ haben. Das Literal " + c("88") + " nimmt deshalb den Typ " + c("uint8") + " an.</p>" },
+    { name: "b + 88", zeile: 4, typ: "int64",
+      text: "<p>" + c("b") + " hat den Typ " + c("int64") + ". Dasselbe Literal " + c("88") + " nimmt hier den Typ " + c("int64") + " an.</p>" },
+    { name: "%T mit 88", zeile: 5, typ: "int",
+      text: "<p>Das Verb " + c("%T") + " gibt den Typ des Arguments aus. " + c("fmt.Printf") + " verlangt für " + c("88") + " keinen bestimmten Typ. Das Literal bekommt deshalb den Standardtyp " + c("int") + ".</p>" +
+        "<p>Der Typ untyped integer selbst lässt sich so nicht ausgeben: Sobald das Literal an eine Funktion übergeben wird, hat es schon einen der gewöhnlichen Typen.</p>" }
+  ];
+  var kontext = 0;
+
+  function zeigeKontext() {
+    var k = KONTEXT[kontext];
+    $("k-programm").innerHTML = KONTEXT_ZEILEN.map(function (z, i) {
+      return "<li" + (i + 1 === k.zeile ? " class=\"aktuell\"" : "") + "><span class=\"nr\">" + (i + 1) + "</span>" + esc(z) + "</li>";
+    }).join("");
+    $("k-typ").textContent = k.typ;
+    $("k-text").innerHTML = k.text;
+    jeder("#k-knoepfe button", function (b) { b.classList.toggle("haupt", Number(b.dataset.kontext) === kontext); });
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-dekl], [data-fassung], [data-suche], [data-zahl], [data-kontext]");
+    if (!k) return;
+    var d = k.dataset;
+    if (d.stufe !== undefined || d.gehe !== undefined) { zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true); return; }
+    if (d.dekl !== undefined) { dekl = Number(d.dekl); zeigeDekl(); }
+    else if (d.fassung !== undefined) { fassung = d.fassung; zeigeSuche(); }
+    else if (d.suche !== undefined) { suche = d.suche; zeigeSuche(); }
+    else if (d.zahl !== undefined) { wert[fassung][d.zahl] = wert[fassung][d.zahl] === 12 ? 13 : 12; zeigeSuche(); }
+    else if (d.kontext !== undefined) { kontext = Number(d.kontext); zeigeKontext(); }
+    melde(false);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("s-vorn").addEventListener("click", function () { vonVorn(); zeigeSuche(); melde(false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Deklaration", "Schritt 2: Wozu eine Konstante", "Schritt 3: Die Zahl 12 suchen", "Schritt 4: Nicht-typisierte Konstanten", "Schritt 5: Bezug zum Kurstext"];
+
+  function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
+    if (stufe === 0 || stufe === 2) return ["Dieser Schritt hat keine Demo."];
+    if (stufe === 1) {
+      var d = DEKL[dekl];
+      return ["Gewählt ist die Fassung „" + d.name + "“. Ihre Programmzeilen: " + d.zeilen.join(" ; ") + ".",
+        d.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + d.ergebnis : "Go übersetzt diese Fassung. Die Ausgabe: " + d.ergebnis];
+    }
+    if (stufe === 3) {
+      var w = wert[fassung];
+      var geaendert = Object.keys(w).filter(function (s) { return w[s] === 13; });
+      return ["Zu sehen ist die " + FASSUNG[fassung] + ". Das Programm steht unten mit Zeilennummern.",
+        geaendert.length ? "Auf 13 geändert " + (geaendert.length === 1 ? "ist die Zahl in Zeile " : "sind die Zahlen in den Zeilen ") + nummern(geaendert.map(zeileVon)) + ". Alle anderen Zahlen stehen auf 12." : "Noch ist keine Zahl geändert, überall steht 12.",
+        trefferSatz() + (suche ? " Die Treffer sind gelb markiert." : ""),
+        "Die Ausgabe des Programms mit diesen Zahlen: " + ausgabe().text.replace("\n", " ; ")].concat(bewertung());
+    }
+    var k = KONTEXT[kontext];
+    return ["Gewählt ist „" + k.name + "“. Markiert ist Zeile " + k.zeile + ": " + KONTEXT_ZEILEN[k.zeile - 1], "Das Literal 88 hat an dieser Stelle den Typ " + k.typ + "."];
+  }
+  function kurz() {
+    if (stufe === 1) return "Fassung „" + DEKL[dekl].name + "“";
+    if (stufe === 3) {
+      var w = wert[fassung], n = Object.keys(w).filter(function (s) { return w[s] === 13; }).length;
+      return (fassung === "literal" ? "mit Literal" : "mit Konstante") + ", " + (n === 0 ? "keine Zahl" : n === 1 ? "eine Zahl" : n + " Zahlen") + " auf 13" +(suche ? ", Suche nach " + suche : "");
+    }
+    if (stufe === 4) return "gewählt: " + KONTEXT[kontext].name;
+    return "";
+  }
+  // Programmzeilen: in Schritt 3 das Programm mit Nummern, in Schritt 4 die fünf Zeilen mit Nummern, dazu jeder Codeblock des Schritts
+  function zeilen() {
+    var bloecke = Array.prototype.slice.call($("stufe-" + stufe).querySelectorAll("pre")).reduce(function (alle, p) {
+      return alle.concat(alle.length ? ["---"] : [], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
+    }, []);
+    if (stufe === 3) return programmZeilen();
+    if (stufe === 4) return KONTEXT_ZEILEN.map(function (z, i) { return (i + 1) + "  " + z; }).concat(["---"], bloecke);
+    return bloecke;
+  }
+
+  vonVorn();
+  zeigeDekl();
+  zeigeSuche();
+  zeigeKontext();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Konstanten in Go: ein fester Wert mit Namen",
+    thema: "Konstanten, const, Deklaration von Konstanten, nicht-typisierte Konstanten",
+    bezug: "Kurstext v3.0.6, Abschnitt 5.2, Seiten 124–126",
+    beschreibung: "../kurslotse/kap5-anweisungen/go_k5_konstanten_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, table, .feld, .auskunft, .hinweis",
+    zeilen: zeilen,
+    zeilenTitel: "Programmzeilen des sichtbaren Schritts, in Go. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum findet die Suche nach 12 fünf Stellen?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
