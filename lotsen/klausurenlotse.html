@@ -36,7 +36,7 @@
 
   <div class="hero">
     <h1>Klausurenlotse</h1>
-    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Die Seite beschreibt, was er tut, und führt dich in 4 Schritten vom Herunterladen bis zur Arbeit mit ihm.</p>
+    <p>Der Klausurenlotse unterstützt dich beim Üben für die Klausur. Die Seite beschreibt, was er tut, und führt dich in 5 Schritten vom Herunterladen bis zur Arbeit mit ihm.</p>
     <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
   </div>
 
@@ -44,9 +44,10 @@
     <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
     <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
     <button type="button" class="tab" data-stufe="2">2 Schlüssel und Kurstext einrichten</button>
-    <button type="button" class="tab" data-stufe="3">3 Aufgaben bearbeiten</button>
-    <button type="button" class="tab" data-stufe="4">4 Den Klausurenlotsen fragen</button>
-    <button type="button" class="tab" data-stufe="5">Gut zu wissen</button>
+    <button type="button" class="tab" data-stufe="3">3 Go einrichten</button>
+    <button type="button" class="tab" data-stufe="4">4 Aufgaben bearbeiten</button>
+    <button type="button" class="tab" data-stufe="5">5 Den Klausurenlotsen fragen</button>
+    <button type="button" class="tab" data-stufe="6">Gut zu wissen</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -69,7 +70,7 @@
     <h3>Was du brauchst</h3>
     <ul>
       <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Das Programm läuft auf deinem eigenen Rechner.</li>
-      <li><strong>Go:</strong> Der Klausurenlotse rechnet bei „Was passiert?“ und bei „Lücken füllen“ mit Go. Für den Kurs installierst du Go ohnehin. Ohne Go laufen das Quiz und die Aufgaben mit freiem Text.</li>
+      <li><strong>Go für die Lotsen:</strong> die ZIP-Datei <code>lotsen-go.zip</code> mit etwa 34 MB aus Moodle. Der Klausurenlotse rechnet bei „Was passiert?“ und bei „Lücken füllen“ mit Go. Hast du Go schon installiert, brauchst du sie nicht.</li>
       <li><strong>Paket:</strong> die ZIP-Datei <code>klausurenlotse.zip</code> mit etwa 7 MB aus Moodle.</li>
       <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal.</li>
       <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Das Quiz läuft auch ohne Schlüssel.</li>
@@ -84,11 +85,12 @@
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Schritt 1: Herunterladen und starten</h2>
-    <h3>Die zwei Dateien in Moodle holen</h3>
-    <p>Beide Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
+    <h3>Die drei Dateien in Moodle holen</h3>
+    <p>Die Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
     <ul>
       <li><strong><code>klausurenlotse.zip</code>:</strong> das Paket des Klausurenlotsen. Es steht in der Tabelle unter „ZIP herunterladen“.</li>
       <li><strong><code>lotsen-kurstext.zip</code>:</strong> der Kurstext für alle Lotsen. Die Datei steht über der Tabelle. Hast du sie schon für einen anderen Lotsen eingerichtet, brauchst du sie nicht noch einmal.</li>
+      <li><strong><code>lotsen-go.zip</code>:</strong> Go für alle Lotsen. Die Datei steht über der Tabelle. Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet, brauchst du sie nicht.</li>
     </ul>
     <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
     <div class="nur-kurs">
@@ -105,15 +107,6 @@
     <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
     <p>Die Datei <code>lotsen-kurstext.zip</code> entpackst du nicht. Sie bleibt, wie sie ist. Hast du sie noch für keinen anderen Lotsen eingerichtet, lade sie aus Moodle. Du brauchst sie beim Einrichten des Kurstexts.</p>
     <p>Im Ordner <code>klausurenlotse</code> liegen die Anleitung, die Nutzungsbedingungen und <code>start.bat</code>. Den Ordner <code>programm</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
-
-    <h3>Prüfen, ob Go installiert ist</h3>
-    <p>Der Klausurenlotse rechnet mit Go. Bei „Was passiert?“ führt er die Funktion der Aufgabe aus, bei „Lücken füllen“ dein ergänztes Programm. Dafür braucht er Go auf deinem Rechner. Für den Kurs installierst du Go ohnehin.</p>
-    <ol>
-      <li>Drück die Windows-Taste, tipp <code>cmd</code> und drück die Eingabetaste.</li>
-      <li>Tipp <code>go version</code> und drück die Eingabetaste.</li>
-    </ol>
-    <p>Antwortet das Fenster mit einer Zeile wie <code>go version go1.22 windows/amd64</code>, ist Go installiert. Antwortet es, der Befehl sei nicht gefunden, dann installiere Go von <a href="https://go.dev/dl/" target="_blank" rel="noopener">go.dev/dl</a> und starte den Rechner neu.</p>
-    <p>Ohne Go laufen das Quiz, die Kurzfragen, „Pseudocode umformen“ und „Verhalten begründen“. „Was passiert?“ und „Lücken füllen“ laufen ohne Go nicht.</p>
 
     <h3>Den Klausurenlotsen starten</h3>
     <ol>
@@ -167,7 +160,26 @@
   </section>
   <section class="stufe" id="stufe-3">
   <div class="card">
-    <h2>Schritt 3: Eine Aufgabe bearbeiten</h2>
+    <h2>Schritt 3: Go für die Lotsen einrichten</h2>
+    <p>Der Klausurenlotse rechnet mit Go. Bei „Was passiert?“ führt er die Funktion der Aufgabe aus, bei „Lücken füllen“ dein ergänztes Programm. Du musst Go nicht installieren: Die Datei <code>lotsen-go.zip</code> enthält alles, was die Lotsen brauchen. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
+    <p>Nach dem Kurstext zeigt der Browser die Seite „Go für die Lotsen einrichten“:</p>
+    <ol>
+      <li>Klick auf „Datei auswählen“ und wähle die Datei <code>lotsen-go.zip</code>. Du brauchst sie nicht zu entpacken.</li>
+      <li>Klick auf „Übernehmen“. Das Einrichten dauert etwa eine halbe Minute.</li>
+    </ol>
+    <ul>
+      <li><strong>Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet:</strong> Dann erscheint diese Seite nicht.</li>
+      <li><strong>Ohne Go:</strong> Mit „Ohne Go weiter“ laufen das Quiz, die Kurzfragen, „Pseudocode umformen“ und „Verhalten begründen“. „Was passiert?“ und „Lücken füllen“ laufen ohne Go nicht.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Eine Aufgabe bearbeiten</h2>
     <p>Du wählst erst die Aufgabenform und dann die Aufgabe. Bei jeder Aufgabenform prüft der Klausurenlotse deine Antwort auf eine andere Art.</p>
 
     <h3>Was passiert?</h3>
@@ -198,13 +210,13 @@
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
-    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
   </div>
   </section>
-  <section class="stufe" id="stufe-4">
+  <section class="stufe" id="stufe-5">
   <div class="card">
-    <h2>Schritt 4: Den Klausurenlotsen fragen</h2>
+    <h2>Schritt 5: Den Klausurenlotsen fragen</h2>
     <p>Rechts neben der Aufgabe steht die Spalte „Klausurenlotse“. Dort beantwortet das Sprachmodell deine Fragen zur Aufgabe, die du gerade siehst.</p>
     <ul>
       <li><strong>Fragen:</strong> Tipp deine Frage in das Feld, zum Beispiel „Warum ist der zweite Aufruf 0?“, und drück die Eingabetaste.</li>
@@ -216,11 +228,11 @@
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
-    <button type="button" class="haupt" data-gehe="5">Weiter zu „Gut zu wissen“</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu „Gut zu wissen“</button>
   </div>
   </section>
-  <section class="stufe" id="stufe-5">
+  <section class="stufe" id="stufe-6">
   <div class="card">
     <h2>Gut zu wissen</h2>
     <h3>Beenden und wieder starten</h3>
@@ -245,7 +257,7 @@
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -255,7 +267,7 @@
 (function () {
   "use strict";
   // Jede Stufe hat eine eigene Adresse, zum Beispiel #schluessel.
-  var ANKER = ["worum", "starten", "schluessel", "aufgaben", "fragen", "wissen"];
+  var ANKER = ["worum", "starten", "schluessel", "go", "aufgaben", "fragen", "wissen"];
 
   function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
 
