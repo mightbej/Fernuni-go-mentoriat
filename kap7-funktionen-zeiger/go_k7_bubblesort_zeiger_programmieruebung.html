@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -150,7 +149,6 @@ func swap(pa *[10]int, i int) {
     </ul>
     <p>Die Funktion ändert eine Variable, die außerhalb ihres Rumpfs deklariert ist. Im Kurstext heißt das Seiteneffekt.</p>
     <div class="hinweis">Wer <code>&amp;</code> vergisst und <code>swap(a, i)</code> schreibt, bekommt eine Meldung des Compilers: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>. Der Fehler aus der Fassung mit der Kopie, das vergessene <code>a =</code>, blieb unbemerkt.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, Hinweis 7.4, Seite 177, und Abschnitt 7.4.1, Seiten 178–180. Die Funktion <code>swap</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -186,7 +184,6 @@ func isGreater(pa *[10]int, i int) bool {
       </tbody>
     </table></div>
     <div class="hinweis">Ein Zeiger gibt der Funktion die Möglichkeit, das Array zu ändern. Am Aufruf <code>isGreater(&amp;a, i)</code> sieht man nicht, ob sie es tut. Das steht im Rumpf der Funktion und in ihrem Kommentar.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.2, Seiten 169–170, und Abschnitt 7.3, Seiten 171–172. Die Abwägung zwischen Kopie und Zeiger für eine Funktion, die nur liest, steht nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -218,7 +215,7 @@ func isGreater(pa *[10]int, i int) bool {
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="b-ausgabe"></div>
     <div class="auskunft" id="b-urteil"></div>
-    <p class="quelle">Das Programm ist ein eigenes Beispiel. Die Demo zeigt die Schleife nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
+    <p>Die Demo zeigt die Schleife nicht Anweisung für Anweisung, sie zeigt jeden Aufruf einer Funktion.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -291,7 +288,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
       <li>Schreibe eine Funktion <code>sortiere(pa *[10]int)</code>, die die zwei Schleifen enthält. Wie lautet der Aufruf in <code>main</code>?</li>
       <li>Was gibt <code>fmt.Println(&amp;a)</code> aus? Der Kurstext nennt die Antwort in Abschnitt 7.4.</li>
     </ul>
-    <p class="quelle">Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
+    <p>Das Programm und seine Ausgabe sind mit Go 1.26 geprüft. Lösungen zu den drei Aufgaben stehen nicht auf dieser Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -313,7 +310,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
         <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit einem Array von Verbunden.</td></tr>
       </tbody>
     </table></div>
-    <p>Die Funktionen <code>isGreater</code> und <code>swap</code> kommen im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
+    <p>Die Funktionen <code>isGreater</code> und <code>swap</code> kommen im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors. Die Abwägung zwischen Kopie und Zeiger für eine Funktion, die nur liest, steht nicht im Kurstext.</p>
 
     <h3>Die Reihe</h3>
     <ul>

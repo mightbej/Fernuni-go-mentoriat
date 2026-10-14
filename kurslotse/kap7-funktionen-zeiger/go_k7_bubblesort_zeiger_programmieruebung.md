@@ -143,6 +143,7 @@ Reiter: kurstext
 - Zu sehen ist eine Tabelle mit sechs Zeilen: Abschnitt 5.3.2, 7.2, 7.3, 7.4 mit Hinweis 7.4, 7.4.1 und 8.4.2, jeweils mit den gedruckten Seiten und einem Satz, was das Programm daraus verwendet.
 - Darunter steht: Die Funktionen `isGreater` und `swap` kommen im Kurstext nicht vor.
 - Unter „Die Reihe“ stehen Links auf die Programmierübungen davor und danach.
+- Der Reiter sagt außerdem: Die Abwägung zwischen Kopie und Zeiger für eine Funktion, die nur liest, steht nicht im Kurstext.
 
 ### Handgriffe
 
