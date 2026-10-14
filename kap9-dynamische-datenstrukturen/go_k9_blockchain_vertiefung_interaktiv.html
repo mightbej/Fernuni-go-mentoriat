@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vertiefung: Blockchain in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7;--rot:#b91c1c;--rot-bg:#fef2f2; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile .etikett { min-width:8.5em;color:var(--muted);font-size:.92rem; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:var(--rot);background:var(--rot-bg); }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em;font-size:.92rem;overflow-x:auto; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    .nebeneinander { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .nebeneinander > div { min-width:0; }
+    .nebeneinander > div > p { margin:4px 0;font-weight:600;color:var(--muted);font-size:.92rem; }
+    @media (max-width: 760px) { .nebeneinander { grid-template-columns:1fr; } }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:.98rem;line-height:1.65;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .rahmen.frei { border-color:var(--accent);background:#f0fdfa; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .verbund { display:flex;flex-direction:column;gap:2px; }
+    .kasten .verbund > span { display:flex;justify-content:space-between;gap:14px;border:1px solid #cbd5e1;border-radius:5px;padding:2px 8px;background:#fff;font-size:.95rem; }
+    .kasten .verbund > span.m { background:#d1fae5;border-color:var(--accent); }
+    .kasten .verbund i { font-style:normal;color:var(--muted); }
+    .kasten:has(.verbund) { align-items:flex-start; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    /* Die Kette: der Kopf und je Block ein Kasten mit Nummer und Anfangsadresse */
+    .kette { display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:10px 0;font-family:Consolas,"Courier New",monospace; }
+    .wagen { border:2px solid var(--blau);border-radius:8px;background:#fff;padding:4px 9px;text-align:center;min-width:3.4em;font-weight:700; }
+    .wagen small { display:block;font-size:.72rem;font-weight:400;color:var(--muted); }
+    .wagen.kopf { border-color:#7c3aed;background:#f5f3ff; }
+    .wagen.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .pfeil { color:var(--muted); }
+
+    /* Blockkarten: ein Block der Blockchain mit allen Feldern */
+    .karten { display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:10px 0; }
+    .karte { border:2px solid var(--blau);border-radius:10px;background:#fff;padding:7px 10px;min-width:190px;font-size:.9rem; }
+    .karte h4 { margin:0 0 4px;font-size:.95rem;color:var(--blau); }
+    .karte div { font-family:Consolas,"Courier New",monospace;overflow-wrap:anywhere; }
+    .karte div i { font-style:normal;color:var(--muted);font-family:"Segoe UI",Tahoma,sans-serif; }
+    .karte .geaendert { background:var(--aktiv-bg);border-radius:4px; }
+    .karte .falsch { background:var(--rot-bg);color:var(--rot);border-radius:4px;font-weight:700; }
+    .karte.schlecht { border-color:var(--rot); }
+    .karte.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .karte.kopfmarke { border-color:#7c3aed;background:#f5f3ff;min-width:auto;align-self:center;font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .karten .pfeil { align-self:center; }
+    .karten .rest { align-self:center;color:var(--muted);font-size:.9rem; }
+
+    /* Rechnung der Hashfunktion */
+    #h-eingabe { font-family:Consolas,"Courier New",monospace;font-size:1rem;padding:8px 10px;border:1px solid #94a3b8;border-radius:8px;min-width:18em;max-width:100%; }
+    table.rechnung td { font-family:Consolas,"Courier New",monospace;font-size:.9rem;white-space:nowrap; }
+    table.rechnung td.zeichen { font-family:"Segoe UI",Tahoma,sans-serif; }
+    .ergebnis { font-family:Consolas,"Courier New",monospace;font-size:1.25rem;font-weight:700;color:var(--blau); }
+
+    /* Konten im Simulator */
+    .konten { display:flex;flex-wrap:wrap;gap:8px;margin:10px 0; }
+    .konto { border:2px solid var(--accent);border-radius:10px;background:#fff;padding:6px 12px;min-width:120px; }
+    .konto b { display:block; }
+    .konto span { font-family:Consolas,"Courier New",monospace;font-size:1.1rem; }
+    .konto.gesperrt { border-color:var(--rot);background:var(--rot-bg); }
+    .konto small { display:block;color:var(--muted); }
+    .konto.gesperrt small { color:var(--rot);font-weight:700; }
+    .status { font-weight:700; }
+    .status.rot { color:var(--rot); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Vertiefung: Blockchain in Go</h1>
+    <p>Eine Blockchain ist eine verkettete Liste mit zwei Änderungen: Ein neuer Block kommt immer vorn an und zeigt auf den älteren. Und jeder Block trägt den Fingerabdruck seines Vorgängers. Diese Lektion baut eine kleine Blockchain mit dem Stoff des Kurses in Go nach.</p>
+    <p>Vertiefung zur Lektion <a href="go_k9_blockchain_interaktiv.html" style="color:#fff">Blockchain: eine verkettete Liste mit Fingerabdruck</a>. Exkurs zu Kapitel 9. Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236. Dazu Abschnitt 4.3.6, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Der umgedrehte Güterzug</button>
+    <button type="button" class="tab" data-stufe="2">2 Der Fingerabdruck</button>
+    <button type="button" class="tab" data-stufe="3">3 Hash statt Zeiger</button>
+    <button type="button" class="tab" data-stufe="4">4 Guthaben ohne Vorzeichen</button>
+    <button type="button" class="tab" data-stufe="5">5 Überweisen</button>
+    <button type="button" class="tab" data-stufe="6">6 Wer darf sperren?</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <div class="hinweis">Diese Lektion ist die Vertiefung. Die leichte Fassung ist die Lektion <a href="go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a>. Wer sie kennt, findet hier jede Funktion ausgeschrieben und Schritt für Schritt nachgerechnet.</div>
+    <p>Eine <strong>Blockchain</strong> ist ein Kassenbuch, das als Kopie auf vielen Rechnern zugleich liegt. Jeder Eintrag steht in einem Block, und die Blöcke sind miteinander verkettet. Bekannt wurde die Blockchain 2009 mit Bitcoin. Wie die echten Blockchains arbeiten und was mit ihnen heute geschieht, zeigt die Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</p>
+    <p>Diese Lektion zeigt, dass du den Kern einer Blockchain schon programmieren kannst. Sie ist eine verkettete Liste wie in Abschnitt 9.2 des Kurstexts, mit zwei Änderungen:</p>
+    <ul>
+      <li><strong>Die Richtung:</strong> Ein neuer Block kommt immer vorn an, und jeder Block zeigt auf den älteren Block. Im Bild des Güterzugs: Jeder neue Wagon kommt direkt hinter die Lokomotive, und jede Kupplung zeigt zum älteren Wagon.</li>
+      <li><strong>Der Fingerabdruck:</strong> Jeder Block trägt einen Hashwert, der aus seinem Inhalt berechnet ist, und den Hashwert seines Vorgängers. Wer einen alten Block ändert, fällt auf.</li>
+    </ul>
+    <div class="hinweis">Blockchain und Hashfunktion kommen im Kurstext nicht vor. In Abschnitt 4.3.8 wird die Hashfunktion nur in einem Satz als Beispiel genannt. Diese Lektion ist ein Exkurs des Mentors. Das Programm ist ein Modell: kein echtes Geld und keine echte Blockchain.</div>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 9.2, verkettete Listen:</strong> Die Lektion <a href="go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>. Diese Lektion baut darauf auf.</li>
+      <li><strong>Abschnitt 4.3.8, Überlauf:</strong> Die Lektion <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+      <li><strong>Abschnitt 4.3.7.2, XOR:</strong> Der Operator <code>^</code> steht in der Lektion <a href="../kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html#byte">Rechenwerk</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 4.6, Bytes eines Strings:</strong> Was <code>text[i]</code> liefert, zeigt die Lektion <a href="../kap4-primitive-datentypen/go_k4_stringbytes_interaktiv.html#bytes">Strings: Bytes und Zeichen</a>.</li>
+      <li><strong>Abschnitt 7.1, zwei Rückgabewerte:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#rueckgaben">Funktionen in Go</a>.</li>
+      <li><strong>Abschnitt 8.4, ein Array von Verbünden:</strong> Die Programmierübung <a href="../kap8-verbund/go_k8_telefonbuch_programmieruebung.html">Ein Telefonbuch als Verbund-Array</a>.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Du hängst vier Blöcke an eine leere Kette. Jeder neue Block kommt vorn an.</li>
+      <li><strong>Schritt 2:</strong> Eine Hashfunktion mit 32 Bit, XOR und gewolltem Überlauf. Du gibst einen Text ein und siehst die Rechnung.</li>
+      <li><strong>Schritt 3:</strong> Jeder Block trägt den Hashwert seines Vorgängers. Du fälschst einen alten Block und siehst, wo die Prüfung anschlägt.</li>
+      <li><strong>Schritt 4:</strong> Guthaben im Typ <code>uint64</code> und was bei 75 − 76 geschieht.</li>
+      <li><strong>Schritt 5:</strong> Du überweist zwischen drei Konten. Jede Buchung wird ein Block.</li>
+      <li><strong>Schritt 6:</strong> Der Herausgeber sperrt Konten, vernichtet Guthaben und hält die Kette an.</li>
+    </ul>
+    <p>Das ganze Programm liegt als <a href="go/blockchain.go">blockchain.go</a> bereit. Es läuft mit <code>go run blockchain.go</code>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Der umgedrehte Güterzug</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Im Güterzug des Kurstexts kommt ein neuer Wagon an die Stelle, die zu seiner Containernummer passt. In eine Blockchain wird nie etwas in der Mitte eingefügt, ein neuer Block kommt immer ganz vorn an. Welcher Fall der Funktion <code>elementEinfügen</code> aus Listing 9.1 ist das?
+          <details><summary>Auflösung</summary>Der erste Fall: Das neue Element wird der Kopf der Liste. Er braucht zwei Zuweisungen. Erst bekommt das neue Element den alten Kopf als Nachfolger, dann zeigt der Kopf auf das neue Element.</details></li>
+      </ol>
+    </div>
+    <p>Im Güterzug des Kurstexts zeigt die Lokomotive auf den ersten Wagon und jeder Wagon auf den nächsten. Die Reihenfolge ergibt sich aus den Containernummern.</p>
+    <p>In einer Blockchain ergibt sich die Reihenfolge aus der Zeit. Jeder neue Block kommt direkt hinter die Lokomotive, und seine Kupplung zeigt auf den Block, der vorher dort stand. So zeigt jeder Block auf einen älteren Block. Wer vom Kopf aus durch die Kette läuft, geht in der Zeit zurück bis zum ersten Block. Dessen Zeiger ist <code>nil</code>. Den ersten Block nennt man in echten Blockchains den <strong>Genesis-Block</strong>.</p>
+    <p>Die zwei Verbund-Typen sehen aus wie die der Liste. Nur heißt der Zeiger <code>vorgänger</code> statt <code>nächstes</code>:</p>
+    <pre class="code-block">// Ein Block der Kette
+type block struct {
+    nummer    int
+    vorgänger *block
+}
+
+// Die Kette. kopf zeigt auf den neuesten Block.
+type blockkette struct {
+    kopf *block
+}</pre>
+    <div class="nebeneinander">
+      <div><p>Blockchain: ein Block kommt vorn an</p>
+<pre class="code-block">func blockAnhängen(k *blockkette) {
+    neuer := &amp;block{}
+    if k.kopf != nil {
+        neuer.nummer = k.kopf.nummer + 1
+    }
+    neuer.vorgänger = k.kopf
+    k.kopf = neuer
+}</pre></div>
+      <div><p>Listing 9.1: der erste Fall von <code>elementEinfügen</code></p>
+<pre class="code-block">neues := &amp;listenElement{wert: neuerWert}
+neues.nächstes = liste.kopf
+liste.kopf = neues
+return</pre></div>
+    </div>
+    <p>Die letzten zwei Zeilen von <code>blockAnhängen</code> sind die zwei Zuweisungen aus der Liste. Eine Schleife braucht die Funktion nicht, weil sie nie eine Stelle in der Mitte sucht.</p>
+
+    <h3>Vier Blöcke entstehen</h3>
+    <p>Eine Anweisung der Demo ist ein ganzer Aufruf von <code>blockAnhängen</code>. Oben steht die Kette, darunter stehen die Rahmen mit den Variablen und der Hauptspeicher des Modells. Die Adressen sind erfunden.</p>
+    <ol class="programm" id="z-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
+      <button type="button" id="z-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="z-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="z-bild"></div>
+    <div id="z-speicher"></div>
+    <div class="auskunft" id="z-urteil"></div>
+    <ul>
+      <li><strong>Größe:</strong> Ein <code>int</code> und ein Zeiger belegen im Modell je 8 Zellen. Ein <code>block</code> belegt 16 Zellen, eine <code>blockkette</code> 8.</li>
+      <li><strong>Reihenfolge:</strong> Die Blöcke liegen im Speicher in der Reihenfolge, in der sie entstanden sind. Die Kette liest man vom Kopf aus rückwärts: 3, 2, 1, 0.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236: Güterzug und Listing 9.1. Die Blockchain kommt im Kurstext nicht vor. Die Typen und die Funktion sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Der Fingerabdruck</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Texte „Alice an Bob: 25“ und „Alice an Bob: 5“ unterscheiden sich in einem Zeichen. Wie ähnlich sind ihre Hashwerte?
+          <details><summary>Auflösung</summary>Sie haben nichts gemeinsam: <code>4e3c6e66</code> und <code>cd11eb3e</code>. Schon ein geändertes Byte mischt sich über die Multiplikation in alle Bits.</details></li>
+      </ol>
+    </div>
+    <p>Eine <strong>Hashfunktion</strong> berechnet aus einem beliebig langen Text eine Zahl mit fester Zahl von Bits, den <strong>Hashwert</strong>. Man nennt ihn auch Fingerabdruck. Zwei Eigenschaften braucht die Blockchain:</p>
+    <ul>
+      <li><strong>Gleicher Text, gleicher Wert:</strong> Jeder Rechner berechnet aus demselben Text denselben Hashwert.</li>
+      <li><strong>Anderer Text, anderer Wert:</strong> Ändert sich ein einziges Zeichen, ändert sich der ganze Hashwert.</li>
+    </ul>
+    <p>Die Hashfunktion dieser Lektion heißt FNV-1a. Sie braucht nur Stoff aus Kapitel 4:</p>
+    <pre class="code-block">// fingerabdruckText berechnet aus einem Text einen Hashwert mit 32 Bit.
+// Das Verfahren heißt FNV-1a. Der Überlauf bei der Multiplikation ist gewollt.
+func fingerabdruckText(text string) uint32 {
+    var h uint32 = 2166136261
+    for i := 0; i &lt; len(text); i++ {
+        h = h ^ uint32(text[i]) // das Byte mit XOR einmischen
+        h = h * 16777619        // Überlauf: Go rechnet modulo 2^32
+    }
+    return h
+}</pre>
+    <ul>
+      <li><strong><code>uint32</code>:</strong> Ein Hashwert ist ein Bitmuster und keine Menge. Für Bitmuster sind die vorzeichenlosen Typen da, so steht es in Abschnitt 4.3.6.</li>
+      <li><strong><code>text[i]</code>:</strong> Der Index-Ausdruck liefert ein Byte, Abschnitt 4.6. Ein Umlaut wie „ü“ besteht aus zwei Bytes.</li>
+      <li><strong><code>^</code>:</strong> XOR aus Abschnitt 4.3.7.2. Jedes Bit von <code>h</code>, an dessen Stelle das Byte eine 1 hat, kippt.</li>
+      <li><strong><code>* 16777619</code>:</strong> Das Produkt braucht bis zu 57 Bit. Go behält die unteren 32 und verwirft den Rest. In Abschnitt 4.3.8 steht, dass man diesen Überlauf bei einer Hashfunktion bewusst einsetzt: Das Ergebnis landet immer im Wertebereich.</li>
+    </ul>
+
+    <h3>Die Rechnung Byte für Byte</h3>
+    <p>Die Texte, die später in die Blöcke kommen, sind Einträge eines Kassenbuchs. In dieser Lektion haben drei Personen ein Konto: Alice, Bob und Charlie. Bezahlt wird in Coins, der Geldeinheit des Modells. Der Eintrag „Alice an Bob: 25“ heißt also: Alice überweist Bob 25 Coins. Die Hashfunktion kennt diese Bedeutung nicht. Für sie ist jeder Eintrag nur eine Folge von Bytes.</p>
+    <p>Wähle einen Text oder schreibe einen eigenen, höchstens 40 Bytes lang. So liest du die Tabelle:</p>
+    <ul>
+      <li><strong>Eine Zeile</strong> ist ein Durchlauf der Schleife, also ein Byte des Textes.</li>
+      <li><strong>Byte:</strong> der Wert von <code>text[i]</code> als Zahl, in Klammern das Zeichen.</li>
+      <li><strong>h nach XOR:</strong> der Wert von <code>h</code> nach der ersten Anweisung im Rumpf.</li>
+      <li><strong>Produkt ohne Grenze:</strong> was die Multiplikation in der Mathematik ergäbe. Die Zahl hat bis zu 17 Stellen und passt nicht in 32 Bit.</li>
+      <li><strong>h neu:</strong> was Go davon behält, die unteren 32 Bit. Mit diesem Wert beginnt die nächste Zeile.</li>
+    </ul>
+    <p>Der Wert von <code>h</code> in der letzten Zeile ist der Hashwert. Alle Werte von <code>h</code> stehen hexadezimal, wie <code>fmt.Printf</code> sie mit <code>%08x</code> ausgibt.</p>
+    <div class="zeile" id="h-wahl"></div>
+    <div class="zeile"><input type="text" id="h-eingabe" maxlength="40" aria-label="Text für die Hashfunktion" spellcheck="false"></div>
+    <div class="auskunft" id="h-urteil"></div>
+    <div class="tabellenrahmen"><table class="text rechnung" id="h-tabelle"></table></div>
+
+    <div class="hinweis"><strong>32 Bit sind zu wenig.</strong> Es gibt nur rund 4,3 Milliarden verschiedene Werte vom Typ <code>uint32</code>. Ein Programm, das der Reihe nach „Alice an Bob: 26“, „Alice an Bob: 27“ und so weiter durchrechnet, findet einen zweiten Text mit dem Hashwert von „Alice an Bob: 25“. Auf einem gewöhnlichen Rechner hat ein Go-Programm dafür knapp zehn Minuten gebraucht. Es fand „Alice an Bob: 9403879403“, die letzte Vorlage oben. Beide Texte haben den Hashwert <code>4e3c6e66</code>. Echte Blockchains verwenden deshalb Hashfunktionen mit 256 Bit, Bitcoin zum Beispiel SHA-256. In Go gibt es dafür das Paket <code>crypto/sha256</code>. Es verlangt den Text als Slice, und Slices verwendet der Kurs nicht.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Seiten 66–68, Abschnitt 4.3.7, Seiten 69–78, und Abschnitt 4.3.8, Seiten 78–84. FNV-1a ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo. Die Funktion ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Hash statt Zeiger</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Kette liegt als Kopie auf tausend Rechnern. Auf einem Rechner liegt Block 1 ab Zelle 248, auf einem anderen ab einer ganz anderen Adresse. Wie kann Block 2 seinen Vorgänger so benennen, dass es auf jedem Rechner gilt?
+          <details><summary>Auflösung</summary>Mit dem Hashwert des Vorgängers. Den berechnet jeder Rechner aus demselben Inhalt gleich. Eine Adresse gilt nur in einem laufenden Programm auf einem Rechner.</details></li>
+      </ol>
+    </div>
+    <p>Der Zeiger <code>vorgänger</code> genügt dem Programm auf einem Rechner. Für die anderen Rechner trägt jeder Block zusätzlich zwei Hashwerte:</p>
+    <pre class="code-block">// Ein Block der Kette. Er kennt seinen Vorgänger auf zwei Arten:
+// über den Zeiger vorgänger und über dessen Hashwert vorgängerHash.
+type block struct {
+    nummer        int
+    eintrag       string
+    vorgängerHash uint32
+    hash          uint32
+    vorgänger     *block
+}</pre>
+    <ul>
+      <li><strong><code>eintrag</code>:</strong> Was im Kassenbuch steht, zum Beispiel „Alice an Bob: 25“.</li>
+      <li><strong><code>vorgängerHash</code>:</strong> Der Hashwert des Vorgängers. Beim ersten Block ist er 0.</li>
+      <li><strong><code>hash</code>:</strong> Der eigene Hashwert. Er wird aus Nummer, Eintrag und <code>vorgängerHash</code> berechnet. So hängt er auch vom Vorgänger ab, und über den Vorgänger von allen älteren Blöcken.</li>
+    </ul>
+    <pre class="code-block">// fingerabdruck berechnet den Hashwert eines Blocks aus seiner Nummer,
+// seinem Eintrag und dem Hashwert seines Vorgängers.
+func fingerabdruck(b *block) uint32 {
+    text := fmt.Sprintf("%d|%s|%08x", b.nummer, b.eintrag, b.vorgängerHash)
+    return fingerabdruckText(text)
+}
+
+// blockAnhängen hängt einen neuen Block vorn an die Kette.
+func blockAnhängen(k *blockkette, eintrag string) {
+    neuer := &amp;block{eintrag: eintrag}
+    if k.kopf != nil {
+        neuer.nummer = k.kopf.nummer + 1
+        neuer.vorgängerHash = k.kopf.hash
+    }
+    neuer.hash = fingerabdruck(neuer)
+    neuer.vorgänger = k.kopf
+    k.kopf = neuer
+}
+
+// ketteGültig prüft jeden Block, vom neuesten bis zum ersten.
+func ketteGültig(k *blockkette) bool {
+    for b := k.kopf; b != nil; b = b.vorgänger {
+        if b.hash != fingerabdruck(b) {
+            return false
+        }
+        if b.vorgänger != nil &amp;&amp; b.vorgängerHash != b.vorgänger.hash {
+            return false
+        }
+    }
+    return true
+}</pre>
+    <p><code>fmt.Sprintf</code> arbeitet wie <code>fmt.Printf</code> aus Abschnitt 4.2, gibt den Text aber zurück, statt ihn auszugeben. Für Block 2 entsteht der Text <code>2|Alice an Bob: 25|2b2ae705</code>.</p>
+
+    <h3>Einen alten Block fälschen</h3>
+    <p>Die Kette hat vier Blöcke. Das Bild zeichnet sie wie die Liste in Listing 9.1: vorn <code>kopf</code>, dahinter der neueste Block 3, ganz hinten Block 0 mit <code>nil</code>. Jeder Pfeil ist ein Zeiger <code>vorgänger</code>. Im Feld <code>vorgängerHash</code> steht deshalb der Hashwert des Blocks rechts daneben. Unter dem Feld steht auf jeder Karte, von welchem Block der Wert stammt.</p>
+    <p>Alice hat Bob in Block 2 25 Coins überwiesen. Nun will sie nachträglich nur 5 Coins überwiesen haben. Wähle, wie weit sie mit dem Fälschen geht. Gelb ist ein geändertes Feld, rot ein Feld, an dem die Prüfung anschlägt.</p>
+    <div class="zeile" id="f-wahl"></div>
+    <div id="f-kette"></div>
+    <div class="auskunft" id="f-urteil"></div>
+    <div class="hinweis">Bei Bitcoin kommt eine Hürde hinzu: Für jeden Block muss ein Rechner eine teure Rechenaufgabe lösen. Wer einen alten Block fälscht, müsste das für ihn und für jeden späteren Block wiederholen, schneller als alle anderen Rechner zusammen. Dieses Verfahren heißt Proof of Work. Die Lektion zeigt es nicht.</div>
+    <p class="quelle">Die Blockchain und die Funktionen sind eigene Beispiele, geprüft mit Go 1.26. Die Adressen sind erfunden.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Guthaben ohne Vorzeichen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Alice hat 75 Coins, gespeichert als <code>uint64</code>. Ein Programm zieht 76 ab, ohne vorher zu prüfen. Was steht danach im Guthaben?
+          <details><summary>Auflösung</summary>18446744073709551615, die größte Zahl des Typs <code>uint64</code>. Alice ist auf einen Schlag sehr reich, und Go meldet nichts.</details></li>
+      </ol>
+    </div>
+    <p>Ein Guthaben kann nicht negativ sein. Es liegt nahe, dafür einen vorzeichenlosen Typ zu nehmen. Davor wird im Kurstext in Hinweis 4.7 gewarnt: Ein Rechenfehler, der eine negative Zahl ergäbe, schwappt unbemerkt an das obere Ende des Wertebereichs. Das Beispiel dort ist <code>10 − 15</code> im Typ <code>uint8</code>, Ergebnis 251. Den Sprung über die Null siehst du am <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3.</p>
+    <p>Blockchains tun es trotzdem. Verträge in der Sprache Solidity für Ethereum speichern Guthaben meist im Typ <code>uint256</code>. Deshalb muss jedes Programm prüfen, bevor es abzieht. Das Programm dieser Lektion verwendet <code>uint64</code> und prüft so:</p>
+    <pre class="code-block">if betrag &gt; sender.guthaben {
+    return false, "das Guthaben reicht nicht"
+}
+sender.guthaben = sender.guthaben - betrag</pre>
+    <h3>Abziehen mit und ohne Prüfung</h3>
+    <p>Alice hat 75 Coins. Wähle den Betrag.</p>
+    <div class="zeile" id="g-wahl"></div>
+    <div class="nebeneinander">
+      <div><p>Ohne Prüfung</p><div class="konsole" id="g-ohne"></div></div>
+      <div><p>Mit Prüfung</p><div class="konsole" id="g-mit"></div></div>
+    </div>
+    <div class="auskunft" id="g-urteil"></div>
+    <h3>Auch beim Addieren prüfen</h3>
+    <p>Beim Ausgeben neuer Coins wächst ein Guthaben. Auch eine Summe kann überlaufen. Die Funktion <code>ausgeben</code> prüft deshalb vor der Addition:</p>
+    <pre class="code-block">if empfänger.guthaben+betrag &lt; empfänger.guthaben {
+    return false, "Überlauf verhindert"
+}</pre>
+    <p>Ist die Summe kleiner als der alte Wert, ist sie übergelaufen. Bei vorzeichenlosen Typen ist diese Prüfung sicher, weil Go modulo 2^64 rechnet. Am Ende von Abschnitt 4.3.8 steht, dass man vor einer gefährdeten Addition prüfen sollte, ob das Ergebnis im Wertebereich liegt.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.6, Hinweis 4.7, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84. Die Werte sind mit Go 1.26 geprüft.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Überweisen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Bob hat 45 Coins und überweist 50 an Charlie. Was ändert sich an den Konten, und was an der Kette?
+          <details><summary>Auflösung</summary>Nichts. <code>überweisen</code> gibt <code>false</code> zurück, bevor es etwas bucht. Ein Block entsteht nur bei einer Buchung.</details></li>
+      </ol>
+    </div>
+    <p>Die Konten liegen in einem Array von Verbünden, wie das Telefonbuch in der Programmierübung zu Kapitel 8. Die Kette bekommt dafür drei neue Felder:</p>
+    <pre class="code-block">// Ein Konto mit Namen, Guthaben und Sperrvermerk
+type konto struct {
+    name     string
+    guthaben uint64
+    gesperrt bool
+}
+
+// Die Blockkette mit den Konten. kopf zeigt auf den neuesten Block.
+type blockkette struct {
+    kopf        *block
+    konten      [3]konto
+    herausgeber string
+    angehalten  bool
+}
+
+// kontoSuchen liefert einen Zeiger auf das Konto mit dem Namen oder nil.
+func kontoSuchen(k *blockkette, name string) *konto {
+    for i := 0; i &lt; len(k.konten); i++ {
+        if k.konten[i].name == name {
+            return &amp;k.konten[i]
+        }
+    }
+    return nil
+}</pre>
+    <p><code>&amp;k.konten[i]</code> ist die Adresse eines Array-Elements. In Abschnitt 7.4 steht, dass ein Element eines Arrays adressierbar ist. Über den Zeiger ändert <code>überweisen</code> das Konto im Array selbst und keine Kopie.</p>
+    <p>Die Funktion <code>überweisen</code> prüft erst alle Regeln und bucht dann. Sie gibt zwei Werte zurück: ob gebucht wurde, und eine Meldung. Gelb ist die Zeile, mit der der letzte Aufruf geendet hat.</p>
+    <ol class="programm" id="u-programm"></ol>
+
+    <h3>Überweisungen ausprobieren</h3>
+    <p>Am Anfang stehen die vier Blöcke aus Schritt 3 in der Kette. Alice hat 75 Coins, Bob 45, Charlie 10.</p>
+    <div class="zeile"><span class="etikett">Von</span><span class="zeile" id="u-von"></span></div>
+    <div class="zeile"><span class="etikett">An</span><span class="zeile" id="u-an"></span></div>
+    <div class="zeile"><span class="etikett">Betrag</span><span class="zeile" id="u-betrag"></span></div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="u-los">überweisen</button>
+      <button type="button" id="u-vorn">von vorn</button>
+    </div>
+    <div class="auskunft" id="u-urteil"></div>
+    <div id="u-zustand"></div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.1, Seiten 163–168, zwei Rückgabewerte, und Abschnitt 7.4, Seiten 173–178, Adresse eines Array-Elements. Die Funktionen sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Wer darf sperren?</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Der Herausgeber sperrt Alice. Läuft die Kette weiter? Und kann Alice noch überweisen?
+          <details><summary>Auflösung</summary>Die Kette läuft weiter, die Sperre steht sogar als eigener Block darin. Alice kann nichts mehr überweisen, weil <code>überweisen</code> vorher <code>sender.gesperrt</code> prüft.</details></li>
+      </ol>
+    </div>
+    <p>Die Kette hat einen <strong>Herausgeber</strong>. Nur er darf neue Coins ausgeben. Das Programm gibt ihm drei weitere Rechte:</p>
+    <pre class="code-block">// sperren sperrt ein Konto. Das darf nur der Herausgeber.
+func sperren(k *blockkette, aufrufer string, name string) (bool, string) {
+    if aufrufer != k.herausgeber {
+        return false, "das darf nur der Herausgeber"
+    }
+    betroffen := kontoSuchen(k, name)
+    if betroffen == nil {
+        return false, "unbekanntes Konto"
+    }
+    betroffen.gesperrt = true
+    blockAnhängen(k, k.herausgeber+" sperrt "+name)
+    return true, "gesperrt"
+}
+
+// vernichten setzt das Guthaben eines gesperrten Kontos auf 0.
+// Das darf nur der Herausgeber.
+func vernichten(k *blockkette, aufrufer string, name string) (bool, string) {
+    if aufrufer != k.herausgeber {
+        return false, "das darf nur der Herausgeber"
+    }
+    betroffen := kontoSuchen(k, name)
+    if betroffen == nil {
+        return false, "unbekanntes Konto"
+    }
+    if !betroffen.gesperrt {
+        return false, name + " ist nicht gesperrt"
+    }
+    betrag := betroffen.guthaben
+    betroffen.guthaben = 0
+    blockAnhängen(k, fmt.Sprintf("%s vernichtet %d von %s", k.herausgeber, betrag, name))
+    return true, "vernichtet"
+}</pre>
+    <p>Die Funktion <code>anhalten</code> setzt <code>k.angehalten</code> auf <code>true</code>. Danach lehnt <code>überweisen</code> jede Überweisung ab. Auch sie prüft zuerst den Aufrufer.</p>
+    <div class="hinweis">Im Modell kann jeder Aufruf „Herausgeber“ als Aufrufer angeben. In einer echten Blockchain belegt eine digitale Signatur, wer eine Funktion aufruft. Fälschen lässt sie sich ohne den geheimen Schlüssel nicht.</div>
+
+    <h3>Der Herausgeber greift ein</h3>
+    <p>Die Demo setzt den Stand aus Schritt 5 fort. Wähle, wer aufruft und welches Konto betroffen ist.</p>
+    <div class="zeile"><span class="etikett">Wer ruft auf?</span><span class="zeile" id="s-aufrufer"></span></div>
+    <div class="zeile"><span class="etikett">Welches Konto?</span><span class="zeile" id="s-konto"></span></div>
+    <div class="zeile"><span class="etikett">Aufruf</span>
+      <button type="button" class="haupt" data-tu="sperren">sperren</button>
+      <button type="button" class="haupt" data-tu="vernichten">vernichten</button>
+      <button type="button" class="haupt" data-tu="anhalten">anhalten</button>
+    </div>
+    <div class="zeile"><span class="etikett">Zum Ausprobieren</span>
+      <button type="button" data-tu="ueberweisen">überweisen: Konto an Charlie, 10</button>
+      <button type="button" id="s-vorn">von vorn</button>
+    </div>
+    <div class="auskunft" id="s-urteil"></div>
+    <div id="s-zustand"></div>
+
+    <h3>Was das Programm zeigt</h3>
+    <p>Die Kette ist technisch in Ordnung, jede Prüfung in <code>ketteGültig</code> geht durch. Trotzdem entscheidet eine einzige Stelle, wer zahlen darf und wessen Guthaben verschwindet. Die Kette macht diese Eingriffe nur sichtbar. Genau solche Funktionen stehen im Vertrag des Stablecoins USDT von Tether. Ihn liest die Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</p>
+
+    <h3>Das ganze Programm</h3>
+    <p>Die Datei <a href="go/blockchain.go">blockchain.go</a> enthält alle Funktionen dieser Lektion und ein <code>main</code>, das die Schritte 5 und 6 durchspielt. Am Ende ändert es den Eintrag in Block 2 und prüft die Kette. Die Ausgabe mit Go 1.26:</p>
+    <div class="konsole" id="p-ausgabe">Herausgeber gibt Alice 100             true  ausgegeben
+Herausgeber gibt Bob 30                true  ausgegeben
+Alice überweist Bob 25                 true  gebucht
+Bob überweist Charlie 10               true  gebucht
+Charlie überweist Alice 50             false das Guthaben reicht nicht
+  Alice      75  gesperrt: false
+  Bob        45  gesperrt: false
+  Charlie    10  gesperrt: false
+Bob sperrt Alice                       false das darf nur der Herausgeber
+Herausgeber sperrt Alice               true  gesperrt
+Alice überweist Charlie 5              false Alice ist gesperrt
+Herausgeber vernichtet Alices Guthaben true  vernichtet
+Herausgeber hält die Kette an          true  angehalten
+Bob überweist Charlie 5                false die Kette ist angehalten
+  Alice       0  gesperrt: true
+  Bob        45  gesperrt: false
+  Charlie    10  gesperrt: false
+
+  Block 6  vorgängerHash 620710fb  hash 14f136c9  Herausgeber hält die Kette an
+  Block 5  vorgängerHash 71c3e938  hash 620710fb  Herausgeber vernichtet 75 von Alice
+  Block 4  vorgängerHash 13892aec  hash 71c3e938  Herausgeber sperrt Alice
+  Block 3  vorgängerHash bfd83c2e  hash 13892aec  Bob an Charlie: 10
+  Block 2  vorgängerHash 2b2ae705  hash bfd83c2e  Alice an Bob: 25
+  Block 1  vorgängerHash f34cbfc8  hash 2b2ae705  Herausgeber an Bob: 30
+  Block 0  vorgängerHash 00000000  hash f34cbfc8  Herausgeber an Alice: 100
+Kette gültig: true
+Block 2 geändert, Kette gültig: false</div>
+
+    <h3>Zum Weiterdenken</h3>
+    <p>Zu diesen Aufgaben gibt es hier keine Lösung.</p>
+    <ul>
+      <li><strong>Entsperren:</strong> Schreibe eine Funktion <code>entsperren</code>. Sie soll wie <code>sperren</code> den Aufrufer prüfen und einen Block anhängen.</li>
+      <li><strong>Ein viertes Konto:</strong> Dora soll ein Konto bekommen. Welche Zeilen des Programms musst du ändern?</li>
+      <li><strong>Nachrechnen:</strong> Ändere in <code>main</code> den Eintrag in Block 2 und berechne danach die Hashwerte von Block 2 bis zum Kopf neu. Was gibt <code>ketteGültig</code> jetzt aus, und woran merkt ein anderer Rechner die Fälschung trotzdem?</li>
+    </ul>
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Abschluss:</strong> Die Lektion <a href="../exkurse/exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a> führt von diesem Modell zu Bitcoin, Ethereum und dem Vertrag von USDT.</li>
+      <li><strong>Abschnitt 9.3:</strong> Die Lektion <a href="go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
+    </ul>
+    <p class="quelle">Die Funktionen und das Programm sind eigene Beispiele, geprüft mit Go 1.26.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#hash
+  const ANKER = ['worum', 'zug', 'hash', 'kette', 'guthaben', 'ueberweisen', 'sperren'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der umgedrehte Güterzug', 'Schritt 2: Der Fingerabdruck', 'Schritt 3: Hash statt Zeiger', 'Schritt 4: Guthaben ohne Vorzeichen', 'Schritt 5: Überweisen', 'Schritt 6: Wer darf sperren?'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Hashfunktion FNV-1a mit 32 Bit, wie in Go ----------
+  const UTF8 = new TextEncoder();
+  function fnv(text) { let h = 2166136261; UTF8.encode(text).forEach(b => { h = (h ^ b) >>> 0; h = Math.imul(h, 16777619) >>> 0; }); return h; }
+  const hex8 = h => h.toString(16).padStart(8, '0');
+  const fingerabdruck = b => fnv(b.nummer + '|' + b.eintrag + '|' + hex8(b.vh));
+
+  // ---------- Schritt 1: Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen { z, satz, rahmen, k (Kette) }. rahmen: Liste von { name, vars } oder { titel, vars }.
+  const FELDER = (namen, werte) => ({ f: namen.map((n, i) => [n, werte[i]]) });
+  const istVerbund = w => w !== null && typeof w === 'object' && w.f;
+  const V = (n, w, neu, m) => ({ n: n, w: w, neu: !!neu, m: m });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const FREI = (titel, vars) => ({ titel: titel, vars: vars || [] });
+  const wertText = v => istVerbund(v.w) ? '{' + v.w.f.map(p => p[0] + ': ' + p[1]).join(', ') + '}' : String(v.w);
+  const rahmenText = rahmen => rahmen.map(r => (r.titel ? r.titel : 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v)).join(', ') : 'keine Variable')).join('. ') + '.';
+  function kette(k) {
+    const weg = []; let a = k.kopf;
+    while (a) { weg.push(a); a = k.E[a].n; }
+    return '<div class="kette"><span class="wagen kopf">kopf<small>' + (k.kopf ? 'enthält ' + k.kopf : 'nil') + '</small></span>' +
+      weg.map(a => '<span class="pfeil">→</span><span class="wagen' + (a === k.neu ? ' neu' : '') + '">' + k.E[a].w + '<small>ab Zelle ' + a + '</small></span>').join('') + '<span class="pfeil">→ nil</span></div>';
+  }
+  function ketteText(k) {
+    const weg = []; let a = k.kopf;
+    while (a) { weg.push(a); a = k.E[a].n; }
+    return 'Die Kette im Bild, wie die Liste in Listing 9.1: vorn kopf, dann der neueste Block. Jeder Pfeil ist ein Zeiger vorgänger. Je Block die Nummer und in Klammern die Anfangsadresse: kopf → ' + weg.map(a => k.E[a].w + ' (' + a + ')').join(' → ') + (weg.length ? ' → ' : '') + 'nil.';
+  }
+  const DZ = (function () {
+    const zeilen = ['k := &blockkette{}', 'blockAnhängen(k)', 'blockAnhängen(k)', 'blockAnhängen(k)', 'blockAnhängen(k)'];
+    const E = {}; let kopf = null;
+    const ADR = a => a ? 'Adresse ' + a : 'nil';
+    const bild = (neu, m) => [R('main', [V('k', 'Adresse 120', neu === 120)]), FREI('Anonyme Variablen, erzeugt mit &', [V('Kette ab 120', FELDER(['kopf'], [ADR(kopf)]), neu === 120, m ? [0] : undefined)].concat(Object.keys(E).map(Number).map(a => V('Block ab ' + a, FELDER(['nummer', 'vorgänger'], [E[a].nr, ADR(E[a].n)]), a === neu, a === neu ? [0, 1] : undefined))))];
+    const speicher = () => [{ adr: 100, n: 8, name: 'k in main', typ: '*blockkette', was: '120', ziel: 120 }, { adr: 120, n: 8, name: 'ohne Namen', typ: 'blockkette', was: '{kopf: ' + (kopf || 'nil') + '}' }]
+      .concat(Object.keys(E).map(Number).map(a => ({ adr: a, n: 16, name: 'ohne Namen', typ: 'block', was: '{nummer: ' + E[a].nr + ', vorgänger: ' + (E[a].n || 'nil') + '}' })));
+    const kopieE = () => { const K = {}; Object.keys(E).forEach(a => { K[a] = { w: E[a].w, n: E[a].n, nr: E[a].nr }; }); return K; };
+    const lauf = [{ z: 1, satz: 'k zeigt auf einen Verbund vom Typ blockkette ab Zelle 120. Sein Feld kopf ist nil: Die Kette ist leer.', k: { kopf: null, E: {} }, rahmen: bild(120), sp: speicher() }];
+    [200, 216, 232, 248].forEach((adr, i) => {
+      const alt = kopf;
+      E[adr] = { w: 'Block ' + i, n: alt, nr: i }; kopf = adr;
+      const satz = alt === null ?
+        'Die Kette ist leer, kopf ist nil. Der neue Block entsteht ab Zelle 200 und behält die Nummer 0. Sein Feld vorgänger bekommt den alten Wert von kopf, also nil. Dann bekommt kopf die Adresse 200. Block 0 ist der Genesis-Block.' :
+        'kopf zeigt auf Block ' + (i - 1) + ' ab Zelle ' + alt + '. Der neue Block entsteht ab Zelle ' + adr + ' und bekommt die Nummer ' + (i - 1) + ' + 1 = ' + i + '. Sein Feld vorgänger bekommt die Adresse ' + alt + ' aus kopf, dann bekommt kopf die Adresse ' + adr + '. Block ' + i + ' zeigt auf den älteren Block ' + (i - 1) + '.';
+      lauf.push({ z: i + 2, satz: satz, k: { kopf: kopf, E: kopieE(), neu: adr }, rahmen: bild(adr, true), sp: speicher(), neu: adr });
+    });
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: 'Noch ist keine Anweisung ausgeführt. In main stehen die fünf Zeilen.' };
+    D.zeichne = function () {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el('z-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el('z-bild').innerHTML = '<div style="flex-basis:100%">' + kette(z ? z.k : { kopf: null, E: {} }) + '</div>' + (z ? z.rahmen : [R('main')]).map(r =>
+        '<div class="rahmen' + (r.titel ? ' frei' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name)) + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (istVerbund(v.w) ? '<span class="verbund">' + v.w.f.map((p, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + '"><i>' + esc(p[0]) + '</i><b>' + esc(p[1]) + '</b></span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">noch keine Variable</div>') + '</div>').join('');
+      el('z-speicher').innerHTML = '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' + (z ? z.sp.map(b => '<div class="block' + (b.ziel ? ' zeiger' : '') + (b.adr === z.neu ? ' neu' : '') + '"><div class="adr">Zellen ' + b.adr + ' bis ' + (b.adr + b.n - 1) + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + '</i></div><div class="was">' + esc(b.was) + '</div>' + (b.ziel ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') : '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      el('z-urteil').innerHTML = '<p>' + esc(z ? z.satz : D.anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el('z-weiter').disabled = D.stand === lauf.length;
+      el('z-zurueck').disabled = D.stand === 0;
+      melde(false);
+    };
+    el('z-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; D.zeichne(); } });
+    el('z-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; D.zeichne(); } });
+    el('z-vorn').addEventListener('click', () => { D.stand = 0; D.zeichne(); });
+    D.standSaetze = function () {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      return [
+        z ? 'Ausgeführt sind ' + D.stand + ' von ' + lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + zeilen[z.z - 1] : 'Noch ist keine Anweisung der Demo ausgeführt.',
+        'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+        ketteText(z ? z.k : { kopf: null, E: {} }),
+        z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+        z ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + z.sp.map(b => 'Zellen ' + b.adr + ' bis ' + (b.adr + b.n - 1) + ': ' + b.name + ', Typ ' + b.typ + ', Inhalt ' + b.was).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.',
+        D.stand === lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + zeilen[lauf[D.stand].z - 1],
+        'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+      ];
+    };
+    D.zeilenMitStand = () => zeilen.map((t, i) => (i + 1) + '  ' + t + (D.stand && lauf[D.stand - 1].z === i + 1 ? '   // hier steht der Lauf' : ''));
+    return D;
+  })();
+
+  // ---------- Schritt 2: die Rechnung der Hashfunktion ----------
+  const VORLAGEN = ['Alice an Bob: 25', 'Alice an Bob: 5', 'alice an Bob: 25', 'Hallo', 'Grüße', 'Alice an Bob: 9403879403'];
+  let hText = VORLAGEN[0];
+  const HZ = { ergebnis: 0, runden: [], bytes: 0, gekuerzt: false };
+  function zeichneHash() {
+    let text = hText;
+    const bytes = UTF8.encode(text);
+    // Welches Zeichen gehört zu welchem Byte?
+    const zu = [];
+    Array.from(text).forEach(ch => { const n = UTF8.encode(ch).length; for (let j = 0; j < n; j++) zu.push(n === 1 ? ch : (j === 0 ? 'erstes' : j === 1 ? 'zweites' : j === 2 ? 'drittes' : 'viertes') + ' Byte von „' + ch + '“'); });
+    let h = 2166136261; const runden = [];
+    bytes.forEach((b, i) => {
+      const x = (h ^ b) >>> 0;
+      const voll = BigInt(x) * 16777619n;
+      const neu = Math.imul(x, 16777619) >>> 0;
+      runden.push({ i: i, b: b, zeichen: zu[i], x: x, voll: voll, neu: neu });
+      h = neu;
+    });
+    HZ.ergebnis = h; HZ.runden = runden; HZ.bytes = bytes.length;
+    el('h-wahl').innerHTML = VORLAGEN.map(v => '<button type="button" class="code' + (v === hText ? ' gewaehlt' : '') + '" data-v="' + esc(v) + '">' + esc(v) + '</button>').join('');
+    if (el('h-eingabe').value !== hText) el('h-eingabe').value = hText;
+    el('h-urteil').innerHTML = '<p>Der Text hat ' + bytes.length + ' Bytes. Sein Hashwert: <span class="ergebnis">' + hex8(h) + '</span>, dezimal ' + h + '.</p>' +
+      (bytes.length === 0 ? '<p>Ohne Byte läuft die Schleife nicht. Der Hashwert ist der Startwert.</p>' : '');
+    el('h-tabelle').innerHTML = '<thead><tr><th>i</th><th>Byte</th><th>h nach XOR</th><th>Produkt ohne Grenze</th><th>h neu</th></tr></thead><tbody>' +
+      '<tr><td></td><td class="zeichen">Startwert</td><td></td><td></td><td>' + hex8(2166136261) + '</td></tr>' +
+      runden.map(r => '<tr><td>' + r.i + '</td><td class="zeichen">' + r.b + ' (' + esc(r.zeichen) + ')</td><td>' + hex8(r.x) + '</td><td>' + r.voll.toString() + '</td><td>' + hex8(r.neu) + '</td></tr>').join('') + '</tbody>';
+    melde(false);
+  }
+  el('h-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { hText = k.dataset.v; zeichneHash(); } });
+  el('h-eingabe').addEventListener('input', () => { hText = el('h-eingabe').value; while (UTF8.encode(hText).length > 40) hText = Array.from(hText).slice(0, -1).join(''); zeichneHash(); });
+  function standHash() {
+    const r = HZ.runden;
+    return ['Der Text im Eingabefeld: „' + hText + '“, ' + HZ.bytes + ' Bytes. Der Student kann eine der sechs Vorlagen wählen oder selbst einen Text mit höchstens 40 Bytes eingeben.',
+      'Der Hashwert, hexadezimal wie mit %08x: ' + hex8(HZ.ergebnis) + ', dezimal ' + HZ.ergebnis + '.',
+      'Die Tabelle zeigt je Runde der Schleife: i, das Byte text[i] mit seinem Zeichen, h nach XOR, das Produkt mit 16777619 ohne Überlauf als Dezimalzahl und h nach dem Überlauf, also die unteren 32 Bit. Der Startwert ist 811c9dc5, dezimal 2166136261.',
+      r.length ? 'Die Runden: ' + r.map(x => 'i=' + x.i + ': Byte ' + x.b + ' (' + x.zeichen + '), nach XOR ' + hex8(x.x) + ', Produkt ' + x.voll.toString() + ', nach dem Überlauf ' + hex8(x.neu)).join(' ; ') + '.' : 'Ohne Byte gibt es keine Runde.',
+      'Zum Vergleich, mit Go geprüft: „Alice an Bob: 25“ hat 4e3c6e66, „Alice an Bob: 5“ hat cd11eb3e, „Hallo“ hat 9f02b107. „Alice an Bob: 9403879403“ hat ebenfalls 4e3c6e66: Zwei verschiedene Texte haben den gleichen Hashwert. Ein Go-Programm hat diesen Text in knapp zehn Minuten durch Probieren gefunden.'];
+  }
+
+  // ---------- Schritt 3: Fälschen ----------
+  const EINTRAEGE = ['Herausgeber an Alice: 100', 'Herausgeber an Bob: 30', 'Alice an Bob: 25', 'Bob an Charlie: 10'];
+  const ADRESSEN = [200, 248, 296, 344];
+  function echteKette(eintraege) {
+    const B = []; let vh = 0;
+    eintraege.forEach((e, i) => { const b = { nummer: i, eintrag: e, vh: vh }; b.h = fingerabdruck(b); B.push(b); vh = b.h; });
+    return B;
+  }
+  const ECHT = echteKette(EINTRAEGE);
+  const FSTUFEN = [
+    { code: 'Kette unverändert', satz: 'Die Kette ist so, wie die Blöcke entstanden sind.' },
+    { code: 'Eintrag in Block 2 geändert', satz: 'Alice ändert in Block 2 den Eintrag in „Alice an Bob: 5“. Die Hashwerte lässt sie stehen.' },
+    { code: 'dazu hash von Block 2 neu berechnet', satz: 'Alice ändert den Eintrag und berechnet den Hashwert von Block 2 neu.' },
+    { code: 'dazu Block 3 neu berechnet', satz: 'Alice ändert den Eintrag, berechnet den Hashwert von Block 2 neu und trägt ihn in Block 3 ein. Dann berechnet sie auch den Hashwert von Block 3 neu.' }
+  ];
+  let fStufe = 0;
+  function gefaelscht(s) {
+    const B = ECHT.map(b => Object.assign({ geaendert: [] }, b));
+    if (s >= 1) { B[2].eintrag = 'Alice an Bob: 5'; B[2].geaendert.push('eintrag'); }
+    if (s >= 2) { B[2].h = fingerabdruck(B[2]); B[2].geaendert.push('hash'); }
+    if (s >= 3) { B[3].vh = B[2].h; B[3].h = fingerabdruck(B[3]); B[3].geaendert.push('vorgängerHash', 'hash'); }
+    return B;
+  }
+  // wie ketteGültig: vom Kopf zum ersten Block, die erste Abweichung beendet die Prüfung
+  function pruefe(B) {
+    for (let i = B.length - 1; i >= 0; i--) {
+      const b = B[i];
+      if (b.h !== fingerabdruck(b)) return { ok: false, block: i, feld: 'hash', satz: 'ketteGültig gibt false zurück. Die erste Abweichung, vom Kopf aus gesucht, ist Block ' + i + ': In hash steht ' + hex8(b.h) + ', fingerabdruck(b) ergibt aber ' + hex8(fingerabdruck(b)) + '. Der Hashwert passt nicht zum Inhalt.' };
+      if (i > 0 && b.vh !== B[i - 1].h) return { ok: false, block: i, feld: 'vorgängerHash', satz: 'ketteGültig gibt false zurück. Die erste Abweichung, vom Kopf aus gesucht, ist Block ' + i + ': In vorgängerHash steht ' + hex8(b.vh) + ', der Vorgänger hat aber den Hashwert ' + hex8(B[i - 1].h) + '.' };
+    }
+    return { ok: true, satz: 'ketteGültig gibt true zurück. Jeder Block passt zu seinem Inhalt und zu seinem Vorgänger.' };
+  }
+  function karten(B, markeFalsch, neuIndex, kurzform) {
+    return '<div class="karten"><span class="karte kopfmarke">kopf</span>' + B.slice().reverse().map(b => {
+      const i = b.nummer, falsch = markeFalsch && markeFalsch.block === i ? markeFalsch.feld : '';
+      const kl = f => (b.geaendert && b.geaendert.indexOf(f) >= 0 ? 'geaendert' : '') + (falsch === f ? ' falsch' : '');
+      return '<div class="karte' + (falsch ? ' schlecht' : '') + (i === neuIndex ? ' neu' : '') + '"><h4>Block ' + i + '</h4>' +
+        '<div class="' + kl('eintrag') + '">' + esc(b.eintrag) + '</div>' +
+        '<div class="' + kl('hash') + '"><i>hash</i> ' + hex8(b.h) + '</div>' +
+        (kurzform ? '' : '<div class="' + kl('vorgängerHash') + '"><i>vorgängerHash</i> ' + hex8(b.vh) + '</div><div><i>' + (i ? '= hash von Block ' + (i - 1) + ', rechts daneben' : 'kein Vorgänger') + '</i></div>') +
+        '</div>';
+    }).map(k => '<span class="pfeil">→</span>' + k).join('') + '<span class="pfeil">→ nil</span></div>';
+  }
+  function zeichneFaelschen() {
+    el('f-wahl').innerHTML = FSTUFEN.map((s, k) => '<button type="button" class="code' + (k === fStufe ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(s.code) + '</button>').join('');
+    const B = gefaelscht(fStufe), p = pruefe(B);
+    el('f-kette').innerHTML = karten(B, p.ok ? null : p, -1, false);
+    const kopfAnders = B[3].h !== ECHT[3].h;
+    el('f-urteil').className = 'auskunft' + (p.ok && !kopfAnders ? '' : ' fehler');
+    el('f-urteil').innerHTML = '<p>' + esc(FSTUFEN[fStufe].satz) + '</p><p>' + esc(p.satz) + '</p>' +
+      (p.ok && kopfAnders ? '<p>Auf diesem Rechner ist die Kette in sich stimmig. Die anderen Rechner haben aber eine Kopie, deren Kopf den Hashwert ' + hex8(ECHT[3].h) + ' trägt. Hier steht ' + hex8(B[3].h) + '. Die anderen Rechner übernehmen die gefälschte Kette nicht.</p>' : '');
+    melde(false);
+  }
+  el('f-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { fStufe = Number(k.dataset.i); zeichneFaelschen(); } });
+  function standFaelschen() {
+    const B = gefaelscht(fStufe), p = pruefe(B);
+    return ['Gewählt ist die Stufe ' + (fStufe + 1) + ' von 4: ' + FSTUFEN[fStufe].code + '. Die vier Stufen: Kette unverändert; Eintrag in Block 2 geändert; dazu hash von Block 2 neu berechnet; dazu Block 3 neu berechnet.',
+      'Die Seite sagt dazu: ' + FSTUFEN[fStufe].satz,
+      'Die Kette als Karten, vorn kopf, dann der neueste Block, jeder Pfeil ist ein Zeiger auf den Vorgänger, unter vorgängerHash steht, dass der Wert vom Block rechts daneben stammt: ' + B.slice().reverse().map(b => 'Block ' + b.nummer + ' {eintrag: „' + b.eintrag + '“, vorgängerHash: ' + hex8(b.vh) + ', hash: ' + hex8(b.h) + '}' + (b.geaendert.length ? ', geändert und gelb: ' + b.geaendert.join(' und ') : '')).join(' ; ') + '. Adressen zeigen die Karten nicht.',
+      'Die Seite sagt zur Prüfung: ' + p.satz + (p.ok ? '' : ' Das Feld ' + p.feld + ' von Block ' + p.block + ' ist rot.'),
+      p.ok && B[3].h !== ECHT[3].h ? 'Die Seite sagt außerdem: Die anderen Rechner haben eine Kopie, deren Kopf den Hashwert ' + hex8(ECHT[3].h) + ' trägt. Hier steht ' + hex8(B[3].h) + '. Die anderen Rechner übernehmen die gefälschte Kette nicht.' : '',
+      'Die ungefälschte Kette, mit Go geprüft: Block 0 hash f34cbfc8, Block 1 hash 2b2ae705, Block 2 hash bfd83c2e, Block 3 hash 13892aec.',
+      'Handgriff: eine der vier Stufen wählen. Einen eigenen Eintrag kann der Student nicht eingeben.'].filter(Boolean);
+  }
+
+  // ---------- Schritt 4: Abziehen mit und ohne Prüfung ----------
+  const BETRAEGE4 = [25, 75, 76, 100];
+  let g = 0;
+  const MOD64 = 1n << 64n;
+  function zeichneGuthaben() {
+    const b = BETRAEGE4[g], ohne = ((75n - BigInt(b)) % MOD64 + MOD64) % MOD64;
+    el('g-wahl').innerHTML = BETRAEGE4.map((x, k) => '<button type="button" class="code' + (k === g ? ' gewaehlt' : '') + '" data-i="' + k + '">betrag = ' + x + '</button>').join('');
+    el('g-ohne').textContent = 'guthaben = guthaben - betrag' + NL + 'guthaben: ' + ohne.toString();
+    el('g-mit').textContent = b > 75 ? 'betrag > guthaben ist true' + NL + 'Rückgabe: false, das Guthaben reicht nicht' + NL + 'guthaben: 75' : 'betrag > guthaben ist false' + NL + 'guthaben = guthaben - betrag' + NL + 'guthaben: ' + (75 - b);
+    const zuviel = b > 75;
+    el('g-urteil').className = 'auskunft' + (zuviel ? ' fehler' : '');
+    el('g-urteil').innerHTML = '<p>' + esc(zuviel ? 'Ohne Prüfung läuft die Subtraktion über: 75 − ' + b + ' ergäbe −' + (b - 75) + '. Im Typ uint64 steht stattdessen 2^64 − ' + (b - 75) + ' = ' + ohne.toString() + '. Go meldet nichts. Mit Prüfung lehnt die Funktion ab, und das Guthaben bleibt 75.' : 'Der Betrag ist nicht größer als das Guthaben. Beide Fassungen ziehen ab, das Guthaben ist danach ' + (75 - b) + '.') + '</p>';
+    melde(false);
+  }
+  el('g-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { g = Number(k.dataset.i); zeichneGuthaben(); } });
+  function standGuthaben() {
+    const b = BETRAEGE4[g], ohne = ((75n - BigInt(b)) % MOD64 + MOD64) % MOD64;
+    return ['Alice hat 75 Coins im Typ uint64. Gewählt ist betrag = ' + b + '. Wählbar sind 25, 75, 76 und 100.',
+      'Ohne Prüfung: guthaben = guthaben - betrag ergibt ' + ohne.toString() + '.',
+      b > 75 ? 'Mit Prüfung: betrag > guthaben ist true. Die Funktion gibt false und „das Guthaben reicht nicht“ zurück, das Guthaben bleibt 75.' : 'Mit Prüfung: betrag > guthaben ist false. Die Funktion zieht ab, das Guthaben ist danach ' + (75 - b) + '.',
+      'Die größte Zahl des Typs uint64 ist 2^64 − 1 = 18446744073709551615. Mit Go geprüft: 75 − 76 ergibt 18446744073709551615, 75 − 100 ergibt 18446744073709551591.'];
+  }
+
+  // ---------- Schritt 5 und 6: der Simulator ----------
+  // Er rechnet wie die Funktionen in blockchain.go. Beide Schritte teilen sich seinen Stand.
+  const NAMEN = ['Alice', 'Bob', 'Charlie'];
+  const UEBERWEISEN = ['func überweisen(k *blockkette, von string, an string, betrag uint64) (bool, string) {', '    sender := kontoSuchen(k, von)', '    empfänger := kontoSuchen(k, an)', '    if sender == nil || empfänger == nil {', '        return false, "unbekanntes Konto"', '    }', '    if k.angehalten {', '        return false, "die Kette ist angehalten"', '    }', '    if sender.gesperrt {', '        return false, von + " ist gesperrt"', '    }', '    if empfänger.gesperrt {', '        return false, an + " ist gesperrt"', '    }', '    if betrag > sender.guthaben {', '        return false, "das Guthaben reicht nicht"', '    }', '    sender.guthaben = sender.guthaben - betrag', '    empfänger.guthaben = empfänger.guthaben + betrag', '    blockAnhängen(k, fmt.Sprintf("%s an %s: %d", von, an, betrag))', '    return true, "gebucht"', '}'];
+  let S;
+  function simVonVorn() {
+    S = { konten: [{ name: 'Alice', guthaben: 75, gesperrt: false }, { name: 'Bob', guthaben: 45, gesperrt: false }, { name: 'Charlie', guthaben: 10, gesperrt: false }],
+      angehalten: false, bloecke: echteKette(EINTRAEGE).map(b => Object.assign({ geaendert: [] }, b)), verlauf: [], letzte: null, zeile: 0 };
+  }
+  simVonVorn();
+  const konto = n => S.konten.find(k => k.name === n);
+  function anhaengen(eintrag) { const kopf = S.bloecke[S.bloecke.length - 1]; const b = { nummer: kopf.nummer + 1, eintrag: eintrag, vh: kopf.h, geaendert: [] }; b.h = fingerabdruck(b); S.bloecke.push(b); }
+  function ueberweisen(von, an, betrag) {
+    const s = konto(von), e = konto(an);
+    if (S.angehalten) return { ok: false, m: 'die Kette ist angehalten', z: 8 };
+    if (s.gesperrt) return { ok: false, m: von + ' ist gesperrt', z: 11 };
+    if (e.gesperrt) return { ok: false, m: an + ' ist gesperrt', z: 14 };
+    if (betrag > s.guthaben) return { ok: false, m: 'das Guthaben reicht nicht', z: 17 };
+    s.guthaben -= betrag; e.guthaben += betrag;
+    anhaengen(von + ' an ' + an + ': ' + betrag);
+    return { ok: true, m: 'gebucht', z: 22 };
+  }
+  function herausgeberTut(was, aufrufer, name) {
+    if (aufrufer !== 'Herausgeber') return { ok: false, m: 'das darf nur der Herausgeber' };
+    if (was === 'anhalten') { S.angehalten = true; anhaengen('Herausgeber hält die Kette an'); return { ok: true, m: 'angehalten' }; }
+    const k = konto(name);
+    if (was === 'sperren') { k.gesperrt = true; anhaengen('Herausgeber sperrt ' + name); return { ok: true, m: 'gesperrt' }; }
+    if (!k.gesperrt) return { ok: false, m: name + ' ist nicht gesperrt' };
+    const betrag = k.guthaben; k.guthaben = 0;
+    anhaengen('Herausgeber vernichtet ' + betrag + ' von ' + name);
+    return { ok: true, m: 'vernichtet' };
+  }
+  const W = { von: 0, an: 1, betrag: 2, aufrufer: 0, konto: 0 };
+  const BETRAEGE5 = [5, 10, 25, 50, 100];
+  const AUFRUFER = ['Herausgeber', 'Alice', 'Bob', 'Charlie'];
+  const knoepfe = (id, liste, wahl) => { el(id).innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === wahl ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(x) + '</button>').join(''); };
+  function aktion(text, r) {
+    S.letzte = { text: text, ok: r.ok, m: r.m, gebucht: r.ok };
+    S.verlauf.push(text.padEnd(38) + ' ' + String(r.ok).padEnd(5) + ' ' + r.m);
+  }
+  function zustandHtml() {
+    const B = S.bloecke, n = B.length;
+    const zeige = B.slice(Math.max(0, n - 5));
+    const kartenHtml = '<div class="karten"><span class="karte kopfmarke">kopf</span>' + zeige.slice().reverse().map(b => '<span class="pfeil">→</span><div class="karte' + (S.letzte && S.letzte.gebucht && b === B[n - 1] ? ' neu' : '') + '"><h4>Block ' + b.nummer + '</h4><div>' + esc(b.eintrag) + '</div><div><i>hash</i> ' + hex8(b.h) + '</div></div>').join('') +
+      '<span class="pfeil">→ ' + (n > 5 ? (n - 5) + ' ältere Blöcke bis Block 0 → nil' : 'nil') + '</span></div>';
+    return '<p><strong>Konten</strong> · Kette: <span class="status' + (S.angehalten ? ' rot' : '') + '">' + (S.angehalten ? 'angehalten' : 'läuft') + '</span> · ketteGültig: ' + pruefe(B).ok + '</p>' +
+      '<div class="konten">' + S.konten.map(k => '<div class="konto' + (k.gesperrt ? ' gesperrt' : '') + '"><b>' + esc(k.name) + '</b><span>' + k.guthaben + '</span><small>' + (k.gesperrt ? 'gesperrt' : 'nicht gesperrt') + '</small></div>').join('') + '</div>' +
+      '<p><strong>Kette</strong>, die neuesten ' + zeige.length + ' von ' + n + ' Blöcken</p>' + kartenHtml +
+      '<p><strong>Verlauf</strong></p><div class="konsole">' + (S.verlauf.length ? esc(S.verlauf.join(NL)) : 'Noch kein Aufruf.') + '</div>';
+  }
+  function zeichneSim() {
+    knoepfe('u-von', NAMEN, W.von); knoepfe('u-an', NAMEN, W.an); knoepfe('u-betrag', BETRAEGE5.map(String), W.betrag);
+    knoepfe('s-aufrufer', AUFRUFER, W.aufrufer); knoepfe('s-konto', NAMEN, W.konto);
+    document.querySelector('[data-tu="ueberweisen"]').textContent = 'überweisen: ' + NAMEN[W.konto] + ' an ' + (W.konto === 2 ? 'Alice' : 'Charlie') + ', 10';
+    el('u-programm').innerHTML = UEBERWEISEN.map((t, k) => '<li class="' + (S.zeile === k + 1 ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+    const satz = S.letzte ? S.letzte.text + ': ' + S.letzte.ok + ', „' + S.letzte.m + '“.' + (S.letzte.gebucht ? ' Die Kette hat einen neuen Block bekommen.' : ' Es ist kein Block entstanden.') : 'Noch ist nichts aufgerufen. Wähle oben und klicke auf einen Aufruf.';
+    ['u', 's'].forEach(p => {
+      el(p + '-urteil').className = 'auskunft' + (S.letzte && !S.letzte.ok ? ' fehler' : '');
+      el(p + '-urteil').innerHTML = '<p>' + esc(satz) + '</p>';
+      el(p + '-zustand').innerHTML = zustandHtml();
+    });
+    melde(false);
+  }
+  [['u-von', 'von'], ['u-an', 'an'], ['u-betrag', 'betrag'], ['s-aufrufer', 'aufrufer'], ['s-konto', 'konto']].forEach(p => el(p[0]).addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W[p[1]] = Number(k.dataset.i); zeichneSim(); } }));
+  el('u-los').addEventListener('click', () => {
+    const von = NAMEN[W.von], an = NAMEN[W.an], betrag = BETRAEGE5[W.betrag], r = ueberweisen(von, an, betrag);
+    S.zeile = r.z; aktion('überweisen(k, "' + von + '", "' + an + '", ' + betrag + ')', r); zeichneSim();
+  });
+  document.querySelectorAll('[data-tu]').forEach(k => k.addEventListener('click', () => {
+    const was = k.dataset.tu, wer = AUFRUFER[W.aufrufer], name = NAMEN[W.konto];
+    if (was === 'ueberweisen') { const an = W.konto === 2 ? 'Alice' : 'Charlie'; const r = ueberweisen(name, an, 10); S.zeile = r.z; aktion('überweisen(k, "' + name + '", "' + an + '", 10)', r); }
+    else aktion(was + '(k, "' + wer + '"' + (was === 'anhalten' ? '' : ', "' + name + '"') + ')', herausgeberTut(was, wer, name));
+    zeichneSim();
+  }));
+  [el('u-vorn'), el('s-vorn')].forEach(k => k.addEventListener('click', () => { simVonVorn(); zeichneSim(); }));
+  function standSim() {
+    const B = S.bloecke;
+    return [
+      'Der Stand des Simulators gilt für Schritt 5 und Schritt 6 gemeinsam. Er rechnet wie die Funktionen in blockchain.go. Am Anfang stehen die vier Blöcke aus Schritt 3 in der Kette, Alice hat 75, Bob 45, Charlie 10.',
+      'Die Konten jetzt: ' + S.konten.map(k => k.name + ' ' + k.guthaben + (k.gesperrt ? ', gesperrt' : ', nicht gesperrt')).join(' ; ') + '. Die Kette ' + (S.angehalten ? 'ist angehalten.' : 'läuft.') + ' ketteGültig ergibt ' + pruefe(B).ok + '.',
+      'Die Kette hat ' + B.length + ' Blöcke. Im Bild steht vorn kopf, dann der neueste Block. Vom Kopf aus gelesen: ' + B.slice().reverse().map(b => 'Block ' + b.nummer + ' „' + b.eintrag + '“ hash ' + hex8(b.h)).join(' ; ') + '. Im Bild stehen höchstens die neuesten fünf.',
+      S.letzte ? 'Der letzte Aufruf: ' + S.letzte.text + ', Ergebnis ' + S.letzte.ok + ', „' + S.letzte.m + '“. ' + (S.letzte.gebucht ? 'Dabei ist ein neuer Block entstanden.' : 'Dabei ist kein Block entstanden.') : 'Noch ist nichts aufgerufen.',
+      S.verlauf.length ? 'Der Verlauf aller Aufrufe: ' + S.verlauf.map(z => z.replace(/ +/g, ' ')).join(' | ') : ''
+    ].filter(Boolean);
+  }
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    if (stufe === 1) return DZ.standSaetze();
+    if (stufe === 2) return standHash();
+    if (stufe === 3) return standFaelschen();
+    if (stufe === 4) return standGuthaben();
+    if (stufe === 5) return ['Gewählt sind: von ' + NAMEN[W.von] + ', an ' + NAMEN[W.an] + ', Betrag ' + BETRAEGE5[W.betrag] + '. Wählbar sind die Konten Alice, Bob und Charlie und die Beträge 5, 10, 25, 50 und 100. Der Knopf „überweisen“ ruft überweisen auf, „von vorn“ setzt den Simulator zurück.',
+      S.zeile ? 'Im Programm überweisen ist Zeile ' + S.zeile + ' hervorgehoben, mit ihr hat der letzte Aufruf geendet: ' + UEBERWEISEN[S.zeile - 1].trim() : 'Im Programm überweisen ist noch keine Zeile hervorgehoben.'].concat(standSim());
+    return ['Gewählt sind: Aufrufer ' + AUFRUFER[W.aufrufer] + ', Konto ' + NAMEN[W.konto] + '. Wählbar sind als Aufrufer Herausgeber, Alice, Bob und Charlie, als Konto Alice, Bob und Charlie.',
+      'Die Knöpfe „sperren“, „vernichten“ und „anhalten“ rufen die Funktion mit dem gewählten Aufrufer auf. Der Knopf „überweisen“ überweist 10 Coins vom gewählten Konto an Charlie, bei Charlie an Alice. „von vorn“ setzt den Simulator zurück. Eine Funktion zum Entsperren oder Freigeben gibt es im Programm nicht.'].concat(standSim());
+  }
+  const kurzStand = () => stufe === 1 ? (DZ.stand ? 'Schritt ' + DZ.stand + ' von ' + DZ.lauf.length : 'nichts ausgeführt') : stufe === 2 ? '„' + hText + '“ → ' + hex8(HZ.ergebnis) : stufe === 3 ? FSTUFEN[fStufe].code : stufe === 4 ? '75 − ' + BETRAEGE4[g] : stufe === 5 || stufe === 6 ? S.konten.map(k => k.name + ' ' + k.guthaben + (k.gesperrt ? ' gesperrt' : '')).join(', ') : '';
+  const programmZeilen = () => stufe === 1 ? DZ.zeilenMitStand() : stufe === 5 ? UEBERWEISEN.map((t, i) => (i + 1) + '  ' + t + (S.zeile === i + 1 ? '   // hier hat der letzte Aufruf geendet' : '')) : [];
+
+  DZ.zeichne(); zeichneHash(); zeichneFaelschen(); zeichneGuthaben(); zeichneSim();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Vertiefung: Blockchain in Go',
+    thema: 'Blockchain, verkettete Liste, Hashfunktion, Hashwert, Fingerabdruck, uint32, Überlauf, XOR, uint64, Guthaben, Überweisung, Sperre',
+    bezug: 'Exkurs zu Kapitel 9. Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–236; Abschnitt 4.3.6, Seiten 66–68; Abschnitt 4.3.8, Seiten 78–84',
+    beschreibung: '../kurslotse/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text, pre.code-block, .nebeneinander > div > p',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum fällt die Fälschung in Block 2 auf?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
