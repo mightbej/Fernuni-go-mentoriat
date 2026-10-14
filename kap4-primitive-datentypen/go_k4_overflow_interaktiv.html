@@ -19,7 +19,6 @@
     input[type=number], select { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;background:#fff; }
     input[type=number] { width:6.5em; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -49,6 +48,7 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -67,6 +67,7 @@
     <button type="button" class="tab" data-stufe="3">3 Mit Vorzeichen</button>
     <button type="button" class="tab" data-stufe="4">4 Teilausdrücke</button>
     <button type="button" class="tab" data-stufe="5">5 Was man dagegen tut</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -96,7 +97,6 @@ fmt.Println(f + 80)    // 24</pre>
       <li><strong>Schritt 5, was man dagegen tut:</strong> Der passende Typ und eine Prüfung vor der Rechnung.</li>
     </ul>
     <div class="hinweis">Die Seite rechnet wie der Kurstext mit den Typen <code>uint8</code> und <code>int8</code>. Sie sind so klein, dass man jeden Überlauf nachrechnen kann. In einem echten Programm steht meist <code>int</code>. Alle Programmzeilen der Seite sind mit Go 1.26 ausgeführt.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–79.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -132,7 +132,6 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
     </div>
     <pre class="code-block" id="f-code"></pre>
     <div class="auskunft" id="f-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 78–79. Die vier Zeilen und die Meldung des Compilers stammen aus dem Kurstext. Die Werte 100, 175, 176 und 255 sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -192,7 +191,6 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
 
     <h3>Ein Überlauf mit Absicht</h3>
     <p>Bei den Typen ohne Vorzeichen legt Go dieses Verhalten fest, und man darf sich darauf verlassen. Manche Programme nutzen es: Eine Hash-Funktion zum Beispiel soll immer einen Wert von 0 bis 2<sup>n</sup> − 1 liefern und rechnet deshalb absichtlich modulo 2<sup>n</sup>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 79–80. Die drei Rechnungen 255 + 1, 130 + 140 und 255 + 255 stammen aus dem Kurstext. In der Fußnote 25 des Kurstexts wird 3 − 5 vom Überlauf unterschieden: Dort fehlt dem Typ der negative Wert, hier fehlen ihm Bits. Go rechnet in beiden Fällen modulo 256.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -252,7 +250,6 @@ f = 200 + 80           // Go übersetzt die Zeile nicht</pre>
     <pre class="code-block" id="code-i"></pre>
     <table class="rechnung" id="rechnung-i"></table>
     <div class="auskunft" id="urteil-i"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 80–81. Die sechs Rechnungen stammen aus dem Kurstext. Dort steht rechts ein Literal, zum Beispiel <code>iA + 1</code>. Die Demo rechnet mit zwei Variablen, das Ergebnis ist das gleiche.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -291,7 +288,6 @@ fmt.Println((x+20)/2, "vs.", x/2+20/2)    // -58 vs. 70</pre>
     <p>Das vierte Paar der Demo zeigt einen besonders tückischen Fall. <code>x+20-40</code> liefert 100, und das ist richtig. Trotzdem ist unterwegs zweimal etwas übergelaufen: <code>x+20</code> ergibt −116 statt 140, und <code>-116 - 40</code> ergibt 100 statt −156. Der erste Überlauf geht nach oben, der zweite nach unten.</p>
     <div class="hinweis">Ein richtiges Endergebnis beweist nicht, dass kein Teilausdruck übergelaufen ist. Wer sich nach einem Test mit <code>x+20-40</code> auf <code>x+20</code> verlässt, erlebt an anderer Stelle eine Überraschung.</div>
     <p>Mit <code>int16</code> statt <code>int8</code> läuft in keinem der vier Paare etwas über. Dann liefern linker und rechter Ausdruck den gleichen Wert.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 82–83, mit Expertenwissen 4.14. Die vier Zeilen stammen aus dem Kurstext. Die Auswertung Schritt für Schritt steht dort nur für <code>x+20-40</code>.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -331,6 +327,35 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
 
     <h3>Wenn kein Typ reicht</h3>
     <p>Für ganze Zahlen beliebiger Größe gibt es in der Standardbibliothek das Paket <code>math/big</code>. Im Kurstext wird es im Expertenwissen 4.15 genannt und nicht weiter verwendet.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Keine Meldung</td><td>4.3.8, Seiten 78–79</td><td>Die vier Zeilen und die Meldung des Compilers stammen aus dem Kurstext.</td><td>Die Werte 100, 175, 176 und 255 sind eigene Beispiele.</td></tr>
+      <tr><td>2 Ohne Vorzeichen</td><td>4.3.8, Seiten 79–80, mit Fußnote 25</td><td>Die Rechnungen 255 + 1, 130 + 140 und 255 + 255 stammen aus dem Kurstext. In Fußnote 25 wird 3 − 5 vom Überlauf unterschieden.</td><td>Dass Go in beiden Fällen modulo 256 rechnet, ergänzt die Lektion.</td></tr>
+      <tr><td>3 Mit Vorzeichen</td><td>4.3.8, Seiten 80–81</td><td>Die sechs Rechnungen stammen aus dem Kurstext. Dort steht rechts ein Literal, zum Beispiel <code>iA + 1</code>.</td><td>Die Demo rechnet mit zwei Variablen. Das Ergebnis ist das gleiche.</td></tr>
+      <tr><td>4 Teilausdrücke</td><td>4.3.8, Seiten 82–83: Expertenwissen 4.14</td><td>Die vier Zeilen stammen aus dem Kurstext.</td><td>Die Auswertung Schritt für Schritt steht im Kurstext nur für <code>x+20-40</code>. Für die anderen drei Zeilen gibt die Lektion sie dazu.</td></tr>
+      <tr><td>5 Was man dagegen tut</td><td>4.3.8, Seiten 83–84: Expertenwissen 4.15</td><td>Das Expertenwissen 4.15 stammt aus dem Kurstext.</td><td>Das Beispiel 100.000 · 100.000 und das Programm mit <code>math.MaxInt8</code> gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Teilausdrücke:</strong> Bei großen Zahlen kann <code>a · c</code> zu groß für den Wertebereich sein. Dann liefern <code>(a − b) · c</code> und <code>a · c − b · c</code> verschiedene Ergebnisse. Das ist der Gedanke von Schritt 4, dort in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.</li>
+      <li><strong>Abschnitt 4.3.4 und 4.3.5, Seiten 63–66, Wertebereiche:</strong> Lektion: <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
+      <li><strong>Abschnitt 7.1, Seiten 163–165, mehrere Rückgaben:</strong> Eine Funktion kann einen Fehler als zweite Rückgabe melden. Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#fehler">Funktionen in Go</a> zeigt in Schritt 4 die Funktion <code>safeAdd</code>, die so einen Überlauf meldet.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -341,10 +366,9 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
       <li><strong>Ein gewollter Überlauf:</strong> Eine Hashfunktion setzt den Überlauf bewusst ein, so steht es in Abschnitt 4.3.8. Das rechnet der Exkurs <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html#hash">Vertiefung: Blockchain in Go</a> in Schritt 2 Byte für Byte vor. Dort steht in Schritt 4 auch, was bei <code>uint64</code> aus 75 − 76 wird.</li>
       <li><strong>Ein Überlauf in einer Schleife:</strong> Die Seite <a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a> rechnet Fakultäten und prüft vor jeder Multiplikation, ob das Produkt noch passt.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.8, Seiten 83–84, mit Expertenwissen 4.15. Das Beispiel 100.000 · 100.000 und das Programm mit <code>math.MaxInt8</code> stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -362,7 +386,7 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#int8
-  const ANKER = ['worum', 'laufzeit', 'uint8', 'int8', 'teilausdruecke', 'vorbeugen'];
+  const ANKER = ['worum', 'laufzeit', 'uint8', 'int8', 'teilausdruecke', 'vorbeugen', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -497,7 +521,7 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Keine Meldung', 'Schritt 2: Ohne Vorzeichen', 'Schritt 3: Mit Vorzeichen', 'Schritt 4: Teilausdrücke', 'Schritt 5: Was man dagegen tut'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Keine Meldung', 'Schritt 2: Ohne Vorzeichen', 'Schritt 3: Mit Vorzeichen', 'Schritt 4: Teilausdrücke', 'Schritt 5: Was man dagegen tut', 'Schritt 6: Bezug zum Kurstext'];
   const glatt = t => t.replace(/\s+/g, ' ').trim();
 
   function standRechner(t) {
@@ -511,6 +535,7 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
       'Handgriffe: für a und b ganze Zahlen von ' + typ.min + ' bis ' + typ.max + ' eintragen, einen der Operatoren +, - und * wählen und „rechnen“ wählen, oder einen der Knöpfe mit Beispielen wählen. Eine Division und einen anderen Typ gibt es in dieser Demo nicht.'];
   }
   function standSaetze() {
+    if (stufe === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 5) return ['Dieser Schritt hat keine Demo. Der Codeblock ist fest und lässt sich nicht ausführen. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) return ['Gewählt ist f = ' + f + '. Die Zeilen lauten: var f uint8 = ' + f + ' ; fmt.Println(f + 80). Go gibt ' + ohneVz(f + 80, 8) + ' aus.',

@@ -2,7 +2,7 @@
 
 Die Seite zeigt den arithmetischen Überlauf: Das Ergebnis einer Rechnung mit ganzen Zahlen passt nicht in seinen Typ, und Go rechnet ohne Meldung mit einem falschen Wert weiter. Die Seite rechnet die Beispiele des Kurstexts mit den Typen `uint8` und `int8` nach. Sie gehört zu Abschnitt 4.3.8 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -166,17 +166,48 @@ Reiter: vorbeugen
 - Der Teil „Gefährdete Stellen erkennen“ nennt drei Stellen: das Produkt großer Zahlen, große Zwischenergebnisse wie die Summe für einen Durchschnitt und Ausdrücke aus mehreren Variablen.
 - Der Teil „Vor der Rechnung prüfen“ zeigt ein Programm: `var a, b int8 = 120, 20`, dann `if a > math.MaxInt8-b`. Ist die Bedingung wahr, gibt das Programm „Die Summe passt nicht in int8.“ aus, sonst `a + b`. Mit 120 und 20 erscheint die Meldung. Mit 100 und 20 erscheint 120.
 - Die Bedingung stellt `a + b > 127` so um, dass nichts überlaufen kann. Sie gilt für ein positives `b`. `math.MaxInt8` ist die Konstante 127.
-- Unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
 - Ein gelber Kasten sagt: Im Kurstext steht nur, dass man vor der Addition prüfen kann. Das Programm ist eine Ergänzung des Mentors.
 - Der Teil „Wenn kein Typ reicht“ nennt das Paket `math/big` aus dem Expertenwissen 4.15.
-- Der Schritt endet mit Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“, „Vertiefung: Blockchain in Go“ und „break-Anweisung in Go“. Der Exkurs zur Blockchain zeigt in Schritt 2 eine Hashfunktion, die den Überlauf von `uint32` bewusst einsetzt, und in Schritt 4 das Ergebnis von 75 − 76 im Typ `uint64`. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
 - In diesem Schritt lässt sich nichts ausprobieren. Der Codeblock ist fest und lässt sich nicht ausführen.
-- Den Links folgen. Alle führen auf eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 4.3.8
 - 4.3.6
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Keine Meldung, 4.3.8, Seiten 78–79: Die vier Zeilen und die Meldung des Compilers stammen aus dem Kurstext. Die Werte 100, 175, 176 und 255 sind eigene Beispiele.
+  - 2 Ohne Vorzeichen, 4.3.8, Seiten 79–80, mit Fußnote 25: Die Rechnungen 255 + 1, 130 + 140 und 255 + 255 stammen aus dem Kurstext. In Fußnote 25 wird 3 − 5 vom Überlauf unterschieden. Dass Go in beiden Fällen modulo 256 rechnet, ergänzt die Lektion.
+  - 3 Mit Vorzeichen, 4.3.8, Seiten 80–81: Die sechs Rechnungen stammen aus dem Kurstext. Dort steht rechts ein Literal, zum Beispiel iA + 1. Die Demo rechnet mit zwei Variablen. Das Ergebnis ist das gleiche.
+  - 4 Teilausdrücke, 4.3.8, Seiten 82–83: Expertenwissen 4.14: Die vier Zeilen stammen aus dem Kurstext. Die Auswertung Schritt für Schritt steht im Kurstext nur für x+20-40. Für die anderen drei Zeilen gibt die Lektion sie dazu.
+  - 5 Was man dagegen tut, 4.3.8, Seiten 83–84: Expertenwissen 4.15: Das Expertenwissen 4.15 stammt aus dem Kurstext. Das Beispiel 100.000 · 100.000 und das Programm mit math.MaxInt8 gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, Teilausdrücke: Bei großen Zahlen kann a · c zu groß für den Wertebereich sein. Dann liefern (a − b) · c und a · c − b · c verschiedene Ergebnisse. Das ist der Gedanke von Schritt 4, dort in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.
+  - Abschnitt 4.3.4 und 4.3.5, Seiten 63–66, Wertebereiche: Lektion: Zahlenkreis.
+  - Abschnitt 7.1, Seiten 163–165, mehrere Rückgaben: Eine Funktion kann einen Fehler als zweite Rückgabe melden. Die Lektion Funktionen in Go zeigt in Schritt 4 die Funktion safeAdd, die so einen Überlauf meldet.
+- Unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
+- Unter „Wie es weitergeht“ stehen Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“, „Vertiefung: Blockchain in Go“ und „break-Anweisung in Go“. Der Exkurs zur Blockchain zeigt in Schritt 2 eine Hashfunktion, die den Überlauf von `uint32` bewusst einsetzt, und in Schritt 4 das Ergebnis von 75 − 76 im Typ `uint64`. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links folgen. Alle führen auf eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 4.3.4
+- 4.3.5
+- 4.3.8
+- 7.1
