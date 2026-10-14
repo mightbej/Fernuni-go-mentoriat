@@ -2,7 +2,7 @@
 
 Die Seite erklärt den Typ `bool`, die drei logischen Operatoren `!`, `&&` und `||` und die Kurzschluss-Auswertung: Go wertet den rechten Operanden von `&&` und `||` nur aus, wenn das Ergebnis nach dem linken noch nicht feststeht. Sie zeigt das an den zwei Beispielen des Kurstexts. Sie gehört zu Abschnitt 4.5 und 4.5.1 des Kurstexts.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -111,7 +111,6 @@ Reiter: funktion
 - Im Kurstext hat das Listing zwei Ausgaben in einem Programm, `true && f()` und `true || f()`, und `f` liefert `false`. Die übrigen Fassungen hat die Seite gebaut.
 - Eine Wirkung einer Funktion neben ihrem Rückgabewert heißt Seiteneffekt. Hier ist es die Ausgabe der Zeile.
 - Funktionen mit Rückgabewert werden im Kurstext in Abschnitt 3.4 kurz und in Kapitel 7 ganz erklärt.
-- Der Schritt endet mit Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -120,8 +119,39 @@ Reiter: funktion
 - Den Rückgabewert von `f` wählen: `true` oder `false`.
 - Die Programmzeilen lassen sich sonst nicht ändern.
 - Die Auflösungen der zwei Fragen aufklappen.
-- Den Links zu den zwei Quizseiten, zur Seite „Logische Operatoren und Vergleiche“ und zur Seite „for-Anweisung mit Bedingung“ folgen. Alle sind eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 4.5.1
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Zwei Wahrheitswerte, 4.5, Seite 93: bool; 4.5.1, Seiten 93–96: Kurzschluss-Auswertung; 4.5.2, Seiten 96–98: Sprachvergleich 4.17: Der Typ bool, die Operatoren &&, || und ! und der Sprachvergleich stammen aus dem Kurstext. Die Demo mit zwei umschaltbaren Werten gibt die Lektion dazu.
+  - 2 Die Division, die nicht stattfindet, 4.5.1, Seiten 94–95: Die Bedingung, die eine Division durch 0 verhindert, stammt aus dem Kurstext. Die Fassung mit vertauschten Teilen und die Meldung zum Abbruch gibt die Lektion dazu.
+  - 3 Die Funktion, die nicht aufgerufen wird, 4.5.1, Seiten 95–96: Listing 4.2: Listing 4.2 mit true && f() und true || f() stammt aus dem Kurstext. Die übrigen Fassungen sind für die Lektion gebaut.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, Abkürzen: Dort steht das Beispiel a > b ∧ c/d ≥ 0 mit d = 0 zum ersten Mal, ohne Go. Schritt 2 dieser Lektion zeigt es in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.
+  - Abschnitt 3.3.3, Seiten 29–30, bool: Der Typ bool mit den Werten true und false. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 5.5.1, Seiten 129–132, Bedingung: Wo ein Wahrheitswert gebraucht wird. Lektion: if-Anweisung in Go.
+- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links zu den zwei Quizseiten, zur Seite „Logische Operatoren und Vergleiche“ und zur Seite „for-Anweisung mit Bedingung“ folgen. Alle sind eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 3.3.3
+- 4.5
+- 4.5.1
+- 4.5.2
+- 5.5.1

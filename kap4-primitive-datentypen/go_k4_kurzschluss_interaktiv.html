@@ -93,6 +93,7 @@
     <button type="button" class="tab" data-stufe="1">1 Zwei Wahrheitswerte</button>
     <button type="button" class="tab" data-stufe="2">2 Die Division, die nicht stattfindet</button>
     <button type="button" class="tab" data-stufe="3">3 Die Funktion, die nicht aufgerufen wird</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -124,7 +125,6 @@
       <li><strong>Schritt 3</strong> zeigt Listing 4.2 des Kurstexts zum Umbauen: eine Funktion, die bei jedem Aufruf eine Zeile ausgibt.</li>
     </ul>
     <div class="hinweis">Die Ausgaben und die Meldung zum Abbruch auf dieser Seite sind mit Go 1.26 nachgeprüft. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5, Seite 93, und Abschnitt 4.5.1, Seiten 93–96.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -172,7 +172,6 @@
     </div>
 
     <div class="hinweis">Go wandelt zwischen <code>bool</code> und Zahlen nichts um. Eine 0 ist kein <code>false</code> und eine 1 kein <code>true</code>, anders als in C++. Auch <code>false &lt; true</code> übersetzt Go nicht, weil <code>bool</code> kein geordneter Typ ist.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5, Seite 93, Abschnitt 4.5.1, Seiten 93–96, und Sprachvergleich 4.17 in Abschnitt 4.5.2.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -217,7 +216,6 @@
     <div id="code2"></div>
     <p class="legende">Grün: Der Teil ist wahr. Rot: Der Teil ist falsch. Grau und durchgestrichen: Go wertet den Teil nicht aus. Schwarz: Bei diesem Teil bricht das Programm ab.</p>
     <p>Die Kurzschluss-Auswertung spart auch Rechenzeit, wenn ein Ausdruck in einer Schleife sehr oft ausgewertet wird oder rechts ein aufwendiger Funktionsaufruf steht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.5.1, Seiten 94–95. Die Fassung mit vertauschten Teilen und die Meldung zum Abbruch stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -251,16 +249,43 @@
       <div><h3>Ausgabe</h3><pre class="konsole" id="konsole"></pre><div id="erkl3"></div></div>
     </div>
     <p>Die Regel daraus: Steht in einem booleschen Ausdruck eine Funktion mit Seiteneffekt, ist ihr Aufruf nicht garantiert. Er hängt vom Wert des Teils links davon ab.</p>
-    <p>So geht es weiter:</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Zwei Wahrheitswerte</td><td>4.5, Seite 93: <code>bool</code><br>4.5.1, Seiten 93–96: Kurzschluss-Auswertung<br>4.5.2, Seiten 96–98: Sprachvergleich 4.17</td><td>Der Typ <code>bool</code>, die Operatoren <code>&amp;&amp;</code>, <code>||</code> und <code>!</code> und der Sprachvergleich stammen aus dem Kurstext.</td><td>Die Demo mit zwei umschaltbaren Werten gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Die Division, die nicht stattfindet</td><td>4.5.1, Seiten 94–95</td><td>Die Bedingung, die eine Division durch 0 verhindert, stammt aus dem Kurstext.</td><td>Die Fassung mit vertauschten Teilen und die Meldung zum Abbruch gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Die Funktion, die nicht aufgerufen wird</td><td>4.5.1, Seiten 95–96: Listing 4.2</td><td>Listing 4.2 mit <code>true &amp;&amp; f()</code> und <code>true || f()</code> stammt aus dem Kurstext.</td><td>Die übrigen Fassungen sind für die Lektion gebaut.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Abkürzen:</strong> Dort steht das Beispiel <code>a &gt; b ∧ c/d ≥ 0</code> mit <code>d = 0</code> zum ersten Mal, ohne Go. Schritt 2 dieser Lektion zeigt es in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, <code>bool</code>:</strong> Der Typ <code>bool</code> mit den Werten <code>true</code> und <code>false</code>. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, Bedingung:</strong> Wo ein Wahrheitswert gebraucht wird. Lektion: <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Quiz:</strong> Das <a href="go_k4_logische_operatoren_quiz.html">Quiz zu den logischen Operatoren</a> und das <a href="go_k4_bool_vergleich_quiz.html">Quiz zu bool und Vergleichen</a> fragen den Stoff von Abschnitt 4.5 ab.</li>
       <li><strong>Vergleiche:</strong> Die Vergleichsoperatoren aus Abschnitt 4.5.2 stehen auf der Seite <a href="go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a>.</li>
       <li><strong>Anwendung:</strong> Eine Schleifenbedingung mit <code>||</code> steht auf der Seite <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a>, Schritt 4.</li>
     </ul>
-    <p class="quelle">Listing 4.2, <code>kurzschluss_und_seiteneffekt.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 4.5.1, Seiten 95–96. Im Kurstext steht <code>true &amp;&amp; f()</code> und <code>true || f()</code> mit einer Funktion <code>f</code>, die <code>false</code> liefert. Die übrigen Fassungen sind für diese Seite gebaut.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -277,7 +302,7 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#division
-  const ANKER = ['worum', 'werte', 'division', 'funktion'];
+  const ANKER = ['worum', 'werte', 'division', 'funktion', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -376,10 +401,11 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Wahrheitswerte', 'Schritt 2: Die Division, die nicht stattfindet', 'Schritt 3: Die Funktion, die nicht aufgerufen wird'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Wahrheitswerte', 'Schritt 2: Die Division, die nicht stattfindet', 'Schritt 3: Die Funktion, die nicht aufgerufen wird', 'Schritt 4: Bezug zum Kurstext'];
   const alsText = id => el(id).innerText.replace(/\s+/g, ' ').trim();
 
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo.'];
     if (stufe === 1) return ['a hat den Wert ' + W.a + ', b hat den Wert ' + W.b + '. Ein Klick auf einen der zwei Werte schaltet ihn um. Andere Handgriffe hat die Demo nicht.',
       '!a ergibt ' + !W.a + '.',
