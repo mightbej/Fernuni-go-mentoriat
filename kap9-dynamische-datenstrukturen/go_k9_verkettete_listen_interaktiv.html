@@ -105,6 +105,7 @@
     <button type="button" class="tab" data-stufe="4">4 Durchlaufen</button>
     <button type="button" class="tab" data-stufe="5">5 Einfügen</button>
     <button type="button" class="tab" data-stufe="6">6 Liste und Array</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -159,7 +160,6 @@
       <li><strong>Feste Länge:</strong> Das Einfügen geht nur, solange das Array freie Plätze hat.</li>
     </ul>
     <p>Am Ende von Abschnitt 9.1 steht ein erster Ausweg: Im Array liegen nur der Schlüsselwert und ein Zeiger auf einen Verbund mit den übrigen Daten. Dann rücken nur diese kleinen Elemente weiter. Die verkettete Liste geht einen Schritt weiter und kommt ohne Weiterrücken aus.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.1, Seiten 227–229. Die Zahlen 3 bis 176 sind die Containernummern aus Abbildung 9.2. Das Array mit acht Plätzen ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -221,7 +221,6 @@
         <tr><td>z<sub>4</sub></td><td><code>neues.nächstes</code></td><td>Der Zeiger ist noch <code>nil</code> und bekommt den Wert von z<sub>2</sub>.</td></tr>
       </tbody>
     </table></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 229–231, mit Abbildung 9.3. Die drei Zeilen stehen in der Funktion <code>elementEinfügen</code> in Listing 9.1. Die umgekehrte Reihenfolge ist ein eigenes Beispiel, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -266,7 +265,6 @@ type sortierteListe struct {
       <li><strong>Reihenfolge im Speicher:</strong> Die Elemente liegen in der Reihenfolge, in der sie erzeugt wurden: 8, 17, 12, 2.</li>
       <li><strong>Reihenfolge der Liste:</strong> Sie ergibt sich aus den Zeigern. <code>kopf</code> enthält 248, dort liegt die 2. Deren Feld <code>nächstes</code> enthält 200, dort liegt die 8. So geht es weiter bis zum Element 17 mit <code>nil</code>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 231–233. Die zwei Typen und die leere Liste stammen aus Listing 9.1. Die Adressen und die Größen in Zellen gehören zum Modell dieser HTML-Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -308,7 +306,7 @@ func längeDerListe(liste *sortierteListe) int {
     return länge
 }</pre>
     <p>Wie lang die Liste ist, steht in keinem Feld. Das Programm erfährt es nur, indem es alle Elemente besucht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Listing 9.1, Datei <code>sortierteListe.go</code>, Seiten 233–234. Beide Funktionen stammen aus dem Listing.</p>
+    <p class="quelle">Listing 9.1, <code>sortierteListe.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 9.2, Seiten 233–234. Beide Funktionen stammen aus dem Listing.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -368,7 +366,6 @@ func längeDerListe(liste *sortierteListe) int {
     <div class="konsole" id="e-ausgabe"></div>
     <div class="auskunft" id="e-urteil"></div>
     <p>Der Wert 17 kommt zweimal vor. Die Liste darf gleiche Werte enthalten. Das zweite Element 17 steht vor dem ersten, weil die Schleife nur weiterrückt, solange der Nachfolger kleiner ist.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Listing 9.1, Datei <code>sortierteListe.go</code>, Seiten 233–236. Die Funktion ist um die Meldungen gekürzt. Die Meldungen in der Ausgabe sind mit Go 1.26 erzeugt. Im Kurstext weicht ihr Wortlaut an zwei Stellen ab, dort steht „ans Ende hinter“ und „am Anfang einfügen vor“.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -397,6 +394,37 @@ func längeDerListe(liste *sortierteListe) int {
       <li><strong>Löschen:</strong> Schreibe eine Funktion, die das erste Element mit einem bestimmten Wert aus der Liste nimmt. Welcher Zeiger bekommt einen neuen Wert, und welcher Fall braucht eine eigene Behandlung?</li>
       <li><strong>Umdrehen:</strong> Schreibe eine Funktion, die die Liste umdreht: Das erste Element wird das letzte, das zweite das vorletzte.</li>
     </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Einfügen im Array</td><td>9.1, Seiten 227–229</td><td>Die Containernummern 3 bis 176 stammen aus Abbildung 9.2.</td><td>Das Array mit acht Plätzen ist ein eigenes Beispiel, geprüft mit Go 1.26.</td></tr>
+      <tr><td>2 Zwei Zuweisungen</td><td>9.2, Seiten 229–231: Abbildung 9.3</td><td>Der Güterzug und die drei Zeilen aus der Funktion <code>elementEinfügen</code> in Listing 9.1 stammen aus dem Kurstext.</td><td>Die umgekehrte Reihenfolge ist ein eigenes Beispiel, geprüft mit Go 1.26.</td></tr>
+      <tr><td>3 Der Typ der Liste</td><td>9.2, Seiten 231–233</td><td>Die zwei Typen und die leere Liste stammen aus Listing 9.1.</td><td>Die Adressen und die Größen in Zellen gehören zum Modell der Lektion.</td></tr>
+      <tr><td>4 Durchlaufen</td><td>9.2, Seiten 233–234: Listing 9.1</td><td>Beide Funktionen stammen aus Listing 9.1.</td><td>Die Ausführung Schritt für Schritt gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Einfügen</td><td>9.2, Seiten 233–236: Listing 9.1</td><td>Die Funktion <code>elementEinfügen</code> stammt aus Listing 9.1.</td><td>Die Lektion kürzt die Funktion um die Meldungen. Die Meldungen in der Ausgabe stammen von Go 1.26. Im Kurstext steht an zwei Stellen „ans Ende hinter“ und „am Anfang einfügen vor“.</td></tr>
+      <tr><td>6 Liste und Array</td><td>9.2, Seiten 231–232</td><td>Die Tabelle fasst zusammen, was im Kurstext steht.</td><td>Die Zeile zum Speicher je Element ist eine Ergänzung.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherplatz:</strong> Bei einfachen Typen ist die Zahl der Speicherelemente fest, bei zusammengesetzten Typen nicht immer. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Kapitel 6, Seiten 151–162, Arrays:</strong> Ein Array hat eine feste Länge. Lektion: <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+      <li><strong>Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
+      <li><strong>Abschnitt 8.3.1, Seiten 215–216, rekursive Verbund-Typen:</strong> Ein Verbund hat ein Feld mit einem Zeiger auf den eigenen Typ. Lektion: <a href="../kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html#kette">Rekursive Verbund-Typen in Go</a>, Schritt 4.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -404,10 +432,9 @@ func längeDerListe(liste *sortierteListe) int {
       <li><strong>Exkurs:</strong> Die Lektion <a href="go_k9_blockchain_interaktiv.html">Blockchain: eine verkettete Liste mit Fingerabdruck</a> macht aus der Liste ein Kassenbuch: Jeder neue Block zeigt auf seinen Vorgänger und trägt dessen Fingerabdruck.</li>
       <li><strong>Laufzeit:</strong> Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 9.2, Seiten 231–232. Die Tabelle fasst zusammen, was dort im Text steht. Die Zeile zum Speicher je Element ist eine Ergänzung.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -426,8 +453,8 @@ func längeDerListe(liste *sortierteListe) int {
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#array
-  const ANKER = ['worum', 'array', 'zug', 'typ', 'durchlaufen', 'einfuegen', 'vergleich'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Einfügen im Array', 'Schritt 2: Zwei Zuweisungen', 'Schritt 3: Der Typ der Liste', 'Schritt 4: Durchlaufen', 'Schritt 5: Einfügen', 'Schritt 6: Liste und Array'];
+  const ANKER = ['worum', 'array', 'zug', 'typ', 'durchlaufen', 'einfuegen', 'vergleich', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Einfügen im Array', 'Schritt 2: Zwei Zuweisungen', 'Schritt 3: Der Typ der Liste', 'Schritt 4: Durchlaufen', 'Schritt 5: Einfügen', 'Schritt 6: Liste und Array', 'Schritt 7: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -693,6 +720,7 @@ func längeDerListe(liste *sortierteListe) int {
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 7) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0 || stufe === 6) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) { const x = WA.liste[WA.i]; return ['Das Array hat acht Plätze. Vorher: 3, 35, 42, 99, 111, 176 und zwei freie Plätze.'].concat(standWahl(WA, 'der Wert'), ['Nachher: ' + VOR.slice(0, x.i).concat([x.x], VOR.slice(x.i)).join(', ') + ' und ein freier Platz. Gelb ist der neue Wert am Index ' + x.i + ', grün sind die ' + x.n + ' Elemente, die weitergerückt sind.']); }
     if (stufe === 2) return ['Der Schritt hat zwei Demos mit den gleichen drei Anweisungen in verschiedener Reihenfolge.', 'Demo „Die Reihenfolge des Kurstexts“:'].concat(standAblauf(DR), [DR.kette(), 'Demo „Die umgekehrte Reihenfolge“:'], standAblauf(DX), [DX.kette(), 'In den Rahmen steht eine Adresse als „Adresse 216“, im Hauptspeicher darunter als Zahl. Ein gestrichelter Kasten ist ein Element, zu dem kein Zeiger mehr führt.']);

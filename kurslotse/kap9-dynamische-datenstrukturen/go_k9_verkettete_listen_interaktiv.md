@@ -2,7 +2,7 @@
 
 Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt, welche zwei Verbund-Typen die Liste braucht und wie die Funktionen `listeAusgeben`, `längeDerListe` und `elementEinfügen` arbeiten. Sie gehört zu Kapitel 9 des Kurstexts, Abschnitt 9.1 und 9.2, Seiten 227–236.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -186,15 +186,49 @@ Reiter: vergleich
 - Unter „Zum Weiterdenken“ stehen drei Aufgaben ohne Lösung: eine Funktion `istWertInListe` schreiben, ein Element löschen, die Liste umdrehen. Der Kurstext nennt Suchen, Löschen und Umdrehen und führt sie nicht aus.
 - Zur ersten Aufgabe: In einer sortierten Liste darf die Suche aufhören, sobald ein Element größer ist als der Suchwert.
 - Zur zweiten Aufgabe: Das Feld `nächstes` des Vorgängers bekommt die Adresse des Nachfolgers. Das erste Element hat keinen Vorgänger, dort bekommt `kopf` den neuen Wert.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Binäre Suchbäume in Go“, auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“ und auf den Exkurs zur Laufzeit. Der Exkurs zur Blockchain baut eine Liste, in der jeder neue Block auf seinen Vorgänger zeigt und dessen Hashwert trägt.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
 
-- Den Links folgen.
 - In diesem Schritt lässt sich nichts ausprobieren.
 
 ### Abschnitte des Kurstexts
 
 - 9.2
 - 9.3
+
+## Schritt 7: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Einfügen im Array, 9.1, Seiten 227–229: Die Containernummern 3 bis 176 stammen aus Abbildung 9.2. Das Array mit acht Plätzen ist ein eigenes Beispiel, geprüft mit Go 1.26.
+  - 2 Zwei Zuweisungen, 9.2, Seiten 229–231: Abbildung 9.3: Der Güterzug und die drei Zeilen aus der Funktion elementEinfügen in Listing 9.1 stammen aus dem Kurstext. Die umgekehrte Reihenfolge ist ein eigenes Beispiel, geprüft mit Go 1.26.
+  - 3 Der Typ der Liste, 9.2, Seiten 231–233: Die zwei Typen und die leere Liste stammen aus Listing 9.1. Die Adressen und die Größen in Zellen gehören zum Modell der Lektion.
+  - 4 Durchlaufen, 9.2, Seiten 233–234: Listing 9.1: Beide Funktionen stammen aus Listing 9.1. Die Ausführung Schritt für Schritt gibt die Lektion dazu.
+  - 5 Einfügen, 9.2, Seiten 233–236: Listing 9.1: Die Funktion elementEinfügen stammt aus Listing 9.1. Die Lektion kürzt die Funktion um die Meldungen. Die Meldungen in der Ausgabe stammen von Go 1.26. Im Kurstext steht an zwei Stellen „ans Ende hinter“ und „am Anfang einfügen vor“.
+  - 6 Liste und Array, 9.2, Seiten 231–232: Die Tabelle fasst zusammen, was im Kurstext steht. Die Zeile zum Speicher je Element ist eine Ergänzung.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherplatz: Bei einfachen Typen ist die Zahl der Speicherelemente fest, bei zusammengesetzten Typen nicht immer. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Kapitel 6, Seiten 151–162, Arrays: Ein Array hat eine feste Länge. Lektion: Arrays in Go.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+  - Abschnitt 8.3.1, Seiten 215–216, rekursive Verbund-Typen: Ein Verbund hat ein Feld mit einem Zeiger auf den eigenen Typ. Lektion: Rekursive Verbund-Typen in Go, Schritt 4.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Binäre Suchbäume in Go“, auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“ und auf den Exkurs zur Laufzeit. Der Exkurs zur Blockchain baut eine Liste, in der jeder neue Block auf seinen Vorgänger zeigt und dessen Hashwert trägt.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 6“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links folgen.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 7.3
+- 7.4
+- 8.3.1
+- 9.1
+- 9.2
