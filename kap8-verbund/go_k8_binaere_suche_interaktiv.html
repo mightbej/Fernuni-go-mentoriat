@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binäre Suche in einem Verbund-Array</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Der Streifen: die zehn Einträge des Telefonbuchs mit Index. Grau: außerhalb des Suchbereichs. */
+    .streifen { display:flex;flex-wrap:wrap;gap:6px;margin:12px 0; }
+    .eintrag { display:flex;flex-direction:column;align-items:center;min-width:5.4em;border:2px solid var(--blau);border-radius:8px;padding:4px 6px;background:#fff;font-family:Consolas,"Courier New",monospace;font-size:.95rem;color:#111827; }
+    button.eintrag { font-weight:400; }
+    button.eintrag:hover { background:#eff6ff; }
+    .eintrag .ix { font-size:.78rem;color:var(--muted); }
+    .eintrag .tag { font-size:.75rem;color:var(--blau);font-weight:700;min-height:1.1em; }
+    .eintrag.aus { border-style:dashed;border-color:#9ca3af;background:#f3f4f6;color:#9ca3af; }
+    .eintrag.aus .ix { color:#9ca3af; }
+    .eintrag.mitte { background:var(--aktiv-bg);border-color:var(--aktiv);font-weight:700; }
+    .eintrag.treffer { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .eintrag.ziel { box-shadow:0 0 0 3px #93c5fd; }
+    .legende { color:var(--muted);font-size:.9rem;margin:4px 0 12px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:200px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff;white-space:nowrap; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    /* Speichersicht einer Demo: je Variable ein Block mit Adressen, Typ und Inhalt */
+    .blockreihe { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px; }
+    .block { border:2px solid var(--blau);border-radius:8px;background:#eff6ff;padding:6px 10px;min-width:150px;max-width:100%; }
+    .block.zeiger { border-color:#7c3aed;background:#f5f3ff; }
+    .block.neu { box-shadow:0 0 0 3px var(--aktiv); }
+    .block .adr { font-size:.8rem;color:var(--muted); }
+    .block .wer { font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .block .wer i { font-style:normal;font-weight:400;color:var(--muted); }
+    .block .was { font-family:Consolas,"Courier New",monospace;font-size:.95rem;overflow-wrap:anywhere; }
+    .blockreihe .leer { color:var(--muted);font-size:.9rem; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Binäre Suche in einem Verbund-Array</h1>
+    <p>Ein Telefonbuch ist nach Namen sortiert. Die binäre Suche sieht in der Mitte nach und verwirft bei jedem Blick die Hälfte, in der der Name nicht stehen kann.</p>
+    <p>Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 221–225.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Die Idee</button>
+    <button type="button" class="tab" data-stufe="2">2 Die Funktion</button>
+    <button type="button" class="tab" data-stufe="3">3 Aufruf für Aufruf</button>
+    <button type="button" class="tab" data-stufe="4">4 Aufwand</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Am Ende von Abschnitt 8.1 wird eine Personalnummer in einem Array von Verbünden gesucht. Eine <code>for</code>-Schleife sieht dort jeden Eintrag von vorn an, bis sie den Namen findet. Bei tausend Einträgen sind das bis zu tausend Vergleiche.</p>
+    <p>Ein Telefonbuch ist nach Namen sortiert. In Abschnitt 8.4.1 wird gezeigt, wie ein Programm das ausnutzt. Die <strong>binäre Suche</strong> vergleicht den gesuchten Namen mit dem Namen in der Mitte. Danach steht fest, in welcher Hälfte der Name stehen muss, und die Suche geht nur dort weiter. Die Funktion dazu ruft sich selbst auf, sie ist rekursiv.</p>
+
+    <h3>Was dazugehört</h3>
+    <ul>
+      <li><strong>Abschnitt 8.2, Array von Verbünden:</strong> Die Lektion <a href="go_k8_feld_variablen_interaktiv.html">Verbund-Variablen und Feld-Variablen</a>.</li>
+      <li><strong>Abschnitt 7.4, Zeiger auf ein Array:</strong> Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a> und der Exkurs <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a>.</li>
+      <li><strong>Abschnitt 2.6 und 7.5, Rekursion:</strong> Die Lektionen <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#rekursion">Unterprogramme und Funktionen</a>, Schritt 4, und <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Abschnitt 4.6, Strings vergleichen:</strong> Schritt 1 der Lektion <a href="go_k8_bubblesort_verbund_interaktiv.html#vergleich">Bubblesort auf einem Verbund-Array</a> zeigt, wie Go zwei Namen mit <code>&gt;</code> vergleicht.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Du suchst einen Namen im Telefonbuch und siehst, wie der Suchbereich mit jedem Blick kleiner wird.</li>
+      <li><strong>Schritt 2:</strong> Die Funktion <code>binSuche</code> aus dem Kurstext, Zeile für Zeile gelesen.</li>
+      <li><strong>Schritt 3:</strong> Die sechs Fälle aus dem Kurstext, Aufruf für Aufruf, mit den Rahmen und dem Hauptspeicher.</li>
+      <li><strong>Schritt 4:</strong> Wie viele Vergleiche die Suche braucht und was sie voraussetzt.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Die Idee</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die Suche sieht zuerst am Index 4 nach, dort steht Koch. Gesucht ist Becker. Welche Einträge kommen danach noch in Frage?
+          <details><summary>Auflösung</summary>Nur die vier Einträge links von Koch, Arnold bis Huber. Becker kommt im Alphabet vor Koch. Koch selbst und alles rechts davon fallen weg.</details></li>
+      </ol>
+    </div>
+    <p>Das Telefonbuch dieser Lektion hat zehn Einträge vom Typ <code>person</code>, sortiert nach dem Feld <code>name</code>. Es ist das Telefonbuch aus der Lektion zu Bubblesort, nachdem es sortiert ist.</p>
+    <pre class="code-block">type person struct {
+    name          string
+    telefonnummer int
+}
+
+telbuch := [10]person{{"Arnold", 3310}, {"Becker", 5522}, {"Fischer", 6398}, {"Huber", 4456}, {"Koch", 7745},
+    {"Lange", 8127}, {"Meier", 4711}, {"Schulz", 1234}, {"Wagner", 9081}, {"Zimmer", 2063}}</pre>
+    <p>Klicke einen Namen an, den die Suche finden soll. Drei Namen stehen nicht im Telefonbuch, sie haben eigene Knöpfe. Danach zeigt „nächster Blick“, wie die Suche den Bereich verkleinert.</p>
+    <div class="streifen" id="i-streifen"></div>
+    <div class="zeile"><span>Namen, die fehlen:</span> <span id="i-fehlen" class="zeile" style="margin:0"></span></div>
+    <p class="legende">Grau und gestrichelt: Der Name kann dort nicht mehr stehen. Gelb: der Name in der Mitte, mit dem die Suche gerade vergleicht. Grün: gefunden. Ein blauer Rand markiert den gesuchten Namen.</p>
+    <div class="zeile">
+      <button type="button" class="haupt" id="i-weiter">nächster Blick</button>
+      <button type="button" id="i-vorn">von vorn</button>
+    </div>
+    <div class="auskunft" id="i-urteil"></div>
+    <p>So steht die Idee in Abschnitt 8.4.1: Die Suche vergleicht mit dem Namen in der Mitte. Ist der gesuchte Name alphabetisch kleiner, sucht sie in der ersten Hälfte weiter, sonst in der zweiten. Bei jedem Blick halbiert sich der Bereich, bis er einen Eintrag enthält. Stimmt dessen Name nicht, steht der Name nicht im Telefonbuch.</p>
+    <div class="hinweis">Die gleiche Strategie steht im Exkurs <a href="../kap3-einfuehrung/exkurs_von_problem_zu_code.html#versuche">Von der Problemstellung zum Go-Programm</a> zu Kapitel 3, Stufe 3, beim Zahlenraten. Wer dort immer die Mitte des Bereichs tippt, der noch möglich ist, verkleinert den Bereich bei jedem Tipp auf die Hälfte. Beim Zahlenraten sagt das Programm „zu klein“ oder „zu groß“. Hier sagt es der Vergleich mit dem Namen in der Mitte.</div>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 221–222. Das Telefonbuch ist ein eigenes Beispiel. Die Blicke folgen der Rechnung aus Listing 8.1 und sind mit Go 1.26 geprüft.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Die Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>links</code> ist 5, <code>rechts</code> ist 9. Welchen Wert bekommt <code>mitte</code>?
+          <details><summary>Auflösung</summary>7. Die Rechnung lautet 5 + (9 − 5) / 2 = 5 + 2 = 7.</details></li>
+      </ol>
+    </div>
+    <p>Die Idee aus Schritt 1 übergibt bei jedem Schritt die halbe Liste. Eine Kopie des halben Arrays wäre aufwendig. Die Funktion bekommt deshalb nur einen Zeiger auf das ganze Array und zwei Indizes, <code>links</code> und <code>rechts</code>. Sie grenzen den Bereich ein, der noch zu durchsuchen ist.</p>
+    <pre class="code-block">package main
+
+const arrlen = 10 // Länge des Arrays
+
+type person struct {
+    name          string
+    telefonnummer int
+}
+
+// Die rekursive Funktion sucht im Verbund-Array nach einem Element,
+// dessen Feld name den Wert suchwert hat und gibt bei Erfolg
+// den Wert des Felds telefonnummer dieses Elements zurück;
+// ansonsten den Wert -1, wenn suchwert nicht gefunden wurde.
+//
+// Das Array muss aufsteigend sortiert sein und
+// suchwert darf im Array höchstens einmal vorkommen.
+//
+// links und rechts sind die Grenzen des Suchbereichs,
+// der beide Grenzen mit umfasst.
+//
+// Der initiale Aufruf erfolgt mit dem kompletten Array,
+// also links=0 und rechts=arrlen-1.
+func binSuche(personArr *[arrlen]person, links, rechts int,
+    suchwert string) int {
+    var ergebnis int
+    // prüfen, ob Suchbereich zulässig ist
+    if rechts &gt;= links {
+        // Mitte des Suchbereichs berechnen
+        // (Index-Position im gesamten Array)
+        mitte := links + (rechts-links)/2
+        if personArr[mitte].name == suchwert {
+            // suchwert gefunden
+            ergebnis = personArr[mitte].telefonnummer
+        } else {
+            if personArr[mitte].name &gt; suchwert {
+                // Suche im linken Teilbereich fortsetzen
+                ergebnis = binSuche(personArr, links, mitte-1,
+                    suchwert)
+            } else {
+                // Suche im rechten Teilbereich fortsetzen
+                ergebnis = binSuche(personArr, mitte+1, rechts,
+                    suchwert)
+            }
+        }
+    } else {
+
+        ergebnis = -1 // suchwert nicht gefunden
+    }
+    return ergebnis
+}</pre>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Listing 8.1, Datei <code>binSuche.go</code>, Seite 224. Das Listing ist unverändert übernommen.</p>
+    <ul>
+      <li><strong>Die Parameter:</strong> <code>personArr</code> ist ein Zeiger auf das Array. <code>links</code> und <code>rechts</code> sind der erste und der letzte Index des Suchbereichs, beide gehören dazu. <code>suchwert</code> ist der gesuchte Name.</li>
+      <li><strong>Der erste Aufruf:</strong> Im Kurstext lautet er <code>binSuche(&amp;telbuch, 0, arrlen-1, "Müller")</code>. Der Bereich umfasst das ganze Array, vom Index 0 bis zum Index 9.</li>
+      <li><strong><code>rechts &gt;= links</code>:</strong> Diese Bedingung entscheidet, ob noch etwas zu durchsuchen ist. Ist <code>rechts</code> kleiner als <code>links</code>, ist der Bereich leer. Die Funktion ruft sich dann nicht mehr auf, die Rekursion bricht ab. Die Bedingung verhindert auch einen Zugriff auf einen Index außerhalb des Arrays.</li>
+      <li><strong><code>mitte := links + (rechts-links)/2</code>:</strong> Der Operator <code>/</code> teilt zwei ganze Zahlen ganzzahlig. Ist <code>rechts - links</code> ungerade, liegt kein Element genau in der Mitte. Die Division wählt dann das linke der zwei mittleren. Beispiel: Mit <code>links</code> 0 und <code>rechts</code> 9 ist <code>mitte</code> gleich 0 + 9 / 2 = 4.</li>
+      <li><strong>Gefunden:</strong> Stimmt der Name am Index <code>mitte</code>, bekommt <code>ergebnis</code> dessen Telefonnummer.</li>
+      <li><strong>Links weitersuchen:</strong> Ist der Name in der Mitte größer als <code>suchwert</code>, ruft sich die Funktion mit <code>links</code> und <code>mitte-1</code> auf. Der Name in der Mitte ist schon verglichen und gehört nicht mehr zum Bereich.</li>
+      <li><strong>Rechts weitersuchen:</strong> Sonst ruft sie sich mit <code>mitte+1</code> und <code>rechts</code> auf.</li>
+      <li><strong><code>return ergebnis</code>:</strong> Jeder Aufruf gibt zurück, was sein eigener rekursiver Aufruf geliefert hat. So kommt die Telefonnummer oder −1 bis zum ersten Aufruf zurück. Der Wert −1 bedeutet „nicht gefunden“, denn eine Telefonnummer ist nie negativ.</li>
+    </ul>
+    <div class="hinweis">Warum <code>links + (rechts-links)/2</code> und nicht <code>(links+rechts)/2</code>? Beide Ausdrücke liefern hier den gleichen Wert. Im Kurstext steht keine Begründung für die erste Form. Sie hat einen Vorteil: Bei sehr großen Indizes kann die Summe <code>links + rechts</code> den Wertebereich des Typs überschreiten, die Differenz nicht. Wie ein solcher <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf</a> aussieht, steht in Abschnitt 4.3.8.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Aufruf für Aufruf</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Gesucht ist Zuse. Der Name steht nicht im Telefonbuch und ist größer als alle Namen darin. Mit welchen Werten für <code>links</code> und <code>rechts</code> läuft der letzte Aufruf?
+          <details><summary>Auflösung</summary><code>links</code> ist 10 und <code>rechts</code> ist 9. Der Aufruf davor hat bei Zimmer am Index 9 verglichen und mit <code>mitte+1</code> weitergesucht. Der Bereich ist leer, der Aufruf liefert −1.</details></li>
+      </ol>
+    </div>
+    <p>In Abschnitt 8.4.1 werden sechs Fälle durchgespielt: Der Name steht vorn, hinten oder dazwischen, oder er fehlt und ist kleiner als alle, größer als alle oder liegt zwischen zwei Namen. Wähle einen Fall.</p>
+    <div class="spalte" id="a-wahl"></div>
+    <p>Jeder Aufruf von <code>binSuche</code> hat einen eigenen Rahmen mit seinen Variablen. In jedem Rahmen steht ein eigener Zeiger <code>personArr</code> mit der Adresse des Telefonbuchs. Das Telefonbuch selbst gibt es nur einmal, im Rahmen von <code>main</code>.</p>
+    <ol class="programm" id="a-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">nächste Anweisung</button>
+      <button type="button" id="a-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="a-vorn">von vorn</button>
+    </div>
+    <p><strong>Der Suchbereich des jüngsten Aufrufs</strong></p>
+    <div class="streifen" id="a-streifen"></div>
+    <div class="rahmenreihe" id="a-bild"></div>
+    <div id="a-speicher"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="a-ausgabe"></div>
+    <div class="auskunft" id="a-urteil"></div>
+    <p>Im Hauptspeicher stehen das Telefonbuch und von jedem Aufruf die drei Werte, die er übergeben bekommt: der Zeiger und die zwei Indizes. Kopiert wird nie ein Verbund.</p>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Listing 8.1, Seiten 223–224. Die Funktion steht hier ohne ihre Kommentare. Die Aufrufe und Ausgaben sind mit Go 1.26 geprüft. Die Adressen gehören zum Modell dieser HTML-Seite.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Aufwand</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Telefonbuch hat tausend Einträge. Mit wie vielen Namen vergleicht die binäre Suche höchstens?
+          <details><summary>Auflösung</summary>Mit zehn. 2<sup>10</sup> ist 1024. Tausend Einträge lassen sich also höchstens zehnmal halbieren.</details></li>
+      </ol>
+    </div>
+    <p>Jeder Vergleich mit der Mitte halbiert den Suchbereich mindestens. In Abschnitt 8.4.1 heißt es dazu: Ein Array mit 2<sup>n</sup> Elementen lässt sich nur n-mal halbieren. Die Suche von vorn aus Abschnitt 8.1 sieht dagegen im ungünstigsten Fall jeden Eintrag an.</p>
+    <p>Deshalb reichen beim Zahlenraten im Exkurs <a href="../kap3-einfuehrung/exkurs_von_problem_zu_code.html#versuche">Von der Problemstellung zum Go-Programm</a> sieben Versuche für die Zahlen von 1 bis 100: 2<sup>7</sup> ist 128. Wer immer die Mitte tippt, gewinnt jede Runde.</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Zahl der Einträge</th><th>Vergleiche mit der Mitte bei der binären Suche, höchstens</th><th>Vergleiche bei der Suche von vorn, höchstens</th></tr></thead>
+      <tbody>
+        <tr><td>10</td><td>4</td><td>10</td></tr>
+        <tr><td>1000</td><td>10</td><td>1000</td></tr>
+        <tr><td>1000000</td><td>20</td><td>1000000</td></tr>
+      </tbody>
+    </table></div>
+    <p>Die Laufzeit der binären Suche ist <strong>logarithmisch</strong>. Die Suche muss das Array dafür nicht einmal ganz lesen. Der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a> stellt die Suche von vorn und die binäre Suche nebeneinander.</p>
+
+    <h3>Was die Suche voraussetzt</h3>
+    <ul>
+      <li><strong>Sortiert:</strong> Das Array muss nach dem Feld sortiert sein, nach dem gesucht wird. Ist es das nicht, muss das Programm erst sortieren. Das zeigt die Lektion <a href="go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a> zu Abschnitt 8.4.2. Sortieren kostet viel mehr als Suchen. Es lohnt sich, wenn ein Programm einmal sortiert und danach oft sucht.</li>
+      <li><strong>Jeder Name einmal:</strong> Laut dem Kommentar über Listing 8.1 darf <code>suchwert</code> höchstens einmal im Array stehen.</li>
+      <li><strong>Direkter Zugriff:</strong> Die Suche springt mit <code>personArr[mitte]</code> sofort an jeden Index. In einem Array geht das.</li>
+    </ul>
+
+    <h3>Zum Weiterdenken</h3>
+    <p>Zu den Aufgaben gibt es hier keine Lösung.</p>
+    <ul>
+      <li><strong>Ohne Rekursion:</strong> Schreibe <code>binSuche</code> mit einer <code>for</code>-Schleife statt mit einem rekursiven Aufruf. Welche Variablen ändert die Schleife bei jedem Durchlauf?</li>
+      <li><strong>Nach der Nummer suchen:</strong> Warum findet <code>binSuche</code> nicht den Namen zu einer bekannten Telefonnummer, auch wenn man den Vergleich auf das Feld <code>telefonnummer</code> umstellt?</li>
+      <li><strong>Ein Name zweimal:</strong> Zwei Einträge heißen Meier. Was liefert <code>binSuche</code> dann, und ist es immer der erste der beiden?</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Abschnitt 8.4.2:</strong> Die Lektion <a href="go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a> sortiert das Telefonbuch, bevor die binäre Suche es durchsuchen kann.</li>
+      <li><strong>Übung mit Verbund-Arrays:</strong> Die Programmierübung <a href="go_k8_telefonbuch_programmieruebung.html">Ein Telefonbuch als Verbund-Array</a>.</li>
+      <li><strong>Abschnitt 9.3.1:</strong> Die Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a> greift die Idee wieder auf. Ein Baum hält die Namen sortiert, auch wenn neue dazukommen.</li>
+    </ul>
+    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 222–223. Die Aussage zum Halbieren und die logarithmische Laufzeit stehen im Kurstext. Die Tabelle und die Aufgaben sind ergänzt, die Zahlen der Tabelle sind mit Go 1.26 gezählt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#idee
+  const ANKER = ['worum', 'idee', 'funktion', 'aufrufe', 'aufwand'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Aufruf für Aufruf', 'Schritt 4: Aufwand'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Das Telefonbuch und die Suche ----------
+  const TB = [['Arnold', 3310], ['Becker', 5522], ['Fischer', 6398], ['Huber', 4456], ['Koch', 7745],
+    ['Lange', 8127], ['Meier', 4711], ['Schulz', 1234], ['Wagner', 9081], ['Zimmer', 2063]];
+  const FEHLEN = ['Abel', 'Maier', 'Zuse'];
+  const indexVon = s => TB.findIndex(p => p[0] === s);
+  // Die Suche wie in Listing 8.1, als Liste der Aufrufe: { l, r, m, rich }. rich: gefunden, links, rechts oder leer.
+  // Die Namen sind ASCII, JavaScript vergleicht sie deshalb wie Go Byte für Byte.
+  function suche(s) {
+    const aufrufe = []; let l = 0, r = TB.length - 1;
+    for (;;) {
+      if (r < l) { aufrufe.push({ l: l, r: r, m: null, rich: 'leer' }); return aufrufe; }
+      const m = l + Math.floor((r - l) / 2), name = TB[m][0];
+      if (name === s) { aufrufe.push({ l: l, r: r, m: m, rich: 'gefunden' }); return aufrufe; }
+      if (name > s) { aufrufe.push({ l: l, r: r, m: m, rich: 'links' }); r = m - 1; }
+      else { aufrufe.push({ l: l, r: r, m: m, rich: 'rechts' }); l = m + 1; }
+    }
+  }
+  // Der Streifen: b = { l, r, m, treffer }, ohne b gehört alles zum Bereich. klick: Einträge sind Knöpfe. ziel: der gesuchte Name.
+  function streifen(id, b, klick, ziel) {
+    const tag = klick ? 'button' : 'div';
+    el(id).innerHTML = TB.map((p, i) => {
+      const drin = !b || (b.l <= i && i <= b.r);
+      const cls = 'eintrag' + (drin ? '' : ' aus') + (b && b.treffer === i ? ' treffer' : b && b.m === i ? ' mitte' : '') + (p[0] === ziel ? ' ziel' : '');
+      const marken = b && b.l <= b.r ? [i === b.l ? 'links' : '', i === b.m ? 'mitte' : '', i === b.r ? 'rechts' : ''].filter(Boolean).join(' ') : '';
+      return '<' + tag + (klick ? ' type="button" data-name="' + p[0] + '"' : '') + ' class="' + cls + '"><span class="ix">' + i + '</span><span>' + p[0] + '</span><span class="ix">' + p[1] + '</span><span class="tag">' + marken + '</span></' + tag + '>';
+    }).join('');
+  }
+  function streifenText(b) {
+    if (!b) return 'Alle zehn Einträge gehören zum Suchbereich, Index 0 bis 9.';
+    if (b.r < b.l) return 'Der Suchbereich ist leer: links ist ' + b.l + ', rechts ist ' + b.r + '. Alle Einträge sind grau.';
+    return 'Zum Suchbereich gehören die Indizes ' + b.l + ' bis ' + b.r + ' (' + TB.slice(b.l, b.r + 1).map(p => p[0]).join(', ') + '), die übrigen sind grau.' +
+      (b.treffer !== undefined ? ' Grün ist ' + TB[b.treffer][0] + ' am Index ' + b.treffer + ': gefunden.' : b.m !== undefined && b.m !== null ? ' Gelb ist ' + TB[b.m][0] + ' am Index ' + b.m + ', die Mitte.' : '');
+  }
+
+  // ---------- Schritt 1: die Idee ----------
+  const I = { ziel: 'Huber', blick: 0 };
+  function linear(s) { const i = indexVon(s); return i >= 0 ? i + 1 : TB.length; }
+  function ideeBereich() {
+    if (!I.blick) return null;
+    const a = suche(I.ziel)[I.blick - 1];
+    return a.rich === 'gefunden' ? { l: a.l, r: a.r, m: a.m, treffer: a.m } : { l: a.l, r: a.r, m: a.m };
+  }
+  function ideeSatz() {
+    const auf = suche(I.ziel), s = I.ziel;
+    if (!I.blick) return 'Gesucht ist ' + s + '. Noch hat die Suche keinen Namen angesehen. Der Suchbereich umfasst alle zehn Einträge, Index 0 bis 9.';
+    const a = auf[I.blick - 1], k = I.blick, name = a.m !== null ? TB[a.m][0] : '';
+    const ende = ' Die Suche von vorn wie in Abschnitt 8.1 hätte ' + (linear(s) === 1 ? 'einen Namen' : linear(s) + ' Namen') + ' angesehen.';
+    if (a.rich === 'leer') return 'Der Suchbereich ist leer. ' + s + ' steht nicht im Telefonbuch. Die binäre Suche hat ' + (k - 1) + ' Namen angesehen.' + ende;
+    const vorn = 'Blick ' + k + ': In der Mitte des Bereichs von Index ' + a.l + ' bis ' + a.r + ' steht am Index ' + a.m + ' ' + name + '. ';
+    if (a.rich === 'gefunden') return vorn + 'Das ist der gesuchte Name, die Telefonnummer ist ' + TB[a.m][1] + '. Gefunden nach ' + k + (k === 1 ? ' Blick.' : ' Blicken.') + ende;
+    const rest = a.rich === 'links' ? [a.l, a.m - 1] : [a.m + 1, a.r];
+    return vorn + s + ' kommt im Alphabet ' + (a.rich === 'links' ? 'vor ' : 'nach ') + name + '. Die Suche behält nur den Teil ' + (a.rich === 'links' ? 'links' : 'rechts') + ' davon, ' +
+      (rest[0] > rest[1] ? 'und dort steht kein Name mehr.' : rest[0] === rest[1] ? 'den Index ' + rest[0] + '.' : 'Index ' + rest[0] + ' bis ' + rest[1] + '.');
+  }
+  function zeichneIdee() {
+    const auf = suche(I.ziel);
+    streifen('i-streifen', ideeBereich(), true, I.ziel);
+    el('i-fehlen').innerHTML = FEHLEN.map(n => '<button type="button" class="' + (n === I.ziel ? 'gewaehlt' : '') + '" data-name="' + n + '">' + n + '</button>').join('');
+    el('i-urteil').innerHTML = '<p>' + esc(ideeSatz()) + '</p>';
+    el('i-weiter').disabled = I.blick === auf.length;
+    melde(false);
+  }
+  function waehleZiel(ev) { const k = ev.target.closest('button[data-name]'); if (k) { I.ziel = k.dataset.name; I.blick = 0; zeichneIdee(); } }
+  el('i-streifen').addEventListener('click', waehleZiel);
+  el('i-fehlen').addEventListener('click', waehleZiel);
+  el('i-weiter').addEventListener('click', () => { if (I.blick < suche(I.ziel).length) { I.blick++; zeichneIdee(); } });
+  el('i-vorn').addEventListener('click', () => { I.blick = 0; zeichneIdee(); });
+  function standIdee() {
+    const auf = suche(I.ziel);
+    return ['Gesucht ist ' + I.ziel + (indexVon(I.ziel) >= 0 ? ', der Name steht am Index ' + indexVon(I.ziel) + '.' : '. Der Name steht nicht im Telefonbuch.'),
+      'Gezeigt ist Blick ' + I.blick + ' von ' + auf.length + '. ' + (I.blick === auf.length ? 'Die Suche ist zu Ende.' : 'Als Nächstes folgt Blick ' + (I.blick + 1) + '.'),
+      'Der Streifen: ' + streifenText(ideeBereich()),
+      'Die Seite sagt dazu: ' + ideeSatz(),
+      'Handgriffe: einen der zehn Namen im Streifen anklicken, oder einen der drei fehlenden Namen Abel, Maier und Zuse wählen. Dann „nächster Blick“ und „von vorn“. Einen eigenen Namen kann der Student nicht eingeben.'];
+  }
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // D.lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher), bereich (für den Streifen).
+  // rahmen: Liste von { name, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu }.
+  function wertText(v) { return Array.isArray(v.w) ? '[' + v.w.join(' ') + ']' : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? 'Die Funktion ' + r.name + ' ist beendet, ihr Rahmen ist gestrichelt' :
+      'Funktion ' + r.name + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v)).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  // Die Speichersicht. speicher = { orte: { 'main.telbuch': [Adresse, Typ, Zellen], … }, ziele: { 'Adresse von telbuch': 100 } }.
+  // Der Schlüssel eines Orts ist der Name des Rahmens, ein Punkt und der Name der Variable.
+  function speicherBloecke(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null, liste = [];
+    if (!z || !D.speicher) return liste;
+    z.rahmen.forEach(r => { if (r.weg) return; r.vars.forEach(v => {
+      const ort = D.speicher.orte[r.name + '.' + v.n];
+      if (!ort) return;
+      const ziel = D.speicher.ziele[v.w];
+      liste.push({ adr: ort[0], typ: ort[1], name: v.n, wo: r.name, neu: v.neu, zeiger: ort[1].charAt(0) === '*',
+        zellen: ort[2] === 1 ? 'Zelle ' + ort[0] : ort[2] ? 'Zellen ' + ort[0] + ' bis ' + (ort[0] + ort[2] - 1) : 'ab Zelle ' + ort[0],
+        wert: ziel !== undefined ? String(ziel) : wertText(v), ziel: ziel });
+    }); });
+    return liste.sort((a, b) => a.adr - b.adr);
+  }
+  const blockText = b => b.zellen + ': ' + b.name + ' in ' + b.wo + ', Typ ' + b.typ + ', Inhalt ' + b.wert + (b.ziel !== undefined ? ' (das ist die Adresse der Zelle ' + b.ziel + ')' : '');
+  function ablauf(kurz, speicher) {
+    const D = { stand: 0, lauf: [], zeilen: [], anfang: '', speicher: speicher };
+    function zeichne() {
+      const z = D.stand ? D.lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = D.zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + '"><h4>Funktion ' + c(r.name) + (r.weg ? ', beendet' : '') + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map(w => '<span>' + esc(w) + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      el(kurz + '-speicher').innerHTML = '<p><strong>Hauptspeicher</strong></p><div class="blockreihe">' +
+        (speicherBloecke(D).map(b => '<div class="block' + (b.zeiger ? ' zeiger' : '') + (b.neu ? ' neu' : '') + '"><div class="adr">' + b.zellen + '</div><div class="wer">' + esc(b.name) + ' <i>' + esc(b.typ) + ' in ' + esc(b.wo) + '</i></div><div class="was">' + esc(b.wert) + '</div>' +
+          (b.ziel !== undefined ? '<div class="adr">Adresse der Zelle ' + b.ziel + '</div>' : '') + '</div>').join('') || '<div class="leer">Noch ist keine Zelle belegt.</div>') + '</div>';
+      el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : D.anfang) + '</p>' + (D.stand === D.lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === D.lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      if (D.nach) D.nach(z);   // eigenes Bild der Seite zu diesem Zustand
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < D.lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    D.setze = function (zeilen, lauf, anfang) { D.zeilen = zeilen; D.lauf = lauf; D.anfang = anfang; D.stand = 0; zeichne(); };
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      speicherBloecke(D).length ? 'Unter den Rahmen steht der Hauptspeicher des Modells als Reihe von Blöcken, die Adressen sind erfunden: ' + speicherBloecke(D).map(blockText).join(' ; ') + '.' : 'Im Hauptspeicher des Modells ist noch keine Zelle belegt.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim()
+    ];
+  }
+  const V = (n, w, neu) => ({ n: n, w: w, neu: !!neu });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const WEG = name => ({ name: name, weg: true, vars: [] });
+
+  // ---------- Schritt 3: die sechs Fälle des Kurstexts ----------
+  const FAELLE = [
+    { s: 'Arnold', text: 'Arnold: steht als erster Name im Array' },
+    { s: 'Zimmer', text: 'Zimmer: steht als letzter Name im Array' },
+    { s: 'Huber', text: 'Huber: steht weder vorn noch hinten' },
+    { s: 'Abel', text: 'Abel: fehlt, kleiner als alle Namen' },
+    { s: 'Zuse', text: 'Zuse: fehlt, größer als alle Namen' },
+    { s: 'Maier', text: 'Maier: fehlt, liegt zwischen Lange und Meier' }
+  ];
+  let fall = 2;
+  const programm = s => ['func binSuche(personArr *[arrlen]person, links, rechts int, suchwert string) int {', '    var ergebnis int', '    if rechts >= links {', '        mitte := links + (rechts-links)/2',
+    '        if personArr[mitte].name == suchwert {', '            ergebnis = personArr[mitte].telefonnummer', '        } else {', '            if personArr[mitte].name > suchwert {',
+    '                ergebnis = binSuche(personArr, links, mitte-1, suchwert)', '            } else {', '                ergebnis = binSuche(personArr, mitte+1, rechts, suchwert)', '            }', '        }',
+    '    } else {', '        ergebnis = -1', '    }', '    return ergebnis', '}', '', 'func main() {',
+    '    telbuch := [arrlen]person{{"Arnold", 3310}, {"Becker", 5522}, {"Fischer", 6398},', '        {"Huber", 4456}, {"Koch", 7745}, {"Lange", 8127}, {"Meier", 4711},', '        {"Schulz", 1234}, {"Wagner", 9081}, {"Zimmer", 2063}}',
+    '    nummer := binSuche(&telbuch, 0, arrlen-1, "' + s + '")', '    fmt.Println(nummer)', '}'];
+  const ADR = 'Adresse von telbuch';
+  const aufrufName = j => 'binSuche, ' + (j + 1) + '. Aufruf';
+  // Jeder Aufruf belegt 24 Zellen für seine Parameter personArr, links und rechts
+  const SP = { orte: { 'main.telbuch': [100, '[10]person', null] }, ziele: { 'Adresse von telbuch': 100 } };
+  for (let j = 0; j < 6; j++) {
+    SP.orte[aufrufName(j) + '.personArr'] = [400 + j * 24, '*[10]person', 8];
+    SP.orte[aufrufName(j) + '.links'] = [408 + j * 24, 'int', 8];
+    SP.orte[aufrufName(j) + '.rechts'] = [416 + j * 24, 'int', 8];
+  }
+  function laufFuer(s) {
+    const auf = suche(s), lauf = [], tel = TB.map(p => '{' + p[0] + ' ' + p[1] + '}'), st = [];
+    const bereichVon = a => a.rich === 'gefunden' ? { l: a.l, r: a.r, m: a.m, treffer: a.m } : a.rich === 'leer' ? { l: a.l, r: a.r } : { l: a.l, r: a.r, m: a.m };
+    // die Rahmen von main und den Aufrufen 0 bis bis. neu: { j, felder }. weg: Nummer eines eben beendeten Aufrufs.
+    const bild = (bis, neu, weg, mainNeu) => {
+      const r = [R('main', [V('telbuch', tel, mainNeu)])];
+      for (let j = 0; j <= bis; j++) {
+        const x = st[j], nn = f => neu && neu.j === j && neu.f.indexOf(f) >= 0;
+        const vs = [V('personArr', ADR, nn('p')), V('links', x.l, nn('p')), V('rechts', x.r, nn('p')), V('suchwert', '"' + s + '"', nn('p')), V('ergebnis', x.erg, nn('e'))];
+        if (x.m !== null) vs.push(V('mitte', x.m, nn('m')));
+        r.push(R(aufrufName(j), vs));
+      }
+      if (weg !== undefined) r.push(WEG(aufrufName(weg)));
+      return r;
+    };
+    lauf.push({ z: 21, satz: 'main legt das Telefonbuch an. Die zehn Einträge stehen nach dem Feld name sortiert.', rahmen: [R('main', [V('telbuch', tel, 1)])], aus: '', bereich: null });
+    auf.forEach((a, j) => {
+      st[j] = { l: a.l, r: a.r, m: null, erg: 0 };
+      const vor = auf[j - 1];
+      const wer = j === 0 ? 'main ruft binSuche(&telbuch, 0, arrlen-1, "' + s + '") auf. arrlen-1 ist 9.' :
+        'Der ' + j + '. Aufruf hat "' + TB[vor.m][0] + '" am Index ' + vor.m + ' verglichen und sucht ' + (vor.rich === 'links' ? 'links weiter, mit mitte-1 = ' + (vor.m - 1) + ' als rechts.' : 'rechts weiter, mit mitte+1 = ' + (vor.m + 1) + ' als links.') +
+        ' Er ruft binSuche(personArr, ' + a.l + ', ' + a.r + ', suchwert) auf und wartet auf dessen Ergebnis.';
+      lauf.push({ z: 2, satz: wer + ' Der ' + (j + 1) + '. Aufruf bekommt einen eigenen Rahmen: personArr enthält die Adresse von telbuch, links ist ' + a.l + ', rechts ist ' + a.r + '. var ergebnis int legt ergebnis mit 0 an.' +
+        (j ? ' Jetzt ' + (j === 1 ? 'wartet ein Aufruf.' : 'warten ' + j + ' Aufrufe.') : ''), rahmen: bild(j, { j: j, f: ['p', 'e'] }), aus: '', bereich: { l: a.l, r: a.r } });
+      if (a.rich === 'leer') {
+        st[j].erg = -1;
+        const vor = auf[j - 1];
+        lauf.push({ z: 15, satz: 'rechts >= links heißt hier ' + a.r + ' >= ' + a.l + '. Das ist false: Der Suchbereich ist leer. Der ' + j + '. Aufruf hat zuletzt "' + TB[vor.m][0] + '" am Index ' + vor.m + ' verglichen, danach blieb kein Name übrig. ergebnis bekommt -1, den Wert für „nicht gefunden“. Die Funktion ruft sich nicht mehr auf.', rahmen: bild(j, { j: j, f: ['e'] }), aus: '', bereich: bereichVon(a) });
+        return;
+      }
+      const name = TB[a.m][0];
+      st[j].m = a.m;
+      lauf.push({ z: 4, satz: 'rechts >= links heißt hier ' + a.r + ' >= ' + a.l + '. Das ist true. mitte = ' + a.l + ' + (' + a.r + ' - ' + a.l + ') / 2 = ' + a.l + ' + ' + Math.floor((a.r - a.l) / 2) + ' = ' + a.m + '. Am Index ' + a.m + ' steht "' + name + '".',
+        rahmen: bild(j, { j: j, f: ['m'] }), aus: '', bereich: { l: a.l, r: a.r, m: a.m } });
+      if (a.rich === 'gefunden') {
+        st[j].erg = TB[a.m][1];
+        lauf.push({ z: 6, satz: 'personArr[' + a.m + '].name == suchwert heißt "' + name + '" == "' + s + '". Das ist true: gefunden. ergebnis bekommt die Telefonnummer ' + TB[a.m][1] + '.', rahmen: bild(j, { j: j, f: ['e'] }), aus: '', bereich: bereichVon(a) });
+      } else if (a.rich === 'links') {
+        lauf.push({ z: 9, satz: '"' + name + '" == "' + s + '" ist false. "' + name + '" > "' + s + '" ist true: ' + s + ' kommt im Alphabet vor ' + name + '. Die Suche geht links weiter, mit links = ' + a.l + ' und mitte-1 = ' + (a.m - 1) + '.', rahmen: bild(j), aus: '', bereich: bereichVon(a) });
+      } else {
+        lauf.push({ z: 11, satz: '"' + name + '" == "' + s + '" ist false. "' + name + '" > "' + s + '" ist auch false: ' + s + ' kommt im Alphabet nach ' + name + '. Die Suche geht rechts weiter, mit mitte+1 = ' + (a.m + 1) + ' und rechts = ' + a.r + '.', rahmen: bild(j), aus: '', bereich: bereichVon(a) });
+      }
+    });
+    const k = auf.length, v = st[k - 1].erg, letzter = bereichVon(auf[k - 1]);
+    lauf.push({ z: 17, satz: 'return ergebnis: Der ' + k + '. Aufruf gibt ' + v + ' zurück und endet.', rahmen: bild(k - 1), aus: '', bereich: letzter });
+    for (let j = k - 2; j >= 0; j--) {
+      st[j].erg = v;
+      lauf.push({ z: auf[j].rich === 'links' ? 9 : 11, satz: 'Zurück im ' + (j + 1) + '. Aufruf: Sein rekursiver Aufruf hat ' + v + ' geliefert, ergebnis bekommt ' + v + '. Danach gibt return ergebnis den Wert ' + v + ' zurück, und auch der ' + (j + 1) + '. Aufruf endet.',
+        rahmen: bild(j, { j: j, f: ['e'] }, j + 1), aus: '', bereich: letzter });
+    }
+    lauf.push({ z: 24, satz: 'Zurück in main: Der 1. Aufruf hat ' + v + ' geliefert, nummer bekommt ' + v + '. binSuche ist ' + k + '-mal gelaufen' + (k > 1 ? ', ein Aufruf hat jeweils den nächsten ausgelöst.' : '.'),
+      rahmen: [R('main', [V('telbuch', tel), V('nummer', v, 1)]), WEG(aufrufName(0))], aus: '', bereich: letzter });
+    lauf.push({ z: 25, satz: 'fmt.Println gibt ' + v + ' aus.' + (v === -1 ? ' -1 heißt: ' + s + ' steht nicht im Telefonbuch.' : ' Das ist die Telefonnummer von ' + s + '.'),
+      rahmen: [R('main', [V('telbuch', tel), V('nummer', v)])], aus: String(v), bereich: letzter });
+    return lauf;
+  }
+  const DA = ablauf('a', SP);
+  DA.nach = z => streifen('a-streifen', z ? z.bereich : null, false, FAELLE[fall].s);
+  function waehleFall(i) {
+    fall = i;
+    el('a-wahl').innerHTML = FAELLE.map((f, k) => '<button type="button" class="' + (k === fall ? 'gewaehlt' : '') + '" data-i="' + k + '">' + esc(f.text) + '</button>').join('');
+    DA.setze(programm(FAELLE[i].s), laufFuer(FAELLE[i].s), 'Noch ist keine Anweisung ausgeführt. Gesucht wird ' + FAELLE[i].s + '. Das Programm beginnt in main, in Zeile 21.');
+  }
+  el('a-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) waehleFall(Number(k.dataset.i)); });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 1) return standIdee();
+    if (stufe === 3) {
+      const z = DA.stand ? DA.lauf[DA.stand - 1] : null;
+      const begonnen = DA.lauf.slice(0, DA.stand).filter(x => x.z === 2).length;
+      // Beim jüngsten Aufruf zählt nur, was schon ausgeführt ist: Zeile 2 heißt eben begonnen, Zeile 4 heißt mitte gerechnet.
+      const bisher = suche(FAELLE[fall].s).slice(0, begonnen).map((a, j) => {
+        const jung = j === begonnen - 1 && z && (z.z === 2 || z.z === 4);
+        return (j + 1) + '. Aufruf mit links = ' + a.l + ', rechts = ' + a.r + (jung && z.z === 2 ? '' :
+          a.rich === 'leer' ? ': Bereich leer' : ', mitte = ' + a.m + ' (' + TB[a.m][0] + ')' + (jung ? '' : a.rich === 'gefunden' ? ', gefunden' : a.rich === 'links' ? ', sucht links weiter' : ', sucht rechts weiter'));
+      });
+      return ['Gewählt ist Fall ' + (fall + 1) + ' von 6: ' + FAELLE[fall].text + '.',
+        begonnen ? 'Die Aufrufe von binSuche bis hierher: ' + bisher.join('; ') + '.' : 'binSuche ist noch nicht aufgerufen.'].concat(standAblauf(DA), [
+        'Der Streifen über den Rahmen zeigt den Suchbereich des jüngsten Aufrufs: ' + streifenText(z ? z.bereich : null),
+        'Jeder Aufruf von binSuche hat einen eigenen Rahmen. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste steht zuletzt. Der Wert des Zeigers personArr steht im Rahmen in Worten da: „Adresse von telbuch“.',
+        'Im Hauptspeicher stehen telbuch und von jedem laufenden Aufruf die Parameter personArr, links und rechts. suchwert, ergebnis, mitte und nummer stehen nur in den Rahmen.',
+        'Handgriffe: einen der sechs Fälle wählen, „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und das Telefonbuch lassen sich nicht ändern.']);
+    }
+    return ['Dieser Schritt hat keine Demo. Demos stehen in Schritt 1 und 3. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 1 ? 'gesucht ' + I.ziel + ', Blick ' + I.blick : stufe === 3 ? 'gesucht ' + FAELLE[fall].s + ', ' + (DA.stand ? 'Schritt ' + DA.stand + ' von ' + DA.lauf.length : 'nichts ausgeführt') : '';
+  // Das Programm der Demo steht in einer Liste und nicht in pre
+  function programmZeilen() {
+    if (stufe !== 3) return [];
+    const jetzt = DA.stand ? DA.lauf[DA.stand - 1].z : 0;
+    return DA.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+
+  zeichneIdee(); waehleFall(2);
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Binäre Suche in einem Verbund-Array',
+    thema: 'binäre Suche, sortiertes Array von Verbünden, Telefonbuch, Rekursion, Suchbereich links rechts mitte, Zeiger auf ein Array, logarithmische Laufzeit',
+    bezug: 'Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 221–225',
+    beschreibung: '../kurslotse/kap8-verbund/go_k8_binaere_suche_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, .legende, table.text, pre.code-block',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum ruft sich binSuche mit mitte-1 auf und nicht mit mitte?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
