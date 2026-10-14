@@ -2,7 +2,7 @@
 
 Die Seite erklärt, was ein imperatives Programm ist: eine Folge von Anweisungen, die der Rechner nacheinander ausführt. Sie zeigt, welche Programmiersprachen heute am meisten benutzt werden, ordnet die vier Arten zu programmieren ein und lässt die Bausteine Verzweigung und Schleife Schritt für Schritt laufen, einmal mit Sprung und einmal mit Block.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -107,7 +107,7 @@ Reiter: bausteine
 - `REPEAT-UNTIL` verlässt die Schleife, wenn die Bedingung erfüllt ist. `WHILE` verlässt sie, wenn die Bedingung nicht erfüllt ist.
 - Die Bedingung `a > 3` stammt aus dem Kurstext. Die Anweisungen in den Programmen sind eigene Beispiele der Seite.
 - Die Tabelle in der unteren Karte hat vier Zeilen und vier Spalten: der Baustein im Kurstext, die Schreibweise in Go, der Abschnitt im Kurstext dazu und die HTML-Seite dazu.
-- Nach der Tabelle schreibt Go `if` und `else` für den Block mit `IF`, `for` mit einer Bedingung für die `WHILE`-Schleife und `break` für den Sprung aus einer Schleife heraus. Für `REPEAT-UNTIL` hat Go keine eigene Schreibweise.
+- Nach der Tabelle schreibt Go `if` und `else` für den Block mit `IF`, `for` mit einer Bedingung für die `WHILE`-Schleife und `break` für den Sprung aus einer Schleife heraus. Für `REPEAT-UNTIL` hat Go keine eigene Schreibweise. Die Tabelle nennt dafür Sprachvergleich 5.14 in Abschnitt 5.5.3.1, Seiten 141–142, und die Variable `ersterLauf`. Mit ihr läuft eine `for`-Schleife mindestens einmal durch.
 - `BREAK` steht nur in der Tabelle. In den Programmen der Demo kommt es nicht vor. Auch `ELSE` und die `FOR`-Schleife zeigt die Demo nicht.
 
 ### Handgriffe
@@ -118,7 +118,7 @@ Reiter: bausteine
 - „nächster Schritt“: Beide Programme führen eine Zeile aus. Sind beide Programme zu Ende, ist der Knopf gesperrt.
 - „einen Schritt zurück“: Beide Programme gehen einen Schritt zurück.
 - „von vorn“: Der Lauf beginnt neu, Baustein und Startwert bleiben.
-- Den drei Links der Tabelle folgen: „if-Anweisungen“, „for-Anweisung mit Bedingung“ und „break-Anweisung“. Das sind eigene HTML-Seiten zu Kapitel 5 und keine Reiter dieser Seite.
+- Den vier Links der Tabelle folgen: „if-Anweisungen“, „for-Anweisung mit Bedingung“ zweimal und „break-Anweisung“. Der Link in der Zeile zu `REPEAT-UNTIL` führt zu Schritt 4 der Lektion zur for-Anweisung mit Bedingung. Das sind eigene HTML-Seiten zu Kapitel 5 und keine Reiter dieser Seite.
 - Die Programme lassen sich nicht ändern. Nur ein Programm allein laufen zu lassen geht nicht.
 
 ### Abschnitte des Kurstexts
@@ -126,4 +126,44 @@ Reiter: bausteine
 - 2.1
 - 5.5.1
 - 5.5.3.1
+- 5.5.3.3
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.1, Seite 6: Das Wort imperare, die zwei Wörter Befehl und Anweisung und die zwei Teile eines imperativen Programms stammen aus dem Kurstext. Dass Schritt 3 Klausurstoff ist und Schritt 1 und 2 der Einordnung dienen, sagt die Lektion dazu.
+  - 1 Welche Sprachen heute benutzt werden, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Rangliste stammt aus dem Stack Overflow Developer Survey 2026: Frage nach den benutzten Programmier-, Skript- und Auszeichnungssprachen, alle Befragten, 14.099 Antworten. Die Einteilung in imperativ und nicht imperativ ist eine Vereinfachung der Lektion.
+  - 2 Vier Arten zu programmieren, 2.1, Seite 5: Abbildung 2.1: Die Arten zu programmieren und der Satz, dass die objektorientierte Programmierung in späteren Modulen folgt, stammen aus dem Kurstext. Die Grundgedanken der Arten und die Zeitleiste mit den Sprachen gibt die Lektion dazu. Die Jahreszahlen sind ungefähre Angaben.
+  - 3 Die Bausteine, 2.1, Seiten 6–8: Die Schreibweisen IF, GOTO, WHILE und REPEAT-UNTIL, der Block in geschweiften Klammern und die Bedingung a > 3 stammen aus dem Kurstext. Die Anweisungen in den Programmen der Demo sind eigene Beispiele. Die Tabelle „Wie Go diese Bausteine schreibt“ gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm: Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: Größter gemeinsamer Teiler.
+  - Abschnitt 2.7, Seiten 17–18, Maschinensprache: Maschinensprache ist imperativ und arbeitet mit Sprungbefehlen. Lektion: Höhere und niedrigere Programmiersprachen, Schritt 1.
+  - Abschnitt 3.3.2, Seiten 27–29, Anweisungen der Reihe nach: Die Anweisungen im Rumpf von main laufen in ihrer Reihenfolge ab. Das Semikolon am Ende einer Anweisung setzt der Compiler meist selbst. Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 3.
+  - Abschnitt 3.4, Seite 39, Block: Eine Folge von Anweisungen in geschweiften Klammern heißt Block. Der Rumpf einer Funktion ist ein Block. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 5.5.1, Seiten 129–132, Verzweigung: Go schreibt if und else. Lektion: if-Anweisung in Go.
+  - Abschnitt 5.5.3 und 5.5.3.1, Seiten 137–142, WHILE und REPEAT-UNTIL: Go schreibt die WHILE-Schleife als for mit einer Bedingung. Wie man in Go eine Schleife mindestens einmal durchläuft, steht auf Seite 141 unter Sprachvergleich 5.14. Lektion: for-Anweisung mit Bedingung in Go.
+  - Abschnitt 5.5.3.2, Seiten 142–146, FOR-Schleife: In Abschnitt 2.1 wird sie nur genannt. Lektion: for-Anweisung mit for-Klausel in Go.
+  - Abschnitt 5.5.3.3, Seiten 146–149, BREAK: Go schreibt break. Lektion: break-Anweisung in Go.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.5
+- 2.7
+- 3.3.2
+- 3.4
+- 5.5.1
+- 5.5.3
+- 5.5.3.1
+- 5.5.3.2
 - 5.5.3.3

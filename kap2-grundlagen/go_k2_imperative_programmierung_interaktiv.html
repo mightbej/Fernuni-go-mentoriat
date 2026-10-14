@@ -16,7 +16,6 @@
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .zeile .frage { color:var(--muted);font-size:.95rem; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     .tabellenrahmen { overflow-x:auto; }
     table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
     th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
@@ -76,6 +75,7 @@
     <button type="button" class="tab" data-stufe="1">1 Welche Sprachen heute benutzt werden</button>
     <button type="button" class="tab" data-stufe="2">2 Vier Arten zu programmieren</button>
     <button type="button" class="tab" data-stufe="3">3 Die Bausteine</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -110,7 +110,6 @@
       <button type="button" id="aufdecken">Welche dieser Sprachen sind nicht imperativ?</button>
     </div>
     <div class="auskunft" id="rang"></div>
-    <p class="quelle">Quelle: Stack Overflow Developer Survey 2026, Frage nach den benutzten Programmier-, Skript- und Auszeichnungssprachen, alle Befragten, 14.099 Antworten. Die Rangliste steht nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -136,7 +135,6 @@
     </table>
     </div>
     <p>Dieses Modul behandelt die strukturierte Programmierung. Die objektorientierte Programmierung baut darauf auf und folgt in späteren Modulen des Studiums.</p>
-    <p class="quelle">Die vier Arten nach Kurstext v3.0.6, Abschnitt 2.1, Abbildung 2.1. Die Jahreszahlen stehen nicht im Kurstext und sind ungefähre Angaben.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -179,7 +177,6 @@
       </div>
     </div>
     <div class="auskunft" id="ablauf"></div>
-    <p class="quelle">Die Schreibweisen <code>IF</code>, <code>GOTO</code>, <code>WHILE</code> und <code>REPEAT-UNTIL</code> und die Bedingung <code>a &gt; 3</code> nach Kurstext v3.0.6, Abschnitt 2.1, Seiten 5–8. Die Anweisungen in den Programmen sind eigene Beispiele.</p>
   </div>
 
   <div class="card">
@@ -191,7 +188,7 @@
       <tbody>
         <tr><td>Block mit <code>IF</code>, <code>THEN</code> und <code>ELSE</code></td><td>Go schreibt <code>if</code> und <code>else</code>.</td><td>5.5.1, Seiten 129–132</td><td><a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisungen</a></td></tr>
         <tr><td><code>WHILE</code>-Schleife</td><td>Go schreibt <code>for</code> mit einer Bedingung.</td><td>5.5.3.1, Seiten 138–142</td><td><a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a></td></tr>
-        <tr><td><code>REPEAT-UNTIL</code>-Schleife</td><td>Go hat dafür keine eigene Schreibweise.</td><td>Es gibt keinen.</td><td>Es gibt keine.</td></tr>
+        <tr><td><code>REPEAT-UNTIL</code>-Schleife</td><td>Go hat dafür keine eigene Schreibweise.</td><td>5.5.3.1, Seiten 141–142: Sprachvergleich 5.14 und die Variable <code>ersterLauf</code></td><td><a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a>, Schritt 4</td></tr>
         <tr><td><code>BREAK</code>, der Sprung aus einer Schleife heraus</td><td>Go schreibt <code>break</code>.</td><td>5.5.3.3, Seiten 146–149</td><td><a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung</a></td></tr>
       </tbody>
     </table>
@@ -199,6 +196,39 @@
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt. Der Stoff von Kapitel 2 kommt im Kurstext zweimal wieder: in Kapitel 3 kurz an Go-Programmen und in den Kapiteln 4 bis 9 ausführlich. Die Liste unter der Tabelle nennt diese Stellen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.1, Seite 6</td><td>Das Wort <em>imperare</em>, die zwei Wörter Befehl und Anweisung und die zwei Teile eines imperativen Programms stammen aus dem Kurstext.</td><td>Dass Schritt 3 Klausurstoff ist und Schritt 1 und 2 der Einordnung dienen, sagt die Lektion dazu.</td></tr>
+      <tr><td>1 Welche Sprachen heute benutzt werden</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Rangliste stammt aus dem Stack Overflow Developer Survey 2026: Frage nach den benutzten Programmier-, Skript- und Auszeichnungssprachen, alle Befragten, 14.099 Antworten. Die Einteilung in imperativ und nicht imperativ ist eine Vereinfachung der Lektion.</td></tr>
+      <tr><td>2 Vier Arten zu programmieren</td><td>2.1, Seite 5: Abbildung 2.1</td><td>Die Arten zu programmieren und der Satz, dass die objektorientierte Programmierung in späteren Modulen folgt, stammen aus dem Kurstext.</td><td>Die Grundgedanken der Arten und die Zeitleiste mit den Sprachen gibt die Lektion dazu. Die Jahreszahlen sind ungefähre Angaben.</td></tr>
+      <tr><td>3 Die Bausteine</td><td>2.1, Seiten 6–8</td><td>Die Schreibweisen <code>IF</code>, <code>GOTO</code>, <code>WHILE</code> und <code>REPEAT-UNTIL</code>, der Block in geschweiften Klammern und die Bedingung <code>a &gt; 3</code> stammen aus dem Kurstext.</td><td>Die Anweisungen in den Programmen der Demo sind eigene Beispiele. Die Tabelle „Wie Go diese Bausteine schreibt“ gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm:</strong> Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: <a href="go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–18, Maschinensprache:</strong> Maschinensprache ist imperativ und arbeitet mit Sprungbefehlen. Lektion: <a href="go_k2_maschinensprache_compiler_interaktiv.html#maschine">Höhere und niedrigere Programmiersprachen</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 3.3.2, Seiten 27–29, Anweisungen der Reihe nach:</strong> Die Anweisungen im Rumpf von <code>main</code> laufen in ihrer Reihenfolge ab. Das Semikolon am Ende einer Anweisung setzt der Compiler meist selbst. Lektion: <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html#klammer">Fehlersuche: drei kurze Go-Programme</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 3.4, Seite 39, Block:</strong> Eine Folge von Anweisungen in geschweiften Klammern heißt Block. Der Rumpf einer Funktion ist ein Block. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, Verzweigung:</strong> Go schreibt <code>if</code> und <code>else</code>. Lektion: <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3 und 5.5.3.1, Seiten 137–142, WHILE und REPEAT-UNTIL:</strong> Go schreibt die <code>WHILE</code>-Schleife als <code>for</code> mit einer Bedingung. Wie man in Go eine Schleife mindestens einmal durchläuft, steht auf Seite 141 unter Sprachvergleich 5.14. Lektion: <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3.2, Seiten 142–146, FOR-Schleife:</strong> In Abschnitt 2.1 wird sie nur genannt. Lektion: <a href="../kap5-anweisungen/go_k5_for_klausel_interaktiv.html">for-Anweisung mit for-Klausel in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3.3, Seiten 146–149, BREAK:</strong> Go schreibt <code>break</code>. Lektion: <a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -216,7 +246,7 @@
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#bausteine
-  var ANKER = ["worum", "sprachen", "arten", "bausteine"];
+  var ANKER = ["worum", "sprachen", "arten", "bausteine", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -420,7 +450,7 @@
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Welche Sprachen heute benutzt werden", "Schritt 2: Vier Arten zu programmieren", "Schritt 3: Die Bausteine"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Welche Sprachen heute benutzt werden", "Schritt 2: Vier Arten zu programmieren", "Schritt 3: Die Bausteine", "Schritt 4: Bezug zum Kurstext"];
   var SEITEN = ["Links", "Rechts"];
 
   function ohneCode(html) { return html.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&amp;/g, "&"); }
@@ -431,6 +461,7 @@
   function laenge() { return Math.max(spuren[0].length, spuren[1].length); }
 
   function standSaetze() {
+    if (stufe === 4) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) return [
       "Die 15 Balken von oben nach unten: " + SPRACHEN.map(function (s, i) { return (i + 1) + ". " + s[0] + " " + prozent(s[1]); }).join(", ") + ".",
@@ -458,7 +489,7 @@
     return saetze;
   }
   function kurz() {
-    if (stufe === 0) return "";
+    if (stufe === 0 || stufe === 4) return "";
     if (stufe === 1) return aufgedeckt ? "Antwort aufgedeckt" : "Antwort verdeckt";
     if (stufe === 2) return "gewählt: " + ARTEN[art].name;
     var b = BAUSTEINE[baustein];
