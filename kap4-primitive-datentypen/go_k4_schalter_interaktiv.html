@@ -106,6 +106,7 @@
     <button type="button" class="tab" data-stufe="2">2 Eine Stelle des Addierers</button>
     <button type="button" class="tab" data-stufe="3">3 Das Relais</button>
     <button type="button" class="tab" data-stufe="4">4 Vom Relais zum Prozessor</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -252,10 +253,36 @@
         <label>Schalter, die ein Mensch pro Sekunde umlegt <input id="rHand" type="number" value="2" step="1" min="1"></label>
       </div>
       <div class="ergebnis" id="rechnung"></div>
-      <p class="quelle">Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.</p>
     </div>
     <div class="nav">
       <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="5">Weiter zu Schritt 5</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Lektion ergänzt die Lektion <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>. Die Gatter aus Schaltern kommen im Kurstext nicht vor. Die Tabelle nennt zu jedem Schritt, woran er im Kurstext anknüpft.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Vier Gatter</td><td>4.3.7.2.1, Seiten 72–74: bit-weise Operatoren</td><td>Die Gatter AND, OR, XOR und NOT entsprechen den bit-weisen Operatoren des Kurstexts.</td><td>Die Verdrahtung mit Schaltern steht nicht im Kurstext.</td></tr>
+      <tr><td>2 Eine Stelle des Addierers</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Stelle des Addierers aus Schaltern ist eine Ergänzung des Mentors.</td></tr>
+      <tr><td>3 Das Relais</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Das Relais steht nicht im Kurstext.</td></tr>
+      <tr><td>4 Vom Relais zum Prozessor</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherelemente:</strong> Ein Speicherelement nimmt genau zwei Werte an. Ein Schalter ist offen oder geschlossen. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren:</strong> Lektion: <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+    </ul>
+  </div>
+  <div class="nav">
+      <button type="button" class="knopf" data-gehe="4">Zurück zu Schritt 4</button>
       <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
@@ -453,8 +480,8 @@
 
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#relais
-  const ANKER = ['worum', 'gatter', 'addierer', 'relais', 'prozessor'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Vier Gatter aus zwei Schaltern', 'Schritt 2: Eine Stelle des Addierers aus Schaltern', 'Schritt 3: Das Relais, Strom schaltet Strom', 'Schritt 4: Vom Relais zum Prozessor'];
+  const ANKER = ['worum', 'gatter', 'addierer', 'relais', 'prozessor', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Vier Gatter aus zwei Schaltern', 'Schritt 2: Eine Stelle des Addierers aus Schaltern', 'Schritt 3: Das Relais, Strom schaltet Strom', 'Schritt 4: Vom Relais zum Prozessor', 'Schritt 5: Bezug zum Kurstext'];
   let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
     const gewechselt = nummer !== aktuell;
@@ -475,6 +502,7 @@
   const lampe01 = on => on ? 'Die Lampe leuchtet' : 'Die Lampe ist aus';
   const stellung = (nameS, wertS) => 'Schalter ' + nameS + ' steht auf ' + wertS + (wertS ? ' (geschlossen)' : ' (offen)');
   function standSaetze() {
+    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     const a = Z.a, b = Z.b, c = Z.c;
     if (aktuell === 1) return [
       stellung('a', a) + ', ' + stellung('b', b) + '.',

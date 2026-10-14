@@ -2,7 +2,7 @@
 
 Die Seite baut die Gatter AND, OR, XOR und NOT aus Schaltern, einer Batterie und einer Lampe. Sie führt von dort zu einer Stelle des Addierers, zum Relais und zum Prozessor. Sie gehört zur Seite „Rechenwerk“, die acht solche Stellen zu einem Addierer zusammensetzt.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 In allen Schaltbildern gilt:
 
@@ -128,3 +128,29 @@ Reiter: prozessor
 ### Abschnitte des Kurstexts
 
 Zu diesem Schritt gibt es im Kurstext keinen Abschnitt.
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Vier Gatter, 4.3.7.2.1, Seiten 72–74: bit-weise Operatoren: Die Gatter AND, OR, XOR und NOT entsprechen den bit-weisen Operatoren des Kurstexts. Die Verdrahtung mit Schaltern steht nicht im Kurstext.
+  - 2 Eine Stelle des Addierers, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Stelle des Addierers aus Schaltern ist eine Ergänzung des Mentors.
+  - 3 Das Relais, kein Abschnitt: Aus dem Kurstext stammt nichts. Das Relais steht nicht im Kurstext.
+  - 4 Vom Relais zum Prozessor, kein Abschnitt: Aus dem Kurstext stammt nichts. Voreingestellt ist der AMD Ryzen 9 7950X von 2022: rund 13,1 Milliarden Transistoren, Takt bis 5,7 Gigahertz, Startpreis 699 US-Dollar. Der Preis von 3 Euro für einen Schalter ist eine Annahme.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherelemente: Ein Speicherelement nimmt genau zwei Werte an. Ein Schalter ist offen oder geschlossen. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren: Lektion: Rechenwerk.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.7.2.1
