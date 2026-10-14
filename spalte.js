@@ -32,7 +32,9 @@
 //   spalte.oeffne(offen)           Die Spalte auf- oder zuklappen.
 //   spalte.sperre(html, platzhalter)  Die Spalte nimmt keine Frage an und sagt, warum. Mit sperre(null) nimmt sie wieder Fragen an.
 //   spalte.leere()                 Das Gespräch leeren.
-//   spalte.markiere(text)          Eine markierte Stelle melden, wenn die Seite sie selbst findet, zum Beispiel im PDF.
+//   spalte.markiere(text, wo)      Eine markierte Stelle melden, wenn die Seite sie selbst findet, zum Beispiel im PDF.
+//                                  wo ist die Umgebung, wenn die Seite sie kennt: { art: 'code', text, titel, zeigen },
+//                                  zum Beispiel im Editorlotsen die ganzen Programmzeilen. Ohne Text verschwindet die Stelle.
 //   spalte.frage({ art, text, extra })    Eine Frage stellen, als hätte der Student sie getippt.
 //   spalte.einzeln({ art, text, extra })  Eine Frage außerhalb des Gesprächs. Liefert die Antwort als HTML.
 //   spalte.neuerStand()            Frühere Fragen und Antworten gehen ab jetzt nicht mehr an das Sprachmodell.
@@ -259,6 +261,7 @@
     let verlauf = [];          // das Gespräch für das Sprachmodell
     let abHier = 0;            // ab dieser Nachricht geht das Gespräch an das Sprachmodell
     let lauf = 0;              // zählt die Gespräche: eine Antwort auf ein geleertes Gespräch verfällt
+    let langsamUhr;            // meldet nach 15 Sekunden, dass KI:connect langsam antwortet
     let markiert = '';         // die markierte Stelle
     let umgebung = null;       // wo sie steht: { art, text, titel, zeigen }
     let gesperrt = false, wartet = false, da = false, platzhalter = angaben.platzhalter || '';
@@ -359,6 +362,11 @@
         beitrag('student', (marke ? '<span class="stand">' + esc(marke) + '</span>' : '') + (zitat ? '<div class="zitat">„' + esc(zitat) + '“' + umgebungHTML(wo) + '</div>' : '') + esc(text));
         if (mitMarkierung) { feld.value = ''; verwirf(); }
         warte = beitrag('wartet', esc(name) + ' sucht im Kurstext und antwortet …');
+        // Nach 15 Sekunden ohne Antwort sieht das Warten wie ein Absturz aus. Meist ist KI:connect nur langsam.
+        const langsam = warte;
+        langsamUhr = setTimeout(() => {
+          if (langsam.className === 'beitrag wartet') langsam.innerHTML += '<br>KI:connect antwortet gerade langsam. Du kannst weiterarbeiten, die Antwort erscheint hier.';
+        }, 15000);
         const d = await schicke(Object.assign(frage, { verlauf: verlauf.slice(abHier) }, auftrag.extra, mehr));
         if (meiner !== lauf) return;
         verlauf.push({ role: 'assistant', content: d.antwort });
@@ -378,6 +386,7 @@
           melde(esc(fehler.message));
         }
       } finally {
+        clearTimeout(langsamUhr);
         if (meiner === lauf) { wartet = false; schalte(); if (!gesperrt && mitMarkierung) feld.focus(); }
       }
     }
@@ -481,7 +490,7 @@
       oeffne: offen => { if (da) oeffne(offen, false); },
       sperre: sperre,
       leere: leere,
-      markiere: text => { if (!gesperrt) zeigeMarkierung(String(text || '').slice(0, 1500), null); },
+      markiere: (text, wo) => { if (!gesperrt) zeigeMarkierung(String(text || '').slice(0, 1500), text ? wo || null : null); },
       frage: auftrag => stelle(auftrag),
       einzeln: einzeln,
       neuerStand: () => { abHier = verlauf.length; },
