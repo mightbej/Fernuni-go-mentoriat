@@ -48,6 +48,7 @@
     /* Was das Programm auf den Bildschirm schreibt */
     .konsole { margin:12px 0;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;white-space:pre-wrap;min-height:3.2em; }
     .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -65,6 +66,7 @@
     <button type="button" class="tab" data-stufe="2">2 break im Lauf</button>
     <button type="button" class="tab" data-stufe="3">3 Ohne break</button>
     <button type="button" class="tab" data-stufe="4">4 Wann break passt</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -95,7 +97,6 @@
       <li><strong>Schritt 4</strong> sagt, warum <code>break</code> als schlechter Stil gilt, wann es trotzdem passt und was es genau verlässt.</li>
     </ul>
     <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–149. Das Programm mit <code>k</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -144,7 +145,6 @@ for i := 1; i &lt;= eingabe; i++ {
     </div>
     <div class="auskunft" id="p-text"></div>
     <p>Die Division <code>math.MaxInt/fak</code> ist eine Division ganzer Zahlen. Die Nachkommastellen fallen weg.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–148. Die Werte der Demo stammen aus einem Lauf mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -204,7 +204,6 @@ for i := 1; i &lt;= eingabe; i++ {
       <li><strong>Eingabe 0:</strong> Die Schleifenbedingung <code>1 &lt;= 0</code> ergibt schon bei der ersten Prüfung <code>false</code>. Der Schleifenrumpf läuft nie. Weil <code>fak</code> mit 1 beginnt, stimmt das Ergebnis trotzdem: 0! = 1.</li>
       <li><strong>Negative Eingabe:</strong> Zeile 15 fängt sie ab. Die Fakultät ist nur für natürliche Zahlen erklärt.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 146–148.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -236,7 +235,6 @@ for i := 1; i &lt;= eingabe; i++ {
     <div class="auskunft" id="o-text"></div>
     <p>Beide Fassungen geben für jede Eingabe das Gleiche aus.</p>
     <p>Der gleiche Kunstgriff steht schon in Abschnitt 5.5.3.1: Dort erzwingt die Flag-Variable <code>ersterLauf</code> in der Schleifenbedingung einen ersten Schleifendurchlauf. Die Seite <a href="go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a> zeigt ihn in Schritt 4. Die Operatoren <code>&amp;&amp;</code> und <code>!</code> stehen auf der Seite <a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seite 148. Im Kurstext steht nur der Kopf der Schleife. Den Schleifenrumpf hat die Seite aus Listing 5.7 übernommen.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -276,12 +274,41 @@ for i := 1; i &lt;= eingabe; i++ {
     </div>
     <div class="auskunft" id="b-text"></div>
     <p class="legende">Gelb markiert ist die Zeile mit <code>break</code>. Die vier Programme sind Ausschnitte ohne <code>package</code>, <code>import</code> und <code>func main</code>.</p>
-
-    <p>Zum Abschluss: Das <a href="155_go_k5_break_anweisung_quiz.html">Quiz zur break-Anweisung</a> fragt den Stoff von Abschnitt 5.5.3.3 ab.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.3, Seiten 147–149. Die vier Programme der Demo und die Meldung des Compilers stehen nicht im Kurstext. Dass <code>break</code> bei geschachtelten Schleifen nur die innere verlässt, steht dort ebenfalls nicht.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Fakultät und Überlauf</td><td>5.5.3.3, Seiten 146–148</td><td>Die Fakultät mit der Prüfung vor jeder Multiplikation stammt aus dem Kurstext.</td><td>Die Werte der Demo stammen aus einem Lauf mit Go 1.26.</td></tr>
+      <tr><td>2 break im Lauf</td><td>5.5.3.3, Seiten 146–148: Listing 5.7</td><td>Listing 5.7 stammt aus dem Kurstext.</td><td>Die Ausführung Anweisung für Anweisung gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Ohne break</td><td>5.5.3.3, Seite 148</td><td>Der Kopf der Schleife mit der Flag-Variable stammt aus dem Kurstext.</td><td>Den Schleifenrumpf hat die Lektion aus Listing 5.7 übernommen.</td></tr>
+      <tr><td>4 Wann break passt</td><td>5.5.3.3, Seiten 147–149</td><td>Der Rat, eine Schleife möglichst ohne <code>break</code> zu schreiben, stammt aus dem Kurstext.</td><td>Die vier Programme der Demo und die Meldung des Compilers gibt die Lektion dazu. Dass <code>break</code> bei geschachtelten Schleifen nur die innere verlässt, steht nicht im Kurstext.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen:</strong> Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Warum die Fakultät geprüft wird. Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3.2, Seiten 142–146, Endlosschleife <code>for {</code>:</strong> Sie endet nur mit <code>break</code>. Lektion: <a href="go_k5_for_klausel_interaktiv.html#varianten">for-Anweisung mit for-Klausel in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 5.5.2, Seiten 133–137, switch:</strong> Ein <code>break</code> in einer switch-Anweisung verlässt nur diese. Lektion: <a href="go_k5_switch_interaktiv.html">switch-Anweisung in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Das <a href="155_go_k5_break_anweisung_quiz.html">Quiz zur break-Anweisung</a> fragt den Stoff von Abschnitt 5.5.3.3 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -312,7 +339,7 @@ for i := 1; i &lt;= eingabe; i++ {
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#lauf
-  var ANKER = ["worum", "pruefung", "lauf", "flag", "wann"];
+  var ANKER = ["worum", "pruefung", "lauf", "flag", "wann", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -553,9 +580,10 @@ for i := 1; i &lt;= eingabe; i++ {
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Fakultät und Überlauf", "Schritt 2: break im Lauf", "Schritt 3: Ohne break", "Schritt 4: Wann break passt"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Fakultät und Überlauf", "Schritt 2: break im Lauf", "Schritt 3: Ohne break", "Schritt 4: Wann break passt", "Schritt 5: Bezug zum Kurstext"];
 
   function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) {
       var p = PRUEF[pruef];
@@ -621,7 +649,7 @@ for i := 1; i &lt;= eingabe; i++ {
     reiter: function () { return ANKER[stufe]; },
     schritt: function () { return SCHRITTE[stufe]; },
     sichtbar: function () { return $("stufe-" + stufe); },
-    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis, table.text",
     zeilen: zeilen,
     zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
     stand: standSaetze,

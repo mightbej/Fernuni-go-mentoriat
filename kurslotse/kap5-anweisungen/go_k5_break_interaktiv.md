@@ -2,7 +2,7 @@
 
 Die Seite erklärt die Anweisung `break`, die eine Schleife sofort verlässt. Sie führt das Programm zur Fakultät aus Listing 5.7 Anweisung für Anweisung aus, zeigt die gleiche Schleife ohne `break` mit einer Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt. Sie gehört zu Abschnitt 5.5.3.3 des Kurstexts.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -156,7 +156,6 @@ Reiter: wann
 - „in switch in einer Schleife“: `for i := 1; i <= 5; i++ {` mit `switch i { case 3: break }` und `fmt.Print(i, " ")`. Ausgabe: `1 2 3 4 5`. `break` verlässt nur die switch-Anweisung, die Schleife läuft weiter.
 - „außerhalb einer Schleife“: `if x > 3 { break }` ohne Schleife. Meldung des Compilers: `break is not in a loop, switch, or select`.
 - Im Kurstext steht, dass `break` nur in einer Schleife und in einer switch-Anweisung zulässig ist. Die vier Programme und der Fall der geschachtelten Schleifen stehen nicht im Kurstext.
-- Der Schritt endet mit einem Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -168,3 +167,35 @@ Reiter: wann
 
 - 5.5.3.3
 - 5.5.2
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Fakultät und Überlauf, 5.5.3.3, Seiten 146–148: Die Fakultät mit der Prüfung vor jeder Multiplikation stammt aus dem Kurstext. Die Werte der Demo stammen aus einem Lauf mit Go 1.26.
+  - 2 break im Lauf, 5.5.3.3, Seiten 146–148: Listing 5.7: Listing 5.7 stammt aus dem Kurstext. Die Ausführung Anweisung für Anweisung gibt die Lektion dazu.
+  - 3 Ohne break, 5.5.3.3, Seite 148: Der Kopf der Schleife mit der Flag-Variable stammt aus dem Kurstext. Den Schleifenrumpf hat die Lektion aus Listing 5.7 übernommen.
+  - 4 Wann break passt, 5.5.3.3, Seiten 147–149: Der Rat, eine Schleife möglichst ohne break zu schreiben, stammt aus dem Kurstext. Die vier Programme der Demo und die Meldung des Compilers gibt die Lektion dazu. Dass break bei geschachtelten Schleifen nur die innere verlässt, steht nicht im Kurstext.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Warum die Fakultät geprüft wird. Lektion: Überlauf bei Ganzzahlen in Go.
+  - Abschnitt 5.5.3.2, Seiten 142–146, Endlosschleife for {: Sie endet nur mit break. Lektion: for-Anweisung mit for-Klausel in Go, Schritt 4.
+  - Abschnitt 5.5.2, Seiten 133–137, switch: Ein break in einer switch-Anweisung verlässt nur diese. Lektion: switch-Anweisung in Go.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur break-Anweisung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 4.3.8
+- 5.5.2
+- 5.5.3.2
+- 5.5.3.3
