@@ -2,7 +2,7 @@
 
 Die Seite zeigt, wie Go eine negative ganze Zahl als Bitmuster ablegt. Schritt 1 liest ein Bitmuster als `uint8` und als `int8`. Schritt 2 bildet aus einer Zahl ihr Negatives. Schritt 3 trennt das binäre Literal im Quelltext vom Bitmuster im Speicher. Die Seite gehört zu Abschnitt 4.3.5 des Kurstexts.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -114,16 +114,45 @@ Reiter: literal
 - `var e int8 = int8(d)` mit `d` vom Typ `uint8` und dem Wert 247: Wert −9, Bitmuster 1111 0111. Die Konvertierung einer Variable lässt die Bits stehen.
 - `var m int8 = -0b10000000`: Wert −128, Bitmuster 1000 0000.
 - Der Teil „Das Bitmuster sichtbar machen“ zeigt drei Zeilen: `fmt.Printf("%b\n", b)` gibt für −9 `-1001` aus, also den Betrag mit Minus. `fmt.Printf("%08b\n", uint8(b))` gibt `11110111` aus, das Bitmuster im Speicher.
-- Der Schritt endet mit Links zum Quiz zu den Wertebereichen und zu den Seiten „Rechenwerk“, „Zahlenkreis“ und „Überlauf bei Ganzzahlen“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
 - Eine der sechs Zeilen wählen.
 - Eigener Code lässt sich nicht eingeben.
-- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 4.3.5
 - 4.3.1
 - 4.7
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Die Wertigkeit −128, 4.3.5, Seiten 64–66: Die sechs Bitmuster auf den Knöpfen und die Zerlegung in den Wert des linken Bits und den Wert der rechten Bits stammen aus dem Kurstext. Das Beispiel mit −119 ist ein eigenes Beispiel.
+  - 2 Eine Zahl negieren, 4.3.5, Seite 64; 4.3.7.2.1, Seiten 72–74: Operator ^: Im Kurstext steht nur, dass die Negation technisch sehr einfach ist. Die zwei Handgriffe, die Begründung und die Sonderfälle gibt die Lektion dazu.
+  - 3 Literal und Bitmuster, 4.3.5, Seite 66: Der Unterschied zwischen System-Ebene und Quellcode-Ebene mit dem Beispiel -0b1001 stammt aus dem Kurstext. Die sechs Zeilen der Demo, die Meldung des Compilers und die Ausgabe mit %08b gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherelemente: Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 4.3.1, Seiten 59–61, Literale: Lektion: Zahlensysteme in Go.
+- Unter „Was über den Kurstext hinausgeht“ steht:
+  - Die formale Definition: Nach dem Kurstext gehört sie in das Modul Computersysteme.
+- Unter „Wie es weitergeht“ stehen Links zum Quiz zu den Wertebereichen und zu den Seiten „Rechenwerk“, „Zahlenkreis“ und „Überlauf bei Ganzzahlen“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links am Ende folgen. Alle führen auf eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.1
+- 4.3.5
+- 4.3.7.2.1

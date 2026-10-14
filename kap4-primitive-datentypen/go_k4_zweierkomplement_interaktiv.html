@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace; }
     input[type=number] { border:1px solid #9ca3af;border-radius:8px;padding:9px 12px;font-family:Consolas,"Courier New",monospace;font-size:1.1rem;width:7em; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -59,6 +58,7 @@
     .stufe { display:none; }
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -75,6 +75,7 @@
     <button type="button" class="tab" data-stufe="1">1 Die Wertigkeit −128</button>
     <button type="button" class="tab" data-stufe="2">2 Eine Zahl negieren</button>
     <button type="button" class="tab" data-stufe="3">3 Literal und Bitmuster</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -104,7 +105,6 @@
       <li><strong>Schritt 3, Literal und Bitmuster:</strong> Warum <code>-9</code> im Quelltext <code>-0b1001</code> heißt und nicht <code>0b11110111</code>.</li>
     </ul>
     <div class="hinweis">Die Seite rechnet mit 8 Bit, also mit <code>uint8</code> und <code>int8</code>. Die größeren Typen arbeiten genauso, nur mit mehr Bits. Die Programmzeilen in Schritt 2 und 3 sind mit Go 1.26 ausgeführt.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Die formale Definition des Zweierkomplements gehört nach dem Kurstext in das Modul Computersysteme.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -159,7 +159,6 @@
       <li><strong>Allgemein für n Bit:</strong> Ein Typ ohne Vorzeichen reicht von 0 bis 2<sup>n</sup> − 1. Ein Typ mit Vorzeichen reicht von −2<sup>n−1</sup> bis 2<sup>n−1</sup> − 1.</li>
     </ul>
     <p>Wie die 256 Bitmuster eines Bytes auf einem Kreis liegen und wo die Naht zwischen 127 und −128 sitzt, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#vorzeichen">Zahlenkreis</a>, Schritt 2.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Die sechs Bitmuster auf den Knöpfen und die Zerlegung in den Wert des linken Bits und den Wert der rechten Bits stammen aus dem Kurstext. Das Beispiel mit −119 ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -215,7 +214,6 @@
       <li><strong>Die −128:</strong> Der Typ <code>int8</code> hat 128 negative Werte und nur 127 positive. Zu −128 fehlt das Gegenstück. In Go ist <code>-m</code> für ein <code>m</code> vom Typ <code>int8</code> mit dem Wert −128 wieder −128, ohne Meldung.</li>
     </ul>
     <p>Was Go tut, wenn ein Ergebnis nicht in den Typ passt, zeigt die Seite <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</p>
-    <p class="quelle">Im Kurstext steht in Abschnitt 4.3.5 auf Seite 64 nur, dass die Negation technisch sehr einfach ist. Die zwei Handgriffe, die Begründung und die Sonderfälle stehen dort nicht. Der Operator <code>^</code> wird in Abschnitt 4.3.7.2.1 behandelt, Seiten 72–74.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -245,6 +243,37 @@
 fmt.Printf("%b\n", b)             // -1001
 fmt.Printf("%08b\n", uint8(b))    // 11110111</pre>
     <p>Die <code>08</code> im Verb füllt die Ausgabe links mit Nullen auf acht Stellen auf. Die Umwandlung <code>uint8(b)</code> lässt die Bits stehen und liest sie ohne Vorzeichen. Mehr dazu steht auf der Seite <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Die Wertigkeit −128</td><td>4.3.5, Seiten 64–66</td><td>Die sechs Bitmuster auf den Knöpfen und die Zerlegung in den Wert des linken Bits und den Wert der rechten Bits stammen aus dem Kurstext.</td><td>Das Beispiel mit −119 ist ein eigenes Beispiel.</td></tr>
+      <tr><td>2 Eine Zahl negieren</td><td>4.3.5, Seite 64<br>4.3.7.2.1, Seiten 72–74: Operator <code>^</code></td><td>Im Kurstext steht nur, dass die Negation technisch sehr einfach ist.</td><td>Die zwei Handgriffe, die Begründung und die Sonderfälle gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Literal und Bitmuster</td><td>4.3.5, Seite 66</td><td>Der Unterschied zwischen System-Ebene und Quellcode-Ebene mit dem Beispiel <code>-0b1001</code> stammt aus dem Kurstext.</td><td>Die sechs Zeilen der Demo, die Meldung des Compilers und die Ausgabe mit <code>%08b</code> gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherelemente:</strong> Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.1, Seiten 59–61, Literale:</strong> Lektion: <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Die formale Definition:</strong> Nach dem Kurstext gehört sie in das Modul Computersysteme.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -252,10 +281,9 @@ fmt.Printf("%08b\n", uint8(b))    // 11110111</pre>
       <li><strong>Rechnen:</strong> Wie der Rechner mit dem Zweierkomplement subtrahiert, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#subtraktion">Rechenwerk</a>, Schritt 5.</li>
       <li><strong>Überlauf:</strong> Was geschieht, wenn eine Rechnung über 127 hinausgeht, zeigen die Seiten <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3, und <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seite 66: Unterschied zwischen System-Ebene und Quellcode-Ebene, mit dem Beispiel <code>-0b1001</code>. Die sechs Zeilen der Demo, die Meldung des Compilers und die Ausgabe mit <code>%08b</code> stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -276,7 +304,7 @@ fmt.Printf("%08b\n", uint8(b))    // 11110111</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#negieren
-  const ANKER = ['worum', 'wertigkeit', 'negieren', 'literal'];
+  const ANKER = ['worum', 'wertigkeit', 'negieren', 'literal', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -388,10 +416,11 @@ fmt.Printf("%08b\n", uint8(b))    // 11110111</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Wertigkeit −128', 'Schritt 2: Eine Zahl negieren', 'Schritt 3: Literal und Bitmuster'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Wertigkeit −128', 'Schritt 2: Eine Zahl negieren', 'Schritt 3: Literal und Bitmuster', 'Schritt 4: Bezug zum Kurstext'];
   const glatt = t => t.replace(/\s+/g, ' ').trim();
 
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 1) {
       const l = lesarten(byte1);
