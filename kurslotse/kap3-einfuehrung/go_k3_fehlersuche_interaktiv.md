@@ -2,9 +2,9 @@
 
 Die Seite ist eine Übung. Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe. Die Seite gehört zu Kapitel 3 des Kurstexts, Abschnitt 3.3 und 3.4, Seiten 25–41.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Schritt 1 bis 3 zeigen je ein Programm, Schritt 4 ordnet die acht Fehler dem Kurstext zu.
 
-Für alle Schritte gilt:
+Für Schritt 1 bis 3 gilt:
 
 - Jede Demo zeigt ein Programm in vier oder fünf Fassungen nacheinander. Fassung 1 heißt „Das Programm lesen“ und zeigt das fehlerhafte Programm ohne Meldung. Jede weitere Fassung ist ein Schritt der Suche: übersetzen, eine Stelle korrigieren, wieder übersetzen. Gelb sind die Zeilen, die der Compiler meldet oder auf die es gerade ankommt.
 - Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
@@ -23,7 +23,7 @@ Reiter: worum
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Eine Liste nennt die zwei Arten von Fehlern, je mit einem Beispiel.
-- Unter „So arbeitest du mit den drei Programmen“ stehen drei Punkte: lesen, weiter, selbst ausprobieren.
+- Unter „So arbeitest du mit den drei Programmen“ stehen vier Punkte: lesen, weiter, selbst ausprobieren, nachlesen. Der letzte Punkt verweist auf Schritt 4.
 - Unter „Was dazugehört“ stehen Links auf die Lektionen „Fehlersuche: drei kurze Go-Programme“, „Höhere und niedrigere Programmiersprachen“ und „Unterprogramme und Funktionen“.
 
 ### Handgriffe
@@ -98,7 +98,7 @@ Reiter: kopie
 - Eine Liste erklärt: Der Parameter `zahl` ist eine eigene Variable der Funktion und bekommt eine Kopie des Werts von `x`. Der Rückgabewert geht verloren, wenn der Aufruf allein in einer Zeile steht.
 - Go meldet einen nicht verwendeten Rückgabewert einer eigenen Funktion nicht.
 - Die öffnende Klammer `{` muss in der gleichen Zeile stehen wie `if` und die Bedingung. In einer neuen Zeile ist sie immer ein Fehler.
-- Unter „Wie es weitergeht“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
+- Unter dem Programm stehen Links auf die Lektionen „if-Anweisung in Go“ und „Funktionen in Go: Rückgaben und Wertübergabe“.
 
 ### Handgriffe
 
@@ -108,3 +108,42 @@ Reiter: kopie
 
 - 3.4
 - 3.3.2
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Fehler eine Zeile, zusammen acht Zeilen. Die Spalten: „Fehler im Programm“ mit Schritt, Zeile und Code, „Was falsch ist“, „Abschnitt im Kurstext“ mit gedruckten Seiten und „Lektion dazu“ mit Link.
+- Die Zuordnung in der Tabelle:
+  - Schritt 1, Zeile 19, `rechteck(a b)`: fehlendes Komma. Abschnitt 3.4, Seiten 37–41, Hinweis 3.7. Lektion „Fehlersuche: drei kurze Go-Programme“, Schritt 1.
+  - Schritt 1, Zeile 20, `quader(fläche, c)`: Bezeichner außerhalb seines Gültigkeitsbereichs. Abschnitt 3.4, Seiten 37–41. Lektion „Variablendeklaration in Go“, Schritt 3.
+  - Schritt 1, Zeile 12, `return grundfläche`: falscher Rückgabewert, gefunden über die Meldung zur unbenutzten Variable `volumen`. Abschnitt 3.4, Seiten 37–41, und Abschnitt 5.1.5, Seiten 122–123. Lektion „Variablendeklaration in Go“, Schritt 5.
+  - Schritt 2, Zeile 11, `tempText + " °C:" + tempC`: `+` mit String und Zahl. Abschnitt 3.3.7, Seite 36, Abschnitt 4.1, Seiten 45–47, und Abschnitt 3.3.5, Seiten 33–35. Lektion „Strings in Go“, Schritt 4.
+  - Schritt 2, Zeile 8, `(32 + tempC) * 1.8`: falsche Klammern. Abschnitt 3.3.6, Seiten 35–36, und Abschnitt 4.1.2, Seiten 50–52. Lektion „Logische Operatoren und Vergleiche“, Schritt 3.
+  - Schritt 2, Zeile 9, `tempC - 273.15`: falsches Vorzeichen, ohne Meldung. Abschnitt 3.3.6, Seiten 35–36, und Abschnitt 2.7, Seiten 17–19. Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 4.
+  - Schritt 3, Zeile 12 und 13, `{` in neuer Zeile: Abschnitt 3.3.2, Seiten 27–29, Expertenwissen 3.5. Lektion „Fehlersuche: drei kurze Go-Programme“, Schritt 3.
+  - Schritt 3, Zeile 15, `addiereEins(x)`: Rückgabewert verloren. Abschnitt 3.4, Seiten 37–41, und Abschnitt 7.2, Seiten 169–170. Lektion „Funktionen in Go“, Schritt 5.
+- Im Kurstext steht die Formel für Kelvin als `tempC - nullpunkt` mit der Konstante `nullpunkt` = -273.15. Das Programm der Seite schreibt `tempC + 273.15`.
+- Unter „Was die Lektion voraussetzt“ stehen Abschnitt 2.6 und 2.7 mit Links auf die Lektionen „Unterprogramme und Funktionen“ und „Höhere und niedrigere Programmiersprachen“.
+- Unter „Woher die Programme stammen“ steht: Schritt 1 ist Listing 3.3, Schritt 2 ein Auszug aus Listing 3.2, Schritt 3 ein eigenes Beispiel.
+- Unter „Was über den Kurstext hinausgeht“ steht: Die acht Fehler stehen nicht im Kurstext. Für die Klammer in einer neuen Zeile nennt Abschnitt 3.3.2 die Meldung `unexpected semicolon or newline before {`, Go 1.26 meldet nach `if` `unexpected newline, expected { after if clause`.
+- Unter „Wie es weitergeht“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 3.4
+- 3.3.2
+- 3.3.5
+- 3.3.6
+- 3.3.7
+- 4.1
+- 5.1.5
+- 7.2
