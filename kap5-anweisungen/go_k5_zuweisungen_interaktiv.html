@@ -16,7 +16,6 @@
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     button.code { font-family:Consolas,"Courier New",monospace; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.5em; }
@@ -50,6 +49,7 @@
     .speicher .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
     .speicher .kasten.merk { border-style:dashed;border-color:var(--muted); }
     .speicher .kasten b { font-weight:700; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -68,6 +68,7 @@
     <button type="button" class="tab" data-stufe="3">3 ++ und --</button>
     <button type="button" class="tab" data-stufe="4">4 Tupel-Zuweisung</button>
     <button type="button" class="tab" data-stufe="5">5 Einfache Anweisungen</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -95,7 +96,6 @@ x = x + 12   // x bekommt den Wert 22</pre>
       <li><strong>Schritt 5</strong> sagt, welche Anweisungen in Go einfache Anweisungen heißen und wozu man den Begriff braucht.</li>
     </ul>
     <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ergebnisse und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3, Seiten 126–128, und Abschnitt 3.3.5, Seiten 33–35.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -150,7 +150,6 @@ x = x + 12   // x bekommt den Wert 22</pre>
     <h3>Wenn der Typ nicht passt</h3>
     <p>Go wandelt bei einer Zuweisung keinen Wert stillschweigend in einen anderen Typ um. Wer einer Variable vom Typ <code>float64</code> den Wert einer Variable vom Typ <code>int</code> zuweisen will, schreibt die Konversion hin: <code>f = float64(x)</code>. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</p>
     <p>Einer Konstante lässt sich nichts zuweisen. Dazu gibt es die Seite <a href="go_k5_konstanten_interaktiv.html">Konstanten</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.5, Seiten 33–35, mit Hinweis 3.6. Die sieben Zeilen der Demo und die Meldungen des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -220,7 +219,6 @@ z -= 2 + 3   // entspricht z = z - (2 + 3)</pre>
       <li><strong>Bits:</strong> zum Beispiel <code>&lt;&lt;=</code> und <code>&gt;&gt;=</code> für die Bitverschiebung. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</li>
       <li><strong>Strings:</strong> <code>+</code> verkettet zwei Strings, also hängt <code>+=</code> einen String an. Hat <code>wetter</code> den Wert <code>"Regen"</code>, ergibt <code>wetter += "schauer"</code> den Wert <code>"Regenschauer"</code>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3, Seiten 126–127. Die Werte der Demo und das Beispiel mit <code>wetter</code> sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -270,7 +268,6 @@ z -= 2 + 3   // entspricht z = z - (2 + 3)</pre>
     <p>Go kennt diese Unterscheidung nicht. In Go schreibt man zwei Anweisungen untereinander, und jeder sieht die Reihenfolge:</p>
 <pre class="code-block">y = x
 x++</pre>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3.1, Seiten 127–128, mit dem Sprachvergleich 5.7. Die Meldungen des Compilers und die Werte zum Beispiel in Java stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -316,7 +313,6 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
       <li><strong>Unpassend:</strong> Die Variablen haben nichts miteinander zu tun, oder rechts stehen längere Ausdrücke. Dann liest sich eine Zuweisung je Zeile besser.</li>
     </ul>
     <p>Das Vertauschen mit einer dritten Variable steht schon in Abschnitt 2.6 des Kurstexts, dort heißt sie k. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#aufruf">Unterprogramme und Funktionen</a>, Schritt 1.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.3.2, Seiten 128–129. Die Fassung „ohne Hilfsvariable“ und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -365,12 +361,41 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
       <span class="was">Art der Anweisung</span><span class="wie" id="e-art"></span>
     </div>
     <div class="auskunft" id="e-text"></div>
-
-    <p>Zum Abschluss: Das <a href="130_go_k5_zuweisungen_quiz.html">Quiz zu den Zuweisungen</a> fragt den Stoff der Abschnitte 5.3 und 5.4 ab.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.4, Seite 129, und Abschnitt 5.5.3.2, Seiten 142–146. Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Zuweisung mit =</td><td>3.3.5, Seiten 33–35: Hinweis 3.6<br>5.3, Seiten 126–128</td><td>Die Zuweisung und ihre Richtung stammen aus dem Kurstext.</td><td>Die sieben Zeilen der Demo und die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Kombinierte Operatoren</td><td>5.3, Seiten 126–127</td><td>Die kombinierten Operatoren wie <code>+=</code> stammen aus dem Kurstext.</td><td>Die Werte der Demo und das Beispiel mit <code>wetter</code> sind eigene Beispiele.</td></tr>
+      <tr><td>3 ++ und --</td><td>5.3.1, Seiten 127–128: Sprachvergleich 5.7</td><td>Die Anweisungen <code>++</code> und <code>--</code> und der Sprachvergleich stammen aus dem Kurstext.</td><td>Die Meldungen des Compilers und die Werte zum Beispiel in Java gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Tupel-Zuweisung</td><td>5.3.2, Seiten 128–129</td><td>Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext.</td><td>Die Fassung ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Einfache Anweisungen</td><td>5.4, Seite 129<br>5.5.3.2, Seiten 142–146</td><td>Der Begriff der einfachen Anweisung stammt aus dem Kurstext.</td><td>Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Zuweisung:</strong> Ein Ausdruck wird ausgewertet und sein Wert einer Variable zugewiesen. Lektion: <a href="../kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html#ablauf">Exkurs: Speichern und Rechnen im Rechner</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Vertauschen:</strong> Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#aufruf">Unterprogramme und Funktionen</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 4.6.2.2, Seiten 107–108, Verketten:</strong> <code>a += "zeit"</code>. Lektion: <a href="../kap4-primitive-datentypen/go_k4_strings_interaktiv.html#verketten">Strings in Go</a>, Schritt 4.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Das <a href="130_go_k5_zuweisungen_quiz.html">Quiz zu den Zuweisungen</a> fragt den Stoff der Abschnitte 5.3 und 5.4 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -398,7 +423,7 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#tupel
-  var ANKER = ["worum", "zuweisung", "kombiniert", "inkrement", "tupel", "einfach"];
+  var ANKER = ["worum", "zuweisung", "kombiniert", "inkrement", "tupel", "einfach", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -610,7 +635,7 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Zuweisung mit =", "Schritt 2: Kombinierte Operatoren", "Schritt 3: ++ und --", "Schritt 4: Tupel-Zuweisung", "Schritt 5: Einfache Anweisungen"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Zuweisung mit =", "Schritt 2: Kombinierte Operatoren", "Schritt 3: ++ und --", "Schritt 4: Tupel-Zuweisung", "Schritt 5: Einfache Anweisungen", "Schritt 6: Bezug zum Kurstext"];
 
   // Die Sätze, die Schritt 1 und Schritt 3 gemeinsam haben: zwei feste Zeilen, eine gewählte dritte
   function standDrei(kopf, liste, wahl) {
@@ -621,6 +646,7 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
       "Als Zeile 3 wählbar sind nur die Knöpfe: " + liste.map(function (x) { return x.zeile; }).join(" ; ") + ". Ein Eingabefeld gibt es nicht."];
   }
   function standSaetze() {
+    if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) return standDrei(KOPF1, ZU, zuWahl);
     if (stufe === 2) {

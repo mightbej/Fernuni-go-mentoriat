@@ -2,7 +2,7 @@
 
 Die Seite erklärt, wie ein Go-Programm einer Variable einen neuen Wert gibt: mit dem Zuweisungsoperator `=`, mit den kombinierten Operatoren wie `+=`, mit den Anweisungen `++` und `--` und mit der Tupel-Zuweisung. Der letzte Schritt erklärt den Begriff einfache Anweisung. Die Seite gehört zu den Abschnitten 5.3 und 5.4 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -178,7 +178,6 @@ Reiter: einfach
 - Keine einfachen Anweisungen sind: `var zahl int = 20` (ausführliche Variablendeklaration) und `if x > 0 { x-- }` (bedingte Anweisung, eine Kontrollfluss-Anweisung).
 - Zu `for var i int = 1; i <= 10; i++ {` meldet der Compiler `syntax error: var declaration not allowed in for initializer`.
 - `quader` ist im Kurstext nur ein Beispielname für eine Funktion. Die Funktion selbst steht nicht auf der Seite.
-- Der Schritt endet mit einem Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -189,5 +188,41 @@ Reiter: einfach
 
 ### Abschnitte des Kurstexts
 
+- 5.4
+- 5.5.3.2
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Zuweisung mit =, 3.3.5, Seiten 33–35: Hinweis 3.6; 5.3, Seiten 126–128: Die Zuweisung und ihre Richtung stammen aus dem Kurstext. Die sieben Zeilen der Demo und die Meldungen des Compilers gibt die Lektion dazu.
+  - 2 Kombinierte Operatoren, 5.3, Seiten 126–127: Die kombinierten Operatoren wie += stammen aus dem Kurstext. Die Werte der Demo und das Beispiel mit wetter sind eigene Beispiele.
+  - 3 ++ und --, 5.3.1, Seiten 127–128: Sprachvergleich 5.7: Die Anweisungen ++ und -- und der Sprachvergleich stammen aus dem Kurstext. Die Meldungen des Compilers und die Werte zum Beispiel in Java gibt die Lektion dazu.
+  - 4 Tupel-Zuweisung, 5.3.2, Seiten 128–129: Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext. Die Fassung ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.
+  - 5 Einfache Anweisungen, 5.4, Seite 129; 5.5.3.2, Seiten 142–146: Der Begriff der einfachen Anweisung stammt aus dem Kurstext. Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, Zuweisung: Ein Ausdruck wird ausgewertet und sein Wert einer Variable zugewiesen. Lektion: Exkurs: Speichern und Rechnen im Rechner, Schritt 1.
+  - Abschnitt 2.6, Seiten 15–17, Vertauschen: Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 1.
+  - Abschnitt 4.6.2.2, Seiten 107–108, Verketten: a += "zeit". Lektion: Strings in Go, Schritt 4.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zu den Zuweisungen“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 2.6
+- 3.3.5
+- 4.6.2.2
+- 5.3
+- 5.3.1
+- 5.3.2
 - 5.4
 - 5.5.3.2
