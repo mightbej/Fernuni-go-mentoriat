@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-13T19:32",
+ "stand": "2026-10-14T07:12",
  "abschnitte": {
   "2.1": [
    {
@@ -80,6 +80,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
@@ -223,6 +230,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
@@ -253,9 +267,30 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
     "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -265,6 +300,15 @@
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "3.1": [
+   {
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -286,6 +330,20 @@
    }
   ],
   "3.3.2": [
+   {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
@@ -312,10 +370,10 @@
   ],
   "3.3.4": [
    {
-    "titel": "Go: Richtige und falsche Bezeichner",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_bezeichner_arbeitsblatt.html",
-    "beschreibung": "Die Seite zeigt eine Liste richtiger und falscher Bezeichner, über die der Kurs erst abstimmt und die sie dann auflöst.",
-    "geprueft": false,
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
     "art": "erklaert"
    },
    {
@@ -335,6 +393,13 @@
   ],
   "3.3.5": [
    {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zahlensysteme in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
@@ -351,6 +416,13 @@
   ],
   "3.3.6": [
    {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
@@ -366,6 +438,20 @@
    }
   ],
   "3.3.7": [
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
@@ -390,18 +476,18 @@
   ],
   "3.4": [
    {
-    "titel": "Go Fehlersuche - 3 Programme",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme.html",
-    "beschreibung": "Die Seite zeigt drei Programme mit eingebauten Fehlern zu Funktionsaufrufen, Gültigkeitsbereich und Rückgabewert.",
-    "geprueft": false,
-    "art": "erklaert"
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
-    "titel": "Go Fehlersuche - Einfache Programme",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme_einfach.html",
-    "beschreibung": "Die Seite zeigt drei kurze Programme mit wenigen Fehlern für den Einstieg in die Fehlersuche.",
-    "geprueft": false,
-    "art": "erklaert"
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
@@ -1095,6 +1181,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
     "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
@@ -1385,13 +1478,6 @@
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/exkurs_von_problem_zu_code.html",
     "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
     "geprueft": true,
-    "art": "nennt"
-   },
-   {
-    "titel": "Go Fehlersuche - Einfache Programme",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_fehlersuche_programme_einfach.html",
-    "beschreibung": "Die Seite zeigt drei kurze Programme mit wenigen Fehlern für den Einstieg in die Fehlersuche.",
-    "geprueft": false,
     "art": "nennt"
    },
    {
