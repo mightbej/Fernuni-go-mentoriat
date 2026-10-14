@@ -2,9 +2,9 @@
 
 Die Seite ist eine Übung. Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht den Fehler, liest die Meldung und sieht die Korrektur. Die Seite gehört zu Kapitel 3 des Kurstexts, Abschnitt 3.3 und 3.4, Seiten 25–41.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Schritt 1 bis 3 zeigen je ein Programm, Schritt 4 ordnet die drei Fehler dem Kurstext zu.
 
-Für alle Schritte gilt:
+Für Schritt 1 bis 3 gilt:
 
 - Jede Demo zeigt ein Programm in drei Fassungen nacheinander. Fassung 1 „Das Programm lesen“: das fehlerhafte Programm ohne Meldung. Fassung 2 „Übersetzen“: das gleiche Programm mit der Meldung des Compilers, die gemeldete Zeile ist gelb. Fassung 3 „Korrigieren“: das berichtigte Programm mit seiner Ausgabe, die geänderte Zeile ist gelb.
 - Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
@@ -90,7 +90,7 @@ Reiter: klammer
 - Die genaue Regel aus Expertenwissen 3.5: Der Compiler fügt ein Semikolon ein, wenn die Zeile mit einem Bezeichner, einem Literal, einem der Schlüsselwörter `break`, `continue`, `fallthrough`, `return` oder einem der Zeichen `++`, `--`, `)`, `]`, `}` endet.
 - Ein gelber Kasten nennt die Faustregel: Eine öffnende Klammer steht nie am Anfang einer neuen Zeile.
 - Im Kurstext steht für diesen Fehler die Meldung `unexpected semicolon or newline before {`. Go 1.26 meldet ihn nach `if` mit dem Wortlaut der Demo.
-- Unter „Wie es weitergeht“ stehen Links auf die zweite Lektion zur Fehlersuche und auf drei Quiz.
+- Unter dem Text steht ein Link auf die Lektion „if-Anweisung in Go“.
 
 ### Handgriffe
 
@@ -99,3 +99,34 @@ Reiter: klammer
 ### Abschnitte des Kurstexts
 
 - 3.3.2
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Fehler eine Zeile, zusammen drei Zeilen. Die Spalten: „Fehler im Programm“ mit Schritt, Zeile und Code, „Was falsch ist“, „Abschnitt im Kurstext“ mit gedruckten Seiten und „Lektion dazu“ mit Link.
+- Schritt 1, Zeile 10, `rechteck(3 4)`: fehlendes Komma. Abschnitt 3.4, Seiten 37–41, Hinweis 3.7, und Abschnitt 2.6, Seiten 15–17. Lektion „Unterprogramme und Funktionen“, Schritt 2.
+- Schritt 2, Zeile 7, `"Temperatur in C: " + tempC`: `+` mit String und Zahl. Abschnitt 3.3.7, Seite 36, Abschnitt 4.1, Seiten 45–47, und Abschnitt 3.3.5, Seiten 33–35. Lektion „Strings in Go“, Schritt 4.
+- Schritt 3, Zeile 7 und 8, `{` in neuer Zeile: Abschnitt 3.3.2, Seiten 27–29, Expertenwissen 3.5, und Abschnitt 5.5.1, Seiten 129–132. Lektion „if-Anweisung in Go“, Schritt 1.
+- Unter „Was die Lektion voraussetzt“ steht Abschnitt 2.7, Seiten 17–19, mit der Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 4.
+- Unter „Woher die Programme stammen“ steht: Schritt 1 ist ein eigenes Beispiel nach Listing 3.3, Schritt 2 nach Listing 3.2, Schritt 3 ein eigenes Beispiel.
+- Unter „Was über den Kurstext hinausgeht“ steht: Die drei Fehler stehen nicht im Kurstext. Für die Klammer in einer neuen Zeile nennt Abschnitt 3.3.2 die Meldung `unexpected semicolon or newline before {`, Go 1.26 meldet nach `if` `unexpected newline, expected { after if clause`.
+- Unter „Wie es weitergeht“ stehen Links auf die zweite Lektion zur Fehlersuche und auf drei Quiz: „Implizite Semikolons“, „Parameter und Argument“, „Ausgabe und String-Verkettung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 3.4
+- 3.3.7
+- 3.3.2
+- 3.3.5
+- 2.6
+- 4.1
+- 5.5.1

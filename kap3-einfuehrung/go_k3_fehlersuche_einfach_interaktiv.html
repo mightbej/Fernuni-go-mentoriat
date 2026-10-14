@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -91,6 +90,7 @@
     <button type="button" class="tab" data-stufe="1">1 Argumente trennen</button>
     <button type="button" class="tab" data-stufe="2">2 Text und Zahl</button>
     <button type="button" class="tab" data-stufe="3">3 Die Klammer nach if</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -114,6 +114,7 @@
       <li><strong>Übersetzen:</strong> Mit „weiter“ erscheint die Meldung des Compilers.</li>
       <li><strong>Korrigieren:</strong> Mit dem nächsten „weiter“ erscheint das korrigierte Programm mit seiner Ausgabe.</li>
       <li><strong>Selbst ausprobieren:</strong> „Diese Fassung kopieren“ legt das Programm in die Zwischenablage. Füge es in deinen Editor ein und übersetze es mit <code>go run</code>.</li>
+      <li><strong>Nachlesen:</strong> Schritt 4 ordnet jeden der drei Fehler einem Abschnitt des Kurstexts zu und nennt die Lektion dazu.</li>
     </ul>
 
     <h3>Was dazugehört</h3>
@@ -146,7 +147,6 @@
       <li><strong>Parameter:</strong> Die Funktion <code>rechteck</code> hat zwei Parameter, <code>a</code> und <code>b</code>. Sie stehen in der Deklaration, durch ein Komma getrennt.</li>
       <li><strong>Argumente:</strong> Beim Aufruf bekommt jeder Parameter einen Wert, sein Argument. Auch die Argumente sind durch ein Komma getrennt.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.4, Seiten 37–41. Das Programm ist ein eigenes Beispiel nach Listing 3.3. Die Meldung ist die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -173,7 +173,6 @@
       <li><strong><code>+</code> mit String und Zahl:</strong> Das gibt es in Go nicht. Beide Operanden müssen den gleichen Typ haben.</li>
       <li><strong>Mehrere Argumente:</strong> <code>fmt.Println</code> nimmt beliebig viele Argumente von beliebigem Typ, gibt sie nacheinander aus und setzt ein Leerzeichen dazwischen.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.7, Seite 36. Das Programm ist ein eigenes Beispiel nach Listing 3.2. Die Meldung ist die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -199,16 +198,52 @@
     <p>Die Zeile <code>if x &gt; 0</code> endet mit dem Literal <code>0</code>. Dort könnte eine Anweisung zu Ende sein, also setzt der Compiler ein Semikolon. Die öffnende Klammer in der nächsten Zeile kommt für ihn zu spät.</p>
     <div class="hinweis">Eine öffnende Klammer <code>{</code> oder <code>(</code> steht in Go nie am Anfang einer neuen Zeile. Sie steht am Ende der Zeile davor.</div>
     <p>Die Anweisung <code>if</code> selbst wird in Kapitel 5 behandelt, in der Lektion <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Jeder der drei Fehler gehört zu einem Abschnitt des Kurstexts. Die Tabelle nennt zu jedem Fehler den Abschnitt zum Nachlesen und die Lektion, die das Thema erklärt.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Fehler im Programm</th><th>Was falsch ist</th><th>Abschnitt im Kurstext</th><th>Lektion dazu</th></tr>
+      <tr><td>Schritt 1, Zeile 10: <code>rechteck(3 4)</code></td><td>Zwischen den zwei Argumenten fehlt das Komma.</td><td>3.4, Seiten 37–41: Hinweis 3.7, Parameter und Argument<br>2.6, Seiten 15–17: Parameter</td><td><a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html#parameter">Unterprogramme und Funktionen</a>, Schritt 2</td></tr>
+      <tr><td>Schritt 2, Zeile 7: <code>"Temperatur in C: " + tempC</code></td><td>Der Operator <code>+</code> soll einen String mit einer Zahl verbinden.</td><td>3.3.7, Seite 36: Verkettung von Strings<br>4.1, Seiten 45–47: gleicher Typ beider Operanden<br>3.3.5, Seiten 33–35: <code>fmt.Println</code> mit zwei Argumenten</td><td><a href="../kap4-primitive-datentypen/go_k4_strings_interaktiv.html#verketten">Strings in Go</a>, Schritt 4</td></tr>
+      <tr><td>Schritt 3, Zeile 7 und 8: <code>if x &gt; 0</code> und <code>{</code> in der nächsten Zeile</td><td>Go setzt am Ende der Zeile mit <code>if</code> ein Semikolon. Die Klammer steht danach allein.</td><td>3.3.2, Seiten 27–29: Expertenwissen 3.5, automatisches Einfügen von Semikolons<br>5.5.1, Seiten 129–132: if-Anweisung</td><td><a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html#if">if-Anweisung in Go</a>, Schritt 1</td></tr>
+    </table>
+    </div>
+
+    <h3>Was die Lektion voraussetzt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.7, Seiten 17–19, Fehler:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html#fehler">Höhere und niedrigere Programmiersprachen</a> erklärt in Schritt 4, welche Fehler der Compiler findet und welche nicht.</li>
+    </ul>
+
+    <h3>Woher die Programme stammen</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Das Programm ist ein eigenes Beispiel nach Listing 3.3 aus Abschnitt 3.4.</li>
+      <li><strong>Schritt 2:</strong> Das Programm ist ein eigenes Beispiel nach Listing 3.2 aus Abschnitt 3.3.</li>
+      <li><strong>Schritt 3:</strong> Das Programm ist ein eigenes Beispiel des Mentoriats.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Die eingebauten Fehler:</strong> Die drei Fehler stehen nicht im Kurstext.</li>
+      <li><strong>Die Meldungen:</strong> Alle Meldungen und Ausgaben stammen von Go 1.26. In Abschnitt 3.3.2 steht für die Klammer in einer neuen Zeile die Meldung <code>unexpected semicolon or newline before {</code>. Go 1.26 meldet nach <code>if</code> stattdessen <code>unexpected newline, expected { after if clause</code>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Mehrere Fehler in einem Programm:</strong> Die Lektion <a href="go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Programme mit mehreren Fehlern</a>. Dort gibt es auch Fehler, die der Compiler nicht findet.</li>
       <li><strong>Quiz:</strong> <a href="go_implizite_semikolons_quiz.html">Implizite Semikolons</a>, <a href="go_parameter_argument_quiz.html">Parameter und Argument</a> und <a href="go_ausgabe_verkettung_string_quiz.html">Ausgabe und String-Verkettung</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.2, Seiten 27–29, mit Expertenwissen 3.5. Im Kurstext steht für diesen Fehler die Meldung „unexpected semicolon or newline before {“. Go 1.26 meldet den Fehler nach <code>if</code> mit dem Wortlaut der Demo.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -227,8 +262,8 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#argumente
-  const ANKER = ['worum', 'argumente', 'text', 'klammer'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Argumente trennen', 'Schritt 2: Text und Zahl', 'Schritt 3: Die Klammer nach if'];
+  const ANKER = ['worum', 'argumente', 'text', 'klammer', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Argumente trennen', 'Schritt 2: Text und Zahl', 'Schritt 3: Die Klammer nach if', 'Schritt 4: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -429,7 +464,7 @@
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis, table.text',
     zeilen: () => zeilenFassung(DEMO()),
     zeilenTitel: 'Das Programm in der Fassung, die gerade zu sehen ist:',
     stand: standSaetze,
