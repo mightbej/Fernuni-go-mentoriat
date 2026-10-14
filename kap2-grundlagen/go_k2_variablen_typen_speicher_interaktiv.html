@@ -15,7 +15,6 @@
     button:disabled { opacity:.5;cursor:default; }
     button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     .tabellenrahmen { overflow-x:auto; }
     table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
     th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
@@ -105,6 +104,7 @@
     <button type="button" class="tab" data-stufe="2">2 Typ, Operator, Konstante, Literal</button>
     <button type="button" class="tab" data-stufe="3">3 Zusammengesetzte Typen</button>
     <button type="button" class="tab" data-stufe="4">4 Eine Variable ist Speicherplatz</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -185,7 +185,6 @@
     </div>
     <p>Der Unterschied in einem Satz: In der Mathematik ändert sich der Wert einer Variable während einer Rechnung nie, im Programm kann eine Variable erst einen Wert haben und später einen anderen.</p>
     <div class="hinweis">Die Zuweisung mit dem Pfeil <code>←</code> wird im Kurstext in Abschnitt 2.3 behandelt, Seiten 10–11. Dort steht auch, welche Zeichen die Programmiersprachen dafür verwenden. Go schreibt <code>=</code>.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–9.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -233,7 +232,6 @@
       <li><strong>Konkatenation:</strong> Go hängt zwei Zeichenketten mit dem Operator <code>+</code> aneinander. Das steht in Abschnitt 4.6.2.2, Seite 107.</li>
       <li><strong>Konversion:</strong> In Go heißt sie Typkonvertierung. Go schreibt den Namen des Typs vor den Wert und setzt den Wert in runde Klammern, zum Beispiel <code>float64(n)</code>. Das steht in Abschnitt 4.7, Seiten 109–111. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9, und Abschnitt 2.4, Seiten 11–12.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -278,7 +276,6 @@
       <li><strong>Datenverbund:</strong> In Go heißt er <code>struct</code>. Verbunde werden in Kapitel 8 behandelt, ab Seite 195. Dazu gibt es die Seite <a href="../kap8-verbund/go_k8_verbund_interaktiv.html">struct in Go</a>.</li>
       <li><strong>Verbund im Verbund:</strong> Hierarchische Verbunde stehen in Abschnitt 8.3, ab Seite 212. Dazu gibt es die Seite <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seite 9.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -326,10 +323,45 @@
       <li><strong>Zellen und Adressen:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a> zeigt, wo eine Variable in Go im Speicher liegt und wie viele Speicherelemente die Typen von Go belegen.</li>
       <li><strong>Bitmuster und Zahl:</strong> Die Seite <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#bitmuster">Zahlenkreis</a> zeigt, wie aus einem Bitmuster eine ganze Zahl wird, auch eine negative.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 2.2, Seiten 9–10, und Abschnitt 2.4, Seite 12.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt. Der Stoff von Kapitel 2 kommt im Kurstext zweimal wieder: in Kapitel 3 kurz an Go-Programmen und in den Kapiteln 4 bis 9 ausführlich. Die Liste unter der Tabelle nennt diese Stellen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.1, Seiten 5–8<br>2.2, Seiten 8–10<br>2.3, Seiten 10–11</td><td>Die Themen der Abschnitte 2.1 bis 2.3 stammen aus dem Kurstext: die Reihenfolge der Anweisungen, die Variable im Speicher und das Rechnen.</td><td>Die Zuordnung der drei Abschnitte zu den Werken des Rechners nach John von Neumann gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Variable in Mathematik und Informatik</td><td>2.2, Seiten 8–9<br>2.3, Seiten 10–11: Zuweisung</td><td>Die Gleichung <code>a · x² + b · x + c = 0</code>, die Parameter und die Unbekannte stammen aus dem Kurstext. Dort steht auch, dass eine Variable im Programm erst einen Wert haben kann und später einen anderen.</td><td>Die drei Beispiele zur Gleichung und das Programm mit drei Anweisungen sind eigene Beispiele.</td></tr>
+      <tr><td>2 Typ, Operator, Konstante, Literal</td><td>2.2, Seite 9<br>2.4, Seiten 11–12</td><td>Typ, Operator, Konstante und Literal, die Zahl Pi mit dem Wert 3,14159265359 und die Konkatenation stammen aus Abschnitt 2.2. Die Konversion und die streng typisierte Sprache stammen aus Abschnitt 2.4.</td><td>Die Programmzeilen zur Fläche eines Kreises, die Tabelle der zwei Typen und die Rechnung <code>n + y</code> mit 17 und 0,5 sind eigene Beispiele.</td></tr>
+      <tr><td>3 Zusammengesetzte Typen</td><td>2.2, Seite 9</td><td>Der Vektor und der Datenverbund mit Vorname, Nachname, Adresse und Telefonnummer stammen aus dem Kurstext. Dort ist auch die Adresse ein zusammengesetzter Typ.</td><td>Die fünf Messwerte und die Werte der Person sind eigene Beispiele.</td></tr>
+      <tr><td>4 Eine Variable ist Speicherplatz</td><td>2.2, Seiten 9–10<br>2.4, Seite 12</td><td>Die binären Speicherelemente, das Beschreiben und das Lesen je nach Typ stammen aus Abschnitt 2.2. Die Deklaration mit Name, Typ, Speicherplatz und Anfangswert stammt aus Abschnitt 2.4.</td><td>Die Variable aus acht Speicherelementen, die Werte 65, 97 und 17 und das Lesen als Zeichen sind eigene Beispiele.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, die erste Variable in Go:</strong> <code>var tempC float64</code> in Listing 3.2, mit Typ, Null-Wert und der Konstante <code>nullpunkt</code>. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 3.3.5, Seiten 33–35, Zuweisung:</strong> Go schreibt die Zuweisung mit <code>=</code>. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html#zuweisung">Zuweisungen in Go</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 4.3.1, Seiten 59–61, Literale:</strong> Wie Go ganze Zahlen als Literale schreibt. Lektion: <a href="../kap4-primitive-datentypen/go_k4_zahlensysteme_interaktiv.html#literale">Zahlensysteme in Go</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 4.3.4, Seite 63, Ganzzahl-Typen:</strong> Wie viele Bit ein Typ von Go belegt. Lektion: <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a>.</li>
+      <li><strong>Abschnitt 4.6.2.2, Seiten 107–108, Konkatenation:</strong> Go hängt zwei Strings mit <code>+</code> aneinander. Lektion: <a href="../kap4-primitive-datentypen/go_k4_strings_interaktiv.html#verketten">Strings in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.7, Seiten 109–111, Konversion:</strong> In Go heißt sie Typkonvertierung. Lektion: <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+      <li><strong>Abschnitt 5.1, Seiten 113–123, Deklaration:</strong> Lektion: <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration in Go</a>.</li>
+      <li><strong>Abschnitt 5.2, Seiten 124–126, Konstanten:</strong> Lektion: <a href="../kap5-anweisungen/go_k5_konstanten_interaktiv.html">Konstanten in Go</a>.</li>
+      <li><strong>Kapitel 6, Seiten 151–162, Vektor:</strong> In Go heißt er Array. Lektion: <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+      <li><strong>Kapitel 8, Seiten 195–214, Datenverbund:</strong> In Go heißt er Verbund, der Typ ist <code>struct</code>. Der Verbund im Verbund wird in Abschnitt 8.3 behandelt. Lektionen: <a href="../kap8-verbund/go_k8_verbund_interaktiv.html">Verbund in Go</a> und <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -347,7 +379,7 @@
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#speicher
-  var ANKER = ["worum", "variable", "begriffe", "typen", "speicher"];
+  var ANKER = ["worum", "variable", "begriffe", "typen", "speicher", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -541,10 +573,11 @@
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
   var SCHRITTE = ["Worum es geht", "Schritt 1: Variable in Mathematik und Informatik", "Schritt 2: Typ, Operator, Konstante, Literal",
-    "Schritt 3: Zusammengesetzte Typen", "Schritt 4: Eine Variable ist Speicherplatz"];
+    "Schritt 3: Zusammengesetzte Typen", "Schritt 4: Eine Variable ist Speicherplatz", "Schritt 5: Bezug zum Kurstext"];
   var PROGRAMM = ["x ← 3", "x ← 7", "x ← x + 1"];
 
   function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo. Im Bild der vier Werke ist das Speicherwerk gelb hervorgehoben."];
     if (stufe === 1) {
       var b = BEISPIELE[beispiel];
@@ -572,7 +605,7 @@
     return liste;
   }
   function kurz() {
-    if (stufe === 0) return "";
+    if (stufe === 0 || stufe === 5) return "";
     if (stufe === 1) return "Beispiel " + (beispiel + 1) + ", " + lauf + " von 3 Anweisungen ausgeführt";
     if (stufe === 2) return teil ? "gewählt: " + TEILE[teil].name : "kein Teil gewählt";
     if (stufe === 3) return !gewaehlt ? "nichts gewählt" : gewaehlt.art === "element" ? "gewählt: " + ORDNUNG[gewaehlt.nr] + " Element" : "gewählt: Feld „" + FELDER[gewaehlt.feld].name + "“";

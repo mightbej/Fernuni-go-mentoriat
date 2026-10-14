@@ -2,7 +2,7 @@
 
 Die Seite erklärt, was eine Variable in einem Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie stellt die Variable der Mathematik neben die Variable im Programm, klärt die Begriffe Typ, Operator, Konstante und Literal, zeigt zusammengesetzte Typen und zeigt die Variable als Speicherplatz aus acht Speicherelementen. Aus Abschnitt 2.4 des Kurstexts nimmt sie die Konversion in Schritt 2 und die Deklaration in Schritt 4 auf.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -181,3 +181,51 @@ Reiter: speicher
 - 2.2
 - 2.4
 - 5.1
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.1, Seiten 5–8; 2.2, Seiten 8–10; 2.3, Seiten 10–11: Die Themen der Abschnitte 2.1 bis 2.3 stammen aus dem Kurstext: die Reihenfolge der Anweisungen, die Variable im Speicher und das Rechnen. Die Zuordnung der drei Abschnitte zu den Werken des Rechners nach John von Neumann gibt die Lektion dazu.
+  - 1 Variable in Mathematik und Informatik, 2.2, Seiten 8–9; 2.3, Seiten 10–11: Zuweisung: Die Gleichung a · x² + b · x + c = 0, die Parameter und die Unbekannte stammen aus dem Kurstext. Dort steht auch, dass eine Variable im Programm erst einen Wert haben kann und später einen anderen. Die drei Beispiele zur Gleichung und das Programm mit drei Anweisungen sind eigene Beispiele.
+  - 2 Typ, Operator, Konstante, Literal, 2.2, Seite 9; 2.4, Seiten 11–12: Typ, Operator, Konstante und Literal, die Zahl Pi mit dem Wert 3,14159265359 und die Konkatenation stammen aus Abschnitt 2.2. Die Konversion und die streng typisierte Sprache stammen aus Abschnitt 2.4. Die Programmzeilen zur Fläche eines Kreises, die Tabelle der zwei Typen und die Rechnung n + y mit 17 und 0,5 sind eigene Beispiele.
+  - 3 Zusammengesetzte Typen, 2.2, Seite 9: Der Vektor und der Datenverbund mit Vorname, Nachname, Adresse und Telefonnummer stammen aus dem Kurstext. Dort ist auch die Adresse ein zusammengesetzter Typ. Die fünf Messwerte und die Werte der Person sind eigene Beispiele.
+  - 4 Eine Variable ist Speicherplatz, 2.2, Seiten 9–10; 2.4, Seite 12: Die binären Speicherelemente, das Beschreiben und das Lesen je nach Typ stammen aus Abschnitt 2.2. Die Deklaration mit Name, Typ, Speicherplatz und Anfangswert stammt aus Abschnitt 2.4. Die Variable aus acht Speicherelementen, die Werte 65, 97 und 17 und das Lesen als Zeichen sind eigene Beispiele.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 3.3.3, Seiten 29–30, die erste Variable in Go: var tempC float64 in Listing 3.2, mit Typ, Null-Wert und der Konstante nullpunkt. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 3.3.5, Seiten 33–35, Zuweisung: Go schreibt die Zuweisung mit =. Lektion: Zuweisungen in Go, Schritt 1.
+  - Abschnitt 4.3.1, Seiten 59–61, Literale: Wie Go ganze Zahlen als Literale schreibt. Lektion: Zahlensysteme in Go, Schritt 2.
+  - Abschnitt 4.3.4, Seite 63, Ganzzahl-Typen: Wie viele Bit ein Typ von Go belegt. Lektion: Speichermodell.
+  - Abschnitt 4.6.2.2, Seiten 107–108, Konkatenation: Go hängt zwei Strings mit + aneinander. Lektion: Strings in Go, Schritt 4.
+  - Abschnitt 4.7, Seiten 109–111, Konversion: In Go heißt sie Typkonvertierung. Lektion: Typkonvertierung.
+  - Abschnitt 5.1, Seiten 113–123, Deklaration: Lektion: Variablendeklaration in Go.
+  - Abschnitt 5.2, Seiten 124–126, Konstanten: Lektion: Konstanten in Go.
+  - Kapitel 6, Seiten 151–162, Vektor: In Go heißt er Array. Lektion: Arrays in Go.
+  - Kapitel 8, Seiten 195–214, Datenverbund: In Go heißt er Verbund, der Typ ist struct. Der Verbund im Verbund wird in Abschnitt 8.3 behandelt. Lektionen: Verbund in Go und Hierarchische Verbünde.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.2
+- 2.3
+- 2.4
+- 3.3.3
+- 3.3.5
+- 4.3.1
+- 4.3.4
+- 4.6.2.2
+- 4.7
+- 5.1
+- 5.2
+- 6
+- 8.2
+- 8.3
