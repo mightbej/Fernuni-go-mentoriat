@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T12:19",
+ "stand": "2026-10-14T14:52",
  "abschnitte": {
   "2.1": [
    {
@@ -145,6 +145,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Speichermodell: Verbund-Datentyp in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wie ein Verbund im Hauptspeicher liegt: Die Felder liegen lückenlos hintereinander, und ein Bauplan des Typs sagt, wo jedes Feld beginnt. Sie ist die vierte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Speichermodell: Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
@@ -176,6 +183,13 @@
     "titel": "Verbund in Go: der Datentyp struct",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_interaktiv.html",
     "beschreibung": "Die Seite führt den Verbund ein: wozu er dient, wie ein Verbund-Typ deklariert wird, was sein Null-Wert ist, wie ein Verbund-Literal aussieht und wie Go einen Verbund ausgibt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1358,6 +1372,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Vergleich von Verbünden in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
@@ -2523,6 +2544,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bubblesort auf einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Das Kopier-Problem: Arrays als Argument",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
     "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
@@ -2533,6 +2561,13 @@
     "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Hierarchische Verbünde: ein Verbund als Feld",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2558,9 +2593,37 @@
     "art": "nennt"
    },
    {
+    "titel": "Rekursive Verbund-Typen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
+    "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Speichermodell: Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie ein Zeiger im Hauptspeicher liegt: eine Variable mit 8 Zellen, in denen die Adresse einer anderen Variable steht. Sie ist die dritte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Verbund-Variablen und Feld-Variablen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_feld_variablen_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass jedes Feld eines Verbunds selbst eine Variable ist: die Punkt-Notation, den Unterschied zwischen dem Wert eines Felds und einem Zeiger auf das Feld, und die Zuweisung eines ganzen Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vergleich von Verbünden in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_vergleich_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, wann zwei Verbünde gleich sind, und unterscheidet den Vergleich der Werte vom Vergleich der Adressen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Zeiger auf Verbünde in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -3418,6 +3481,13 @@
     "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Binäre Suche in einem Verbund-Array",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_binaere_suche_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die binäre Suche aus Abschnitt 8.4.1 und die Funktion `binSuche` aus Listing 8.1: Sie sucht in einem Array von Verbünden des Typs `person`, das nach dem Feld `name` sortiert ist.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Rekursion in Go",
