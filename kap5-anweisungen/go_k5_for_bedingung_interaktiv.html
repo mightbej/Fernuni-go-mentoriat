@@ -50,6 +50,7 @@
     .konsole::before { content:"Ausgabe bisher";display:block;color:#94a3b8;font-family:"Segoe UI",Tahoma,sans-serif;font-size:.8rem; }
     table.text td, table.text th { font-size:.95rem; }
     table.text td { font-family:Consolas,"Courier New",monospace; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -68,6 +69,7 @@
     <button type="button" class="tab" data-stufe="3">3 while in anderen Sprachen</button>
     <button type="button" class="tab" data-stufe="4">4 Mindestens ein Durchlauf</button>
     <button type="button" class="tab" data-stufe="5">5 Aus der Praxis</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -104,7 +106,6 @@
       <li><strong>Schritt 5</strong> enthält Faustregeln des Mentors. Sie gehen über den Kurstext hinaus.</li>
     </ul>
     <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3, Seiten 137–138, und Abschnitt 5.5.3.1, Seiten 138–142.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -167,7 +168,6 @@
     <h3>Woran man eine Endlosschleife erkennt</h3>
     <p>In der Fassung „ohne n--“ ändert der Schleifenrumpf den Wert von <code>n</code> nicht. Die Bedingung <code>n &gt; 0</code> ergibt deshalb bei jeder Prüfung dasselbe. Ist sie einmal <code>true</code>, bleibt sie <code>true</code>.</p>
     <p>Ein Programm in einer Endlosschleife beendet man im Terminal mit den Tasten Strg und C.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3, Seiten 137–138. Das Programm mit <code>n</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -231,7 +231,6 @@
       <li><a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#programm">Größter gemeinsamer Teiler: das Go-Programm Schritt für Schritt</a></li>
       <li><a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html#uebergang">Größter gemeinsamer Teiler: vom Struktogramm zum Go-Code</a></li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -269,7 +268,6 @@
     </div>
     <div class="auskunft" id="f-text"></div>
     <p>Für die Schreibweise gilt bei der for-Anweisung dasselbe wie bei der if-Anweisung und der switch-Anweisung: Die Bedingung steht ohne runde Klammern, der Block ist Pflicht.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142, mit dem Sprachvergleich 5.13. Die Programme mit <code>i</code> sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -331,7 +329,6 @@ until eingabe = 0;</pre>
     <table class="text" id="m-tabelle"></table>
     <p class="legende">Die Tabelle bekommt bei jeder Prüfung der Schleifenbedingung in Zeile 4 eine Zeile. „nicht ausgewertet“ bedeutet: Der linke Teil ergab schon <code>true</code>, den rechten Teil wertet Go dann nicht mehr aus.</p>
     <p>Dass Go den rechten Teil von <code>||</code> überspringt, heißt Kurzschluss-Auswertung. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte: bool und die Kurzschluss-Auswertung</a>.</p>
-    <p class="quelle">Das Programm folgt dem Codeausschnitt in Abschnitt 5.5.3.1 des Kurstexts. An der Stelle der Zeilen 5 bis 9 steht dort ein Kommentar. Die Seite hat die Zeilen aus Listing 5.4 eingesetzt.</p>
 
     <h3>Der schlechtere Weg: den Rumpf kopieren</h3>
     <p>Man kann die Anweisungen des Schleifenrumpfs auch einmal vor die Schleife schreiben:</p>
@@ -349,7 +346,6 @@ for eingabe != 0 {
       <li><strong>Quiz:</strong> Das <a href="146_go_k5_for_bedingung_quiz.html">Quiz zur for-Anweisung mit Bedingung</a> fragt den Stoff von Abschnitt 5.5.3.1 ab.</li>
       <li><strong>Schritt 5:</strong> Dort stehen Faustregeln aus der Praxis.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.5.3.1, Seiten 138–142, mit dem Sprachvergleich 5.14. Die Codeblöcke in Java und Pascal sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -412,11 +408,42 @@ for i <= 10 {
 }</pre>
     <p>Die Schleife ohne Bedingung steht im Kurstext im Expertenwissen 5.16, die Anweisung <code>break</code> in Abschnitt 5.5.3.3, Seiten 146–149. Dort wird auch begründet, warum eine Schleife möglichst ohne <code>break</code> auskommen soll: An der Schleifenbedingung allein ist dann nicht mehr abzulesen, wann die Schleife endet. Im Kurstext wird deshalb die Flag-Variable aus Schritt 4 verwendet. Zu <code>break</code> gibt es die Seite <a href="go_k5_break_interaktiv.html">break-Anweisung</a>.</p>
 
-    <p>Zum Abschluss: Das <a href="146_go_k5_for_bedingung_quiz.html">Quiz zur for-Anweisung mit Bedingung</a> fragt den Stoff von Abschnitt 5.5.3.1 ab.</p>
-    <p class="quelle">Wie lange Bedingungen lesbar bleiben, steht auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5, Faustregel 3.</p>
+    <p>Wie lange Bedingungen lesbar bleiben, steht auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5, Faustregel 3.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Bedingung und Rumpf</td><td>5.5.3, Seiten 137–138</td><td>Die Begriffe Schleifenbedingung und Schleifenrumpf stammen aus dem Kurstext.</td><td>Das Programm mit <code>n</code> ist ein eigenes Beispiel.</td></tr>
+      <tr><td>2 Wiederholte Eingabe</td><td>5.5.3.1, Seiten 138–142: Listing 5.4</td><td>Listing 5.4 zur wiederholten Eingabe stammt aus dem Kurstext.</td><td>Die Fassung mit 0.0 in Zeile 9 gibt die Lektion dazu.</td></tr>
+      <tr><td>3 while in anderen Sprachen</td><td>5.5.3.1, Seiten 138–142: Sprachvergleich 5.13</td><td>Der Sprachvergleich zu <code>while</code> stammt aus dem Kurstext.</td><td>Die Programme mit <code>i</code> sind eigene Beispiele.</td></tr>
+      <tr><td>4 Mindestens ein Durchlauf</td><td>5.5.3.1, Seiten 138–142: Sprachvergleich 5.14</td><td>Der Codeausschnitt mit der Flag-Variable und der Sprachvergleich stammen aus dem Kurstext. Dort steht in der Mitte ein Kommentar.</td><td>An der Stelle des Kommentars hat die Lektion die Zeilen aus Listing 5.4 eingesetzt. Die Codeblöcke in Java und Pascal sind eigene Beispiele.</td></tr>
+      <tr><td>5 Aus der Praxis</td><td>4.4.4, Seiten 90–91: Vergleich von Gleitkommazahlen<br>5.5.3.3, Seiten 146–149: <code>break</code></td><td>Dass errechnete Gleitkommazahlen nicht mit <code>==</code> verglichen werden, steht in Abschnitt 4.4.4. Warum eine Schleife möglichst ohne <code>break</code> auskommt, steht in Abschnitt 5.5.3.3.</td><td>Die Faustregeln stammen aus der Praxis des Mentors.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen:</strong> Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 2.5, Seiten 13–14, WHILE:</strong> Die Schleife als Flussdiagramm und Struktogramm. Lektion: <a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>.</li>
+      <li><strong>Abschnitt 5.5.3.2, Seiten 142–146, for-Klausel:</strong> Die for-Anweisung mit Bedingung ist eine verkürzte for-Anweisung mit for-Klausel. Lektion: <a href="go_k5_for_klausel_interaktiv.html#varianten">for-Anweisung mit for-Klausel in Go</a>, Schritt 4.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Das <a href="146_go_k5_for_bedingung_quiz.html">Quiz zur for-Anweisung mit Bedingung</a> fragt den Stoff von Abschnitt 5.5.3.1 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -456,7 +483,7 @@ for i <= 10 {
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#eingabe
-  var ANKER = ["worum", "begriffe", "eingabe", "while", "flag", "praxis"];
+  var ANKER = ["worum", "begriffe", "eingabe", "while", "flag", "praxis", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -730,7 +757,7 @@ for i <= 10 {
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Bedingung und Rumpf", "Schritt 2: Wiederholte Eingabe", "Schritt 3: while in anderen Sprachen", "Schritt 4: Mindestens ein Durchlauf", "Schritt 5: Aus der Praxis"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Bedingung und Rumpf", "Schritt 2: Wiederholte Eingabe", "Schritt 3: while in anderen Sprachen", "Schritt 4: Mindestens ein Durchlauf", "Schritt 5: Aus der Praxis", "Schritt 6: Bezug zum Kurstext"];
 
   function zeilenBisher(s, ort) { return nummern(einmalig(s.slice(0, ort + 1).map(function (x) { return x.zeile; }))); }
   function ausgabeSatz(e) { return "Ausgabe bisher: " + (e.aus.length ? e.aus.join(" ; ") : "noch keine"); }
@@ -751,6 +778,7 @@ for i <= 10 {
     return saetze;
   }
   function standSaetze() {
+    if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0 || stufe === 5) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) {
       var s = lauf1(), e = s[ort1], fertig = ort1 === s.length - 1, ende = s[s.length - 1];
@@ -813,7 +841,7 @@ for i <= 10 {
     reiter: function () { return ANKER[stufe]; },
     schritt: function () { return SCHRITTE[stufe]; },
     sichtbar: function () { return $("stufe-" + stufe); },
-    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis",
+    text: ".card > h3, .card > p:not(.quelle), .card > ul, .auskunft, .hinweis, table.text",
     zeilen: zeilen,
     zeilenTitel: "Programmzeilen des sichtbaren Schritts. Eine Zeile aus drei Strichen trennt zwei Codeblöcke. Steht vor einer Zeile eine Nummer, ist es ihre Zeilennummer:",
     stand: standSaetze,

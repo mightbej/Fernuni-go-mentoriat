@@ -2,7 +2,7 @@
 
 Die Seite erklärt die einfachste Schleife in Go: `for`, eine Schleifenbedingung und einen Schleifenrumpf. Sie führt drei Programme Anweisung für Anweisung aus, darunter das Programm zur wiederholten Eingabe aus Listing 5.4. Sie gehört zu Abschnitt 5.5.3.1 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -206,5 +206,39 @@ Reiter: praxis
 
 - 5.5.3.1
 - 4.4.3
+- 5.5.3.2
+- 5.5.3.3
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Bedingung und Rumpf, 5.5.3, Seiten 137–138: Die Begriffe Schleifenbedingung und Schleifenrumpf stammen aus dem Kurstext. Das Programm mit n ist ein eigenes Beispiel.
+  - 2 Wiederholte Eingabe, 5.5.3.1, Seiten 138–142: Listing 5.4: Listing 5.4 zur wiederholten Eingabe stammt aus dem Kurstext. Die Fassung mit 0.0 in Zeile 9 gibt die Lektion dazu.
+  - 3 while in anderen Sprachen, 5.5.3.1, Seiten 138–142: Sprachvergleich 5.13: Der Sprachvergleich zu while stammt aus dem Kurstext. Die Programme mit i sind eigene Beispiele.
+  - 4 Mindestens ein Durchlauf, 5.5.3.1, Seiten 138–142: Sprachvergleich 5.14: Der Codeausschnitt mit der Flag-Variable und der Sprachvergleich stammen aus dem Kurstext. Dort steht in der Mitte ein Kommentar. An der Stelle des Kommentars hat die Lektion die Zeilen aus Listing 5.4 eingesetzt. Die Codeblöcke in Java und Pascal sind eigene Beispiele.
+  - 5 Aus der Praxis, 4.4.4, Seiten 90–91: Vergleich von Gleitkommazahlen; 5.5.3.3, Seiten 146–149: break: Dass errechnete Gleitkommazahlen nicht mit == verglichen werden, steht in Abschnitt 4.4.4. Warum eine Schleife möglichst ohne break auskommt, steht in Abschnitt 5.5.3.3. Die Faustregeln stammen aus der Praxis des Mentors.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 2.5, Seiten 13–14, WHILE: Die Schleife als Flussdiagramm und Struktogramm. Lektion: Größter gemeinsamer Teiler.
+  - Abschnitt 5.5.3.2, Seiten 142–146, for-Klausel: Die for-Anweisung mit Bedingung ist eine verkürzte for-Anweisung mit for-Klausel. Lektion: for-Anweisung mit for-Klausel in Go, Schritt 4.
+- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur for-Anweisung mit Bedingung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.5
+- 4.4.4
+- 5.5.3
+- 5.5.3.1
 - 5.5.3.2
 - 5.5.3.3
