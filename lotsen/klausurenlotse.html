@@ -70,7 +70,7 @@
     <h3>Was du brauchst</h3>
     <ul>
       <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Das Programm läuft auf deinem eigenen Rechner.</li>
-      <li><strong>Go für die Lotsen:</strong> die ZIP-Datei <code>lotsen-go.zip</code> mit etwa 34 MB aus Moodle. Der Klausurenlotse rechnet bei „Was passiert?“ und bei „Lücken füllen“ mit Go. Hast du Go schon installiert, brauchst du sie nicht.</li>
+      <li><strong>Internet beim ersten Start:</strong> Der Klausurenlotse rechnet bei „Was passiert?“ und bei „Lücken füllen“ mit Go. Fehlt Go auf deinem Rechner, holt er es einmal selbst, etwa 34 MB. Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet, holt er nichts.</li>
       <li><strong>Paket:</strong> die ZIP-Datei <code>klausurenlotse.zip</code> mit etwa 7 MB aus Moodle.</li>
       <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal.</li>
       <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Das Quiz läuft auch ohne Schlüssel.</li>
@@ -85,12 +85,11 @@
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h2>Schritt 1: Herunterladen und starten</h2>
-    <h3>Die drei Dateien in Moodle holen</h3>
-    <p>Die Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
+    <h3>Die zwei Dateien in Moodle holen</h3>
+    <p>Beide Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
     <ul>
       <li><strong><code>klausurenlotse.zip</code>:</strong> das Paket des Klausurenlotsen. Es steht in der Tabelle unter „ZIP herunterladen“.</li>
       <li><strong><code>lotsen-kurstext.zip</code>:</strong> der Kurstext für alle Lotsen. Die Datei steht über der Tabelle. Hast du sie schon für einen anderen Lotsen eingerichtet, brauchst du sie nicht noch einmal.</li>
-      <li><strong><code>lotsen-go.zip</code>:</strong> Go für alle Lotsen. Die Datei steht über der Tabelle. Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet, brauchst du sie nicht.</li>
     </ul>
     <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
     <div class="nur-kurs">
@@ -161,13 +160,10 @@
   <section class="stufe" id="stufe-3">
   <div class="card">
     <h2>Schritt 3: Go für die Lotsen einrichten</h2>
-    <p>Der Klausurenlotse rechnet mit Go. Bei „Was passiert?“ führt er die Funktion der Aufgabe aus, bei „Lücken füllen“ dein ergänztes Programm. Du musst Go nicht installieren: Die Datei <code>lotsen-go.zip</code> enthält alles, was die Lotsen brauchen. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
-    <p>Nach dem Kurstext zeigt der Browser die Seite „Go für die Lotsen einrichten“:</p>
-    <ol>
-      <li>Klick auf „Datei auswählen“ und wähle die Datei <code>lotsen-go.zip</code>. Du brauchst sie nicht zu entpacken.</li>
-      <li>Klick auf „Übernehmen“. Das Einrichten dauert etwa eine halbe Minute.</li>
-    </ol>
+    <p>Der Klausurenlotse rechnet mit Go. Bei „Was passiert?“ führt er die Funktion der Aufgabe aus, bei „Lücken füllen“ dein ergänztes Programm. Du musst Go nicht installieren. Go wird einmal eingerichtet und gilt dann für alle Lotsen auf deinem Rechner.</p>
+    <p>Nach dem Kurstext zeigt der Browser die Seite „Go für die Lotsen einrichten“. Das Programm holt Go dann von selbst aus dem Internet, etwa 34 MB, und richtet es ein. Ein Balken zeigt, wie weit es ist. Danach geht es von selbst weiter. Du musst nichts tun.</p>
     <ul>
+      <li><strong>Kommt das Programm nicht ins Internet:</strong> Das kann an einem Virenscanner oder an einer Firewall liegen. Die Seite zeigt dann einen Link auf <code>lotsen-go.zip</code>. Lade die Datei im Browser herunter, wähle sie auf der Seite aus und klick auf „Übernehmen“. Du brauchst sie nicht zu entpacken.</li>
       <li><strong>Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet:</strong> Dann erscheint diese Seite nicht.</li>
       <li><strong>Ohne Go:</strong> Mit „Ohne Go weiter“ laufen das Quiz, die Kurzfragen, „Pseudocode umformen“ und „Verhalten begründen“. „Was passiert?“ und „Lücken füllen“ laufen ohne Go nicht.</li>
     </ul>
