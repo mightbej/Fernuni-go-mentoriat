@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T12:06",
+ "stand": "2026-10-14T12:09",
  "abschnitte": {
   "2.1": [
    {
@@ -96,6 +96,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Bezeichner und Schlüsselwörter in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
@@ -127,6 +134,13 @@
     "titel": "Konstanten in Go: ein fester Wert mit Namen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Speichermodell: Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -920,6 +934,13 @@
     "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Speichermodell: Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, dass ein Array einen Namen und viele Elemente hat und dass der Rechner die Adresse eines Elements aus dem Index ausrechnet. Sie ist die zweite von vier HTML-Seiten mit dem gleichen Speichermodell.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2372,6 +2393,13 @@
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Arrays in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
+    "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Das Kopier-Problem: Arrays als Argument",
