@@ -88,6 +88,7 @@
     .zelle.gelesen { border-color:var(--aktiv);background:var(--aktiv-bg);box-shadow:0 0 0 2px var(--aktiv); }
     .zelle button.bit { padding:1px 3px;min-width:1.25em;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:1rem;font-weight:400;background:#fff; }
     .zelle button.bit.eins { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -107,6 +108,7 @@
     <button type="button" class="tab" data-stufe="4">4 Zeiger als Rückgabe</button>
     <button type="button" class="tab" data-stufe="5">5 Lebenszeit</button>
     <button type="button" class="tab" data-stufe="6">6 new</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
   </div>
 
   <!-- ===================== Worum es geht ===================== -->
@@ -184,7 +186,7 @@
     }
 }</pre>
     <div class="hinweis"><strong>Hinweis 7.4 des Kurstexts:</strong> An <code>pa[i]</code> oder <code>range pa</code> allein sieht man nicht, ob <code>pa</code> ein Array ist oder ein Zeiger auf ein Array. Das steht in der Deklaration von <code>pa</code>.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Hinweis 7.4, Seite 177. Das Programm ist Listing 7.2, <code>array_per_zeiger.go</code>, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
+    <p class="quelle">Listing 7.2, <code>array_per_zeiger.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 7.3, Seiten 171–172, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -242,7 +244,6 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
 
     <div class="hinweis"><strong>Hinweis 7.3 des Kurstexts, der Stern:</strong> In einer Typangabe wie <code>*int</code> bildet der Stern den Namen des Zeiger-Typs. In einem Ausdruck wie <code>*p</code> ist er der Dereferenzierungsoperator. Zwischen zwei Operanden wie in <code>a * b</code> multipliziert er.</div>
     <p>Mit einem Zeiger lässt sich in Go nicht rechnen. Ein Programm kann einen Zeiger zuweisen, vergleichen und ausgeben, mehr nicht. In der Sprache C ist das anders, dort gibt es Zeiger-Arithmetik.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4, Seiten 173–178. Das Programm fasst Zeilen des Kurstexts zusammen. Im Kurstext gibt das Programm auch Adressen aus, zum Beispiel <code>0xc00000a0a8</code>. Sie sind bei jedem Start andere, die Seite schreibt dafür „Adresse von x“. Die Meldungen von Go sind eine Ergänzung, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -288,7 +289,6 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
       <li><strong><code>incr(&amp;x)</code></strong> ist eine Anweisung und auch ein Ausdruck, weil der Aufruf einen Wert liefert. <code>fmt.Println(incr(&amp;x))</code> ist erlaubt.</li>
     </ul>
     <p>Einen Zeiger als Argument kennst du schon von <code>fmt.Scan(&amp;s)</code>: Die Funktion bekommt die Adresse von <code>s</code> und legt die Eingabe in dieser Variable ab.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.1, Seiten 178–180. Das Programm stammt aus dem Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -321,7 +321,6 @@ fmt.Println(y == z, &amp;y == &amp;z) // true false</pre>
     <div class="konsole" id="g-ausgabe"></div>
     <div class="auskunft" id="g-urteil"></div>
     <p>Der grüne Rahmen enthält die Variablen, deren Bezeichner nicht mehr gilt. Das Programm erreicht sie nur noch über einen Zeiger. Im Hauptspeicher bleiben ihre Zellen belegt: Die erste Variable <code>v</code> liegt in den Zellen 200 bis 207, die zweite in den Zellen 208 bis 215. In <code>q</code> steht die Zahl 200, in <code>r</code> die Zahl 208.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.2, Seite 180. Das Programm stammt aus dem Kurstext. Die Namen „erste Variable v“ und „zweite Variable v“ gehören zur Darstellung dieser Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -374,7 +373,6 @@ fmt.Println(*p) // 18</pre>
       <li><strong>Globale Variable:</strong> Ihre Lebenszeit ist die ganze Laufzeit des Programms. Sie belegt die ganze Zeit Speicher, auch wenn das Programm sie nicht mehr braucht.</li>
       <li><strong>Vergessener Zeiger:</strong> Solange ein Zeiger auf eine Variable zeigt, kann der Garbage-Collector ihren Speicher nicht freigeben. Zeigt ein Zeiger auf eine Variable, die das Programm längst nicht mehr braucht, bleibt der Speicher belegt. Das heißt <strong>Speicherleck</strong>, englisch memory leak.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.3, Seiten 181–182, und Abschnitt 7.4.4, Seiten 182–183. Das Programm der Demo stammt aus dem Kurstext, ohne die vier Zeilen, die Adressen ausgeben. Die Zahl der Verweise zählt die Seite mit.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -426,6 +424,37 @@ func neueIntVarNew() *int {
     return new(int)
 }</pre>
     <p>Für die Variable macht es keinen Unterschied, ob eine Deklaration oder <code>new</code> sie erzeugt hat. Auch eine Variable aus <code>new</code> gibt der Garbage-Collector frei, sobald sie unerreichbar ist.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Adresse übergeben</td><td>7.3, Seiten 171–172: Listing 7.2<br>Hinweis 7.4, Seite 177</td><td>Listing 7.2 und Hinweis 7.4 stammen aus dem Kurstext.</td><td>Die Lektion lässt die Zeilen mit <code>package</code> und <code>import</code> und die Kommentare weg.</td></tr>
+      <tr><td>2 &amp; und *</td><td>7.4, Seiten 173–178</td><td>Das Programm fasst Zeilen des Kurstexts zusammen. Im Kurstext gibt es auch Adressen aus, zum Beispiel <code>0xc00000a0a8</code>.</td><td>Die Adressen sind bei jedem Start andere, die Lektion schreibt dafür „Adresse von x“. Die Meldungen von Go sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
+      <tr><td>3 Zeiger als Parameter</td><td>7.4.1, Seiten 178–180</td><td>Das Programm stammt aus dem Kurstext.</td><td>Die Demo mit Rahmen und Hauptspeicher gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Zeiger als Rückgabe</td><td>7.4.2, Seite 180</td><td>Das Programm stammt aus dem Kurstext.</td><td>Die Namen „erste Variable v“ und „zweite Variable v“ gehören zur Darstellung der Lektion.</td></tr>
+      <tr><td>5 Lebenszeit</td><td>7.4.3, Seiten 181–182<br>7.4.4, Seiten 182–183</td><td>Das Programm stammt aus dem Kurstext, ohne die vier Zeilen, die Adressen ausgeben.</td><td>Die Zahl der Verweise zählt die Lektion mit.</td></tr>
+      <tr><td>6 new</td><td>7.4.5, Seiten 183–184<br>7.4.6, Seite 184</td><td>Das Programm fasst Zeilen des Kurstexts zusammen.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherplatz:</strong> Eine Variable belegt Speicherplatz. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 4.3.4, Seite 63, Zellen und Adressen im Modell:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a>.</li>
+      <li><strong>Abschnitt 8.2.4, Seite 205, Zeiger auf Verbünde:</strong> Lektion: <a href="../kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde in Go</a>.</li>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Listen:</strong> Jedes Element zeigt mit einem Zeiger auf das nächste. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -436,10 +465,9 @@ func neueIntVarNew() *int {
       <li><strong>Programmieren:</strong> Zwei Programmierübungen sortieren ein Array über einen Zeiger: <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
       <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 7.4.5, Seiten 183–184, und Abschnitt 7.4.6, Seite 184. Das Programm der Demo fasst Zeilen des Kurstexts zusammen.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -458,8 +486,8 @@ func neueIntVarNew() *int {
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#adresse
-  const ANKER = ['worum', 'adresse', 'operatoren', 'parameter', 'rueckgabe', 'lebenszeit', 'new'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Adresse übergeben', 'Schritt 2: Die Operatoren & und *', 'Schritt 3: Zeiger als Parameter', 'Schritt 4: Zeiger als Rückgabe', 'Schritt 5: Lebenszeit', 'Schritt 6: new'];
+  const ANKER = ['worum', 'adresse', 'operatoren', 'parameter', 'rueckgabe', 'lebenszeit', 'new', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Adresse übergeben', 'Schritt 2: Die Operatoren & und *', 'Schritt 3: Zeiger als Parameter', 'Schritt 4: Zeiger als Rückgabe', 'Schritt 5: Lebenszeit', 'Schritt 6: new', 'Schritt 7: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -727,6 +755,7 @@ func neueIntVarNew() *int {
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const DEMOS = [null, DA, DO, DI, DG, DL, DN];
   function standSaetze() {
+    if (stufe === 7) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     const s = standAblauf(DEMOS[stufe]);
     s.push('In den Rahmen steht der Wert eines Zeigers in Worten, zum Beispiel „Adresse von x“. Im Hauptspeicher darunter steht dafür eine erfundene Adresse als Zahl, zum Beispiel 100. Eine Zahl wie 0xc00000a0a8 zeigt die Seite nicht.');
@@ -763,7 +792,7 @@ func neueIntVarNew() *int {
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,

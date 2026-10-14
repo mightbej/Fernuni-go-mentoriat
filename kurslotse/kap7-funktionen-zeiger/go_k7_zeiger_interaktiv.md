@@ -2,7 +2,7 @@
 
 Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, den Zeiger-Typ, den Adressoperator `&`, den Dereferenzierungsoperator `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`. Sie gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.3 und 7.4, Seiten 171–184.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -189,7 +189,6 @@ Reiter: new
 - Der grüne Rahmen heißt „Anonyme Variablen“. Darin stehen die Variablen „erste“, „zweite“ und „dritte“. Diese Namen gehören zur Darstellung der Seite.
 - Der Ablauf: Die erste anonyme Variable hat den Wert 0, Ausgabe 0. `*p = 15` setzt sie auf 15, Ausgabe 15. `q` und `r` zeigen auf zwei weitere anonyme Variablen. `q == r` gibt `false` aus.
 - Unter „Zwei Schreibweisen, die gleiche Variable“ stehen die Funktionen `neueIntVar` mit `var v int` und `return &v` und `neueIntVarNew` mit `return new(int)`. Für die Variable macht es keinen Unterschied, wie sie erzeugt wurde.
-- Unter „Wie es weitergeht“ stehen sechs Links: „Speichermodell: Zeiger“, der Ausblick auf Kapitel 9 aus Abschnitt 7.4.6, „Hierarchische Verbünde“ in Kapitel 8, „Rekursion in Go“, die zwei Programmierübungen mit Zeigern und das Quiz.
 
 ### Handgriffe
 
@@ -200,3 +199,44 @@ Reiter: new
 
 - 7.4.5
 - 7.4.6
+
+## Schritt 7: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Adresse übergeben, 7.3, Seiten 171–172: Listing 7.2; Hinweis 7.4, Seite 177: Listing 7.2 und Hinweis 7.4 stammen aus dem Kurstext. Die Lektion lässt die Zeilen mit package und import und die Kommentare weg.
+  - 2 & und *, 7.4, Seiten 173–178: Das Programm fasst Zeilen des Kurstexts zusammen. Im Kurstext gibt es auch Adressen aus, zum Beispiel 0xc00000a0a8. Die Adressen sind bei jedem Start andere, die Lektion schreibt dafür „Adresse von x“. Die Meldungen von Go sind eine Ergänzung, geprüft mit Go 1.26.
+  - 3 Zeiger als Parameter, 7.4.1, Seiten 178–180: Das Programm stammt aus dem Kurstext. Die Demo mit Rahmen und Hauptspeicher gibt die Lektion dazu.
+  - 4 Zeiger als Rückgabe, 7.4.2, Seite 180: Das Programm stammt aus dem Kurstext. Die Namen „erste Variable v“ und „zweite Variable v“ gehören zur Darstellung der Lektion.
+  - 5 Lebenszeit, 7.4.3, Seiten 181–182; 7.4.4, Seiten 182–183: Das Programm stammt aus dem Kurstext, ohne die vier Zeilen, die Adressen ausgeben. Die Zahl der Verweise zählt die Lektion mit.
+  - 6 new, 7.4.5, Seiten 183–184; 7.4.6, Seite 184: Das Programm fasst Zeilen des Kurstexts zusammen. Die Demo gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Speicherplatz: Eine Variable belegt Speicherplatz. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 4.3.4, Seite 63, Zellen und Adressen im Modell: Lektion: Speichermodell.
+  - Abschnitt 8.2.4, Seite 205, Zeiger auf Verbünde: Lektion: Zeiger auf Verbünde in Go.
+  - Abschnitt 9.2, Seiten 229–236, verkettete Listen: Jedes Element zeigt mit einem Zeiger auf das nächste. Lektion: Verkettete Listen in Go.
+- Unter „Wie es weitergeht“ stehen sechs Links: „Speichermodell: Zeiger“, der Ausblick auf Kapitel 9 aus Abschnitt 7.4.6, „Hierarchische Verbünde“ in Kapitel 8, „Rekursion in Go“, die zwei Programmierübungen mit Zeigern und das Quiz.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 6“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 4.3.4
+- 7.3
+- 7.4
+- 7.4.1
+- 7.4.2
+- 7.4.3
+- 7.4.4
+- 7.4.5
+- 7.4.6
+- 8.2.4
+- 9.2
