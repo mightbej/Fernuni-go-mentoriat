@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -91,6 +90,7 @@
     <button type="button" class="tab" data-stufe="1">1 Rechteck und Quader</button>
     <button type="button" class="tab" data-stufe="2">2 Temperaturen</button>
     <button type="button" class="tab" data-stufe="3">3 Der Wert bleibt 7</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -108,6 +108,7 @@
       <li><strong>Lesen:</strong> Lies das Programm und zähle, wie viele Fehler du findest.</li>
       <li><strong>Weiter:</strong> Jedes „weiter“ ist ein Schritt der Suche: übersetzen, Meldung lesen, eine Stelle korrigieren, wieder übersetzen.</li>
       <li><strong>Selbst ausprobieren:</strong> „Diese Fassung kopieren“ legt das Programm in die Zwischenablage. Füge es in deinen Editor ein und übersetze es mit <code>go run</code>.</li>
+      <li><strong>Nachlesen:</strong> Schritt 4 ordnet jeden der acht Fehler einem Abschnitt des Kurstexts zu und nennt die Lektion dazu.</li>
     </ul>
 
     <h3>Was dazugehört</h3>
@@ -126,7 +127,7 @@
   <section class="stufe" id="stufe-1">
   <div class="card">
     <h3>Schritt 1: Rechteck und Quader</h3>
-    <p>Das Programm soll die Fläche eines Rechtecks mit den Seiten 3 und 4 ausgeben und das Volumen eines Quaders mit dieser Grundfläche und der Höhe 5. Erwartet sind 12 und 60. Das Programm enthält drei Fehler.</p>
+    <p>Das Programm soll die Fläche eines Rechtecks mit den Seiten 3 und 4 ausgeben und das Volumen eines Quaders mit dieser Grundfläche und der Höhe 5. Erwartet sind 12 und 60. Das Programm ist Listing 3.3 des Kurstexts mit kürzeren Ausgaben und drei eingebauten Fehlern.</p>
     <ol class="programm" id="a-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="a-weiter">weiter</button>
@@ -142,7 +143,6 @@
       <li><strong>Rückgabewert:</strong> <code>main</code> bekommt von <code>rechteck</code> den Wert und nicht die Variable. Der Aufruf <code>rechteck(a, b)</code> steht deshalb selbst als Argument da.</li>
       <li><strong>Unbenutzte Variable:</strong> Go übersetzt kein Programm mit einer lokalen Variable, die deklariert und nie gelesen wird. Diese Regel hat hier den dritten Fehler aufgedeckt.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.4, Listing 3.3, Seiten 37–41. Das Programm ist Listing 3.3 mit kürzeren Ausgaben und drei eingebauten Fehlern. Die Meldungen sind die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -153,7 +153,7 @@
   <section class="stufe" id="stufe-2">
   <div class="card">
     <h3>Schritt 2: Temperaturen</h3>
-    <p>Das Programm soll 22 Grad Celsius in Fahrenheit und in Kelvin umrechnen. Die Formeln: Fahrenheit ist 32 plus das 1,8-Fache der Celsius-Temperatur. Kelvin ist die Celsius-Temperatur plus 273,15. Erwartet sind 71,6 °F und 295,15 K. Das Programm enthält drei Fehler.</p>
+    <p>Das Programm soll 22 Grad Celsius in Fahrenheit und in Kelvin umrechnen. Die Formeln: Fahrenheit ist 32 plus das 1,8-Fache der Celsius-Temperatur. Kelvin ist die Celsius-Temperatur plus 273,15. Erwartet sind 71,6 °F und 295,15 K. Das Programm ist ein Auszug aus Listing 3.2 des Kurstexts mit drei eingebauten Fehlern.</p>
     <ol class="programm" id="b-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="b-weiter">weiter</button>
@@ -168,7 +168,6 @@
       <li><strong>Bindungsstärke:</strong> <code>*</code> bindet stärker als <code>+</code>. In <code>32 + tempC*1.8</code> rechnet Go erst die Multiplikation. Klammern ändern die Reihenfolge, und hier haben sie die Formel verfälscht.</li>
       <li><strong>Prüfen mit einem bekannten Wert:</strong> Beide Rechenfehler fallen nur auf, wenn man das richtige Ergebnis kennt. 0 °C sind 32 °F und 273,15 K. Mit solchen Werten prüft man eine Formel.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.5 bis 3.3.7, Listing 3.2, Seiten 33–36. Das Programm ist ein Auszug aus Listing 3.2 mit drei eingebauten Fehlern. Meldung und Ausgaben sind die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -179,7 +178,7 @@
   <section class="stufe" id="stufe-3">
   <div class="card">
     <h3>Schritt 3: Der Wert bleibt 7</h3>
-    <p>Das Programm soll melden, dass <code>x</code> positiv ist, <code>x</code> um eins erhöhen und den neuen Wert ausgeben. Erwartet ist am Ende der Wert 8. Das Programm enthält zwei Fehler.</p>
+    <p>Das Programm soll melden, dass <code>x</code> positiv ist, <code>x</code> um eins erhöhen und den neuen Wert ausgeben. Erwartet ist am Ende der Wert 8. Das Programm ist ein eigenes Beispiel mit zwei Fehlern.</p>
     <ol class="programm" id="c-programm"></ol>
     <div class="zeile">
       <button type="button" class="haupt" id="c-weiter">weiter</button>
@@ -195,16 +194,58 @@
       <li><strong>Rückgabewert verwenden:</strong> Die Funktion liefert die 8 zurück. Ein Aufruf, der allein in einer Zeile steht, wirft diesen Wert weg. Erst die Zuweisung <code>x = addiereEins(x)</code> legt ihn in <code>x</code> ab.</li>
     </ul>
     <p>Die Anweisung <code>if</code> wird in Kapitel 5 behandelt, in der Lektion <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>. Die Wertübergabe steht ausführlich in der Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html">Funktionen in Go: Rückgaben und Wertübergabe</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Jeder der acht Fehler gehört zu einem Abschnitt des Kurstexts. Die Tabelle nennt zu jedem Fehler den Abschnitt zum Nachlesen und die Lektion, die das Thema erklärt.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Fehler im Programm</th><th>Was falsch ist</th><th>Abschnitt im Kurstext</th><th>Lektion dazu</th></tr>
+      <tr><td>Schritt 1, Zeile 19: <code>rechteck(a b)</code></td><td>Zwischen den zwei Argumenten fehlt das Komma.</td><td>3.4, Seiten 37–41: Hinweis 3.7, Parameter und Argument</td><td><a href="go_k3_fehlersuche_einfach_interaktiv.html#argumente">Fehlersuche: drei kurze Go-Programme</a>, Schritt 1</td></tr>
+      <tr><td>Schritt 1, Zeile 20: <code>quader(fläche, c)</code></td><td>Der Bezeichner <code>fläche</code> gilt nur im Rumpf von <code>rechteck</code>.</td><td>3.4, Seiten 37–41: Gültigkeitsbereich</td><td><a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration in Go</a>, Schritt 3</td></tr>
+      <tr><td>Schritt 1, Zeile 12: <code>return grundfläche</code></td><td>Die Funktion gibt den falschen Wert zurück. Die Meldung zur unbenutzten Variable <code>volumen</code> führt zu diesem Fehler.</td><td>3.4, Seiten 37–41: return-Anweisung<br>5.1.5, Seiten 122–123: ungenutzte Variablen</td><td><a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#ungenutzt">Variablendeklaration in Go</a>, Schritt 5</td></tr>
+      <tr><td>Schritt 2, Zeile 11: <code>tempText + " °C:" + tempC</code></td><td>Der Operator <code>+</code> soll einen String mit einer Zahl verbinden.</td><td>3.3.7, Seite 36: Verkettung von Strings<br>4.1, Seiten 45–47: gleicher Typ beider Operanden<br>3.3.5, Seiten 33–35: <code>fmt.Println</code> mit zwei Argumenten</td><td><a href="../kap4-primitive-datentypen/go_k4_strings_interaktiv.html#verketten">Strings in Go</a>, Schritt 4</td></tr>
+      <tr><td>Schritt 2, Zeile 8: <code>(32 + tempC) * 1.8</code></td><td>Die Klammern lassen Go erst addieren und dann multiplizieren.</td><td>3.3.6, Seiten 35–36: Bindungsstärken<br>4.1.2, Seiten 50–52: Tabelle der Bindungsstärken</td><td><a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html#verknuepfen">Logische Operatoren und Vergleiche</a>, Schritt 3</td></tr>
+      <tr><td>Schritt 2, Zeile 9: <code>tempC - 273.15</code></td><td>Das Minus steht an der Stelle des Plus. Der Compiler meldet diesen Fehler nicht.</td><td>3.3.6, Seiten 35–36: Formel für Kelvin<br>2.7, Seiten 17–19: Arten von Fehlern</td><td><a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html#fehler">Höhere und niedrigere Programmiersprachen</a>, Schritt 4</td></tr>
+      <tr><td>Schritt 3, Zeile 12 und 13: <code>if x &gt; 0</code> und <code>{</code> in der nächsten Zeile</td><td>Go setzt am Ende der Zeile mit <code>if</code> ein Semikolon. Die Klammer steht danach allein.</td><td>3.3.2, Seiten 27–29: Expertenwissen 3.5, automatisches Einfügen von Semikolons</td><td><a href="go_k3_fehlersuche_einfach_interaktiv.html#klammer">Fehlersuche: drei kurze Go-Programme</a>, Schritt 3</td></tr>
+      <tr><td>Schritt 3, Zeile 15: <code>addiereEins(x)</code></td><td>Der Rückgabewert geht verloren, <code>x</code> bleibt 7.</td><td>3.4, Seiten 37–41: Rückgabewert<br>7.2, Seiten 169–170: Übergabe von Argumenten</td><td><a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a>, Schritt 5</td></tr>
+    </table>
+    </div>
+
+    <h3>Was die Lektion voraussetzt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Unterprogramme:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html">Unterprogramme und Funktionen</a> erklärt Parameter, eigene Variablen und Rückgabe ohne Go.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–19, Fehler:</strong> Die Lektion <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html#fehler">Höhere und niedrigere Programmiersprachen</a> unterscheidet in Schritt 4 Syntaxfehler und Semantikfehler.</li>
+    </ul>
+
+    <h3>Woher die Programme stammen</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Das Programm ist Listing 3.3 aus Abschnitt 3.4, mit kürzeren Ausgaben.</li>
+      <li><strong>Schritt 2:</strong> Das Programm ist ein Auszug aus Listing 3.2 aus Abschnitt 3.3.</li>
+      <li><strong>Schritt 3:</strong> Das Programm ist ein eigenes Beispiel des Mentoriats.</li>
+    </ul>
+
+    <h3>Was über den Kurstext hinausgeht</h3>
+    <ul>
+      <li><strong>Die eingebauten Fehler:</strong> Die acht Fehler stehen nicht im Kurstext.</li>
+      <li><strong>Die Meldungen:</strong> Alle Meldungen und Ausgaben stammen von Go 1.26. In Abschnitt 3.3.2 steht für die Klammer in einer neuen Zeile die Meldung <code>unexpected semicolon or newline before {</code>. Go 1.26 meldet nach <code>if</code> stattdessen <code>unexpected newline, expected { after if clause</code>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Quiz zu Kapitel 3:</strong> <a href="go_scope_block_return_quiz.html">Scope, Block und return</a>, <a href="go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Auswertungsreihenfolge und Bindungsstärken</a>, <a href="go_parameter_argument_quiz.html">Parameter und Argument</a> und <a href="go_verschachtelte_funktionsaufrufe_quiz.html">Verschachtelte Funktionsaufrufe</a>.</li>
       <li><strong>Alle Quiz zu Kapitel 3:</strong> die <a href="quiz_startseite.html">Übersicht der Quiz</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 3.3.2, Seiten 27–29, und Abschnitt 3.4, Seiten 37–41. Das Programm ist ein eigenes Beispiel. Meldung und Ausgaben sind die von Go 1.26.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -223,8 +264,8 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#quader
-  const ANKER = ['worum', 'quader', 'temperatur', 'kopie'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Rechteck und Quader', 'Schritt 2: Temperaturen', 'Schritt 3: Der Wert bleibt 7'];
+  const ANKER = ['worum', 'quader', 'temperatur', 'kopie', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Rechteck und Quader', 'Schritt 2: Temperaturen', 'Schritt 3: Der Wert bleibt 7', 'Schritt 4: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -440,7 +481,7 @@
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis, table.text',
     zeilen: () => zeilenFassung(DEMO()),
     zeilenTitel: 'Das Programm in der Fassung, die gerade zu sehen ist:',
     stand: standSaetze,
