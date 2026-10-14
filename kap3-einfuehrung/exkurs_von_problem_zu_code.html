@@ -15,6 +15,7 @@
         code {font-family:Consolas,"Courier New",monospace; font-size:.95em; }
         table {margin:10px 0; }
         th, td {vertical-align:top; }
+        .tabellenrahmen { overflow-x:auto;margin:10px 0; }
 
         .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
         .tab { padding:9px 14px;border-radius:8px;font:inherit; font-weight:600; cursor:pointer; }
@@ -62,6 +63,7 @@
         <button class="tab" data-stufe="4">4 Runden und Wertung</button>
         <button class="tab" data-stufe="5">5 Ablauf</button>
         <button class="tab" data-stufe="6">6 Go-Programm</button>
+        <button class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
     </div>
 
     <!-- Worum es geht -->
@@ -90,6 +92,7 @@
                 <tr><td>6 Go-Programm</td><td>Das Spiel lief nur, solange das Sprachmodell mitspielte.</td><td>Wir legen alles fest, in Go.</td></tr>
             </table>
             <p>Kurstext v3.0.6: Das Spiel braucht die Anweisungen aus Kapitel 5, Seiten 113–149.</p>
+            <p>Der letzte Reiter ordnet jede Anweisung des Go-Programms einem Abschnitt des Kurstexts zu.</p>
         </div>
         <div class="nav">
             <button class="knopf grau" disabled>Zurück</button>
@@ -296,16 +299,16 @@
             </div>
             <h3>Vom Ablauf zum Programm</h3>
             <table>
-                <tr><th>Schritt im Ablauf aus Stufe 5</th><th>Anweisung in Go</th><th>Abschnitt im Kurstext</th></tr>
-                <tr><td>Das Spiel kennt die Grenzen 1, 100 und 7.</td><td><code>const ( MAX_VERSUCHE = 7 … )</code></td><td>5.2</td></tr>
-                <tr><td>Das Spiel merkt sich drei Werte über alle Runden.</td><td><code>var ( anzahlSiege int … )</code> außerhalb von <code>main</code></td><td>5.1.3</td></tr>
-                <tr><td>Das Spiel wiederholt die Schritte für jede Runde.</td><td><code>for { … }</code></td><td>5.5.3</td></tr>
-                <tr><td>Das Spiel wählt eine geheime Zufallszahl.</td><td><code>zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL</code></td><td>5.1.2</td></tr>
-                <tr><td>Das Spiel wiederholt, solange <code>versuchsZaehler</code> kleiner als 7 ist.</td><td><code>for versuchsZaehler &lt; MAX_VERSUCHE { … }</code></td><td>5.5.3.1</td></tr>
-                <tr><td>Das Spiel vergleicht den Tipp mit der Zahl.</td><td><code>if … else if … else</code></td><td>5.5.1</td></tr>
-                <tr><td>Das Spiel verlässt die Schleife sofort.</td><td><code>break</code></td><td>5.5.3.3</td></tr>
-                <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>4.7</td></tr>
-                <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>5.5.2</td></tr>
+                <tr><th>Schritt im Ablauf aus Stufe 5</th><th>Anweisung in Go</th></tr>
+                <tr><td>Das Spiel kennt die Grenzen 1, 100 und 7.</td><td><code>const ( MAX_VERSUCHE = 7 … )</code></td></tr>
+                <tr><td>Das Spiel merkt sich drei Werte über alle Runden.</td><td><code>var ( anzahlSiege int … )</code> außerhalb von <code>main</code></td></tr>
+                <tr><td>Das Spiel wiederholt die Schritte für jede Runde.</td><td><code>for { … }</code></td></tr>
+                <tr><td>Das Spiel wählt eine geheime Zufallszahl.</td><td><code>zielZahl := rand.Intn(MAX_ZAHL-MIN_ZAHL+1) + MIN_ZAHL</code></td></tr>
+                <tr><td>Das Spiel wiederholt, solange <code>versuchsZaehler</code> kleiner als 7 ist.</td><td><code>for versuchsZaehler &lt; MAX_VERSUCHE { … }</code></td></tr>
+                <tr><td>Das Spiel vergleicht den Tipp mit der Zahl.</td><td><code>if … else if … else</code></td></tr>
+                <tr><td>Das Spiel verlässt die Schleife sofort.</td><td><code>break</code></td></tr>
+                <tr><td>Das Spiel teilt die Summe der Versuche durch die Zahl der Siege.</td><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td></tr>
+                <tr><td>Das Spiel bewertet den Durchschnitt.</td><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td></tr>
             </table>
             <p>Die Programmierübung baut dieses Programm Schritt für Schritt auf: <a href="../kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a>.</p>
         </div>
@@ -320,6 +323,49 @@
         </div>
         <div class="nav">
             <button class="knopf grau" data-gehe="5">Zurück</button>
+            <button class="knopf" data-gehe="7">Weiter zum Bezug zum Kurstext</button>
+        </div>
+    </section>
+
+    <!-- Bezug zum Kurstext -->
+    <section class="stufe" id="stufe-7">
+        <div class="card">
+            <h2>Bezug zum Kurstext</h2>
+            <p>Der Exkurs steht bei Kapitel 3. Das Go-Programm aus Stufe 6 braucht aber die Anweisungen aus Kapitel 4 und 5. Die Tabelle nennt zu jeder Anweisung den Abschnitt zum Nachlesen und die Lektion, die sie erklärt.</p>
+            <div class="tabellenrahmen">
+            <table>
+                <tr><th>Anweisung in Go</th><th>Was sie im Spiel tut</th><th>Abschnitt im Kurstext</th><th>Lektion dazu</th></tr>
+                <tr><td><code>const ( MAX_VERSUCHE = 7 … )</code></td><td>Die Anweisung legt die Grenzen 1, 100 und 7 fest.</td><td>5.2, Seiten 124–126</td><td><a href="../kap5-anweisungen/go_k5_konstanten_interaktiv.html">Konstanten in Go</a></td></tr>
+                <tr><td><code>var ( anzahlSiege int … )</code> außerhalb von <code>main</code></td><td>Die Anweisung legt drei Werte an, die über alle Runden bestehen bleiben.</td><td>5.1.3, Seiten 119–120</td><td><a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#lokal">Variablendeklaration in Go</a>, Schritt 3</td></tr>
+                <tr><td><code>for { … }</code></td><td>Die Schleife wiederholt die Runden.</td><td>5.5.3.2, Seiten 142–146, Expertenwissen 5.16</td><td><a href="../kap5-anweisungen/go_k5_for_klausel_interaktiv.html#varianten">for-Anweisung mit for-Klausel</a>, Schritt 4</td></tr>
+                <tr><td><code>zielZahl := …</code></td><td>Die Anweisung legt die geheime Zahl einer Runde an.</td><td>5.1.2, Seiten 116–118</td><td><a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#kurz">Variablendeklaration in Go</a>, Schritt 2</td></tr>
+                <tr><td><code>for versuchsZaehler &lt; MAX_VERSUCHE { … }</code></td><td>Die Schleife wiederholt die Tipps einer Runde.</td><td>5.5.3.1, Seiten 138–142</td><td><a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung</a></td></tr>
+                <tr><td><code>if … else if … else</code></td><td>Die Anweisung vergleicht den Tipp mit der Zahl.</td><td>5.5.1, Seiten 129–132</td><td><a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a></td></tr>
+                <tr><td><code>break</code></td><td>Die Anweisung verlässt die Schleife sofort.</td><td>5.5.3.3, Seiten 146–149</td><td><a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a></td></tr>
+                <tr><td><code>float64(gesamtVersuche) / float64(anzahlSiege)</code></td><td>Der Ausdruck wandelt zwei ganze Zahlen um, bevor er teilt.</td><td>4.7, Seiten 109–111</td><td><a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a></td></tr>
+                <tr><td><code>switch { case durchschnitt &lt;= 3.0: … }</code></td><td>Die Anweisung bewertet den Durchschnitt.</td><td>5.5.2, Seiten 133–137</td><td><a href="../kap5-anweisungen/go_k5_switch_interaktiv.html">switch-Anweisung in Go</a></td></tr>
+            </table>
+            </div>
+
+            <h3>Was der Exkurs sonst aus dem Kurstext aufnimmt</h3>
+            <ul>
+                <li><strong>Abschnitt 2.7, Seiten 17–19, Spezifikation:</strong> Eine Spezifikation legt fest, welche Eingaben gültig sind und welche Ausgabe zu welcher Eingabe richtig ist. Im Exkurs wird sie Stufe für Stufe genauer, bis das Go-Programm nichts mehr offen lässt. Lektion: <a href="../kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html#fehler">Höhere und niedrigere Programmiersprachen</a>, Schritt 4.</li>
+                <li><strong>Abschnitt 8.4.1, Seiten 221–225, binäre Suche:</strong> Das Halbieren aus Stufe 3. Lektion: <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a>.</li>
+            </ul>
+
+            <h3>Was über den Kurstext hinausgeht</h3>
+            <ul>
+                <li><strong>Der Weg über das Sprachmodell:</strong> Die Stufen 1 bis 5 und das Sprachmodell als Entwicklungsabteilung stehen nicht im Kurstext.</li>
+                <li><strong><code>rand.Intn</code>:</strong> Das Paket <code>math/rand</code> kommt im Kurstext nicht vor.</li>
+            </ul>
+
+            <h3>Wie es weitergeht</h3>
+            <ul>
+                <li><strong>Das Programm selbst schreiben:</strong> Die Programmierübung <a href="../kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html">Zahlenraten mit Statistik</a> baut das Programm aus Stufe 6 Schritt für Schritt auf.</li>
+            </ul>
+        </div>
+        <div class="nav">
+            <button class="knopf grau" data-gehe="6">Zurück</button>
             <button class="knopf grau" data-gehe="0">Zum Anfang</button>
         </div>
     </section>
@@ -410,7 +456,7 @@
     }
 
     // Jede Stufe hat eine eigene Adresse, zum Beispiel …exkurs_von_problem_zu_code.html#versuche
-    const ANKER = ["worum", "spielidee", "zahlenbereich", "versuche", "runden", "ablauf", "programm"];
+    const ANKER = ["worum", "spielidee", "zahlenbereich", "versuche", "runden", "ablauf", "programm", "kurstext"];
     let stufe = 0;
     let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -464,11 +510,11 @@
 
     // ---- Kurslotse ----
     // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-    const SCHRITTE = ["Worum es geht", "Stufe 1: Die Spielidee", "Stufe 2: Der Zahlenbereich", "Stufe 3: Die Zahl der Versuche", "Stufe 4: Runden und Wertung", "Stufe 5: Der Ablauf", "Stufe 6: Das Go-Programm"];
+    const SCHRITTE = ["Worum es geht", "Stufe 1: Die Spielidee", "Stufe 2: Der Zahlenbereich", "Stufe 3: Die Zahl der Versuche", "Stufe 4: Runden und Wertung", "Stufe 5: Der Ablauf", "Stufe 6: Das Go-Programm", "Bezug zum Kurstext"];
 
     function standSaetze() {
         const fest = "Das Spiel wird nicht in dieser Spalte gespielt. Der Student kopiert die Spezifikation und gibt sie in einem eigenen Gespräch einem Sprachmodell.";
-        if (stufe === 0 || stufe === 6) return ["Diese Stufe hat keine Demo und keine Spezifikation zum Kopieren."];
+        if (stufe === 0 || stufe >= 6) return ["Diese Stufe hat keine Demo und keine Spezifikation zum Kopieren."];
         if (stufe !== 3) return ["Diese Stufe hat keine Demo. Die Spezifikation der Stufe steht im dunklen Kasten und geht mit dem Text der Stufe mit.", fest];
         const n = Math.floor(Number(document.getElementById("obergrenze").value));
         if (!(n >= 2 && n <= 1000000)) return ["Im Feld „Zahlen von 1 bis“ steht kein gültiger Wert. Erlaubt ist eine ganze Zahl von 2 bis 1000000.", fest];

@@ -2,7 +2,7 @@
 
 Die Seite zeigt an einem Zahlenratespiel, wie ein Programm entsteht: Aus einer Idee wird in sechs Stufen eine immer genauere Spezifikation. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text, den der Student einem Sprachmodell gibt. Auf Stufe 6 ist sie ein Go-Programm. Die Seite ist ein Exkurs des Mentoriats zu Kapitel 3 und steht nicht im Kurstext. Der Mentor zeigt sie in der Sitzung zu Kapitel 3. Das Go-Programm in Stufe 6 braucht die Anweisungen aus Kapitel 5, die Programmierübung „Zahlenraten mit Statistik“ zu Kapitel 5 baut es Schritt für Schritt auf.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur eine Stufe.
+Die Seite hat acht Reiter: „Worum es geht“, sechs Stufen und „Bezug zum Kurstext“. Sichtbar ist immer nur einer.
 
 Für alle Stufen gilt:
 
@@ -25,7 +25,7 @@ Reiter: worum
 - Zu sehen sind zwei Karten. Die erste beschreibt das Vorgehen in vier Punkten: aufschreiben, was wir wollen, die Spezifikation in die Entwicklungsabteilung geben, spielen und prüfen, das Fehlende auf der nächsten Stufe festlegen.
 - Die zweite Karte „Die sechs Stufen“ ist eine Tabelle mit drei Spalten: Stufe, was am Spiel davor nicht gefallen hat, was die Stufe festlegt.
 - Die sechs Stufen: 1 Spielidee, 2 Zahlenbereich 1 bis 100, 3 höchstens 7 Versuche, 4 mehrere Runden und eine Wertung, 5 jeder Schritt des Ablaufs, 6 alles in Go.
-- Unter der Tabelle steht, dass das Spiel die Anweisungen aus Kapitel 5 des Kurstexts braucht.
+- Unter der Tabelle steht, dass das Spiel die Anweisungen aus Kapitel 5 des Kurstexts braucht und dass der letzte Reiter jede Anweisung einem Abschnitt zuordnet.
 
 ### Handgriffe
 
@@ -162,8 +162,8 @@ Reiter: programm
 
 - Der gelbe Kasten nennt den Mangel von Stufe 5: Das Spiel läuft nur, solange das Sprachmodell mitspielt, und das Sprachmodell macht Fehler. Das Beispiel: Auf den Tipp 35 kam „größer als 35“, auf den Tipp 37 kam „Treffer, meine Zahl ist 36“.
 - Der grüne Kasten legt fest: Der Ablauf aus Stufe 5 wird in Go geschrieben. Der Go-Compiler entscheidet nichts für uns.
-- Die Tabelle „Vom Ablauf zum Programm“ hat drei Spalten: Schritt im Ablauf, Anweisung in Go, Abschnitt im Kurstext. Sie hat neun Zeilen.
-- Die Zuordnung: Grenzen zu `const ( MAX_VERSUCHE = 7 … )` und 5.2. Drei Werte über alle Runden zu `var ( … )` außerhalb von `main` und 5.1.3. Wiederholung je Runde zu `for { … }` und 5.5.3. Zufallszahl zu `zielZahl := rand.Intn(…)` und 5.1.2. Schleife der Tipps zu `for versuchsZaehler < MAX_VERSUCHE { … }` und 5.5.3.1. Vergleich zu `if … else if … else` und 5.5.1. Verlassen der Schleife zu `break` und 5.5.3.3. Durchschnitt zu `float64(gesamtVersuche) / float64(anzahlSiege)` und 4.7. Wertung zu `switch { case durchschnitt <= 3.0: … }` und 5.5.2.
+- Die Tabelle „Vom Ablauf zum Programm“ hat zwei Spalten: Schritt im Ablauf und Anweisung in Go. Sie hat neun Zeilen. Die Abschnitte des Kurstexts dazu stehen im Reiter „Bezug zum Kurstext“.
+- Die Zuordnung: Grenzen zu `const ( MAX_VERSUCHE = 7 … )`. Drei Werte über alle Runden zu `var ( … )` außerhalb von `main`. Wiederholung je Runde zu `for { … }`. Zufallszahl zu `zielZahl := rand.Intn(…)`. Schleife der Tipps zu `for versuchsZaehler < MAX_VERSUCHE { … }`. Vergleich zu `if … else if … else`. Verlassen der Schleife zu `break`. Durchschnitt zu `float64(gesamtVersuche) / float64(anzahlSiege)`. Wertung zu `switch { case durchschnitt <= 3.0: … }`.
 - Diese Stufe hat keine Spezifikation zum Kopieren. Das ganze Go-Programm steht auf der Seite „Programmierübung: Zahlenraten mit Statistik“, der Link steht unter der Tabelle.
 - Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt. Ein Satz verlinkt die Lektion „Binäre Suche in einem Verbund-Array“, dort kommt das Halbieren aus Stufe 3 wieder vor.
 - Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
@@ -172,6 +172,7 @@ Reiter: programm
 
 - In dieser Stufe lässt sich nichts einstellen.
 - Den Links zur Programmierübung und zur Übung in Kapitel 6 folgen. Beide sind eigene HTML-Seiten.
+- Mit „Weiter zum Bezug zum Kurstext“ zum letzten Reiter wechseln.
 
 ### Abschnitte des Kurstexts
 
@@ -179,3 +180,46 @@ Reiter: programm
 - 5.5.1
 - 5.5.2
 - 5.2
+
+## Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Anweisung des Go-Programms aus Stufe 6 eine Zeile, zusammen neun Zeilen. Die Spalten: Anweisung in Go, was sie im Spiel tut, Abschnitt im Kurstext mit gedruckten Seiten, Lektion dazu mit Link.
+- Die Zuordnung:
+  - `const ( … )`: Abschnitt 5.2, Seiten 124–126, Lektion „Konstanten in Go“.
+  - `var ( … )` außerhalb von `main`: Abschnitt 5.1.3, Seiten 119–120, Lektion „Variablendeklaration in Go“, Schritt 3.
+  - `for { … }`: Abschnitt 5.5.3.2, Seiten 142–146, Expertenwissen 5.16, Lektion „for-Anweisung mit for-Klausel“, Schritt 4.
+  - `zielZahl := …`: Abschnitt 5.1.2, Seiten 116–118, Lektion „Variablendeklaration in Go“, Schritt 2.
+  - `for versuchsZaehler < MAX_VERSUCHE { … }`: Abschnitt 5.5.3.1, Seiten 138–142, Lektion „for-Anweisung mit Bedingung“.
+  - `if … else if … else`: Abschnitt 5.5.1, Seiten 129–132, Lektion „if-Anweisung in Go“.
+  - `break`: Abschnitt 5.5.3.3, Seiten 146–149, Lektion „break-Anweisung in Go“.
+  - `float64(…) / float64(…)`: Abschnitt 4.7, Seiten 109–111, Lektion „Typkonvertierung“.
+  - `switch { … }`: Abschnitt 5.5.2, Seiten 133–137, Lektion „switch-Anweisung in Go“.
+- Unter „Was der Exkurs sonst aus dem Kurstext aufnimmt“ stehen zwei Abschnitte:
+  - Abschnitt 2.7, Seiten 17–19, Spezifikation: Sie legt fest, welche Eingaben gültig sind und welche Ausgabe zu welcher Eingabe richtig ist. Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 4.
+  - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: das Halbieren aus Stufe 3. Lektion „Binäre Suche in einem Verbund-Array“.
+- Unter „Was über den Kurstext hinausgeht“ steht: Die Stufen 1 bis 5 und das Sprachmodell als Entwicklungsabteilung stehen nicht im Kurstext. Das Paket `math/rand` mit `rand.Intn` kommt im Kurstext nicht vor.
+- Unter „Wie es weitergeht“ steht ein Link auf die Programmierübung „Zahlenraten mit Statistik“.
+
+### Handgriffe
+
+- Mit den Reitern oben, mit „Zurück“ oder mit „Zum Anfang“ zu einer anderen Stufe wechseln.
+- In diesem Reiter lässt sich nichts einstellen.
+
+### Abschnitte des Kurstexts
+
+- 5.2
+- 5.1.3
+- 5.5.3.2
+- 5.1.2
+- 5.5.3.1
+- 5.5.1
+- 5.5.3.3
+- 4.7
+- 5.5.2
+- 2.7
+- 8.4.1
