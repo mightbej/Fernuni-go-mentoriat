@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -93,6 +92,7 @@
     <button type="button" class="tab" data-stufe="2">2 Ein Stammbaum</button>
     <button type="button" class="tab" data-stufe="3">3 Dem Zeiger folgen</button>
     <button type="button" class="tab" data-stufe="4">4 Eine Kette</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -159,7 +159,6 @@ type mensch struct {
         <tr><td><code>vater *mensch</code></td><td>Dort liegt eine Adresse in 8 Zellen oder <code>nil</code>.</td><td>Ja.</td></tr>
       </tbody>
     </table></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.1, Seite 215. Beide Deklarationen stammen aus dem Kurstext. Dort steht als Grund die unendlich rekursive Definition. Die Meldung des Compilers und die Begründung mit den Zellen sind eine Ergänzung, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -198,7 +197,6 @@ type mensch struct {
     "und die Omas", erik.vater.mutter.name,
     "und", erik.mutter.mutter.name)</pre>
     <div class="konsole">Erik hat Vater Chris und Mutter Dagmar sowie die Opas Achim und Bert und die Omas Anita und Bärbel</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.1, Seiten 215–216. Die sieben Verbünde und die lange Ausgabe stammen aus dem Kurstext. Die kurze Ausgabe in Zeile 8 der Demo ist ergänzt.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -223,7 +221,6 @@ type mensch struct {
     <div class="konsole" id="f-ausgabe"></div>
     <div class="auskunft" id="f-urteil"></div>
     <div class="hinweis">Vor jedem Sprung muss feststehen, dass der Zeiger auf einen Verbund zeigt. Ein Programm prüft dafür mit <code>!= nil</code>, zum Beispiel <code>if erik.vater != nil</code>.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.1, Seiten 215–216. Die Ausdrücke 3 bis 5 stehen in der Ausgabe des Kurstexts. Die Ausdrücke 6 und 7 mit <code>nil</code> sind eine Ergänzung, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -270,6 +267,34 @@ type mensch struct {
       </tbody>
     </table></div>
     <p>Ein Array hat eine feste Länge. Eine Kette aus Verbünden wächst mit jedem Verbund, der angehängt wird. Das ist der Grund für die dynamischen Datenstrukturen in Kapitel 9.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Der Typ selbst als Feld</td><td>8.3.1, Seite 215</td><td>Beide Deklarationen stammen aus dem Kurstext. Dort steht als Grund die unendlich rekursive Definition.</td><td>Die Meldung des Compilers und die Begründung mit den Zellen sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
+      <tr><td>2 Ein Stammbaum</td><td>8.3.1, Seiten 215–216</td><td>Die sieben Verbünde und die lange Ausgabe stammen aus dem Kurstext.</td><td>Die kurze Ausgabe in Zeile 8 der Demo ist ergänzt.</td></tr>
+      <tr><td>3 Dem Zeiger folgen</td><td>8.3.1, Seiten 215–216</td><td>Die Ausdrücke 3 bis 5 stehen in der Ausgabe des Kurstexts.</td><td>Die Ausdrücke 6 und 7 mit <code>nil</code> sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
+      <tr><td>4 Eine Kette</td><td>8.3.1, Seite 216<br>9.2, Seiten 229–236</td><td>Der Typ <code>listenElement</code> stammt aus Abschnitt 9.2.</td><td>Die Schleife über die Väter ist ein eigenes Beispiel, geprüft mit Go 1.26.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 7.5, Seite 185, Rekursion:</strong> Rekursiv ist dort eine Funktion, hier ein Typ. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
+      <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Listen:</strong> Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -277,10 +302,9 @@ type mensch struct {
       <li><strong>Kapitel 9:</strong> Die Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a> baut aus diesem Typ die Liste auf. Die Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a> zeigt den Baum.</li>
       <li><strong>Go-Programm:</strong> <code>S224_rekursive_verbunde_demo.go</code> liegt im Ordner <code>go</code> dieses Kapitels.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.3.1, Seite 216, und Abschnitt 9.2. Die Schleife über die Väter ist ein eigenes Beispiel, geprüft mit Go 1.26. Der Typ <code>listenElement</code> stammt aus Abschnitt 9.2 des Kurstexts.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -299,8 +323,8 @@ type mensch struct {
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#verbot
-  const ANKER = ['worum', 'verbot', 'stammbaum', 'folgen', 'kette'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Typ selbst als Feld', 'Schritt 2: Ein Stammbaum', 'Schritt 3: Dem Zeiger folgen', 'Schritt 4: Eine Kette'];
+  const ANKER = ['worum', 'verbot', 'stammbaum', 'folgen', 'kette', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Typ selbst als Feld', 'Schritt 2: Ein Stammbaum', 'Schritt 3: Dem Zeiger folgen', 'Schritt 4: Eine Kette', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -488,6 +512,7 @@ type mensch struct {
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const STAMM = 'Der Stammbaum im Hauptspeicher des Modells, die Adressen sind erfunden: achim ab Zelle 100, anita ab 200, chris ab 300 mit vater 100 und mutter 200, bert ab 400, bärbel ab 500, dagmar ab 600 mit vater 400 und mutter 500, erik ab 700 mit vater 300 und mutter 600. Bei achim, anita, bert und bärbel sind beide Zeiger-Felder nil.';
   function standSaetze() {
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0 || stufe === 1) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 2) return standAblauf(DS).concat('In den Rahmen steht ein Zeiger-Feld in Worten, zum Beispiel „Adresse von achim“. Im Hauptspeicher darunter steht dafür die Zahl.');
     if (stufe === 3) { const x = WF.liste[WF.i]; return [STAMM].concat(standWahl(WF, 'der Ausdruck'), ['Gelb markiert sind die Verbünde, die der Rechner für den Ausdruck besucht: ' + x.weg.join(', dann ') + '.']); }

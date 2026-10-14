@@ -2,7 +2,7 @@
 
 Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen. Sie bereitet die verkettete Liste in Kapitel 9 vor. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.3.1, Seiten 215–216.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -134,7 +134,6 @@ Reiter: kette
 - Eine Tabelle stellt Stammbaum und verkettete Liste gegenüber: Das Feld `vater` entspricht dem Feld `nächstes`, das Ende ist in beiden Fällen `nil`, und eine Schleife läuft hindurch, bis der Zeiger `nil` ist.
 - Der Text sagt: Ein Array hat eine feste Länge, eine Kette aus Verbünden wächst mit jedem Verbund, der angehängt wird.
 - Wie eine Liste aufgebaut, durchlaufen und sortiert gehalten wird, steht in Abschnitt 9.2. Diese Seite greift dem nicht vor. Im Kurstext gibt es dort außerdem den Typ `sortierteListe` mit dem Feld `kopf *listenElement`.
-- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Anonyme Felder und eingebettete Verbünde“, die Lektionen „Verkettete Listen in Go“ und „Binäre Suchbäume in Go“ zu Kapitel 9 und das Go-Programm `S224_rekursive_verbunde_demo.go`.
 
 ### Handgriffe
 
@@ -143,5 +142,36 @@ Reiter: kette
 
 ### Abschnitte des Kurstexts
 
+- 8.3.1
+- 9.2
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Der Typ selbst als Feld, 8.3.1, Seite 215: Beide Deklarationen stammen aus dem Kurstext. Dort steht als Grund die unendlich rekursive Definition. Die Meldung des Compilers und die Begründung mit den Zellen sind eine Ergänzung, geprüft mit Go 1.26.
+  - 2 Ein Stammbaum, 8.3.1, Seiten 215–216: Die sieben Verbünde und die lange Ausgabe stammen aus dem Kurstext. Die kurze Ausgabe in Zeile 8 der Demo ist ergänzt.
+  - 3 Dem Zeiger folgen, 8.3.1, Seiten 215–216: Die Ausdrücke 3 bis 5 stehen in der Ausgabe des Kurstexts. Die Ausdrücke 6 und 7 mit nil sind eine Ergänzung, geprüft mit Go 1.26.
+  - 4 Eine Kette, 8.3.1, Seite 216; 9.2, Seiten 229–236: Der Typ listenElement stammt aus Abschnitt 9.2. Die Schleife über die Väter ist ein eigenes Beispiel, geprüft mit Go 1.26.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 7.5, Seite 185, Rekursion: Rekursiv ist dort eine Funktion, hier ein Typ. Lektion: Rekursion in Go.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+  - Abschnitt 9.2, Seiten 229–236, verkettete Listen: Lektion: Verkettete Listen in Go.
+- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Anonyme Felder und eingebettete Verbünde“, die Lektionen „Verkettete Listen in Go“ und „Binäre Suchbäume in Go“ zu Kapitel 9 und das Go-Programm `S224_rekursive_verbunde_demo.go`.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 7.3
+- 7.4
+- 7.5
 - 8.3.1
 - 9.2
