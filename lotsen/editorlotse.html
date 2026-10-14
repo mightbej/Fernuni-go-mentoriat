@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editorlotse: Beschreibung und Anleitung</title>
+  <!-- Diese Seite schreibt lotsenanleitung.py im Modul lotsen aus anleitung.py im Ordner des Lotsen. Nicht von Hand ändern. -->
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    li { margin:6px 0; }
+    .hinweis { margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+    /* Kasten zur Weitergabe: steht in „Worum es geht“ und beim Herunterladen */
+    .nur-kurs { border:2px solid #b91c1c;background:#fef2f2;border-radius:8px;padding:12px 16px;margin:14px 0; }
+    .nur-kurs p { margin:0 0 8px; } .nur-kurs p:last-child { margin-bottom:0; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Editorlotse</h1>
+    <p>Der Editorlotse ist deine Werkstatt für Go-Programme im Browser. Die Seite beschreibt, was er tut, und führt dich in 5 Schritten vom Herunterladen bis zur Arbeit mit ihm.</p>
+    <p>Mentoriat im Modul 63811 „Einführung in die Imperative Programmierung“, Wintersemester 2026/2027.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Herunterladen und starten</button>
+    <button type="button" class="tab" data-stufe="2">2 Schlüssel und Kurstext einrichten</button>
+    <button type="button" class="tab" data-stufe="3">3 Go einrichten</button>
+    <button type="button" class="tab" data-stufe="4">4 Programmieren</button>
+    <button type="button" class="tab" data-stufe="5">5 Den Editorlotsen fragen</button>
+    <button type="button" class="tab" data-stufe="6">Gut zu wissen</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Der Editorlotse ist deine Werkstatt für Go-Programme. Du schreibst ein Programm im Browser, führst es aus und siehst die Ausgabe. Liest dein Programm von der Tastatur, tippst du die Eingabe direkt darunter ein. Go, VS Code oder eine andere Entwicklungsumgebung musst du dafür nicht installieren.</p>
+    <p>Meldet Go einen Fehler oder tut dein Programm etwas anderes als erwartet, fragst du rechts in der Spalte. Der Editorlotse ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist. Er sieht dein Programm und hilft dir, den Fehler selbst zu finden.</p>
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Editorlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält die Listings des Kurstexts, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität.</p>
+    </div>
+    <h3>Was du auf dem Bildschirm siehst</h3>
+    <ul>
+      <li><strong>Oben:</strong> die Auswahl der Programme und die Knöpfe „Ausführen“, „Speichern“ und „Formatieren“.</li>
+      <li><strong>In der Mitte:</strong> der Editor mit deinem Programm und den Zeilennummern.</li>
+      <li><strong>Unten:</strong> die Ausgabe deines Programms und die Zeile für deine Eingaben.</li>
+      <li><strong>Rechts:</strong> die Spalte „Editorlotse“. Dort stellst du Fragen zu deinem Programm.</li>
+    </ul>
+    <h3>Was du brauchst</h3>
+    <ul>
+      <li><strong>Rechner:</strong> Windows mit 64 Bit und einen Browser. Das Programm läuft auf deinem eigenen Rechner.</li>
+      <li><strong>Go für die Lotsen:</strong> die ZIP-Datei <code>lotsen-go.zip</code> mit etwa 34 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal. Hast du Go schon installiert, brauchst du sie nicht.</li>
+      <li><strong>Paket:</strong> die ZIP-Datei <code>editorlotse.zip</code> mit etwa 6 MB aus Moodle.</li>
+      <li><strong>Kurstext für die Lotsen:</strong> die ZIP-Datei <code>lotsen-kurstext.zip</code> mit etwa 4 MB aus Moodle. Sie gilt für alle Lotsen, du lädst sie einmal.</li>
+      <li><strong>Schlüssel:</strong> deinen persönlichen Schlüssel von KI:connect, dem KI-Dienst der Hochschulen in Nordrhein-Westfalen. Programme schreiben und ausführen geht auch ohne Schlüssel.</li>
+    </ul>
+    <div class="hinweis">Der Editorlotse ist ein privates Angebot deines Mentors. Verbindlich sind allein der Kurstext und Moodle der FernUniversität. Das Sprachmodell kann sich irren.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Herunterladen und starten</h2>
+    <h3>Die drei Dateien in Moodle holen</h3>
+    <p>Die Dateien liegen in Moodle, im Beitrag deines Mentors im Forum des Mentoriats, im Block „Die Lotsen zum Kurs“:</p>
+    <ul>
+      <li><strong><code>editorlotse.zip</code>:</strong> das Paket des Editorlotsen. Es steht in der Tabelle unter „ZIP herunterladen“.</li>
+      <li><strong><code>lotsen-kurstext.zip</code>:</strong> der Kurstext für alle Lotsen. Die Datei steht über der Tabelle. Hast du sie schon für einen anderen Lotsen eingerichtet, brauchst du sie nicht noch einmal.</li>
+      <li><strong><code>lotsen-go.zip</code>:</strong> Go für alle Lotsen. Die Datei steht über der Tabelle. Hast du Go schon installiert oder für einen anderen Lotsen eingerichtet, brauchst du sie nicht.</li>
+    </ul>
+    <p><a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161" target="_blank" rel="noopener">Zum Beitrag „[Mentoriat] Thomas Czinkota“ in Moodle</a></p>
+    <div class="nur-kurs">
+      <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Editorlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
+      <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
+      <p>Der Grund: Das Paket enthält die Listings des Kurstexts, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität.</p>
+    </div>
+
+    <h3>Den Ordner entpacken</h3>
+    <ol>
+      <li>Klick mit der rechten Maustaste auf <code>editorlotse.zip</code> und wähle „Alle extrahieren“.</li>
+      <li>Wähle einen Ort, den du wiederfindest, zum Beispiel „Dokumente“.</li>
+    </ol>
+    <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
+    <p>Die Datei <code>lotsen-kurstext.zip</code> entpackst du nicht. Sie bleibt, wie sie ist. Hast du sie noch für keinen anderen Lotsen eingerichtet, lade sie aus Moodle. Du brauchst sie beim Einrichten des Kurstexts.</p>
+    <p>Im Ordner <code>editorlotse</code> liegen die Anleitung, die Nutzungsbedingungen, <code>start.bat</code> und der Ordner <code>meine-programme</code> für deine Programme. Den Ordner <code>programm</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
+
+    <h3>Den Editorlotsen starten</h3>
+    <ol>
+      <li>Öffne den entpackten Ordner <code>editorlotse</code>.</li>
+      <li>Mach einen Doppelklick auf <code>start.bat</code>.</li>
+    </ol>
+    <p>Es öffnet sich ein schwarzes Fenster, und dein Browser zeigt die Adresse <code>http://localhost:8617</code>. Das schwarze Fenster ist das Programm. Lass es offen, solange du mit dem Editorlotsen arbeitest.</p>
+    <div class="hinweis">Windows kann beim ersten Start warnen, weil das Programm von keinem Hersteller signiert ist. Klick in diesem Fall auf „Weitere Informationen“ und dann auf „Trotzdem ausführen“.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Schlüssel und Kurstext einrichten</h2>
+    <h3>Den Schlüssel für KI:connect einrichten</h3>
+    <p>KI:connect ist der KI-Dienst der Hochschulen in Nordrhein-Westfalen. Als Student der FernUniversität darfst du ihn nutzen. Der Editorlotse stellt deine Fragen dort, und dafür braucht er deinen persönlichen Schlüssel. Du richtest ihn einmal ein.</p>
+    <p>Beim ersten Start zeigt der Browser die Seite „Schlüssel für KI:connect einrichten“. Dort stehen die gleichen Schritte:</p>
+    <ol>
+      <li>Öffne <a href="https://chat.kiconnect.nrw" target="_blank" rel="noopener">chat.kiconnect.nrw</a>, wähle „FernUniversität in Hagen“ und melde dich an.</li>
+      <li>Klick unten links auf deinen Namen und dann auf „API-Schlüsselverwaltung“.</li>
+      <li>Gib einen Namen ein, zum Beispiel „mentoriat“, und klick auf „Schlüssel erstellen“.</li>
+      <li>Kopiere den Schlüssel. KI:connect zeigt ihn nur einmal an.</li>
+      <li>Füge den Schlüssel auf der Seite des Editorlotsen ein und klick auf „Prüfen und übernehmen“.</li>
+    </ol>
+    <h3>Was mit dem Schlüssel geschieht</h3>
+    <ul>
+      <li><strong>Er bleibt bei dir:</strong> Der Schlüssel bleibt auf deinem Rechner. Das Programm schickt ihn nur an KI:connect.</li>
+      <li><strong>Er ist persönlich:</strong> Gib den Schlüssel niemandem weiter.</li>
+      <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für einen anderen Lotsen eingerichtet, findet ihn der Editorlotse von selbst.</li>
+    </ul>
+    <h3>Ohne Schlüssel</h3>
+    <p>Mit „Ohne Schlüssel weiter“ schreibst und führst du deine Programme aus wie sonst. Es fehlen die Antworten des Editorlotsen in der Spalte.</p>
+
+    <h3>Den Kurstext für die Lotsen einrichten</h3>
+    <p>Der Editorlotse schlägt zu deiner Frage im Kurstext nach. So nennt er dir den Abschnitt und die HTML-Seiten des Mentoriats dazu. Dafür braucht er die Datei <code>lotsen-kurstext.zip</code>. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
+    <p>Nach dem Schlüssel zeigt der Browser die Seite „Kurstext für die Lotsen einrichten“:</p>
+    <ol>
+      <li>Klick auf „Datei auswählen“ und wähle die Datei <code>lotsen-kurstext.zip</code>. Du brauchst sie nicht zu entpacken.</li>
+      <li>Klick auf „Übernehmen“.</li>
+    </ol>
+    <p>Hast du schon einen anderen Lotsen eingerichtet, erscheint diese Seite nicht.</p>
+    <p>Mit „Ohne Kurstext weiter“ bleibt alles. Der Editorlotse antwortet dann ohne Stellen aus dem Kurstext und nennt keine HTML-Seiten.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Go für die Lotsen einrichten</h2>
+    <p>Der Editorlotse übersetzt deine Programme mit Go. Du musst Go nicht installieren: Die Datei <code>lotsen-go.zip</code> enthält alles, was die Lotsen brauchen. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
+    <p>Nach dem Kurstext zeigt der Browser die Seite „Go für die Lotsen einrichten“:</p>
+    <ol>
+      <li>Klick auf „Datei auswählen“ und wähle die Datei <code>lotsen-go.zip</code>. Du brauchst sie nicht zu entpacken.</li>
+      <li>Klick auf „Übernehmen“. Das Einrichten dauert etwa eine halbe Minute.</li>
+    </ol>
+    <ul>
+      <li><strong>Hast du Go schon installiert:</strong> Dann erscheint diese Seite nicht, und der Editorlotse nimmt dein Go.</li>
+      <li><strong>Was auf deinem Rechner geschieht:</strong> Das Programm legt Go in einem Ordner der Lotsen ab. Es installiert nichts und ändert nichts an Windows.</li>
+      <li><strong>Das erste Ausführen:</strong> Es dauert einige Sekunden, weil Go dabei seine eigenen Bausteine übersetzt. Danach geht es in einer Sekunde.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Ein Programm schreiben und ausführen</h2>
+    <p>Links oben wählst du ein Programm, darunter steht es im Editor. Unter dem Editor erscheint, was dein Programm ausgibt.</p>
+    <h3>Ein Programm laden</h3>
+    <ul>
+      <li><strong>Listings des Kurstexts:</strong> Die Programme aus dem Kurstext, zum Beispiel <code>for_ggt</code>. Vier davon sind Ausschnitte und laufen nicht allein, die Auswahl sagt das dazu.</li>
+      <li><strong>Beispiele deines Mentors zu Kapitel 4:</strong> Kleine Programme zu den Datentypen.</li>
+      <li><strong>Meine Programme:</strong> Was du selbst gespeichert hast.</li>
+      <li><strong>Neu:</strong> Ein leeres Programm, das „Hallo, Welt!“ ausgibt.</li>
+    </ul>
+    <h3>Ausführen</h3>
+    <ul>
+      <li><strong>Ausführen:</strong> Klick auf „Ausführen“ oder drück Strg+Enter. Go übersetzt dein Programm und startet es.</li>
+      <li><strong>Eingaben:</strong> Liest dein Programm mit <code>fmt.Scan</code>, dann tippst du die Eingabe in die Zeile unter der Ausgabe und drückst die Eingabetaste.</li>
+      <li><strong>Fehler beim Übersetzen:</strong> Die Ausgabe nennt die Meldung von Go mit der Zeile. Im Editor ist die Stelle rot unterstrichen. Ein Klick auf „Zeile 8“ springt dorthin.</li>
+      <li><strong>Stopp:</strong> Läuft eine Schleife endlos, beendet „Stopp“ das Programm.</li>
+    </ul>
+    <h3>Speichern</h3>
+    <ul>
+      <li><strong>Speichern:</strong> Mit „Speichern“ oder Strg+S legst du dein Programm im Ordner <code>meine-programme</code> ab, im Ordner des Editorlotsen. Dort findest du es auch ohne den Editorlotsen.</li>
+      <li><strong>Ein Listing ändern:</strong> Das Listing selbst bleibt, wie es ist. Deine Fassung speicherst du unter eigenem Namen.</li>
+      <li><strong>Formatieren:</strong> Setzt Einrückung und Abstände so, wie Go sie schreibt.</li>
+      <li><strong>Neu laden:</strong> Der Browser merkt sich, was im Editor steht. Lädst du die Seite neu, ist nichts verloren.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Den Editorlotsen fragen</h2>
+    <p>Rechts neben dem Editor steht die Spalte „Editorlotse“. Dort beantwortet das Sprachmodell deine Fragen zu deinem Programm. Es sieht dein Programm mit den Zeilennummern und was beim letzten Ausführen herauskam.</p>
+    <ul>
+      <li><strong>Fragen:</strong> Tipp deine Frage in das Feld, zum Beispiel „Warum gibt meine Schleife eine Zahl zu viel aus?“, und drück die Eingabetaste.</li>
+      <li><strong>Meldung erklären:</strong> Übersetzt Go dein Programm nicht, steht unter der Meldung der Knopf „Editorlotsen fragen: Was bedeutet die Meldung?“.</li>
+      <li><strong>Eine Stelle markieren:</strong> Markiere mit der Maus eine Stelle im Programm oder in der Ausgabe. Sie erscheint rechts über dem Eingabefeld und geht mit deiner Frage mit, zusammen mit der ganzen Programmzeile. Das Kreuz daneben verwirft sie.</li>
+      <li><strong>Keine fertige Lösung:</strong> Der Editorlotse hilft dir, den Fehler selbst zu finden. Er erklärt die Meldung und gibt dir einen Hinweis. Die korrigierte Zeile schreibst du selbst.</li>
+      <li><strong>Unter der Antwort:</strong> Dort stehen die Abschnitte des Kurstexts, auf die sich die Antwort stützt, und Links auf die HTML-Seiten des Mentoriats zu diesen Abschnitten.</li>
+      <li><strong>Spalte schließen:</strong> Der Knopf „×“ oben rechts schließt die Spalte, damit der Editor die ganze Breite hat. Der Knopf „Editorlotsen fragen“ unten rechts öffnet sie wieder.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu „Gut zu wissen“</button>
+  </div>
+  </section>
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Gut zu wissen</h2>
+    <h3>Beenden und wieder starten</h3>
+    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>start.bat</code>.</p>
+    <p>Meldet das schwarze Fenster „Die Adresse ist belegt“, dann läuft der Editorlotse schon in einem anderen Fenster.</p>
+
+    <h3>Was du wissen musst</h3>
+    <ul>
+      <li><strong>Was dein Rechner verlässt:</strong> Dein Programm, die letzte Ausgabe und deine Frage gehen an KI:connect, wenn du in der Spalte fragst. Deine Programme selbst bleiben auf deinem Rechner.</li>
+      <li><strong>Was das Programm aus dem Netz holt:</strong> Bei jedem Start holt es von den HTML-Seiten des Mentoriats die Liste, welche HTML-Seite zu welchem Abschnitt des Kurstexts gehört. So erscheinen neue HTML-Seiten ohne neues Paket.</li>
+      <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
+      <li><strong>Nicht weitergeben:</strong> Das Paket enthält die Listings des Kurstexts, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität. Beide sind nur für Teilnehmer dieses Kurses bestimmt. Genaueres steht in den Nutzungsbedingungen.</li>
+      <li><strong>Deine Programme:</strong> Sie liegen als Dateien mit der Endung <code>.go</code> im Ordner <code>meine-programme</code>. Sichere den Ordner, bevor du einen neuen Editorlotsen entpackst.</li>
+      <li><strong>Ein Programm, das nicht endet:</strong> Der Editorlotse beendet ein Programm nach zehn Minuten oder wenn es mehr als 200 000 Zeichen ausgibt.</li>
+      <li><strong>Einsendeaufgaben:</strong> Der Editorlotse löst sie nicht für dich.</li>
+      <li><strong>Fehler und Fragen:</strong> Bring sie ins Mentoriat mit.</li>
+    </ul>
+
+    <h3>Nutzungsbedingungen und fremde Software</h3>
+    <ul>
+      <li><strong>Nutzungsbedingungen:</strong> Wer den Editorlotsen nutzen darf und was nicht erlaubt ist, steht in der Datei <code>Nutzungsbedingungen.txt</code> im Ordner. Du öffnest sie mit einem Doppelklick.</li>
+      <li><strong>Fremde Software:</strong> Der Editor im Browser ist CodeMirror von Marijn Haverbeke und anderen, unter der MIT-Lizenz. Go stammt von go.dev und steht unter der BSD-Lizenz. Die Lizenztexte liegen im Ordner <code>Lizenzen</code> und in <code>lotsen-go.zip</code>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+  // Jede Stufe hat eine eigene Adresse, zum Beispiel #schluessel.
+  var ANKER = ["worum", "starten", "schluessel", "go", "programmieren", "fragen", "wissen"];
+
+  function jeder(auswahl, tu) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tu); }
+
+  function zeigeStufe(nummer, nachOben) {
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe]");
+    if (!k) return;
+    var d = k.dataset;
+    zeigeStufe(Number(d.stufe !== undefined ? d.stufe : d.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  zeigeStufe(stufeAusAdresse(), false);
+})();
+</script>
+</body>
+</html>
