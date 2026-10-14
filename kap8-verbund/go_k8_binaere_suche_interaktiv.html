@@ -97,6 +97,7 @@
     <button type="button" class="tab" data-stufe="2">2 Die Funktion</button>
     <button type="button" class="tab" data-stufe="3">3 Aufruf für Aufruf</button>
     <button type="button" class="tab" data-stufe="4">4 Aufwand</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -155,7 +156,6 @@ telbuch := [10]person{{"Arnold", 3310}, {"Becker", 5522}, {"Fischer", 6398}, {"H
     <div class="auskunft" id="i-urteil"></div>
     <p>So steht die Idee in Abschnitt 8.4.1: Die Suche vergleicht mit dem Namen in der Mitte. Ist der gesuchte Name alphabetisch kleiner, sucht sie in der ersten Hälfte weiter, sonst in der zweiten. Bei jedem Blick halbiert sich der Bereich, bis er einen Eintrag enthält. Stimmt dessen Name nicht, steht der Name nicht im Telefonbuch.</p>
     <div class="hinweis">Die gleiche Strategie steht im Exkurs <a href="../kap3-einfuehrung/exkurs_von_problem_zu_code.html#versuche">Von der Problemstellung zum Go-Programm</a> zu Kapitel 3, Stufe 3, beim Zahlenraten. Wer dort immer die Mitte des Bereichs tippt, der noch möglich ist, verkleinert den Bereich bei jedem Tipp auf die Hälfte. Beim Zahlenraten sagt das Programm „zu klein“ oder „zu groß“. Hier sagt es der Vergleich mit dem Namen in der Mitte.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 221–222. Das Telefonbuch ist ein eigenes Beispiel. Die Blicke folgen der Rechnung aus Listing 8.1 und sind mit Go 1.26 geprüft.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -223,7 +223,7 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
     }
     return ergebnis
 }</pre>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Listing 8.1, Datei <code>binSuche.go</code>, Seite 224. Das Listing ist unverändert übernommen.</p>
+    <p class="quelle">Listing 8.1, <code>binSuche.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 8.4.1, Seite 224, unverändert übernommen.</p>
     <ul>
       <li><strong>Die Parameter:</strong> <code>personArr</code> ist ein Zeiger auf das Array. <code>links</code> und <code>rechts</code> sind der erste und der letzte Index des Suchbereichs, beide gehören dazu. <code>suchwert</code> ist der gesuchte Name.</li>
       <li><strong>Der erste Aufruf:</strong> Im Kurstext lautet er <code>binSuche(&amp;telbuch, 0, arrlen-1, "Müller")</code>. Der Bereich umfasst das ganze Array, vom Index 0 bis zum Index 9.</li>
@@ -268,7 +268,6 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
     <div class="konsole" id="a-ausgabe"></div>
     <div class="auskunft" id="a-urteil"></div>
     <p>Im Hauptspeicher stehen das Telefonbuch und von jedem Aufruf die drei Werte, die er übergeben bekommt: der Zeiger und die zwei Indizes. Kopiert wird nie ein Verbund.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Listing 8.1, Seiten 223–224. Die Funktion steht hier ohne ihre Kommentare. Die Aufrufe und Ausgaben sind mit Go 1.26 geprüft. Die Adressen gehören zum Modell dieser HTML-Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -311,6 +310,35 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
       <li><strong>Nach der Nummer suchen:</strong> Warum findet <code>binSuche</code> nicht den Namen zu einer bekannten Telefonnummer, auch wenn man den Vergleich auf das Feld <code>telefonnummer</code> umstellt?</li>
       <li><strong>Ein Name zweimal:</strong> Zwei Einträge heißen Meier. Was liefert <code>binSuche</code> dann, und ist es immer der erste der beiden?</li>
     </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Die Idee</td><td>8.4.1, Seiten 221–222</td><td>Das Halbieren des Suchbereichs stammt aus dem Kurstext.</td><td>Das Telefonbuch ist ein eigenes Beispiel. Die Blicke folgen der Rechnung aus Listing 8.1 und sind mit Go 1.26 geprüft.</td></tr>
+      <tr><td>2 Die Funktion</td><td>8.4.1, Seite 224: Listing 8.1</td><td>Listing 8.1 stammt unverändert aus dem Kurstext.</td><td>Die Lektion gibt nichts dazu.</td></tr>
+      <tr><td>3 Aufruf für Aufruf</td><td>8.4.1, Seiten 223–224: Listing 8.1</td><td>Die Funktion aus Listing 8.1 und die sechs Fälle stammen aus dem Kurstext.</td><td>Die Funktion steht hier ohne ihre Kommentare. Aufrufe und Ausgaben sind mit Go 1.26 geprüft. Die Adressen gehören zum Modell der Lektion.</td></tr>
+      <tr><td>4 Aufwand</td><td>8.4.1, Seiten 222–223</td><td>Die Aussage zum Halbieren und die logarithmische Laufzeit stehen im Kurstext.</td><td>Die Tabelle und die Aufgaben sind ergänzt. Die Zahlen der Tabelle sind mit Go 1.26 gezählt.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Ohne Abschnitt im Kurstext, Halbieren beim Zahlenraten:</strong> Lektion: <a href="../kap3-einfuehrung/exkurs_von_problem_zu_code.html#versuche">Exkurs: Von der Problemstellung zum Go-Programm</a>, Stufe 3.</li>
+      <li><strong>Abschnitt 7.5, Seite 185, Rekursion:</strong> <code>binSuche</code> ruft sich selbst auf. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Abschnitt 9.3, Seite 237, binäre Bäume:</strong> Die Suche im Baum halbiert ebenfalls. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a>.</li>
+      <li><strong>Ohne Abschnitt im Kurstext, Laufzeit:</strong> Wie die Zahl der Schritte mit der Datenmenge wächst, zeigt der Exkurs <a href="../exkurse/exkurs_laufzeit_wachstum.html">Wie die Laufzeit mit der Datenmenge wächst</a>.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -318,10 +346,9 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
       <li><strong>Übung mit Verbund-Arrays:</strong> Die Programmierübung <a href="go_k8_telefonbuch_programmieruebung.html">Ein Telefonbuch als Verbund-Array</a>.</li>
       <li><strong>Abschnitt 9.3.1:</strong> Die Lektion <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a> greift die Idee wieder auf. Ein Baum hält die Namen sortiert, auch wenn neue dazukommen.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4.1, Seiten 222–223. Die Aussage zum Halbieren und die logarithmische Laufzeit stehen im Kurstext. Die Tabelle und die Aufgaben sind ergänzt, die Zahlen der Tabelle sind mit Go 1.26 gezählt.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -339,8 +366,8 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#idee
-  const ANKER = ['worum', 'idee', 'funktion', 'aufrufe', 'aufwand'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Aufruf für Aufruf', 'Schritt 4: Aufwand'];
+  const ANKER = ['worum', 'idee', 'funktion', 'aufrufe', 'aufwand', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Aufruf für Aufruf', 'Schritt 4: Aufwand', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -591,6 +618,7 @@ func binSuche(personArr *[arrlen]person, links, rechts int,
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 1) return standIdee();
     if (stufe === 3) {
       const z = DA.stand ? DA.lauf[DA.stand - 1] : null;

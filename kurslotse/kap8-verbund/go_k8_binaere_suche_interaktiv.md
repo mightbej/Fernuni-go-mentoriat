@@ -2,7 +2,7 @@
 
 Die Seite erklärt die binäre Suche aus Abschnitt 8.4.1 des Kurstexts, Seiten 221–225, und die Funktion `binSuche` aus Listing 8.1. Die Funktion sucht in einem Array von Verbünden des Typs `person`, das nach dem Feld `name` sortiert ist, und liefert die Telefonnummer oder −1.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -145,7 +145,6 @@ Reiter: aufwand
 - Zur ersten Aufgabe: Die Schleife läuft, solange `rechts >= links` gilt, und setzt statt eines Aufrufs `rechts` auf `mitte-1` oder `links` auf `mitte+1`. Die Lektion „Rekursion in Go“ zeigt in Schritt 1 eine Funktion iterativ und rekursiv.
 - Zur zweiten Aufgabe: Das Telefonbuch ist nach `name` sortiert und nicht nach `telefonnummer`. Erst ein Array, das nach der Nummer sortiert ist, lässt sich nach der Nummer durchsuchen. So steht es in Abschnitt 8.4.1 am Beispiel des gedruckten Telefonbuchs.
 - Zur dritten Aufgabe: Die Funktion liefert die Nummer des Eintrags, den sie zuerst als Mitte trifft. Das muss nicht der erste der beiden sein.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
@@ -158,3 +157,33 @@ Reiter: aufwand
 - 8.4.1
 - 8.4.2
 - 9.3.1
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Die Idee, 8.4.1, Seiten 221–222: Das Halbieren des Suchbereichs stammt aus dem Kurstext. Das Telefonbuch ist ein eigenes Beispiel. Die Blicke folgen der Rechnung aus Listing 8.1 und sind mit Go 1.26 geprüft.
+  - 2 Die Funktion, 8.4.1, Seite 224: Listing 8.1: Listing 8.1 stammt unverändert aus dem Kurstext. Die Lektion gibt nichts dazu.
+  - 3 Aufruf für Aufruf, 8.4.1, Seiten 223–224: Listing 8.1: Die Funktion aus Listing 8.1 und die sechs Fälle stammen aus dem Kurstext. Die Funktion steht hier ohne ihre Kommentare. Aufrufe und Ausgaben sind mit Go 1.26 geprüft. Die Adressen gehören zum Modell der Lektion.
+  - 4 Aufwand, 8.4.1, Seiten 222–223: Die Aussage zum Halbieren und die logarithmische Laufzeit stehen im Kurstext. Die Tabelle und die Aufgaben sind ergänzt. Die Zahlen der Tabelle sind mit Go 1.26 gezählt.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Ohne Abschnitt im Kurstext, Halbieren beim Zahlenraten: Lektion: Exkurs: Von der Problemstellung zum Go-Programm, Stufe 3.
+  - Abschnitt 7.5, Seite 185, Rekursion: binSuche ruft sich selbst auf. Lektion: Rekursion in Go.
+  - Abschnitt 9.3, Seite 237, binäre Bäume: Die Suche im Baum halbiert ebenfalls. Lektion: Binäre Suchbäume in Go.
+  - Ohne Abschnitt im Kurstext, Laufzeit: Wie die Zahl der Schritte mit der Datenmenge wächst, zeigt der Exkurs Wie die Laufzeit mit der Datenmenge wächst.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 7.5
+- 8.4.1
+- 9.3
