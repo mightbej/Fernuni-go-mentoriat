@@ -2,7 +2,7 @@
 
 Die Seite zeigt den Weg von „Strom an, Strom aus“ zur Addition zweier Zahlen: ein Gatter, die Gatter auf einem Byte, die Schaltung für eine Stelle mit Übertrag, der Addierer mit acht Stellen, die Subtraktion über das Zweierkomplement. Die Bit-Operatoren von Go sind die Bausteine. Die Seite gehört zu Abschnitt 4.3.7.2.1 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -167,9 +167,40 @@ Reiter: subtraktion
 
 - Ein Bit von `a` oder `b` anklicken, `a` und `b` als ganze Zahl von 0 bis 255 eintragen oder einen der drei Knöpfe mit Beispielen wählen.
 - Die Auflösung der Frage aufklappen.
-- Den Links zu den Seiten „Zahlenkreis“ und „Bitverschiebung“ und zum Quiz zur Bitverschiebung folgen. Ein Quiz zum Rechenwerk gibt es nicht.
 
 ### Abschnitte des Kurstexts
 
 - 4.3.5
 - 4.3.7.2.1
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Ein Gatter, 4.3.7.2.1, Seiten 72–74: bit-weise Operatoren: Die bit-weisen Operatoren und ihre Tabellen stammen aus dem Kurstext. Die Zeile „Addition“ gibt die Lektion dazu.
+  - 2 Die Gatter auf einem Byte, 4.3.7.2.1, Seiten 72–74: Die Werte 10 und 12 sind das Beispiel des Kurstexts. Die Demo mit zwei einstellbaren Bytes gibt die Lektion dazu.
+  - 3 Eine Stelle mit Übertrag, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Schaltung ist eine Ergänzung des Mentors.
+  - 4 Der Addierer, 4.3.8, Seiten 78–84: Überlauf: Der Überlauf, der beim letzten Übertrag entsteht, wird in Abschnitt 4.3.8 behandelt. Der Addierer steht nicht im Kurstext.
+  - 5 Die Subtraktion, 4.3.5, Seiten 64–66: Zweierkomplement: Im Kurstext steht, dass sich die Subtraktion mit dem Zweierkomplement auf die Addition zurückführen lässt. Die Rechnung Stelle für Stelle gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, Rechnen: Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: Exkurs: Speichern und Rechnen im Rechner.
+  - Abschnitt 4.3.5, Seiten 64–66, Zweierkomplement: Lektion: Zweierkomplement.
+  - Ohne Abschnitt im Kurstext: Wie man die Gatter aus Schaltern baut, zeigt die Lektion Gatter aus Schaltern.
+- Unter „Wie es weitergeht“ stehen Links auf: „Zahlenkreis“, „Bitverschiebung“, „Quiz zur Bitverschiebung“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links zu den Seiten „Zahlenkreis“ und „Bitverschiebung“ und zum Quiz zur Bitverschiebung folgen. Ein Quiz zum Rechenwerk gibt es nicht.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 4.3.5
+- 4.3.7.2.1
+- 4.3.8

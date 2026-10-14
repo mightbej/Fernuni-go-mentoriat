@@ -34,7 +34,6 @@
     .meldung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--erg);background:var(--erg-bg);margin:12px 0; }
     .meldung.ueberlauf { border-left-color:var(--rot);background:#fef2f2; }
     .erklaerung { padding:12px 14px;border-radius:8px;border-left:4px solid var(--accent);background:#eef2ff;margin:12px 0;min-height:92px; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
     .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
     button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
     button:hover { background:#e5e7eb; }
@@ -118,6 +117,7 @@
     <button type="button" class="tab" data-stufe="3">3 Eine Stelle mit Übertrag</button>
     <button type="button" class="tab" data-stufe="4">4 Der Addierer</button>
     <button type="button" class="tab" data-stufe="5">5 Die Subtraktion</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -149,7 +149,6 @@
       <li><strong>Schritt 5</strong> subtrahiert, indem es das Zweierkomplement addiert.</li>
     </ul>
     <div class="hinweis">Im Kurstext werden die Bit-Operatoren in Abschnitt 4.3.7.2.1 behandelt. Der Addierer wird dort nicht ausgeführt. Er ist eine Ergänzung des Mentors: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -172,7 +171,6 @@
       <div class="legende">Ein Klick auf das Bit von a oder b schaltet den Strom um. Die Zeilen stehen in der gleichen Reihenfolge wie in Schritt 2 beim Byte. Dort gibt es acht solche Spalten nebeneinander.</div>
     </div>
     <p>Die letzte Zeile zeigt schon die Addition zweier Bits: Die Summe kommt aus XOR, der Übertrag aus AND.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Zeile „Addition“ steht nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -219,7 +217,6 @@
 
     <div class="hinweis"><strong>Wozu das heute gebraucht wird.</strong> Ein Sprachmodell mit 13 Milliarden Gewichten braucht 26 GB Speicher, also eine Grafikkarte für über 2.000 €. Forscher von Samsung haben es 2025 auf unter 1 GB verkleinert. Damit passt es in den Speicher jedes heutigen Smartphones. Sie speichern die Gewichte als einzelne Bits in <code>uint32</code>-Werten und ersetzen die Multiplikation durch XOR. Den Typ <code>uint32</code> zeigt die Tabelle auf der Seite <a href="go_k4_zahlenkreis_interaktiv.html#typen">Zahlenkreis</a>, im Kurstext steht er in Abschnitt 4.3.4. Quelle: Lee u. a., „LittleBit“, NeurIPS 2025, <a href="https://arxiv.org/abs/2506.13771">arXiv 2506.13771</a>.</div>
     <p>Was <code>&lt;&lt;</code> und <code>&gt;&gt;</code> mit den Bits tun und warum sie verdoppeln und halbieren, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.7.2.1, Seiten 72–74. Die Werte 10 und 12 sind das Beispiel des Kurstexts.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -246,7 +243,6 @@
       <svg id="schaltV" class="schaltbild" viewBox="0 0 660 360" role="img" aria-label="Schaltung eines Addierers für eine Stelle"></svg>
       <div class="legende">Eine dicke, farbige Leitung führt Strom und steht für 1. Eine dünne, graue Leitung führt keinen Strom und steht für 0. Ein Punkt verbindet zwei Leitungen, ein Bogen führt eine Leitung über eine andere hinweg.</div>
     </div>
-    <p class="quelle">Die Schaltung steht nicht im Kurstext. Sie ist eine Ergänzung des Mentors.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -291,7 +287,6 @@
     <div id="meldA"></div>
     <div id="codeA"></div>
     <p>Was ein Übertrag über die vorderste Stelle hinaus für die Typen in Go bedeutet, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3.</p>
-    <p class="quelle">Der Addierer steht nicht im Kurstext. Der Überlauf wird dort in Abschnitt 4.3.8 behandelt, Seiten 78–84.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -320,15 +315,44 @@
     <div id="meldS"></div>
     <div id="codeS"></div>
     <div class="hinweis">Ein echtes Rechenwerk spart sich den Zwischenschritt „1 dazuzählen“. Es dreht die Bits von <code>b</code> um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist das gleiche.</div>
-    <p>So geht es weiter:</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Ein Gatter</td><td>4.3.7.2.1, Seiten 72–74: bit-weise Operatoren</td><td>Die bit-weisen Operatoren und ihre Tabellen stammen aus dem Kurstext.</td><td>Die Zeile „Addition“ gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Die Gatter auf einem Byte</td><td>4.3.7.2.1, Seiten 72–74</td><td>Die Werte 10 und 12 sind das Beispiel des Kurstexts.</td><td>Die Demo mit zwei einstellbaren Bytes gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Eine Stelle mit Übertrag</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Schaltung ist eine Ergänzung des Mentors.</td></tr>
+      <tr><td>4 Der Addierer</td><td>4.3.8, Seiten 78–84: Überlauf</td><td>Der Überlauf, der beim letzten Übertrag entsteht, wird in Abschnitt 4.3.8 behandelt.</td><td>Der Addierer steht nicht im Kurstext.</td></tr>
+      <tr><td>5 Die Subtraktion</td><td>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Im Kurstext steht, dass sich die Subtraktion mit dem Zweierkomplement auf die Addition zurückführen lässt.</td><td>Die Rechnung Stelle für Stelle gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Rechnen:</strong> Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</li>
+      <li><strong>Abschnitt 4.3.5, Seiten 64–66, Zweierkomplement:</strong> Lektion: <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a>.</li>
+      <li><strong>Ohne Abschnitt im Kurstext:</strong> Wie man die Gatter aus Schaltern baut, zeigt die Lektion <a href="go_k4_schalter_interaktiv.html">Gatter aus Schaltern</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Zweierkomplement:</strong> Wie ein Bitmuster als Zahl mit Vorzeichen gelesen wird, zeigt die Seite <a href="go_k4_zahlenkreis_interaktiv.html#vorzeichen">Zahlenkreis</a>, Schritt 2.</li>
       <li><strong>Schieben:</strong> Die Operatoren <code>&lt;&lt;</code> und <code>&gt;&gt;</code> stehen auf der Seite <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>, dazu gibt es das <a href="go_k4_bitverschiebung_quiz.html">Quiz zur Bitverschiebung</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66. Im Kurstext steht, dass sich die Subtraktion mit dem Zweierkomplement auf die Addition zurückführen lässt.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -351,7 +375,7 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#addierer
-  const ANKER = ['worum', 'gatter', 'byte', 'stelle', 'addierer', 'subtraktion'];
+  const ANKER = ['worum', 'gatter', 'byte', 'stelle', 'addierer', 'subtraktion', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -577,11 +601,12 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Gatter', 'Schritt 2: Die Gatter auf einem Byte', 'Schritt 3: Eine Stelle mit Übertrag', 'Schritt 4: Der Addierer', 'Schritt 5: Die Subtraktion'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Gatter', 'Schritt 2: Die Gatter auf einem Byte', 'Schritt 3: Eine Stelle mit Übertrag', 'Schritt 4: Der Addierer', 'Schritt 5: Die Subtraktion', 'Schritt 6: Bezug zum Kurstext'];
   const glatt = id => { const k = el(id).cloneNode(true); k.querySelectorAll('br').forEach(b => b.replaceWith(' ; ')); return k.textContent.replace(/\s+/g, ' ').trim(); };
   const byte = v => mitLuecke(v) + ' (' + (v & 255) + ')';
 
   function standSaetze() {
+    if (stufe === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo.'];
     if (stufe === 1) {
       const a = Z.ga, b = Z.gb;
