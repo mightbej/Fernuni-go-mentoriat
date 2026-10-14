@@ -18,7 +18,6 @@
     .erklaerung ol { margin:0;padding-left:22px; } .erklaerung li { margin:5px 0;overflow-wrap:anywhere; }
     .auskunft { padding:12px 14px;border-radius:8px;border-left:4px solid #1e40af;background:#eff6ff;margin:12px 0; }
     .auskunft ul { margin:6px 0 0;padding-left:22px; } .auskunft li { margin:4px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
     button:hover { background:#e5e7eb; }
     button.aktiv { background:var(--accent);color:#fff;border-color:var(--accent); }
@@ -100,6 +99,7 @@
     <button type="button" class="tab" data-stufe="2">2 Kopie und Zeiger</button>
     <button type="button" class="tab" data-stufe="3">3 Zeiger als Feld</button>
     <button type="button" class="tab" data-stufe="4">4 Wert oder Zeiger</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -130,7 +130,6 @@ type besitzerZ struct {
     ort      string
     fahrzeug *auto // Feld mit Zeiger auf Verbund-Typ
 }</pre>
-      <p class="quelle">Die drei Typen stammen aus dem Kurstext v3.0.6: <code>auto</code> aus Abschnitt 8.2.7, Seite 210, <code>besitzerW</code> und <code>besitzerZ</code> aus Abschnitt 8.3, Seiten 212 und 213.</p>
       <p>Die Seite geht in vier Schritten vor. Jeder Schritt hat oben einen Reiter.</p>
       <ul>
         <li><strong>Schritt 1, Verbund als Feld:</strong> Die Variable <code>mike</code> enthält ein ganzes Auto. Ein Klick auf ein Feld zeigt den Ausdruck, der zu ihm führt.</li>
@@ -171,7 +170,6 @@ type besitzerZ struct {
 }
 fmt.Println("Mike mit altem Auto:", mike)
 // Mike mit altem Auto: {Mike München {Mercedes M-RT357 133000 2024}}</pre>
-      <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seite 212.</p>
       <p>Die Ausgabe zeigt die Hierarchie mit geschweiften Klammern: Die inneren Klammern umschließen die vier Werte des Autos.</p>
       <div class="feld">
         <div class="buehne" id="buehne1"></div>
@@ -200,7 +198,6 @@ fmt.Println("Mike mit altem Auto:", mike)
       <div class="layout">
         <div>
           <ol class="programm" id="programm2"></ol>
-          <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seiten 212–213. Die Ausgaben stehen dort als Kommentar, hier im Feld „Ausgabe des Programms“.</p>
         </div>
         <div>
           <div class="feld">
@@ -238,7 +235,6 @@ fmt.Println("Mike mit altem Auto:", mike)
       <div class="layout">
         <div>
           <ol class="programm" id="programm3"></ol>
-          <p class="quelle">Programm aus dem Kurstext v3.0.6, Abschnitt 8.3, Seiten 213–214. Die Ausgabe steht dort als Kommentar, hier im Feld „Ausgabe des Programms“.</p>
         </div>
         <div>
           <div class="feld">
@@ -279,16 +275,44 @@ fmt.Println("Mike mit altem Auto:", mike)
       </table>
       </div>
       <p>Im Kurstext steht dazu: Hierarchische Verbünde mit Zeigern als Feldern sind flexibler einsetzbar als solche mit ganzen Verbund-Werten als Feldern. In der Praxis werden deshalb meist Zeiger auf Verbünde als Feld-Typ verwendet.</p>
-      <p class="quelle">Nach Kurstext v3.0.6, Abschnitt 8.3, Seite 214.</p>
-      <h3>Wie es im Kurstext weitergeht</h3>
+    </div>
+    <div class="nav">
+      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+      <button type="button" class="knopf" data-gehe="5">Weiter zu Schritt 5</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Schritt 5: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>8.2.7, Seite 210<br>8.3, Seiten 212–213</td><td>Die drei Typen stammen aus dem Kurstext: <code>auto</code> aus Abschnitt 8.2.7, <code>besitzerW</code> und <code>besitzerZ</code> aus Abschnitt 8.3.</td><td>Die Kästen und Pfeile gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Verbund als Feld</td><td>8.3, Seite 212</td><td>Das Programm stammt aus dem Kurstext.</td><td>Die Ausführung Anweisung für Anweisung gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Kopie und Zeiger</td><td>8.3, Seiten 212–213</td><td>Das Programm stammt aus dem Kurstext. Die Ausgaben stehen dort als Kommentar.</td><td>In der Lektion stehen die Ausgaben im Feld „Ausgabe des Programms“.</td></tr>
+      <tr><td>3 Zeiger als Feld</td><td>8.3, Seiten 213–214</td><td>Das Programm stammt aus dem Kurstext. Die Ausgabe steht dort als Kommentar.</td><td>In der Lektion steht die Ausgabe im Feld „Ausgabe des Programms“.</td></tr>
+      <tr><td>4 Wert oder Zeiger</td><td>8.3, Seite 214</td><td>Der Satz, dass Zeiger als Felder flexibler einsetzbar sind, stammt aus dem Kurstext.</td><td>Die Gegenüberstellung in der Tabelle gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Datenverbund:</strong> Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es im Kurstext weitergeht</h3>
       <ul>
         <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum. Dazu gibt es die Seite <a href="go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a>.</li>
         <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds. Dazu gibt es die Seite <a href="go_k8_anonyme_felder_interaktiv.html">Anonyme Felder und eingebettete Verbünde</a>.</li>
       </ul>
       <p>Ein längeres Go-Programm zu dieser Seite liegt im Repository: <a href="go/S220_hierarchische_verbunde_demo.go">S220_hierarchische_verbunde_demo.go</a>.</p>
-    </div>
-    <div class="nav">
-      <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
+  </div>
+  <div class="nav">
+      <button type="button" class="knopf" data-gehe="4">Zurück zu Schritt 4</button>
       <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
@@ -563,7 +587,7 @@ fmt.Println("Mike mit altem Auto:", mike)
 
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#zeiger-feld
-  const ANKER = ['worum', 'wert-feld', 'kopie-zeiger', 'zeiger-feld', 'vergleich'];
+  const ANKER = ['worum', 'wert-feld', 'kopie-zeiger', 'zeiger-feld', 'vergleich', 'kurstext'];
   let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
     const gewechselt = nummer !== aktuell;
@@ -608,7 +632,7 @@ fmt.Println("Mike mit altem Auto:", mike)
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund als Feld', 'Schritt 2: Kopie und Zeiger', 'Schritt 3: Ein Zeiger als Feld', 'Schritt 4: Wert oder Zeiger'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Ein Verbund als Feld', 'Schritt 2: Kopie und Zeiger', 'Schritt 3: Ein Zeiger als Feld', 'Schritt 4: Wert oder Zeiger', 'Schritt 5: Bezug zum Kurstext'];
   const ohneMarken = h => h.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
   // Eine Variable in einem Satz
@@ -618,6 +642,7 @@ fmt.Println("Mike mit altem Auto:", mike)
   }
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function standSaetze() {
+    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (aktuell === 1) {
       return [variableSatz(S1.vars[0]), 'Gewählt und gelb hinterlegt ist der Ausdruck ' + wahl + ' mit dem Typ ' + ort(S1, wahl).typ + ' und dem Wert ' + wertText(lies(S1, wahl)) + '.'];
     }

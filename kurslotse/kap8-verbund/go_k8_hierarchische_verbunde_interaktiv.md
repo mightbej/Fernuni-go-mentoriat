@@ -2,7 +2,7 @@
 
 Die Seite zeigt Verbünde, die einen anderen Verbund als Feld enthalten. Das Beispiel stammt aus Abschnitt 8.3 des Kurstexts: Ein Besitzer hat die Felder `name`, `ort` und `fahrzeug`. Für das Feld `fahrzeug` gibt es zwei Bauweisen. Im Typ `besitzerW` hat es den Typ `auto` und enthält die vier Werte des Autos selbst. Im Typ `besitzerZ` hat es den Typ `*auto` und enthält die Adresse eines Autos, das in einer anderen Variable gespeichert ist.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -126,12 +126,10 @@ Reiter: vergleich
 - Die Tabelle hat fünf Zeilen: was das Feld speichert, was bei einer Zuweisung an das Feld geschieht, ob zwei Besitzer dasselbe Auto haben können, wer eine Änderung am Auto bemerkt, wie der Zugriff auf den Tachostand lautet.
 - Die Beispiele in der Tabelle stammen aus Schritt 2 mit `mike` und `bmw` und aus Schritt 3 mit `audi`, `olaf` und `olga`.
 - Unter der Tabelle steht die Aussage des Kurstexts, dass in der Praxis meist Zeiger auf Verbünde als Feld-Typ verwendet werden.
-- Die Liste „Wie es im Kurstext weitergeht“ nennt Abschnitt 8.3.1 mit den rekursiven Verbund-Typen und Abschnitt 8.3.2 mit den anonymen Feldern. Zu beiden gibt es seit 2026-10-13 eine HTML-Seite, die Liste verlinkt sie: „Rekursive Verbund-Typen“ und „Anonyme Felder und eingebettete Verbünde“.
 - Unter der Karte steht auf jedem Reiter der Link zum Quiz.
 
 ### Handgriffe
 
-- Dem Link auf das Go-Programm `S220_hierarchische_verbunde_demo.go` folgen. Es lässt sich auf dem eigenen Rechner mit `go run` ausführen, auf der Seite nicht.
 - Mit den Reitern oben zu Schritt 2 oder Schritt 3 wechseln und die Beispiele dort ablaufen lassen.
 
 ### Abschnitte des Kurstexts
@@ -139,3 +137,36 @@ Reiter: vergleich
 - 8.3
 - 8.3.1
 - 8.3.2
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 8.2.7, Seite 210; 8.3, Seiten 212–213: Die drei Typen stammen aus dem Kurstext: auto aus Abschnitt 8.2.7, besitzerW und besitzerZ aus Abschnitt 8.3. Die Kästen und Pfeile gibt die Lektion dazu.
+  - 1 Verbund als Feld, 8.3, Seite 212: Das Programm stammt aus dem Kurstext. Die Ausführung Anweisung für Anweisung gibt die Lektion dazu.
+  - 2 Kopie und Zeiger, 8.3, Seiten 212–213: Das Programm stammt aus dem Kurstext. Die Ausgaben stehen dort als Kommentar. In der Lektion stehen die Ausgaben im Feld „Ausgabe des Programms“.
+  - 3 Zeiger als Feld, 8.3, Seiten 213–214: Das Programm stammt aus dem Kurstext. Die Ausgabe steht dort als Kommentar. In der Lektion steht die Ausgabe im Feld „Ausgabe des Programms“.
+  - 4 Wert oder Zeiger, 8.3, Seite 214: Der Satz, dass Zeiger als Felder flexibler einsetzbar sind, stammt aus dem Kurstext. Die Gegenüberstellung in der Tabelle gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+- Die Liste „Wie es im Kurstext weitergeht“ nennt Abschnitt 8.3.1 mit den rekursiven Verbund-Typen und Abschnitt 8.3.2 mit den anonymen Feldern. Zu beiden gibt es seit 2026-10-13 eine HTML-Seite, die Liste verlinkt sie: „Rekursive Verbund-Typen“ und „Anonyme Felder und eingebettete Verbünde“.
+- Darunter steht ein Link auf das Go-Programm `S220_hierarchische_verbunde_demo.go`.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Dem Link auf das Go-Programm `S220_hierarchische_verbunde_demo.go` folgen. Es lässt sich auf dem eigenen Rechner mit `go run` ausführen, auf der Seite nicht.
+
+### Abschnitte des Kurstexts
+
+- 2.2
+- 7.3
+- 7.4
+- 8.2.7
+- 8.3
