@@ -2,7 +2,7 @@
 
 Die Seite gehört zu Abschnitt 2.6 des Kurstexts. Sie zeigt, was ein Unterprogramm ist: ein Programmteil mit einem Namen, der einmal dasteht und von mehreren Stellen aus aufgerufen wird. Sie zeigt den Aufruf als Sprung mit Rücksprungadresse, Argument und Parameter, die eigene Variable eines Unterprogramms, die Funktion mit Rückgabewert und die Rekursion.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -154,4 +154,43 @@ Reiter: rekursion
 ### Abschnitte des Kurstexts
 
 - 2.6
+- 7.5
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.6, Seite 15: Das Unterprogramm und die drei Gründe dafür stammen aus dem Kurstext: Übersicht, weniger Fehler und Wiederverwendung. Die Zuordnung zum Steuerwerk nach John von Neumann gibt die Lektion dazu.
+  - 1 Aufruf und Rücksprung, 2.6, Seiten 15–16: Der Aufruf als Sprung, die Rücksprungadresse und das Unterprogramm mit der dritten Variable k stammen aus dem Kurstext. Die zwei anderen Wege zu vertauschen stehen dort auch, mit Fußnote 5 zum Überlauf. Das Hauptprogramm, die Nummern der Anweisungen und die Zahlenbeispiele zu den zwei anderen Wegen sind eigene Beispiele.
+  - 2 Parameter und eigene Variable, 2.6, Seite 16: Die eigene Variable k des Unterprogramms, die Parameter v₁ und v₂ und die Argumente stammen aus dem Kurstext. Die Variablen a und b, die Werte und die Nummern der Anweisungen sind eigene Beispiele.
+  - 3 Funktion, 2.6, Seiten 16–17: Das Beispiel mit dem Sinus, die zwei Schreibweisen und das Wort Funktionswert stammen aus dem Kurstext. Dort steht auch, dass Go jedes Unterprogramm Funktion nennt. Der Ausdruck 2 · sin(x) + 1 und die Werte von x sind eigene Beispiele. Die Lektion rechnet x in Grad, damit die Sinus-Werte glatt sind.
+  - 4 Rekursion, 2.6, Seite 17: Die Regel für die Dezimaldarstellung, die Länge l(d) und das Beispiel 48 stammen aus dem Kurstext. Die Erklärung der Zeichen in der Regel, die Prüfung von 483 und 04 und die Beispiele 7 und 1613 gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 3.1, Seite 21, Pakete: Bibliotheken heißen in Go Pakete. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 3.4, Seiten 37–41, Funktionen in einem Go-Programm: Parameter, Argument und return an Listing 3.3. Eine Lektion zu diesem Abschnitt gibt es nicht. Die Lektion Fehlersuche: drei Go-Programme mit mehreren Fehlern zeigt Listing 3.3 in Schritt 1.
+  - Abschnitt 4.3.7.2.1, Seiten 72–74, XOR: Go schreibt XOR mit dem Operator ^. Lektion: Rechenwerk, Schritt 1.
+  - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Warum das Vertauschen mit Minus und Plus bei großen Zahlen scheitert. Lektion: Überlauf bei Ganzzahlen in Go.
+  - Abschnitt 5.3.2, Seiten 128–129, Vertauschen in Go: Die Tupel-Zuweisung n, m = m, n. Lektion: Zuweisungen in Go, Schritt 4.
+  - Abschnitt 7.1 und 7.2, Seiten 163–170, Funktionen und Übergabe der Argumente: In Go bekommt ein Parameter eine Kopie des Arguments. Lektion: Funktionen in Go.
+  - Abschnitt 7.5, Seiten 185–193, Rekursion: Lektion: Rekursion in Go.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.6
+- 3.1
+- 3.4
+- 4.3.7.2.1
+- 4.3.8
+- 5.3.2
+- 7.1
+- 7.2
 - 7.5
