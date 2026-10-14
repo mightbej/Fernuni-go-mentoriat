@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T09:26",
+ "stand": "2026-10-14T10:01",
  "abschnitte": {
   "2.1": [
    {
@@ -244,6 +244,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
@@ -284,6 +291,13 @@
     "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
     "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -403,6 +417,13 @@
     "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
     "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -562,6 +583,20 @@
     "art": "nennt"
    },
    {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Logische Operatoren und Vergleiche in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
     "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
@@ -591,6 +626,13 @@
    }
   ],
   "4.1.2": [
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Logische Operatoren und Vergleiche in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
@@ -707,6 +749,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Bezeichner und Schlüsselwörter in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
+    "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
     "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
@@ -780,6 +829,20 @@
    }
   ],
   "4.3.6": [
+   {
+    "titel": "Blockchain: eine verkettete Liste mit Fingerabdruck",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Studenten im ersten Semester, dass hinter einer Blockchain Stoff aus dem Kurs steckt: eine verkettete Liste, in der jeder Block auf seinen Vorgänger zeigt, ein Fingerabdruck für jeden Block und Guthaben in einem vorzeichenlosen Typ.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vertiefung: Blockchain in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
+    "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Überlauf bei Ganzzahlen in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_overflow_interaktiv.html",
@@ -875,6 +938,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Blockchain: eine verkettete Liste mit Fingerabdruck",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Studenten im ersten Semester, dass hinter einer Blockchain Stoff aus dem Kurs steckt: eine verkettete Liste, in der jeder Block auf seinen Vorgänger zeigt, ein Fingerabdruck für jeden Block und Guthaben in einem vorzeichenlosen Typ.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Funktionen in Go: Rückgaben und Wertübergabe",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html",
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
@@ -892,6 +962,13 @@
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vertiefung: Blockchain in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
+    "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1343,6 +1420,13 @@
     "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "5.2": [
@@ -1502,6 +1586,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Fehlersuche: drei kurze Go-Programme",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
     "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
@@ -1595,13 +1686,6 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
     "geprueft": true,
     "art": "erklaert"
-   },
-   {
-    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
-    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/exkurs_von_problem_zu_code.html",
-    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
-    "geprueft": true,
-    "art": "nennt"
    }
   ],
   "5.5.3.1": [
@@ -1674,6 +1758,13 @@
     "titel": "Arrays in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_arrays_interaktiv.html",
     "beschreibung": "Die Seite zeigt, was ein Array in Go ist: das Array-Literal, den Zugriff über den Index, das Durchlaufen mit der for-Anweisung mit range-Klausel, das zweidimensionale Array und einen Ausblick auf Slices.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/exkurs_von_problem_zu_code.html",
+    "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2002,6 +2093,13 @@
     "titel": "Das Kopier-Problem: Arrays als Argument",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
     "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
+    "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2896,6 +2994,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Blockchain: eine verkettete Liste mit Fingerabdruck",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html",
+    "beschreibung": "Die Seite zeigt Studenten im ersten Semester, dass hinter einer Blockchain Stoff aus dem Kurs steckt: eine verkettete Liste, in der jeder Block auf seinen Vorgänger zeigt, ein Fingerabdruck für jeden Block und Guthaben in einem vorzeichenlosen Typ.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Bubblesort auf einem Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
     "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
@@ -2906,6 +3011,20 @@
     "titel": "Rekursive Verbund-Typen in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
     "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vertiefung: Blockchain in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
+    "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    }
