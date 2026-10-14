@@ -6,12 +6,6 @@
     <title>Exkurs: Wie die Laufzeit mit der Datenmenge wächst</title>
     <link rel="stylesheet" href="../stil.css">
     <style>
-        .hero .quelle {
-            font-size: 0.92rem;
-            margin-top: 10px;
-            opacity: 0.95;
-        }
-
         .card ul, .card ol {
             padding-left: 22px;
         }
@@ -98,10 +92,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .tabelle-rahmen {
-            overflow-x: auto;
-        }
-
         .hinweis, .info-box, .success-box {
             margin: 14px 0;
         }
@@ -118,6 +108,9 @@
         .code-block .kommentar {
             color: #9ca3af;
         }
+        .tabellenrahmen {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +118,7 @@
         <div class="hero">
             <h1>Exkurs: Wie die Laufzeit mit der Datenmenge wächst</h1>
             <p>Ein Array wird zehnmal so groß. Braucht das Programm dann zehnmal so lange, hundertmal so lange oder fast gleich lange? Die Seite zeigt fünf Antworten als Kurven und zählt bei vier Algorithmen des Kurses die Vergleiche.</p>
-            <p class="quelle">Kurstext v3.0.6, Abschnitt 8.4, Seiten 221–226</p>
+            <p>Kurstext v3.0.6, Abschnitt 8.4, Seiten 221–226.</p>
         </div>
 
         <div class="tabs">
@@ -133,6 +126,7 @@
             <button type="button" class="tab" data-stufe="1">1 Vergleiche zählen</button>
             <button type="button" class="tab" data-stufe="2">2 Woher die Formeln kommen</button>
             <button type="button" class="tab" data-stufe="3">3 Die Kurve erkennen</button>
+            <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
         </div>
 
         <section class="stufe active" id="stufe-0">
@@ -151,7 +145,7 @@
             <p>Nach rechts wächst das Array, nach oben wächst die Zahl der Schritte. Jede Kurve ist ausgerechnet, der Ausschnitt reicht bis n = 30 und bis 100 Schritte.</p>
             <svg id="bild-grundlagen" class="schaubild" viewBox="0 0 760 420" role="img" aria-label="Schaubild mit fünf Kurven: O(1) bleibt bei einem Schritt, O(log n) steigt kaum, O(n) steigt gleichmäßig, O(n log n) steigt etwas steiler, O(n²) verlässt den Ausschnitt schon bei n = 15."></svg>
 
-            <div class="tabelle-rahmen">
+            <div class="tabellenrahmen">
                 <table>
                     <thead>
                         <tr>
@@ -225,7 +219,7 @@
             <svg id="bild-ausprobieren" class="schaubild" viewBox="0 0 760 420" role="img" aria-label="Schaubild mit den fünf Kurven und den gezählten Vergleichen bei der gewählten Größe des Arrays. Die Werte stehen in der Tabelle darunter."></svg>
             <p id="ausserhalb" aria-live="polite"></p>
 
-            <div class="tabelle-rahmen">
+            <div class="tabellenrahmen">
                 <table>
                     <thead>
                         <tr>
@@ -293,7 +287,7 @@
                 <li><strong>Den festen Faktor:</strong> Die Hälfte in n² / 2 ändert nichts daran, dass ein zehnmal so großes Array hundertmal so viele Vergleiche kostet.</li>
                 <li><strong>Den kleineren Summanden:</strong> n · (n − 1) / 2 ist n² / 2 − n / 2. Bei n = 1000 sind das 500.000 − 500. Die 500 fallen nicht ins Gewicht.</li>
             </ul>
-            <div class="tabelle-rahmen">
+            <div class="tabellenrahmen">
                 <table>
                     <thead>
                         <tr>
@@ -339,7 +333,7 @@
 
         <div class="card">
             <h2>Was geschieht, wenn das Array zehnmal so groß wird</h2>
-            <div class="tabelle-rahmen">
+            <div class="tabellenrahmen">
                 <table>
                     <thead>
                         <tr>
@@ -362,22 +356,50 @@
                 <strong>In Zeit umgerechnet:</strong> Angenommen, ein Rechner schafft eine Milliarde Vergleiche in der Sekunde. Eine Million Elemente sortiert Bubble Sort dann in gut acht Minuten. Ein Verfahren mit O(n log n) braucht dafür zwei Hundertstelsekunden.
             </div>
         </div>
-
-        <div class="card">
-            <h2>Wo die Algorithmen erklärt sind</h2>
-            <ul>
-                <li><strong>Bubble Sort:</strong> <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Programmierübung: Sortieren mit Bubble Sort</a></li>
-                <li><strong>Selection Sort:</strong> <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Programmierübung: Sortieren mit Selection Sort</a></li>
-                <li><strong>Kopieraufwand beim Sortieren:</strong> <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a></li>
-                <li><strong>Bubblesort im Kurstext, Abschnitt 8.4.2:</strong> <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a></li>
-                <li><strong>Binäre Suche im Kurstext, Abschnitt 8.4.1:</strong> <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a></li>
-                <li><strong>Suchen in etwa log₂ n Schritten:</strong> <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html">Binäre Suchbäume in Go</a></li>
-                <li><strong>Einfügen ohne Verschieben:</strong> <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a></li>
-                <li><strong>Binäre Suche als Go-Programm:</strong> <a href="https://github.com/mightbej/Fernuni-go-mentoriat/blob/main/kap8-verbund/go/S230_binaere_suche_demo.go">S230_binaere_suche_demo.go</a></li>
-            </ul>
-        </div>
         <div class="schritte">
             <button type="button" class="btn-secondary" data-gehe="2">Zurück zu Schritt 2</button>
+            <button type="button" class="btn-primary" data-gehe="4">Weiter zu Schritt 4</button>
+        </div>
+        </section>
+
+        <section class="stufe" id="stufe-4">
+        <div class="card">
+          <h2>Bezug zum Kurstext</h2>
+          <p>Der Exkurs geht über den Kurstext hinaus. Die Tabelle nennt zu jedem Schritt die Stellen im Kurstext, an die er anknüpft, mit den Seiten zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was der Exkurs dazugibt.</p>
+
+          <div class="tabellenrahmen">
+          <table class="text">
+            <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+            <tr><td>Worum es geht</td><td>8.4.1, Seiten 221–222<br>8.4.2, Seite 225</td><td>Aus dem Kurstext stammen zwei Wörter: „logarithmisch“ für die binäre Suche und „quadratisch“ für Bubblesort.</td><td>Die Schreibweise O(…), das Schaubild und die Kurven O(1), O(n) und O(n log n) stehen nicht im Kurstext.</td></tr>
+            <tr><td>1 Vergleiche zählen</td><td>8.4.1, Seiten 221–225: Listing 8.1<br>8.4.2, Seiten 225–226: Listing 8.2</td><td>Bubble Sort läuft mit den gleichen zwei Schleifen wie in Listing 8.2, ohne vorzeitigen Abbruch. Die binäre Suche wählt die Mitte wie in Listing 8.1.</td><td>Im Kurstext ruft sich die binäre Suche selbst auf. Auf der HTML-Seite läuft sie mit einer Schleife. Das Array enthält Zahlen statt Verbünde mit Namen. Die lineare Suche, Selection Sort und das Zählen der Vergleiche stehen nicht im Kurstext.</td></tr>
+            <tr><td>2 Woher die Formeln kommen</td><td>8.4.1, Seiten 221–222<br>8.4.2, Seiten 225–226</td><td>Aus dem Kurstext stammen die Herleitung von n · (n − 1) / 2, der Satz zu den Vertauschungen und die Übungsaufgabe zum Abbruch. Dass sich ein Array mit n Elementen nur log₂ n mal halbieren lässt, steht in Abschnitt 8.4.1.</td><td>Die Formeln für Selection Sort und die lineare Suche, die Zahlenreihe 500, 250, 125 … und was die Schreibweise O(…) weglässt, stehen nicht im Kurstext.</td></tr>
+            <tr><td>3 Die Kurve erkennen</td><td>8.4.2, Seite 225</td><td>Aus dem Kurstext stammt nur, dass Bubblesort quadratische Laufzeit hat.</td><td>Die vier Faustregeln, die Tabelle bis n = 1.000.000 und die Umrechnung in Zeit stehen nicht im Kurstext.</td></tr>
+          </table>
+          </div>
+
+          <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+          <ul>
+            <li><strong>Abschnitt 2.1, Seiten 5–8, Schleife:</strong> Ohne Go wird gezeigt, wie <code>WHILE</code> und <code>REPEAT-UNTIL</code> Anweisungen wiederholen. Wie oft eine Schleife läuft, bestimmt die Zahl der Schritte. Lektion: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+            <li><strong>Abschnitt 6.2, Seiten 156–159, ein Array durchlaufen:</strong> Eine Schleife sieht jedes Element einmal an. Das ist die Kurve O(n). Lektion: <a href="../kap6-arrays/go_k6_arrays_interaktiv.html#durchlaufen">Arrays in Go</a>, Schritt 3.</li>
+            <li><strong>Abschnitt 7.2, Seiten 169–170, Kopie des Arguments:</strong> Ein Array als Argument wird ganz kopiert, und auch das kostet Schritte. Deshalb übergibt die binäre Suche in Abschnitt 8.4.1 einen Zeiger auf das Array. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a>.</li>
+            <li><strong>Abschnitt 7.5.3, Seiten 188–189, kaskadenartige Rekursion:</strong> Ruft sich eine Funktion zweimal selbst auf, wächst die Zahl der Aufrufe exponentiell mit der Rekursionstiefe. Bei einem Aufruf wächst sie nur linear. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_rekursion_interaktiv.html#fibonacci">Rekursion in Go</a>, Schritt 3.</li>
+            <li><strong>Abschnitt 8.4.1, Seiten 221–225, binäre Suche:</strong> Lektion: <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html#aufwand">Binäre Suche in einem Verbund-Array</a>, Schritt 4. Das Go-Programm dazu liegt im Repository: <a href="https://github.com/mightbej/Fernuni-go-mentoriat/blob/main/kap8-verbund/go/S230_binaere_suche_demo.go">S230_binaere_suche_demo.go</a>.</li>
+            <li><strong>Abschnitt 8.4.2, Seiten 225–226, Bubblesort:</strong> Lektion: <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html#aufwand">Bubblesort auf einem Verbund-Array</a>, Schritt 4.</li>
+            <li><strong>Abschnitt 9.1 und 9.2, Seiten 227–236, Einfügen ohne Verschieben:</strong> In einem sortierten Array muss beim Einfügen im Durchschnitt die Hälfte der Elemente einen Platz weiterrücken. In einer verketteten Liste genügen zwei Zeiger-Zuweisungen. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html#vergleich">Verkettete Listen in Go</a>, Schritt 6.</li>
+            <li><strong>Abschnitt 9.3.2, Seite 243, Suchen im binären Suchbaum:</strong> In einem balancierten Baum braucht das Suchen etwa log₂ n Schritte. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_binaere_suchbaeume_interaktiv.html#suchen">Binäre Suchbäume in Go</a>, Schritt 4.</li>
+            <li><strong>Ohne Abschnitt im Kurstext, Bubble Sort und Selection Sort an einem Array mit Zahlen:</strong> Lektionen: <a href="../kap6-arrays/go_k6_bubblesort_programmieruebung.html">Programmierübung: Sortieren mit Bubble Sort</a> und <a href="../kap6-arrays/go_k6_selectionsort_programmieruebung.html">Programmierübung: Sortieren mit Selection Sort</a>.</li>
+          </ul>
+
+          <h3>Was über den Kurstext hinausgeht</h3>
+          <ul>
+            <li><strong>Die Schreibweise O(…):</strong> Im Kurstext stehen nur die Wörter „logarithmisch“ und „quadratisch“. O(1), O(n) und O(n log n) kommen im Kurstext nicht vor.</li>
+            <li><strong>Lineare Suche:</strong> Eine Suche, die das Array von vorn nach hinten durchgeht, kommt im Kurstext nicht vor. Die HTML-Seite nimmt sie als Beispiel für die Kurve O(n).</li>
+            <li><strong>Selection Sort:</strong> Selection Sort kommt im Kurstext nicht vor. Auf Seite 225 steht nur, dass im Vorkurs zwei einfache Sortierverfahren vorgestellt wurden.</li>
+            <li><strong>Mergesort und O(n log n):</strong> Schnelle Sortierverfahren kommen im Kurs nicht vor. Auf der HTML-Seite läuft dazu kein Programm.</li>
+          </ul>
+        </div>
+        <div class="schritte">
+            <button type="button" class="btn-secondary" data-gehe="3">Zurück zu Schritt 3</button>
             <button type="button" class="btn-secondary" disabled>Weiter</button>
         </div>
         </section>
@@ -548,8 +570,8 @@
 
             // ---- Reiter ----
             // Jeder Schritt hat eine eigene Adresse, zum Beispiel …wachstum.html#ausprobieren. Die Adressen sind die der früheren Bereiche.
-            const ANKER = ["grundlagen", "ausprobieren", "vertiefung", "faustregeln"];
-            const SCHRITTE = ["Worum es geht", "Schritt 1: Vergleiche zählen", "Schritt 2: Woher die Formeln kommen", "Schritt 3: Die Kurve erkennen"];
+            const ANKER = ["grundlagen", "ausprobieren", "vertiefung", "faustregeln", "kurstext"];
+            const SCHRITTE = ["Worum es geht", "Schritt 1: Vergleiche zählen", "Schritt 2: Woher die Formeln kommen", "Schritt 3: Die Kurve erkennen", "Schritt 4: Bezug zum Kurstext"];
             let stufe = 0;
             let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
             let letzter = null;       // was die Demo zuletzt gezählt hat, für den Kurslotsen
@@ -660,6 +682,7 @@
             // ---- Kurslotse ----
             // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
             function standSaetze() {
+                if (stufe === 4) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
                 if (stufe === 0) return ["Zu sehen ist ein festes Schaubild mit den fünf Kurven. Der Ausschnitt reicht bis n = 30 und bis 100 Schritte. In diesem Schritt lässt sich nichts verstellen."];
                 if (stufe === 1) return [
                     "Der Regler für die Größe des Arrays steht auf n = " + zahl(letzter.n) + ". Er reicht von 2 bis 1.000.",
@@ -680,7 +703,7 @@
                 reiter: () => ANKER[stufe],
                 schritt: () => SCHRITTE[stufe],
                 sichtbar: () => document.getElementById("stufe-" + stufe),
-                text: ".card > h2, .card > p, .card > ul, .info-box, .success-box, .hinweis, table",
+                text: ".card > h2, .card > h3, .card > p, .card > ul, .info-box, .success-box, .hinweis, table",
                 zeilen: () => [],
                 zeilenTitel: "",
                 stand: standSaetze,

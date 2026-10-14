@@ -2,7 +2,7 @@
 
 Die Seite ist ein Exkurs. Sie zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird, und erklärt die Schreibweise O(…). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche. Die Seite knüpft an Abschnitt 8.4 des Kurstexts an, Seiten 221–226.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -13,7 +13,8 @@ Für alle Schritte gilt:
 - Im Kurstext steht die Schreibweise O(…) in Abschnitt 8.4 nicht. Dort stehen die Wörter „logarithmisch“ in Abschnitt 8.4.1 auf Seite 222 und „quadratisch“ in Abschnitt 8.4.2 auf Seite 225.
 - Die Kurve O(n log n) gehört zu schnellen Sortierverfahren wie Mergesort. Sie kommen im Kurs nicht vor, auf der Seite läuft dazu kein Programm.
 - Bubble Sort läuft auf der Seite ohne vorzeitigen Abbruch, wie in Listing 8.2 des Kurstexts.
-- Die Schritte hießen früher Bereiche: „Grundlagen“, „Ausprobieren“, „Vertiefung“ und „Faustregeln“.
+- „Worum es geht“ und die Schritte 1 bis 3 hießen früher Bereiche: „Grundlagen“, „Ausprobieren“, „Vertiefung“ und „Faustregeln“.
+- Die Links auf die Lektionen, in denen die Algorithmen erklärt sind, stehen in Schritt 4 unter „Wo das Thema im Kurstext noch vorkommt“.
 - Auf der Seite läuft kein Go. Die vier Algorithmen laufen im Browser und entsprechen dem Go-Programm `laufzeit_vergleiche_zaehlen.go` im Repository. Der Student kann keinen eigenen Code eingeben.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
@@ -95,15 +96,58 @@ Reiter: faustregeln
 - Die Faustregeln stehen nicht im Kurstext.
 - Eine Tabelle zeigt, was bei zehnfacher Größe des Arrays geschieht, mit den Schritten bei n = 1000 und bei n = 1.000.000.
 - Ein grüner Kasten rechnet in Zeit um: Bei einer Milliarde Vergleichen in der Sekunde sortiert Bubble Sort eine Million Elemente in gut acht Minuten, ein Verfahren mit O(n log n) in zwei Hundertstelsekunden.
-- Die Karte „Wo die Algorithmen erklärt sind“ verlinkt die Programmierübungen zu Bubble Sort und Selection Sort, den Exkurs „Das Kopier-Problem“, die Lektionen „Bubblesort auf einem Verbund-Array“, „Binäre Suche in einem Verbund-Array“, „Binäre Suchbäume in Go“ und „Verkettete Listen in Go“ und das Go-Programm zur binären Suche.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
 
-- Den Links folgen.
 - In diesem Schritt lässt sich nichts ausprobieren.
 
 ### Abschnitte des Kurstexts
 
 - 8.4.1
 - 8.4.2
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 8.4.1, Seiten 221–222; 8.4.2, Seite 225: Aus dem Kurstext stammen zwei Wörter: „logarithmisch“ für die binäre Suche und „quadratisch“ für Bubblesort. Die Schreibweise O(…), das Schaubild und die Kurven O(1), O(n) und O(n log n) stehen nicht im Kurstext.
+  - 1 Vergleiche zählen, 8.4.1, Seiten 221–225: Listing 8.1; 8.4.2, Seiten 225–226: Listing 8.2: Bubble Sort läuft mit den gleichen zwei Schleifen wie in Listing 8.2, ohne vorzeitigen Abbruch. Die binäre Suche wählt die Mitte wie in Listing 8.1. Im Kurstext ruft sich die binäre Suche selbst auf. Auf der HTML-Seite läuft sie mit einer Schleife. Das Array enthält Zahlen statt Verbünde mit Namen. Die lineare Suche, Selection Sort und das Zählen der Vergleiche stehen nicht im Kurstext.
+  - 2 Woher die Formeln kommen, 8.4.1, Seiten 221–222; 8.4.2, Seiten 225–226: Aus dem Kurstext stammen die Herleitung von n · (n − 1) / 2, der Satz zu den Vertauschungen und die Übungsaufgabe zum Abbruch. Dass sich ein Array mit n Elementen nur log₂ n mal halbieren lässt, steht in Abschnitt 8.4.1. Die Formeln für Selection Sort und die lineare Suche, die Zahlenreihe 500, 250, 125 … und was die Schreibweise O(…) weglässt, stehen nicht im Kurstext.
+  - 3 Die Kurve erkennen, 8.4.2, Seite 225: Aus dem Kurstext stammt nur, dass Bubblesort quadratische Laufzeit hat. Die vier Faustregeln, die Tabelle bis n = 1.000.000 und die Umrechnung in Zeit stehen nicht im Kurstext.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 5–8, Schleife: Ohne Go wird gezeigt, wie WHILE und REPEAT-UNTIL Anweisungen wiederholen. Wie oft eine Schleife läuft, bestimmt die Zahl der Schritte. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 6.2, Seiten 156–159, ein Array durchlaufen: Eine Schleife sieht jedes Element einmal an. Das ist die Kurve O(n). Lektion: Arrays in Go, Schritt 3.
+  - Abschnitt 7.2, Seiten 169–170, Kopie des Arguments: Ein Array als Argument wird ganz kopiert, und auch das kostet Schritte. Deshalb übergibt die binäre Suche in Abschnitt 8.4.1 einen Zeiger auf das Array. Lektion: Das Kopier-Problem.
+  - Abschnitt 7.5.3, Seiten 188–189, kaskadenartige Rekursion: Ruft sich eine Funktion zweimal selbst auf, wächst die Zahl der Aufrufe exponentiell mit der Rekursionstiefe. Bei einem Aufruf wächst sie nur linear. Lektion: Rekursion in Go, Schritt 3.
+  - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: Lektion: Binäre Suche in einem Verbund-Array, Schritt 4. Das Go-Programm dazu liegt im Repository: S230_binaere_suche_demo.go.
+  - Abschnitt 8.4.2, Seiten 225–226, Bubblesort: Lektion: Bubblesort auf einem Verbund-Array, Schritt 4.
+  - Abschnitt 9.1 und 9.2, Seiten 227–236, Einfügen ohne Verschieben: In einem sortierten Array muss beim Einfügen im Durchschnitt die Hälfte der Elemente einen Platz weiterrücken. In einer verketteten Liste genügen zwei Zeiger-Zuweisungen. Lektion: Verkettete Listen in Go, Schritt 6.
+  - Abschnitt 9.3.2, Seite 243, Suchen im binären Suchbaum: In einem balancierten Baum braucht das Suchen etwa log₂ n Schritte. Lektion: Binäre Suchbäume in Go, Schritt 4.
+  - Ohne Abschnitt im Kurstext, Bubble Sort und Selection Sort an einem Array mit Zahlen: Lektionen: Programmierübung: Sortieren mit Bubble Sort und Programmierübung: Sortieren mit Selection Sort.
+- Unter „Was über den Kurstext hinausgeht“ steht:
+  - Die Schreibweise O(…): Im Kurstext stehen nur die Wörter „logarithmisch“ und „quadratisch“. O(1), O(n) und O(n log n) kommen im Kurstext nicht vor.
+  - Lineare Suche: Eine Suche, die das Array von vorn nach hinten durchgeht, kommt im Kurstext nicht vor. Die HTML-Seite nimmt sie als Beispiel für die Kurve O(n).
+  - Selection Sort: Selection Sort kommt im Kurstext nicht vor. Auf Seite 225 steht nur, dass im Vorkurs zwei einfache Sortierverfahren vorgestellt wurden.
+  - Mergesort und O(n log n): Schnelle Sortierverfahren kommen im Kurs nicht vor. Auf der HTML-Seite läuft dazu kein Programm.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 6.2
+- 7.2
+- 7.5.3
+- 8.4.1
+- 8.4.2
+- 9.1
+- 9.2
+- 9.3.2
