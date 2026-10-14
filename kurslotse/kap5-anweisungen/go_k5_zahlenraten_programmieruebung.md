@@ -206,7 +206,7 @@ Reiter: kurstext
 - Zu sehen ist eine Tabelle mit vier Spalten: Stelle im Programm, was dort steht, Abschnitt im Kurstext, Seite dazu. Sie hat zwölf Zeilen.
 - Die Zuordnung: Konstanten zu 5.2, globale Variablen zu 5.1.1 und 5.1.3, kurze Variablendeklaration zu 5.1.2, Zuweisungen zu 5.3, `if … else if … else` zu 5.5.1, `switch` zu 5.5.2, die Rateschleife zu 5.5.3.1, `for {` zu 5.5.3.2 mit dem Expertenwissen 5.16, `break` zu 5.5.3.3, `float64(…)` zu 4.7, `||` und `!` zu 4.5, `fmt.Printf` zu 4.2.
 - Die letzte Spalte verlinkt je Zeile eine HTML-Seite des Mentoriats. Zu `fmt.Printf` gibt es noch keine.
-- Darunter steht, was über den Kurstext hinausgeht: das Paket `math/rand` mit `rand.Intn`.
+- Darunter steht, was über den Kurstext hinausgeht: Das Programm ist ein eigenes Beispiel des Mentoriats, mit Go 1.26 übersetzt und gespielt. Das Paket `math/rand` mit `rand.Intn` kommt im Kurstext nicht vor.
 - Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
 
 ### Handgriffe
