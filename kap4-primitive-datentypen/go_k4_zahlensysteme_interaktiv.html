@@ -43,6 +43,7 @@
     .stufe.active { display:block; }
     .schritte { justify-content:space-between;margin:0 0 24px; }
       .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    #ergebnis { overflow-x:auto; }
   </style>
 </head>
 <body>
@@ -104,6 +105,7 @@
   <div class="card">
     <h2>Schritt 1: Stellenwert</h2>
     <p>In jedem der vier Zahlensysteme hängt der Wert einer Ziffer von ihrer Stelle ab. Die Stellen zählen von rechts und beginnen bei 0. Die Basis sagt, um wie viel eine Stelle mehr wert ist als die Stelle rechts von ihr.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Zahlensystem</th><th>Basis</th><th>Ziffern</th><th>Wert der Stellen von rechts</th></tr></thead>
       <tbody>
@@ -113,6 +115,7 @@
         <tr><td>Hexadezimalsystem</td><td>16</td><td><code>0</code> bis <code>9</code> und <code>a</code> bis <code>f</code></td><td>Die Stellen sind 1, 16, 256, 4096 und so weiter wert.</td></tr>
       </tbody>
     </table>
+    </div>
     <p>Im Hexadezimalsystem reichen die zehn Ziffern nicht. Die Buchstaben <code>a</code> bis <code>f</code> stehen für die Werte 10 bis 15.</p>
 
     <h3>Die Regel</h3>
@@ -144,7 +147,9 @@
     </div>
     <div class="auskunft" id="urteil"></div>
     <div id="ergebnis">
+      <div class="tabellenrahmen">
       <table class="rechnung" id="rechnung"></table>
+      </div>
       <h3>Der gleiche Wert in allen vier Schreibweisen</h3>
       <div class="vier" id="vier"></div>
       <div id="teilen"></div>
@@ -161,6 +166,7 @@
   <div class="card">
     <h2>Schritt 2: Literale in Go</h2>
     <p>Go erkennt das Zahlensystem am Präfix. Ein Präfix beginnt mit der Ziffer <code>0</code>, danach folgt ein Buchstabe.</p>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Zahlensystem</th><th>Präfix</th><th>Beispiel</th><th>Wert des Beispiels</th></tr></thead>
       <tbody>
@@ -170,6 +176,7 @@
         <tr><td>Hexadezimalsystem</td><td><code>0x</code> oder <code>0X</code></td><td><code>0x7b</code></td><td>Das Literal hat den Wert 123.</td></tr>
       </tbody>
     </table>
+    </div>
 
     <h3>Drei Regeln</h3>
     <ul>
@@ -213,10 +220,12 @@ fmt.Println(a, b, c)    // 245 123 62</pre>
       <button type="button" data-wert="255">255</button>
       <button type="button" data-wert="62">62</button>
     </div>
+    <div class="tabellenrahmen">
     <table class="text">
       <thead><tr><th>Verb</th><th>Was das Verb ausgibt</th><th>Ausgabe für den gewählten Wert</th></tr></thead>
       <tbody id="verben"></tbody>
     </table>
+    </div>
 
     <h3>Drei Bausteine</h3>
     <ul>

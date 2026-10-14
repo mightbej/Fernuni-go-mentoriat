@@ -79,6 +79,8 @@
     .eingabetext { font-family:"Segoe UI",sans-serif;font-size:13px;font-weight:700;text-anchor:middle;fill:var(--rot); }
     .abstand { stroke:var(--exp);stroke-width:2; }
     .abstandtext { font-family:"Segoe UI",sans-serif;font-size:12px;text-anchor:middle;fill:var(--exp); }
+    /* Auf einem schmalen Bildschirm lässt sich das Bitfeld seitlich schieben */
+    @media (max-width:600px) { .bitfeld { overflow-x:auto; } .teile { justify-content:flex-start; } }
   </style>
 </head>
 <body>
