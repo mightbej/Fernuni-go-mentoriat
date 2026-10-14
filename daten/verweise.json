@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T10:33",
+ "stand": "2026-10-14T12:06",
  "abschnitte": {
   "2.1": [
    {
@@ -38,9 +38,23 @@
     "art": "nennt"
    },
    {
+    "titel": "break-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_break_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.3 des Kurstexts. Sie erklärt die Prüfung auf Überlauf bei der Fakultät, führt Listing 5.7 Anweisung für Anweisung aus, zeigt die Schleife ohne `break` mit der Flag-Variable in der Schleifenbedingung und sagt, wann `break` passt und was es verlässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "for-Anweisung mit for-Klausel in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_klausel_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.2 des Kurstexts. Sie zeigt die drei Teile der for-Klausel, führt Listing 5.6 mit den Quadratzahlen Anweisung für Anweisung aus, zeigt den Gültigkeitsbereich der Laufvariable und die vier Schreibweisen der Schleife aus dem Expertenwissen 5.16.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -106,6 +120,13 @@
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -250,6 +271,13 @@
     "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -434,6 +462,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "3.3.3": [
@@ -441,6 +476,13 @@
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
     "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -478,6 +520,13 @@
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -637,6 +686,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Variablendeklaration in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "switch-Anweisung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
@@ -670,6 +726,13 @@
     "titel": "Fehlersuche: drei kurze Go-Programme",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
     "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1154,6 +1217,13 @@
     "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "for-Anweisung mit Bedingung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "4.5": [
@@ -1214,6 +1284,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "switch-Anweisung in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_switch_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "4.5.2": [
@@ -1249,6 +1326,13 @@
     "titel": "Zuweisungen in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -1352,6 +1436,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "4.7": [
@@ -1373,6 +1464,13 @@
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
     "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1424,6 +1522,13 @@
     "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
     "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1566,6 +1671,13 @@
   ],
   "5.2": [
    {
+    "titel": "Konstanten in Go: ein fester Wert mit Namen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_konstanten_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.2 des Kurstexts. Sie zeigt, wie Go eine Konstante deklariert, wozu eine Konstante dient und welchen Typ eine Konstante ohne Typangabe hat.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/exkurs_von_problem_zu_code.html",
     "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
@@ -1620,6 +1732,15 @@
     "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
+  "5.3.1": [
+   {
+    "titel": "Zuweisungen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
     "geprueft": true,
     "art": "nennt"
    }
