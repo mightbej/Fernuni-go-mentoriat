@@ -15,7 +15,6 @@
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap;overflow-x:auto; }
     .hinweis { margin:12px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:0; }
     .fehler { color:var(--rot);font-size:.92rem;min-height:1.4em; }
     button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
     button:hover { background:#e5e7eb; }
@@ -96,6 +95,7 @@
     <button type="button" class="tab" data-stufe="1">1 Eine Zahl speichern</button>
     <button type="button" class="tab" data-stufe="2">2 Im Modell rechnen</button>
     <button type="button" class="tab" data-stufe="3">3 In Go mit float64</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -138,7 +138,6 @@
       <li><strong>Schritt 2</strong> rechnet im Modell mit zwei Zahlen und zeigt, wie der Fehler wächst.</li>
       <li><strong>Schritt 3</strong> zeigt die Typen in Go und einen Vergleich mit <code>float64</code>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.3, Seiten 87–90.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -194,7 +193,6 @@
       <span class="name">Abstand zur nächstgrößeren Zahl</span><span id="aAbstand"></span>
     </div>
     <p class="legende">Auf dem Zahlenstrahl ist der grüne Strich die gespeicherte Zahl. Die schwarzen Striche sind ihre darstellbaren Nachbarn. Das rote Dreieck zeigt die eingegebene Zahl.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.3, Seiten 87–88. Die Zahlen 2/3 und 0,67 sind die Beispiele des Kurstexts.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -244,7 +242,6 @@
       <li><strong>Multiplikation:</strong> Die Mantisse verschiebt sich höchstens um eine Stelle. Auch hier droht wenig.</li>
     </ul>
     <p>Das Bild im Kurstext dazu: Wer eine Centmünze wiegen will, indem er ein Auto einmal mit und einmal ohne Münze wiegt, misst nur die Ungenauigkeit der Autowaage.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.3, Seiten 87–90. Die Rechnungen 0,67 − 2/3 und 0,67 + 2/3 stehen im Kurstext, 100 + 0,2 ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -295,16 +292,43 @@
 
     <h3>Die Regel für den Vergleich</h3>
     <p>Zwei Gleitkommazahlen prüft man nicht mit <code>==</code> auf Gleichheit. Man prüft, ob ihr Abstand kleiner ist als ein kleines ε, zum Beispiel <code>math.Abs(a+b-c) &lt; 1e-9</code>.</p>
-    <p>So geht es weiter:</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Eine Zahl speichern</td><td>4.4.2, Seiten 86–87: Gleitkomma-Typen<br>4.4.3, Seiten 87–88: Rundungsfehler</td><td>Das Modell mit 8 Bit Mantisse und die Zahlen 2/3 und 0,67 stammen aus dem Kurstext.</td><td>Die Demo, die eine eingegebene Zahl im Modell speichert, gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Im Modell rechnen</td><td>4.4.3, Seiten 87–90: Rundungsfehler</td><td>Die Rechnungen 0,67 − 2/3 und 0,67 + 2/3 stammen aus dem Kurstext.</td><td>Die Rechnung 100 + 0,2 ist ein eigenes Beispiel.</td></tr>
+      <tr><td>3 In Go mit <code>float64</code></td><td>4.4.2, Seiten 86–87: Gleitkomma-Typen<br>4.4.4, Seiten 90–91: Vergleich</td><td>Der Typ <code>float64</code> und der Vergleich von Gleitkommazahlen stammen aus dem Kurstext.</td><td>Das Beispiel mit 0.1, 0.2 und 0.3 und der Hinweis zu konstanten Ausdrücken stehen nicht im Kurstext.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, FLOAT:</strong> Eine Gleitkommazahl ist eine Näherung einer reellen Zahl. Ihre Operationen arbeiten anders als die für ganze Zahlen, auch wenn sie gleich heißen. Lektion: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, <code>float64</code>:</strong> Die Variable <code>tempC</code> hat den Typ <code>float64</code>, eine Näherung der reellen Zahlen mit 64 Bit. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 4.7, Seiten 109–111, Typkonvertierung:</strong> Lektion: <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
     <ul>
       <li><strong>Quiz:</strong> Das <a href="go_k4_float_typen_quiz.html">Quiz zu den Gleitkomma-Typen</a> fragt den Stoff von Abschnitt 4.4 ab.</li>
       <li><strong>Anwendung:</strong> Eine Schleife, die wegen dieses Fehlers nie endet, steht auf der Seite <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</li>
       <li><strong>Komma verschieben:</strong> Wie das Verschieben von Bits mit dem Exponenten zusammenhängt, zeigt die Seite <a href="go_k4_bitverschiebung_interaktiv.html#komma">Bitverschiebung</a>, Schritt 4.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 4.4.2, Seiten 86–87, und Abschnitt 4.4.4, Seiten 90–91. Das Beispiel mit 0.1, 0.2 und 0.3 und der Hinweis zu konstanten Ausdrücken stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -321,7 +345,7 @@
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#rechnen
-  const ANKER = ['worum', 'speichern', 'rechnen', 'float64'];
+  const ANKER = ['worum', 'speichern', 'rechnen', 'float64', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -553,7 +577,7 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Zahl speichern', 'Schritt 2: Im Modell rechnen', 'Schritt 3: In Go mit float64'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Eine Zahl speichern', 'Schritt 2: Im Modell rechnen', 'Schritt 3: In Go mit float64', 'Schritt 4: Bezug zum Kurstext'];
   // Text eines Elements, Hochzahlen als 2^-7 geschrieben
   function textVon(knoten) {
     const k = knoten.cloneNode(true);
@@ -564,6 +588,7 @@
   const zeilenVon = id => Array.from(el(id).querySelectorAll('tr')).map(z => Array.from(z.children).map(textVon).filter(Boolean).join(': '));
 
   function standSaetze() {
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo.'];
     if (stufe === 1) {
       const z = A.z;

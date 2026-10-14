@@ -2,7 +2,7 @@
 
 Die Seite erklärt, wie eine Gleitkommazahl aus Vorzeichen, Mantisse und Exponent besteht und warum beim Speichern und beim Rechnen Fehler entstehen. Sie rechnet mit dem Modell des Kurstexts, einer Mantisse aus 8 Bit, und zeigt am Ende einen Vergleich mit `float64`. Sie gehört zu Abschnitt 4.4 des Kurstexts.
 
-Die Seite hat vier Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -122,16 +122,46 @@ Reiter: float64
 - Diese drei Ausgaben sind mit Go 1.26 nachgeprüft. Für andere Zahlen rechnet der Browser, mit derselben Darstellung wie `float64`.
 - Ein gelber Kasten sagt: `0.1 + 0.2 == 0.3` mit Literalen liefert in Go `true`, weil Go konstante Ausdrücke beim Übersetzen exakt ausrechnet. Der Fehler entsteht erst mit Variablen vom Typ `float64`.
 - Der Teil „Die Regel für den Vergleich“ sagt: Gleitkommazahlen prüft man nicht mit `==`. Man prüft, ob ihr Abstand kleiner ist als ein kleines ε. `math.Abs` liefert den Betrag einer Zahl.
-- Der Schritt endet mit einem Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
 - Drei Zahlen für `a`, `b` und `c` eintragen und „vergleichen“ wählen. Der Betrag jeder Zahl darf höchstens 10^15 sein.
 - Die Seite prüft immer `a + b` gegen `c`. Eine andere Rechnung lässt sich nicht einstellen.
 - Die Auflösung der Frage aufklappen.
-- Den Links zum Quiz, zur Seite „for-Anweisung mit Bedingung“ und zur Seite „Bitverschiebung“ folgen. Alle sind eigene HTML-Seiten.
 
 ### Abschnitte des Kurstexts
 
 - 4.4.2
 - 4.4.4
+
+## Schritt 4: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Eine Zahl speichern, 4.4.2, Seiten 86–87: Gleitkomma-Typen; 4.4.3, Seiten 87–88: Rundungsfehler: Das Modell mit 8 Bit Mantisse und die Zahlen 2/3 und 0,67 stammen aus dem Kurstext. Die Demo, die eine eingegebene Zahl im Modell speichert, gibt die Lektion dazu.
+  - 2 Im Modell rechnen, 4.4.3, Seiten 87–90: Rundungsfehler: Die Rechnungen 0,67 − 2/3 und 0,67 + 2/3 stammen aus dem Kurstext. Die Rechnung 100 + 0,2 ist ein eigenes Beispiel.
+  - 3 In Go mit float64, 4.4.2, Seiten 86–87: Gleitkomma-Typen; 4.4.4, Seiten 90–91: Vergleich: Der Typ float64 und der Vergleich von Gleitkommazahlen stammen aus dem Kurstext. Das Beispiel mit 0.1, 0.2 und 0.3 und der Hinweis zu konstanten Ausdrücken stehen nicht im Kurstext.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.3, Seiten 10–11, FLOAT: Eine Gleitkommazahl ist eine Näherung einer reellen Zahl. Ihre Operationen arbeiten anders als die für ganze Zahlen, auch wenn sie gleich heißen. Lektion: Exkurs: Speichern und Rechnen im Rechner.
+  - Abschnitt 3.3.3, Seiten 29–30, float64: Die Variable tempC hat den Typ float64, eine Näherung der reellen Zahlen mit 64 Bit. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 4.7, Seiten 109–111, Typkonvertierung: Lektion: Typkonvertierung.
+- Unter „Wie es weitergeht“ stehen einem Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 3“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+- Den Links zum Quiz, zur Seite „for-Anweisung mit Bedingung“ und zur Seite „Bitverschiebung“ folgen. Alle sind eigene HTML-Seiten.
+
+### Abschnitte des Kurstexts
+
+- 2.3
+- 3.3.3
+- 4.4.2
+- 4.4.3
+- 4.4.4
+- 4.7
