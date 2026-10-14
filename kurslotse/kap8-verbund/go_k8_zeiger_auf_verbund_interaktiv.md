@@ -2,7 +2,7 @@
 
 Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion. Sie gehört zu Kapitel 8 des Kurstexts, Abschnitt 8.2.4, Seiten 205–207.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -122,7 +122,6 @@ Reiter: argument
 - Den Rumpf von `fügeHinzu` zeigt der Kurstext nicht, die Seite auch nicht.
 - Die Demo zeigt vier Zeilen: `f1 := &rgb{22, 33, 44}`, `f2 := &rgb{22, 33, 44}`, `fmt.Println(f1 == f2)`, `fmt.Println(*f1 == *f2)`.
 - Der Ablauf: Jedes `&rgb{…}` erzeugt eine neue anonyme Variable. `f1 == f2` gibt `false` aus, `*f1 == *f2` gibt `true` aus.
-- Unter „Wie es weitergeht“ stehen vier Links: die Lektionen „Vergleich von Verbünden“, „Verbünde und Funktionen“ und „Hierarchische Verbünde“ und das Quiz.
 
 ### Handgriffe
 
@@ -133,3 +132,32 @@ Reiter: argument
 
 - 8.2.4
 - 8.2.5
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Feld-Zugriff über einen Zeiger, 8.2.4, Seiten 205–206: Hinweis 8.2: Die zwei Schreibweisen stammen aus dem Kurstext. Dort weisen beide den Wert "Meier" zu. Die Demo nimmt für die zweite "Maier", damit man beide Zuweisungen sieht. Die vier Zeilen zum Ausprobieren sind eine Ergänzung, geprüft mit Go 1.26.
+  - 2 Im Speicher, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Speichersicht steht nicht im Kurstext. Das Modell zeigen die Lektionen „Speichermodell: Zeiger“ und „Speichermodell: Verbund“ ausführlich.
+  - 3 Adresse eines Literals, 8.2.4, Seite 206: Die zwei Fassungen stammen aus dem Kurstext. Die zwei Zeilen mit fmt.Println und der Name pZwei sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.
+  - 4 Literal als Argument, 8.2.4, Seiten 206–207: Expertenwissen 8.3: Die Funktion fügeHinzu und die Zeiger f1 und f2 stammen aus dem Kurstext. Die letzte Zeile der Demo, *f1 == *f2, ist ergänzt.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
+  - Abschnitt 7.4.5, Seiten 183–184, anonyme Variable: new erzeugt eine Variable ohne Namen, wie das Literal mit &. Lektion: Zeiger in Go, Schritt 6.
+- Unter „Wie es weitergeht“ stehen vier Links: die Lektionen „Vergleich von Verbünden“, „Verbünde und Funktionen“ und „Hierarchische Verbünde“ und das Quiz.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 7.3
+- 7.4
+- 7.4.5
+- 8.2.4

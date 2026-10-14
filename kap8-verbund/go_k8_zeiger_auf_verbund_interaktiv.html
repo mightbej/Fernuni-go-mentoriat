@@ -18,7 +18,6 @@
     button.code { font-family:Consolas,"Courier New",monospace;text-align:left; }
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
-    .quelle { color:var(--muted);font-size:.88rem;margin:8px 0 0; }
     li { margin:6px 0; }
     pre.code-block { margin:12px 0;line-height:1.5; }
     .hinweis { margin:12px 0; }
@@ -77,6 +76,7 @@
     .zelle.gelesen { border-color:var(--aktiv);background:var(--aktiv-bg);box-shadow:0 0 0 2px var(--aktiv); }
     .zelle button.bit { padding:1px 3px;min-width:1.25em;border-radius:4px;font-family:Consolas,"Courier New",monospace;font-size:1rem;font-weight:400;background:#fff; }
     .zelle button.bit.eins { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -94,6 +94,7 @@
     <button type="button" class="tab" data-stufe="2">2 Im Speicher</button>
     <button type="button" class="tab" data-stufe="3">3 Adresse eines Literals</button>
     <button type="button" class="tab" data-stufe="4">4 Literal als Argument</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -164,7 +165,6 @@ type rgb struct {
     <p><strong>Ausgabe oder Meldung</strong></p>
     <div class="konsole" id="w-ausgabe"></div>
     <div class="auskunft" id="w-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.4 mit Hinweis 8.2, Seiten 205–206. Im Kurstext weisen beide Schreibweisen den Wert <code>"Meier"</code> zu. Die Demo nimmt für die zweite <code>"Maier"</code>, damit man beide Zuweisungen sieht. Die vier Zeilen zum Ausprobieren sind eine Ergänzung, geprüft mit Go 1.26.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -199,7 +199,6 @@ var pFarbe *rgb = &amp;farbe     // Zellen 112 bis 119, darin die Adresse 101</p
     <div class="auskunft" id="m-urteil"></div>
     <p>Die Kurzschreibweise <code>pFarbe.green</code> ist im Speicher eine Rechnung mit zwei Zahlen: die Adresse aus dem Zeiger und der Abstand des Felds aus dem Bauplan.</p>
     <div class="hinweis">Das Modell vereinfacht. Zellen, die Adressen 100 bis 119, der Bauplan und der Typ <code>uint8</code> für die Felder gehören zum Modell dieser Seite. Im Kurstext hat <code>rgb</code> Felder vom Typ <code>int</code>.</div>
-    <p class="quelle">Die Speichersicht steht nicht im Kurstext. Das Modell zeigen die Seiten <a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a> und <a href="go_k8_speichermodell_verbund_interaktiv.html">Speichermodell: Verbund</a> ausführlich.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -236,7 +235,6 @@ var pFarbe *rgb = new(rgb) // anonyme Variable
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="l-ausgabe"></div>
     <div class="auskunft" id="l-urteil"></div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 8.2.4, Seite 206. Die zwei Fassungen stammen aus dem Kurstext. Die zwei Zeilen mit <code>fmt.Println</code> und der Name <code>pZwei</code> sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung dieser Seite.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -279,6 +277,33 @@ fügeHinzu(h)</pre>
     <p><strong>Ausgabe</strong></p>
     <div class="konsole" id="n-ausgabe"></div>
     <div class="auskunft" id="n-urteil"></div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Feld-Zugriff über einen Zeiger</td><td>8.2.4, Seiten 205–206: Hinweis 8.2</td><td>Die zwei Schreibweisen stammen aus dem Kurstext. Dort weisen beide den Wert <code>"Meier"</code> zu.</td><td>Die Demo nimmt für die zweite <code>"Maier"</code>, damit man beide Zuweisungen sieht. Die vier Zeilen zum Ausprobieren sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
+      <tr><td>2 Im Speicher</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Speichersicht steht nicht im Kurstext. Das Modell zeigen die Lektionen „Speichermodell: Zeiger“ und „Speichermodell: Verbund“ ausführlich.</td></tr>
+      <tr><td>3 Adresse eines Literals</td><td>8.2.4, Seite 206</td><td>Die zwei Fassungen stammen aus dem Kurstext.</td><td>Die zwei Zeilen mit <code>fmt.Println</code> und der Name <code>pZwei</code> sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.</td></tr>
+      <tr><td>4 Literal als Argument</td><td>8.2.4, Seiten 206–207: Expertenwissen 8.3</td><td>Die Funktion <code>fügeHinzu</code> und die Zeiger <code>f1</code> und <code>f2</code> stammen aus dem Kurstext.</td><td>Die letzte Zeile der Demo, <code>*f1 == *f2</code>, ist ergänzt.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
+      <li><strong>Abschnitt 7.4.5, Seiten 183–184, anonyme Variable:</strong> <code>new</code> erzeugt eine Variable ohne Namen, wie das Literal mit <code>&amp;</code>. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#new">Zeiger in Go</a>, Schritt 6.</li>
+    </ul>
 
     <h3>Wie es weitergeht</h3>
     <ul>
@@ -287,10 +312,9 @@ fügeHinzu(h)</pre>
       <li><strong>Zeiger als Feld:</strong> Die Lektion <a href="go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> legt einen Zeiger auf einen Verbund in ein Feld.</li>
       <li><strong>Quiz:</strong> Das <a href="S214_zeiger_auf_verbund_demo_quiz.html">Quiz zu Zeigern auf Verbünde</a>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Expertenwissen 8.3, Seiten 206–207. Die Funktion <code>fügeHinzu</code> und die Zeiger <code>f1</code> und <code>f2</code> stammen aus dem Kurstext. Die letzte Zeile der Demo, <code>*f1 == *f2</code>, ist ergänzt.</p>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -309,8 +333,8 @@ fügeHinzu(h)</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#zeiger
-  const ANKER = ['worum', 'zeiger', 'speicher', 'literal', 'argument'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Feld-Zugriff über einen Zeiger', 'Schritt 2: Der Zeiger im Speicher', 'Schritt 3: Die Adresse eines Verbund-Literals', 'Schritt 4: Ein Literal als Argument'];
+  const ANKER = ['worum', 'zeiger', 'speicher', 'literal', 'argument', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Feld-Zugriff über einen Zeiger', 'Schritt 2: Der Zeiger im Speicher', 'Schritt 3: Die Adresse eines Verbund-Literals', 'Schritt 4: Ein Literal als Argument', 'Schritt 5: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -478,6 +502,7 @@ fügeHinzu(h)</pre>
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const DEMOS = [null, DZ, null, DL, DN];
   function standSaetze() {
+    if (stufe === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
     if (stufe === 0) return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
     if (stufe === 2) { const x = WM.liste[WM.i]; return ['Zu sehen sind 20 Zellen mit den Adressen 100 bis 119, jede mit ihrem Bitmuster: Zelle 100 gehört zu n und enthält 42. Die Zellen 101 bis 103 gehören zu farbe und enthalten 128, 0 und 80. Die Zellen 104 bis 111 gehören zu pn und enthalten die Adresse 100. Die Zellen 112 bis 119 gehören zu pFarbe und enthalten die Adresse 101.',
       'Die Typen in diesem Schritt: n ist eine einzelne Ganzzahl vom Typ int8 und kein Verbund. pn hat den Typ *int8 und zeigt auf n. farbe hat den Typ rgb mit den Feldern red, green und blue vom Typ uint8. pFarbe hat den Typ *rgb und zeigt auf farbe. Der Typ person und die Variablen anna und pPer kommen in diesem Schritt nicht vor.',
@@ -499,7 +524,7 @@ fügeHinzu(h)</pre>
     reiter: () => ANKER[stufe],
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
-    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis',
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
     zeilen: programmZeilen,
     zeilenTitel: 'Programm der Demo, die Zeilen stehen im Rumpf von main:',
     stand: standSaetze,
