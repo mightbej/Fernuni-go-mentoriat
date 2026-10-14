@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T14:52",
+ "stand": "2026-10-14T15:13",
  "abschnitte": {
   "2.1": [
    {
@@ -8,6 +8,20 @@
     "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
@@ -34,6 +48,13 @@
     "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -194,6 +215,20 @@
     "art": "nennt"
    },
    {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zahlenkreis: Ganzzahlen und Überlauf in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html",
     "beschreibung": "Die Seite stellt die Bitmuster eines Ganzzahl-Typs auf einen Kreis und zeigt, dass Zählen über das letzte Bitmuster hinaus beim ersten ankommt.",
@@ -333,6 +368,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
@@ -398,6 +440,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zuweisungen in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zuweisungen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu den Abschnitten 5.3 und 5.4 des Kurstexts. Sie wiederholt die Zuweisung mit `=` aus Abschnitt 3.3.5 und zeigt die kombinierten Operatoren, die Anweisungen `++` und `--`, die Tupel-Zuweisung und die einfachen Anweisungen.",
@@ -447,9 +496,30 @@
     "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "2.8": [
+   {
+    "titel": "Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html",
+    "beschreibung": "Die Seite zeigt das Programm zum größten gemeinsamen Teiler in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Sie wird in zwei Kapiteln gebraucht. In Kapitel 2 dienen die vorderen Reiter der Darstellung von Programmen. In Kapitel 5 dienen die hinteren Reiter der `for`-Anweisung mit Bedingung. Der Kurstext stellt den Bezug selbst her: Unter Listing 5.5 auf Seite 140 steht, das Programm greife das Beispiel aus Kapitel 2.5 wieder auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
@@ -463,6 +533,13 @@
     "titel": "Bezeichner und Schlüsselwörter in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -506,6 +583,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "if-Anweisung in Go: bedingte Anweisung und Verzweigung",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.1 des Kurstexts. Sie zeigt `if`, `else` und `else if` an kleinen Programmen und führt das Schaltjahr-Programm aus Listing 5.2 Zeile für Zeile aus.",
@@ -532,6 +616,13 @@
     "titel": "Speichermodell: Name, Typ und Adresse in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html",
     "beschreibung": "Die Seite zeigt, dass eine Variable ein Stück Hauptspeicher mit einem Namen ist. Der Typ sagt, wie viele Zellen dazugehören und wie ihre Bits zu lesen sind. Schritt 2 und 3 behandeln die syntaktische und die semantische Ebene aus Abschnitt 4.3.3 in beiden Richtungen: ein Wert in mehreren Schreibweisen, ein Bitmuster mit mehreren Werten.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -592,6 +683,13 @@
     "titel": "Fehlersuche: drei kurze Go-Programme",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html",
     "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -700,6 +798,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Bubble Sort mit Funktionen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
@@ -731,6 +836,13 @@
     "titel": "Variablendeklaration in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.1 des Kurstexts. Sie zeigt die ausführliche und die kurze Variablendeklaration, führt Listing 5.1 mit einer globalen und zwei lokalen Variablen Anweisung für Anweisung aus und zeigt die Meldung des Compilers bei einer ungenutzten Variable.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -987,6 +1099,20 @@
     "art": "nennt"
    },
    {
+    "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
     "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
@@ -1082,6 +1208,13 @@
     "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Vertiefung: Blockchain in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
+    "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "4.3.7.1": [
@@ -1126,6 +1259,13 @@
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vertiefung: Blockchain in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
+    "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1221,6 +1361,13 @@
     "titel": "Vertiefung: Blockchain in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html",
     "beschreibung": "Die Vertiefung zur Lektion Exkurs Blockchain. Sie schreibt jede Funktion der kleinen Blockchain in Go aus und rechnet sie nach: verkettete Liste mit Speichersicht, Hashfunktion mit 32 Bit Byte für Byte, Fälschung in vier Stufen, Guthaben im Typ `uint64`, Überweisungen und die Rechte eines Herausgebers.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1322,6 +1469,13 @@
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
     "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2047,6 +2201,20 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "5.5.3.1": [
@@ -2126,6 +2294,13 @@
     "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/exkurs_von_problem_zu_code.html",
     "beschreibung": "Die Seite entwickelt ein Zahlenratespiel in sechs Stufen. Jede Stufe legt etwas fest, das auf der Stufe davor noch offen war. Auf den Stufen 1 bis 5 ist die Spezifikation ein Text für ein Sprachmodell, auf Stufe 6 ein Go-Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html",
+    "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2334,6 +2509,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Sortieren mit Bubble Sort",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap6-arrays/go_k6_bubblesort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie sortiert zehn Zahlen mit Bubble Sort und führt dabei von zehn einzelnen Variablen über ein Array und einen einzelnen Durchgang zu einem Programm mit zwei Schleifen.",
@@ -2468,6 +2650,13 @@
     "titel": "Das Kopier-Problem: Arrays als Argument",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html",
     "beschreibung": "Die Seite ist ein Exkurs. Sie zählt an einer Funktion `swap`, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2621,6 +2810,20 @@
     "art": "nennt"
    },
    {
+    "titel": "Verkettete Listen in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html",
+    "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zeiger auf Verbünde in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html",
     "beschreibung": "Die Seite zeigt Zeiger auf Verbünde: den Feld-Zugriff über einen Zeiger in langer und kurzer Schreibweise, die Adresse eines Verbund-Literals und ein Literal als Argument einer Funktion.",
@@ -2761,6 +2964,13 @@
     "titel": "Verbünde und Funktionen: Zeiger oder Kopie",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_verbund_funktionen_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde an Funktionen: einen Verbund-Zeiger als Rückgabe, was auf der linken Seite einer Zuweisung stehen darf, einen Zeiger als Parameter und eine Kopie als Parameter.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2930,6 +3140,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Bubble Sort rekursiv",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
@@ -2953,6 +3170,13 @@
     "beschreibung": "Die Seite erklärt Rekursion an den Funktionen des Kurstexts: Fakultät iterativ, rekursiv und endrekursiv, Fibonacci-Zahlen, Türme von Hanoi und die Funktion `zahlenfolge` mit ihrer Abstiegsfunktion.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
+    "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Programmierübung: Bubble Sort rekursiv",
@@ -2997,6 +3221,13 @@
     "titel": "Speichermodell: Verbund-Datentyp in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie ein Verbund im Hauptspeicher liegt: Die Felder liegen lückenlos hintereinander, und ein Bauplan des Typs sagt, wo jedes Feld beginnt. Sie ist die vierte von vier HTML-Seiten mit dem gleichen Modell.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -3128,6 +3359,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Zeiger in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html",
     "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
@@ -3179,6 +3417,13 @@
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Vom Eisenbahnzug in den Maschinenraum von Tether",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_tether_interaktiv.html",
+    "beschreibung": "Die Seite ist der Exkurs zum Abschluss des Kurses, für Studenten im ersten Semester. Sie erklärt Bitcoin, Ethereum und den digitalen Dollar USDT von Tether, zeigt den Weg zum Programmtext von USDT bei Etherscan und stellt fünf Zeilen daraus neben ihr Gegenstück in Go, bis zur Sperrliste. Am Ende steht die Frage, wer die Kontrolle über digitales Geld hat, mit dem digitalen Euro als Vergleich.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -3414,6 +3659,13 @@
     "beschreibung": "Die Seite erklärt die einfach verkettete Liste: warum das Einfügen in ein sortiertes Array teuer ist, wie ein Element mit zwei Zuweisungen in eine Kette kommt und wie die Funktionen aus Listing 9.1 arbeiten.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "9.2": [
@@ -3442,6 +3694,13 @@
     "titel": "Bubblesort auf einem Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
     "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -3527,6 +3786,13 @@
     "beschreibung": "Die Seite erklärt binäre Bäume und binäre Suchbäume: die Begriffe, die Regel des Suchbaums, die Funktionen aus Listing 9.2 und die drei Fälle beim Löschen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
+    "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "Kapitel 5": [
