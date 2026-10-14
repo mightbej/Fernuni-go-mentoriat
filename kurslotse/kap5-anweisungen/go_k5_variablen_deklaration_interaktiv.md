@@ -2,7 +2,7 @@
 
 Die Seite erklärt, wie Go eine Variable deklariert: ausführlich mit `var` und kurz mit `:=`. Sie zeigt den Unterschied zwischen Deklaration und Zuweisung, lokale und globale Variablen an Listing 5.1 und die Meldung des Compilers bei einer ungenutzten Variable. Sie gehört zu Abschnitt 5.1 des Kurstexts.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -187,7 +187,6 @@ Reiter: ungenutzt
 - `a` ist in allen Fassungen in Ordnung, weil `b = a * 100` und `fmt.Println(a)` den Wert von `a` lesen.
 - Unter der Demo stehen drei Teile: „Warum Go so streng ist“, „Der leere Bezeichner _“ mit `_ = b` und `_, _ = a, b`, und „Globale Variablen“.
 - Ein gelber Kasten sagt: Im Kurstext steht die Meldung als `b declared but not used`, Go 1.26 schreibt `declared and not used: b`. Gemeint ist das Gleiche.
-- Der Schritt endet mit einem Link zum Selbsttest. Welche Fragen der Selbsttest stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -197,4 +196,41 @@ Reiter: ungenutzt
 
 ### Abschnitte des Kurstexts
 
+- 5.1.5
+
+## Schritt 6: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - 1 Ausführliche Deklaration, 5.1.1, Seiten 114–116: Sprachvergleich 5.1: Die Form mit var, der Null-Wert und der Sprachvergleich stammen aus dem Kurstext. Die Deklarationen mit preis sind eigene Beispiele.
+  - 2 Kurze Deklaration, 5.1.2, Seiten 116–118: Hinweis 5.2 und Expertenwissen 5.3: Die kurze Deklaration mit := und die Regel zur Mischform stammen aus dem Kurstext. Die Zeilen der Demo sind eigene Beispiele.
+  - 3 Lokal und global, 5.1.3, Seiten 119–120: Listing 5.1 und Hinweis 5.5: Listing 5.1 mit der globalen Variable klima stammt aus dem Kurstext. Die zwei Meldungen des Compilers gibt die Lektion dazu.
+  - 4 Welche Form wann, 5.1.4, Seite 121; 5.1.2, Seite 118: Hinweis 5.4: Die Empfehlung, wann welche Form passt, stammt aus dem Kurstext. Das Beispiel mit int8 und die Meldung des Compilers gibt die Lektion dazu.
+  - 5 Ungenutzte Variablen, 5.1.5, Seiten 122–123: Die Meldung zur ungenutzten Variable und der leere Bezeichner als Ausweg stammen aus dem Kurstext. Die Fassung mit der globalen Variable b ist ein eigenes Beispiel.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.4, Seiten 11–12, Deklaration: Eine Deklaration stellt Speicherplatz bereit, der über den Namen der Variable angesprochen wird. Lektion: Variablen, Typen und Speicher, Schritt 4.
+  - Abschnitt 3.3.3, Seiten 29–30, die erste Deklaration: var tempC float64 in Listing 3.2, mit dem Null-Wert 0. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 3.3.4, Seiten 30–32, Bezeichner: Welche Namen eine Variable haben darf. Lektion: Bezeichner und Schlüsselwörter in Go.
+  - Abschnitt 3.4, Seiten 37–41, Gültigkeitsbereich: Lektion: Fehlersuche: drei Go-Programme mit mehreren Fehlern, Schritt 1.
+- Unter „Wie es weitergeht“ stehen Links auf: „Selbsttest zur Variablendeklaration“.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.4
+- 3.3.3
+- 3.3.4
+- 3.4
+- 5.1.1
+- 5.1.2
+- 5.1.3
+- 5.1.4
 - 5.1.5

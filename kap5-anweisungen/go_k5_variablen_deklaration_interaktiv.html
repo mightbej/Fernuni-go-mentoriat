@@ -58,6 +58,7 @@
     .raum .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
     .raum .kasten b { font-weight:700; }
     .raum .leer { color:var(--muted);font-size:.9rem; }
+      .tabellenrahmen { overflow-x:auto;margin:12px 0; }
   </style>
 </head>
 <body>
@@ -76,6 +77,7 @@
     <button type="button" class="tab" data-stufe="3">3 Lokal und global</button>
     <button type="button" class="tab" data-stufe="4">4 Welche Form wann</button>
     <button type="button" class="tab" data-stufe="5">5 Ungenutzte Variablen</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -108,7 +110,6 @@ foo := 42          // kurze Variablendeklaration</pre>
       <li><strong>Schritt 5</strong> zeigt, was Go zu einer Variable sagt, die nie gelesen wird.</li>
     </ul>
     <div class="hinweis">Die Programme auf dieser Seite sind mit Go 1.26 ausgeführt. Ausgaben und Meldungen des Compilers stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1, Seiten 113–114.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -184,7 +185,6 @@ var a, b, c int</pre>
     a, b, c               int
 )</pre>
     <p>Eine Konstante wird genauso deklariert, mit <code>const</code> an der Stelle von <code>var</code>. Dazu gibt es die Seite <a href="go_k5_konstanten_interaktiv.html#deklaration">Konstanten</a>, Schritt 1.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.1, Seiten 114–116, mit dem Sprachvergleich 5.1. Die Deklarationen mit <code>preis</code> sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -238,7 +238,6 @@ foo := 42      // kurze Variablendeklaration</pre>
       <li><strong>Neuer Bezeichner:</strong> Go deklariert eine neue Variable.</li>
     </ul>
     <p>Mindestens ein Bezeichner links muss neu sein. Wozu diese Mischform gut ist, wird in Abschnitt 7.1.2 bei den Funktionen mit mehreren Rückgabewerten erklärt.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.2, Seiten 116–118, mit Hinweis 5.2 und Expertenwissen 5.3. Die Zeilen der Demo sind eigene Beispiele.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -283,7 +282,6 @@ foo := 42      // kurze Variablendeklaration</pre>
       <li><strong>Globale Variable:</strong> Die Deklaration darf im Quellcode auch hinter der ersten Verwendung stehen, sogar am Ende der Datei. Go verarbeitet alle globalen Deklarationen, bevor <code>main</code> beginnt. Der Übersicht wegen stehen globale Variablen trotzdem am Anfang.</li>
       <li><strong>Kurze Deklaration außerhalb einer Funktion:</strong> Zu <code>klima := "kalt"</code> in Zeile 5 meldet der Compiler <code>syntax error: non-declaration statement outside function body</code>.</li>
     </ul>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.3, Seiten 119–120, mit Hinweis 5.5. Die zwei Meldungen des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -333,7 +331,6 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
     </ul>
     <p>Das Gleiche gilt für den Rückgabewert einer Funktion: Bei <code>x := math.Exp2(8)</code> muss der Leser in der Dokumentation des Pakets <code>math</code> nachsehen, dass <code>x</code> den Typ <code>float64</code> bekommt. Der Wert ist 256.</p>
     <p>Wie Go ganze Zahlen teilt, zeigt die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung</a>, Schritt 4.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.4, Seite 121, und Hinweis 5.4 in Abschnitt 5.1.2, Seite 118. Das Beispiel mit <code>int8</code> und die Meldung des Compilers stehen nicht im Kurstext.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
@@ -376,11 +373,42 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
     <p>Die Meldung gibt es nur für lokale Variablen. Eine globale Variable darf ungenutzt bleiben. Das ist kein Ausweg: Eine Variable wird nur dann global deklariert, wenn das Programm es braucht.</p>
 
     <div class="hinweis">Im Kurstext steht die Meldung als <code>b declared but not used</code>. Go 1.26 schreibt <code>declared and not used: b</code>. Gemeint ist das Gleiche.</div>
-    <p>Zum Abschluss: Der <a href="go_k5_variablen_deklaration_quiz.html">Selbsttest zur Variablendeklaration</a> fragt den Stoff von Abschnitt 5.1 ab.</p>
-    <p class="quelle">Kurstext v3.0.6, Abschnitt 5.1.5, Seiten 122–123. Die Fassung mit der globalen Variable <code>b</code> ist ein eigenes Beispiel.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Ausführliche Deklaration</td><td>5.1.1, Seiten 114–116: Sprachvergleich 5.1</td><td>Die Form mit <code>var</code>, der Null-Wert und der Sprachvergleich stammen aus dem Kurstext.</td><td>Die Deklarationen mit <code>preis</code> sind eigene Beispiele.</td></tr>
+      <tr><td>2 Kurze Deklaration</td><td>5.1.2, Seiten 116–118: Hinweis 5.2 und Expertenwissen 5.3</td><td>Die kurze Deklaration mit <code>:=</code> und die Regel zur Mischform stammen aus dem Kurstext.</td><td>Die Zeilen der Demo sind eigene Beispiele.</td></tr>
+      <tr><td>3 Lokal und global</td><td>5.1.3, Seiten 119–120: Listing 5.1 und Hinweis 5.5</td><td>Listing 5.1 mit der globalen Variable <code>klima</code> stammt aus dem Kurstext.</td><td>Die zwei Meldungen des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Welche Form wann</td><td>5.1.4, Seite 121<br>5.1.2, Seite 118: Hinweis 5.4</td><td>Die Empfehlung, wann welche Form passt, stammt aus dem Kurstext.</td><td>Das Beispiel mit <code>int8</code> und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Ungenutzte Variablen</td><td>5.1.5, Seiten 122–123</td><td>Die Meldung zur ungenutzten Variable und der leere Bezeichner als Ausweg stammen aus dem Kurstext.</td><td>Die Fassung mit der globalen Variable <code>b</code> ist ein eigenes Beispiel.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.4, Seiten 11–12, Deklaration:</strong> Eine Deklaration stellt Speicherplatz bereit, der über den Namen der Variable angesprochen wird. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 3.3.3, Seiten 29–30, die erste Deklaration:</strong> <code>var tempC float64</code> in Listing 3.2, mit dem Null-Wert 0. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 3.3.4, Seiten 30–32, Bezeichner:</strong> Welche Namen eine Variable haben darf. Lektion: <a href="../kap3-einfuehrung/go_k3_bezeichner_interaktiv.html">Bezeichner und Schlüsselwörter in Go</a>.</li>
+      <li><strong>Abschnitt 3.4, Seiten 37–41, Gültigkeitsbereich:</strong> Lektion: <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html#quader">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a>, Schritt 1.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Der <a href="go_k5_variablen_deklaration_quiz.html">Selbsttest zur Variablendeklaration</a> fragt den Stoff von Abschnitt 5.1 ab.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -409,7 +437,7 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#kurz
-  var ANKER = ["worum", "var", "kurz", "lokal", "wahl", "ungenutzt"];
+  var ANKER = ["worum", "var", "kurz", "lokal", "wahl", "ungenutzt", "kurstext"];
   var stufe = 0;
   var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
 
@@ -651,9 +679,10 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
 
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
-  var SCHRITTE = ["Worum es geht", "Schritt 1: Ausführliche Deklaration", "Schritt 2: Kurze Deklaration", "Schritt 3: Lokal und global", "Schritt 4: Welche Form wann", "Schritt 5: Ungenutzte Variablen"];
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Ausführliche Deklaration", "Schritt 2: Kurze Deklaration", "Schritt 3: Lokal und global", "Schritt 4: Welche Form wann", "Schritt 5: Ungenutzte Variablen", "Schritt 6: Bezug zum Kurstext"];
 
   function standSaetze() {
+    if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) {
       var e1 = ergebnis1();
