@@ -71,6 +71,7 @@
     <button type="button" class="tab" data-stufe="2">2 Flussdiagramm</button>
     <button type="button" class="tab" data-stufe="3">3 Von der Darstellung zum Go-Code</button>
     <button type="button" class="tab" data-stufe="4">4 Das Go-Programm</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -87,7 +88,7 @@ WHILE n ≠ m
    IF n &gt; m THEN n ← n − m
    ELSE m ← m − n;
 Ausgabe n</div>
-    <p class="quelle">Quelle: Kurstext v3.0.6, Abschnitt 2.5, Seite 13. Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts ausgerechnet wird.</p>
+    <p>Der Pfeil <code>←</code> bedeutet: Die Variable links bekommt den Wert, der rechts ausgerechnet wird.</p>
     <p>Dasselbe Programm steht in Abschnitt 5.5.3.1 noch einmal, dort als Go-Programm. Die Seite führt in vier Schritten vom Bild zum Go-Programm:</p>
     <ul>
       <li><strong>Schritt 1</strong> lässt das Programm im Struktogramm laufen.</li>
@@ -131,7 +132,6 @@ Ausgabe n</div>
       <g id="sg-ausgabe"><rect class="knoten" x="10" y="246" width="500" height="44"/><text x="260" y="274" text-anchor="middle">Ausgabe n</text></g>
     </svg>
     <div class="platz-stand"></div>
-    <p class="quelle">Das Struktogramm nach Kurstext v3.0.6, Abschnitt 2.5, Abbildung 2.3, Seite 14.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -171,7 +171,6 @@ Ausgabe n</div>
     </svg>
     <div class="platz-stand"></div>
     <p>Ein Pfeil zurück nach oben ist ein Sprung. Wie Blöcke den Sprung ersetzen, zeigt die Seite <a href="go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung, Schritt 3</a>.</p>
-    <p class="quelle">Das Flussdiagramm nach Kurstext v3.0.6, Abschnitt 2.5, Abbildung 2.2, Seite 14.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
@@ -220,9 +219,10 @@ Ausgabe n</div>
   <section class="stufe" id="stufe-4">
   <div class="card">
     <h2>Das Go-Programm</h2>
-    <p>Quelle: Das Programm ist Listing 5.5 <code>for_ggt.go</code> aus dem Kurstext v3.0.6, Abschnitt 5.5.3.1, Seite 140. Der Durchlauf zeigt dieselben Schritte wie im Struktogramm, jetzt an den Zeilen des Go-Programms.</p>
+    <p>Das Programm steht im Kurstext in Abschnitt 5.5.3.1. Der Durchlauf zeigt dieselben Schritte wie im Struktogramm, jetzt an den Zeilen des Go-Programms.</p>
     <div class="platz-bedienung"></div>
     <ol class="programm" id="programm"></ol>
+    <p class="quelle">Listing 5.5, <code>for_ggt.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.1, Seite 140, unverändert übernommen.</p>
     <div class="platz-stand"></div>
     <ul>
       <li><strong>Die Zeilen 7 bis 13</strong> sind der Kern aus Schritt 3.</li>
@@ -233,6 +233,39 @@ Ausgabe n</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt. Der Stoff von Kapitel 2 kommt im Kurstext zweimal wieder: in Kapitel 3 kurz an Go-Programmen und in den Kapiteln 4 bis 9 ausführlich. Die Liste unter der Tabelle nennt diese Stellen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.5, Seite 13</td><td>Das Programm in der Schreibweise mit Großbuchstaben und die zwei Fragen stammen aus dem Kurstext. Die Antwort auf Frage 1 steht dort in Fußnote 4.</td><td>Die Antwort auf Frage 2 mit der kleiner werdenden Summe gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Struktogramm</td><td>2.5, Seite 14: Abbildung 2.3</td><td>Das Struktogramm stammt aus dem Kurstext.</td><td>Den Durchlauf mit zwei Zahlen gibt die Lektion dazu. Die voreingestellten Zahlen 42 und 78 stammen aus Abschnitt 5.5.3.1.</td></tr>
+      <tr><td>2 Flussdiagramm</td><td>2.5, Seite 14: Abbildung 2.2</td><td>Das Flussdiagramm stammt aus dem Kurstext.</td><td>Den Durchlauf an derselben Stelle wie in Schritt 1 gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Von der Darstellung zum Go-Code</td><td>2.5, Seite 13<br>5.5.3.1, Seite 140: Listing 5.5</td><td>Die Zeilen des Programms und ihre Schreibweise in Go stammen aus dem Kurstext.</td><td>Die Gegenüberstellung Zeile für Zeile gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Das Go-Programm</td><td>5.5.3.1, Seite 140: Listing 5.5</td><td>Listing 5.5 stammt unverändert aus dem Kurstext. Dort steht auch, dass die Funktion <code>ggT</code> mit Kopien der Werte arbeitet.</td><td>Den Durchlauf an den Zeilen des Programms gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 6–8, Sprung und Block:</strong> Ein Pfeil zurück im Flussdiagramm ist ein Sprung, ein Kasten im Struktogramm ein Block. Lektion: <a href="go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–18, das Programm in Maschinensprache:</strong> Lektion: <a href="go_k2_maschinensprache_compiler_interaktiv.html#maschine">Höhere und niedrigere Programmiersprachen</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 2.8, Seite 19, Einrückung:</strong> Blöcke werden eingerückt, damit man ihre Struktur auch im Programmtext sieht. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
+      <li><strong>Abschnitt 5.3, Seiten 126–128, Zuweisung:</strong> <code>n -= m</code> ist die Kurzform von <code>n = n - m</code>. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html#kombiniert">Zuweisungen in Go</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 5.5.1, Seiten 129–132, Verzweigung:</strong> Go schreibt <code>if</code> und <code>else</code>. Lektion: <a href="../kap5-anweisungen/go_k5_if_anweisungen_interaktiv.html">if-Anweisung in Go</a>.</li>
+      <li><strong>Abschnitt 5.5.3.1, Seiten 138–142, Schleife mit Bedingung:</strong> Dort steht das Programm als Listing 5.5. Lektion: <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>.</li>
+      <li><strong>Abschnitt 7.2, Seiten 169–170, Kopie des Arguments:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a>, Schritt 5.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -275,7 +308,7 @@ Ausgabe n</div>
 
   // ---- Reiter ----
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#programm
-  var ANKER = ["worum", "struktogramm", "flussdiagramm", "uebergang", "programm"];
+  var ANKER = ["worum", "struktogramm", "flussdiagramm", "uebergang", "programm", "kurstext"];
   // Welche Darstellung der Durchlauf in einer Stufe erklärt
   var DARSTELLUNG = { 1: "sg", 2: "fd", 4: "go" };
   var stufe = 0;
@@ -446,7 +479,7 @@ Ausgabe n</div>
   // ---- Kurslotse ----
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand des Durchlaufs in Sätzen.
   var SCHRITTE = ["Worum es geht", "Schritt 1: Das Programm als Struktogramm", "Schritt 2: Das Programm als Flussdiagramm",
-    "Schritt 3: Von der Darstellung zum Go-Code", "Schritt 4: Das Go-Programm"];
+    "Schritt 3: Von der Darstellung zum Go-Code", "Schritt 4: Das Go-Programm", "Schritt 5: Bezug zum Kurstext"];
   var KASTEN = {
     sg: { eingabe: "der Kasten „Eingabe n, m“ ganz oben", test: "der Kasten der Schleife „while n ≠ m“", vergleich: "der Kasten mit der Frage „n > m?“",
           subN: "der Kasten „n ← n − m“ links unter „ja“", subM: "der Kasten „m ← m − n“ rechts unter „nein“", ausgabe: "der Kasten „Ausgabe n“ ganz unten" },
@@ -454,6 +487,7 @@ Ausgabe n</div>
           subN: "das Rechteck „n ← n − m“ unten rechts", subM: "das Rechteck „m ← m − n“ unter der unteren Raute", ausgabe: "das Rechteck „Ausgabe n“ rechts neben der oberen Raute" }
   };
   function standSaetze() {
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Die Antworten auf die zwei Fragen sind " + ($("antworten").hidden ? "verdeckt." : "aufgedeckt.")];
     var art = DARSTELLUNG[stufe];
     if (!art) return ["Dieser Schritt hat keinen Durchlauf. Tabelle, Go-Code und Liste stehen fest."];

@@ -2,13 +2,13 @@
 
 Die Seite zeigt ein kleines Programm in vier Darstellungen: als Text, als Struktogramm, als Flussdiagramm und als Go-Programm. Das Programm berechnet den größten gemeinsamen Teiler zweier positiver ganzer Zahlen, kurz ggT. Es zieht so lange die kleinere Zahl von der größeren ab, bis beide Zahlen gleich sind.
 
-Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für die Schritte 1, 2 und 4 gilt:
 
 - Sie zeigen denselben Durchlauf des Programms, jeder in seiner Darstellung. Wer den Reiter wechselt, bleibt an derselben Stelle des Durchlaufs und bei denselben Zahlen.
 - Der Durchlauf ist nachgestellt. Die Seite führt kein Go-Programm aus. Der Student kann den Code nicht ändern und nicht starten.
-- Das Wort „Schritt“ kommt auf der Seite zweimal vor. Die Reiter heißen Schritt 1 bis Schritt 4. Der Zähler unter der Darstellung, zum Beispiel „3 von 24“, zählt die Schritte des Durchlaufs.
+- Das Wort „Schritt“ kommt auf der Seite zweimal vor. Die Reiter heißen Schritt 1 bis Schritt 5. Der Zähler unter der Darstellung, zum Beispiel „3 von 24“, zählt die Schritte des Durchlaufs.
 - Ein Schritt des Durchlaufs ist eines von sechs Ereignissen: die Eingabe, die Prüfung der Bedingung der Schleife, die Frage `n > m?`, die Subtraktion `n ← n − m`, die Subtraktion `m ← m − n`, die Ausgabe.
 - Unter der Darstellung steht ein Feld mit vier Zeilen: Schritt, Wert von n, Wert von m, Ausgabe. Darunter steht in einem grünen Kasten ein Satz, der den letzten Schritt des Durchlaufs erklärt.
 - Die Werte von n und m sind die Werte nach dem Schritt, der gerade markiert ist.
@@ -132,7 +132,9 @@ Reiter: programm
 
 ### Aufbau der Darstellung
 
+- Über dem Programm steht ein Satz: Das Programm steht im Kurstext in Abschnitt 5.5.3.1.
 - Zu sehen ist das Go-Programm `for_ggt.go` in einem dunklen Kasten, 27 Zeilen mit Zeilennummern am linken Rand. Die Programmzeilen gehen mit ihren Nummern mit.
+- Unter dem Programm steht in kleiner grauer Schrift die Quelle: Listing 5.5, `for_ggt.go`, aus dem Kurstext, Abschnitt 5.5.3.1, Seite 140, unverändert übernommen.
 - Zeilen 6 bis 15: die Funktion `ggT` mit der Schleife. Zeilen 17 bis 27: die Funktion `main` mit Deklaration, Eingabe, Prüfung der Eingabe und Ausgabe.
 - Hell hinterlegt mit einem gelben Strich am linken Rand sind die Zeilen, die zum Schritt des Durchlaufs gehören. Der Durchlauf hat dieselben Schritte wie im Struktogramm.
 - Eingabe: Die Zeilen 20 und 21 sind markiert. Die Zahlen kommen aus den Feldern n und m über dem Programm. Eine Eingabe über die Tastatur wie bei `fmt.Scan` gibt es auf der Seite nicht.
@@ -160,5 +162,43 @@ Reiter: programm
 
 ### Abschnitte des Kurstexts
 
+- 5.5.3.1
+- 7.2
+
+## Schritt 5: Bezug zum Kurstext
+
+Reiter: kurstext
+
+### Aufbau der Darstellung
+
+- Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
+- Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
+  - Worum es geht, 2.5, Seite 13: Das Programm in der Schreibweise mit Großbuchstaben und die zwei Fragen stammen aus dem Kurstext. Die Antwort auf Frage 1 steht dort in Fußnote 4. Die Antwort auf Frage 2 mit der kleiner werdenden Summe gibt die Lektion dazu.
+  - 1 Struktogramm, 2.5, Seite 14: Abbildung 2.3: Das Struktogramm stammt aus dem Kurstext. Den Durchlauf mit zwei Zahlen gibt die Lektion dazu. Die voreingestellten Zahlen 42 und 78 stammen aus Abschnitt 5.5.3.1.
+  - 2 Flussdiagramm, 2.5, Seite 14: Abbildung 2.2: Das Flussdiagramm stammt aus dem Kurstext. Den Durchlauf an derselben Stelle wie in Schritt 1 gibt die Lektion dazu.
+  - 3 Von der Darstellung zum Go-Code, 2.5, Seite 13; 5.5.3.1, Seite 140: Listing 5.5: Die Zeilen des Programms und ihre Schreibweise in Go stammen aus dem Kurstext. Die Gegenüberstellung Zeile für Zeile gibt die Lektion dazu.
+  - 4 Das Go-Programm, 5.5.3.1, Seite 140: Listing 5.5: Listing 5.5 stammt unverändert aus dem Kurstext. Dort steht auch, dass die Funktion ggT mit Kopien der Werte arbeitet. Den Durchlauf an den Zeilen des Programms gibt die Lektion dazu.
+- Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
+  - Abschnitt 2.1, Seiten 6–8, Sprung und Block: Ein Pfeil zurück im Flussdiagramm ist ein Sprung, ein Kasten im Struktogramm ein Block. Lektion: Imperative Programmierung, Schritt 3.
+  - Abschnitt 2.7, Seiten 17–18, das Programm in Maschinensprache: Lektion: Höhere und niedrigere Programmiersprachen, Schritt 1.
+  - Abschnitt 2.8, Seite 19, Einrückung: Blöcke werden eingerückt, damit man ihre Struktur auch im Programmtext sieht. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 5.3, Seiten 126–128, Zuweisung: n -= m ist die Kurzform von n = n - m. Lektion: Zuweisungen in Go, Schritt 2.
+  - Abschnitt 5.5.1, Seiten 129–132, Verzweigung: Go schreibt if und else. Lektion: if-Anweisung in Go.
+  - Abschnitt 5.5.3.1, Seiten 138–142, Schleife mit Bedingung: Dort steht das Programm als Listing 5.5. Lektion: for-Anweisung mit Bedingung in Go.
+  - Abschnitt 7.2, Seiten 169–170, Kopie des Arguments: Lektion: Funktionen in Go, Schritt 5.
+
+### Handgriffe
+
+- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- In diesem Schritt lässt sich nichts ausprobieren.
+
+### Abschnitte des Kurstexts
+
+- 2.1
+- 2.5
+- 2.7
+- 2.8
+- 5.3
+- 5.5.1
 - 5.5.3.1
 - 7.2
