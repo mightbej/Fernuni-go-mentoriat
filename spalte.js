@@ -39,6 +39,9 @@
 //   spalte.setzeLage(html)         Die Zeile über dem Eingabefeld: worauf sich die nächste Frage bezieht.
 //   spalte.setzeHinweis(html), spalte.setzePlatzhalter(text), spalte.setzeZusatz(text)
 //
+// Für die übrigen Anfragen der Seite an ihren Lotsen gibt es Spalte.hole(pfad, daten), zum Beispiel
+// Spalte.hole('/api/bereit'). Mit daten geht die Anfrage als POST mit JSON.
+//
 // Mit jeder Frage schickt die Spalte: art, markiert, umgebung, markiertCode, getippt und verlauf. Dazu kommt, was
 // mitschicken liefert. Die Antwort des Programms: antwort, quellen, zurFrage und nach Bedarf hinweis.
 (function () {
@@ -329,12 +332,8 @@
 
     // ----- Fragen -----
 
-    async function schicke(daten) {
-      const adresse = typeof angaben.adresse === 'function' ? angaben.adresse() : angaben.adresse;
-      const r = await fetch(adresse, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(daten) });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.fehler || 'Status ' + r.status);
-      return d;
+    function schicke(daten) {
+      return hole(typeof angaben.adresse === 'function' ? angaben.adresse() : angaben.adresse, daten);
     }
 
     // Stellt eine Frage im Gespräch. auftrag.text fehlt, wenn der Student die Frage getippt hat.
@@ -494,5 +493,14 @@
     };
   }
 
-  window.Spalte = { einrichten: einrichten, alsHTML: alsHTML, esc: esc };
+  // hole schickt eine Anfrage an den Lotsen und liefert seine Antwort. Mit daten geht sie als POST mit JSON. Meldet der
+  // Lotse einen Fehler, wirft hole ihn mit dem Text des Lotsen, sonst mit der Nummer des Fehlers.
+  async function hole(pfad, daten) {
+    const r = await fetch(pfad, daten ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(daten) } : undefined);
+    const d = await r.json().catch(() => null);
+    if (!r.ok || d === null) throw new Error((d && d.fehler) || 'Fehler ' + r.status);
+    return d;
+  }
+
+  window.Spalte = { einrichten: einrichten, alsHTML: alsHTML, esc: esc, hole: hole };
 })();
