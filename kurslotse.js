@@ -1,9 +1,9 @@
-// Dialog mit dem Kurslotsen: eine Spalte rechts neben der Seite, in der der Student Fragen zum sichtbaren Schritt stellt.
+// Dialog mit dem Kurslotsen: eine Leiste rechts neben der Seite, in der der Student Fragen zum sichtbaren Schritt stellt.
 //
 // Der Kurslotse ist ein Programm auf dem Rechner des Studenten. Es reicht die Frage an ein Sprachmodell weiter.
-// Läuft es nicht, erscheint die Spalte nicht, und die Seite sieht aus wie ohne diese Datei.
+// Läuft es nicht, erscheint die Leiste nicht, und die Seite sieht aus wie ohne diese Datei.
 //
-// Die Spalte selbst steht in der Datei spalte.js neben dieser Datei. Sie ist für alle Lotsen dieselbe. In dieser Datei
+// Die Leiste selbst steht in der Datei lotsenleiste.js neben dieser Datei. Sie ist für alle Lotsen dieselbe. In dieser Datei
 // steht, was nur die HTML-Seiten des Mentoriats betrifft: was die Seite mit einer Frage mitschickt und wie sie den
 // Kurslotsen auf dem Rechner des Studenten findet.
 //
@@ -40,7 +40,7 @@
   const el = id => document.getElementById(id);
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   let seite = null;          // die Angaben der HTML-Seite
-  let spalte = null;         // die Spalte aus spalte.js, sobald die Datei geladen ist
+  let leiste = null;         // die Leiste aus lotsenleiste.js, sobald die Datei geladen ist
   let standZuletzt = null;   // der Stand der Demo bei der letzten Frage, als ein Text
   const beschreibung = { seite: '', schritte: {} };
 
@@ -103,7 +103,7 @@
   const datei = adresse => new URL(adresse, location.href).pathname.split('/').pop();
   function mitschicken() {
     const jetzt = seite.stand().join('\n');
-    if (standZuletzt !== null && jetzt !== standZuletzt) spalte.neuerStand();
+    if (standZuletzt !== null && jetzt !== standZuletzt) leiste.neuerStand();
     standZuletzt = jetzt;
     return { kontext: kontext(), zeilen: zeilen(), abschnitte: abschnitte(), thema: (seite.thema || seite.titel) + ', ' + seite.schritt(), seite: datei(location.href) };
   }
@@ -117,9 +117,9 @@
 
   // Die Zeile über dem Eingabefeld: welchen Stand die nächste Frage mitschickt
   function zeigeStand() {
-    if (!seite || !spalte) return;
+    if (!seite || !leiste) return;
     const kurz = seite.kurz ? seite.kurz() : '';
-    spalte.setzeLage('Die nächste Frage schickt mit: <b>' + esc(seite.schritt().split(':')[0]) + '</b>' + (kurz ? ', ' + esc(kurz) : ''));
+    leiste.setzeLage('Die nächste Frage schickt mit: <b>' + esc(seite.schritt().split(':')[0]) + '</b>' + (kurz ? ', ' + esc(kurz) : ''));
   }
 
   // ---------- Den Kurslotsen finden ----------
@@ -136,9 +136,9 @@
         return;
       }
       el('lotseZeile').hidden = true;
-      spalte.setzeZusatz('Modell: ' + d.modell);
+      leiste.setzeZusatz('Modell: ' + d.modell);
       try { localStorage.setItem('lotseVerbunden', '1'); } catch (fehler) {}
-      spalte.zeige(true, aufWunsch ? true : undefined);
+      leiste.zeige(true, aufWunsch ? true : undefined);
     } catch (fehler) {
       if (aufWunsch) el('lotseStatus').textContent = 'Der Kurslotse antwortet auf diesem Rechner nicht. Er muss laufen, und der Browser muss den Zugriff auf den eigenen Rechner erlauben.';
     }
@@ -148,15 +148,15 @@
 
   function einrichten(angaben) {
     seite = angaben;
-    if (window.Spalte) { baue(); return; }
+    if (window.Leiste) { baue(); return; }
     const skript = document.createElement('script');
-    skript.src = WURZEL + 'spalte.js';
+    skript.src = WURZEL + 'lotsenleiste.js';
     skript.onload = baue;
     document.head.appendChild(skript);
   }
 
   function baue() {
-    spalte = Spalte.einrichten({
+    leiste = Leiste.einrichten({
       name: 'Kurslotse',
       adresse: LOTSE + '/api/frage',
       wo: 'auf der HTML-Seite',
@@ -195,7 +195,7 @@
 
   window.Kurslotse = {
     einrichten: einrichten,
-    schrittGewechselt: () => { if (spalte) spalte.leere(); zeigeStand(); },
+    schrittGewechselt: () => { if (leiste) leiste.leere(); zeigeStand(); },
     standGeaendert: zeigeStand
   };
 })();
