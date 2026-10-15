@@ -1,20 +1,20 @@
 {
- "stand": "2026-10-15T19:22",
+ "stand": "2026-10-15T19:30",
  "abschnitte": {
   "1.1": [
    {
-    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "titel": "Willkommen im Mentoriat: Kurstext, Go und Lernquellen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
-    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "beschreibung": "Die Lektion zur ersten Sitzung: Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
     "geprueft": true,
     "art": "erklaert"
    }
   ],
   "1.2": [
    {
-    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "titel": "Willkommen im Mentoriat: Kurstext, Go und Lernquellen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
-    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "beschreibung": "Die Lektion zur ersten Sitzung: Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
     "geprueft": true,
     "art": "erklaert"
    }
@@ -548,9 +548,9 @@
   ],
   "3": [
    {
-    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "titel": "Willkommen im Mentoriat: Kurstext, Go und Lernquellen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
-    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "beschreibung": "Die Lektion zur ersten Sitzung: Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -587,9 +587,9 @@
     "art": "nennt"
    },
    {
-    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "titel": "Willkommen im Mentoriat: Kurstext, Go und Lernquellen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
-    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "beschreibung": "Die Lektion zur ersten Sitzung: Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
     "geprueft": true,
     "art": "nennt"
    }
