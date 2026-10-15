@@ -54,7 +54,7 @@
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Editorlotse ist deine Werkstatt für Go-Programme. Du schreibst ein Programm im Browser, führst es aus und siehst die Ausgabe. Liest dein Programm von der Tastatur, tippst du die Eingabe direkt darunter ein. Go, VS Code oder eine andere Entwicklungsumgebung musst du dafür nicht installieren.</p>
-    <p>Meldet Go einen Fehler oder tut dein Programm etwas anderes als erwartet, fragst du rechts in der Spalte. Der Editorlotse ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist. Er sieht dein Programm und hilft dir, den Fehler selbst zu finden.</p>
+    <p>Meldet Go einen Fehler oder tut dein Programm etwas anderes als erwartet, fragst du rechts in der Leiste. Der Editorlotse ist ein Sprachmodell, das für unser Mentoriat eingerichtet ist. Er sieht dein Programm und hilft dir, den Fehler selbst zu finden.</p>
     <div class="nur-kurs">
       <p><strong>Nur für dein Studium in diesem Kurs.</strong> Der Editorlotse ist für Studenten bestimmt, die im Wintersemester 2026/2027 im Modul 63811 eingeschrieben sind. Du darfst ihn für deine eigene Teilnahme an diesem Kurs verwenden.</p>
       <p>Du darfst das Paket und die Datei <code>lotsen-kurstext.zip</code> nicht weitergeben, nicht veröffentlichen und nicht zum Herunterladen anbieten. Das gilt auch für Studenten anderer Kurse und Semester.</p>
@@ -65,7 +65,7 @@
       <li><strong>Oben:</strong> die Auswahl der Programme und die Knöpfe „Ausführen“, „Speichern“ und „Formatieren“.</li>
       <li><strong>In der Mitte:</strong> der Editor mit deinem Programm und den Zeilennummern.</li>
       <li><strong>Unten:</strong> die Ausgabe deines Programms und die Zeile für deine Eingaben.</li>
-      <li><strong>Rechts:</strong> die Spalte „Editorlotse“. Dort stellst du Fragen zu deinem Programm.</li>
+      <li><strong>Rechts:</strong> die Leiste „Editorlotse“. Dort stellst du Fragen zu deinem Programm.</li>
     </ul>
     <h3>Was du brauchst</h3>
     <ul>
@@ -105,12 +105,12 @@
     </ol>
     <p>Starte das Programm nicht direkt aus der ZIP-Datei. Es findet dann seine Dateien nicht.</p>
     <p>Die Datei <code>lotsen-kurstext.zip</code> entpackst du nicht. Sie bleibt, wie sie ist. Hast du sie noch für keinen anderen Lotsen eingerichtet, lade sie aus Moodle. Du brauchst sie beim Einrichten des Kurstexts.</p>
-    <p>Im Ordner <code>editorlotse</code> liegen die Anleitung, die Nutzungsbedingungen, <code>start.bat</code> und der Ordner <code>meine-programme</code> für deine Programme. Den Ordner <code>programm</code> brauchst du nicht zu öffnen. Verschieb keine Datei aus dem Ordner heraus.</p>
+    <p>Im Ordner <code>editorlotse</code> liegen die Anleitung, die Nutzungsbedingungen, das Programm <code>editorlotse.exe</code>, der Ordner <code>meine-programme</code> für deine Programme und der Ordner <code>programme</code> mit den Beispielen. Verschieb keine Datei aus dem Ordner heraus.</p>
 
     <h3>Den Editorlotsen starten</h3>
     <ol>
       <li>Öffne den entpackten Ordner <code>editorlotse</code>.</li>
-      <li>Mach einen Doppelklick auf <code>start.bat</code>.</li>
+      <li>Mach einen Doppelklick auf <code>editorlotse.exe</code>.</li>
     </ol>
     <p>Es öffnet sich ein schwarzes Fenster, und dein Browser zeigt die Adresse <code>http://localhost:8617</code>. Das schwarze Fenster ist das Programm. Lass es offen, solange du mit dem Editorlotsen arbeitest.</p>
     <div class="hinweis">Windows kann beim ersten Start warnen, weil das Programm von keinem Hersteller signiert ist. Klick in diesem Fall auf „Weitere Informationen“ und dann auf „Trotzdem ausführen“.</div>
@@ -140,7 +140,7 @@
       <li><strong>Er gilt für alle Lotsen:</strong> Hast du den Schlüssel schon für einen anderen Lotsen eingerichtet, findet ihn der Editorlotse von selbst.</li>
     </ul>
     <h3>Ohne Schlüssel</h3>
-    <p>Mit „Ohne Schlüssel weiter“ schreibst und führst du deine Programme aus wie sonst. Es fehlen die Antworten des Editorlotsen in der Spalte.</p>
+    <p>Mit „Ohne Schlüssel weiter“ schreibst und führst du deine Programme aus wie sonst. Es fehlen die Antworten des Editorlotsen in der Leiste.</p>
 
     <h3>Den Kurstext für die Lotsen einrichten</h3>
     <p>Der Editorlotse schlägt zu deiner Frage im Kurstext nach. So nennt er dir den Abschnitt und die HTML-Seiten des Mentoriats dazu. Dafür braucht er die Datei <code>lotsen-kurstext.zip</code>. Sie liegt in Moodle im Beitrag deines Mentors, über der Tabelle „Die Lotsen zum Kurs“. Du richtest sie einmal ein, sie gilt dann für alle Lotsen auf deinem Rechner.</p>
@@ -208,14 +208,15 @@
   <section class="stufe" id="stufe-5">
   <div class="card">
     <h2>Schritt 5: Den Editorlotsen fragen</h2>
-    <p>Rechts neben dem Editor steht die Spalte „Editorlotse“. Dort beantwortet das Sprachmodell deine Fragen zu deinem Programm. Es sieht dein Programm mit den Zeilennummern und was beim letzten Ausführen herauskam.</p>
+    <p>Rechts neben dem Editor steht die Leiste „Editorlotse“. Dort beantwortet das Sprachmodell deine Fragen zu deinem Programm. Es sieht dein Programm mit den Zeilennummern und was beim letzten Ausführen herauskam.</p>
     <ul>
       <li><strong>Fragen:</strong> Tipp deine Frage in das Feld, zum Beispiel „Warum gibt meine Schleife eine Zahl zu viel aus?“, und drück die Eingabetaste.</li>
       <li><strong>Meldung erklären:</strong> Übersetzt Go dein Programm nicht, steht unter der Meldung der Knopf „Editorlotsen fragen: Was bedeutet die Meldung?“.</li>
       <li><strong>Eine Stelle markieren:</strong> Markiere mit der Maus eine Stelle im Programm oder in der Ausgabe. Sie erscheint rechts über dem Eingabefeld und geht mit deiner Frage mit, zusammen mit der ganzen Programmzeile. Das Kreuz daneben verwirft sie.</li>
       <li><strong>Keine fertige Lösung:</strong> Der Editorlotse hilft dir, den Fehler selbst zu finden. Er erklärt die Meldung und gibt dir einen Hinweis. Die korrigierte Zeile schreibst du selbst.</li>
       <li><strong>Unter der Antwort:</strong> Dort stehen die Abschnitte des Kurstexts, auf die sich die Antwort stützt, und Links auf die HTML-Seiten des Mentoriats zu diesen Abschnitten.</li>
-      <li><strong>Spalte schließen:</strong> Der Knopf „×“ oben rechts schließt die Spalte, damit der Editor die ganze Breite hat. Der Knopf „Editorlotsen fragen“ unten rechts öffnet sie wieder.</li>
+      <li><strong>Fürs Forum:</strong> Kommst du nicht weiter, schreibt das Sprachmodell aus dem Gespräch einen Entwurf für einen Beitrag im Forum des Kurses in Moodle. Du kopierst Betreff und Mitteilung, öffnest das Forum und stellst den Beitrag selbst ein. Lies den Entwurf vorher durch.</li>
+      <li><strong>Leiste schließen:</strong> Der Knopf „×“ oben rechts schließt die Leiste, damit der Editor die ganze Breite hat. Der Knopf „Editorlotsen fragen“ unten rechts öffnet sie wieder.</li>
     </ul>
   </div>
   <div class="zeile schritte">
@@ -227,12 +228,12 @@
   <div class="card">
     <h2>Gut zu wissen</h2>
     <h3>Beenden und wieder starten</h3>
-    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>start.bat</code>.</p>
+    <p>Schließ das schwarze Fenster. Damit endet das Programm. Zum Weiterarbeiten machst du wieder einen Doppelklick auf <code>editorlotse.exe</code>.</p>
     <p>Meldet das schwarze Fenster „Die Adresse ist belegt“, dann läuft der Editorlotse schon in einem anderen Fenster.</p>
 
     <h3>Was du wissen musst</h3>
     <ul>
-      <li><strong>Was dein Rechner verlässt:</strong> Dein Programm, die letzte Ausgabe und deine Frage gehen an KI:connect, wenn du in der Spalte fragst. Deine Programme selbst bleiben auf deinem Rechner.</li>
+      <li><strong>Was dein Rechner verlässt:</strong> Dein Programm, die letzte Ausgabe und deine Frage gehen an KI:connect, wenn du in der Leiste fragst. Deine Programme selbst bleiben auf deinem Rechner.</li>
       <li><strong>Was das Programm aus dem Netz holt:</strong> Bei jedem Start holt es von den HTML-Seiten des Mentoriats die Liste, welche HTML-Seite zu welchem Abschnitt des Kurstexts gehört. So erscheinen neue HTML-Seiten ohne neues Paket.</li>
       <li><strong>Keine persönlichen Angaben:</strong> Gib keine Namen, E-Mail-Adressen und Matrikelnummern ein. Die Nutzungsbedingungen von KI:connect untersagen das.</li>
       <li><strong>Nicht weitergeben:</strong> Das Paket enthält die Listings des Kurstexts, die Datei <code>lotsen-kurstext.zip</code> enthält den Kurstext der FernUniversität. Beide sind nur für Teilnehmer dieses Kurses bestimmt. Genaueres steht in den Nutzungsbedingungen.</li>
