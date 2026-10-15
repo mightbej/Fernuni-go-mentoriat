@@ -28,7 +28,7 @@
 //   merken           Name, unter dem sich der Browser merkt, ob die Leiste offen ist
 //   forum            false: ohne den Knopf „Fürs Forum“
 //
-// Der Knopf „Fürs Forum“ steht in jeder Leiste, deren Adresse auf /api/frage endet. Er schickt das Gespräch an
+// Der Knopf „Fürs Forum“ steht in jeder Leiste, deren Adresse auf /api/frage oder /api/lektion endet. Er schickt das Gespräch an
 // /api/forum desselben Lotsen. Das Sprachmodell schreibt daraus einen Entwurf für das Forum des Kurses in Moodle.
 // Der Student kopiert Betreff und Mitteilung und stellt den Beitrag selbst ein. Der Entwurf geht nicht in das
 // Gespräch ein. Thomas' Beschluss vom 2026-10-15.
@@ -359,10 +359,11 @@
       knopf.addEventListener('click', () => stelle({ art: w.art, text: w.text, brauchtMarkierung: w.brauchtMarkierung, mitMarkierung: true }));
       teil('lotse-knoepfe').appendChild(knopf);
     });
-    // Der Entwurf für das Forum geht an /api/forum desselben Lotsen.
+    // Der Entwurf für das Forum geht an /api/forum desselben Lotsen. Die Lotsen fragen unter /api/frage, die Lektionen
+    // seit 2026-10-15 unter /api/lektion.
     const forumAdresse = () => {
       const a = typeof angaben.adresse === 'function' ? angaben.adresse() : angaben.adresse;
-      return /\/api\/frage$/.test(a) ? a.replace(/\/api\/frage$/, '/api/forum') : '';
+      return /\/api\/(frage|lektion)$/.test(a) ? a.replace(/\/api\/(frage|lektion)$/, '/api/forum') : '';
     };
     if (angaben.forum !== false && forumAdresse()) {
       const knopf = document.createElement('button');
