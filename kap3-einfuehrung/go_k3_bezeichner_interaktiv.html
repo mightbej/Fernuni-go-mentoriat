@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="3.3.4">
   <title>Bezeichner und Schlüsselwörter in Go</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -95,7 +96,8 @@
     <button type="button" class="tab" data-stufe="2">2 Groß und klein</button>
     <button type="button" class="tab" data-stufe="3">3 Schlüsselwörter</button>
     <button type="button" class="tab" data-stufe="4">4 Vorgegebene Bezeichner</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -123,7 +125,8 @@
       <li><strong>Schritt 2:</strong> Groß- und Kleinbuchstaben und was ein großer Anfangsbuchstabe bewirkt.</li>
       <li><strong>Schritt 3:</strong> Die 25 Schlüsselwörter.</li>
       <li><strong>Schritt 4:</strong> Vorgegebene Bezeichner wie <code>int</code> und <code>true</code> und der leere Bezeichner <code>_</code>.</li>
-      <li><strong>Schritt 5:</strong> Was aus dem Kurstext stammt und wo das Thema im Kurstext noch vorkommt.</li>
+      <li><strong>Schritt 5:</strong> Du gibst einer Variablen selbst einen Namen und führst das Programm im Editorlotsen aus.</li>
+      <li><strong>Schritt 6:</strong> Was aus dem Kurstext stammt und wo das Thema im Kurstext noch vorkommt.</li>
     </ul>
   </div>
   <div class="zeile schritte">
@@ -250,8 +253,27 @@ fmt.Println(tempc)</pre>
 
   <section class="stufe" id="stufe-5">
   <div class="card">
-    <h3>Schritt 5: Bezug zum Kurstext</h3>
-    <p>Alle vier Schritte gehören zu Abschnitt 3.3.4 des Kurstexts. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen und trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier steht ein kurzes Programm: Es deklariert eine Variable und gibt sie aus. Wähle eine Fassung, sag vorher, ob Go den Namen annimmt, und führe sie aus. Danach kannst du im Editor eigene Namen versuchen.</p>
+    <p>Vorschläge zum Ausprobieren:</p>
+    <ul>
+      <li><strong>Eigener Name:</strong> Gib der Variablen deinen Vornamen als Namen, mit Umlaut, wenn er einen hat.</li>
+      <li><strong>Grenzfall:</strong> Versuch <code>_</code>, <code>__</code> oder <code>x_1_</code>.</li>
+      <li><strong>Schlüsselwort:</strong> Versuch ein Schlüsselwort aus Schritt 3, zum Beispiel <code>for</code> oder <code>range</code>.</li>
+    </ul>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder die Fassung der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
+    <p>Alle Schritte gehören zu Abschnitt 3.3.4 des Kurstexts. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen und trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
     <div class="tabellenrahmen">
     <table class="text">
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was die Lektion dazugibt</th></tr>
@@ -259,6 +281,7 @@ fmt.Println(tempc)</pre>
       <tr><td>2 Groß und klein</td><td>3.3.4, Seite 31</td><td>Das Beispiel mit <code>tempC</code> und <code>tempc</code>, der Export und die Konvention zum großen Anfangsbuchstaben stammen aus dem Kurstext.</td><td>Die zwei Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
       <tr><td>3 Schlüsselwörter</td><td>3.3.4, Seiten 31–32</td><td>Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext.</td><td>Die grüne Markierung der vier Schlüsselwörter und die vier Zeilen der Auswahl mit ihren Meldungen gibt die Lektion dazu.</td></tr>
       <tr><td>4 Vorgegebene Bezeichner</td><td>3.3.4, Seiten 31–32</td><td>Die drei Listen der vorgegebenen Bezeichner, die Warnung und der leere Bezeichner stammen aus dem Kurstext.</td><td>Die vier Zeilenpaare der Auswahl mit ihren Ausgaben und Meldungen gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Selbst ausprobieren</td><td>3.3.4, Seiten 30–32</td><td>Die Namen <code>größe</code>, <code>tempC</code> und <code>tempc</code> stammen aus dem Kurstext.</td><td>Das Ausführen im Editorlotsen, die übrigen Fassungen, ihre Meldungen von Go 1.26.1 und die Vorschläge gibt die Lektion dazu.</td></tr>
     </table>
     </div>
 
@@ -278,7 +301,7 @@ fmt.Println(tempc)</pre>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -286,6 +309,7 @@ fmt.Println(tempc)</pre>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -297,8 +321,8 @@ fmt.Println(tempc)</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#regeln
-  const ANKER = ['worum', 'regeln', 'gross', 'schluessel', 'vorgegeben', 'kurstext'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Regeln', 'Schritt 2: Groß und klein', 'Schritt 3: Schlüsselwörter', 'Schritt 4: Vorgegebene Bezeichner', 'Schritt 5: Bezug zum Kurstext'];
+  const ANKER = ['worum', 'regeln', 'gross', 'schluessel', 'vorgegeben', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zwei Regeln', 'Schritt 2: Groß und klein', 'Schritt 3: Schlüsselwörter', 'Schritt 4: Vorgegebene Bezeichner', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -492,15 +516,38 @@ fmt.Println(tempc)</pre>
     { code: 'var _ int = 5' + NL + 'fmt.Println(_)', fehler: true, aus: '.\\main.go:7:17: cannot use _ as value or type', satz: 'Die Deklaration mit dem leeren Bezeichner ist zulässig. Lesen lässt sich der Wert aber nicht: Der leere Bezeichner ist ein Platzhalter und keine Variable.' }
   ], true);
 
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Ein kurzes Programm mit einem Namen. Eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 meldet oder ausgibt.
+  const PROG = zeilen => 'package main' + NL + NL + 'import "fmt"' + NL + NL + 'func main() {' + NL + zeilen.map(z => '\t' + z + NL).join('') + '}' + NL;
+  const probe = Ausprobieren.einrichten({
+    ziel: el('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+      { name: 'größe', code: PROG(['var größe int = 5', 'fmt.Println(größe)']), ergebnis: { ausgabe: '5' + NL } },
+      { name: '2alter', code: PROG(['var 2alter int = 5', 'fmt.Println(2alter)']),
+        ergebnis: { meldungen: ['.\\main.go:6:6: syntax error: unexpected literal 2, expected name', '.\\main.go:7:15: syntax error: unexpected name alter in argument list; possibly missing comma or )'] } },
+      { name: 'mein-name', code: PROG(['var mein-name int = 5', 'fmt.Println(mein-name)']),
+        ergebnis: { meldungen: ['.\\main.go:6:10: syntax error: unexpected -, expected type'] } },
+      { name: 'func', code: PROG(['var func int = 5', 'fmt.Println(func)']),
+        ergebnis: { meldungen: ['.\\main.go:6:6: syntax error: unexpected keyword func, expected name', '.\\main.go:7:18: syntax error: unexpected ), expected ('] } },
+      { name: 'tempC und tempc', code: PROG(['var tempC int = 5', 'fmt.Println(tempc)']),
+        ergebnis: { meldungen: ['.\\main.go:6:6: declared and not used: tempC', '.\\main.go:7:14: undefined: tempc'] } },
+      { name: 'int als Name', code: PROG(['var int int = 5', 'var y int = 7', 'fmt.Println(int, y)']),
+        ergebnis: { meldungen: ['.\\main.go:7:8: int (local variable) is not a type'] } }
+    ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
     if (stufe === 1) return ['Die Demo setzt den gewählten Namen in ein Programm ein: Zeile 6 lautet var NAME int = 5, Zeile 7 lautet fmt.Println(NAME).'].concat(standWahl(WR, 'der Name'), ['Handgriff: einen der vierzehn festen Namen wählen. Einen eigenen Namen kann der Student nicht eingeben.']);
     if (stufe === 3) return ['Über der Auswahl steht die Liste der 25 Schlüsselwörter. Grün sind package, import, func und var.', 'Die gewählte Zeile steht im Programm als Zeile 6, in Zeile 7 folgt die Ausgabe der Variable.'].concat(standWahl(WK));
+    if (stufe === 5) return probe.stand();
     if (stufe === 4) return ['Jede Auswahl hat zwei Zeilen. Sie stehen im Programm als Zeile 6 und 7 im Rumpf von main.'].concat(standWahl(WV, 'das Zeilenpaar'));
     return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
   }
-  const kurzStand = () => stufe === 1 ? WR.liste[WR.i].code : stufe === 3 ? WK.liste[WK.i].code : stufe === 4 ? WV.liste[WV.i].code.split(NL)[0] : '';
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 1 ? WR.liste[WR.i].code : stufe === 3 ? WK.liste[WK.i].code : stufe === 4 ? WV.liste[WV.i].code.split(NL)[0] : '';
 
   WR.zeichne(); WK.zeichne(); WV.zeichne();
   zeigeStufe(stufeAusAdresse(), false);
@@ -513,8 +560,8 @@ fmt.Println(tempc)</pre>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
-    zeilen: () => [],
-    zeilenTitel: '',
+    zeilen: () => stufe === 5 ? probe.zeilen() : [],
+    zeilenTitel: 'Das Programm im Editor:',
     stand: standSaetze,
     kurz: kurzStand,
     beispiel: 'Warum meldet Go bei mein-name „expected type“?'
