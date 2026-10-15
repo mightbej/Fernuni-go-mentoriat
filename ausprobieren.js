@@ -13,7 +13,8 @@
 //                     Editorlotsen, im selben Tab.
 //   anderswo          Auf GitHub Pages oder bei einem Lotsen ohne Go wählt der Student eine Fassung und sieht das
 //                     Programm und was Go dazu gemeldet oder ausgegeben hat, festgehalten mit Go 1.26.1. Ein Satz sagt,
-//                     wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, oben die Lektion wählen.
+//                     wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, im Menü „Programm wählen“
+//                     das Kapitel und darin die Lektion wählen.
 //                     Ein Link dorthin fehlt mit Absicht, Thomas' Beschluss vom 2026-10-15: Mit ihm hätte der Student
 //                     zwei Tabs, die Seite des Editorlotsen und die Lektion. Der Reiter ist grau.
 //
@@ -35,6 +36,8 @@
   // Liefert ein Lotse die Seite selbst aus, fragt der Kasten ihn. Von GitHub Pages aus fragt er keinen.
   const LOKAL = location.protocol === 'http:' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
   const ANLEITUNG = 'https://mightbej.github.io/Fernuni-go-mentoriat/lotsen/editorlotse.html';
+  // Das Kapitel der Lektion, wie es im Menü des Editorlotsen steht: aus dem Ordner, zum Beispiel kap3-einfuehrung.
+  const kapitel = () => { const k = location.pathname.match(/\/kap(\d+)-/); return k ? 'Kapitel ' + k[1] : 'Exkurse'; };
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   const GESTALTUNG = `
@@ -186,7 +189,7 @@
       if (zustand === 'ohne') {
         setzeLage('<p>Hier steht das Programm, und darunter, was Go dazu meldet oder ausgibt. Ändern und ausführen kannst du es im Editorlotsen auf deinem Rechner:</p>' +
           '<ol><li>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>.</li>' +
-          '<li>Auf seiner Seite steht oben „Lektionen zum Ausprobieren“. Wähle dort „' + esc(document.title) + '“.</li></ol>' +
+          '<li>Wähle dort im Menü „Programm wählen“ den Eintrag „' + esc(kapitel()) + '“ und darin „' + esc(document.title) + '“.</li></ol>' +
           '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>');
       } else if (!ed) {
         setzeLage('<p>Der Editor wird geladen …</p>');
