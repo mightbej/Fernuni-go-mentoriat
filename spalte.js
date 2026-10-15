@@ -44,6 +44,10 @@
 // Für die übrigen Anfragen der Seite an ihren Lotsen gibt es Spalte.hole(pfad, daten), zum Beispiel
 // Spalte.hole('/api/bereit'). Mit daten geht die Anfrage als POST mit JSON.
 //
+// In einem Fenster ab 1100 Pixel Breite zieht der Student die Spalte am linken Rand breiter oder schmaler, zwischen
+// 320 Pixeln und 60 Prozent des Fensters. Der Browser merkt sich die Breite unter lotseBreite, je Adresse getrennt:
+// Auf GitHub Pages gilt sie für alle HTML-Seiten, jeder Lotse auf dem eigenen Rechner hat seine eigene.
+//
 // Mit jeder Frage schickt die Spalte: art, markiert, umgebung, markiertCode, getippt und verlauf. Dazu kommt, was
 // mitschicken liefert. Die Antwort des Programms: antwort, quellen, zurFrage und nach Bedarf hinweis.
 (function () {
@@ -100,8 +104,70 @@
     .lotse-meldung a, .lotse-gesperrt a { color:#0f766e;font-weight:600; }
     .lotse-auf { position:fixed;right:18px;bottom:18px;z-index:19;width:auto;margin:0;background:#0f766e;color:#fff;border:1px solid #0f766e;border-radius:8px;font-weight:600;font-size:.95rem;line-height:1.4;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(15,118,110,.35);padding:11px 16px; }
     .lotse-auf:hover { background:#115e59; }
-    /* In einem breiten Fenster rückt die Seite nach links und macht der Spalte Platz. In einem schmalen liegt die Spalte über der Seite. */
-    @media (min-width:1100px) { body.lotse-offen { padding-right:420px; } }`;
+    /* Der Griff am linken Rand: Ziehen ändert die Breite der Spalte, ein Doppelklick setzt sie zurück. */
+    .lotse-griff { display:none;position:absolute;top:0;bottom:0;left:-5px;width:10px;cursor:col-resize;z-index:1;touch-action:none; }
+    .lotse-griff::after { content:"";position:absolute;top:50%;left:3px;width:4px;height:44px;margin-top:-22px;border-radius:2px;background:#cbd5e1; }
+    .lotse-griff:hover::after, .lotse-griff:focus::after, body.lotse-ziehen .lotse-griff::after { background:#0f766e; }
+    .lotse-griff:focus { outline:none; }
+    body.lotse-ziehen { cursor:col-resize;user-select:none; }
+    body.lotse-ziehen iframe { pointer-events:none; }
+    /* In einem breiten Fenster rückt die Seite nach links und macht der Spalte Platz. Der Student kann die Spalte dort
+       breiter oder schmaler ziehen. In einem schmalen Fenster liegt die Spalte über der Seite und hat ihre feste Breite. */
+    @media (min-width:1100px) {
+      .lotse { width:var(--lotse-breite,420px); }
+      .lotse-griff { display:block; }
+      body.lotse-offen { padding-right:var(--lotse-breite,420px); }
+    }`;
+
+  // ---------- Die Breite der Spalte ----------
+
+  // Die Breite gilt für alle Seiten unter derselben Adresse. Der Browser merkt sie sich für den nächsten Besuch.
+  const BREITE = 420, SCHMALSTE = 320, MERKEN_BREITE = 'lotseBreite';
+  let breite = BREITE;
+  // Die Breite des Fensters ohne die Bildlaufleiste: Bis zu ihr reicht die Spalte.
+  const fenster = () => document.documentElement.clientWidth || window.innerWidth;
+  // Die Spalte nimmt höchstens 60 Prozent des Fensters ein, damit von der Seite genug zu sehen bleibt.
+  const begrenze = b => Math.round(Math.max(SCHMALSTE, Math.min(b, Math.max(SCHMALSTE, fenster() * 0.6))));
+  function setzeBreite(b, merke) {
+    breite = b;
+    document.documentElement.style.setProperty('--lotse-breite', begrenze(b) + 'px');
+    if (merke) { try { localStorage.setItem(MERKEN_BREITE, String(Math.round(b))); } catch (fehler) {} }
+  }
+  function ladeBreite() {
+    let gemerkt = null;
+    try { gemerkt = Number(localStorage.getItem(MERKEN_BREITE)); } catch (fehler) {}
+    setzeBreite(gemerkt > 0 ? gemerkt : BREITE, false);
+    // Wird das Fenster schmaler, wird die Spalte notfalls mit schmaler. Wird es wieder breiter, kommt die gewählte Breite zurück.
+    window.addEventListener('resize', () => setzeBreite(breite, false));
+  }
+  function richteGriffEin(griff) {
+    let zieht = false;
+    griff.addEventListener('pointerdown', ev => {
+      if (ev.button !== 0) return;
+      ev.preventDefault();
+      zieht = true;
+      griff.setPointerCapture(ev.pointerId);
+      document.body.classList.add('lotse-ziehen');
+    });
+    griff.addEventListener('pointermove', ev => {
+      if (zieht) setzeBreite(begrenze(fenster() - ev.clientX), false);
+    });
+    const ende = () => {
+      if (!zieht) return;
+      zieht = false;
+      document.body.classList.remove('lotse-ziehen');
+      setzeBreite(breite, true);
+    };
+    griff.addEventListener('pointerup', ende);
+    griff.addEventListener('pointercancel', ende);
+    griff.addEventListener('dblclick', () => setzeBreite(BREITE, true));
+    // Mit der Tastatur: Pfeil nach links macht die Spalte breiter, Pfeil nach rechts schmaler, Pos1 setzt sie zurück.
+    griff.addEventListener('keydown', ev => {
+      const schritt = ev.key === 'ArrowLeft' ? 20 : ev.key === 'ArrowRight' ? -20 : 0;
+      if (schritt) { ev.preventDefault(); setzeBreite(begrenze(begrenze(breite) + schritt), true); }
+      if (ev.key === 'Home') { ev.preventDefault(); setzeBreite(BREITE, true); }
+    });
+  }
 
   // ---------- Darstellung einer Antwort ----------
 
@@ -212,6 +278,7 @@
       stil.textContent = GESTALTUNG;
       document.head.appendChild(stil);
       gestaltet = true;
+      ladeBreite();
     }
     const name = angaben.name;
     const wurzel = document.createElement('aside');
@@ -219,6 +286,7 @@
     wurzel.hidden = true;
     wurzel.setAttribute('aria-label', 'Fragen an den ' + name + 'n');
     wurzel.innerHTML = `
+      <div class="lotse-griff" role="separator" aria-orientation="vertical" aria-label="Breite der Spalte" tabindex="0" title="Ziehen ändert die Breite der Spalte. Doppelklick setzt sie zurück."></div>
       <div class="lotse-kopf">
         <strong>${esc(name)}</strong>
         <span class="lotse-zusatz"></span>
@@ -482,6 +550,7 @@
     teil('lotse-leeren').addEventListener('click', () => { leere(); if (!gesperrt) feld.focus(); });
     teil('lotse-verwerfen').addEventListener('click', verwirf);
     teil('lotse-zu').addEventListener('click', () => oeffne(false, true));
+    richteGriffEin(teil('lotse-griff'));
     auf.addEventListener('click', () => oeffne(true, true));
     schalte();
 
