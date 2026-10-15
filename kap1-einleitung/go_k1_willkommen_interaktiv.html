@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt, button.gewaehlt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile .frage { color:var(--muted);font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    li { margin:6px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+
+    /* Schritt 2: Termine */
+    #termine td:first-child { white-space:nowrap;font-family:Consolas,monospace; }
+    #termine tr.vorbei td { color:#9ca3af; }
+    #termine tr.naechster td { background:var(--aktiv-bg);font-weight:600; }
+    .art { display:inline-block;border-radius:6px;padding:1px 8px;font-size:.85rem;font-weight:600;white-space:nowrap; }
+    .art.sitzung { background:#dbeafe;color:#1e40af; }
+    .art.paket { background:#ede9fe;color:#5b21b6; }
+    .art.klausur { background:#fee2e2;color:#991b1b; }
+
+    /* Schritt 3: Kästen des Kurstexts */
+    .kaesten { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0; }
+    @media (max-width:760px) { .kaesten { grid-template-columns:minmax(0,1fr); } }
+    .kasten { border:1px solid var(--line);border-left:6px solid #94a3b8;border-radius:8px;padding:12px 14px;background:#fff; }
+    .kasten h3 { margin:0 0 6px;font-size:1.02rem; }
+    .kasten p { margin:0 0 8px; }
+    .kasten .urteil { font-weight:600; }
+    .kasten.hinweis-k { border-left-color:#f59e0b; }
+    .kasten.sprache-k { border-left-color:#2563eb; }
+    .kasten.experte-k { border-left-color:#7c3aed; }
+    .kasten.exkurs-k { border-left-color:#059669; }
+    .rechner { display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .rechner input { width:6em;font-size:1rem;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font-family:inherit; }
+    .rechner .ergebnis { font-weight:600; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge</h1>
+    <p>Die Lektion zur ersten Sitzung: wer dir bei welcher Frage hilft, wann die Sitzungen und Fristen sind, wie du mit dem Kurstext arbeitest und wie Go auf deinen Rechner kommt.</p>
+    <p>Kurstext v3.0.6, Kapitel 1, Seiten 1–4.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Wer hilft wobei</button>
+    <button type="button" class="tab" data-stufe="2">2 Termine</button>
+    <button type="button" class="tab" data-stufe="3">3 Mit dem Kurstext arbeiten</button>
+    <button type="button" class="tab" data-stufe="4">4 Go auf dem Rechner</button>
+    <button type="button" class="tab" data-stufe="5">5 Lernquellen und KI</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Willkommen im Mentoriat zum Modul 63811 „Einführung in die imperative Programmierung“. Der Mentor heißt Thomas Czinkota. Er begleitet dich durch den Kurstext, in neun Sitzungen über Microsoft Teams und mit den HTML-Seiten des Fernlotsen.</p>
+    <p>Im Mentoriat geht es um drei Dinge:</p>
+    <ul>
+      <li><strong>Verstehen:</strong> Die Sitzungen gehen den Kurstext Kapitel für Kapitel durch und zeigen den Stoff an Beispielen.</li>
+      <li><strong>Ausprobieren:</strong> Die Lektionen lassen dich Programme Schritt für Schritt verfolgen und ändern.</li>
+      <li><strong>Fragen:</strong> In der Sitzung, im Forum und rechts in der Leiste dieser Seite.</li>
+    </ul>
+    <div class="hinweis">Die HTML-Seiten des Fernlotsen sind ein privates Angebot des Mentors. Verbindlich für Kurs und Klausur sind allein der Kurstext und Moodle der FernUniversität in Hagen.</div>
+    <p>Die Lektion geht in fünf Schritten vor:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> sagt, an wen du dich mit welcher Frage wendest.</li>
+      <li><strong>Schritt 2</strong> zeigt alle Termine des Semesters und hebt den nächsten hervor.</li>
+      <li><strong>Schritt 3</strong> erklärt, wie der Kurstext aufgebaut ist und was seine farbigen Kästen bedeuten.</li>
+      <li><strong>Schritt 4</strong> stellt fünf Wege vor, Go-Programme zu schreiben und auszuführen.</li>
+      <li><strong>Schritt 5</strong> nennt Lernquellen neben dem Kurstext, auch Sprachmodelle.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Wer hilft wobei</h2>
+    <p>Für jede Art von Frage gibt es eine Stelle, die sie am besten beantwortet. Die Tabelle nennt sie, je mit einem Beispiel.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Worum es in der Frage geht</th><th>Wohin du dich wendest</th><th>Ein Beispiel für eine solche Frage</th></tr></thead>
+      <tbody>
+        <tr><td>Die Frage betrifft den Stoff des Kurstexts.</td><td>Du fragst im <a href="https://moodle.fernuni-hagen.de/mod/forum/view.php?id=335942">Forum des Kurses</a>. Die Betreuer des Lehrgebiets lesen mit, und alle sehen die Antwort.</td><td>„Warum meldet Go <code>declared and not used</code>?“</td></tr>
+        <tr><td>Die Frage betrifft die Sitzungen oder die HTML-Seiten des Fernlotsen.</td><td>Du fragst den Mentor in der Sitzung oder im <a href="https://moodle.fernuni-hagen.de/mod/forum/view.php?id=186462">Forum des Mentoriats</a>.</td><td>„Wo finde ich die Lektion aus der letzten Sitzung?“</td></tr>
+        <tr><td>Die Frage lässt sich im Forum nicht klären.</td><td>Du wendest dich an das Team der Lehrveranstaltung: <a href="https://kai-sauerwald.de/teaching.html">Dr. Kai Sauerwald</a> ist Modulverantwortlicher, <a href="https://www.fernuni-hagen.de/aig/team/yehia.hetab.shtml">Yehia Hatab</a> ist Betreuer.</td><td>„In der Musterlösung zu einer Aufgabe fehlt eine Zeile.“</td></tr>
+        <tr><td>Die Frage betrifft Klausur, Zulassung oder Anmeldung.</td><td>Du schreibst an das Prüfungsamt: <code>pruefungsamt.mathinf@fernuni-hagen.de</code></td><td>„Ich habe die Anmeldefrist verpasst.“</td></tr>
+        <tr><td>Die Frage betrifft die Organisation deines Studiums.</td><td>Du wendest dich an den Studienservice der FernUniversität.</td><td>„Wie belege ich das Modul im nächsten Semester wieder?“</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="auskunft">
+      <p>Die Leiste rechts auf dieser Seite fragt ein Sprachmodell. Es kennt den Kurstext und die Angaben dieser Lektion. Eine verbindliche Auskunft gibt es nicht: Bei Terminen und Fristen gilt allein, was in Moodle und beim Prüfungsamt steht.</p>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Termine</h2>
+    <p>Die Tabelle zeigt alle Termine des Wintersemesters 2026/2027 in der Reihenfolge der Daten. Vergangene Termine sind grau. Der nächste Termin ist gelb hervorgehoben. Was „heute“ ist, nimmt die Seite vom Datum deines Rechners.</p>
+    <div class="zeile" id="filter">
+      <span class="frage">Zeigen:</span>
+      <button type="button" data-filter="alle">alle Termine</button>
+      <button type="button" data-filter="sitzung">nur Sitzungen</button>
+      <button type="button" data-filter="frist">nur Aufgabenpakete und Klausur</button>
+    </div>
+    <div class="auskunft" id="heute"></div>
+    <div class="tabellenrahmen">
+    <table id="termine">
+      <thead><tr><th>Datum</th><th>Art des Termins</th><th>Was an diesem Tag geschieht</th></tr></thead>
+      <tbody id="terminkoerper"></tbody>
+    </table>
+    </div>
+    <h3>Die Sitzungen</h3>
+    <ul>
+      <li><strong>Zeit:</strong> Jede Sitzung ist an einem Samstag von 9 bis 12 Uhr deutscher Zeit.</li>
+      <li><strong>Ort:</strong> Die Sitzungen laufen über Microsoft Teams. Den Link für alle Termine findest du im angepinnten <a href="https://moodle.fernuni-hagen.de/mod/forum/discuss.php?d=152161">Beitrag des Mentors</a> im Forum des Mentoriats.</li>
+      <li><strong>Ablauf:</strong> Am Anfang steht ein Blick auf Aktuelles aus der Informatik. Danach folgt das Thema der Sitzung, am Ende ist Zeit für deine Fragen.</li>
+    </ul>
+    <h3>Die Aufgabenpakete und die Klausur</h3>
+    <ul>
+      <li><strong>Aufgabenpakete:</strong> Moodle empfiehlt für jedes der sechs Aufgabenpakete A bis F einen Zeitraum. Die Tabelle nennt das Ende des Zeitraums und die Kapitel, die das Paket voraussetzt.</li>
+      <li><strong>Anmeldung zur Klausur:</strong> Du meldest dich im Prüfungsportal an, vom 01.12.2026 bis zum 15.01.2027.</li>
+      <li><strong>Klausur:</strong> Die Klausur ist am Samstag, 20.02.2027. Uhrzeit, Ort, Dauer und Hilfsmittel stehen nicht auf dieser Seite.</li>
+    </ul>
+    <p>Stand der Angaben: 15.10.2026. Verbindlich sind allein Moodle und das Prüfungsamt.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Mit dem Kurstext arbeiten</h2>
+    <p>Der Kurstext hat die Version 3.0.6 und liegt als PDF in Moodle. Er ist in neun Kapitel geteilt:</p>
+    <ul>
+      <li><strong>Kapitel 1</strong> begrüßt dich und erklärt die farbigen Kästen. Davon handelt diese Lektion.</li>
+      <li><strong>Kapitel 2</strong> erklärt die Begriffe der imperativen Programmierung, noch ohne Go. Lies es auch, wenn du schon programmierst, damit du die Begriffe des Kurstexts kennst.</li>
+      <li><strong>Kapitel 3</strong> zeigt an einem Go-Programm alles einmal kurz.</li>
+      <li><strong>Kapitel 4 bis 9</strong> nehmen jedes Thema einzeln und ausführlich durch. Manches dort liest sich wie ein Nachschlagewerk. Du musst nicht jede Einzelheit gleich beim ersten Lesen lernen.</li>
+    </ul>
+
+    <h3>Seitenzahlen im PDF</h3>
+    <p>Die gedruckte Seitenzahl unten auf der Seite und die Seitenzahl, die dein PDF-Programm anzeigt, sind verschieden. Die Seite im PDF liegt immer 6 über der gedruckten Seite, weil vor der gedruckten Seite 1 sechs Seiten stehen. Die Lektionen nennen immer die gedruckte Seite.</p>
+    <div class="rechner">
+      <label for="seite">Gedruckte Seite:</label>
+      <input id="seite" type="number" min="1" max="244" value="22">
+      <span class="ergebnis" id="pdfseite"></span>
+    </div>
+
+    <h3>Die farbigen Kästen</h3>
+    <p>Der Kurstext hebt vier Arten von Textstellen mit einem Kasten hervor. Bei jedem Kasten kannst du vorhersagen, ob sein Inhalt prüfungsrelevant ist, und dann nachsehen.</p>
+    <div class="kaesten" id="kaesten"></div>
+
+    <h3>Was der Kurs außer dem Kurstext bietet</h3>
+    <ul>
+      <li><strong>Selbsttests in Moodle:</strong> Aufgaben mit automatischer Antwort, zum Prüfen deines Wissens.</li>
+      <li><strong>Programmieraufgaben:</strong> etwa alle zwei Wochen mehrere Aufgaben mit Musterlösungen. Das sind die Aufgabenpakete aus Schritt 2.</li>
+      <li><strong>Vorkurs:</strong> Wer noch wenig programmiert hat, bekommt einen Vorkurs mit Videos zum Entwurf von Algorithmen. Er läuft am besten neben Kapitel 2. Fragen zum Vorkurs kannst du im Mentoriat stellen.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Go auf dem Rechner</h2>
+    <p>Wie Go auf deinen Rechner kommt, steht nicht im Kurstext. In Abschnitt 3.2 steht nur der Befehl <code>go run hello_world.go</code>, der ein Programm übersetzt und ausführt. Hinweis 3.1 nennt die Version: Der Kurstext beruht auf Go 1.22, eine neuere Version geht auch.</p>
+    <p>Der Lehrstuhl beschreibt in Moodle unter „Compiler und weitere Software“ vier Wege. Ein fünfter kommt vom Mentor dazu. Die Tabelle stellt sie nebeneinander.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Weg</th><th>Was du installierst</th><th>Ob ein Programm Eingaben lesen kann</th><th>Was der Weg kostet</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://go.dev/play/">Go Playground</a></td><td>Du installierst nichts, das Programm läuft im Browser.</td><td>Ein Programm kann keine Eingaben lesen, <code>fmt.Scan</code> geht also nicht.</td><td>Der Playground ist kostenlos.</td></tr>
+        <tr><td><a href="https://go.dev/dl/">Go selbst</a></td><td>Du installierst Go und startest Programme in der Konsole mit <code>go run</code>.</td><td>Ein Programm liest Eingaben in der Konsole.</td><td>Go ist kostenlos.</td></tr>
+        <tr><td><a href="https://www.jetbrains.com/go/download">GoLand</a> von JetBrains</td><td>Du installierst Go und dazu GoLand, eine Entwicklungsumgebung.</td><td>Ein Programm liest Eingaben in der Konsole unten in GoLand.</td><td>Für Studenten ist die Lizenz kostenlos. Du beantragst sie mit deiner Adresse <code>…@studium.fernuni-hagen.de</code>.</td></tr>
+        <tr><td><a href="https://code.visualstudio.com/docs/languages/go">Visual Studio Code</a> mit der Go Extension</td><td>Du installierst Go, Visual Studio Code und die Erweiterung für Go.</td><td>Ein Programm liest Eingaben im Terminal von Visual Studio Code.</td><td>Visual Studio Code ist kostenlos. Nach dem Lehrstuhl ist es nur für Fortgeschrittene.</td></tr>
+        <tr><td><a href="../lotsen/editorlotse.html">Editorlotse</a> des Mentors</td><td>Du entpackst das Paket und startest die EXE. Go holt der Editorlotse selbst.</td><td>Du tippst Eingaben unter der Ausgabe ein.</td><td>Der Editorlotse ist kostenlos. Für die Leiste brauchst du einen Schlüssel von KI:connect, siehe Schritt 5.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h3>Was du wissen solltest</h3>
+    <ul>
+      <li><strong>Welcher Weg:</strong> Womit du arbeitest, entscheidest du. In den Sitzungen führt der Mentor die Programme im Editorlotsen vor. Das Paket des Editorlotsen folgt in Moodle.</li>
+      <li><strong>Virenscanner:</strong> Unter Windows prüft der Microsoft Defender jede neu übersetzte EXE. Dann braucht selbst ein Programm wie „Hello, World!“ beim ersten Start einige Sekunden. Für GoLand beschreibt der Lehrstuhl in Moodle, wie sich das abstellen lässt.</li>
+      <li><strong>Playground:</strong> Für ein kurzes Programm ohne Eingabe ist er der schnellste Weg. Die lokale Installation ersetzt er nicht.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h2>Lernquellen und KI</h2>
+    <p>Der Kurstext ist die Grundlage. Daneben helfen andere Quellen, den Stoff aus einem zweiten Blickwinkel zu sehen.</p>
+    <h3>Videos und Kurse</h3>
+    <ul>
+      <li><strong>Vorkurs:</strong> Videos zum Entwurf von Algorithmen, siehe Schritt 3.</li>
+      <li><strong>YouTube:</strong> Zu Go gibt es viele Videos, von der Einführung bis zu einzelnen Themen wie Zeigern.</li>
+      <li><strong>LinkedIn Learning:</strong> Die Kurse „Go lernen“ und „Code-Challenges für Go“.</li>
+    </ul>
+    <h3>Fragen und Beispiele im Netz</h3>
+    <ul>
+      <li><strong>Stack Overflow:</strong> <a href="https://stackoverflow.com/questions/tagged/go">Fragen und Antworten zu Go</a>, oft genau zu der Fehlermeldung, die du gerade siehst.</li>
+      <li><strong>GitHub:</strong> Das Repository <a href="https://github.com/GoesToEleven/GolangTraining">GolangTraining</a> enthält viele kleine Beispielprogramme.</li>
+      <li><strong>Moodle:</strong> Im Forum des Kurses diskutieren die Studenten des Semesters.</li>
+    </ul>
+    <h3>Sprachmodelle</h3>
+    <ul>
+      <li><strong>KI:connect:</strong> Über KI:connect erreichen die Lotsen des Mentoriats ihr Sprachmodell, auch die Leiste auf dieser Seite. Jeder Student holt sich dort einen eigenen Schlüssel. Wie das geht, steht in der <a href="../lotsen/kurslotse.html">Anleitung zum Kurslotsen</a>.</li>
+      <li><strong>Google Gemini:</strong> Studenten in Deutschland bekommen ein Jahr Google AI Plus kostenlos. Einlösen kannst du das Angebot bis zum 31.12.2026, das kostenlose Jahr beginnt mit dem Einlösen. Du musst mindestens 18 Jahre alt sein, dein Studium nachweisen und eine Zahlungsmethode hinterlegen. Ohne Kündigung läuft das Abo danach kostenpflichtig weiter. Die Bedingungen stehen auf der <a href="https://gemini.google/de/students/">Seite von Google für Studenten</a>.</li>
+      <li><strong>GitHub Education:</strong> Mit dem <a href="https://education.github.com/pack">Student Developer Pack</a> bekommen nachgewiesene Studenten GitHub Copilot kostenlos. Im Jahr 2026 hat GitHub die Bedingungen mehrmals geändert. Was gerade gilt, steht auf der Seite von GitHub Education.</li>
+      <li><strong>ChatGPT und andere:</strong> Jedes Sprachmodell erklärt Code und findet Fehler, manchmal auch falsche.</li>
+    </ul>
+    <div class="auskunft">
+      <p><strong>Ein Sprachmodell irrt sich.</strong> Prüfe jede Erklärung am Kurstext und jedes Programm mit Go selbst. Den Kurstext lädst du bei einem fremden Dienst nur für dich selbst hoch, er ist für die Teilnehmer des Kurses bestimmt.</p>
+    </div>
+    <p>Stand der Angebote von Google und GitHub: 15.10.2026.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h2>Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt. Die meisten Angaben dieser Lektion stammen aus Moodle und vom Mentor.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>1.1, Seiten 1–3</td><td>Der Name des Moduls stammt aus dem Kurstext.</td><td>Mentoriat, Sitzungen und Fernlotse beschreibt die Lektion.</td></tr>
+      <tr><td>1 Wer hilft wobei</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Foren, Team der Lehrveranstaltung und Prüfungsamt stammen aus Moodle.</td></tr>
+      <tr><td>2 Termine</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Sitzungen stammen aus dem Beitrag des Mentors in Moodle, die Aufgabenpakete und die Klausur aus dem Kurs in Moodle.</td></tr>
+      <tr><td>3 Mit dem Kurstext arbeiten</td><td>1.1, Seiten 1–3, und 1.2, Seite 4</td><td>Die Rolle von Kapitel 2, der Vorkurs, die Selbsttests, die Programmieraufgaben und die vier farbigen Kästen stammen aus dem Kurstext.</td><td>Den Abstand von 6 zwischen gedruckter Seite und Seite im PDF gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Go auf dem Rechner</td><td>Hinweis 3.1, Seite 21, und 3.2, Seite 22</td><td>Die Version Go 1.22 und der Befehl <code>go run hello_world.go</code> stammen aus dem Kurstext.</td><td>Die vier Wege stammen aus der Seite „Compiler und weitere Software“ des Lehrstuhls in Moodle, der Editorlotse vom Mentor.</td></tr>
+      <tr><td>5 Lernquellen und KI</td><td>1.1, Seite 2</td><td>Der Vorkurs stammt aus dem Kurstext.</td><td>Die übrigen Quellen und die Angebote zu Sprachmodellen nennt der Mentor.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 3.2, Seiten 22–24, das erste Programm:</strong> „Hello, World!“ mit dem Befehl <code>go run</code>. Die Lektion dazu gibt es im Editorlotsen.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Die nächste Lektion ist die erste zu Kapitel 2: <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html">Imperative Programmierung: Anweisungen, Blöcke und Schleifen</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function jeder(auswahl, tun) { Array.prototype.forEach.call(document.querySelectorAll(auswahl), tun); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#termine
+  var ANKER = ["worum", "hilfe", "termine", "lesen", "go", "quellen", "kurstext"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    jeder(".stufe", function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Heute ----
+  // Das Datum kommt vom Rechner des Studenten. Verglichen wird als Text in der Form JJJJ-MM-TT.
+  function iso(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function deutsch(t) { var s = t.split("-"); return s[2] + "." + s[1] + "." + s[0]; }
+  var HEUTE = iso(new Date());
+  var WOCHENTAG = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  function wochentag(t) { var s = t.split("-"); return WOCHENTAG[new Date(+s[0], +s[1] - 1, +s[2]).getDay()]; }
+
+  // ---- Schritt 2: Termine ----
+  // Datum, Art, Text. Stand 2026-10-15, aus dem Beitrag des Mentors und dem Kurs in Moodle.
+  var TERMINE = [
+    ["2026-10-17", "sitzung", "Sitzung 1: Kapitel 1 und 2, Einleitung und Grundlagen"],
+    ["2026-10-18", "paket", "Aufgabenpaket A: Der empfohlene Zeitraum vom 01.10.2026 an endet. Das Paket setzt Kapitel 1 bis 4 voraus."],
+    ["2026-10-24", "sitzung", "Sitzung 2: Kapitel 3, Praktische Einführung in Go"],
+    ["2026-10-31", "sitzung", "Sitzung 3: Kapitel 4, Primitive Datentypen"],
+    ["2026-11-04", "paket", "Aufgabenpaket B: Der empfohlene Zeitraum vom 19.10.2026 an endet. Das Paket setzt Kapitel 1 bis 5 voraus."],
+    ["2026-11-21", "sitzung", "Sitzung 4: Kapitel 5, Anweisungen in Go"],
+    ["2026-11-22", "paket", "Aufgabenpaket C: Der empfohlene Zeitraum vom 05.11.2026 an endet. Das Paket setzt Kapitel 1 bis 6 voraus."],
+    ["2026-12-01", "klausur", "Die Anmeldung zur Klausur im Prüfungsportal beginnt."],
+    ["2026-12-05", "sitzung", "Sitzung 5: Kapitel 6, Arrays mit Bubble Sort und Selection Sort"],
+    ["2026-12-13", "paket", "Aufgabenpaket D: Der empfohlene Zeitraum vom 23.11.2026 an endet. Das Paket setzt Kapitel 1 bis 7 voraus."],
+    ["2026-12-19", "sitzung", "Sitzung 6: Kapitel 6, Arrays, dazu Spezifikation und Programmierung"],
+    ["2027-01-02", "sitzung", "Sitzung 7: Kapitel 7, Funktionen und Zeiger"],
+    ["2027-01-03", "paket", "Aufgabenpaket E: Der empfohlene Zeitraum vom 14.12.2026 an endet. Das Paket setzt Kapitel 1 bis 7 voraus."],
+    ["2027-01-04", "paket", "Aufgabenpaket F: Der empfohlene Zeitraum beginnt. Das Paket setzt Kapitel 1 bis 9 voraus."],
+    ["2027-01-15", "klausur", "Die Anmeldung zur Klausur im Prüfungsportal endet."],
+    ["2027-01-23", "sitzung", "Sitzung 8: Kapitel 8, Verbund-Datentypen"],
+    ["2027-01-30", "sitzung", "Sitzung 9: Kapitel 9, Dynamische Datenstrukturen und Blockchain"],
+    ["2027-02-20", "klausur", "Die Klausur"]
+  ];
+  var ARTNAME = { sitzung: "Sitzung", paket: "Aufgabenpaket", klausur: "Klausur" };
+  var FILTERNAME = { alle: "alle Termine", sitzung: "nur Sitzungen", frist: "nur Aufgabenpakete und Klausur" };
+  var filter = "alle";
+
+  function passt(t) { return filter === "alle" || (filter === "sitzung" ? t[1] === "sitzung" : t[1] !== "sitzung"); }
+  function gezeigt() { return TERMINE.filter(passt); }
+  function naechster() { var l = gezeigt().filter(function (t) { return t[0] >= HEUTE; }); return l.length ? l[0] : null; }
+
+  function zeigeTermine() {
+    jeder("#filter button", function (b) { b.className = b.dataset.filter === filter ? "gewaehlt" : ""; });
+    var n = naechster();
+    $("terminkoerper").innerHTML = gezeigt().map(function (t) {
+      var klasse = t === n ? "naechster" : (t[0] < HEUTE ? "vorbei" : "");
+      return "<tr class=\"" + klasse + "\"><td>" + wochentag(t[0]).slice(0, 2) + ", " + deutsch(t[0]) + "</td><td><span class=\"art " + t[1] + "\">" +
+        ARTNAME[t[1]] + "</span></td><td>" + t[2] + "</td></tr>";
+    }).join("");
+    $("heute").innerHTML = "<p>Heute ist laut deinem Rechner " + wochentag(HEUTE) + ", der " + deutsch(HEUTE) + ".</p><p>" +
+      (n ? "Als Nächstes kommt am " + deutsch(n[0]) + (n[0] === HEUTE ? ", also heute" : "") + ": " + n[2] : "Alle Termine dieser Auswahl liegen in der Vergangenheit.") + "</p>";
+  }
+
+  // ---- Schritt 3: Seitenzahl und Kästen ----
+  var ERSTE = 1, LETZTE = 244;
+  function gedruckt() { var s = parseInt($("seite").value, 10); return isNaN(s) ? null : s; }
+  function zeigeSeite() {
+    var s = gedruckt();
+    $("pdfseite").textContent = s === null || s < ERSTE || s > LETZTE
+      ? "Der Kurstext hat die gedruckten Seiten " + ERSTE + " bis " + LETZTE + "."
+      : "Im PDF ist das Seite " + (s + 6) + ".";
+  }
+
+  var KAESTEN = [
+    { name: "Hinweis", klasse: "hinweis-k", text: "Ein Hinweis macht auf etwas besonders aufmerksam, zum Beispiel auf einen häufigen Fehler oder ein Missverständnis.",
+      urteil: "Prüfungsrelevant. Abschnitt 1.2 nimmt nur das Expertenwissen aus der Prüfung aus." },
+    { name: "Sprachvergleich", klasse: "sprache-k", text: "Ein Sprachvergleich zeigt, wie Go sich von Java, C, C++ oder Pascal unterscheidet. Er richtet sich vor allem an alle, die schon eine dieser Sprachen kennen.",
+      urteil: "Prüfungsrelevant. Abschnitt 1.2 nimmt nur das Expertenwissen aus der Prüfung aus." },
+    { name: "Expertenwissen", klasse: "experte-k", text: "Expertenwissen geht über das Thema des Moduls hinaus. Es hilft, das Ganze besser zu verstehen.",
+      urteil: "Nicht prüfungsrelevant. So steht es in Abschnitt 1.2." },
+    { name: "Exkurs", klasse: "exkurs-k", text: "Ein Exkurs führt etwas ein, das eigentlich nicht zum Thema des Kapitels passt, an dieser Stelle aber gebraucht wird. Längere Abschweifungen stehen in eigenen Kapiteln mit „Exkurs:“ im Titel.",
+      urteil: "Prüfungsrelevant. So steht es in Abschnitt 1.2." }
+  ];
+  var offen = [false, false, false, false];
+
+  function zeigeKaesten() {
+    $("kaesten").innerHTML = KAESTEN.map(function (k, i) {
+      return "<div class=\"kasten " + k.klasse + "\"><h3>" + k.name + "</h3><p>" + k.text + "</p>" +
+        (offen[i] ? "<p class=\"urteil\">" + k.urteil + "</p>" : "") +
+        "<button type=\"button\" data-kasten=\"" + i + "\">" + (offen[i] ? "Antwort verdecken" : "Prüfungsrelevant?") + "</button></div>";
+    }).join("");
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-filter], [data-kasten]");
+    if (!k) return;
+    if (k.dataset.filter !== undefined) { filter = k.dataset.filter; zeigeTermine(); melde(false); return; }
+    if (k.dataset.kasten !== undefined) { var i = Number(k.dataset.kasten); offen[i] = !offen[i]; zeigeKaesten(); melde(false); return; }
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("seite").addEventListener("input", function () { zeigeSeite(); melde(false); });
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: das heutige Datum und der Stand der Demos.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Wer hilft wobei", "Schritt 2: Termine", "Schritt 3: Mit dem Kurstext arbeiten",
+                  "Schritt 4: Go auf dem Rechner", "Schritt 5: Lernquellen und KI", "Schritt 6: Bezug zum Kurstext"];
+
+  function standSaetze() {
+    var heute = "Heute ist laut dem Rechner des Studenten " + wochentag(HEUTE) + ", der " + deutsch(HEUTE) + ". Alle Sitzungen des Mentoriats sind an einem Samstag. Stand der Termine: 15.10.2026. Verbindlich sind allein der Kurs in Moodle und das Prüfungsamt.";
+    var unbekannt = "Auf dieser Seite und in ihren Angaben steht nicht: ob die Sitzungen aufgezeichnet werden, ob Kamera und Mikrofon an sein sollen, was der Lehrstuhl zu Sprachmodellen bei den Aufgabenpaketen erlaubt, Uhrzeit, Ort, Dauer und Hilfsmittel der Klausur. Wer danach fragt, bekommt die Antwort, dass das hier nicht bekannt ist, und fragt den Mentor in der Sitzung oder im Forum des Mentoriats.";
+    var alle = TERMINE.filter(function (t) { return t[0] >= HEUTE; });
+    var bald = "Die nächsten Termine von heute an: " + (alle.length ? alle.slice(0, 3).map(function (t) { return wochentag(t[0]) + ", " + deutsch(t[0]) + ": " + t[2]; }).join("; ") : "keine, alle Termine liegen in der Vergangenheit") + ".";
+    if (stufe === 2) {
+      var n = naechster();
+      return [heute, unbekannt,
+        "Gewählt ist die Auswahl „" + FILTERNAME[filter] + "“. Die Tabelle zeigt " + gezeigt().length + " von " + TERMINE.length + " Terminen.",
+        n ? "Gelb hervorgehoben ist der nächste Termin dieser Auswahl: " + wochentag(n[0]) + ", " + deutsch(n[0]) + ": " + n[2] + "." : "Kein Termin ist hervorgehoben, alle Termine dieser Auswahl liegen in der Vergangenheit.",
+        "Grau sind die Termine vor dem heutigen Tag.", bald];
+    }
+    if (stufe === 3) {
+      var s = gedruckt();
+      return [heute, unbekannt,
+        s === null ? "Im Feld „Gedruckte Seite“ steht keine Zahl." :
+          (s < ERSTE || s > LETZTE ? "Im Feld „Gedruckte Seite“ steht " + s + ". Die Seite meldet, dass der Kurstext die gedruckten Seiten 1 bis 244 hat."
+                                   : "Im Feld „Gedruckte Seite“ steht " + s + ". Die Seite zeigt: Im PDF ist das Seite " + (s + 6) + "."),
+        "Bei den Kästen sind aufgedeckt: " + (KAESTEN.filter(function (k, i) { return offen[i]; }).map(function (k) { return k.name; }).join(", ") || "keiner") +
+        ". Verdeckt: " + (KAESTEN.filter(function (k, i) { return !offen[i]; }).map(function (k) { return k.name; }).join(", ") || "keiner") + "."];
+    }
+    return [heute, unbekannt, bald, "Dieser Schritt hat keine Demo."];
+  }
+  function kurz() {
+    if (stufe === 2) return FILTERNAME[filter] + ", heute " + deutsch(HEUTE);
+    if (stufe === 3) { var s = gedruckt(); return s === null ? "keine Seite eingetragen" : "gedruckte Seite " + s; }
+    return "";
+  }
+
+  zeigeTermine();
+  zeigeSeite();
+  zeigeKaesten();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    thema: "Organisation des Kurses, Ansprechpartner, Termine, Aufgabenpakete, Klausur, Kurstext, Programmierumgebung, Lernquellen",
+    bezug: "Kurstext v3.0.6, Kapitel 1, Seiten 1–4",
+    beschreibung: "../kurslotse/kap1-einleitung/go_k1_willkommen_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p, .card > ul, .card > h3, .auskunft, .hinweis, .kasten, table",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Wann ist die nächste Sitzung?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
