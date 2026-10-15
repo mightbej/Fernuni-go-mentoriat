@@ -78,7 +78,12 @@
     .spalte button.code { white-space:pre-wrap; }
     .wortliste { display:flex;flex-wrap:wrap;gap:6px;margin:10px 0; }
     .wortliste code { border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:#f8fafc; }
+    .wortliste code { cursor:help; }
     .wortliste code.bekannt { border-color:var(--accent);background:#ecfdf5;font-weight:700; }
+    .wortliste code.fremd { color:#9ca3af;text-decoration:line-through;background:#f3f4f6; }
+    .wortliste code:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    /* Hinweis beim Zeigen auf ein Schlüsselwort. Das Skript hält ihn im Fenster. */
+    .worthinweis { position:absolute;z-index:20;max-width:280px;padding:8px 10px;border-radius:8px;background:#1e293b;color:#f8fafc;font-size:.88rem;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.2);pointer-events:none; }
   </style>
 </head>
 <body>
@@ -204,7 +209,13 @@ fmt.Println(tempc)</pre>
     </div>
     <p>Ein <strong>Schlüsselwort</strong> ist von der Sprache fest vorgegeben und hat eine feste Bedeutung. Schlüsselwörter dürfen nicht als Bezeichner verwendet werden und heißen deshalb auch <strong>reservierte Wörter</strong>. Go hat 25 davon:</p>
     <div class="wortliste" id="k-liste"></div>
-    <p>Grün sind die vier Schlüsselwörter, die bis Abschnitt 3.3.4 im Kurstext vorgekommen sind: <code>package</code>, <code>import</code>, <code>func</code> und <code>var</code>. Die Schlüsselwörter <code>chan</code>, <code>defer</code>, <code>go</code>, <code>interface</code>, <code>map</code>, <code>select</code> und <code>goto</code> braucht der Kurs nicht.</p>
+    <p>Die Farben sagen, wann dir ein Schlüsselwort im Kurstext begegnet:</p>
+    <ul>
+      <li><strong>Grün:</strong> Die fünf Schlüsselwörter <code>package</code>, <code>import</code>, <code>func</code>, <code>var</code> und <code>const</code> standen schon in Listing 3.1 und 3.2.</li>
+      <li><strong>Schwarz:</strong> Diese Schlüsselwörter kommen später im Kurstext, zum Beispiel <code>if</code> in Abschnitt 5.5.1.</li>
+      <li><strong>Grau und durchgestrichen:</strong> <code>chan</code>, <code>defer</code>, <code>go</code>, <code>goto</code>, <code>interface</code>, <code>map</code> und <code>select</code> stehen im Kurstext nur in dieser Liste. Der Kurs braucht sie nicht. Reserviert sind sie trotzdem: Als Name sind sie verboten.</li>
+    </ul>
+    <p>Zeig mit der Maus auf ein Schlüsselwort oder tippe es an. Dann steht da, wo es im Kurstext zum ersten Mal vorkommt.</p>
     <p>Wähle eine Zeile.</p>
     <div class="spalte" id="k-wahl"></div>
     <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
@@ -279,7 +290,7 @@ fmt.Println(tempc)</pre>
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was die Lektion dazugibt</th></tr>
       <tr><td>1 Zwei Regeln</td><td>3.3.4, Seiten 30–31</td><td>Die zwei Regeln, die Unicode-Buchstaben und die Namen <code>größe</code>, <code>_intern</code> und <code>24stunden</code> stammen aus dem Kurstext.</td><td>Die übrigen elf Namen und alle Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
       <tr><td>2 Groß und klein</td><td>3.3.4, Seite 31</td><td>Das Beispiel mit <code>tempC</code> und <code>tempc</code>, der Export und die Konvention zum großen Anfangsbuchstaben stammen aus dem Kurstext.</td><td>Die zwei Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
-      <tr><td>3 Schlüsselwörter</td><td>3.3.4, Seiten 31–32</td><td>Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext.</td><td>Die grüne Markierung der vier Schlüsselwörter und die vier Zeilen der Auswahl mit ihren Meldungen gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Schlüsselwörter</td><td>3.3.4, Seiten 31–32</td><td>Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext.</td><td>Die Farben der Schlüsselwörter, die Hinweise auf ihre erste Stelle im Kurstext und die vier Zeilen der Auswahl mit ihren Meldungen gibt die Lektion dazu.</td></tr>
       <tr><td>4 Vorgegebene Bezeichner</td><td>3.3.4, Seiten 31–32</td><td>Die drei Listen der vorgegebenen Bezeichner, die Warnung und der leere Bezeichner stammen aus dem Kurstext.</td><td>Die vier Zeilenpaare der Auswahl mit ihren Ausgaben und Meldungen gibt die Lektion dazu.</td></tr>
       <tr><td>5 Selbst ausprobieren</td><td>3.3.4, Seiten 30–32</td><td>Die Namen <code>größe</code>, <code>tempC</code> und <code>tempc</code> stammen aus dem Kurstext.</td><td>Das Ausführen im Editorlotsen, die übrigen Fassungen, ihre Meldungen von Go 1.26.1 und die Vorschläge gibt die Lektion dazu.</td></tr>
     </table>
@@ -500,7 +511,59 @@ fmt.Println(tempc)</pre>
 
   // ---------- Schritt 3: Schlüsselwörter ----------
   const WORTE = ['break', 'case', 'chan', 'const', 'continue', 'default', 'defer', 'else', 'fallthrough', 'for', 'func', 'go', 'goto', 'if', 'import', 'interface', 'map', 'package', 'range', 'return', 'select', 'struct', 'switch', 'type', 'var'];
-  el('k-liste').innerHTML = WORTE.map(w => '<code class="' + (['package', 'import', 'func', 'var'].indexOf(w) >= 0 ? 'bekannt' : '') + '">' + w + '</code>').join('');
+  // Wo ein Schlüsselwort im Kurstext v3.0.6 zum ersten Mal vorkommt, außer in der Liste in Abschnitt 3.3.4.
+  // Gesucht in den Listings und im Text der MD-Dateien des Kurstexts, am 2026-10-15.
+  const ERSTE = {
+    package: 'Listing 3.1, Abschnitt 3.2, Seiten 22–24',
+    import: 'Listing 3.1, Abschnitt 3.2, Seiten 22–24',
+    func: 'Listing 3.1, Abschnitt 3.2, Seiten 22–24',
+    var: 'Listing 3.2, Abschnitt 3.3, Seiten 25–26',
+    const: 'Listing 3.2, Abschnitt 3.3, Seiten 25–26',
+    return: 'Listing 3.3, Abschnitt 3.4, Seiten 37–41. Genannt schon in Abschnitt 3.3.2 bei den Semikolons.',
+    if: 'Abschnitt 5.5.1, if-Anweisung, Seiten 129–132',
+    else: 'Abschnitt 5.5.1, if-Anweisung, Seiten 129–132',
+    switch: 'Abschnitt 5.5.2, Mehrfachverzweigung, Seiten 133–137',
+    case: 'Abschnitt 5.5.2, Mehrfachverzweigung, Seiten 133–137',
+    default: 'Abschnitt 5.5.2, Mehrfachverzweigung, Seiten 133–137',
+    for: 'Abschnitt 5.5.3, Schleifen, Seiten 137–149',
+    break: 'Abschnitt 5.5.3, Schleifen, Seiten 137–149. Genannt schon in Abschnitt 3.3.2 bei den Semikolons.',
+    continue: 'Nur genannt, in Abschnitt 3.3.2 bei den Semikolons, Seiten 27–29. In keinem Listing.',
+    fallthrough: 'Nur genannt, in Abschnitt 3.3.2 bei den Semikolons. Abschnitt 5.5.2 erklärt das Verhalten „fallthrough“ anderer Sprachen. In keinem Listing.',
+    range: 'Abschnitt 6.1, Arrays, Seiten 154–155',
+    type: 'Abschnitt 8.2, Verbund, Seiten 199–211',
+    struct: 'Abschnitt 8.2, Verbund, Seiten 199–211'
+  };
+  const BEKANNT = ['package', 'import', 'func', 'var', 'const'];
+  const FREMD = ['chan', 'defer', 'go', 'goto', 'interface', 'map', 'select'];
+  const hinweis = w => FREMD.includes(w) ? w + ': kommt im Kurstext nur in der Liste in Abschnitt 3.3.4 vor. Der Kurs braucht es nicht.'
+    : w + ': zum ersten Mal in ' + ERSTE[w] + '.';
+  el('k-liste').innerHTML = WORTE.map(w => '<code tabindex="0" data-wort="' + w + '" aria-label="' + hinweis(w) + '" class="' + (BEKANNT.includes(w) ? 'bekannt' : FREMD.includes(w) ? 'fremd' : '') + '">' + w + '</code>').join('');
+  // Der Hinweis steht unter dem Wort und bleibt im Fenster, auch auf einem schmalen Bildschirm.
+  const blase = document.createElement('div');
+  blase.className = 'worthinweis';
+  blase.hidden = true;
+  document.body.appendChild(blase);
+  let wortGezeigt = '';
+  function zeigeHinweis(k) {
+    wortGezeigt = k.dataset.wort;
+    blase.textContent = hinweis(wortGezeigt);
+    blase.hidden = false;
+    blase.style.left = '0px';   // erst links messen, sonst schrumpft die Breite am rechten Rand
+    const r = k.getBoundingClientRect();
+    const breite = blase.offsetWidth;
+    const links = Math.max(8, Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - breite - 8));
+    blase.style.left = links + 'px';
+    blase.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  }
+  const versteckeHinweis = () => { blase.hidden = true; };
+  el('k-liste').querySelectorAll('code').forEach(k => {
+    k.addEventListener('mouseenter', () => zeigeHinweis(k));
+    k.addEventListener('focus', () => zeigeHinweis(k));
+    k.addEventListener('click', () => zeigeHinweis(k));
+    k.addEventListener('mouseleave', versteckeHinweis);
+    k.addEventListener('blur', versteckeHinweis);
+  });
+  window.addEventListener('scroll', versteckeHinweis, { passive: true });
   const WK = wahl('k', [
     { code: 'var func int = 5', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected keyword func, expected name', satz: 'Der Compiler erkennt func als Schlüsselwort, „keyword“, und hat einen Namen erwartet.' },
     { code: 'var var int = 5', fehler: true, aus: '.\\main.go:6:9: syntax error: unexpected keyword var, expected name', satz: 'Auch var ist reserviert. Hinter dem ersten var muss ein Bezeichner stehen.' },
@@ -542,7 +605,9 @@ fmt.Println(tempc)</pre>
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
     if (stufe === 1) return ['Die Demo setzt den gewählten Namen in ein Programm ein: Zeile 6 lautet var NAME int = 5, Zeile 7 lautet fmt.Println(NAME).'].concat(standWahl(WR, 'der Name'), ['Handgriff: einen der vierzehn festen Namen wählen. Einen eigenen Namen kann der Student nicht eingeben.']);
-    if (stufe === 3) return ['Über der Auswahl steht die Liste der 25 Schlüsselwörter. Grün sind package, import, func und var.', 'Die gewählte Zeile steht im Programm als Zeile 6, in Zeile 7 folgt die Ausgabe der Variable.'].concat(standWahl(WK));
+    if (stufe === 3) return ['Über der Auswahl steht die Liste der 25 Schlüsselwörter. Grün sind package, import, func, var und const, sie standen schon in Listing 3.1 und 3.2. Grau und durchgestrichen sind chan, defer, go, goto, interface, map und select, sie kommen im Kurstext nur in der Liste vor.',
+      wortGezeigt ? 'Zuletzt hat der Student auf ' + wortGezeigt + ' gezeigt. Der Hinweis dazu: ' + hinweis(wortGezeigt) : 'Zeigt der Student auf ein Schlüsselwort, nennt ein Hinweis seine erste Stelle im Kurstext.',
+'Die gewählte Zeile steht im Programm als Zeile 6, in Zeile 7 folgt die Ausgabe der Variable.'].concat(standWahl(WK));
     if (stufe === 5) return probe.stand();
     if (stufe === 4) return ['Jede Auswahl hat zwei Zeilen. Sie stehen im Programm als Zeile 6 und 7 im Rumpf von main.'].concat(standWahl(WV, 'das Zeilenpaar'));
     return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];

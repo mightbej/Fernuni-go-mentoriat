@@ -96,7 +96,8 @@ Reiter: schluessel
 
 - Oben steht ein blauer Kasten mit einer Frage und einer aufklappbaren „Auflösung“.
 - Der Text erklärt Schlüsselwort und reserviertes Wort.
-- Eine Liste zeigt die 25 Schlüsselwörter: `break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var`. Grün sind `package`, `import`, `func` und `var`.
+- Eine Liste zeigt die 25 Schlüsselwörter: `break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var`. Grün sind `package`, `import`, `func`, `var` und `const`, sie standen schon in Listing 3.1 und 3.2. Grau und durchgestrichen sind `chan`, `defer`, `go`, `goto`, `interface`, `map` und `select`: Sie stehen im Kurstext nur in der Liste in Abschnitt 3.3.4, der Kurs braucht sie nicht, als Name sind sie trotzdem verboten. Die übrigen kommen später im Kurstext.
+- Zeigt der Student mit der Maus auf ein Schlüsselwort oder tippt es an, nennt ein Hinweis die erste Stelle im Kurstext: `return` Listing 3.3 in 3.4, `if` und `else` in 5.5.1, `switch`, `case` und `default` in 5.5.2, `for` und `break` in 5.5.3, `range` in 6.1, `type` und `struct` in 8.2. `continue` und `fallthrough` sind nur in 3.3.2 genannt und stehen in keinem Listing. Fragt der Student nach einem grauen Schlüsselwort, sagt die Antwort in einem Satz, wofür es da ist, und dass der Kurs es nicht braucht.
 - Der Kurs braucht `chan`, `defer`, `go`, `interface`, `map`, `select` und `goto` nicht.
 - Vier Knöpfe wählen eine Zeile. Darunter stehen die Ausgabe oder die Meldung und ein Kasten mit einem Satz.
 - Zeile 1: `var func int = 5` ergibt `syntax error: unexpected keyword func, expected name`.
@@ -172,7 +173,7 @@ Reiter: kurstext
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was die Lektion dazugibt.
 - Schritt 1, Abschnitt 3.3.4, Seiten 30–31: Die zwei Regeln, die Unicode-Buchstaben und die Namen `größe`, `_intern` und `24stunden` stammen aus dem Kurstext. Die übrigen elf Namen und alle Meldungen gibt die Lektion dazu.
 - Schritt 2, Abschnitt 3.3.4, Seite 31: Das Beispiel `tempC` und `tempc`, der Export und die Konvention stammen aus dem Kurstext. Die zwei Meldungen gibt die Lektion dazu.
-- Schritt 3, Abschnitt 3.3.4, Seiten 31–32: Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die grüne Markierung und die vier Zeilen der Auswahl gibt die Lektion dazu.
+- Schritt 3, Abschnitt 3.3.4, Seiten 31–32: Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die Farben der Schlüsselwörter, die Hinweise auf ihre erste Stelle und die vier Zeilen der Auswahl gibt die Lektion dazu.
 - Schritt 4, Abschnitt 3.3.4, Seiten 31–32: Die drei Listen, die Warnung und der leere Bezeichner stammen aus dem Kurstext. Die vier Zeilenpaare gibt die Lektion dazu.
 - Schritt 5, Abschnitt 3.3.4, Seiten 30–32: Die Namen `größe`, `tempC` und `tempc` stammen aus dem Kurstext. Das Ausführen, die übrigen Fassungen und die Vorschläge gibt die Lektion dazu.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen fünf Abschnitte:
