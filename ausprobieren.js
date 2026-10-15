@@ -9,10 +9,13 @@
 // Der Kasten hat zwei Zustände:
 //
 //   im Editorlotsen   Der Editor steht da, „Ausführen“ übersetzt und startet das Programm. Ein Programm mit fmt.Scan
-//                     bekommt seine Eingabe in der Zeile unter der Ausgabe.
+//                     bekommt seine Eingabe in der Zeile unter der Ausgabe. Ein Link führt zurück zum Editor des
+//                     Editorlotsen, im selben Tab.
 //   anderswo          Auf GitHub Pages oder bei einem Lotsen ohne Go wählt der Student eine Fassung und sieht das
-//                     Programm und was Go dazu gemeldet oder ausgegeben hat, festgehalten mit Go 1.26.1. Ein Link öffnet
-//                     die Lektion im Editorlotsen. Der Reiter ist grau.
+//                     Programm und was Go dazu gemeldet oder ausgegeben hat, festgehalten mit Go 1.26.1. Ein Satz sagt,
+//                     wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, oben die Lektion wählen.
+//                     Ein Link dorthin fehlt mit Absicht, Thomas' Beschluss vom 2026-10-15: Mit ihm hätte der Student
+//                     zwei Tabs, die Seite des Editorlotsen und die Lektion. Der Reiter ist grau.
 //
 // Eine Lektion bindet die Datei ein und richtet den Kasten ein:
 //
@@ -29,11 +32,8 @@
 // probe.zeilen() liefert das Programm im Kasten, probe.stand() den Stand in Sätzen, beides für die Leiste.
 (function () {
   'use strict';
-  const EDITORLOTSE = 'http://localhost:8617/';
   // Liefert ein Lotse die Seite selbst aus, fragt der Kasten ihn. Von GitHub Pages aus fragt er keinen.
   const LOKAL = location.protocol === 'http:' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
-  // Das Hauptverzeichnis der HTML-Seiten: der Ordner, in dem diese Datei liegt. Daraus ergibt sich der Pfad der Lektion.
-  const WURZEL = new URL('.', document.currentScript.src).href;
   const ANLEITUNG = 'https://mightbej.github.io/Fernuni-go-mentoriat/lotsen/editorlotse.html';
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -184,13 +184,14 @@
       $('.zuruecksetzen').hidden = !bereit;
       $('.ueber').textContent = bereit ? 'Ausgabe' : 'Was Go dazu meldet oder ausgibt';
       if (zustand === 'ohne') {
-        const hier = EDITORLOTSE + location.href.slice(WURZEL.length).split('#')[0] + '#ausprobieren';
-        setzeLage('<p>Hier steht das Programm, und darunter, was Go dazu meldet oder ausgibt. Ändern und ausführen kannst du es im Editorlotsen auf deinem Rechner. Läuft er, öffnet dieser Link die Lektion dort: <a href="' + esc(hier) + '">Im Editorlotsen öffnen</a></p>' +
+        setzeLage('<p>Hier steht das Programm, und darunter, was Go dazu meldet oder ausgibt. Ändern und ausführen kannst du es im Editorlotsen auf deinem Rechner:</p>' +
+          '<ol><li>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>.</li>' +
+          '<li>Auf seiner Seite steht oben „Lektionen zum Ausprobieren“. Wähle dort „' + esc(document.title) + '“.</li></ol>' +
           '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>');
       } else if (!ed) {
         setzeLage('<p>Der Editor wird geladen …</p>');
       } else {
-        setzeLage('');
+        setzeLage('<p>Eigene Programme schreibst und speicherst du im <a href="/">Editor des Editorlotsen</a>.</p>');
       }
     }
 
