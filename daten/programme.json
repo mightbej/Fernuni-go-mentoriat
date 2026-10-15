@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-15T18:00",
+ "stand": "2026-10-15T18:13",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -37,6 +37,14 @@
    "sha256": "7d9c6cfdb71a298b8394e0956653d1a6bd60419b8622ecb8d6aacb8248ded06e"
   },
   {
+   "pfad": "kap8-verbund/go/S220_hierarchische_verbunde_demo.go",
+   "titel": "Hierarchische Verbünde (Abschnitt 8.3)",
+   "datei": "S220_hierarchische_verbunde_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 8",
+   "sha256": "16fa1d3d360a54cac1563d9eadebe5def88682e70e0a07f85b067857e3dd8501",
+   "slices": true
+  },
+  {
    "pfad": "kap8-verbund/go/S224_rekursive_verbunde_demo.go",
    "titel": "Rekursive Verbund-Typen (Abschnitt 8.3.1)",
    "datei": "S224_rekursive_verbunde_demo",
@@ -65,6 +73,22 @@
    "sha256": "979d50d044394a39dc291fe800f5c4f855f0d692169f60d95dd0236a478116f0"
   },
   {
+   "pfad": "kap9-dynamische-datenstrukturen/go/S234_bubblesort_demo.go",
+   "titel": "Bubblesort auf Verbund-Arrays (Abschnitt 8.4.2)",
+   "datei": "S234_bubblesort_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 9",
+   "sha256": "5f2a17855894482c5d0b572940f50b0825f3f882111463962e83de62145cecda",
+   "slices": true
+  },
+  {
+   "pfad": "kap9-dynamische-datenstrukturen/go/S240_array_operationen_demo.go",
+   "titel": "Array-Operationen auf Verbünden (Abschnitt 8.4)",
+   "datei": "S240_array_operationen_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 9",
+   "sha256": "919d04f2f5e7f249670e0e52d850c3c60f7593c9c25948a92aa3d258a49ab0b2",
+   "slices": true
+  },
+  {
    "pfad": "exkurse/go/laufzeit_vergleiche_zaehlen.go",
    "titel": "Wie die Laufzeit mit der Datenmenge wächst",
    "datei": "laufzeit_vergleiche_zaehlen",
@@ -75,7 +99,8 @@
  "lektionen": [
   {
    "pfad": "kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
-   "titel": "Bezeichner und Schlüsselwörter in Go"
+   "titel": "Bezeichner und Schlüsselwörter in Go",
+   "abschnitt": "3.3.4"
   }
  ]
 }
