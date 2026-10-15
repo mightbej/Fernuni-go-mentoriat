@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-14T15:13",
+ "stand": "2026-10-15T13:19",
  "abschnitte": {
   "2.1": [
    {
@@ -412,6 +412,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
     "beschreibung": "Die Seite ist eine Übung: Drei Programme enthalten je mehrere Fehler. Einige meldet der Compiler, die übrigen zeigen sich erst an der Ausgabe.",
@@ -466,6 +473,13 @@
     "titel": "Bezeichner und Schlüsselwörter in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -530,6 +544,13 @@
   ],
   "3.1": [
    {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Bezeichner und Schlüsselwörter in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
@@ -545,6 +566,13 @@
    }
   ],
   "3.2": [
+   {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
@@ -567,6 +595,13 @@
     "beschreibung": "Die Seite ist eine Übung: Drei kurze Programme enthalten je einen Fehler, den der Compiler meldet. Der Student sucht ihn, liest die Meldung und sieht die Korrektur.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
@@ -769,6 +804,13 @@
    }
   ],
   "3.4": [
+   {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
+    "geprueft": true,
+    "art": "nennt"
+   },
    {
     "titel": "Fehlersuche: drei Go-Programme mit mehreren Fehlern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html",
@@ -1580,6 +1622,13 @@
     "titel": "Bubblesort auf einem Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html",
     "beschreibung": "Die Seite erklärt die Funktion `bubblesort` aus Listing 8.2: Sie sortiert ein Array von Verbünden des Typs `person` nach dem Feld `name`.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Das erste Go-Programm: Hello, World!",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Listing 3.1, das Hello-World-Programm, Zeile für Zeile: Paketklausel, Import, die Funktion `main` und den Aufruf von `fmt.Println`. Dazu kommen Pakete und die Standardbibliothek aus Abschnitt 3.1 und der Leerraum. Im Schritt „Selbst ausprobieren“ ändert der Student das Programm und führt es mit dem Kurslotsen auf seinem Rechner aus.",
     "geprueft": true,
     "art": "nennt"
    },
