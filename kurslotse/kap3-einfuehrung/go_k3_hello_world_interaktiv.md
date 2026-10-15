@@ -131,7 +131,7 @@ Reiter: ausprobieren
 
 - Fünf Fassungen zur Wahl: Listing 3.1, ohne import, import ohne Aufruf, viel Leerraum, func start().
 - Läuft die Lektion im Editorlotsen, steht die gewählte Fassung in einem Editor. Der Student ändert sie und wählt „Ausführen“. Der Editorlotse übersetzt das Programm mit Go auf dem Rechner des Studenten und zeigt die Ausgabe oder die Meldung. Eine Meldung mit Zeile ist im Editor rot unterstrichen. Wartet das Programm auf eine Eingabe, tippt der Student sie in die Zeile unter der Ausgabe.
-- Läuft die Lektion nicht im Editorlotsen, zum Beispiel auf GitHub Pages, zeigt der Schritt das Programm und darunter, was Go 1.26.1 dazu gemeldet oder ausgegeben hat. Darüber steht, wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, auf seiner Seite oben unter „Lektionen zum Ausprobieren“ diese Lektion wählen. Läuft die Lektion im Editorlotsen, führt ein Link zurück zu seinem Editor. Der Stand der Demo sagt, welcher Fall gilt.
+- Läuft die Lektion nicht im Editorlotsen, zum Beispiel auf GitHub Pages, zeigt der Schritt das Programm und darunter, was Go 1.26.1 dazu gemeldet oder ausgegeben hat. Darüber steht, wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, im Menü „Programm wählen“ unter „Kapitel 3“ diese Lektion wählen. Läuft die Lektion im Editorlotsen, führt ein Link zurück zu seinem Editor. Der Stand der Demo sagt, welcher Fall gilt.
 - Vorschläge: eigenen Namen ausgeben, eine zweite Zeile mit `fmt.Println`, einen Fehler einbauen.
 - Der Stand der Demo sagt, welche Fassung gewählt ist, ob der Student sie geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind die Fassung im Editor.
 
