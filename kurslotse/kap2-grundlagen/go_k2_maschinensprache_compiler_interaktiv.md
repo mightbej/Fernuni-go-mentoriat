@@ -81,7 +81,7 @@ Reiter: uebersetzen
 - Untere Demo: Zwei Bilder nebeneinander. Links stehen die höheren Sprachen als Kästchen „Sprache 1“ und so weiter, rechts die Maschinensprachen als „Maschine 1“ und so weiter. Jeder Strich ist ein Compiler.
 - Im linken Bild führt von jeder Sprache ein Strich zu jeder Maschinensprache. Das sind n · m Compiler. Im rechten Bild führen alle Striche über ein gelbes Kästchen „Zwischensprache“ in der Mitte. Das sind n + m Compiler.
 - Bei n = 1, bei m = 1 und bei n = m = 2 spart die Zwischensprache nichts. Bei n = 1 oder m = 1 braucht sie sogar einen Compiler mehr.
-- Unter den Bildern steht ein Listenpunkt: Der Befehl `go run` übersetzt ein Go-Programm und startet es gleich danach.
+- Unter den Bildern steht ein Listenpunkt: Der Befehl `go run` übersetzt ein Go-Programm und startet es gleich danach. Ein Link führt zur Lektion „Das erste Go-Programm: Hello, World!“.
 
 ### Handgriffe
 
@@ -177,7 +177,7 @@ Reiter: kurstext
   - 4 Fehler, 2.7, Seite 19: Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext. Die drei fehlerhaften Fassungen und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm: Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: Größter gemeinsamer Teiler.
-  - Abschnitt 3.2, Seiten 22–24, go run: Der Befehl übersetzt ein Go-Programm und startet es gleich danach. Eine Lektion zu diesem Abschnitt gibt es nicht.
+  - Abschnitt 3.2, Seiten 22–24, go run: Der Befehl übersetzt ein Go-Programm und startet es gleich danach. Lektion: Das erste Go-Programm: Hello, World!
   - Abschnitt 3.3.2, Seiten 27–29, die erste Meldung des Compilers: Steht die Klammer { in einer neuen Zeile, lehnt der Compiler das Programm mit syntax error ab. Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 3.
   - Abschnitt 3.3.4, Seiten 30–32, Token in Go: Die Regeln für Namen und die 25 Schlüsselwörter. Lektion: Bezeichner und Schlüsselwörter in Go.
   - Abschnitt 3.3.6, Seiten 35–36, Punkt vor Strich: In Go wird wie in x ← a + 2 · b zuerst multipliziert. Eine Lektion zu diesem Abschnitt gibt es nicht.
