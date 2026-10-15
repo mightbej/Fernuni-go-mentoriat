@@ -24,6 +24,10 @@
 // Dazu nach Bedarf: thema (kurzer Name für die Suche), text (Auswahl der Elemente, deren Text mitgeht),
 // zeilen und zeilenTitel (die Programmzeilen und ihre Überschrift, wenn das Programm nicht in pre steht).
 //
+// Liefert ein Lotse die Seite selbst aus, heißt die Leiste wie er. Seit 2026-10-15 liefert auch der Editorlotse Lektionen
+// aus, die mit dem Reiter „Selbst ausprobieren“. Die Fragen gehen dann an ihn. Jeder Lotse beantwortet sie unter
+// /api/lektion mit dem gleichen Code aus dem Modul lotsen.
+//
 // Wechselt der Student den Schritt, ruft die Seite Kurslotse.schrittGewechselt() auf: Der Dialog leert sich.
 // Ändert er einen Wert der Demo, ruft sie Kurslotse.standGeaendert() auf.
 (function () {
@@ -41,6 +45,7 @@
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   let seite = null;          // die Angaben der HTML-Seite
   let leiste = null;         // die Leiste aus lotsenleiste.js, sobald die Datei geladen ist
+  let name = 'Kurslotse';    // der Lotse, der antwortet; liefert ein Lotse die Seite aus, sein Name aus /api/bereit
   let standZuletzt = null;   // der Stand der Demo bei der letzten Frage, als ein Text
   const beschreibung = { seite: '', schritte: {} };
 
@@ -146,8 +151,11 @@
 
   // ---------- Anmeldung der Seite ----------
 
-  function einrichten(angaben) {
+  async function einrichten(angaben) {
     seite = angaben;
+    if (LOTSE === '') {
+      try { name = (await (await fetch('/api/bereit')).json()).name || name; } catch (fehler) {}
+    }
     if (window.Leiste) { baue(); return; }
     const skript = document.createElement('script');
     skript.src = WURZEL + 'lotsenleiste.js';
@@ -157,8 +165,8 @@
 
   function baue() {
     leiste = Leiste.einrichten({
-      name: 'Kurslotse',
-      adresse: LOTSE + '/api/frage',
+      name: name,
+      adresse: LOTSE + '/api/lektion',
       wo: 'auf der HTML-Seite',
       sonst: 'Zu diesem Schritt',
       hinweis: '<p>Hier stellst du Fragen zu dem Schritt, der links zu sehen ist. Die Frage geht an das Sprachmodell von KI:connect. Die Seite schickt den Stand der Demo mit: Wer links etwas umstellt und danach fragt, bekommt eine Antwort zum neuen Stand. Wer links eine Stelle markiert, schickt sie mit der nächsten Frage mit. Wer oben den Schritt wechselt, beginnt einen neuen Dialog. „Kopieren“ legt den Dialog vorher in die Zwischenablage.</p>',
