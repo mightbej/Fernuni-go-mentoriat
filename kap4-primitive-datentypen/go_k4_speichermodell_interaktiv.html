@@ -4,19 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Speichermodell: Name, Typ und Adresse in Go</title>
+  <link rel="stylesheet" href="../stil.css">
   <style>
     :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--pos:#0f766e;--pos-bg:#d1fae5;--neg:#1e40af;--neg-bg:#dbeafe;--naht:#dc2626;--highlight:#fef3c7;--lesen:#2563eb;--schreiben:#dc2626; }
-    * { box-sizing:border-box; }
-    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
-    .container { max-width:1200px;margin:0 auto;padding:24px; }
-    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
-    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
-    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .container { max-width:1200px; }
+    .hero p {opacity:.96;}
     .hero p + p { margin-top:8px;font-size:.95rem; }
-    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
-    h2 { margin-top:0;font-size:1.3rem;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:8px; }
-    h3 { font-size:1.05rem;margin:18px 0 8px;color:var(--muted); }
-    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    h3 {margin:18px 0 8px;}
+    code {font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     .formel { font-family:Consolas,monospace;font-size:1.1rem;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0; }
     .layout { display:grid;grid-template-columns:minmax(320px,600px) 1fr;gap:24px;align-items:start; }
     .layout > div { min-width:0; }
@@ -31,7 +26,7 @@
     .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
     .meldung { padding:14px;border-radius:8px;border-left:4px solid var(--accent);background:var(--pos-bg);margin:12px 0;min-height:120px; }
     .meldung ol { margin:0;padding-left:22px; } .meldung li { margin:6px 0;overflow-wrap:anywhere; }
-    .hinweis { background:var(--highlight);padding:12px 14px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0; }
+    .hinweis {margin:12px 0; }
     ol { padding-left:22px; } li { margin:8px 0; }
     details { margin-top:6px; } summary { cursor:pointer;color:var(--accent);font-weight:600; }
     .seiten { margin:0;padding-left:22px; }
@@ -39,9 +34,8 @@
 
     /* Tabellen */
     .tabellenrahmen { overflow-x:auto; }
-    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
-    th,td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left; }
-    th { background:#f9fafb;font-weight:600; }
+    table {margin:12px 0;font-size:.95rem; }
+    th {font-weight:600; }
     tr.benutzt td { background:#f0fdfa; }
 
     /* Programm */
@@ -110,7 +104,6 @@
 
     /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
     .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
-    .tab { background:#fff; }
     .tab:hover { background:#ecfdf5; }
     .tab.active { background:var(--accent);color:#fff;border-color:var(--accent); }
     .stufe { display:none; }
