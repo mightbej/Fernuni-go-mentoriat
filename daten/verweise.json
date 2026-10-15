@@ -1,6 +1,24 @@
 {
- "stand": "2026-10-15T16:22",
+ "stand": "2026-10-15T19:22",
  "abschnitte": {
+  "1.1": [
+   {
+    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
+    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "1.2": [
+   {
+    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
+    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
   "2.1": [
    {
     "titel": "Imperative Programmierung: Anweisungen, Blöcke und Schleifen",
@@ -528,6 +546,15 @@
     "art": "nennt"
    }
   ],
+  "3": [
+   {
+    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
+    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
+    "geprueft": true,
+    "art": "nennt"
+   }
+  ],
   "3.1": [
    {
     "titel": "Bezeichner und Schlüsselwörter in Go",
@@ -556,6 +583,13 @@
     "titel": "Strings in Go: Literale, Verkettung und Unveränderbarkeit",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_strings_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Willkommen im Mentoriat: Ansprechpartner, Termine und Werkzeuge",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap1-einleitung/go_k1_willkommen_interaktiv.html",
+    "beschreibung": "Die Lektion zur ersten Sitzung: wer bei welcher Frage hilft, alle Termine des Semesters mit Aufgabenpaketen und Klausur, Arbeiten mit dem Kurstext und seinen farbigen Kästen, fünf Wege zu Go und Lernquellen neben dem Kurstext.",
     "geprueft": true,
     "art": "nennt"
    }
