@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-15T12:43",
+ "stand": "2026-10-15T16:30",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -72,10 +72,5 @@
    "sha256": "aaec514bd15fa3bfd3d536dfb9d9943a2e83cf10be893fb59f1f0d945f00b233"
   }
  ],
- "lektionen": [
-  {
-   "pfad": "kap3-einfuehrung/go_k3_hello_world_interaktiv.html",
-   "titel": "Das erste Go-Programm: Hello, World!"
-  }
- ]
+ "lektionen": []
 }
