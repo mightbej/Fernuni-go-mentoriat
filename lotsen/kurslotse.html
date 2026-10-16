@@ -234,7 +234,9 @@
     jeder(".tab", function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
     if (nachOben) {
       history.replaceState(null, "", "#" + ANKER[nummer]);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Nur rollen, wenn die Reiterleiste oben aus dem Fenster ist, und dann bis zu ihr.
+      var r = document.querySelector(".tabs");
+      if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
   function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
