@@ -26,7 +26,7 @@ Reiter: worum
 - Zu sehen ist eine Karte mit Text. Code und Demo gibt es hier nicht.
 - Oben steht der Bezug zum Exkurs „Von der Problemstellung zum Go-Programm“.
 - Die Liste „Was das Programm tun soll“ nennt sechs Aufgaben: Zahl wählen, raten lassen, Runde beenden, mitzählen, bewerten, weiterspielen.
-- Darunter steht, dass das ganze Programm in `main` steht, weil Funktionen erst in Kapitel 7 behandelt werden.
+- Darunter steht, dass das ganze Programm in `main` steht und keine eigenen Funktionen vorkommen. Eingeführt werden eigene Funktionen in Abschnitt 3.4, ausführlich behandelt in Kapitel 7, mit Link auf die Lektion „Funktionen in Go“.
 - Eine Liste sagt, was die sieben Schritte der Seite zeigen.
 - Ein gelber Kasten sagt, dass das Programm mit Go 1.26 übersetzt und gespielt ist und dass auf der Seite kein Go läuft.
 
