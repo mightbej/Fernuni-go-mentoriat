@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-16T11:30",
+ "stand": "2026-10-16T16:51",
  "abschnitte": {
   "1.1": [
    {
@@ -1537,6 +1537,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "for-Anweisung mit Bedingung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_for_bedingung_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
@@ -1987,6 +1994,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Quicksort Schritt für Schritt",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
@@ -2302,6 +2316,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
     "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
@@ -2520,6 +2541,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Quicksort Schritt für Schritt",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
@@ -2567,6 +2595,13 @@
     "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
     "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2636,6 +2671,13 @@
     "titel": "Programmierübung: Bubble Sort mit Funktionen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm aus Kapitel 6 in die Funktionen `isGreater` und `swap`. Beide bekommen das Array als Kopie.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2765,6 +2807,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Quicksort Schritt für Schritt",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
@@ -2854,6 +2903,13 @@
     "titel": "Programmierübung: Bubble Sort rekursiv",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2989,6 +3045,13 @@
     "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Insertion Sort in vier Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und zwei Schleifen, Funktion, Zeiger auf ein Array.",
     "geprueft": true,
     "art": "nennt"
    },
