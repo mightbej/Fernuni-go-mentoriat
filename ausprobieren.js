@@ -49,7 +49,13 @@
     .probe .balken { height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden;margin:8px 0; }
     .probe .balken span { display:block;height:100%;width:0;background:#0f766e;transition:width .3s; }
     .probe pre.quelltext { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;overflow-x:auto; }
-    .probe .editor { height:300px;border:1px solid #cbd5e1;border-radius:8px;overflow:hidden;margin:10px 0; }
+    .probe .editor { height:var(--probe-editor, 300px);border:1px solid #cbd5e1;border-radius:8px 8px 0 0;overflow:hidden;margin:10px 0 0; }
+    .probe .griff { position:relative;height:12px;margin:0 0 10px;background:#e2e8f0;border:1px solid #cbd5e1;border-top:0;border-radius:0 0 8px 8px;cursor:row-resize;touch-action:none; }
+    .probe .griff[hidden] { display:none; }
+    .probe .griff::after { content:"";position:absolute;left:50%;top:4px;width:44px;height:4px;margin-left:-22px;border-radius:2px;background:#94a3b8; }
+    .probe .griff:hover::after, .probe .griff:focus::after, body.probe-ziehen .probe .griff::after { background:#0f766e; }
+    .probe .griff:focus { outline:none; }
+    body.probe-ziehen { cursor:row-resize;user-select:none; }
     .probe .knoepfe { display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0; }
     .probe .knoepfe .stand { color:#4b5563;font-size:.9rem; }
     .probe .ausgabe { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:2.4em;max-height:320px;overflow-y:auto;overflow-wrap:anywhere; }
@@ -82,6 +88,45 @@
     return editorGeladen;
   }
 
+  // Die Höhe des Editors: Der Student zieht den Griff unter dem Editor. Sie gilt für jeden Kasten auf jeder Lektion,
+  // der Browser merkt sie sich. Ein Doppelklick oder Pos1 setzt sie auf 300 Pixel zurück.
+  const HOEHE = 300, NIEDRIGSTE = 150, MERKEN_HOEHE = 'probeEditorHoehe';
+  let hoehe = HOEHE;
+  const begrenze = h => Math.round(Math.max(NIEDRIGSTE, Math.min(h, Math.max(NIEDRIGSTE, window.innerHeight * 0.85))));
+  function setzeHoehe(h, merke) {
+    hoehe = h;
+    document.documentElement.style.setProperty('--probe-editor', begrenze(h) + 'px');
+    if (merke) { try { localStorage.setItem(MERKEN_HOEHE, String(Math.round(h))); } catch (fehler) {} }
+  }
+  try { const h = Number(localStorage.getItem(MERKEN_HOEHE)); if (h > 0) setzeHoehe(h, false); } catch (fehler) {}
+  window.addEventListener('resize', () => { if (hoehe !== HOEHE) setzeHoehe(hoehe, false); });
+  function richteGriffEin(griff) {
+    let start = null;   // Mausstelle und Höhe beim Beginn des Ziehens
+    griff.addEventListener('pointerdown', ev => {
+      if (ev.button !== 0) return;
+      ev.preventDefault();
+      start = { y: ev.clientY, h: begrenze(hoehe) };
+      griff.setPointerCapture(ev.pointerId);
+      document.body.classList.add('probe-ziehen');
+    });
+    griff.addEventListener('pointermove', ev => { if (start) setzeHoehe(begrenze(start.h + ev.clientY - start.y), false); });
+    const ende = () => {
+      if (!start) return;
+      start = null;
+      document.body.classList.remove('probe-ziehen');
+      setzeHoehe(hoehe, true);
+    };
+    griff.addEventListener('pointerup', ende);
+    griff.addEventListener('pointercancel', ende);
+    griff.addEventListener('dblclick', () => setzeHoehe(HOEHE, true));
+    // Mit der Tastatur: Pfeil nach unten macht den Editor höher, Pfeil nach oben niedriger.
+    griff.addEventListener('keydown', ev => {
+      const schritt = ev.key === 'ArrowDown' ? 20 : ev.key === 'ArrowUp' ? -20 : 0;
+      if (schritt) { ev.preventDefault(); setzeHoehe(begrenze(begrenze(hoehe) + schritt), true); }
+      if (ev.key === 'Home') { ev.preventDefault(); setzeHoehe(HOEHE, true); }
+    });
+  }
+
   function einrichten(angaben) {
     if (!document.getElementById('probeStil')) {
       const stil = document.createElement('style');
@@ -98,6 +143,7 @@
       <div class="lage" aria-live="polite"></div>
       <pre class="quelltext"></pre>
       <div class="editor" hidden></div>
+      <div class="griff" hidden role="separator" aria-orientation="horizontal" aria-label="Höhe des Editors" tabindex="0" title="Ziehen ändert die Höhe des Editors. Doppelklick setzt sie zurück."></div>
       <div class="knoepfe">
         <button type="button" class="haupt ausfuehren" hidden>Ausführen</button>
         <button type="button" class="stopp" hidden>Stopp</button>
@@ -111,6 +157,7 @@
         <button type="submit">Eingeben</button>
       </form>`;
     const $ = s => kasten.querySelector(s);
+    richteGriffEin($('.griff'));
 
     let zustand = 'ohne';     // 'ohne': nicht im Editorlotsen, 'bereit': im Editorlotsen mit Go
     let gewaehlt = 0;         // Nummer der gewählten Fassung
@@ -183,6 +230,7 @@
       const bereit = zustand === 'bereit' && ed;
       $('.quelltext').hidden = !!bereit;
       $('.editor').hidden = !bereit;
+      $('.griff').hidden = !bereit;
       $('.ausfuehren').hidden = !bereit;
       $('.zuruecksetzen').hidden = !bereit;
       $('.ueber').textContent = bereit ? 'Ausgabe' : 'Was Go dazu meldet oder ausgibt';
