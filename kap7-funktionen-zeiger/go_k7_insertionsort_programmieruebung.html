@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.3">
+  <title>Programmierübung: Insertion Sort Schritt für Schritt</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left;white-space:pre; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Die Idee ohne Code: Zahlen als Kärtchen */
+    .reihe { display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 10px; }
+    .reihe .titel { min-width:9.5em;color:var(--muted);font-size:.95rem; }
+    .reihe span.z { min-width:2.4em;text-align:center;border:2px solid #cbd5e1;border-radius:6px;padding:4px 6px;background:#fff;font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .reihe span.z.sortiert { background:#d1fae5;border-color:var(--accent); }
+    .reihe span.z.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .legende { display:flex;flex-wrap:wrap;gap:14px;font-size:.9rem;color:var(--muted);margin:4px 0 10px; }
+    .legende i { display:inline-block;width:14px;height:14px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:5px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Demo: Programm links, Knöpfe, Erklärung, Variablen und Ausgabe rechts daneben.
+       So passt der Lauf auf einen Bildschirm. Das Programm rollt in seinem Kasten zur aktuellen Zeile. */
+    .demo { display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start;margin:12px 0; }
+    .demo .programm { margin:0;position:relative;max-height:calc(100vh - 40px);overflow:auto;font-size:.86rem;line-height:1.55; }
+    .demo .programm li { display:flex;white-space:pre-wrap; }   /* lange Zeilen brechen im Kasten um */
+    .demo .programm li .nr { width:2.2em;flex:none; }
+    .demo-rechts { position:sticky;top:12px; }
+    .demo-rechts .zeile { margin-top:0; }
+    .demo-rechts .auskunft { margin-top:0; }
+    .demo-rechts .rahmenreihe { margin:8px 0; }
+    .demo-rechts .rahmen { min-width:0; }
+    .demo-rechts .kasten { padding:3px 10px;margin:4px 0; }
+    .demo-rechts p { margin:8px 0 4px; }
+    .stufe .card { container-type:inline-size; }
+    @container (max-width: 640px) {
+      .demo { grid-template-columns:minmax(0,1fr); }
+      .demo .programm { max-height:45vh; }
+      .demo-rechts { position:static; }
+    }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:210px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .feld span.b { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld span.m.b { background:#d1fae5;border-color:var(--aktiv);border-width:2px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Insertion Sort Schritt für Schritt</h1>
+    <p>Insertion Sort sortiert, wie man Spielkarten in der Hand ordnet: Es nimmt ein Element nach dem anderen und fügt es an der richtigen Stelle in den schon sortierten Teil ein. Die Übung baut das Programm in vier Stufen auf: erst mit fünf einzelnen Variablen, am Ende als Funktion mit Zeiger.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Abschnitt 7.4, Seiten 173–178. Insertion Sort kommt im Kurstext nicht vor.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Fünf Variablen</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Array</button>
+    <button type="button" class="tab" data-stufe="3">3 Eine Funktion</button>
+    <button type="button" class="tab" data-stufe="4">4 Ein Zeiger</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Stell dir vor, du bekommst Spielkarten einzeln auf die Hand. Die Karten in deiner Hand hältst du sortiert. Kommt eine neue Karte, schiebst du sie von rechts nach links an den sortierten Karten vorbei, bis links von ihr eine kleinere Karte steht. Dort steckst du sie hinein.</p>
+    <p>Genau so arbeitet <strong>Insertion Sort</strong>, auf Deutsch Sortieren durch Einfügen:</p>
+    <ul>
+      <li><strong>Der sortierte Teil:</strong> Am Anfang besteht er nur aus dem ersten Element. Ein einzelnes Element ist sortiert.</li>
+      <li><strong>Einfügen:</strong> Das nächste Element wird von rechts mit den Elementen des sortierten Teils verglichen. Jedes größere Element rückt einen Platz nach rechts. Steht links ein kleineres oder gleiches Element, oder ist der Anfang erreicht, kommt das neue Element in die Lücke.</li>
+      <li><strong>Das Ende:</strong> Nach jedem Einfügen ist der sortierte Teil um ein Element länger. Ist das letzte Element eingefügt, ist alles sortiert.</li>
+    </ul>
+    <p>Ein Beispiel mit den ersten fünf Werten des Arrays der Bubble-Sort-Übungen:</p>
+    <div class="legende"><span><i style="background:#d1fae5;border-color:#0f766e"></i>schon sortiert</span><span><i style="background:#fef3c7;border-color:#fbbf24"></i>gerade eingefügt</span><span><i style="background:#fff;border-color:#cbd5e1"></i>noch nicht eingefügt</span></div>
+    <div id="idee-bild"></div>
+    <p>Die 88 bleibt an ihrem Platz, weil links von ihr schon die 42 steht. Die 3 dagegen wandert ganz nach vorn, an allen vier Elementen vorbei.</p>
+
+    <h3>Wie die Übung aufgebaut ist</h3>
+    <p>Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses:</p>
+    <ul>
+      <li><strong>Stufe 1, fünf Variablen:</strong> Einfügen mit <code>if</code> und der Tupel-Zuweisung aus Abschnitt 5.3. Jeder Vergleich steht einzeln im Programm.</li>
+      <li><strong>Stufe 2, ein Array:</strong> Index und zwei <code>for</code>-Schleifen aus Kapitel 5 und 6. Die innere Schleife hört auf, sobald die Lücke gefunden ist.</li>
+      <li><strong>Stufe 3, eine Funktion:</strong> Das Sortieren wird die Funktion <code>insertionSort</code>, Abschnitt 7.1 und 7.2.</li>
+      <li><strong>Stufe 4, ein Zeiger:</strong> <code>insertionSort</code> bekommt einen Zeiger auf das Array und sortiert das Array von <code>main</code>, Abschnitt 7.3 und 7.4.</li>
+    </ul>
+    <div class="hinweis">Insertion Sort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors und verwendet nur, was der Kurs bis Abschnitt 7.4 gezeigt hat.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Fünf Variablen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Wie viele Vergleiche führt das Programm aus? Hängt die Zahl von den fünf Werten ab?
+          <details><summary>Auflösung</summary>Zehn: einer für <code>b</code>, zwei für <code>c</code>, drei für <code>d</code> und vier für <code>e</code>. Die Zahl hängt nicht von den Werten ab, denn jedes <code>if</code> steht im Programm und wird ausgeführt.</details></li>
+        <li>Beim Einfügen von <code>d</code> mit 88 wird nichts getauscht. Welcher der drei Vergleiche hätte schon genügt, um das zu wissen?
+          <details><summary>Auflösung</summary>Der erste, <code>d &lt; c</code>. <code>c</code> ist das größte Element des sortierten Teils. Ist 88 nicht kleiner als <code>c</code>, ist 88 auch nicht kleiner als <code>b</code> und <code>a</code>.</details></li>
+      </ol>
+    </div>
+    <p>Die fünf Werte stehen in den Variablen <code>a</code> bis <code>e</code>. Der sortierte Teil beginnt mit <code>a</code>. Danach fügt das Programm <code>b</code>, <code>c</code>, <code>d</code> und <code>e</code> nacheinander ein.</p>
+    <p>Einfügen heißt hier: Das neue Element vergleicht sich mit seinem linken Nachbarn. Ist es kleiner, tauschen die zwei ihre Werte mit einer Tupel-Zuweisung. Dann vergleicht es sich mit dem nächsten Nachbarn weiter links, bis zum Anfang.</p>
+    <div class="demo">
+      <ol class="programm" id="v-programm"></ol>
+      <div class="demo-rechts">
+        <div class="zeile">
+          <button type="button" class="haupt" id="v-weiter">nächste Anweisung</button>
+          <button type="button" id="v-zurueck">eine Anweisung zurück</button>
+          <button type="button" id="v-vorn">von vorn</button>
+        </div>
+        <div class="auskunft" id="v-urteil"></div>
+        <div class="rahmenreihe" id="v-bild"></div>
+        <p><strong>Ausgabe</strong></p>
+        <div class="konsole" id="v-ausgabe"></div>
+      </div>
+    </div>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <ul>
+      <li><strong>Unnötige Vergleiche:</strong> Das Programm vergleicht jedes neue Element bis zum Anfang, auch wenn es schon nach dem ersten Vergleich an seinem Platz steht. Bei <code>d</code> waren zwei der drei Vergleiche überflüssig.</li>
+      <li><strong>Feste Zahl von Werten:</strong> Für fünf Werte braucht das Programm zehn <code>if</code>-Anweisungen. Für zehn Werte wären es 45, und jede müsste man von Hand hinschreiben.</li>
+    </ul>
+    <p>Beides löst Stufe 2: Ein Array mit Index lässt sich mit Schleifen durchlaufen, und die innere Schleife hört auf, sobald die Lücke gefunden ist.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Ein Array</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Bei <code>i</code> gleich 3 läuft die innere Schleife kein einziges Mal. Warum nicht?
+          <details><summary>Auflösung</summary><code>key</code> ist 88, und links davon steht 42. Die Bedingung <code>a[j] &gt; key</code> heißt dann <code>42 &gt; 88</code> und ist nicht erfüllt. 88 bleibt, wo sie ist.</details></li>
+        <li>Was passiert, wenn man die Bedingung der inneren Schleife umdreht zu <code>a[j] &gt; key &amp;&amp; j &gt;= 0</code>?
+          <details><summary>Auflösung</summary>Das Programm bricht ab, sobald ein Element ganz nach vorn wandert, hier die 7 bei <code>i</code> gleich 1. Dann ist <code>j</code> gleich −1, und Go wertet zuerst <code>a[-1]</code> aus. Go meldet <code>panic: runtime error: index out of range [-1]</code>. In der richtigen Reihenfolge verhindert die Kurzschluss-Auswertung diesen Zugriff: Ist <code>j &gt;= 0</code> falsch, wertet Go den rechten Teil nicht mehr aus.</details></li>
+      </ol>
+    </div>
+    <p>Die fünf Werte stehen jetzt im Array <code>a</code>. Zwei Schleifen tragen das Sortieren:</p>
+    <ul>
+      <li><strong>Die äußere Schleife</strong> geht mit <code>i</code> vom Index 1 bis zum letzten Index. Links von <code>i</code> steht der sortierte Teil. <code>a[i]</code> ist das Element, das als Nächstes eingefügt wird. Das Programm merkt es sich in <code>key</code>.</li>
+      <li><strong>Die innere Schleife</strong> geht mit <code>j</code> von <code>i-1</code> nach links. Solange <code>a[j]</code> größer ist als <code>key</code>, rückt <code>a[j]</code> einen Platz nach rechts, auf den Index <code>j+1</code>. Die Schleife hört auf, wenn links ein kleineres oder gleiches Element steht oder der Anfang erreicht ist.</li>
+      <li><strong>Einfügen:</strong> Nach der inneren Schleife ist der Platz <code>j+1</code> frei für <code>key</code>.</li>
+    </ul>
+    <p>Neu gegenüber Stufe 1: Das Programm tauscht nicht mehr, es <strong>verschiebt</strong>. Weil der Wert in <code>key</code> gesichert ist, darf das Element links von ihm ihn überschreiben. Während die innere Schleife läuft, steht deshalb ein Wert zweimal im Array. Das ist gewollt.</p>
+    <p>In der Demo ist grün der sortierte Teil, so weit er vor dem Einfügen reichte. Gelb ist das Element am Index <code>j</code>, mit dem die innere Schleife gerade vergleicht, oder der Platz, an den <code>key</code> kommt.</p>
+    <div class="demo">
+      <ol class="programm" id="a-programm"></ol>
+      <div class="demo-rechts">
+        <div class="zeile">
+          <button type="button" class="haupt" id="a-weiter">nächste Anweisung</button>
+          <button type="button" id="a-zurueck">eine Anweisung zurück</button>
+          <button type="button" id="a-vorn">von vorn</button>
+        </div>
+        <div class="auskunft" id="a-urteil"></div>
+        <div class="rahmenreihe" id="a-bild"></div>
+        <p><strong>Ausgabe</strong></p>
+        <div class="konsole" id="a-ausgabe"></div>
+      </div>
+    </div>
+    <p>Die innere Schleife ist eine <code>for</code>-Anweisung mit Bedingung wie in der Lektion <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>. Warum <code>j &gt;= 0</code> links von <code>&amp;&amp;</code> stehen muss, zeigt die Lektion <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</p>
+    <p>Für die fünf Werte braucht das Programm acht Vergleiche <code>a[j] &gt; key</code> statt zehn wie in Stufe 1.</p>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <p>Das Sortieren steht mitten in <code>main</code>. Soll ein Programm zwei Arrays sortieren, müssten beide Schleifen zweimal dastehen. Das Sortieren soll deshalb eine Funktion werden. Das ist Stufe 3.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Eine Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>main</code> ruft <code>insertionSort(a)</code> auf und gibt danach <code>a</code> aus. Was steht da?
+          <details><summary>Auflösung</summary>Das unveränderte Array <code>[42 7 19 88 3]</code>. Die Funktion hat eine Kopie sortiert, und ihr Ergebnis hat niemand aufgefangen.</details></li>
+      </ol>
+    </div>
+    <p>Die zwei Schleifen aus Stufe 2 stehen jetzt in der Funktion <code>insertionSort</code>. Sie bekommt das Array als Parameter und liefert das sortierte Array als Ergebnis.</p>
+    <pre class="code-block">// sortiert eine Kopie des Arrays und liefert sie zurück
+func insertionSort(a [5]int) [5]int {
+    for i := 1; i &lt; len(a); i++ {
+        key := a[i]
+        j := i - 1
+        for j &gt;= 0 &amp;&amp; a[j] &gt; key {
+            a[j+1] = a[j]
+            j--
+        }
+        a[j+1] = key
+    }
+    return a
+}</pre>
+    <p>Warum liefert die Funktion das Array zurück? In Go bekommt eine Funktion eine Kopie ihres Arguments, auch bei einem Array. Das ist die Wertübergabe aus Abschnitt 7.2. Die Funktion sortiert ihre Kopie. Das Array in <code>main</code> bleibt, wie es war.</p>
+    <p>Wähle eine von drei Möglichkeiten, wie <code>main</code> die Funktion aufruft:</p>
+    <div class="spalte" id="f-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="f-ausgabe"></div>
+    <div class="auskunft" id="f-urteil"></div>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <ul>
+      <li><strong>Die Kopie:</strong> Jeder Aufruf kopiert das ganze Array hin und zurück. Bei fünf Elementen fällt das nicht auf, bei vielen schon. Die Lektion <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zeigt das an Bubble Sort.</li>
+      <li><strong>Die feste Länge:</strong> Die Funktion sortiert nur Arrays vom Typ <code>[5]int</code>. Ein Array mit zehn Elementen hat den Typ <code>[10]int</code>, das ist ein anderer Typ.</li>
+    </ul>
+    <p>Die Kopie vermeidet Stufe 4 mit einem Zeiger auf das Array. Die feste Länge bleibt: Ab Stufe 4 sortiert die Funktion Arrays vom Typ <code>[10]int</code>, wie in der Reihe Bubble Sort.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Ein Zeiger</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Array hat jetzt zehn Elemente. In welcher Runde wandert ein Element am weitesten nach links?
+          <details><summary>Auflösung</summary>In der letzten, bei <code>i</code> gleich 9. Die 9 rückt an sieben größeren Elementen vorbei bis zum Index 2, hinter 3 und 7.</details></li>
+        <li>Wie viele Vergleiche <code>pa[j] &gt; key</code> braucht das Programm für ein Array mit zehn Elementen, das schon sortiert ist?
+          <details><summary>Auflösung</summary>Neun, einen je Runde. Jeder Vergleich ergibt sofort, dass das Element an seinem Platz steht. Selection Sort vergleicht auch dann alle 45 Paare.</details></li>
+      </ol>
+    </div>
+    <p>Gegenüber Stufe 3 ändert sich der Parameter. <code>insertionSort</code> bekommt mit <code>pa *[10]int</code> die Adresse des Arrays. Sie arbeitet damit auf dem Array von <code>main</code> und muss nichts zurückgeben. Der Aufruf in <code>main</code> heißt <code>insertionSort(&amp;a)</code>.</p>
+    <p>Im Rumpf steht <code>pa[i]</code> statt <code>(*pa)[i]</code>. Go erlaubt bei einem Zeiger auf ein Array diese Kurzschreibweise, wie in Abschnitt 7.4 beschrieben. Auch <code>len(pa)</code> geht mit einem Zeiger auf ein Array und liefert 10.</p>
+    <p>Ein Schritt der Demo ist eine ganze Runde der äußeren Schleife, also ein Einfügen. Grün ist der sortierte Teil nach dem Einfügen, gelb der Platz, an den <code>key</code> gekommen ist.</p>
+    <div class="demo">
+      <ol class="programm" id="z-programm"></ol>
+      <div class="demo-rechts">
+        <div class="zeile">
+          <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
+          <button type="button" id="z-zurueck">eine Anweisung zurück</button>
+          <button type="button" id="z-vorn">von vorn</button>
+        </div>
+        <div class="auskunft" id="z-urteil"></div>
+        <div class="rahmenreihe" id="z-bild"></div>
+        <p><strong>Ausgabe</strong></p>
+        <div class="konsole" id="z-ausgabe"></div>
+      </div>
+    </div>
+
+    <h3>Wie schnell ist Insertion Sort?</h3>
+    <p>Für das Array der Übung braucht Insertion Sort 30 Vergleiche <code>pa[j] &gt; key</code>. Wie viele es sind, hängt von der Reihenfolge der Werte ab:</p>
+    <ul>
+      <li><strong>Schon sortiert:</strong> 9 Vergleiche, einer je Runde.</li>
+      <li><strong>Umgekehrt sortiert:</strong> 45 Vergleiche. Jedes Element wandert bis ganz nach vorn.</li>
+    </ul>
+    <p>Insertion Sort ist deshalb schnell, wenn ein Array schon fast sortiert ist. Im schlechtesten Fall wächst die Zahl der Vergleiche wie bei Bubble Sort mit dem Quadrat der Anzahl der Elemente. Wie man das zählt, zeigt der <a href="../exkurse/exkurs_laufzeit_wachstum.html">Exkurs zur Laufzeit</a>. Das Programm „Stufe 4 mit Ausgabe jedes Einfügens“ im nächsten Schritt zählt die Vergleiche mit.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier stehen die Programme aller vier Stufen, jedes vollständig mit <code>package</code> und <code>import</code>. Wähle ein Programm, sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern.</p>
+    <p>Das Programm „Stufe 1 mit der Funktion ordne“ zeigt eine Zwischenstufe: Der Vergleich mit dem Tausch steht in einer Funktion <code>ordne</code>, die zwei Werte geordnet zurückgibt. Das Programm „Stufe 4 mit Ausgabe jedes Einfügens“ zählt die Vergleiche. Damit es jeden Vergleich zählen kann, steht der Vergleich dort in einem <code>if</code> mit <code>break</code>.</p>
+    <p>Vorschläge zum Ausprobieren:</p>
+    <ul>
+      <li><strong>Bedingung umdrehen:</strong> Schreibe im Programm „Stufe 2: Array und Schleifen“ die Bedingung als <code>a[j] &gt; key &amp;&amp; j &gt;= 0</code>. Was meldet Go?</li>
+      <li><strong>Absteigend sortieren:</strong> Was musst du in Stufe 2 ändern, damit das größte Element vorn steht?</li>
+      <li><strong>Vergleiche zählen:</strong> Setze im Programm „Stufe 4 mit Ausgabe jedes Einfügens“ ein sortiertes und ein umgekehrt sortiertes Array ein. Stimmen 9 und 45?</li>
+      <li><strong>Gleiche Werte:</strong> Ersetze in Stufe 4 <code>pa[j] &gt; key</code> durch <code>pa[j] &gt;= key</code> und sortiere ein Array, in dem ein Wert mehrmals vorkommt. Ist das Ergebnis noch richtig? Welche Elemente rücken jetzt, die vorher stehen blieben?</li>
+    </ul>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
+    <p>Insertion Sort kommt im Kurstext nicht vor. Jede Stufe verwendet aber ein Mittel von Go, das der Kurstext erklärt. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Fünf Variablen</td><td>5.3, Seiten 126–129</td><td>Die Tupel-Zuweisung und der Tausch mit <code>a, b = b, a</code> stammen aus dem Kurstext.</td><td>Das Einfügen in einen sortierten Teil steht nicht im Kurstext.</td></tr>
+      <tr><td>2 Ein Array</td><td>4.5.1, Seiten 93–96, 5.5.3, Seiten 138–146, 6.1 und 6.2, Seiten 154–159</td><td>Die Kurzschluss-Auswertung von <code>&amp;&amp;</code>, die <code>for</code>-Anweisung mit Bedingung und mit for-Klausel, das Array mit Index und <code>len</code> stammen aus dem Kurstext.</td><td>Das Verschieben mit <code>key</code> und <code>j</code> steht nicht im Kurstext.</td></tr>
+      <tr><td>3 Eine Funktion</td><td>7.1 und 7.2, Seiten 163–170</td><td>Eine Funktion mit einem Array als Parameter und Ergebnis und die Wertübergabe stammen aus dem Kurstext.</td><td>Die drei Aufrufe in <code>main</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Ein Zeiger</td><td>7.3, Seiten 171–172, und 7.4, Seiten 173–178</td><td>Der Zeiger auf ein Array als Parameter und die Kurzschreibweise <code>pa[i]</code> stammen aus dem Kurstext.</td><td>Die Zahl der Vergleiche von Insertion Sort steht nicht im Kurstext.</td></tr>
+      <tr><td>5 Selbst ausprobieren</td><td>7.3 und 7.4, Seiten 171–178</td><td>Die Mittel von Go stammen aus dem Kurstext, wie in Schritt 1 bis 4.</td><td>Das Ausführen im Editorlotsen, die Programme und ihre Ausgaben von Go 1.26.1 gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung:</strong> Darum steht <code>j &gt;= 0</code> links von <code>&amp;&amp;</code>. Lektion: <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
+      <li><strong>Abschnitt 5.5.3.1, Seiten 138–142, for mit Bedingung:</strong> die Form der inneren Schleife. Lektion: <a href="../kap5-anweisungen/go_k5_for_bedingung_interaktiv.html">for-Anweisung mit Bedingung in Go</a>.</li>
+      <li><strong>Abschnitt 8.4.2, Bubblesort:</strong> das Sortierverfahren, das der Kurstext zeigt. Lektion: <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Die Reihe:</strong> Die Programmierübungen <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a> sortieren das gleiche Array mit einem Zeiger. Die <a href="go_k7_quicksort_programmieruebung.html">Programmierübung Quicksort</a> baut ihr Programm ebenfalls in Stufen auf, bis zur Rekursion.</li>
+      <li><strong>Laufzeit:</strong> Der <a href="../exkurse/exkurs_laufzeit_wachstum.html">Exkurs zur Laufzeit</a> vergleicht, wie die Sortierverfahren mit der Datenmenge wachsen.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#zeiger
+  const ANKER = ['worum', 'variablen', 'array', 'funktion', 'zeiger', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Fünf Variablen', 'Schritt 2: Ein Array', 'Schritt 3: Eine Funktion', 'Schritt 4: Ein Zeiger', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); (function () { const r = document.querySelector('.tabs'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); })(); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Die Idee: das Array nach jedem Einfügen ----------
+  const FUENF = [42, 7, 19, 88, 3];
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9];
+  (function () {
+    const a = FUENF.slice();
+    const reihe = (titel, werte, sortiertBis, neu) => '<div class="reihe"><span class="titel">' + titel + '</span>' +
+      werte.map((w, k) => '<span class="z' + (k === neu ? ' neu' : k <= sortiertBis ? ' sortiert' : '') + '">' + w + '</span>').join('') + '</div>';
+    let html = reihe('Vorher', a, 0, -1);
+    for (let i = 1; i < a.length; i++) {
+      const key = a[i]; let j = i - 1;
+      while (j >= 0 && a[j] > key) { a[j + 1] = a[j]; j--; }
+      a[j + 1] = key;
+      html += reihe(key + ' einfügen', a, i, j + 1);
+    }
+    el('idee-bild').innerHTML = html;
+  })();
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, titel, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (grüne Indizes), b (gelbe Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? (r.titel || 'Funktion ' + r.name) + ' ist beendet' :
+      (r.titel || 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) +
+        (v.m && v.m.length ? ' (grün: Index ' + v.m.join(', ') + ')' : '') + (v.b && v.b.length ? ' (gelb: Index ' + v.b.join(', ') + ')' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name)) + (r.weg ? ', beendet' : '') + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + (v.b && v.b.indexOf(i) >= 0 ? ' b' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      const prog = el(kurz + '-programm'), zeile = prog.querySelector('li.aktuell');
+      if (prog.scrollHeight > prog.clientHeight) prog.scrollTop = zeile ? Math.max(0, zeile.offsetTop - prog.clientHeight / 3) : 0;
+      el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  function zeilenVon(D) {
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  // ---------- Eine Auswahl fester Zeilen ----------
+  function wahl(kurz, liste) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  const V = (n, w, neu, m, b) => ({ n: n, w: w, neu: !!neu, m: m, b: b });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const bis = (von, zu) => { const l = []; for (let k = von; k <= zu; k++) l.push(k); return l; };
+
+  // ---------- Schritt 1: fünf Variablen ----------
+  // Das Programm entsteht aus dem gleichen Muster für b, c, d und e: Vergleich mit dem linken Nachbarn, bis zum Anfang.
+  const DV = (function () {
+    const N = ['a', 'b', 'c', 'd', 'e'];
+    const w = FUENF.slice(), lauf = [];
+    const zeilen = ['func main() {', '    a, b, c, d, e := 42, 7, 19, 88, 3', '    fmt.Println("Vorher:     ", a, b, c, d, e)'];
+    let aus = '';
+    const fuenf = neu => [R('main', N.map((n, i) => V(n, w[i], neu.indexOf(n) >= 0)))];
+    const zeigeWerte = () => w.join(' ');
+    lauf.push({ z: 2, satz: 'main legt fünf Variablen an. Der sortierte Teil besteht zu Beginn nur aus a mit 42.', rahmen: fuenf(N), aus: '' });
+    aus = 'Vorher:      ' + zeigeWerte();
+    lauf.push({ z: 3, satz: 'fmt.Println gibt die fünf Werte aus.', rahmen: fuenf([]), aus: aus });
+    for (let k = 1; k < 5; k++) {
+      const links = N.slice(0, k);
+      zeilen.push('    // ' + N[k] + ' einfügen: mit ' + (k === 1 ? 'a vergleichen' : k === 2 ? 'b vergleichen, dann mit a' : links.slice().reverse().join(', ').replace(/, ([a-z])$/, ' und $1') + ' vergleichen'));
+      for (let m = k; m >= 1; m--) {
+        const r = N[m], l = N[m - 1];
+        zeilen.push('    if ' + r + ' < ' + l + ' {', '        ' + l + ', ' + r + ' = ' + r + ', ' + l, '    }');
+        const zIf = zeilen.length - 2, zTausch = zeilen.length - 1;
+        if (w[m] < w[m - 1]) {
+          lauf.push({ z: zIf, satz: r + ' ist ' + w[m] + ', ' + l + ' ist ' + w[m - 1] + '. ' + w[m] + ' < ' + w[m - 1] + ' ist erfüllt.', rahmen: fuenf([]), aus: aus });
+          const t = w[m]; w[m] = w[m - 1]; w[m - 1] = t;
+          lauf.push({ z: zTausch, satz: l + ' und ' + r + ' tauschen ihre Werte mit einer Tupel-Zuweisung. Die ' + w[m - 1] + ' rückt einen Platz nach links, die ' + w[m] + ' einen nach rechts.', rahmen: fuenf([l, r]), aus: aus });
+        } else {
+          lauf.push({ z: zIf, satz: r + ' ist ' + w[m] + ', ' + l + ' ist ' + w[m - 1] + '. ' + w[m] + ' < ' + w[m - 1] + ' ist nicht erfüllt, es wird nicht getauscht.' + (m < k ? ' Der Vergleich war überflüssig: Das Element steht schon an seinem Platz.' : ''), rahmen: fuenf([]), aus: aus });
+        }
+      }
+      zeilen.push('    fmt.Println("' + N[k] + ' eingefügt:", a, b, c, d, e)');
+      aus += NL + N[k] + ' eingefügt: ' + zeigeWerte();
+      lauf.push({ z: zeilen.length, satz: 'fmt.Println gibt die Werte aus. Die Variablen a bis ' + N[k] + ' sind jetzt sortiert: ' + w.slice(0, k + 1).join(' ') + '.' + (k === 4 ? ' Damit sind alle fünf sortiert.' : ''), rahmen: fuenf([]), aus: aus });
+    }
+    zeilen.push('}');
+    return ablauf('v', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 2.');
+  })();
+
+  // ---------- Schritt 2: Array und zwei Schleifen ----------
+  const DA = (function () {
+    const zeilen = ['func main() {', '    a := [5]int{42, 7, 19, 88, 3}', '    fmt.Println("Vorher: ", a)', '    for i := 1; i < len(a); i++ {', '        key := a[i]', '        j := i - 1',
+      '        for j >= 0 && a[j] > key {', '            a[j+1] = a[j]', '            j--', '        }', '        a[j+1] = key', '    }', '    fmt.Println("Nachher:", a)', '}'];
+    const a = FUENF.slice(), lauf = [];
+    let i = null, key = null, j = null, aus = '', gruen = null, vergleiche = 0;
+    const bild = (neu, gelb) => {
+      const vars = [V('a', a.slice(), neu === 'a', gruen === null ? [] : bis(0, gruen), gelb)];
+      if (i !== null) vars.push(V('i', i, neu === 'i'));
+      if (key !== null) vars.push(V('key', key, neu === 'key'));
+      if (j !== null) vars.push(V('j', j, neu === 'j'));
+      return [R('main', vars)];
+    };
+    const schritt = (z, satz, neu, gelb) => lauf.push({ z: z, satz: satz, rahmen: bild(neu, gelb), aus: aus });
+    schritt(2, 'main legt das Array a mit fünf Elementen an.', 'a');
+    aus = 'Vorher:  ' + goArray(a); schritt(3, 'fmt.Println gibt das Array aus.');
+    for (i = 1; ; i++) {
+      if (!(i < a.length)) { key = null; j = null; gruen = a.length - 1; schritt(4, 'i ist ' + i + ' und nicht mehr kleiner als len(a), also 5. Die äußere Schleife endet. Das ganze Array ist sortiert.', 'i'); break; }
+      gruen = i - 1; key = null; j = null;
+      schritt(4, (i === 1 ? 'Die äußere Schleife beginnt mit i gleich 1.' : 'i wird ' + i + '.') + ' Der sortierte Teil reicht von Index 0 bis ' + (i - 1) + '.', 'i', [i]);
+      key = a[i]; schritt(5, 'key merkt sich a[' + i + '], also ' + key + '. Diesen Wert fügt die Runde ein.', 'key', [i]);
+      j = i - 1; schritt(6, 'j ist ' + j + ': Die innere Schleife beginnt beim rechten Ende des sortierten Teils.', 'j', [j]);
+      for (;;) {
+        if (j < 0) { schritt(7, 'j ist −1. j >= 0 ist nicht erfüllt. Wegen der Kurzschluss-Auswertung wertet Go a[j] > key nicht mehr aus. Die innere Schleife endet: key gehört an den Anfang.', null, []); break; }
+        vergleiche++;
+        if (a[j] > key) {
+          schritt(7, 'j >= 0 ist erfüllt. a[' + j + '] ist ' + a[j] + ' und größer als key mit ' + key + '. Die Bedingung ist erfüllt.', null, [j]);
+          a[j + 1] = a[j]; schritt(8, 'a[' + (j + 1) + '] bekommt den Wert von a[' + j + '], also ' + a[j] + '. Die ' + a[j] + ' rückt einen Platz nach rechts. Sie steht jetzt zweimal im Array, key ist in der Variable gesichert.', 'a', [j + 1]);
+          j--; schritt(9, 'j wird ' + j + '.', 'j', j >= 0 ? [j] : []);
+        } else {
+          schritt(7, 'j >= 0 ist erfüllt. a[' + j + '] ist ' + a[j] + ' und nicht größer als key mit ' + key + '. Die innere Schleife endet: key gehört rechts neben a[' + j + '].', null, [j]);
+          break;
+        }
+      }
+      a[j + 1] = key; gruen = i;
+      schritt(11, 'a[' + (j + 1) + '] bekommt key, also ' + key + '. Der sortierte Teil reicht jetzt von Index 0 bis ' + i + '.', 'a', [j + 1]);
+    }
+    aus += NL + 'Nachher: ' + goArray(a);
+    schritt(13, 'fmt.Println gibt das sortierte Array aus. Die innere Schleife hat ' + vergleiche + '-mal a[j] > key ausgewertet. Die Variablen i, key und j gelten nach der äußeren Schleife nicht mehr.');
+    lauf[lauf.length - 1].rahmen = [R('main', [V('a', a.slice(), false, bis(0, a.length - 1))])];
+    return ablauf('a', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 2.');
+  })();
+
+  // ---------- Schritt 3: drei Aufrufe in main ----------
+  const WF = wahl('f', [
+    { code: 'b := insertionSort(a)' + NL + 'fmt.Println(a, b)', aus: '[42 7 19 88 3] [3 7 19 42 88]',
+      satz: 'insertionSort liefert das sortierte Array. main fängt es in b auf. a ist unverändert: Die Funktion hat eine Kopie sortiert.' },
+    { code: 'insertionSort(a)' + NL + 'fmt.Println(a)', aus: '[42 7 19 88 3]',
+      satz: 'Go übersetzt den Aufruf, obwohl niemand das Ergebnis auffängt. Die Funktion hat ihre Kopie sortiert, und die Kopie ist mit dem Ende der Funktion verloren. a ist unverändert.' },
+    { code: 'a = insertionSort(a)' + NL + 'fmt.Println(a)', aus: '[3 7 19 42 88]',
+      satz: 'Das Ergebnis überschreibt a. So kommt das sortierte Array zurück in die Variable von main, aber über zwei Kopien: eine beim Aufruf, eine bei der Rückgabe.' }
+  ]);
+
+  // ---------- Schritt 4: insertionSort mit Zeiger, Runde für Runde ----------
+  const DZ = (function () {
+    const zeilen = ['// sortiert das Array, auf das pa zeigt', 'func insertionSort(pa *[10]int) {', '    for i := 1; i < len(pa); i++ {', '        key := pa[i]', '        j := i - 1',
+      '        for j >= 0 && pa[j] > key {', '            pa[j+1] = pa[j]', '            j--', '        }', '        pa[j+1] = key', '    }', '}', '',
+      'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    fmt.Println("Start:   ", a)', '    insertionSort(&a)', '    fmt.Println("Sortiert:", a)', '}'];
+    const a = START.slice(), lauf = [];
+    let aus = '';
+    const mainR = (gruen, gelb, neu) => R('main', [V('a', a.slice(), neu, gruen, gelb)]);
+    const fkt = (vars, weg) => ({ titel: 'Funktion insertionSort', vars: vars, weg: !!weg });
+    lauf.push({ z: 15, satz: 'main legt das Array a mit zehn Elementen an.', rahmen: [mainR([], [], true)], aus: '' });
+    aus = 'Start:    ' + goArray(a);
+    lauf.push({ z: 16, satz: 'fmt.Println gibt das Array aus.', rahmen: [mainR([], [])], aus: aus });
+    lauf.push({ z: 17, satz: 'main ruft insertionSort(&a) auf. Die Funktion bekommt nur die Adresse von a, das Array wird nicht kopiert. Der sortierte Teil besteht zu Beginn aus a[0] mit 42.', rahmen: [mainR([0], []), fkt([V('pa', 'Adresse von a', true)])], aus: aus });
+    for (let i = 1; i < a.length; i++) {
+      const key = a[i]; let j = i - 1, verschoben = 0;
+      while (j >= 0 && a[j] > key) { a[j + 1] = a[j]; j--; verschoben++; }
+      a[j + 1] = key;
+      const wo = j + 1;
+      const satz = 'Runde i = ' + i + ': key ist ' + key + '. ' + (verschoben === 0 ? 'Links davon steht ' + a[i - 1] + ', das ist nicht größer. Nichts rückt, ' + key + ' bleibt am Index ' + i + '.' :
+        verschoben + (verschoben === 1 ? ' größeres Element rückt' : ' größere Elemente rücken') + ' einen Platz nach rechts, ' + key + ' kommt an den Index ' + wo + (wo === 0 ? ', ganz nach vorn.' : ', rechts neben ' + a[wo - 1] + '.')) +
+        ' Die Funktion ändert über pa das Array a von main. Sortiert sind jetzt die Indizes 0 bis ' + i + '.';
+      lauf.push({ z: 10, satz: satz, rahmen: [mainR(bis(0, i), [wo]), fkt([V('pa', 'Adresse von a'), V('i', i, true), V('key', key, true), V('j', j, true)])], aus: aus });
+    }
+    lauf.push({ z: 12, satz: 'Die äußere Schleife endet bei i gleich 10. insertionSort ist fertig und kehrt zu main zurück. Sie gibt nichts zurück: Das sortierte Array steht schon in a.', rahmen: [mainR(bis(0, 9), []), fkt([], true)], aus: aus });
+    aus += NL + 'Sortiert: ' + goArray(a);
+    lauf.push({ z: 18, satz: 'Zurück in main: fmt.Println gibt das sortierte Array aus.', rahmen: [mainR(bis(0, 9), [])], aus: aus });
+    return ablauf('z', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 15.');
+  })();
+
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Die Programme aller Stufen, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: el('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+      {
+        "name": "Stufe 1: fünf Variablen",
+        "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b, c, d, e := 42, 7, 19, 88, 3\n\tfmt.Println(\"Vorher:     \", a, b, c, d, e)\n\t// b einfügen: mit a vergleichen\n\tif b < a {\n\t\ta, b = b, a\n\t}\n\tfmt.Println(\"b eingefügt:\", a, b, c, d, e)\n\t// c einfügen: mit b vergleichen, dann mit a\n\tif c < b {\n\t\tb, c = c, b\n\t}\n\tif b < a {\n\t\ta, b = b, a\n\t}\n\tfmt.Println(\"c eingefügt:\", a, b, c, d, e)\n\t// d einfügen: mit c, b und a vergleichen\n\tif d < c {\n\t\tc, d = d, c\n\t}\n\tif c < b {\n\t\tb, c = c, b\n\t}\n\tif b < a {\n\t\ta, b = b, a\n\t}\n\tfmt.Println(\"d eingefügt:\", a, b, c, d, e)\n\t// e einfügen: mit d, c, b und a vergleichen\n\tif e < d {\n\t\td, e = e, d\n\t}\n\tif d < c {\n\t\tc, d = d, c\n\t}\n\tif c < b {\n\t\tb, c = c, b\n\t}\n\tif b < a {\n\t\ta, b = b, a\n\t}\n\tfmt.Println(\"e eingefügt:\", a, b, c, d, e)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Vorher:      42 7 19 88 3\nb eingefügt: 7 42 19 88 3\nc eingefügt: 7 19 42 88 3\nd eingefügt: 7 19 42 88 3\ne eingefügt: 3 7 19 42 88\n"
+        }
+      },
+      {
+        "name": "Stufe 1 mit der Funktion ordne",
+        "code": "package main\n\nimport \"fmt\"\n\n// liefert die zwei Werte geordnet: erst den kleineren, dann den größeren\nfunc ordne(x, y int) (int, int) {\n\tif y < x {\n\t\treturn y, x\n\t}\n\treturn x, y\n}\n\nfunc main() {\n\ta, b, c, d, e := 42, 7, 19, 88, 3\n\tfmt.Println(\"Vorher: \", a, b, c, d, e)\n\t// b einfügen\n\ta, b = ordne(a, b)\n\t// c einfügen\n\tb, c = ordne(b, c)\n\ta, b = ordne(a, b)\n\t// d einfügen\n\tc, d = ordne(c, d)\n\tb, c = ordne(b, c)\n\ta, b = ordne(a, b)\n\t// e einfügen\n\td, e = ordne(d, e)\n\tc, d = ordne(c, d)\n\tb, c = ordne(b, c)\n\ta, b = ordne(a, b)\n\tfmt.Println(\"Nachher:\", a, b, c, d, e)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Vorher:  42 7 19 88 3\nNachher: 3 7 19 42 88\n"
+        }
+      },
+      {
+        "name": "Stufe 2: Array und Schleifen",
+        "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tfmt.Println(\"Vorher: \", a)\n\tfor i := 1; i < len(a); i++ {\n\t\tkey := a[i]\n\t\tj := i - 1\n\t\tfor j >= 0 && a[j] > key {\n\t\t\ta[j+1] = a[j]\n\t\t\tj--\n\t\t}\n\t\ta[j+1] = key\n\t}\n\tfmt.Println(\"Nachher:\", a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Vorher:  [42 7 19 88 3]\nNachher: [3 7 19 42 88]\n"
+        }
+      },
+      {
+        "name": "Stufe 3: b := insertionSort(a)",
+        "code": "package main\n\nimport \"fmt\"\n\n// sortiert eine Kopie des Arrays und liefert sie zurück\nfunc insertionSort(a [5]int) [5]int {\n\tfor i := 1; i < len(a); i++ {\n\t\tkey := a[i]\n\t\tj := i - 1\n\t\tfor j >= 0 && a[j] > key {\n\t\t\ta[j+1] = a[j]\n\t\t\tj--\n\t\t}\n\t\ta[j+1] = key\n\t}\n\treturn a\n}\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tb := insertionSort(a)\n\tfmt.Println(a, b)\n}\n",
+        "ergebnis": {
+          "ausgabe": "[42 7 19 88 3] [3 7 19 42 88]\n"
+        }
+      },
+      {
+        "name": "Stufe 3: Ergebnis nicht aufgefangen",
+        "code": "package main\n\nimport \"fmt\"\n\n// sortiert eine Kopie des Arrays und liefert sie zurück\nfunc insertionSort(a [5]int) [5]int {\n\tfor i := 1; i < len(a); i++ {\n\t\tkey := a[i]\n\t\tj := i - 1\n\t\tfor j >= 0 && a[j] > key {\n\t\t\ta[j+1] = a[j]\n\t\t\tj--\n\t\t}\n\t\ta[j+1] = key\n\t}\n\treturn a\n}\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tinsertionSort(a)\n\tfmt.Println(a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "[42 7 19 88 3]\n"
+        }
+      },
+      {
+        "name": "Stufe 4: Zeiger",
+        "code": "package main\n\nimport \"fmt\"\n\n// sortiert das Array, auf das pa zeigt\nfunc insertionSort(pa *[10]int) {\n\tfor i := 1; i < len(pa); i++ {\n\t\tkey := pa[i]\n\t\tj := i - 1\n\t\tfor j >= 0 && pa[j] > key {\n\t\t\tpa[j+1] = pa[j]\n\t\t\tj--\n\t\t}\n\t\tpa[j+1] = key\n\t}\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:   \", a)\n\tinsertionSort(&a)\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Start:    [42 7 19 88 3 25 71 14 60 9]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+        }
+      },
+      {
+        "name": "Stufe 4 mit Ausgabe jedes Einfügens",
+        "code": "package main\n\nimport \"fmt\"\n\n// sortiert das Array, auf das pa zeigt, und gibt\n// nach jedem Einfügen das Array aus\nfunc insertionSort(pa *[10]int) {\n\tvergleiche := 0\n\tfor i := 1; i < len(pa); i++ {\n\t\tkey := pa[i]\n\t\tj := i - 1\n\t\tfor j >= 0 {\n\t\t\tvergleiche++\n\t\t\tif pa[j] <= key {\n\t\t\t\tbreak\n\t\t\t}\n\t\t\tpa[j+1] = pa[j]\n\t\t\tj--\n\t\t}\n\t\tpa[j+1] = key\n\t\tfmt.Println(\"i =\", i, \"key =\", key, \"->\", *pa)\n\t}\n\tfmt.Println(\"Vergleiche:\", vergleiche)\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tinsertionSort(&a)\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "i = 1 key = 7 -> [7 42 19 88 3 25 71 14 60 9]\ni = 2 key = 19 -> [7 19 42 88 3 25 71 14 60 9]\ni = 3 key = 88 -> [7 19 42 88 3 25 71 14 60 9]\ni = 4 key = 3 -> [3 7 19 42 88 25 71 14 60 9]\ni = 5 key = 25 -> [3 7 19 25 42 88 71 14 60 9]\ni = 6 key = 71 -> [3 7 19 25 42 71 88 14 60 9]\ni = 7 key = 14 -> [3 7 14 19 25 42 71 88 60 9]\ni = 8 key = 60 -> [3 7 14 19 25 42 60 71 88 9]\ni = 9 key = 9 -> [3 7 9 14 19 25 42 60 71 88]\nVergleiche: 30\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+        }
+      }
+    ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMO = { 1: DV, 2: DA, 4: DZ };
+  function standSaetze() {
+    if (DEMO[stufe]) {
+      const zusatz = {
+        1: 'Die Demo zeigt die fünf Variablen a bis e als Kästen im Rahmen von main. Gelb ist eine Variable, die sich im letzten Schritt geändert hat.',
+        2: 'Im Rahmen von main stehen a, i, key und j. Im Array a ist grün der sortierte Teil, so weit er vor dem Einfügen reichte. Gelb ist das Element am Index j, mit dem die innere Schleife vergleicht, oder der Platz, an den key kommt.',
+        4: 'Die Demo zeigt insertionSort und main. Ein Schritt der Demo ist eine ganze Runde der äußeren Schleife. Im Rahmen von insertionSort stehen pa, i, key und j nach der Runde. Im Array a von main ist grün der sortierte Teil, gelb der Platz, an den key gekommen ist.'
+      };
+      return [zusatz[stufe]].concat(standAblauf(DEMO[stufe]));
+    }
+    if (stufe === 3) {
+      const x = WF.liste[WF.i];
+      return ['Über der Auswahl steht die Funktion insertionSort(a [5]int) [5]int. Die Auswahl hat drei Möglichkeiten für die zwei Zeilen in main nach a := [5]int{42, 7, 19, 88, 3}.',
+        'Gewählt ist Möglichkeit ' + (WF.i + 1) + ' von 3: ' + x.code.split(NL).join(' ; '), 'Die Ausgabe: ' + x.aus, 'Die Seite sagt dazu: ' + x.satz,
+        'Handgriff: eine der drei festen Möglichkeiten wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+    }
+    if (stufe === 5) return probe.stand();
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 3 ? WF.liste[WF.i].code.split(NL)[0] : DEMO[stufe] ? (DEMO[stufe].stand ? 'Schritt ' + DEMO[stufe].stand + ' von ' + DEMO[stufe].lauf.length : 'nichts ausgeführt') : '';
+  const programmZeilen = () => stufe === 5 ? probe.zeilen() : DEMO[stufe] ? zeilenVon(DEMO[stufe]) : [];
+
+  DV.zeichne(); DA.zeichne(); WF.zeichne(); DZ.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Programmierübung: Insertion Sort Schritt für Schritt',
+    thema: 'Insertion Sort, Sortieren durch Einfügen, sortierter Teil, key, Verschieben, Tupel-Zuweisung, Array, Index, for-Schleife, Kurzschluss-Auswertung, Wertübergabe, Zeiger auf ein Array, Zahl der Vergleiche',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.3, Seiten 171–172, und Abschnitt 7.4, Seiten 173–178. Insertion Sort kommt im Kurstext nicht vor.',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum steht j >= 0 links von && und nicht rechts?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>

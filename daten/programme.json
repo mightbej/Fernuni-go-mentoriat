@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-15T23:11",
+ "stand": "2026-10-16T11:30",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -125,6 +125,11 @@
    "pfad": "kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
    "titel": "Bezeichner und Schlüsselwörter in Go",
    "abschnitt": "3.3.4"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
+   "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
+   "abschnitt": "7.3"
   },
   {
    "pfad": "kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
