@@ -141,7 +141,7 @@
         return;
       }
       el('lotseZeile').hidden = true;
-      leiste.setzeZusatz('Modell: ' + d.modell);
+      leiste.setzeZusatz('Modell: ' + d.modell, d.stand);
       try { localStorage.setItem('lotseVerbunden', '1'); } catch (fehler) {}
       leiste.zeige(true, aufWunsch ? true : undefined);
     } catch (fehler) {

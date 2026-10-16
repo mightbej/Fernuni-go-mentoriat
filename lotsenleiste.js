@@ -45,7 +45,9 @@
 //   leiste.einzeln({ art, text, extra })  Eine Frage außerhalb des Gesprächs. Liefert die Antwort als HTML.
 //   leiste.neuerStand()            Frühere Fragen und Antworten gehen ab jetzt nicht mehr an das Sprachmodell.
 //   leiste.setzeLage(html)         Die Zeile über dem Eingabefeld: worauf sich die nächste Frage bezieht.
-//   leiste.setzeHinweis(html), leiste.setzePlatzhalter(text), leiste.setzeZusatz(text)
+//   leiste.setzeHinweis(html), leiste.setzePlatzhalter(text)
+//   leiste.setzeZusatz(text, stand) Die Angabe im Kopf, meist das Modell. stand erscheint als Text unter der Maus,
+//                                  zum Beispiel "Stand: 16.10.2026 · Lotse 1a2b3c4 · Modul 5d6e7f8" aus /api/bereit.
 //
 // Für die übrigen Anfragen der Seite an ihren Lotsen gibt es Leiste.hole(pfad, daten), zum Beispiel
 // Leiste.hole('/api/bereit'). Mit daten geht die Anfrage als POST mit JSON.
@@ -657,7 +659,11 @@
       setzeLage: html => { teil('lotse-lage').innerHTML = html || ''; },
       setzeHinweis: html => { teil('lotse-hinweis').innerHTML = html || ''; },
       setzePlatzhalter: text => { platzhalter = text || ''; if (!gesperrt) feld.placeholder = platzhalter; },
-      setzeZusatz: text => { teil('lotse-zusatz').textContent = text || ''; },
+      setzeZusatz: (text, stand) => {
+        const zusatz = teil('lotse-zusatz');
+        zusatz.textContent = text || '';
+        zusatz.title = stand ? 'Stand: ' + stand : '';
+      },
       melde: melde,
     };
   }
