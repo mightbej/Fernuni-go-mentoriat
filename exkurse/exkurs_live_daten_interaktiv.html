@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="8.3">
+  <title>Ausblick: Verbünde in Programmen mit Live-Daten</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    li { margin:6px 0; }
+    .hinweis { margin:12px 0; }
+    .card p code, .card li code { overflow-wrap:anywhere; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    table.text th, table.text td { vertical-align:top; }
+    .laden { color:var(--muted);font-style:italic; }
+    /* Die Programme sind breit: Die Ausgabe darf waagrecht rollen statt umzubrechen. */
+    .probe .ausgabe { white-space:pre;overflow-x:auto; }
+    .probe .editor { height:420px; }
+    .probe pre.quelltext { max-height:420px;overflow:auto; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Ausblick: Verbünde in Programmen mit Live-Daten</h1>
+    <p>Drei Go-Programme holen echte Daten aus dem Internet: Aktienkurse, Wetter und Reiseangebote. Fast alles, was darin steht, kennst du schon aus dem Kurs. Führ sie aus, lies sie und bau sie um.</p>
+    <p>Ausblick zum Ende von Kapitel 8 des Kurstexts, vor allem zu Abschnitt 8.3, hierarchische Verbünde, Seiten 212–214.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Aktien-Portfolio</button>
+    <button type="button" class="tab" data-stufe="2">2 Wetter-Vergleich</button>
+    <button type="button" class="tab" data-stufe="3">3 Reiseangebote</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Mit Kapitel 8 hast du alles beisammen, um Programme zu schreiben, die mit echten Daten arbeiten: Verbünde, die ineinander stecken, Arrays von Verbünden, Funktionen mit Zeigern und Schleifen, die suchen, zählen und sortieren.</p>
+    <p>Diese Lektion zeigt dir drei solche Programme. Jedes holt Daten aus dem Internet, legt sie in Verbünden ab und rechnet damit. Du musst nichts Neues lernen. Lies die Programme, führ sie aus und probier eigene Änderungen.</p>
+
+    <h3>Die drei Programme</h3>
+    <ul>
+      <li><strong>Aktien-Portfolio, Schritt 1:</strong> holt Aktienkurse und berechnet, was ein Depot gewonnen oder verloren hat.</li>
+      <li><strong>Wetter-Vergleich, Schritt 2:</strong> holt das Wetter für sechs Städte und sucht die wärmste, die kälteste und die windigste.</li>
+      <li><strong>Reiseangebote, Schritt 3:</strong> liest die neuesten Reiseangebote aus zwei Feeds, holt das Wetter am Zielort dazu und sortiert nach dem Preis je Nacht.</li>
+    </ul>
+
+    <h3>So arbeitest du mit den Programmen</h3>
+    <p>Öffnest du die Lektion im <a href="../lotsen/editorlotse.html">Editorlotsen</a>, steht in jedem Schritt ein Editor mit dem Programm und dem Knopf „Ausführen“. Im Editorlotsen findest du die Lektion im Menü „Programm wählen“ unter „Exkurse“. Die Programme brauchen eine Verbindung zum Internet. Ihre Ausgabe ist bei jedem Lauf anders, weil sich Kurse, Wetter und Angebote ändern.</p>
+    <p>Anderswo zeigt jeder Schritt das Programm und seine Ausgabe vom 15.10.2026.</p>
+
+    <div class="hinweis">
+      <p><strong>Was in den Programmen neu ist</strong></p>
+      <p>Die Programme verwenden ein paar Pakete, die im Kurs nicht vorkommen. Du brauchst sie nicht zu verstehen, um die Programme zu lesen. Sie stecken in wenigen Funktionen am Ende jedes Programms:</p>
+      <ul>
+        <li><strong>net/http:</strong> ruft eine Adresse im Internet ab, so wie ein Browser eine Webseite.</li>
+        <li><strong>encoding/json und encoding/xml:</strong> lesen die Antwort im Format JSON oder XML und füllen damit die Felder eines Verbunds.</li>
+        <li><strong>regexp:</strong> sucht nach einem Muster im Text, zum Beispiel einer Zahl vor dem Zeichen €. Nur das dritte Programm braucht es.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <span></span>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Aktien-Portfolio</h3>
+    <p>Eine Aktie ist ein Anteil an einem Unternehmen, ihr Preis heißt Kurs. Ein Portfolio sind alle Aktien, die jemand besitzt. Jede Aktie darin ist eine Position: welche Aktie, wie viele Stück und zu welchem Preis gekauft.</p>
+    <p>Das Programm holt die Kurse von fünf Aktien bei Yahoo Finance, zum Beispiel AAPL für Apple. Dann legt es ein Portfolio mit drei Positionen an und berechnet, was jede Position gewonnen oder verloren hat.</p>
+
+    <h3>Was du darin schon kennst</h3>
+    <ul>
+      <li><strong>Hierarchische Verbünde:</strong> Ein <code>Portfolio</code> enthält <code>PortfolioPosition</code>, und jede Position enthält eine <code>Aktie</code>. Den Kurs der ersten Position liest das Programm mit <code>p.Positionen[0].Aktie.AktuellerPreis</code>. Abschnitt 8.3, Lektion <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a>.</li>
+      <li><strong>Ein Array mit Zählvariable:</strong> <code>Positionen [10]PortfolioPosition</code> hat Platz für zehn Positionen, das Feld <code>Anzahl</code> sagt, wie viele belegt sind. Kapitel 6, Lektion <a href="../kap6-arrays/go_k6_arrays_interaktiv.html">Arrays in Go</a>.</li>
+      <li><strong>Wert und Fehler als Rückgabe:</strong> <code>holeAktie(symbol string) (Aktie, error)</code> liefert eine Aktie und einen Fehler. Ist der Fehler <code>nil</code>, hat alles geklappt. Abschnitt 7.1.2, Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#fehler">Funktionen in Go</a>.</li>
+      <li><strong>Zeiger auf einen Verbund:</strong> <code>fuegeHinzu(p *Portfolio, …)</code> und <code>berechneSummen(p *Portfolio)</code> ändern das Portfolio selbst und keine Kopie. Abschnitt 8.2.7, Lektion <a href="../kap8-verbund/go_k8_verbund_funktionen_interaktiv.html">Verbünde und Funktionen</a>.</li>
+      <li><strong>Maximum und Minimum suchen:</strong> <code>besteUndSchlechteste</code> geht alle Positionen durch und merkt sich die beste und die schlechteste.</li>
+    </ul>
+
+    <h3>Was neu ist</h3>
+    <p>Die Funktion <code>holeAktie</code> fragt Yahoo Finance mit <code>net/http</code> und liest die Antwort mit <code>encoding/json</code> in den Verbund <code>yahooAntwort</code>. Yahoo Finance ist keine offizielle Schnittstelle. Lehnt sie eine Anfrage ab, sagt das Programm das und rechnet mit den übrigen Aktien weiter.</p>
+
+    <div id="werkstatt-1" data-programm="exkurse/go/aktien_portfolio.go"><p class="laden">Das Programm wird geladen …</p></div>
+
+    <h3>Ideen zum Ändern</h3>
+    <ul>
+      <li><strong>Andere Aktien:</strong> Trag in <code>symbole</code> andere Kürzel ein, zum Beispiel <code>"SAP"</code> oder <code>"NVDA"</code>.</li>
+      <li><strong>Eigene Position:</strong> Leg mit einem vierten Aufruf von <code>fuegeHinzu</code> eine weitere Position an.</li>
+      <li><strong>Sortieren:</strong> Sortier die Positionen mit Bubblesort nach dem Gewinn, wie in Abschnitt 8.4.2.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Wetter-Vergleich</h3>
+    <p>Open-Meteo ist ein freier Wetterdienst. Wer ihm Breitengrad und Längengrad eines Ortes schickt, bekommt das Wetter jetzt und eine Vorhersage für sieben Tage zurück.</p>
+    <p>Das Programm holt so das Wetter für sechs Städte, darunter Hagen. Dann sucht es die wärmste, die kälteste und die windigste Stadt und zeigt die Woche für die erste Stadt.</p>
+
+    <h3>Was du darin schon kennst</h3>
+    <ul>
+      <li><strong>Hierarchische Verbünde:</strong> Ein <code>WetterBericht</code> enthält eine <code>Stadt</code>, die <code>Koordinaten</code> enthält. Den Breitengrad erreicht das Programm mit <code>bericht.Stadt.Koordinaten.Breitengrad</code>. Abschnitt 8.3.</li>
+      <li><strong>Ein Array als Feld:</strong> <code>Vorhersage [7]TagesVorhersage</code> hält sieben Verbünde, einen je Tag. Kapitel 6 und Abschnitt 8.3.</li>
+      <li><strong>Ein Array-Literal von Verbünden:</strong> Die Städte stehen in <code>staedte</code> als <code>[6]Stadt{…}</code>. Abschnitt 8.2.1.</li>
+      <li><strong>Suchen in einer Schleife:</strong> Eine einzige Schleife findet die wärmste, die kälteste und die windigste Stadt und zählt die Temperaturen für den Durchschnitt zusammen.</li>
+      <li><strong>switch:</strong> <code>wetterText</code> macht aus einer Zahl wie 3 den Text „Bewölkt“. Abschnitt 5.5.2, Lektion <a href="../kap5-anweisungen/go_k5_switch_interaktiv.html">switch-Anweisung in Go</a>.</li>
+    </ul>
+
+    <h3>Was neu ist</h3>
+    <p>Die Funktion <code>holeBericht</code> fragt Open-Meteo mit <code>net/http</code> und liest die Antwort mit <code>encoding/json</code>. Die Vorhersage kommt dabei als Arrays mit sieben Werten an, zum Beispiel <code>Max [7]float64</code> für die Höchsttemperaturen.</p>
+
+    <div id="werkstatt-2" data-programm="exkurse/go/wetter_vergleich.go"><p class="laden">Das Programm wird geladen …</p></div>
+
+    <h3>Ideen zum Ändern</h3>
+    <ul>
+      <li><strong>Deine Stadt:</strong> Ersetz eine Stadt in <code>staedte</code> durch deinen Wohnort. Die Koordinaten findest du zum Beispiel in der Wikipedia.</li>
+      <li><strong>Eine andere Woche:</strong> Zeig die Woche für Hagen statt für Berlin.</li>
+      <li><strong>Neue Auswertung:</strong> Such die Stadt mit der höchsten Luftfeuchtigkeit.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Reiseangebote</h3>
+    <p>Viele Webseiten bieten ihre neuesten Beiträge als Feed an: eine Liste in einem festen Format, die ein Programm lesen kann. Das Programm liest die Feeds von mydealz, Gruppe Reisen, und von Urlaubspiraten. Aus jedem Beitrag macht es ein Angebot.</p>
+    <p>Im Titel jedes Angebots sucht das Programm einen Zielort, einen Preis und die Zahl der Nächte. Für jeden gefundenen Zielort holt es das Wetter bei Open-Meteo. Am Ende sortiert es die Angebote nach dem Preis je Nacht.</p>
+
+    <h3>Was du darin schon kennst</h3>
+    <ul>
+      <li><strong>Ein Zeiger als Feld:</strong> <code>Wetter *WetterInfo</code> zeigt auf das Wetter am Zielort. Gibt es kein Wetter, steht dort <code>nil</code>, und das Programm prüft vor der Ausgabe <code>if d.Wetter != nil</code>. Abschnitt 8.2.4 und 7.4, Lektion <a href="../kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde in Go</a>.</li>
+      <li><strong>Ein Zeiger auf ein Element eines Arrays:</strong> <code>deals[i].Wetter = &amp;wetter[k]</code>. Alle Angebote mit dem gleichen Zielort zeigen auf dasselbe Element. So holt das Programm das Wetter für jeden Ort nur einmal.</li>
+      <li><strong>Ein Array von Verbünden:</strong> <code>deals [maxDeals]ReiseDeal</code> mit der Zählvariable <code>anzahl</code>, wie in der Lektion <a href="../kap8-verbund/go_k8_telefonbuch_programmieruebung.html">Programmierübung: Ein Telefonbuch als Verbund-Array</a>.</li>
+      <li><strong>Bubblesort:</strong> <code>sortiere</code> tauscht ganze Verbünde, wie in Abschnitt 8.4.2. Lektion <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a>.</li>
+      <li><strong>Ändern über einen Zeiger:</strong> <code>werteAus(d *ReiseDeal)</code> trägt Zielort, Preis und Nächte direkt in das Angebot ein. Abschnitt 8.2.7.</li>
+    </ul>
+
+    <h3>Was neu ist</h3>
+    <p>Die Funktion <code>leseFeed</code> holt einen Feed mit <code>net/http</code> und liest ihn mit <code>encoding/xml</code> Element für Element. Bei jedem Element <code>&lt;item&gt;</code> liest sie ein Angebot ein. Zielort, Preis und Nächte findet <code>werteAus</code> mit Suchmustern aus dem Paket <code>regexp</code>.</p>
+    <p>Das Programm rät dabei. „Flüge: Paris – Westkanada“ ist für das Programm ein Angebot nach Paris, obwohl der Flug dort beginnt. Nicht jedes Angebot nennt Preis und Zielort im Titel. Am 15.10.2026 waren es 7 von 70.</p>
+
+    <div id="werkstatt-3" data-programm="exkurse/go/reiseangebote.go"><p class="laden">Das Programm wird geladen …</p></div>
+
+    <h3>Ideen zum Ändern</h3>
+    <ul>
+      <li><strong>Dein Reiseziel:</strong> Ergänz in <code>orte</code> ein eigenes Ziel mit seinen Koordinaten. Vergrößer dafür die Länge des Arrays.</li>
+      <li><strong>Eine Preisgrenze:</strong> Zeig nur Angebote unter 100 € je Nacht.</li>
+      <li><strong>Nach Wetter:</strong> Zeig nur Ziele, an denen es wärmer als 20 °C ist.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Bezug zum Kurstext</h3>
+    <p>Die drei Programme stammen vom Mentor und stehen nicht im Kurstext. Die Tabelle nennt zu jedem Schritt die Stellen im Kurstext, deren Stoff die Programme verwenden, mit den Seiten zum Nachlesen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Aktien-Portfolio</td><td>6, Seiten 151–154<br>7.1.2, Seiten 166–168<br>8.2.7, Seiten 210–211<br>8.3, Seiten 212–214</td><td>Aus dem Kurstext stammen das Array mit fester Länge, die Rückgabe eines Werts mit einem <code>error</code>, der Zeiger auf einen Verbund als Parameter und der Verbund als Feld.</td><td>Aktien, Yahoo Finance und die Pakete <code>net/http</code> und <code>encoding/json</code> stehen nicht im Kurstext.</td></tr>
+      <tr><td>2 Wetter-Vergleich</td><td>5.5.2, Seiten 133–137<br>6, Seiten 151–154<br>8.2.1, Seiten 201–202<br>8.3, Seiten 212–214</td><td>Aus dem Kurstext stammen <code>switch</code>, das Array als Feld, das Array-Literal von Verbünden und Verbünde über mehrere Stufen.</td><td>Open-Meteo und die Pakete <code>net/http</code>, <code>encoding/json</code> und <code>time</code> stehen nicht im Kurstext.</td></tr>
+      <tr><td>3 Reiseangebote</td><td>7.4, Seiten 173–178<br>8.2.4, Seiten 205–207<br>8.2.7, Seiten 210–211<br>8.4.2, Seiten 225–226</td><td>Aus dem Kurstext stammen <code>nil</code> als Null-Wert eines Zeigers, der Zeiger auf einen Verbund, das Ändern über einen Zeiger und Bubblesort.</td><td>Feeds, das Format XML und die Pakete <code>encoding/xml</code> und <code>regexp</code> stehen nicht im Kurstext.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Datenverbund:</strong> Ohne Go wird das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer gezeigt. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a>, Schritt 3.</li>
+      <li><strong>Abschnitt 8.2, Seiten 199–200, der Datentyp struct:</strong> Lektion: <a href="../kap8-verbund/go_k8_verbund_interaktiv.html">Verbund in Go: der Datentyp struct</a>.</li>
+      <li><strong>Abschnitt 8.3, Seiten 212–214, hierarchische Verbünde:</strong> Lektion: <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <p>Ein weiteres Programm, das mit dem Stoff des Kurses echtes Geld nachbaut, steht im Exkurs <a href="exkurs_tether_interaktiv.html">Vom Eisenbahnzug in den Maschinenraum von Tether</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<!-- Die Ausgaben vom 15.10.2026, erzeugt mit Go 1.26.1. Sie stehen da, wo kein Editorlotse ausführt. -->
+<script type="text/plain" id="ausgabe-1">
+Aktien-Portfolio mit Kursen aus dem Internet
+============================================
+
+1. Kurse von Yahoo Finance
+
+   Kürzel  Unternehmen                 Kurs $   Änderung
+   AAPL    Apple Inc.                  342.00     -0.28%
+   MSFT    Microsoft Corporation       539.44     +1.08%
+   GOOGL   Alphabet Inc.               349.22     +0.45%
+   AMZN    Amazon.com, Inc.            254.76     +0.27%
+   TSLA    Tesla, Inc.                 362.44     -1.29%
+
+2. Portfolio anlegen
+
+   10 x AAPL gekauft zu 150.00 $ am 2024-01-15
+   5 x MSFT gekauft zu 350.00 $ am 2024-02-20
+   15 x TSLA gekauft zu 200.00 $ am 2024-03-10
+
+3. Mein Tech-Portfolio
+
+   Kürzel  Anzahl      Kauf $     Heute $      Gewinn $   Prozent
+   AAPL        10      150.00      342.00      +1920.00   +128.0%
+   MSFT         5      350.00      539.44       +947.20    +54.1%
+   TSLA        15      200.00      362.44      +2436.60    +81.2%
+   ----------------------------------------------------------------
+   Summe                                       +5303.80    +84.9%
+
+   Investiert: 6250.00 $, heute wert: 11553.80 $
+
+4. Auswertung
+
+   Beste Position:        TSLA, +2436.60 $
+   Schlechteste Position: MSFT, +947.20 $
+</script>
+<script type="text/plain" id="ausgabe-2">
+Wetter-Vergleich mit Daten aus dem Internet
+===========================================
+
+1. Wetter von Open-Meteo
+
+   Stadt         Temp.   gefühlt      Wind  Feuchte  Wetter
+   Berlin       12.3°C    11.5°C    5 km/h      85%  Teilweise bewölkt
+   München      12.6°C    12.4°C    3 km/h      89%  Bewölkt
+   Hamburg      13.4°C    12.9°C    6 km/h      87%  Bewölkt
+   Hagen        15.3°C    13.9°C   11 km/h      75%  Bewölkt
+   Paris        19.2°C    19.4°C    6 km/h      68%  Klar
+   London       17.6°C    17.4°C   13 km/h      86%  Teilweise bewölkt
+
+2. Vergleich
+
+   Am wärmsten:   Paris, 19.2 °C
+   Am kältesten:  Berlin, 12.3 °C
+   Am windigsten: London, 13 km/h
+   Durchschnitt:  15.1 °C
+
+3. Die nächsten sieben Tage in Berlin
+
+   Tag        Wetter                 Temperatur    Regen
+   Do 15.10.  Bewölkt                7 bis 16°C   0.0 mm
+   Fr 16.10.  Nebel                  7 bis 19°C   0.0 mm
+   Sa 17.10.  Leichter Regen         6 bis 14°C   0.2 mm
+   So 18.10.  Nebel                  4 bis 13°C   0.0 mm
+   Mo 19.10.  Bewölkt                6 bis 11°C   0.0 mm
+   Di 20.10.  Bewölkt               10 bis 14°C   0.0 mm
+   Mi 21.10.  Leichter Regen        10 bis 17°C   5.2 mm
+
+   Regen in der Woche: 5.4 mm, an 1 von 7 Tagen mehr als 0,5 mm
+</script>
+<script type="text/plain" id="ausgabe-3">
+Reiseangebote aus dem Internet, mit Wetter am Zielort
+=====================================================
+
+1. Feeds lesen
+
+   mydealz Reisen   30 Angebote
+   Urlaubspiraten   40 Angebote
+
+2. Zielort, Preis und Nächte suchen
+
+   7 von 70 Angeboten nennen einen bekannten Zielort und einen Preis.
+
+3. Wetter an den Zielorten
+
+   New York        18.8 °C, klar
+   Teneriffa       24.0 °C, bewölkt
+   Paris           19.2 °C, klar
+   Mallorca        20.2 °C, teils bewölkt
+   London          17.6 °C, teils bewölkt
+   Rom             18.0 °C, teils bewölkt
+   Wien            12.9 °C, teils bewölkt
+
+4. Die günstigsten Angebote mit Zielort und Preis
+
+   Nr.  Zielort         Preis €   Nächte    €/Nacht  Wetter                  Titel
+     1  Rom               32.20        7      32.20  18 °C, teils bewölkt    1 Woche bei Rom im Mobilheim für 32,20€ pro Nacht…
+     2  Teneriffa         46.98        ?      46.98  24 °C, bewölkt          Direktflüge auf die Kanarischen Inseln (Teneriffa…
+     3  London           133.00        2      66.50  18 °C, teils bewölkt    London (Großbritannien): 2 Nächte in Budget-Unter…
+     4  Mallorca         599.00        7      85.57  20 °C, teils bewölkt    AIDA Last Minute: 7 Nächte Mallorca, La Spezia, R…
+     5  Wien              89.98        1      89.98  13 °C, teils bewölkt    Hotelgutschein: Wien (Österreich) - The Raphael V…
+     6  Paris            353.00        ?     353.00  19 °C, klar             Flüge: Paris – Westkanada mit WestJet hin & zurüc…
+     7  New York        1730.00        ?    1730.00  19 °C, klar             5 % Rabatt auf Meilen bei MilesMarket – z. B. Bus…
+
+   ? heißt: Das Angebot nennt keine Zahl der Nächte, zum Beispiel bei einem Flug.
+   €/Nacht ist dann der ganze Preis.
+</script>
+
+<script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+
+  // ---------- Reiter ----------
+  const ANKER = ['worum', 'aktien', 'wetter', 'reisen', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Aktien-Portfolio', 'Schritt 2: Wetter-Vergleich', 'Schritt 3: Reiseangebote', 'Schritt 4: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Die Programme ----------
+  // Der Quelltext steht nur einmal, im Ordner go. Im Editorlotsen holt die Lektion ihn über /api/programm, so wie
+  // das Menü „Programm wählen“. Anderswo, etwa auf GitHub Pages, holt sie die Datei neben der Lektion.
+  const LOKAL = location.protocol === 'http:' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  async function ladeCode(pfad) {
+    if (LOKAL) {
+      try {
+        const r = await fetch('/api/programm?pfad=' + encodeURIComponent('online/' + pfad));
+        if (r.ok) { const d = await r.json(); if (d.code) return d.code; }
+      } catch (e) { /* weiter mit der Datei */ }
+    }
+    const r = await fetch('../' + pfad);
+    if (!r.ok) throw new Error(r.status);
+    return (await r.text()).replace(/\r\n/g, '\n');
+  }
+  const proben = {};
+  async function richteEin(n) {
+    const ziel = el('werkstatt-' + n);
+    const pfad = ziel.dataset.programm;
+    let code;
+    try { code = await ladeCode(pfad); }
+    catch (e) {
+      ziel.innerHTML = '<p class="laden">Das Programm ließ sich nicht laden. Du findest es unter <a href="../' + pfad + '">' + pfad.split('/').pop() + '</a>.</p>';
+      return;
+    }
+    proben[n] = Ausprobieren.einrichten({
+      ziel: ziel,
+      fassungen: [{ name: pfad.split('/').pop(), code: code, ergebnis: { ausgabe: el('ausgabe-' + n).textContent.replace(/^\n/, '') } }],
+      beiAenderung: () => { if (stufe === n) melde(false); }
+    });
+  }
+
+  // ---------- Kurslotse ----------
+  function standSaetze() {
+    if (proben[stufe]) return proben[stufe].stand().concat(['Das Programm braucht eine Verbindung zum Internet. Seine Ausgabe ist bei jedem Lauf anders. Die festgehaltene Ausgabe stammt vom 15.10.2026.']);
+    if (stufe >= 1 && stufe <= 3) return ['Das Programm dieses Schritts ließ sich nicht laden.'];
+    if (stufe === 4) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => proben[stufe] ? proben[stufe].kurz() : '';
+
+  zeigeStufe(stufeAusAdresse(), false);
+  Promise.all([1, 2, 3].map(richteEin)).then(() => {
+    Kurslotse.einrichten({
+      titel: 'Ausblick: Verbünde in Programmen mit Live-Daten',
+      thema: 'hierarchischer Verbund, Array von Verbünden, Zeiger auf Verbund, nil, Bubblesort, Live-Daten',
+      bezug: 'Ausblick zu Kapitel 8, Abschnitt 8.3, Seiten 212–214',
+      beschreibung: '../kurslotse/exkurse/exkurs_live_daten_interaktiv.md',
+      reiter: () => ANKER[stufe],
+      schritt: () => SCHRITTE[stufe],
+      sichtbar: () => el('stufe-' + stufe),
+      text: '.card > h3, .card > p, .card > ul, .hinweis, table.text',
+      zeilen: () => proben[stufe] ? proben[stufe].zeilen() : [],
+      zeilenTitel: 'Das Programm im Editor:',
+      stand: standSaetze,
+      kurz: kurzStand,
+      beispiel: 'Wie füge ich eine eigene Aktie hinzu?'
+    });
+    angemeldet = true;
+  });
+})();
+</script>
+</body>
+</html>
