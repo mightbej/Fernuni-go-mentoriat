@@ -14,6 +14,7 @@ Für alle Schritte gilt:
 - Die Werte: In Stufe 1 bis 3 sind es die fünf Werte 42, 7, 19, 88, 3. Ab Stufe 4 ist es das Array der Bubble-Sort-Übungen, `[10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}`. Die ersten fünf Werte sind die gleichen.
 - Die Funktionen ab Stufe 4: `swap(pa *[10]int, i, j int)` tauscht zwei Elemente. `partition(pa *[10]int, start, end int) int` teilt den Bereich von `start` bis `end` auf, beide gehören dazu. `quickSort(pa *[10]int, start, end int)` sortiert den Bereich.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
+- Die Demos in Schritt 1, 2, 4 und 5 haben oben zwei Spalten. Links steht das Programm in einem Kasten, der zur hervorgehobenen Zeile rollt, lange Zeilen brechen dort um. Rechts stehen die Knöpfe, darunter der Satz zum letzten Schritt und die Ausgabe. Die Rahmen mit den Variablen stehen darunter über die volle Breite. Ist die Seite schmal, zum Beispiel auf einem Telefon, steht alles untereinander.
 - Die Demos stellen im Browser nach, was das Programm tut. Ausführen lässt sich ein Programm nur in Schritt 6, wenn der Editorlotse die Lektion ausliefert.
 - Fragt der Student nach der Lösung einer eigenen Aufgabe, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
