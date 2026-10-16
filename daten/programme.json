@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-15T18:13",
+ "stand": "2026-10-15T23:11",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -89,11 +89,35 @@
    "slices": true
   },
   {
+   "pfad": "exkurse/go/aktien_portfolio.go",
+   "titel": "Aktien-Portfolio mit Kursen aus dem Internet",
+   "datei": "aktien_portfolio",
+   "gruppe": "Programme des Mentoriats zu den Exkursen",
+   "sha256": "57008ebe311b3b247c97befd31f2494e8d540fa2e9983023fdb743c605c77a11",
+   "lektion": "exkurse/exkurs_live_daten_interaktiv.html"
+  },
+  {
    "pfad": "exkurse/go/laufzeit_vergleiche_zaehlen.go",
    "titel": "Wie die Laufzeit mit der Datenmenge wächst",
    "datei": "laufzeit_vergleiche_zaehlen",
    "gruppe": "Programme des Mentoriats zu den Exkursen",
    "sha256": "aaec514bd15fa3bfd3d536dfb9d9943a2e83cf10be893fb59f1f0d945f00b233"
+  },
+  {
+   "pfad": "exkurse/go/reiseangebote.go",
+   "titel": "Reiseangebote aus dem Internet, mit Wetter am Zielort",
+   "datei": "reiseangebote",
+   "gruppe": "Programme des Mentoriats zu den Exkursen",
+   "sha256": "633eaa1cf8bc1532500fd9af7fd859a08d1906b4d4ddc1f6747235add551f796",
+   "lektion": "exkurse/exkurs_live_daten_interaktiv.html"
+  },
+  {
+   "pfad": "exkurse/go/wetter_vergleich.go",
+   "titel": "Wetter-Vergleich mit Daten aus dem Internet",
+   "datei": "wetter_vergleich",
+   "gruppe": "Programme des Mentoriats zu den Exkursen",
+   "sha256": "e10f83d481c3f6dbb8f636242c0d0c857e1f1038e04da7ae61d6189211dc48fb",
+   "lektion": "exkurse/exkurs_live_daten_interaktiv.html"
   }
  ],
  "lektionen": [
@@ -101,6 +125,16 @@
    "pfad": "kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
    "titel": "Bezeichner und Schlüsselwörter in Go",
    "abschnitt": "3.3.4"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+   "titel": "Programmierübung: Quicksort Schritt für Schritt",
+   "abschnitt": "7.5"
+  },
+  {
+   "pfad": "exkurse/exkurs_live_daten_interaktiv.html",
+   "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+   "abschnitt": "8.3"
   }
  ]
 }
