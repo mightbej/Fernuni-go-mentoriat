@@ -139,7 +139,7 @@
     const kasten = angaben.ziel;
     kasten.classList.add('probe');
     kasten.innerHTML = `
-      <div class="fassungen" role="group" aria-label="Fassung des Programms"></div>
+      <div class="fassungen" role="group" aria-label="Programm wählen"></div>
       <div class="lage" aria-live="polite"></div>
       <pre class="quelltext"></pre>
       <div class="editor" hidden></div>
@@ -147,7 +147,7 @@
       <div class="knoepfe">
         <button type="button" class="haupt ausfuehren" hidden>Ausführen</button>
         <button type="button" class="stopp" hidden>Stopp</button>
-        <button type="button" class="zuruecksetzen" hidden>Fassung zurücksetzen</button>
+        <button type="button" class="zuruecksetzen" hidden>Programm zurücksetzen</button>
         <span class="stand"></span>
       </div>
       <p><strong class="ueber">Was Go dazu meldet oder ausgibt</strong></p>
@@ -361,13 +361,13 @@
       zeilen: () => code().split('\n'),
       stand: () => {
         const f = fassungen[gewaehlt];
-        const saetze = ['Gewählt ist die Fassung „' + f.name + '“.'];
+        const saetze = ['Gewählt ist das Programm „' + f.name + '“.'];
         if (zustand !== 'bereit') {
           saetze.push('Die Seite läuft nicht im Editorlotsen. Der Student kann hier nichts ändern und nichts ausführen. Die Seite zeigt das Programm und darunter, was Go 1.26.1 dazu gemeldet oder ausgegeben hat.');
         } else {
           saetze.push('Die Seite läuft im Editorlotsen. Der Student kann das Programm im Editor ändern und mit „Ausführen“ ausführen.');
-          saetze.push(ed && ed.text() !== f.code ? 'Der Student hat das Programm im Editor geändert. Die Programmzeilen unten zeigen seine Fassung.' : 'Das Programm im Editor ist die Fassung, wie die Seite sie lädt.');
-          if (!gelaufen) saetze.push('Diese Fassung ist seit der letzten Änderung nicht ausgeführt.');
+          saetze.push(ed && ed.text() !== f.code ? 'Der Student hat das Programm im Editor geändert. Die Programmzeilen unten zeigen seinen geänderten Code.' : 'Das Programm im Editor ist so, wie die Seite es lädt.');
+          if (!gelaufen) saetze.push('Das Programm ist seit der letzten Änderung nicht ausgeführt.');
         }
         if (protokoll) saetze.push(protokoll.slice(0, 3000));
         return saetze;
