@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.5">
+  <title>Programmierübung: Quicksort Schritt für Schritt</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    button.code { font-family:Consolas,"Courier New",monospace;text-align:left;white-space:pre; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Die Idee ohne Code: Zahlen als Kärtchen */
+    .reihe { display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 14px; }
+    .reihe .titel { min-width:7.5em;color:var(--muted);font-size:.95rem; }
+    .reihe span.z { min-width:2.4em;text-align:center;border:2px solid #cbd5e1;border-radius:6px;padding:4px 6px;background:#fff;font-family:Consolas,"Courier New",monospace;font-weight:700; }
+    .reihe span.z.pivot { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .reihe span.z.klein { background:#d1fae5;border-color:var(--accent); }
+    .reihe span.z.gross { background:#dbeafe;border-color:var(--blau); }
+    .legende { display:flex;flex-wrap:wrap;gap:14px;font-size:.9rem;color:var(--muted);margin:4px 0 10px; }
+    .legende i { display:inline-block;width:14px;height:14px;border-radius:3px;border:2px solid;vertical-align:-2px;margin-right:5px; }
+
+    /* Programm mit Zeilennummern. Gelb: Hier steht der Lauf. */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:1rem;line-height:1.7;list-style:none;overflow-x:auto; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+
+    /* Jede Funktion, die gerade läuft, hat einen Rahmen mit ihren Variablen */
+    .rahmenreihe { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;align-items:flex-start; }
+    .rahmen { border:2px solid #94a3b8;border-radius:10px;padding:8px 12px 10px;background:#f8fafc;min-width:210px; }
+    .rahmen.weg { border-style:dashed;opacity:.6; }
+    .rahmen h4 { margin:0 0 6px;font-size:.95rem;color:var(--muted);font-weight:600; }
+    .rahmen h4 code { color:#111827; }
+    .rahmen .leer { color:var(--muted);font-size:.9rem; }
+    .kasten { display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:2px solid var(--blau);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:Consolas,"Courier New",monospace;font-size:1.02rem; }
+    .kasten.neu { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld { display:flex;gap:3px;flex-wrap:wrap; }
+    .kasten .feld span { min-width:2.1em;text-align:center;border:1px solid #cbd5e1;border-radius:5px;padding:2px 4px;background:#fff; }
+    .kasten .feld span.m { background:#d1fae5;border-color:var(--accent);font-weight:700; }
+    .kasten .feld span.b { background:var(--aktiv-bg);border-color:var(--aktiv); }
+    .kasten .feld span.m.b { background:#d1fae5;border-color:var(--aktiv);border-width:2px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Programmierübung: Quicksort Schritt für Schritt</h1>
+    <p>Quicksort sortiert, indem es ein Array um einen Vergleichswert aufteilt und die Teile auf die gleiche Weise weiter aufteilt. Die Übung baut das Programm in fünf Stufen auf: erst mit fünf einzelnen Variablen, am Ende als rekursive Funktion mit Zeiger.</p>
+    <p>Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193. Quicksort kommt im Kurstext nicht vor.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Fünf Variablen</button>
+    <button type="button" class="tab" data-stufe="2">2 Ein Array</button>
+    <button type="button" class="tab" data-stufe="3">3 Eine Funktion</button>
+    <button type="button" class="tab" data-stufe="4">4 Zeiger und Bereiche</button>
+    <button type="button" class="tab" data-stufe="5">5 Rekursion</button>
+    <button type="button" class="tab" data-stufe="6">6 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Bubble Sort und Selection Sort vergleichen immer wieder fast alle Elemente miteinander. Quicksort geht anders vor. Es wählt ein Element als Vergleichswert. Dieses Element heißt <strong>Pivot</strong>, das ist das englische Wort für Drehpunkt. Dann teilt es die übrigen Elemente in zwei Gruppen:</p>
+    <ul>
+      <li><strong>Links:</strong> alle Elemente, die kleiner sind als das Pivot.</li>
+      <li><strong>Rechts:</strong> alle Elemente, die größer oder gleich sind.</li>
+    </ul>
+    <p>Das Pivot kommt zwischen die zwei Gruppen. Dort steht es schon an seinem endgültigen Platz, denn links davon steht nur Kleineres und rechts nur Größeres. Dieser Vorgang heißt <strong>Aufteilen</strong>, englisch partition.</p>
+    <p>Ein Beispiel mit dem Array der Bubble-Sort-Übungen. Das Pivot ist das erste Element, 42:</p>
+    <div class="legende"><span><i style="background:#fef3c7;border-color:#fbbf24"></i>Pivot</span><span><i style="background:#d1fae5;border-color:#0f766e"></i>kleiner als 42</span><span><i style="background:#dbeafe;border-color:#1e40af"></i>größer als 42</span></div>
+    <div id="idee-bild"></div>
+    <p>Danach sind zwei kleinere Aufgaben übrig: den linken Teil sortieren und den rechten Teil sortieren. Für beide Teile gilt das gleiche Verfahren. Jeder Teil bekommt sein eigenes Pivot und wird wieder aufgeteilt. Das geht so weiter, bis jeder Teil nur noch ein Element hat oder leer ist. Dann ist das ganze Array sortiert.</p>
+
+    <h3>Wie die Übung aufgebaut ist</h3>
+    <p>Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses:</p>
+    <ul>
+      <li><strong>Stufe 1, fünf Variablen:</strong> einmal aufteilen mit der Tupel-Zuweisung aus Abschnitt 5.3. Die Entscheidungen triffst du selbst.</li>
+      <li><strong>Stufe 2, ein Array:</strong> Index und <code>for</code>-Schleife aus Kapitel 6. Jetzt entscheidet das Programm.</li>
+      <li><strong>Stufe 3, eine Funktion:</strong> Das Aufteilen wird die Funktion <code>partition</code>, Abschnitt 7.1 und 7.2.</li>
+      <li><strong>Stufe 4, Zeiger und Bereiche:</strong> <code>partition</code> bekommt einen Zeiger auf das Array und teilt einen Bereich auf, Abschnitt 7.3 und 7.4.</li>
+      <li><strong>Stufe 5, Rekursion:</strong> Die Funktion <code>quickSort</code> ruft sich für beide Teile selbst auf, Abschnitt 7.5.</li>
+    </ul>
+    <div class="hinweis">Quicksort stammt von Tony Hoare, 1959. Es kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors und verwendet nur, was der Kurs bis Abschnitt 7.5 gezeigt hat.</div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Fünf Variablen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Die fünf Variablen haben die Werte 42, 7, 19, 88 und 3. Das Pivot ist <code>a</code> mit 42. Welche Werte stehen nach dem Aufteilen links von 42, welche rechts?
+          <details><summary>Auflösung</summary>Links stehen 7, 19 und 3, rechts steht 88. In welcher Reihenfolge die drei kleineren Werte links stehen, ist beim Aufteilen noch offen.</details></li>
+        <li>Warum steht in Zeile 7 <code>d, e = e, d</code> und nicht zwei Zeilen <code>d = e</code> und <code>e = d</code>?
+          <details><summary>Auflösung</summary>Nach <code>d = e</code> haben beide Variablen den Wert 3, die 88 ist verloren. Die Tupel-Zuweisung wertet erst beide Ausdrücke rechts aus und weist dann zu.</details></li>
+      </ol>
+    </div>
+    <p>Das Programm teilt die fünf Werte einmal auf. Es braucht dafür nur zwei Anweisungen, beide sind Tupel-Zuweisungen:</p>
+    <ul>
+      <li><strong>Zeile 7:</strong> <code>e</code> ist kleiner als 42 und steht rechts von <code>d</code> mit 88. <code>d</code> und <code>e</code> tauschen ihre Werte. Jetzt stehen die drei kleineren Werte in <code>b</code>, <code>c</code> und <code>d</code>.</li>
+      <li><strong>Zeile 9:</strong> Das Pivot tauscht mit dem letzten kleineren Wert, mit <code>d</code>. Jetzt steht 42 zwischen den kleineren und den größeren Werten.</li>
+    </ul>
+    <ol class="programm" id="v-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="v-weiter">nächste Anweisung</button>
+      <button type="button" id="v-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="v-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="v-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="v-ausgabe"></div>
+    <div class="auskunft" id="v-urteil"></div>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <p>Welche Werte kleiner sind als 42, steht nur in den Kommentaren. Die Entscheidungen hast du getroffen, das Programm vergleicht nichts. Für andere Werte müsstest du andere Tausche hinschreiben, und für zehn oder hundert Werte bräuchtest du zehn oder hundert Variablen.</p>
+    <p>Das Programm soll selbst vergleichen. Dafür muss es die Werte der Reihe nach durchgehen können, und das geht mit einem Array und einem Index. Das ist Stufe 2.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Ein Array</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Am Ende der Schleife hat <code>left</code> den Wert 4. Was bedeutet diese 4?
+          <details><summary>Auflösung</summary>Die Elemente an den Indizes 1 bis 3 sind kleiner als das Pivot, das sind drei Elemente. Am Index 4 beginnen die größeren. Das Pivot gehört deshalb an den Index <code>left-1</code>, also 3.</details></li>
+      </ol>
+    </div>
+    <p>Die fünf Werte stehen jetzt im Array <code>a</code>. Das Pivot ist <code>a[0]</code>. Zwei Variablen tragen das Aufteilen:</p>
+    <ul>
+      <li><strong><code>i</code>:</strong> Die Schleife geht mit <code>i</code> vom Index 1 bis zum letzten Index und vergleicht jedes Element mit dem Pivot.</li>
+      <li><strong><code>left</code>:</strong> ein Index, der die Grenze markiert. Links von <code>left</code>, ab Index 1, stehen nur Elemente, die kleiner sind als das Pivot. <code>left</code> ist der Platz für das nächste kleinere Element.</li>
+    </ul>
+    <p>Findet die Schleife ein kleineres Element, tauscht es mit dem Element am Index <code>left</code>, und <code>left</code> rückt eins weiter. Nach der Schleife tauscht das Pivot mit dem Element am Index <code>left-1</code>, dem letzten kleineren Element.</p>
+    <p>In der Demo ist grün, was schon links von der Grenze steht. Gelb ist das Element am Index <code>i</code>, das die Schleife gerade ansieht.</p>
+    <ol class="programm" id="a-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">nächste Anweisung</button>
+      <button type="button" id="a-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="a-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="a-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="a-ausgabe"></div>
+    <div class="auskunft" id="a-urteil"></div>
+    <p>Das Ergebnis ist das gleiche wie in Stufe 1: <code>[3 7 19 42 88]</code>. Neu ist, dass das Programm selbst vergleicht. Es teilt jedes Array mit fünf Elementen auf, ohne dass eine Zeile geändert werden muss.</p>
+    <p>Bei 7 und 19 tauscht ein Element mit sich selbst, weil <code>i</code> und <code>left</code> gleich sind. Das schadet nicht.</p>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <p>Das Aufteilen steht mitten in <code>main</code>. Für den linken und den rechten Teil müsste es noch einmal dastehen, und für deren Teile wieder. Das Aufteilen soll deshalb eine Funktion werden. Das ist Stufe 3.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Eine Funktion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>main</code> ruft <code>partition(a)</code> auf und gibt danach <code>a</code> aus. Was steht da?
+          <details><summary>Auflösung</summary>Das unveränderte Array <code>[42 7 19 88 3]</code>. Die Funktion hat eine Kopie aufgeteilt, und ihr Ergebnis hat niemand aufgefangen.</details></li>
+      </ol>
+    </div>
+    <p>Das Aufteilen aus Stufe 2 steht jetzt in der Funktion <code>partition</code>. Sie bekommt das Array als Parameter und liefert zwei Ergebnisse: das aufgeteilte Array und den Index des Pivots.</p>
+    <pre class="code-block">// teilt das Array um das Pivot a[0] auf und liefert
+// das aufgeteilte Array und den Index des Pivots
+func partition(a [5]int) ([5]int, int) {
+    pivot := a[0]
+    left := 1
+    for i := 1; i &lt; len(a); i++ {
+        if a[i] &lt; pivot {
+            a[i], a[left] = a[left], a[i]
+            left++
+        }
+    }
+    a[0], a[left-1] = a[left-1], a[0]
+    return a, left - 1
+}</pre>
+    <p>Warum liefert die Funktion das Array zurück? In Go bekommt eine Funktion eine Kopie ihres Arguments, auch bei einem Array. Das ist die Wertübergabe aus Abschnitt 7.2. Die Funktion teilt ihre Kopie auf. Das Array in <code>main</code> bleibt, wie es war.</p>
+    <p>Wähle eine von drei Möglichkeiten, wie <code>main</code> die Funktion aufruft:</p>
+    <div class="spalte" id="f-wahl"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="f-ausgabe"></div>
+    <div class="auskunft" id="f-urteil"></div>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <ul>
+      <li><strong>Die Kopie:</strong> Jeder Aufruf kopiert das ganze Array hin und zurück. Bei fünf Elementen fällt das nicht auf, bei vielen schon. Die Lektion <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zeigt das an Bubble Sort.</li>
+      <li><strong>Das ganze Array:</strong> Die Funktion teilt immer das ganze Array auf. Quicksort muss aber auch den linken Teil allein aufteilen können, zum Beispiel nur die Indizes 0 bis 2.</li>
+    </ul>
+    <p>Beides löst Stufe 4: ein Zeiger auf das Array und zwei Grenzen für den Bereich.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Zeiger und Bereiche</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Das Array hat jetzt zehn Elemente. Der erste Aufruf <code>partition(&amp;a, 0, 9)</code> bringt 42 an den Index 6. Wie viele Elemente sind kleiner als 42?
+          <details><summary>Auflösung</summary>Sechs: 7, 19, 3, 25, 14 und 9. Sie stehen danach an den Indizes 0 bis 5.</details></li>
+        <li>Nach drei Aufrufen von <code>partition</code> ist das Array noch nicht sortiert. Warum nicht?
+          <details><summary>Auflösung</summary>Jeder Aufruf bringt nur sein Pivot an den richtigen Platz. Die Teile links und rechts davon sind nur grob geordnet und müssten selbst wieder aufgeteilt werden.</details></li>
+      </ol>
+    </div>
+    <p>Zwei Dinge ändern sich gegenüber Stufe 3:</p>
+    <ul>
+      <li><strong>Ein Zeiger:</strong> <code>partition</code> bekommt mit <code>pa *[10]int</code> die Adresse des Arrays. Sie arbeitet damit auf dem Array von <code>main</code> und muss nichts zurückgeben außer dem Index des Pivots. Das Tauschen steht jetzt in der Funktion <code>swap</code>, wie in der Programmierübung <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a>.</li>
+      <li><strong>Ein Bereich:</strong> Die Parameter <code>start</code> und <code>end</code> geben den ersten und den letzten Index des Bereichs an. Das Pivot ist <code>pa[start]</code>, und <code>left</code> beginnt bei <code>start + 1</code>.</li>
+    </ul>
+    <pre class="code-block">// tauscht in dem Array, auf das pa zeigt,
+// die Elemente an den Indizes i und j
+func swap(pa *[10]int, i, j int) {
+    pa[i], pa[j] = pa[j], pa[i]
+}
+
+// teilt den Bereich von start bis end um das Pivot
+// pa[start] auf und liefert den Index des Pivots
+func partition(pa *[10]int, start, end int) int {
+    pivot := pa[start]
+    left := start + 1
+    for i := start + 1; i &lt;= end; i++ {
+        if pa[i] &lt; pivot {
+            swap(pa, i, left)
+            left++
+        }
+    }
+    swap(pa, start, left-1)
+    return left - 1
+}</pre>
+    <p>Die Schleife läuft jetzt bis <code>i &lt;= end</code>, denn <code>end</code> ist der letzte Index des Bereichs und gehört dazu.</p>
+    <p><code>main</code> ruft <code>partition</code> dreimal von Hand auf: für das ganze Array, für den linken Teil und für den rechten Teil. Grün sind die Elemente, deren Platz feststeht. Gelb ist der Bereich, den der letzte Aufruf aufgeteilt hat.</p>
+    <ol class="programm" id="z-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="z-weiter">nächste Anweisung</button>
+      <button type="button" id="z-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="z-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="z-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="z-ausgabe"></div>
+    <div class="auskunft" id="z-urteil"></div>
+
+    <h3>Was dieser Stufe fehlt</h3>
+    <p>Nach drei Aufrufen stehen 9, 42 und 88 an ihrem Platz. Übrig sind die Bereiche 0 bis 1, 3 bis 5 und 7 bis 8. Jeder davon braucht wieder einen Aufruf, und deren Teile wieder. Wie viele Aufrufe es werden, hängt von den Werten ab. Von Hand lässt sich das nicht hinschreiben.</p>
+    <p>Die Lösung: Eine Funktion <code>quickSort</code> teilt ihren Bereich auf und ruft sich dann für beide Teile selbst auf. Das ist Stufe 5.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Rekursion</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Ein Aufruf <code>quickSort(pa, 3, 3)</code> soll den Bereich vom Index 3 bis zum Index 3 sortieren. Was ist zu tun?
+          <details><summary>Auflösung</summary>Nichts. Der Bereich hat ein Element, und ein einzelnes Element ist sortiert. Die Funktion kehrt sofort zurück.</details></li>
+        <li>Wie kann ein Aufruf mit <code>start</code> größer als <code>end</code> entstehen, zum Beispiel <code>quickSort(pa, 0, -1)</code>?
+          <details><summary>Auflösung</summary>Wenn das Pivot ganz links landet, ist der linke Teil leer. Der Aufruf für den linken Teil bekommt dann <code>start</code> und <code>p-1</code>, also einen Bereich ohne Element.</details></li>
+      </ol>
+    </div>
+    <p>Die Funktion <code>quickSort</code> sortiert den Bereich von <code>start</code> bis <code>end</code>. Sie hat drei Teile:</p>
+    <ul>
+      <li><strong>Das Ende, Zeilen 2 bis 4:</strong> Hat der Bereich höchstens ein Element, kehrt die Funktion sofort zurück. Das ist der Fall, wenn <code>start &gt;= end</code> gilt.</li>
+      <li><strong>Aufteilen, Zeile 5:</strong> <code>partition</code> aus Stufe 4 bringt das Pivot an seinen Platz <code>p</code>.</li>
+      <li><strong>Zwei rekursive Aufrufe, Zeilen 6 und 7:</strong> erst für den linken Teil von <code>start</code> bis <code>p-1</code>, dann für den rechten Teil von <code>p+1</code> bis <code>end</code>. Das Pivot selbst gehört zu keinem Teil, sein Platz steht fest.</li>
+    </ul>
+    <p>Jeder Aufruf hat einen eigenen Rahmen mit <code>pa</code>, <code>start</code>, <code>end</code> und <code>p</code>. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste Aufruf steht zuletzt. Ein Schritt der Demo ist ein Aufruf, ein Aufteilen oder eine Rückkehr. <code>partition</code> und <code>swap</code> zeigt die Demo nicht.</p>
+    <ol class="programm" id="q-programm"></ol>
+    <div class="zeile">
+      <button type="button" class="haupt" id="q-weiter">nächste Anweisung</button>
+      <button type="button" id="q-zurueck">eine Anweisung zurück</button>
+      <button type="button" id="q-vorn">von vorn</button>
+    </div>
+    <div class="rahmenreihe" id="q-bild"></div>
+    <p><strong>Ausgabe</strong></p>
+    <div class="konsole" id="q-ausgabe"></div>
+    <div class="auskunft" id="q-urteil"></div>
+
+    <h3>Einordnung nach Abschnitt 7.5 des Kurstexts</h3>
+    <ul>
+      <li><strong>Kaskadenartige Rekursion:</strong> Ein Aufruf enthält zwei rekursive Aufrufe, wie die Fibonacci-Zahlen in Abschnitt 7.5.3. Die Lektion <a href="go_k7_rekursion_interaktiv.html#fibonacci">Rekursion in Go</a> zeigt sie in Schritt 3. Bubble Sort rekursiv war dagegen linear rekursiv.</li>
+      <li><strong>Keine Endrekursion:</strong> Nach dem ersten rekursiven Aufruf folgt noch der zweite. Der Aufruf muss deshalb warten und seinen Rahmen behalten.</li>
+      <li><strong>Terminierung:</strong> Jeder rekursive Aufruf bekommt einen kleineren Bereich, denn das Pivot fällt jedes Mal heraus. Irgendwann hat jeder Bereich höchstens ein Element, dann gibt es keinen Aufruf mehr.</li>
+    </ul>
+    <p>Für das Array der Übung läuft <code>quickSort</code> 13-mal. Sechs Aufrufe teilen auf, sieben finden einen Bereich mit höchstens einem Element und kehren sofort zurück. Das ganze Programm mit Ausgaben steht im nächsten Schritt.</p>
+
+    <h3>Ausblick: Aufteilen nach Hoare</h3>
+    <p>Die Übung teilt mit einem einzigen Index <code>left</code> auf. Tony Hoare, der Erfinder von Quicksort, hat zwei Indizes verwendet, die von beiden Seiten aufeinander zulaufen:</p>
+    <ul>
+      <li><strong><code>left</code></strong> läuft von links nach rechts, bis es ein Element findet, das größer ist als das Pivot.</li>
+      <li><strong><code>right</code></strong> läuft von rechts nach links, bis es ein Element findet, das nicht größer ist als das Pivot.</li>
+      <li><strong>Tausch:</strong> Beide Elemente stehen auf der falschen Seite und tauschen. Dann laufen beide Indizes weiter, bis sie sich kreuzen.</li>
+    </ul>
+    <pre class="code-block">func partition(pa *[10]int, start, end int) int {
+    pivot := pa[start]
+    left := start + 1
+    right := end
+    for left &lt;= right {
+        for left &lt;= end &amp;&amp; pa[left] &lt;= pivot {
+            left++
+        }
+        for pa[right] &gt; pivot {
+            right--
+        }
+        if left &lt; right {
+            swap(pa, left, right)
+        }
+    }
+    swap(pa, start, right)
+    return right
+}</pre>
+    <p>Dieses Aufteilen tauscht nur Paare, die beide auf der falschen Seite stehen. Das Pivot 42 landet auch hier am Index 6, die Elemente links davon stehen in anderer Reihenfolge: <code>[14 7 19 9 3 25 42 71 60 88]</code>. Die Funktion <code>quickSort</code> bleibt gleich. Es ist aber schwerer zu durchschauen, deshalb teilt die Übung mit einem einzigen Index auf.</p>
+
+    <h3>Wie schnell ist Quicksort?</h3>
+    <p>Wie man die Vergleiche eines Sortierverfahrens zählt und was n log n bedeutet, zeigt der <a href="../exkurse/exkurs_laufzeit_wachstum.html">Exkurs zur Laufzeit</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Selbst ausprobieren</h3>
+    <p>Hier stehen die Programme aller fünf Stufen, jedes vollständig mit <code>package</code> und <code>import</code>. Wähle ein Programm, sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern.</p>
+    <p>Vorschläge zum Ausprobieren:</p>
+    <ul>
+      <li><strong>Andere Werte:</strong> Setze im Programm „Stufe 2: Array und Schleife“ andere fünf Werte ein, zum Beispiel <code>{3, 7, 19, 42, 88}</code>. Wo landet das Pivot?</li>
+      <li><strong>Gleiche Werte:</strong> Sortiere im Programm „Stufe 5: Quicksort“ ein Array, in dem ein Wert mehrmals vorkommt.</li>
+      <li><strong>Jeder Aufruf:</strong> Das Programm „Stufe 5 mit Ausgabe jedes Aufrufs“ gibt jeden Aufruf von <code>quickSort</code> aus. Zähle, wie oft das Ende in Zeile 2 greift.</li>
+      <li><strong>Ohne Ende:</strong> Lösche in <code>quickSort</code> die drei Zeilen mit <code>if start &gt;= end</code>. Was meldet Go?</li>
+    </ul>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Quicksort kommt im Kurstext nicht vor. Jede Stufe verwendet aber ein Mittel von Go, das der Kurstext erklärt. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>1 Fünf Variablen</td><td>5.3, Seiten 126–129</td><td>Die Tupel-Zuweisung und der Tausch mit <code>a, b = b, a</code> stammen aus dem Kurstext.</td><td>Das Aufteilen um ein Pivot steht nicht im Kurstext.</td></tr>
+      <tr><td>2 Ein Array</td><td>6.1 und 6.2, Seiten 154–159</td><td>Das Array mit fester Länge, der Index und das Durchlaufen mit <code>for</code> und <code>len</code> stammen aus dem Kurstext.</td><td>Die Grenze <code>left</code> und das Aufteilen steht nicht im Kurstext.</td></tr>
+      <tr><td>3 Eine Funktion</td><td>7.1 und 7.2, Seiten 163–170</td><td>Eine Funktion mit zwei Ergebnissen und die Wertübergabe eines Arrays stammen aus dem Kurstext.</td><td>Die drei Aufrufe in <code>main</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Zeiger und Bereiche</td><td>7.3, Seiten 171–172, und 7.4, Seiten 173–178</td><td>Der Zeiger auf ein Array als Parameter und die Kurzschreibweise <code>pa[i]</code> stammen aus dem Kurstext.</td><td>Der Bereich mit <code>start</code> und <code>end</code> steht nicht im Kurstext.</td></tr>
+      <tr><td>5 Rekursion</td><td>7.5, Seiten 185–193, besonders 7.5.3 und 7.5.5</td><td>Die kaskadenartige Rekursion und die Terminierung stammen aus dem Kurstext.</td><td>Quicksort selbst und das Aufteilen nach Hoare stehen nicht im Kurstext.</td></tr>
+      <tr><td>6 Selbst ausprobieren</td><td>7.5, Seiten 185–193</td><td>Die Mittel von Go stammen aus dem Kurstext, wie in Schritt 1 bis 5.</td><td>Das Ausführen im Editorlotsen, die Programme und ihre Ausgaben von Go 1.26.1 gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.6, Seiten 15–17, Unterprogramme:</strong> Ein Unterprogramm übernimmt eine Teilaufgabe, und Rekursion führt eine Aufgabe auf eine kleinere zurück. Lektion: <a href="../kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html">Unterprogramme und Funktionen</a>.</li>
+      <li><strong>Abschnitt 7.5.4, Türme von Hanoi:</strong> ein weiteres Problem, das eine Aufgabe in zwei kleinere zerlegt. Lektion: <a href="go_k7_rekursion_interaktiv.html#hanoi">Rekursion in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 8.4.1, binäre Suche:</strong> Auch sie halbiert den Bereich immer wieder, sucht aber nur in einem Teil weiter. Lektion: <a href="../kap8-verbund/go_k8_binaere_suche_interaktiv.html">Binäre Suche in einem Verbund-Array</a>.</li>
+      <li><strong>Abschnitt 8.4.2, Bubblesort:</strong> das Sortierverfahren, das der Kurstext zeigt. Lektion: <a href="../kap8-verbund/go_k8_bubblesort_verbund_interaktiv.html">Bubblesort auf einem Verbund-Array</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Die Reihe:</strong> Die Programmierübungen <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_bubblesort_rekursiv_programmieruebung.html">Bubble Sort rekursiv</a> verwenden das gleiche Array.</li>
+      <li><strong>Laufzeit:</strong> Der <a href="../exkurse/exkurs_laufzeit_wachstum.html">Exkurs zur Laufzeit</a> vergleicht, wie die Sortierverfahren mit der Datenmenge wachsen.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const c = t => '<code>' + esc(t) + '</code>';
+  const NL = String.fromCharCode(10);
+  const goArray = a => '[' + a.join(' ') + ']';     // so gibt fmt.Println ein Array aus
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#rekursion
+  const ANKER = ['worum', 'variablen', 'array', 'funktion', 'zeiger', 'rekursion', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Fünf Variablen', 'Schritt 2: Ein Array', 'Schritt 3: Eine Funktion', 'Schritt 4: Zeiger und Bereiche', 'Schritt 5: Rekursion', 'Schritt 6: Selbst ausprobieren', 'Schritt 7: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Die Idee: das Array vor und nach dem Aufteilen ----------
+  const START = [42, 7, 19, 88, 3, 25, 71, 14, 60, 9];
+  (function () {
+    const art = w => w === 42 ? 'pivot' : w < 42 ? 'klein' : 'gross';
+    const reihe = (titel, werte) => '<div class="reihe"><span class="titel">' + titel + '</span>' + werte.map(w => '<span class="z ' + art(w) + '">' + w + '</span>').join('') + '</div>';
+    el('idee-bild').innerHTML = reihe('Vorher', START) + reihe('Nachher', [9, 7, 19, 3, 25, 14, 42, 88, 60, 71]);
+  })();
+
+  // ---------- Ein Programm Anweisung für Anweisung ----------
+  // lauf: Liste von Zuständen. Ein Zustand: z (Nummer der Zeile), satz, rahmen, aus (Ausgabe bis hierher).
+  // rahmen: Liste von { name, titel, weg, vars }. vars: Liste von { n (Name), w (Wert oder Array), neu, m (grüne Indizes), b (gelbe Indizes) }.
+  function wertText(v) { return Array.isArray(v.w) ? goArray(v.w) : String(v.w); }
+  function rahmenText(rahmen) {
+    return rahmen.map(r => (r.weg ? (r.titel || 'Funktion ' + r.name) + ' ist beendet' :
+      (r.titel || 'Funktion ' + r.name) + ': ' + (r.vars.length ? r.vars.map(v => v.n + ' = ' + wertText(v) +
+        (v.m && v.m.length ? ' (grün: Index ' + v.m.join(', ') + ')' : '') + (v.b && v.b.length ? ' (gelb: Index ' + v.b.join(', ') + ')' : '')).join(', ') : 'keine Variable'))).join('. ') + '.';
+  }
+  function ablauf(kurz, zeilen, lauf, anfang) {
+    const D = { stand: 0, lauf: lauf, zeilen: zeilen, anfang: anfang };
+    function zeichne() {
+      const z = D.stand ? lauf[D.stand - 1] : null;
+      el(kurz + '-programm').innerHTML = zeilen.map((t, k) => '<li class="' + (z && k + 1 === z.z ? 'aktuell' : '') + '"><span class="nr">' + (k + 1) + '</span>' + esc(t) + '</li>').join('');
+      el(kurz + '-bild').innerHTML = (z ? z.rahmen : [{ name: 'main', vars: [] }]).map(r =>
+        '<div class="rahmen' + (r.weg ? ' weg' : '') + '"><h4>' + (r.titel ? esc(r.titel) : 'Funktion ' + c(r.name)) + (r.weg ? ', beendet' : '') + '</h4>' +
+        (r.vars.length ? r.vars.map(v => '<div class="kasten' + (v.neu ? ' neu' : '') + '"><span>' + esc(v.n) + '</span>' +
+          (Array.isArray(v.w) ? '<span class="feld">' + v.w.map((w, i) => '<span class="' + (v.m && v.m.indexOf(i) >= 0 ? 'm' : '') + (v.b && v.b.indexOf(i) >= 0 ? ' b' : '') + '">' + w + '</span>').join('') + '</span>' : '<strong>' + esc(v.w) + '</strong>') + '</div>').join('') :
+          '<div class="leer">' + (r.weg ? 'Ihre Bezeichner gelten nicht mehr.' : 'noch keine Variable') + '</div>') + '</div>').join('');
+      el(kurz + '-ausgabe').textContent = z ? z.aus : '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(z ? z.satz : anfang) + '</p>' + (D.stand === lauf.length ? '<p>Das Programm ist zu Ende.</p>' : '');
+      el(kurz + '-weiter').disabled = D.stand === lauf.length;
+      el(kurz + '-zurueck').disabled = D.stand === 0;
+      melde(false);
+    }
+    el(kurz + '-weiter').addEventListener('click', () => { if (D.stand < lauf.length) { D.stand++; zeichne(); } });
+    el(kurz + '-zurueck').addEventListener('click', () => { if (D.stand > 0) { D.stand--; zeichne(); } });
+    el(kurz + '-vorn').addEventListener('click', () => { D.stand = 0; zeichne(); });
+    D.zeichne = zeichne;
+    return D;
+  }
+  function standAblauf(D) {
+    const z = D.stand ? D.lauf[D.stand - 1] : null;
+    return [
+      z ? 'Ausgeführt sind ' + D.stand + ' von ' + D.lauf.length + ' Schritten der Demo. Hervorgehoben ist Zeile ' + z.z + ': ' + D.zeilen[z.z - 1].trim() : 'Noch ist keine Anweisung der Demo ausgeführt.',
+      'Die Seite sagt dazu: ' + (z ? z.satz : D.anfang),
+      z ? 'Die Rahmen mit den Variablen: ' + rahmenText(z.rahmen) : 'Zu sehen ist ein leerer Rahmen für die Funktion main.',
+      z && z.aus ? 'Die Ausgabe bisher: ' + z.aus.split(NL).join(' | ') : 'Ausgegeben ist noch nichts.',
+      D.stand === D.lauf.length ? 'Das Programm ist zu Ende.' : 'Als Nächstes folgt: ' + D.zeilen[D.lauf[D.stand].z - 1].trim(),
+      'Handgriffe: „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Das Programm und seine Werte lassen sich nicht ändern.'
+    ];
+  }
+  function zeilenVon(D) {
+    const jetzt = D.stand ? D.lauf[D.stand - 1].z : 0;
+    return D.zeilen.map((t, i) => (i + 1) + '  ' + t + (i + 1 === jetzt ? '   // hier steht der Lauf' : ''));
+  }
+  // ---------- Eine Auswahl fester Zeilen ----------
+  function wahl(kurz, liste) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="code' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').innerHTML = '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  const V = (n, w, neu, m, b) => ({ n: n, w: w, neu: !!neu, m: m, b: b });
+  const R = (name, vars) => ({ name: name, vars: vars || [] });
+  const bis = (von, zu) => { const l = []; for (let k = von; k <= zu; k++) l.push(k); return l; };
+
+  // ---------- Schritt 1: fünf Variablen ----------
+  const DV = (function () {
+    const zeilen = ['func main() {', '    a, b, c, d, e := 42, 7, 19, 88, 3', '    fmt.Println("Vorher: ", a, b, c, d, e)', '    // Pivot ist a mit 42.', '    // b und c sind kleiner als 42 und stehen schon links.',
+      '    // d ist größer als 42. e ist kleiner und tauscht mit d.', '    d, e = e, d', '    // Das Pivot tauscht mit dem letzten kleineren Wert.', '    a, d = d, a', '    fmt.Println("Nachher:", a, b, c, d, e)', '}'];
+    const fuenf = (w, neu) => [R('main', ['a', 'b', 'c', 'd', 'e'].map((n, i) => V(n, w[i], neu.indexOf(n) >= 0)))];
+    const vorher = 'Vorher:  42 7 19 88 3';
+    const lauf = [
+      { z: 2, satz: 'main legt fünf Variablen an. Das Pivot ist a mit 42.', rahmen: fuenf([42, 7, 19, 88, 3], ['a', 'b', 'c', 'd', 'e']), aus: '' },
+      { z: 3, satz: 'fmt.Println gibt die fünf Werte aus. Zwischen „Vorher:“ und 42 stehen zwei Leerzeichen: eines im Text, eines setzt Println zwischen zwei Argumente.', rahmen: fuenf([42, 7, 19, 88, 3], []), aus: vorher },
+      { z: 7, satz: 'd und e tauschen ihre Werte mit einer Tupel-Zuweisung: Go wertet erst e und d aus und weist dann zu. Jetzt stehen die kleineren Werte 7, 19 und 3 in b, c und d. Die 88 steht in e.', rahmen: fuenf([42, 7, 19, 3, 88], ['d', 'e']), aus: vorher },
+      { z: 9, satz: 'a und d tauschen ihre Werte. Das Pivot 42 steht jetzt in d, zwischen den kleineren Werten in a bis c und dem größeren Wert in e. Der Platz von 42 steht fest.', rahmen: fuenf([3, 7, 19, 42, 88], ['a', 'd']), aus: vorher },
+      { z: 10, satz: 'fmt.Println gibt die aufgeteilten Werte aus. Hier sind sie zufällig schon sortiert. Das Aufteilen allein sortiert im Allgemeinen nicht.', rahmen: fuenf([3, 7, 19, 42, 88], []), aus: vorher + NL + 'Nachher: 3 7 19 42 88' }
+    ];
+    return ablauf('v', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 2.');
+  })();
+
+  // ---------- Schritt 2: Array und Schleife ----------
+  const DA = (function () {
+    const zeilen = ['func main() {', '    a := [5]int{42, 7, 19, 88, 3}', '    fmt.Println("Vorher: ", a)', '    pivot := a[0]', '    left := 1', '    for i := 1; i < len(a); i++ {', '        if a[i] < pivot {',
+      '            a[i], a[left] = a[left], a[i]', '            left++', '        }', '    }', '    a[0], a[left-1] = a[left-1], a[0]', '    fmt.Println("Nachher:", a)', '    fmt.Println("Das Pivot steht am Index", left-1)', '}'];
+    const a = [42, 7, 19, 88, 3], lauf = [];
+    let pivot = null, left = null, i = null, aus = '', fertig = false;
+    // grün: die kleineren Elemente. Vor dem letzten Tausch stehen sie an den Indizes 1 bis left-1, danach an 0 bis left-2.
+    const bild = (neu, gelb) => {
+      const vars = [V('a', a.slice(), neu === 'a', left === null ? [] : fertig ? bis(0, left - 2) : bis(1, left - 1), gelb)];
+      if (pivot !== null) vars.push(V('pivot', pivot, neu === 'pivot'));
+      if (left !== null) vars.push(V('left', left, neu === 'left'));
+      if (i !== null) vars.push(V('i', i, neu === 'i'));
+      return [R('main', vars)];
+    };
+    const schritt = (z, satz, neu, gelb) => lauf.push({ z: z, satz: satz, rahmen: bild(neu, gelb), aus: aus });
+    schritt(2, 'main legt das Array a mit fünf Elementen an.', 'a');
+    aus = 'Vorher:  ' + goArray(a);
+    schritt(3, 'fmt.Println gibt das Array aus.');
+    pivot = a[0]; schritt(4, 'pivot bekommt den Wert von a[0], also 42.', 'pivot');
+    left = 1; schritt(5, 'left ist 1: Am Index 1 kommt das erste kleinere Element hin. Noch steht links von left kein kleineres Element.', 'left');
+    for (i = 1; ; i++) {
+      if (!(i < a.length)) { schritt(6, 'i ist ' + i + ' und nicht mehr kleiner als len(a), also 5. Die Schleife endet. left ist ' + left + '.', 'i'); break; }
+      schritt(6, (i === 1 ? 'Die Schleife beginnt mit i gleich 1.' : 'i wird ' + i + '.') + ' Die Bedingung i < len(a) ist erfüllt.', 'i', [i]);
+      if (a[i] < pivot) {
+        schritt(7, 'a[' + i + '] ist ' + a[i] + ' und kleiner als ' + pivot + '. Die Bedingung ist erfüllt.', null, [i]);
+        const t = a[i]; a[i] = a[left]; a[left] = t;
+        schritt(8, i === left ? 'i und left sind beide ' + i + '. a[' + i + '] tauscht mit sich selbst, das Array bleibt gleich.' : 'a[' + i + '] und a[' + left + '] tauschen. Die ' + a[left] + ' steht jetzt links bei den kleineren Elementen, die ' + a[i] + ' rückt nach rechts.', 'a', [i]);
+        left++;
+        schritt(9, 'left rückt auf ' + left + '. Grün sind die Elemente an den Indizes 1 bis ' + (left - 1) + ', sie sind kleiner als das Pivot.', 'left', [i]);
+      } else {
+        schritt(7, 'a[' + i + '] ist ' + a[i] + ' und nicht kleiner als ' + pivot + '. Die Bedingung ist nicht erfüllt, die Schleife macht weiter. left bleibt ' + left + '.', null, [i]);
+      }
+    }
+    i = null; fertig = true;
+    { const t = a[0]; a[0] = a[left - 1]; a[left - 1] = t; }
+    schritt(12, 'Das Pivot an Index 0 tauscht mit dem letzten kleineren Element an Index ' + (left - 1) + '. Jetzt steht 42 an Index ' + (left - 1) + ', gelb, links davon nur kleinere Elemente, grün, rechts nur größere. Die Variable i gilt nach der Schleife nicht mehr.', 'a', [left - 1]);
+    aus += NL + 'Nachher: ' + goArray(a); schritt(13, 'fmt.Println gibt das aufgeteilte Array aus.');
+    aus += NL + 'Das Pivot steht am Index ' + (left - 1); schritt(14, 'Die letzte Zeile gibt den Index des Pivots aus: left-1, also ' + (left - 1) + '.');
+    return ablauf('a', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 2.');
+  })();
+
+  // ---------- Schritt 3: drei Aufrufe in main ----------
+  const WF = wahl('f', [
+    { code: 'b, p := partition(a)' + NL + 'fmt.Println(a, b, p)', aus: '[42 7 19 88 3] [3 7 19 42 88] 3',
+      satz: 'partition liefert das aufgeteilte Array und den Index 3. main fängt beides in b und p auf. a ist unverändert: Die Funktion hat eine Kopie aufgeteilt.' },
+    { code: 'partition(a)' + NL + 'fmt.Println(a)', aus: '[42 7 19 88 3]',
+      satz: 'Go übersetzt den Aufruf, obwohl niemand die zwei Ergebnisse auffängt. Die Funktion hat ihre Kopie aufgeteilt, und die Kopie ist mit dem Ende der Funktion verloren. a ist unverändert.' },
+    { code: 'a, p := partition(a)' + NL + 'fmt.Println(a, p)', aus: '[3 7 19 42 88] 3',
+      satz: 'Das Ergebnis überschreibt a. Der Operator := ist hier erlaubt, weil p neu ist. a bekommt nur einen neuen Wert. So kommt das aufgeteilte Array zurück in die Variable von main, aber über zwei Kopien: eine beim Aufruf, eine bei der Rückgabe.' }
+  ]);
+
+  // Aufteilen wie partition in Stufe 4 und 5, auf einer Kopie des Arrays
+  function teile(a, start, end) {
+    const pivot = a[start]; let left = start + 1;
+    for (let i = start + 1; i <= end; i++) if (a[i] < pivot) { const t = a[i]; a[i] = a[left]; a[left] = t; left++; }
+    const t = a[start]; a[start] = a[left - 1]; a[left - 1] = t;
+    return left - 1;
+  }
+
+  // ---------- Schritt 4: dreimal partition von Hand ----------
+  const DZ = (function () {
+    const zeilen = ['func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    fmt.Println("Start:       ", a)', '    p := partition(&a, 0, 9)', '    fmt.Println("Ganz:        ", a, "Pivot am Index", p)',
+      '    pl := partition(&a, 0, p-1)', '    fmt.Println("Linker Teil: ", a, "Pivot am Index", pl)', '    pr := partition(&a, p+1, 9)', '    fmt.Println("Rechter Teil:", a, "Pivot am Index", pr)', '}'];
+    const a = START.slice(), lauf = [], fest = [], vars = {};
+    let aus = '';
+    const bild = (neu, gelb) => [R('main', [V('a', a.slice(), neu === 'a', fest.slice().sort((x, y) => x - y), gelb)].concat(['p', 'pl', 'pr'].filter(n => n in vars).map(n => V(n, vars[n], neu === n))))];
+    const schritt = (z, satz, neu, gelb) => lauf.push({ z: z, satz: satz, rahmen: bild(neu, gelb), aus: aus });
+    schritt(2, 'main legt das Array a mit zehn Elementen an.', 'a');
+    aus = 'Start:        ' + goArray(a); schritt(3, 'fmt.Println gibt das Array aus.');
+    const ruf = (name, start, end, z, wie) => {
+      const p = teile(a, start, end); vars[name] = p; fest.push(p);
+      schritt(z, 'main ruft partition(&a, ' + wie + ') auf, also für den Bereich ' + start + ' bis ' + end + '. Das Pivot ist ' + a[p] + '. partition arbeitet über den Zeiger direkt auf a und liefert den Index ' + p + '. ' + name + ' bekommt ' + p + '. Gelb ist der Bereich, grün sind die Pivots, deren Platz feststeht.', name, bis(start, end));
+      return p;
+    };
+    const p = ruf('p', 0, 9, 4, '0, 9');
+    aus += NL + 'Ganz:         ' + goArray(a) + ' Pivot am Index ' + p; schritt(5, 'fmt.Println gibt das Array und den Index des Pivots aus. Links von Index ' + p + ' stehen die sechs kleineren Elemente, rechts die drei größeren.');
+    const pl = ruf('pl', 0, p - 1, 6, '0, p-1');
+    aus += NL + 'Linker Teil:  ' + goArray(a) + ' Pivot am Index ' + pl; schritt(7, 'Im linken Teil ist 9 das Pivot. Kleiner sind nur 7 und 3, deshalb landet 9 am Index ' + pl + '.');
+    const pr = ruf('pr', p + 1, 9, 8, 'p+1, 9');
+    aus += NL + 'Rechter Teil: ' + goArray(a) + ' Pivot am Index ' + pr; schritt(9, 'Im rechten Teil ist 88 das Pivot. Alle anderen sind kleiner, deshalb landet 88 am Ende, am Index ' + pr + '. Drei Pivots stehen fest. Die Bereiche 0 bis 1, 3 bis 5 und 7 bis 8 sind noch nicht sortiert.');
+    return ablauf('z', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 2.');
+  })();
+
+  // ---------- Schritt 5: quickSort, Aufruf für Aufruf ----------
+  const DQ = (function () {
+    const zeilen = ['func quickSort(pa *[10]int, start, end int) {', '    if start >= end {', '        return', '    }', '    p := partition(pa, start, end)', '    quickSort(pa, start, p-1)', '    quickSort(pa, p+1, end)', '}', '',
+      'func main() {', '    a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}', '    fmt.Println("Start:   ", a)', '    quickSort(&a, 0, len(a)-1)', '    fmt.Println("Sortiert:", a)', '}'];
+    const a = START.slice(), lauf = [], fest = [], stapel = [];
+    let aus = '', aufrufe = 0;
+    const titel = f => 'quickSort, Bereich ' + f.start + ' bis ' + f.end;
+    const bild = (gelb, neu) => [R('main', [V('a', a.slice(), false, fest.slice().sort((x, y) => x - y), gelb)])].concat(stapel.map((f, k) => {
+      const vars = [V('pa', 'Adresse von a', neu && k === stapel.length - 1), V('start', f.start, neu && k === stapel.length - 1), V('end', f.end, neu && k === stapel.length - 1)];
+      if (f.p !== undefined) vars.push(V('p', f.p, f.pNeu));
+      return { titel: titel(f), vars: vars };
+    }));
+    const schritt = (z, satz, gelb, neu) => { lauf.push({ z: z, satz: satz, rahmen: bild(gelb, neu), aus: aus }); stapel.forEach(f => { f.pNeu = false; }); };
+    const bereich = (s, e) => s <= e ? bis(s, e) : [];
+    function sortiere(start, end, z, wie) {
+      aufrufe++;
+      stapel.push({ start: start, end: end });
+      const wer = stapel.length === 1 ? 'main' : 'Der Aufruf für den Bereich ' + stapel[stapel.length - 2].start + ' bis ' + stapel[stapel.length - 2].end;
+      schritt(z, wer + ' ruft ' + wie + ' auf. Der neue Aufruf soll den Bereich ' + start + ' bis ' + end + ' sortieren' + (start > end ? ', einen Bereich ohne Element' : start === end ? ', einen Bereich mit einem Element' : '') + '. Jetzt ' + (stapel.length === 1 ? 'läuft ein Aufruf' : 'laufen ' + stapel.length + ' Aufrufe, ' + (stapel.length - 1) + ' davon warten') + '.', bereich(start, end), true);
+      if (start >= end) {
+        if (start === end && fest.indexOf(start) < 0) fest.push(start);
+        schritt(3, 'start ist ' + start + ', end ist ' + end + '. Die Bedingung start >= end ist erfüllt: ' + (start === end ? 'Ein einzelnes Element ist sortiert, ' + a[start] + ' steht fest.' : 'Der Bereich ist leer.') + ' Der Aufruf kehrt sofort zurück.', bereich(start, end));
+        stapel.pop();
+        return;
+      }
+      const p = teile(a, start, end); fest.push(p);
+      stapel[stapel.length - 1].p = p; stapel[stapel.length - 1].pNeu = true;
+      schritt(5, 'partition teilt den Bereich ' + start + ' bis ' + end + ' um das Pivot ' + a[p] + ' auf. p ist ' + p + ', dort steht ' + a[p] + ' fest. Links bleibt der Bereich ' + start + ' bis ' + (p - 1) + ', rechts der Bereich ' + (p + 1) + ' bis ' + end + '.', bereich(start, end));
+      sortiere(start, p - 1, 6, 'quickSort(pa, start, p-1) mit ' + start + ' und ' + (p - 1));
+      sortiere(p + 1, end, 7, 'quickSort(pa, p+1, end) mit ' + (p + 1) + ' und ' + end);
+      schritt(8, 'Beide Teile des Bereichs ' + start + ' bis ' + end + ' sind sortiert. Der Aufruf ist fertig und kehrt zurück' + (stapel.length > 1 ? ' zum Aufruf für den Bereich ' + stapel[stapel.length - 2].start + ' bis ' + stapel[stapel.length - 2].end : ' zu main') + '.', bereich(start, end));
+      stapel.pop();
+    }
+    schritt(11, 'main legt das Array a mit zehn Elementen an.');
+    aus = 'Start:    ' + goArray(a); schritt(12, 'fmt.Println gibt das Array aus.');
+    sortiere(0, a.length - 1, 13, 'quickSort(&a, 0, len(a)-1) mit 0 und 9');
+    aus += NL + 'Sortiert: ' + goArray(a);
+    schritt(14, 'Zurück in main: fmt.Println gibt das sortierte Array aus. quickSort ist ' + aufrufe + '-mal gelaufen.');
+    return ablauf('q', zeilen, lauf, 'Noch ist keine Anweisung ausgeführt. Das Programm beginnt in main, in Zeile 11.');
+  })();
+
+  // ---------- Schritt 6: selbst ausprobieren ----------
+  // Die Programme aller Stufen, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: el('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="6"]'),
+    fassungen: [
+      {
+        "name": "Stufe 1: fünf Variablen",
+        "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b, c, d, e := 42, 7, 19, 88, 3\n\tfmt.Println(\"Vorher: \", a, b, c, d, e)\n\t// Pivot ist a mit 42.\n\t// b und c sind kleiner als 42 und stehen schon links.\n\t// d ist größer als 42. e ist kleiner und tauscht mit d.\n\td, e = e, d\n\t// Das Pivot tauscht mit dem letzten kleineren Wert.\n\ta, d = d, a\n\tfmt.Println(\"Nachher:\", a, b, c, d, e)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Vorher:  42 7 19 88 3\nNachher: 3 7 19 42 88\n"
+        }
+      },
+      {
+        "name": "Stufe 2: Array und Schleife",
+        "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tfmt.Println(\"Vorher: \", a)\n\tpivot := a[0]\n\tleft := 1\n\tfor i := 1; i < len(a); i++ {\n\t\tif a[i] < pivot {\n\t\t\ta[i], a[left] = a[left], a[i]\n\t\t\tleft++\n\t\t}\n\t}\n\ta[0], a[left-1] = a[left-1], a[0]\n\tfmt.Println(\"Nachher:\", a)\n\tfmt.Println(\"Das Pivot steht am Index\", left-1)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Vorher:  [42 7 19 88 3]\nNachher: [3 7 19 42 88]\nDas Pivot steht am Index 3\n"
+        }
+      },
+      {
+        "name": "Stufe 3: b, p := partition(a)",
+        "code": "package main\n\nimport \"fmt\"\n\n// teilt das Array um das Pivot a[0] auf und liefert\n// das aufgeteilte Array und den Index des Pivots\nfunc partition(a [5]int) ([5]int, int) {\n\tpivot := a[0]\n\tleft := 1\n\tfor i := 1; i < len(a); i++ {\n\t\tif a[i] < pivot {\n\t\t\ta[i], a[left] = a[left], a[i]\n\t\t\tleft++\n\t\t}\n\t}\n\ta[0], a[left-1] = a[left-1], a[0]\n\treturn a, left - 1\n}\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tb, p := partition(a)\n\tfmt.Println(a, b, p)\n}\n",
+        "ergebnis": {
+          "ausgabe": "[42 7 19 88 3] [3 7 19 42 88] 3\n"
+        }
+      },
+      {
+        "name": "Stufe 3: Ergebnis nicht aufgefangen",
+        "code": "package main\n\nimport \"fmt\"\n\n// teilt das Array um das Pivot a[0] auf und liefert\n// das aufgeteilte Array und den Index des Pivots\nfunc partition(a [5]int) ([5]int, int) {\n\tpivot := a[0]\n\tleft := 1\n\tfor i := 1; i < len(a); i++ {\n\t\tif a[i] < pivot {\n\t\t\ta[i], a[left] = a[left], a[i]\n\t\t\tleft++\n\t\t}\n\t}\n\ta[0], a[left-1] = a[left-1], a[0]\n\treturn a, left - 1\n}\n\nfunc main() {\n\ta := [5]int{42, 7, 19, 88, 3}\n\tpartition(a)\n\tfmt.Println(a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "[42 7 19 88 3]\n"
+        }
+      },
+      {
+        "name": "Stufe 4: dreimal von Hand",
+        "code": "package main\n\nimport \"fmt\"\n\n// tauscht in dem Array, auf das pa zeigt,\n// die Elemente an den Indizes i und j\nfunc swap(pa *[10]int, i, j int) {\n\tpa[i], pa[j] = pa[j], pa[i]\n}\n\n// teilt den Bereich von start bis end um das Pivot\n// pa[start] auf und liefert den Index des Pivots\nfunc partition(pa *[10]int, start, end int) int {\n\tpivot := pa[start]\n\tleft := start + 1\n\tfor i := start + 1; i <= end; i++ {\n\t\tif pa[i] < pivot {\n\t\t\tswap(pa, i, left)\n\t\t\tleft++\n\t\t}\n\t}\n\tswap(pa, start, left-1)\n\treturn left - 1\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:       \", a)\n\tp := partition(&a, 0, 9)\n\tfmt.Println(\"Ganz:        \", a, \"Pivot am Index\", p)\n\tpl := partition(&a, 0, p-1)\n\tfmt.Println(\"Linker Teil: \", a, \"Pivot am Index\", pl)\n\tpr := partition(&a, p+1, 9)\n\tfmt.Println(\"Rechter Teil:\", a, \"Pivot am Index\", pr)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Start:        [42 7 19 88 3 25 71 14 60 9]\nGanz:         [9 7 19 3 25 14 42 88 60 71] Pivot am Index 6\nLinker Teil:  [3 7 9 19 25 14 42 88 60 71] Pivot am Index 2\nRechter Teil: [3 7 9 19 25 14 42 71 60 88] Pivot am Index 9\n"
+        }
+      },
+      {
+        "name": "Stufe 5: Quicksort",
+        "code": "package main\n\nimport \"fmt\"\n\n// tauscht in dem Array, auf das pa zeigt,\n// die Elemente an den Indizes i und j\nfunc swap(pa *[10]int, i, j int) {\n\tpa[i], pa[j] = pa[j], pa[i]\n}\n\n// teilt den Bereich von start bis end um das Pivot\n// pa[start] auf und liefert den Index des Pivots\nfunc partition(pa *[10]int, start, end int) int {\n\tpivot := pa[start]\n\tleft := start + 1\n\tfor i := start + 1; i <= end; i++ {\n\t\tif pa[i] < pivot {\n\t\t\tswap(pa, i, left)\n\t\t\tleft++\n\t\t}\n\t}\n\tswap(pa, start, left-1)\n\treturn left - 1\n}\n\n// sortiert den Bereich von start bis end\nfunc quickSort(pa *[10]int, start, end int) {\n\tif start >= end {\n\t\treturn\n\t}\n\tp := partition(pa, start, end)\n\tquickSort(pa, start, p-1)\n\tquickSort(pa, p+1, end)\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:   \", a)\n\tquickSort(&a, 0, len(a)-1)\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "Start:    [42 7 19 88 3 25 71 14 60 9]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+        }
+      },
+      {
+        "name": "Stufe 5 mit Ausgabe jedes Aufrufs",
+        "code": "package main\n\nimport \"fmt\"\n\n// tauscht in dem Array, auf das pa zeigt,\n// die Elemente an den Indizes i und j\nfunc swap(pa *[10]int, i, j int) {\n\tpa[i], pa[j] = pa[j], pa[i]\n}\n\n// teilt den Bereich von start bis end um das Pivot\n// pa[start] auf und liefert den Index des Pivots\nfunc partition(pa *[10]int, start, end int) int {\n\tpivot := pa[start]\n\tleft := start + 1\n\tfor i := start + 1; i <= end; i++ {\n\t\tif pa[i] < pivot {\n\t\t\tswap(pa, i, left)\n\t\t\tleft++\n\t\t}\n\t}\n\tswap(pa, start, left-1)\n\treturn left - 1\n}\n\n// sortiert den Bereich von start bis end\nfunc quickSort(pa *[10]int, start, end int) {\n\tfmt.Printf(\"quickSort(pa, %d, %d)\\n\", start, end)\n\tif start >= end {\n\t\treturn\n\t}\n\tp := partition(pa, start, end)\n\tfmt.Println(\"   \", *pa, \"Pivot\", pa[p], \"am Index\", p)\n\tquickSort(pa, start, p-1)\n\tquickSort(pa, p+1, end)\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tquickSort(&a, 0, len(a)-1)\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+        "ergebnis": {
+          "ausgabe": "quickSort(pa, 0, 9)\n    [9 7 19 3 25 14 42 88 60 71] Pivot 42 am Index 6\nquickSort(pa, 0, 5)\n    [3 7 9 19 25 14 42 88 60 71] Pivot 9 am Index 2\nquickSort(pa, 0, 1)\n    [3 7 9 19 25 14 42 88 60 71] Pivot 3 am Index 0\nquickSort(pa, 0, -1)\nquickSort(pa, 1, 1)\nquickSort(pa, 3, 5)\n    [3 7 9 14 19 25 42 88 60 71] Pivot 19 am Index 4\nquickSort(pa, 3, 3)\nquickSort(pa, 5, 5)\nquickSort(pa, 7, 9)\n    [3 7 9 14 19 25 42 71 60 88] Pivot 88 am Index 9\nquickSort(pa, 7, 8)\n    [3 7 9 14 19 25 42 60 71 88] Pivot 71 am Index 8\nquickSort(pa, 7, 7)\nquickSort(pa, 9, 8)\nquickSort(pa, 10, 9)\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+        }
+      }
+    ],
+    beiAenderung: () => { if (stufe === 6) melde(false); }
+  });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  const DEMO = { 1: DV, 2: DA, 4: DZ, 5: DQ };
+  function standSaetze() {
+    if (DEMO[stufe]) {
+      const zusatz = {
+        1: 'Die Demo zeigt die fünf Variablen a bis e als Kästen im Rahmen von main. Gelb ist eine Variable, die sich im letzten Schritt geändert hat.',
+        2: 'Im Array a ist grün, was links von der Grenze left steht: die Elemente ab Index 1, die kleiner sind als das Pivot. Gelb ist das Element am Index i.',
+        4: 'Über der Demo stehen swap und partition. Die Demo zeigt nur main. Ein Schritt ist ein ganzer Aufruf von partition. Im Array a ist gelb der Bereich des letzten Aufrufs, grün sind die Pivots, deren Platz feststeht.',
+        5: 'Die Demo zeigt quickSort und main, partition und swap stehen in Schritt 4. Jeder laufende Aufruf von quickSort hat einen Rahmen mit pa, start, end und p, der jüngste steht zuletzt. Im Array a ist gelb der Bereich des jüngsten Aufrufs, grün sind die Elemente, deren Platz feststeht. Ein Schritt der Demo ist ein Aufruf, ein Aufteilen oder eine Rückkehr.'
+      };
+      return [zusatz[stufe]].concat(standAblauf(DEMO[stufe]));
+    }
+    if (stufe === 3) {
+      const x = WF.liste[WF.i];
+      return ['Über der Auswahl steht die Funktion partition(a [5]int) ([5]int, int). Die Auswahl hat drei Möglichkeiten für die zwei Zeilen in main nach a := [5]int{42, 7, 19, 88, 3}.',
+        'Gewählt ist Möglichkeit ' + (WF.i + 1) + ' von 3: ' + x.code.split(NL).join(' ; '), 'Die Ausgabe: ' + x.aus, 'Die Seite sagt dazu: ' + x.satz,
+        'Handgriff: eine der drei festen Möglichkeiten wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
+    }
+    if (stufe === 6) return probe.stand();
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 6 ? probe.kurz() : stufe === 3 ? WF.liste[WF.i].code.split(NL)[0] : DEMO[stufe] ? (DEMO[stufe].stand ? 'Schritt ' + DEMO[stufe].stand + ' von ' + DEMO[stufe].lauf.length : 'nichts ausgeführt') : '';
+  const programmZeilen = () => stufe === 6 ? probe.zeilen() : DEMO[stufe] ? zeilenVon(DEMO[stufe]) : [];
+
+  DV.zeichne(); DA.zeichne(); WF.zeichne(); DZ.zeichne(); DQ.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Programmierübung: Quicksort Schritt für Schritt',
+    thema: 'Quicksort, Pivot, Aufteilen, partition, Tupel-Zuweisung, Array, Index, Wertübergabe, Zeiger auf ein Array, Bereich, Rekursion, kaskadenartige Rekursion, Terminierung',
+    bezug: 'Kurstext v3.0.6, Abschnitt 7.5, Seiten 185–193. Quicksort kommt im Kurstext nicht vor.',
+    beschreibung: '../kurslotse/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
+    zeilen: programmZeilen,
+    zeilenTitel: 'Programm der Demo:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum beginnt left bei start + 1 und nicht bei start?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
