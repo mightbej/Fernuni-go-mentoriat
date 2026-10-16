@@ -386,7 +386,7 @@ Umgekehrt: [{Becker 1234 63} {Arnold 3310 27} {Meier 9081 41} {Koch 7745 19} {Be
     document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
     if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
-    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); (function () { const r = document.querySelector('.tabs'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); })(); }
   }
   const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
   document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
