@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-15T19:30",
+ "stand": "2026-10-16T11:30",
  "abschnitte": {
   "1.1": [
    {
@@ -1987,6 +1987,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
     "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
@@ -2205,6 +2212,13 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.2 des Kurstexts. Sie führt Listing 5.3 mit der Zuordnung der Wochentage Anweisung für Anweisung aus, vergleicht `switch` mit `if`, zeigt die switch-Anweisung ohne switch-Ausdruck und den Fallthrough in Java.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Exkurs: Von der Problemstellung zum Go-Programm",
@@ -2506,6 +2520,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Selection Sort mit Funktionen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
@@ -2546,6 +2567,13 @@
     "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_laufzeit_wachstum.html",
     "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2612,6 +2640,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Selection Sort mit Funktionen",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Selection Sort aus Kapitel 6 in die Funktionen `findMin` und `swap`. Beide bekommen das Array als Kopie.",
@@ -2656,6 +2691,13 @@
     "beschreibung": "Die Seite zeigt, was in Abschnitt 7.1 und 7.2 des Kurstexts zu den Funktionen dazukommt: mehrere Rückgaben, benannte Rückgaben, die Signatur, das Rückgabe-Tupel, den Typ `error` und die Übergabe eines Arguments als Kopie.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Variablendeklaration in Go",
@@ -2719,6 +2761,13 @@
     "titel": "Programmierübung: Bubble Sort mit Zeigern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `isGreater` und `swap` auf Zeiger um. Das Programm sortiert wie vorher und kopiert kein Element mehr.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -2809,6 +2858,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Programmierübung: Selection Sort mit Zeigern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie stellt `findMin` und `swap` auf Zeiger um und vergleicht am Ende die vier Sortierprogramme mit Funktionen.",
@@ -2881,6 +2937,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Binäre Suche in einem Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_binaere_suche_interaktiv.html",
     "beschreibung": "Die Seite erklärt die binäre Suche aus Abschnitt 8.4.1 und die Funktion `binSuche` aus Listing 8.1: Sie sucht in einem Array von Verbünden des Typs `person`, das nach dem Feld `name` sortiert ist.",
@@ -2926,6 +2989,13 @@
     "titel": "Programmierübung: Ein Telefonbuch als Verbund-Array",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_telefonbuch_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung: Drei Funktionen suchen in einem Array von Verbünden die jüngste Person, zählen doppelte Namen und kehren das Array um.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -3126,6 +3196,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Rekursive Verbund-Typen in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_rekursive_verbunde_interaktiv.html",
     "beschreibung": "Die Seite erklärt rekursive Verbund-Typen: warum ein Verbund sich nicht selbst als Feld enthalten darf, wohl aber einen Zeiger auf den eigenen Typ, und wie aus solchen Verbünden ein Stammbaum und eine Kette entstehen.",
@@ -3186,6 +3263,13 @@
     "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
     "geprueft": true,
     "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
+    "geprueft": true,
+    "art": "nennt"
    }
   ],
   "7.5.4": [
@@ -3216,6 +3300,13 @@
     "titel": "Programmierübung: Bubble Sort rekursiv",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
     "beschreibung": "Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich für ein Element weniger selbst auf.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Programmierübung: Quicksort Schritt für Schritt",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
+    "beschreibung": "Die Seite ist eine Programmierübung. Sie baut Quicksort in fünf Stufen auf. Jede Stufe nimmt ein Mittel von Go dazu, in der Reihenfolge des Kurses: Tupel-Zuweisung, Array mit Index und Schleife, Funktion, Zeiger auf ein Array mit Bereich, Rekursion.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -3278,6 +3369,13 @@
     "titel": "Anonyme Felder und eingebettete Verbünde in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
     "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -3365,6 +3463,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
@@ -3448,6 +3553,13 @@
     "art": "erklaert"
    },
    {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Hierarchische Verbünde: ein Verbund als Feld",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html",
     "beschreibung": "Die Seite zeigt Verbünde, die einen Verbund als Feld enthalten, und stellt das Feld mit Verbund-Wert dem Feld mit Zeiger gegenüber.",
@@ -3474,6 +3586,13 @@
     "titel": "Anonyme Felder und eingebettete Verbünde in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap8-verbund/go_k8_anonyme_felder_interaktiv.html",
     "beschreibung": "Die Seite erklärt anonyme Felder: ein Feld, das nur mit seinem Verbund-Typ deklariert ist, und den verkürzten Zugriff auf die Felder des eingebetteten Verbunds.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -3626,6 +3745,13 @@
     "beschreibung": "Die Seite zeigt, wie die Zahl der Schritte eines Algorithmus wächst, wenn das Array größer wird. Sie zeichnet fünf Kurven: O(1), O(log n), O(n), O(n log n) und O(n²). Vier Algorithmen laufen auf der Seite wirklich und zählen ihre Vergleiche: lineare Suche, binäre Suche, Bubble Sort und Selection Sort. Anlass war ein Schaubild von Quora, das Thomas am 2026-10-11 gezeigt hat. Das Schaubild der Seite ist nachgebaut und gerechnet, das Bild von Quora ist nicht übernommen.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Ausblick: Verbünde in Programmen mit Live-Daten",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/exkurse/exkurs_live_daten_interaktiv.html",
+    "beschreibung": "Die Lektion ist eine Lektion mit Editor am Ende von Kapitel 8. Sie zeigt drei Go-Programme des Mentors, die Daten aus dem Internet holen und in Verbünden ablegen: ein Aktien-Portfolio, einen Wetter-Vergleich und Reiseangebote. Sie unterrichtet nichts Neues. Sie zeigt dem Studenten, was er mit dem Stoff des Kurses schon kann. Im Editorlotsen steht in jedem Programm-Schritt der Editor mit dem ganzen Programm.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Binäre Suche in einem Verbund-Array",
