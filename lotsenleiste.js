@@ -678,6 +678,4 @@
   }
 
   window.Leiste = { einrichten: einrichten, alsHTML: alsHTML, esc: esc, hole: hole };
-  // Bis 2026-10-15 hieß die Leiste Spalte. Eine ältere kurslotse.js ruft noch Spalte.einrichten auf.
-  window.Spalte = window.Leiste;
 })();
