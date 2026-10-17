@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="4.1">
+  <title>Operatoren und Ausdrücke in Go</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5;box-shadow:0 0 0 1px var(--accent); }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    /* Ein Knopf, der Code zur Wahl stellt: hell, damit er nicht wie ein Programmblock aussieht */
+    button.wk { font-family:Consolas,"Courier New",monospace;font-weight:600;text-align:left;white-space:pre-wrap;padding:7px 12px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .spalte { display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:10px 0; }
+    .beschriftung { font-weight:600;min-width:9em; }
+    li { margin:6px 0; }
+    pre.code-block { margin:12px 0;line-height:1.5; }
+    .hinweis { margin:12px 0; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .frage ol { margin:6px 0 0; }
+    .spaeter { border-left:4px solid #7c3aed;background:#f5f3ff;border-radius:8px;padding:12px 14px;margin:16px 0 0; }
+    .spaeter ul { margin:6px 0 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:3.2em; }
+    .auskunft.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:1.6em; }
+    details.tabelle { margin:12px 0; }
+    details.tabelle summary { cursor:pointer;font-weight:600; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Schritt 3: ein Ausdruck als Kästen in Kästen. Grün: elementar, blau: kombiniert, gelb umrandet: gewählt. */
+    .kaesten { margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow-x:auto;white-space:nowrap;font-family:Consolas,"Courier New",monospace;font-size:1.1rem; }
+    .bx { display:inline-block;vertical-align:middle;border:2px solid var(--blau);border-radius:7px;background:#eff6ff;padding:4px 6px;margin:2px;cursor:pointer; }
+    .bx.el { border-color:var(--accent);background:#ecfdf5;font-weight:700; }
+    .bx.sel { box-shadow:0 0 0 4px var(--aktiv); }
+    .bx:hover { filter:brightness(.96); }
+    .legende { display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--muted);margin:6px 0; }
+    .legende span::before { content:'';display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:6px;vertical-align:-2px;border:2px solid var(--blau);background:#eff6ff; }
+    .legende span.el::before { border-color:var(--accent);background:#ecfdf5; }
+    .legende span.sel::before { box-shadow:0 0 0 3px var(--aktiv);background:#fff;border-color:#9ca3af; }
+
+    /* Schritt 4: der Rechenweg, Zeile für Zeile. Gelb: wird als Nächstes ausgerechnet. Grün: gerade ausgerechnet. */
+    .rechenweg { margin:12px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:12px 14px;font-family:Consolas,"Courier New",monospace;font-size:1.08rem;overflow-x:auto; }
+    .rechenweg .rz { display:flex;gap:18px;align-items:baseline;padding:3px 0;white-space:nowrap; }
+    .rechenweg .rz .lhs { min-width:1.2em;color:#94a3b8; }
+    .rechenweg .rz .warum { font-family:system-ui,sans-serif;font-size:.85rem;color:#94a3b8; }
+    .rechenweg .rz.letzte .warum { color:#fde68a; }
+    .rechenweg mark { background:var(--aktiv);color:#111827;border-radius:4px;padding:0 3px;font-weight:700; }
+    .rechenweg .wert { color:#86efac;font-weight:700; }
+    .rechenweg .ausgelassen { color:#64748b;text-decoration:line-through; }
+    .rechenweg .klammern { margin-top:10px;padding-top:8px;border-top:1px dashed #475569;color:#cbd5e1;white-space:pre-wrap; }
+    .funktionen { font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Operatoren und Ausdrücke in Go</h1>
+    <p>Daten haben einen Typ, und zu jedem Typ gehören feste Operationen. Wie man damit Ausdrücke baut und in welcher Reihenfolge Go sie ausrechnet.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.1 bis 4.1.2, Seiten 45–52.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Operatoren</button>
+    <button type="button" class="tab" data-stufe="2">2 Typen passen zusammen</button>
+    <button type="button" class="tab" data-stufe="3">3 Aufbau von Ausdrücken</button>
+    <button type="button" class="tab" data-stufe="4">4 Auswertung</button>
+    <button type="button" class="tab" data-stufe="5">5 Konstante Ausdrücke</button>
+    <button type="button" class="tab" data-stufe="6">6 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Ein Programm arbeitet mit <strong>Daten</strong>: eine Temperatur, ein Name, die Antwort ja oder nein. Der Rechner legt die Daten im Speicher ab. Verarbeitet, also verrechnet und verglichen, werden sie im <strong>Rechenwerk</strong>.</p>
+    <p>Jedes Datum hat einen <strong>Typ</strong>. Der Typ legt zwei Dinge fest:</p>
+    <ul>
+      <li><strong>Wertebereich:</strong> welche Werte möglich sind, zum Beispiel ganze Zahlen beim Typ <code>int</code>.</li>
+      <li><strong>Operationen:</strong> was das Rechenwerk mit diesen Werten tun darf, zum Beispiel addieren.</li>
+    </ul>
+    <p>Zu jedem Typ gehören genau festgelegte Operationen. Vier Beispiele:</p>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Typ</th><th>Beispielwert</th><th>Was man mit Werten dieses Typs tun kann</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code>, ganze Zahl</td><td><code>7</code></td><td>Man kann sie addieren, subtrahieren, multiplizieren, teilen, den Rest bilden und vergleichen.</td></tr>
+        <tr><td><code>float64</code>, Gleitkommazahl</td><td><code>2.5</code></td><td>Man kann sie addieren, subtrahieren, multiplizieren, teilen und vergleichen.</td></tr>
+        <tr><td><code>string</code>, Text</td><td><code>"Hallo"</code></td><td>Man kann zwei Strings aneinanderhängen und vergleichen.</td></tr>
+        <tr><td><code>bool</code>, Wahrheitswert</td><td><code>true</code></td><td>Man kann zwei Wahrheitswerte mit UND oder ODER verknüpfen, einen umkehren und zwei auf Gleichheit prüfen.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Operator, Operand, Ausdruck</h3>
+    <p>Im Programm schreibt man eine Operation mit einem <strong>Operator</strong>. In <code>5 + 8</code> ist <code>+</code> der Operator, <code>5</code> und <code>8</code> sind seine <strong>Operanden</strong>. Zusammen bilden sie einen <strong>Ausdruck</strong>. Go rechnet den Ausdruck aus und erhält seinen <strong>Wert</strong>, hier 13. Das Ausrechnen heißt <strong>Auswertung</strong>.</p>
+
+    <h3>Was du schon kennst</h3>
+    <ul>
+      <li><strong>Speicher und Rechenwerk:</strong> Abschnitt 2.2 und 2.3. Lektionen: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a> und, für das Innere des Rechenwerks, <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>
+      <li><strong>Punkt vor Strich:</strong> Abschnitt 3.3.5 und 3.3.6. Die Lektion „Zuweisen, rechnen, ausgeben“ liegt im Editorlotsen unter Kapitel 3.</li>
+    </ul>
+
+    <h3>Die Schritte</h3>
+    <ul>
+      <li><strong>Schritt 1:</strong> Welcher Operator zu welchem Typ gehört. Du probierst Typ und Operator aus.</li>
+      <li><strong>Schritt 2:</strong> Warum die Typen der Operanden zusammenpassen müssen.</li>
+      <li><strong>Schritt 3:</strong> Woraus ein Ausdruck besteht.</li>
+      <li><strong>Schritt 4:</strong> In welcher Reihenfolge Go rechnet. Du gehst den Rechenweg Zeile für Zeile.</li>
+      <li><strong>Schritt 5:</strong> Was der Compiler schon vor dem Lauf ausrechnet.</li>
+      <li><strong>Schritt 6:</strong> Du änderst Programme und führst sie im Editorlotsen aus.</li>
+      <li><strong>Schritt 7:</strong> Was aus dem Kurstext stammt und wo das Thema im Kurstext noch vorkommt.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Operatoren</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Darf man zwei Strings mit <code>-</code> voneinander abziehen?
+          <details><summary>Auflösung</summary>Nein. Für Strings ist von den Rechenzeichen nur <code>+</code> festgelegt. Es hängt zwei Strings aneinander.</details></li>
+      </ol>
+    </div>
+    <p>Es gibt zwei Arten von Operatoren:</p>
+    <ul>
+      <li><strong>Binärer Operator:</strong> Er hat zwei Operanden und steht zwischen ihnen, zum Beispiel <code>a + b</code>.</li>
+      <li><strong>Unärer Operator:</strong> Er hat einen Operanden und steht davor, zum Beispiel <code>-a</code> oder <code>!a</code>.</li>
+    </ul>
+
+    <h3>Ausprobieren: Typ und Operator</h3>
+    <p>Wähle einen Typ und einen Operator. Die Demo setzt beides in ein kleines Programm mit zwei Variablen <code>a</code> und <code>b</code> und zeigt, was Go dazu sagt.</p>
+    <div class="zeile"><span class="beschriftung">Typ von a und b:</span><span class="zeile" id="g-typ" style="margin:0"></span></div>
+    <div class="zeile"><span class="beschriftung">Operator:</span><span class="zeile" id="g-op" style="margin:0"></span></div>
+    <pre class="code-block" id="g-programm"></pre>
+    <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
+    <div class="konsole" id="g-ausgabe"></div>
+    <div class="auskunft" id="g-urteil"></div>
+
+    <details class="tabelle"><summary>Alle Operatoren für die primitiven Typen, Tabelle 4.1 des Kurstexts</summary>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Art</th><th>Operatoren</th><th>Was der Operator tut</th><th>Für diese Typen festgelegt</th></tr></thead>
+      <tbody>
+        <tr><td>unär</td><td><code>+ -</code></td><td>Vorzeichen und Negation</td><td>Ganzzahlen, Gleitkommazahlen, komplexe Zahlen</td></tr>
+        <tr><td>unär</td><td><code>^</code></td><td>bitweise Negation</td><td>Ganzzahlen</td></tr>
+        <tr><td>unär</td><td><code>!</code></td><td>logische Negation</td><td><code>bool</code></td></tr>
+        <tr><td>binär</td><td><code>+</code></td><td>Addition, bei Strings Verkettung</td><td>Ganzzahlen, Gleitkommazahlen, komplexe Zahlen, Strings</td></tr>
+        <tr><td>binär</td><td><code>- * /</code></td><td>Subtraktion, Multiplikation, Division</td><td>Ganzzahlen, Gleitkommazahlen, komplexe Zahlen</td></tr>
+        <tr><td>binär</td><td><code>%</code></td><td>Rest der Division</td><td>Ganzzahlen</td></tr>
+        <tr><td>binär</td><td><code>| ^ &amp; &amp;^ &lt;&lt; &gt;&gt;</code></td><td>bitweise Logik und Verschiebung</td><td>Ganzzahlen</td></tr>
+        <tr><td>binär</td><td><code>== !=</code></td><td>gleich, ungleich</td><td>alle primitiven Typen</td></tr>
+        <tr><td>binär</td><td><code>&lt; &lt;= &gt; &gt;=</code></td><td>kleiner, größer</td><td>Ganzzahlen, Gleitkommazahlen, Strings</td></tr>
+        <tr><td>binär</td><td><code>&amp;&amp; ||</code></td><td>logisches UND und ODER</td><td><code>bool</code></td></tr>
+      </tbody>
+    </table></div>
+    <p>Die Operatoren fallen in drei Gruppen: <strong>arithmetische Operatoren</strong> für Zahlen, <strong>logische Operatoren</strong> für <code>bool</code> und <strong>Vergleichsoperatoren</strong>. Die komplexen Zahlen braucht der Kurs nicht.</p>
+    </details>
+
+    <div class="spaeter"><strong>Mehr dazu später</strong>
+      <ul>
+        <li><strong>Division und Rest bei Ganzzahlen:</strong> Abschnitt 4.3.7.1. Die Lektion <a href="go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung</a> zeigt die Division in Schritt 4.</li>
+        <li><strong>Bit-Operatoren:</strong> Abschnitt 4.3.7.2, Lektionen <a href="go_k4_rechenwerk_interaktiv.html">Rechenwerk</a> und <a href="go_k4_bitverschiebung_interaktiv.html">Bitverschiebung</a>.</li>
+        <li><strong>Vergleiche:</strong> Abschnitt 4.5.2, Lektion <a href="go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a>.</li>
+        <li><strong>Verkettung von Strings:</strong> Abschnitt 4.6.2.2, Lektion <a href="go_k4_strings_interaktiv.html">Strings in Go</a>.</li>
+        <li><strong>Die unären Operatoren <code>&amp;</code> und <code>*</code>:</strong> Abschnitt 7.4, Lektion <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>. Den dritten, <code>&lt;-</code>, braucht der Kurs nicht.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Typen passen zusammen</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>x</code> hat den Typ <code>int</code>, <code>t</code> den Typ <code>float64</code>. Übersetzt Go <code>x + t</code>?
+          <details><summary>Auflösung</summary>Nein. Bei einem binären Operator müssen beide Operanden den gleichen Typ haben.</details></li>
+      </ol>
+    </div>
+    <p>Für die Operanden und das Ergebnis gelten zwei Regeln:</p>
+    <ul>
+      <li><strong>Gleicher Typ:</strong> Die beiden Operanden eines binären Operators haben den gleichen Typ. Eine Ausnahme: Steht eine ganze Zahl wörtlich im Programm, als Integer-Literal wie <code>32</code>, und ist der andere Operand eine Gleitkommazahl, passt Go den Typ des Literals an. Das heißt <strong>implizite Typanpassung</strong>.</li>
+      <li><strong>Ergebnistyp:</strong> Bei Rechenzeichen und logischen Operatoren hat das Ergebnis den Typ der Operanden. Ein Vergleich liefert immer einen Wahrheitswert, Typ <code>bool</code>.</li>
+    </ul>
+    <p>Wähle ein Programm. Jedes steht ab Zeile 6 im Rumpf von <code>main</code>.</p>
+    <div class="spalte" id="t-wahl"></div>
+    <p><strong>Ausgabe oder Meldung des Compilers</strong></p>
+    <div class="konsole" id="t-ausgabe"></div>
+    <div class="auskunft" id="t-urteil"></div>
+
+    <div class="hinweis"><strong>Operator oder Funktion?</strong> Ein Operator ist eine kurze Schreibweise für eine Funktion mit einem oder zwei Parametern. Statt <code>3 + 4 + 5</code> könnte eine Sprache <code>add(add(3, 4), 5)</code> verlangen. Die kurze Schreibweise ist leichter zu lesen. In Go lässt sich die Bedeutung eines Operators nicht ändern, auch nicht für eigene Typen. In C++ geht das, es heißt dort Überladen eines Operators.</div>
+
+    <div class="spaeter"><strong>Mehr dazu später</strong>
+      <ul>
+        <li><strong>Implizite Typanpassung und Typkonvertierung:</strong> Abschnitt 4.7, Lektion <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Aufbau von Ausdrücken</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Welche dieser vier Zeilen ist ein Ausdruck: <code>123</code>, <code>x = 5</code>, <code>tempC - 4</code>, <code>var y int</code>?
+          <details><summary>Auflösung</summary><code>123</code> und <code>tempC - 4</code>. Beide haben einen Wert. <code>x = 5</code> ist eine Zuweisung und <code>var y int</code> eine Deklaration. Beide sind Anweisungen und haben keinen Wert.</details></li>
+      </ol>
+    </div>
+    <p>Ein Ausdruck ist alles, was einen Wert hat. Große Ausdrücke sind aus kleinen zusammengesetzt, wie Kästen in Kästen.</p>
+    <ul>
+      <li><strong>Elementarer Ausdruck:</strong> Er ist nicht weiter zerlegbar. Das ist ein Literal wie <code>123</code>, der Name einer Variable wie <code>tempC</code> oder ein Funktionsaufruf ohne Argument wie <code>Jahr()</code>.</li>
+      <li><strong>Kombinierter Ausdruck:</strong> Er ist aus anderen Ausdrücken zusammengesetzt, durch einen Operator wie in <code>123 + x</code>, als Argument wie in <code>Quadrat(2+3)</code> oder durch Klammern wie in <code>(7 + 3)</code>.</li>
+    </ul>
+    <p>Wähle einen Ausdruck aus dem Kurstext. Jeder Kasten ist ein Ausdruck. Klicke einen Kasten an, darunter steht, was er ist.</p>
+    <div class="zeile" id="b-wahl"></div>
+    <div class="legende"><span class="el">elementar</span><span>kombiniert</span><span class="sel">angeklickt</span></div>
+    <div class="kaesten" id="b-kaesten"></div>
+    <div class="auskunft" id="b-urteil"></div>
+
+    <div class="hinweis"><strong>Ein Ausdruck allein ist keine Anweisung.</strong> Steht <code>x + 1</code> allein in einer Zeile, übersetzt Go das Programm nicht und meldet <code>x + 1 (value of type int) is not used</code>: Der Wert wird berechnet und nirgends verwendet. Ein Funktionsaufruf ist die Ausnahme. Er ist zugleich Ausdruck und Anweisung, zum Beispiel <code>fmt.Println(x)</code>.</div>
+
+    <div class="spaeter"><strong>Mehr dazu später</strong>
+      <ul>
+        <li><strong>Funktionen mit Rückgabewert:</strong> Abschnitt 7.1, Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html">Funktionen in Go</a>.</li>
+        <li><strong>Anweisungen:</strong> Kapitel 5, zum Beispiel die Lektion <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Auswertung</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li>Welchen Wert hat <code>8 / 4 * 5</code>: 10 oder 0,4?
+          <details><summary>Auflösung</summary>10. <code>/</code> und <code>*</code> binden gleich stark. Dann rechnet Go von links nach rechts: erst <code>8 / 4</code> ergibt 2, dann <code>2 * 5</code> ergibt 10.</details></li>
+      </ol>
+    </div>
+    <p>Go rechnet einen Ausdruck so aus, wie du es aus der Schule kennst: immer einen Teil nach dem anderen. Welcher Teil zuerst dran ist, regeln drei Regeln.</p>
+    <ul>
+      <li><strong>Bindungsstärke:</strong> Manche Operatoren binden stärker als andere. Punkt vor Strich: <code>*</code> und <code>/</code> kommen vor <code>+</code> und <code>-</code>. Rechnen kommt vor Vergleichen, Vergleichen vor <code>&amp;&amp;</code> und <code>||</code>.</li>
+      <li><strong>Von links nach rechts:</strong> Bei gleich starken Operatoren gilt der linke zuerst. Das heißt <strong>Linksassoziativität</strong>.</li>
+      <li><strong>Klammern:</strong> Was in Klammern steht, wird zuerst ausgerechnet.</li>
+    </ul>
+
+    <h3>Ausprobieren: der Rechenweg</h3>
+    <p>Wähle einen Ausdruck und klicke auf „Nächster Rechenschritt“. Jede Zeile zeigt den Ausdruck nach einem Rechenschritt. Gelb ist der Teil, den Go als Nächstes ausrechnet, grün das Ergebnis des letzten Schritts. Rechts steht, warum dieser Teil dran war.</p>
+    <div class="zeile" id="a-wahl"></div>
+    <div class="zeile" id="a-xwahl"></div>
+    <p class="funktionen" id="a-funktionen" hidden>Im Programm sind <code>x = 3</code> und <code>y = 1</code> und drei Funktionen deklariert: <code>f()</code> gibt 2 zurück, <code>g(a)</code> gibt <code>a * 2</code> zurück, <code>h(a, b)</code> gibt <code>a + b</code> zurück. Alle Werte haben den Typ <code>int</code>.</p>
+    <div class="rechenweg" id="a-weg"></div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="a-weiter">Nächster Rechenschritt</button>
+      <button type="button" id="a-zurueck">Einen Schritt zurück</button>
+      <button type="button" id="a-vorn">Von vorn</button>
+      <button type="button" id="a-klammern">Klammern zeigen</button>
+    </div>
+
+    <details class="tabelle"><summary>Die Bindungsstärken aller Operatoren, Tabelle aus Abschnitt 4.1.2</summary>
+    <div class="tabellenrahmen"><table class="text">
+      <thead><tr><th>Stufe</th><th>Operatoren</th><th>Was in der Stufe steht</th></tr></thead>
+      <tbody>
+        <tr><td>6, die höchste</td><td><code>+ - ^ ! &amp; * &lt;-</code></td><td>Die Stufe enthält alle unären Operatoren.</td></tr>
+        <tr><td>5</td><td><code>* / % &amp; &amp;^ &lt;&lt; &gt;&gt;</code></td><td>Die Stufe enthält die binären Operatoren, die wie eine Multiplikation wirken.</td></tr>
+        <tr><td>4</td><td><code>+ - | ^</code></td><td>Die Stufe enthält die binären Operatoren, die wie eine Addition wirken.</td></tr>
+        <tr><td>3</td><td><code>== != &lt; &lt;= &gt; &gt;=</code></td><td>Die Stufe enthält die Vergleiche.</td></tr>
+        <tr><td>2</td><td><code>&amp;&amp;</code></td><td>Die Stufe enthält das logische UND.</td></tr>
+        <tr><td>1, die niedrigste</td><td><code>||</code></td><td>Die Stufe enthält das logische ODER.</td></tr>
+      </tbody>
+    </table></div>
+    </details>
+
+    <div class="hinweis"><strong>Wann der Wert feststeht.</strong> Enthält ein Ausdruck Variablen oder Funktionsaufrufe, steht sein Wert erst fest, wenn das Programm läuft. Er hängt davon ab, welche Werte die Variablen gerade haben. Kommt das Programm noch einmal an diese Stelle, rechnet Go den Ausdruck neu aus.</div>
+
+    <div class="spaeter"><strong>Mehr dazu später</strong>
+      <ul>
+        <li><strong>Warum <code>3/4</code> den Wert 0 hat:</strong> Die Division zweier Ganzzahlen schneidet die Nachkommastellen ab, Abschnitt 4.3.7.1. Die Lektion <a href="go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung</a> zeigt das in Schritt 4.</li>
+        <li><strong>Warum Go den rechten Vergleich manchmal überspringt:</strong> Abschnitt 4.5.1, Lektion <a href="go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
+        <li><strong>Vergleiche verknüpfen:</strong> Abschnitt 4.5.2, Lektion <a href="go_k4_logische_operatoren_interaktiv.html#verknuepfen">Logische Operatoren und Vergleiche</a>, Schritt 3.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Konstante Ausdrücke</h3>
+    <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
+      <ol>
+        <li><code>fix</code> hat in beiden Programmen den Wert 15, also ist <code>3*5 - fix</code> gleich 0. Im einen Programm ist <code>fix</code> eine Konstante, im anderen eine Variable. Was geschieht jeweils bei <code>100 / (3*5 - fix)</code>?
+          <details><summary>Auflösung</summary>Mit der Konstante übersetzt Go das Programm nicht: Der Compiler rechnet den Ausdruck aus und findet die Division durch 0. Mit der Variable übersetzt Go das Programm. Es bricht erst beim Lauf ab.</details></li>
+      </ol>
+    </div>
+    <p>Ein <strong>konstanter Ausdruck</strong> besteht nur aus Literalen und Konstanten. Sein Wert steht schon beim Übersetzen fest und ändert sich nie. Der Compiler rechnet ihn deshalb selbst aus und schreibt das Ergebnis ins Programm. Das hat zwei Folgen:</p>
+    <ul>
+      <li><strong>Schneller:</strong> Das laufende Programm muss den Ausdruck nicht bei jedem Durchlauf neu berechnen.</li>
+      <li><strong>Früher Fehler:</strong> Einen Fehler im konstanten Ausdruck, etwa eine Division durch 0, meldet schon der Compiler.</li>
+    </ul>
+    <p>Wähle ein Programm. Jedes steht ab Zeile 6 im Rumpf von <code>main</code>.</p>
+    <div class="spalte" id="k-wahl"></div>
+    <p><strong>Ausgabe oder Meldung</strong></p>
+    <div class="konsole" id="k-ausgabe"></div>
+    <div class="auskunft" id="k-urteil"></div>
+
+    <div class="spaeter"><strong>Mehr dazu später</strong>
+      <ul>
+        <li><strong>Konstanten deklarieren:</strong> Abschnitt 5.2, Lektion <a href="../kap5-anweisungen/go_k5_konstanten_interaktiv.html">Konstanten in Go</a>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Selbst ausprobieren</h3>
+    <p>Hier stehen sechs Programme zu den Schritten dieser Lektion. Wähle eines, sag vorher, was Go ausgibt oder meldet, und führe es aus. Danach kannst du im Editor eigene Ausdrücke versuchen.</p>
+    <p>Vorschläge zum Ausprobieren:</p>
+    <ul>
+      <li><strong>Klammern setzen:</strong> Ändere im Programm „Punkt vor Strich“ die Klammern so, dass <code>24/8 - 3*4</code> den Wert −6 hat.</li>
+      <li><strong>Andere Werte:</strong> Gib im Programm „Vergleich und ODER“ der Variable <code>x</code> den Wert 0 oder 8. Wann ist der Ausdruck <code>true</code>?</li>
+      <li><strong>Typen angleichen:</strong> Im Programm „Typen mischen“ übersetzt Go die Zeile nicht. Ändere die Deklaration von <code>x</code> so, dass es geht.</li>
+    </ul>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h3>Schritt 7: Bezug zum Kurstext</h3>
+    <p>Die Lektion gehört zu Abschnitt 4.1 bis 4.1.2 des Kurstexts. Die Tabelle nennt zu jedem Schritt die Seiten zum Nachlesen und trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was die Lektion dazugibt</th></tr>
+      <tr><td>Worum es geht</td><td>4.1, Seite 45</td><td>Der Satz über Wertebereich und Operationen und die Begriffe Operator, Operand, Ausdruck und Auswertung stammen aus dem Kurstext.</td><td>Daten, Speicher und Rechenwerk als Einstieg und die Tabelle mit vier Typen gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Operatoren</td><td>4.1, Seiten 45–46</td><td>Unär und binär, die Infixnotation, Tabelle 4.1 und die drei Gruppen stammen aus dem Kurstext.</td><td>Die Demo mit vier Typen und elf Operatoren und ihre Ausgaben und Meldungen von Go 1.26.1 gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Typen passen zusammen</td><td>4.1, Seiten 46–47</td><td>Die Regel zum gleichen Typ, die implizite Typanpassung mit <code>32 + tempC*1.8</code>, der Ergebnistyp und Expertenwissen 4.2 und 4.3 stammen aus dem Kurstext.</td><td>Die vier Programme der Auswahl mit ihren Ausgaben und Meldungen von Go 1.26.1 gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Aufbau von Ausdrücken</td><td>4.1.1, Seiten 47–49</td><td>Die elementaren und kombinierten Ausdrücke, die drei Wege zum kombinierten Ausdruck und die sieben Ausdrücke der Auswahl stammen aus dem Kurstext.</td><td>Die Darstellung als Kästen in Kästen, die vier Zeilen der Vorhersage und die Meldung zu <code>x + 1</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Auswertung</td><td>4.1.2, Seiten 50–52</td><td>Die Tabelle der Bindungsstärken, die drei Regeln, die Ausdrücke <code>5 + 2 * 3</code>, <code>(5 + 2) * 3</code>, <code>8 / 4 * 5</code>, <code>24/8 - 3*4</code>, <code>10+x*5 &gt;= 50 || x &lt; 1</code> und der Ausdruck mit <code>f</code>, <code>g</code> und <code>h</code> stammen aus dem Kurstext.</td><td>Der Rechenweg Zeile für Zeile mit Begründung, die Werte von <code>x</code> und <code>y</code> und die Rümpfe von <code>f</code>, <code>g</code> und <code>h</code> gibt die Lektion dazu. Alle Werte hat Go 1.26.1 nachgerechnet.</td></tr>
+      <tr><td>5 Konstante Ausdrücke</td><td>4.1.2, Seite 52</td><td>Die konstanten Ausdrücke mit 13.75 und 640 und die Division durch 0 mit <code>const fix</code> stammen aus dem Kurstext.</td><td>Das Programm mit der Variable <code>fix</code>, das Programm mit <code>x*x + 1</code> und alle Ausgaben und Meldungen von Go 1.26.1 gibt die Lektion dazu.</td></tr>
+      <tr><td>6 Selbst ausprobieren</td><td>4.1 bis 4.1.2, Seiten 45–52</td><td>Die Ausdrücke in den Programmen stammen aus dem Kurstext.</td><td>Die Programme, ihre Ausgaben und Meldungen von Go 1.26.1 und die Vorschläge gibt die Lektion dazu.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Ausdrücke und Zuweisungen:</strong> Ein Ausdruck verknüpft Werte zu einem neuen Wert. Lektion: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs: Speichern und Rechnen im Rechner</a>.</li>
+      <li><strong>Abschnitt 3.3.5 und 3.3.6, Seiten 33–36, Zuweisungen, Ausdrücke und Bindungsstärken:</strong> Die erste kurze Einführung am Programm zur Umrechnung von Temperaturen. Die Lektion „Zuweisen, rechnen, ausgeben“ liegt im Editorlotsen unter Kapitel 3.</li>
+      <li><strong>Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung:</strong> Lektion <a href="go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
+      <li><strong>Abschnitt 4.7, Seiten 109–111, Typkonvertierung:</strong> Lektion <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+      <li><strong>Abschnitt 5.2, Seiten 124–126, Konstanten:</strong> Lektion <a href="../kap5-anweisungen/go_k5_konstanten_interaktiv.html">Konstanten in Go</a>.</li>
+      <li><strong>Abschnitt 5.3, Seiten 126–128, Zuweisung:</strong> Rechts vom Gleichheitszeichen steht ein Ausdruck. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
+    </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Formatierte Ausgabe:</strong> Im Kurstext folgt Abschnitt 4.2 zu <code>fmt.Printf</code>. Die Lektion dazu liegt im Editorlotsen unter Kapitel 4.</li>
+      <li><strong>Quiz:</strong> <a href="../kap3-einfuehrung/go_auswertungsreihenfolge_bindungsstaerken_quiz.html">Auswertungsreihenfolge und Bindungsstärken</a> und die <a href="go_k4_quiz_hub.html">Quiz zu Kapitel 4</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const NL = String.fromCharCode(10);
+
+  // ---------- Reiter ----------
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#auswertung
+  const ANKER = ['worum', 'operatoren', 'typen', 'aufbau', 'auswertung', 'konstant', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Operatoren', 'Schritt 2: Typen passen zusammen', 'Schritt 3: Aufbau von Ausdrücken', 'Schritt 4: Auswertung', 'Schritt 5: Konstante Ausdrücke', 'Schritt 6: Selbst ausprobieren', 'Schritt 7: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); (function () { const r = document.querySelector('.tabs'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); })(); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Eine Auswahl fester Programme ----------
+  // liste: Einträge mit code, aus (Ausgabe oder Meldung), fehler, laufzeit, satz.
+  function wahl(kurz, liste) {
+    const W = { i: 0, liste: liste };
+    W.zeichne = function () {
+      el(kurz + '-wahl').innerHTML = liste.map((x, k) => '<button type="button" class="wk' + (k === W.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(x.code) + '</button>').join('');
+      const x = liste[W.i];
+      el(kurz + '-ausgabe').textContent = x.aus || '';
+      el(kurz + '-urteil').className = 'auskunft' + (x.fehler ? ' fehler' : '');
+      el(kurz + '-urteil').innerHTML = (x.fehler ? '<p>' + (x.laufzeit ? 'Go übersetzt das Programm, es bricht aber beim Lauf ab.' : 'Go übersetzt das Programm nicht.') + '</p>' : '') + '<p>' + esc(x.satz) + '</p>';
+      melde(false);
+    };
+    el(kurz + '-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { W.i = Number(k.dataset.i); W.zeichne(); } });
+    return W;
+  }
+  function standWahl(W) {
+    const x = W.liste[W.i];
+    return ['Gewählt ist das Programm ' + (W.i + 1) + ' von ' + W.liste.length + ': ' + x.code.split(NL).join(' | '),
+      x.fehler ? (x.laufzeit ? 'Go übersetzt das Programm, es bricht aber beim Lauf ab. Die Meldung: ' : 'Go übersetzt das Programm nicht. Die Meldung des Compilers: ') + x.aus.split(NL).join(' | ') : 'Die Ausgabe: ' + x.aus.split(NL).join(' | '),
+      'Die Seite sagt dazu: ' + x.satz,
+      'Handgriff: eines der ' + W.liste.length + ' festen Programme wählen. Ein eigenes Programm lässt sich hier nicht eingeben, auf der Seite läuft kein Go. Ausgaben und Meldungen stammen von Go 1.26.1.'];
+  }
+
+  // ---------- Schritt 1: Typ mal Operator ----------
+  // Das Programm: Zeile 6 var a TYP = WERT, Zeile 7 var b TYP = WERT, Zeile 8 fmt.Println(a OP b).
+  // Bei einem unären Operator fehlt b, Zeile 7 ist fmt.Println(OPa). Alle Ergebnisse von Go 1.26.1.
+  const TYPEN = { int: ['7', '2'], float64: ['7.5', '2.0'], string: ['"Hallo"', '"Welt"'], bool: ['true', 'false'] };
+  const OPS = [['+', '+'], ['-', '-'], ['*', '*'], ['/', '/'], ['%', '%'], ['==', '=='], ['<', '<'], ['&&', '&&'], ['||', '||'], ['!', '! (unär)'], ['neg', '- (unär)']];
+  const GITTER = {
+    'int +': { a: "9" },
+    'int -': { a: "5" },
+    'int *': { a: "14" },
+    'int /': { a: "3" },
+    'int %': { a: "1" },
+    'int ==': { a: "false" },
+    'int <': { a: "false" },
+    'int &&': { m: ".\\main.go:8:14: invalid operation: operator && not defined on a (variable of type int)" },
+    'int ||': { m: ".\\main.go:8:14: invalid operation: operator || not defined on a (variable of type int)" },
+    'int !': { m: ".\\main.go:7:15: invalid operation: operator ! not defined on a (variable of type int)" },
+    'int neg': { a: "-7" },
+    'float64 +': { a: "9.5" },
+    'float64 -': { a: "5.5" },
+    'float64 *': { a: "15" },
+    'float64 /': { a: "3.75" },
+    'float64 %': { m: ".\\main.go:8:14: invalid operation: operator % not defined on a (variable of type float64)" },
+    'float64 ==': { a: "false" },
+    'float64 <': { a: "false" },
+    'float64 &&': { m: ".\\main.go:8:14: invalid operation: operator && not defined on a (variable of type float64)" },
+    'float64 ||': { m: ".\\main.go:8:14: invalid operation: operator || not defined on a (variable of type float64)" },
+    'float64 !': { m: ".\\main.go:7:15: invalid operation: operator ! not defined on a (variable of type float64)" },
+    'float64 neg': { a: "-7.5" },
+    'string +': { a: "HalloWelt" },
+    'string -': { m: ".\\main.go:8:14: invalid operation: operator - not defined on a (variable of type string)" },
+    'string *': { m: ".\\main.go:8:14: invalid operation: operator * not defined on a (variable of type string)" },
+    'string /': { m: ".\\main.go:8:14: invalid operation: operator / not defined on a (variable of type string)" },
+    'string %': { m: ".\\main.go:8:14: invalid operation: operator % not defined on a (variable of type string)" },
+    'string ==': { a: "false" },
+    'string <': { a: "true" },
+    'string &&': { m: ".\\main.go:8:14: invalid operation: operator && not defined on a (variable of type string)" },
+    'string ||': { m: ".\\main.go:8:14: invalid operation: operator || not defined on a (variable of type string)" },
+    'string !': { m: ".\\main.go:7:15: invalid operation: operator ! not defined on a (variable of type string)" },
+    'string neg': { m: ".\\main.go:7:15: invalid operation: operator - not defined on a (variable of type string)" },
+    'bool +': { m: ".\\main.go:8:14: invalid operation: operator + not defined on a (variable of type bool)" },
+    'bool -': { m: ".\\main.go:8:14: invalid operation: operator - not defined on a (variable of type bool)" },
+    'bool *': { m: ".\\main.go:8:14: invalid operation: operator * not defined on a (variable of type bool)" },
+    'bool /': { m: ".\\main.go:8:14: invalid operation: operator / not defined on a (variable of type bool)" },
+    'bool %': { m: ".\\main.go:8:14: invalid operation: operator % not defined on a (variable of type bool)" },
+    'bool ==': { a: "false" },
+    'bool <': { m: ".\\main.go:8:14: invalid operation: a < b (operator < not defined on bool)" },
+    'bool &&': { a: "false" },
+    'bool ||': { a: "true" },
+    'bool !': { a: "false" },
+    'bool neg': { m: ".\\main.go:7:15: invalid operation: operator - not defined on a (variable of type bool)" }
+  };
+  // Was die Seite zu einer Kombination zusätzlich sagt
+  const ZUSATZ = {
+    'int /': 'Die Division zweier Ganzzahlen schneidet die Nachkommastellen ab: 7 / 2 ergibt 3. Mehr dazu in Abschnitt 4.3.7.1.',
+    'int %': '% liefert den Rest der Division: 7 geteilt durch 2 ist 3 Rest 1.',
+    'float64 *': 'Das Ergebnis ist 15.0. fmt.Println lässt die Nachkommastelle 0 weg und schreibt 15.',
+    'float64 %': 'Den Rest einer Division gibt es nur für Ganzzahlen.',
+    'string +': 'Bei Strings hängt + die beiden Strings aneinander. Ein Leerzeichen fügt Go nicht ein.',
+    'string <': 'Strings haben eine Reihenfolge, die im Wörterbuch. Hallo steht vor Welt.',
+    'bool <': 'Wahrheitswerte haben keine Reihenfolge. true ist nicht größer als false.',
+    'bool &&': 'true UND false ergibt false. Beide Operanden müssten true sein.',
+    'bool ||': 'true ODER false ergibt true. Ein Operand true genügt.',
+    'bool !': '! kehrt den Wahrheitswert um: aus true wird false.'
+  };
+  const G = { typ: 'int', op: '+' };
+  const istUnaer = op => op === '!' || op === 'neg';
+  const opZeichen = op => op === 'neg' ? '-' : op;
+  function gitterZeilen() {
+    const w = TYPEN[G.typ];
+    return istUnaer(G.op) ? ['var a ' + G.typ + ' = ' + w[0], 'fmt.Println(' + opZeichen(G.op) + 'a)']
+      : ['var a ' + G.typ + ' = ' + w[0], 'var b ' + G.typ + ' = ' + w[1], 'fmt.Println(a ' + G.op + ' b)'];
+  }
+  const erlaubt = typ => OPS.filter(o => GITTER[typ + ' ' + o[0]].a !== undefined).map(o => o[1]);
+  const verboten = typ => OPS.filter(o => GITTER[typ + ' ' + o[0]].m !== undefined).map(o => o[1]);
+  function gitterSatz() {
+    const e = GITTER[G.typ + ' ' + G.op], schreib = istUnaer(G.op) ? opZeichen(G.op) + 'a' : 'a ' + G.op + ' b';
+    const ergTyp = (G.op === '==' || G.op === '<') ? 'bool' : G.typ;
+    const z = ZUSATZ[G.typ + ' ' + G.op];
+    if (e.m) return { fehler: true, saetze: ['Für den Typ ' + G.typ + ' ist der Operator ' + opZeichen(G.op) + ' nicht festgelegt. Go übersetzt die Zeile nicht und meldet „not defined“.'].concat(z ? [z] : []) };
+    return { fehler: false, saetze: [schreib + ' ergibt ' + e.a + '. Das Ergebnis hat den Typ ' + ergTyp + (ergTyp !== G.typ ? ', denn ein Vergleich liefert immer einen Wahrheitswert.' : ', den Typ der Operanden.')].concat(z ? [z] : []) };
+  }
+  function zeichneGitter() {
+    el('g-typ').innerHTML = Object.keys(TYPEN).map(t => '<button type="button" class="wk' + (t === G.typ ? ' gewaehlt' : '') + '" data-typ="' + t + '">' + t + '</button>').join('');
+    el('g-op').innerHTML = OPS.map(o => '<button type="button" class="wk' + (o[0] === G.op ? ' gewaehlt' : '') + '" data-op="' + esc(o[0]) + '">' + esc(o[1]) + '</button>').join('');
+    el('g-programm').textContent = gitterZeilen().join(NL);
+    const e = GITTER[G.typ + ' ' + G.op], s = gitterSatz();
+    el('g-ausgabe').textContent = e.m || e.a;
+    el('g-urteil').className = 'auskunft' + (s.fehler ? ' fehler' : '');
+    el('g-urteil').innerHTML = s.saetze.map(t => '<p>' + esc(t) + '</p>').join('') +
+      '<p>Für ' + G.typ + ' festgelegt: ' + (erlaubt(G.typ).map(o => '<code>' + esc(o) + '</code>').join(', ') || 'keiner') + '.<br>Nicht festgelegt: ' + (verboten(G.typ).map(o => '<code>' + esc(o) + '</code>').join(', ') || 'keiner') + '.</p>';
+    melde(false);
+  }
+  el('g-typ').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { G.typ = k.dataset.typ; zeichneGitter(); } });
+  el('g-op').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { G.op = k.dataset.op; zeichneGitter(); } });
+  function standGitter() {
+    const e = GITTER[G.typ + ' ' + G.op], s = gitterSatz();
+    return ['Gewählt sind der Typ ' + G.typ + ' und der Operator ' + opZeichen(G.op) + (istUnaer(G.op) ? ' als unärer Operator.' : '.'),
+      'Das Programm ab Zeile 6 im Rumpf von main: ' + gitterZeilen().join(' | '),
+      e.m ? 'Go übersetzt das Programm nicht. Die Meldung des Compilers: ' + e.m : 'Die Ausgabe: ' + e.a,
+      'Die Seite sagt dazu: ' + s.saetze.join(' '),
+      'Für ' + G.typ + ' festgelegt: ' + erlaubt(G.typ).join(', ') + '. Nicht festgelegt: ' + (verboten(G.typ).join(', ') || 'keiner') + '.',
+      'Handgriffe: einen der Typen int, float64, string, bool wählen und einen der Operatoren + - * / % == < && || ! und - als Vorzeichen. Die Werte sind fest: int 7 und 2, float64 7.5 und 2.0, string "Hallo" und "Welt", bool true und false. Ausgaben und Meldungen stammen von Go 1.26.1.'];
+  }
+
+  // ---------- Schritt 2: Typen passen zusammen ----------
+  const WT = wahl('t', [
+    { code: 'var x int = 7' + NL + 'var t float64 = 2.5' + NL + 'fmt.Println(x + t)', fehler: true, aus: '.\\main.go:8:14: invalid operation: x + t (mismatched types int and float64)', satz: 'Die beiden Operanden haben verschiedene Typen, „mismatched types“. Die implizite Typanpassung gilt nur für ein Literal, x ist eine Variable.' },
+    { code: 'var tempC float64 = 22' + NL + 'fmt.Println(32 + tempC*1.8)', aus: '71.6', satz: 'Das Beispiel des Kurstexts aus Listing 3.2. tempC*1.8 hat den Typ float64. Go passt das Integer-Literal 32 an float64 an. Das ist die implizite Typanpassung.' },
+    { code: 'var alter int = 20' + NL + 'fmt.Println(alter >= 18)', aus: 'true', satz: 'Die Operanden sind Ganzzahlen, das Ergebnis ist ein Wahrheitswert vom Typ bool. Ein Vergleich liefert immer bool.' },
+    { code: 'fmt.Println("Hallo" + " Welt")', aus: 'Hallo Welt', satz: 'Beide Operanden sind Strings, das Ergebnis ist wieder ein String. Das Leerzeichen steht am Anfang von " Welt".' }
+  ]);
+
+  // ---------- Ausdrücke zerlegen ----------
+  // Ein kleiner Zerleger für die Ausdrücke dieser Lektion. Knoten: art ('lit', 'name', 'ruf', 'un', 'bin', 'klammer'),
+  // text, op, kinder, p (der Knoten darüber). Die Stufen der binären Operatoren folgen der Tabelle in Abschnitt 4.1.2.
+  const STUFE = { '||': 1, '&&': 2, '==': 3, '!=': 3, '<': 3, '<=': 3, '>': 3, '>=': 3, '+': 4, '-': 4, '*': 5, '/': 5, '%': 5 };
+  function zerlege(text) {
+    const toks = text.match(/\d+\.\d+|\d+|"[^"]*"|[A-Za-z_]\w*|\|\||&&|==|!=|<=|>=|[-+*\/%<>!(),]/g);
+    let p = 0;
+    const blick = () => toks[p];
+    function primaer() {
+      const t = toks[p++];
+      if (t === '(') { const innen = ausdruck(0); p++; return { art: 'klammer', kinder: [innen] }; }
+      if (t === '-' || t === '+' || t === '!') return { art: 'un', op: t, kinder: [primaer()] };
+      if (/^[A-Za-z_]/.test(t) && t !== 'true' && t !== 'false') {
+        if (blick() === '(') {
+          p++;
+          const args = [];
+          while (blick() !== ')') { args.push(ausdruck(0)); if (blick() === ',') p++; }
+          p++;
+          return { art: 'ruf', name: t, kinder: args };
+        }
+        return { art: 'name', text: t };
+      }
+      return { art: 'lit', text: t };
+    }
+    function ausdruck(min) {
+      let links = primaer();
+      while (p < toks.length && STUFE[blick()] && STUFE[blick()] > min) {
+        const op = toks[p++];
+        const rechts = ausdruck(STUFE[op]);
+        links = { art: 'bin', op: op, kinder: [links, rechts] };
+      }
+      return links;
+    }
+    const baum = ausdruck(0);
+    let nr = 0;
+    (function verknuepfe(n, oben) { n.p = oben; n.id = nr++; (n.kinder || []).forEach(k => verknuepfe(k, n)); })(baum, null);
+    return baum;
+  }
+  // Ein Knoten als Text. opt.werte: Map Knoten → Wert für schon ausgerechnete Teile. opt.neu: der Knoten, dessen Wert grün
+  // erscheint. opt.mark: der gelbe Knoten. opt.aus: übersprungene Knoten. opt.voll: Klammern um jeden Teilausdruck.
+  function alsText(n, opt) {
+    opt = opt || {};
+    const h = opt.html ? esc : (t => t);
+    if (opt.werte && opt.werte.has(n)) return opt.html && (opt.neu === n || (n.art === 'klammer' && opt.neu === n.kinder[0])) ? '<span class="wert">' + esc(opt.werte.get(n)) + '</span>' : h(String(opt.werte.get(n)));
+    let t;
+    const k = n.kinder ? n.kinder.map(x => alsText(x, opt)) : [];
+    if (n.art === 'lit' || n.art === 'name') t = h(n.text);
+    else if (n.art === 'ruf') t = n.name + '(' + k.join(', ') + ')';
+    else if (n.art === 'klammer') t = opt.voll ? k[0] : '(' + k[0] + ')';
+    else if (n.art === 'un') t = h(n.op) + k[0];
+    else t = k[0] + ' ' + h(n.op) + ' ' + k[1];
+    if (opt.voll && (n.art === 'bin' || n.art === 'un')) t = '(' + t + ')';
+    if (opt.aus && opt.aus.has(n) && opt.html) t = '<span class="ausgelassen">' + t + '</span>';
+    if (opt.mark === n) t = opt.html ? '<mark>' + t + '</mark>' : '[' + t + ']';
+    return t;
+  }
+  const istElementar = n => n.art === 'lit' || n.art === 'name' || (n.art === 'ruf' && n.kinder.length === 0);
+  function artText(n) {
+    if (n.art === 'lit') return 'ein Literal, ein Wert, der wörtlich im Programm steht';
+    if (n.art === 'name') return 'der Name einer Variable oder Konstante';
+    if (n.art === 'ruf') return n.kinder.length ? 'ein Funktionsaufruf mit ' + (n.kinder.length === 1 ? 'einem Argument' : n.kinder.length + ' Argumenten') : 'ein Funktionsaufruf ohne Argument';
+    if (n.art === 'klammer') return 'ein Ausdruck in Klammern';
+    if (n.art === 'un') return 'ein unärer Operator ' + n.op + ' mit einem Operanden';
+    return 'der binäre Operator ' + n.op + ' mit zwei Operanden';
+  }
+
+  // ---------- Schritt 3: Kästen in Kästen ----------
+  const BAUM_AUSDRUECKE = ['123', 'x * x', '"Hallo" + " Welt"', '32 + tempC*1.8', 'Quadrat(2+3)', '6 * (7 + 3)', 'kontostand >= 0 && einkommen >= 1000'];
+  const B = { i: 3, sel: 0 };
+  function knotenMitId(n, id) { if (n.id === id) return n; for (const k of n.kinder || []) { const f = knotenMitId(k, id); if (f) return f; } return null; }
+  function kastenHtml(n) {
+    const k = n.kinder ? n.kinder.map(kastenHtml) : [];
+    let innen;
+    if (n.art === 'lit' || n.art === 'name') innen = esc(n.text);
+    else if (n.art === 'ruf') innen = esc(n.name) + '(' + k.join(', ') + ')';
+    else if (n.art === 'klammer') innen = '(' + k[0] + ')';
+    else if (n.art === 'un') innen = esc(n.op) + k[0];
+    else innen = k[0] + ' ' + esc(n.op) + ' ' + k[1];
+    return '<span class="bx' + (istElementar(n) ? ' el' : '') + (n.id === B.sel ? ' sel' : '') + '" data-id="' + n.id + '">' + innen + '</span>';
+  }
+  function kastenSatz(n) {
+    const t = alsText(n);
+    if (istElementar(n)) return 'Angeklickt: ' + t + '. Ein elementarer Ausdruck: ' + artText(n) + '. Er ist nicht weiter zerlegbar.';
+    const teile = n.kinder.map(k => alsText(k) + ' (' + (istElementar(k) ? 'elementar' : 'kombiniert') + ')');
+    if (n.art === 'ruf') return 'Angeklickt: ' + t + '. Ein kombinierter Ausdruck: ' + artText(n) + '. Jedes Argument ist selbst ein Ausdruck: ' + teile.join(', ') + '.';
+    if (n.art === 'klammer') return 'Angeklickt: ' + t + '. Ein kombinierter Ausdruck: ' + artText(n) + '. Innen steht der Ausdruck ' + teile[0] + '.';
+    return 'Angeklickt: ' + t + '. Ein kombinierter Ausdruck: ' + artText(n) + '. ' + (n.kinder.length === 2 ? 'Linker Operand: ' + teile[0] + '. Rechter Operand: ' + teile[1] + '.' : 'Operand: ' + teile[0] + '.');
+  }
+  function zaehle(n, z) { z[istElementar(n) ? 0 : 1]++; (n.kinder || []).forEach(k => zaehle(k, z)); return z; }
+  function zeichneKaesten() {
+    el('b-wahl').innerHTML = BAUM_AUSDRUECKE.map((t, k) => '<button type="button" class="wk' + (k === B.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(t) + '</button>').join('');
+    B.baum = zerlege(BAUM_AUSDRUECKE[B.i]);
+    el('b-kaesten').innerHTML = kastenHtml(B.baum);
+    const z = zaehle(B.baum, [0, 0]);
+    el('b-urteil').innerHTML = '<p>' + esc(kastenSatz(knotenMitId(B.baum, B.sel))) + '</p><p>Der ganze Ausdruck besteht aus ' + (z[0] + z[1]) + ' Kästen: ' + z[0] + ' elementaren und ' + z[1] + ' kombinierten.</p>';
+    melde(false);
+  }
+  el('b-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { B.i = Number(k.dataset.i); B.sel = 0; zeichneKaesten(); } });
+  el('b-kaesten').addEventListener('click', ev => { const k = ev.target.closest('.bx'); if (k) { B.sel = Number(k.dataset.id); zeichneKaesten(); } });
+  function kaestenZeilen(n, tiefe, liste) {
+    liste.push('  '.repeat(tiefe) + '- ' + alsText(n) + ': ' + (istElementar(n) ? 'elementar, ' : 'kombiniert, ') + artText(n));
+    (n.kinder || []).forEach(k => kaestenZeilen(k, tiefe + 1, liste));
+    return liste;
+  }
+
+  // ---------- Schritt 4: der Rechenweg ----------
+  // Ganzzahlen und Wahrheitswerte. Die Division schneidet ab wie in Go. Die Werte hat Go 1.26.1 nachgerechnet:
+  // 5+2*3 = 11, (5+2)*3 = 21, 8/4*5 = 10, 24/8-3*4 = -9, der Ausdruck mit f, g, h = 10 bei x = 3, y = 1,
+  // 10+x*5 >= 50 || x < 1: x = 0 true, x = 3 false, x = 8 true.
+  const AUSW = [
+    { text: '5 + 2 * 3' },
+    { text: '(5 + 2) * 3' },
+    { text: '8 / 4 * 5' },
+    { text: '24/8 - 3*4' },
+    { text: '10+x*5 >= 50 || x < 1', mitX: true },
+    { text: '9 - 3/4*g(x-y) + 24/(f()+h(g(7), 5+x))', funk: true }
+  ];
+  const FUNK = { f: () => 2, g: a => a * 2, h: (a, b) => a + b };
+  const A = { i: 0, x: 3, k: 0, voll: false };
+  // Warum ein Knoten gerade jetzt dran ist, in wenigen Wörtern
+  function warum(n) {
+    if (n.art === 'name') return 'Go holt den Wert der Variable ' + n.text;
+    if (n.art === 'ruf') return 'Funktionsaufruf, die Argumente sind ausgerechnet';
+    if (n.art === 'un') return 'Vorzeichen bindet am stärksten';
+    let oben = n.p;
+    if (oben && oben.art === 'klammer') return 'Klammer zuerst';
+    if (oben && oben.art === 'ruf') return 'Argument der Funktion ' + oben.name + ' zuerst';
+    if (!oben) return 'zum Schluss ' + n.op;
+    if (oben.art === 'bin') {
+      if (STUFE[n.op] > STUFE[oben.op]) return n.op + ' bindet stärker als ' + oben.op + (STUFE[n.op] === 5 && STUFE[oben.op] === 4 ? ', Punkt vor Strich' : '');
+      if (STUFE[n.op] === STUFE[oben.op] && oben.kinder[0] === n) return n.op + ' und ' + oben.op + ' binden gleich stark, links zuerst';
+    }
+    return 'Operanden sind ausgerechnet';
+  }
+  // Die Liste der Rechenschritte. Literale sind sofort da und brauchen keinen Schritt.
+  function rechne(baum, belegung) {
+    const liste = [], werte = new Map(), aus = new Set();
+    function auswerten(n) {
+      if (n.art === 'lit') { const v = n.text === 'true' ? true : n.text === 'false' ? false : Number(n.text); werte.set(n, v); return v; }
+      if (n.art === 'klammer') { const v = auswerten(n.kinder[0]); werte.set(n, v); return v; }
+      let v, satz;
+      const vorher = new Map(werte);
+      if (n.art === 'name') { v = belegung[n.text]; satz = n.text + ' hat den Wert ' + v; }
+      else if (n.art === 'ruf') {
+        const a = n.kinder.map(auswerten);
+        v = FUNK[n.name].apply(null, a);
+        satz = n.name + '(' + a.join(', ') + ') = ' + v;
+      } else if (n.art === 'un') {
+        const a = auswerten(n.kinder[0]);
+        v = n.op === '-' ? -a : n.op === '!' ? !a : a;
+        satz = n.op + a + ' = ' + v;
+      } else {
+        const l = auswerten(n.kinder[0]);
+        if ((n.op === '||' && l === true) || (n.op === '&&' && l === false)) {
+          aus.add(n.kinder[1]);
+          v = l;
+          satz = l + ' ' + n.op + ' … = ' + v + ': Der Wert steht fest, Go rechnet ' + alsText(n.kinder[1]) + ' nicht mehr aus';
+        } else {
+          const r = auswerten(n.kinder[1]);
+          const op = n.op;
+          v = op === '+' ? l + r : op === '-' ? l - r : op === '*' ? l * r : op === '/' ? Math.trunc(l / r) : op === '%' ? l % r :
+            op === '<' ? l < r : op === '<=' ? l <= r : op === '>' ? l > r : op === '>=' ? l >= r : op === '==' ? l === r : op === '!=' ? l !== r :
+            op === '&&' ? l && r : l || r;
+          satz = l + ' ' + op + ' ' + r + ' = ' + v + (op === '/' && l % r !== 0 ? ', Ganzzahlen: Nachkommastellen fallen weg' : '');
+        }
+      }
+      // vorher: Stand der Zeile, in der n gelb ist. Die Werte der Teile von n stehen schon darin.
+      liste.push({ knoten: n, wert: v, satz: satz, warum: warum(n), vorher: new Map(werte), aus: new Set(aus) });
+      werte.set(n, v);
+      return v;
+    }
+    auswerten(baum);
+    return { liste: liste, werte: werte, aus: aus };
+  }
+  // Die Werte nach k Rechenschritten, Klammern um ausgerechnete Teile eingeschlossen
+  function werteNach(S, k) {
+    if (k === 0) return S.liste.length ? S.liste[0].vorher : new Map();
+    if (k < S.liste.length) return S.liste[k].vorher;
+    return S.werte;
+  }
+  function zeichneRechenweg() {
+    const a = AUSW[A.i];
+    A.baum = zerlege(a.text);
+    A.S = rechne(A.baum, a.funk ? { x: 3, y: 1 } : { x: A.x });
+    const S = A.S, n = S.liste.length;
+    el('a-wahl').innerHTML = AUSW.map((x, k) => '<button type="button" class="wk' + (k === A.i ? ' gewaehlt' : '') + '" data-i="' + k + '">' + esc(x.text) + '</button>').join('');
+    el('a-xwahl').innerHTML = a.mitX ? '<span class="beschriftung">Wert von x:</span>' + [0, 3, 8].map(w => '<button type="button" class="wk' + (w === A.x ? ' gewaehlt' : '') + '" data-x="' + w + '">x = ' + w + '</button>').join('') : '';
+    el('a-funktionen').hidden = !a.funk;
+    let html = '';
+    for (let j = 0; j <= A.k; j++) {
+      const werte = werteNach(S, j);
+      const naechster = j < n ? S.liste[j] : null;
+      const letzter = j > 0 ? S.liste[j - 1] : null;
+      const zeile = j === n ? '<span class="wert">' + esc(S.liste[n - 1].wert) + '</span>'
+        : alsText(A.baum, { html: true, werte: werte, neu: letzter ? letzter.knoten : null, mark: j === A.k ? naechster.knoten : null, aus: naechster ? naechster.aus : null });
+      const kommentar = j === 0 ? (A.k === 0 ? 'Gelb: ' + naechster.warum : 'Ausgangsausdruck')
+        : esc(letzter.satz) + ' · ' + esc(letzter.warum);
+      html += '<div class="rz' + (j === A.k ? ' letzte' : '') + '"><span class="lhs">' + (j ? '=' : '') + '</span><span>' + zeile + '</span><span class="warum">' + kommentar + '</span></div>';
+    }
+    if (A.k === n) html += '<div class="rz letzte"><span class="lhs"></span><span class="warum">Fertig: Der Ausdruck hat den Wert ' + esc(S.liste[n - 1].wert) + '.</span></div>';
+    if (A.voll) html += '<div class="klammern">So liest Go den Ausdruck, mit einer Klammer um jeden Teilausdruck:' + NL + esc(alsText(A.baum, { voll: true })) + '</div>';
+    el('a-weg').innerHTML = html;
+    el('a-weiter').disabled = A.k === n;
+    el('a-zurueck').disabled = A.k === 0;
+    el('a-klammern').textContent = A.voll ? 'Klammern verbergen' : 'Klammern zeigen';
+    melde(false);
+  }
+  el('a-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { A.i = Number(k.dataset.i); A.k = 0; zeichneRechenweg(); } });
+  el('a-xwahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { A.x = Number(k.dataset.x); A.k = 0; zeichneRechenweg(); } });
+  el('a-weiter').addEventListener('click', () => { if (A.k < A.S.liste.length) { A.k++; zeichneRechenweg(); } });
+  el('a-zurueck').addEventListener('click', () => { if (A.k > 0) { A.k--; zeichneRechenweg(); } });
+  el('a-vorn').addEventListener('click', () => { A.k = 0; zeichneRechenweg(); });
+  el('a-klammern').addEventListener('click', () => { A.voll = !A.voll; zeichneRechenweg(); });
+  function standRechenweg() {
+    const a = AUSW[A.i], S = A.S, n = S.liste.length;
+    const zeilen = [];
+    for (let j = 0; j <= A.k; j++) {
+      const t = j === n ? String(S.liste[n - 1].wert) : alsText(A.baum, { werte: werteNach(S, j), mark: j === A.k ? S.liste[j].knoten : null });
+      zeilen.push((j ? '= ' : '') + t + (j ? '   (' + S.liste[j - 1].satz + '; ' + S.liste[j - 1].warum + ')' : ''));
+    }
+    return [
+      'Gewählt ist der Ausdruck ' + (A.i + 1) + ' von ' + AUSW.length + ': ' + a.text,
+      a.mitX ? 'Die Variable x hat den Wert ' + A.x + '. Wählbar sind x = 0, 3 und 8.' : a.funk ? 'Im Programm gilt x = 3 und y = 1. f() gibt 2 zurück, g(a) gibt a * 2 zurück, h(a, b) gibt a + b zurück. Alle Werte haben den Typ int.' : 'Der Ausdruck enthält nur Literale vom Typ int.',
+      'Die Demo zeigt den Rechenweg Zeile für Zeile, ' + A.k + ' von ' + n + ' Rechenschritten sind gemacht. In eckigen Klammern steht der Teil, den Go als Nächstes ausrechnet:',
+      zeilen.join(NL),
+      A.k === n ? 'Der Ausdruck ist ausgerechnet, sein Wert ist ' + S.liste[n - 1].wert + '.' + (S.aus.size ? ' Nicht ausgerechnet, grau durchgestrichen: ' + Array.from(S.aus).map(k => alsText(k)).join(', ') + '.' : '') : '',
+      'Mit allen Klammern, so wie Go den Ausdruck liest: ' + alsText(A.baum, { voll: true }) + (A.voll ? ' Diese Form ist gerade unter dem Rechenweg eingeblendet.' : ''),
+      'Handgriffe: einen der ' + AUSW.length + ' festen Ausdrücke wählen, „Nächster Rechenschritt“, „Einen Schritt zurück“, „Von vorn“, „Klammern zeigen“. Eigene Ausdrücke lassen sich hier nicht eingeben. Die Demo rechnet im Browser, die Werte hat Go 1.26.1 nachgerechnet.'
+    ].filter(Boolean);
+  }
+
+  // ---------- Schritt 5: konstante Ausdrücke ----------
+  const WK = wahl('k', [
+    { code: 'const tageProJahr = 365' + NL + 'fmt.Println((408.8 * 12.5 - (182.5 / 2)) / tageProJahr)', aus: '13.75', satz: 'Das Beispiel des Kurstexts. Der Ausdruck besteht nur aus Literalen und der Konstante tageProJahr. Der Compiler rechnet 13.75 aus und schreibt den Wert ins Programm.' },
+    { code: 'fmt.Println(780 - 280 + 10 * 14)', aus: '640', satz: 'Das zweite Beispiel des Kurstexts. Ein Ausdruck nur aus Literalen ist ein konstanter Ausdruck.' },
+    { code: 'const fix int = 8 + 7' + NL + 'fmt.Println(100 / (3*5 - fix))', fehler: true, aus: '.\\main.go:7:20: invalid operation: division by zero', satz: 'Der Ausdruck ist konstant. Der Compiler rechnet 3*5 - fix aus, findet 0 und meldet die Division durch 0, bevor das Programm läuft.' },
+    { code: 'var fix int = 8 + 7' + NL + 'fmt.Println(100 / (3*5 - fix))', fehler: true, laufzeit: true, aus: 'panic: runtime error: integer divide by zero' + NL + NL + 'goroutine 1 [running]:' + NL + 'main.main()' + NL + '\t…/main.go:7 +0x9' + NL + 'exit status 2', satz: 'Jetzt ist fix eine Variable. Der Ausdruck ist nicht mehr konstant, der Compiler rechnet ihn nicht aus. Erst beim Lauf teilt das Programm durch 0 und bricht mit einer „panic“ ab.' },
+    { code: 'var x int = 4' + NL + 'fmt.Println(x*x + 1)' + NL + 'x = 10' + NL + 'fmt.Println(x*x + 1)', aus: '17' + NL + '101', satz: 'Zweimal der gleiche Ausdruck x*x + 1, zweimal ein anderer Wert. Der Wert hängt davon ab, welchen Wert x gerade hat. Go rechnet den Ausdruck bei jedem Auftreten neu aus.' }
+  ]);
+
+  // ---------- Schritt 6: selbst ausprobieren ----------
+  // Eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 meldet oder ausgibt.
+  const PROG = (zeilen, nach) => 'package main' + NL + NL + 'import "fmt"' + NL + NL + 'func main() {' + NL + zeilen.map(z => '\t' + z + NL).join('') + '}' + NL + (nach || '');
+  const FUNKS = NL + 'func f() int {' + NL + '\treturn 2' + NL + '}' + NL + NL + 'func g(a int) int {' + NL + '\treturn a * 2' + NL + '}' + NL + NL + 'func h(a int, b int) int {' + NL + '\treturn a + b' + NL + '}' + NL;
+  const probe = Ausprobieren.einrichten({
+    ziel: el('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="6"]'),
+    fassungen: [
+      { name: 'Punkt vor Strich', code: PROG(['fmt.Println(5 + 2*3)', 'fmt.Println((5 + 2) * 3)', 'fmt.Println(8 / 4 * 5)', 'fmt.Println(24/8 - 3*4)', 'fmt.Println(-2 + 5)']), ergebnis: { ausgabe: '11' + NL + '21' + NL + '10' + NL + '-9' + NL + '3' + NL } },
+      { name: 'Vergleich und ODER', code: PROG(['var x int = 3', 'fmt.Println(10+x*5 >= 50 || x < 1)', 'fmt.Println(((10 + (x * 5)) >= 50) || (x < 1))']), ergebnis: { ausgabe: 'false' + NL + 'false' + NL } },
+      { name: 'Funktionen im Ausdruck', code: PROG(['var x int = 3', 'var y int = 1', 'fmt.Println(9 - 3/4*g(x-y) + 24/(f()+h(g(7), 5+x)))', 'fmt.Println(3 / 4)'], FUNKS), ergebnis: { ausgabe: '10' + NL + '0' + NL } },
+      { name: 'Typen mischen', code: PROG(['var x int = 7', 'var t float64 = 2.5', 'fmt.Println(x + t)']), ergebnis: { meldungen: ['.\\main.go:8:14: invalid operation: x + t (mismatched types int and float64)'] } },
+      { name: 'Ausdruck allein', code: PROG(['var x int = 3', 'x + 1', 'fmt.Println(x)']), ergebnis: { meldungen: ['.\\main.go:7:2: x + 1 (value of type int) is not used'] } },
+      { name: 'Konstante Division durch 0', code: PROG(['const fix int = 8 + 7', 'fmt.Println(100 / (3*5 - fix))']), ergebnis: { meldungen: ['.\\main.go:7:20: invalid operation: division by zero'] } }
+    ],
+    beiAenderung: () => { if (stufe === 6) melde(false); }
+  });
+
+  // ---------- Kurslotse ----------
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
+  function standSaetze() {
+    if (stufe === 1) return standGitter();
+    if (stufe === 2) return ['Jedes Programm der Auswahl steht ab Zeile 6 im Rumpf von main, davor package main, import "fmt" und func main() {. Die Zeilennummern der Meldungen beziehen sich darauf.'].concat(standWahl(WT));
+    if (stufe === 3) {
+      const z = zaehle(B.baum, [0, 0]);
+      return ['Gewählt ist der Ausdruck ' + (B.i + 1) + ' von ' + BAUM_AUSDRUECKE.length + ': ' + BAUM_AUSDRUECKE[B.i],
+        'Die Demo zeigt ihn als Kästen in Kästen: Jeder Teilausdruck hat einen Rahmen, kleinere Kästen stehen in größeren. Grün sind elementare Ausdrücke, blau kombinierte. Die Kästen von außen nach innen:',
+        kaestenZeilen(B.baum, 0, []).join(NL),
+        'Gelb umrandet und darunter erklärt ist der angeklickte Kasten. ' + kastenSatz(knotenMitId(B.baum, B.sel)),
+        'Der ganze Ausdruck besteht aus ' + (z[0] + z[1]) + ' Kästen: ' + z[0] + ' elementaren und ' + z[1] + ' kombinierten.',
+        'Die Seite rechnet die Ausdrücke in diesem Schritt nicht aus. Wie die Variablen und Funktionen deklariert sind, sagt die Seite nicht.',
+        'Handgriffe: einen der ' + BAUM_AUSDRUECKE.length + ' festen Ausdrücke aus Abschnitt 4.1.1 wählen und einen Kasten anklicken. Einen eigenen Ausdruck kann der Student nicht eingeben.'];
+    }
+    if (stufe === 4) return standRechenweg();
+    if (stufe === 5) return ['Jedes Programm steht ab Zeile 6 im Rumpf von main.'].concat(standWahl(WK));
+    if (stufe === 6) return probe.stand();
+    return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+  }
+  const kurzStand = () => stufe === 1 ? G.typ + ', ' + opZeichen(G.op) : stufe === 2 ? WT.liste[WT.i].code.split(NL).pop() : stufe === 3 ? BAUM_AUSDRUECKE[B.i] : stufe === 4 ? AUSW[A.i].text + ' · ' + A.k + ' von ' + A.S.liste.length : stufe === 5 ? WK.liste[WK.i].code.split(NL).pop() : stufe === 6 ? probe.kurz() : '';
+
+  zeichneGitter(); WT.zeichne(); zeichneKaesten(); zeichneRechenweg(); WK.zeichne();
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Operatoren und Ausdrücke in Go',
+    thema: 'Datentyp, Operation, Operator, Operand, unär, binär, Ergebnistyp, implizite Typanpassung, Ausdruck, elementarer Ausdruck, kombinierter Ausdruck, Auswertung, Bindungsstärke, Linksassoziativität, Klammerung, konstanter Ausdruck',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.1 bis 4.1.2, Seiten 45–52',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_ausdruecke_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, .spaeter, table.text, details.tabelle',
+    zeilen: () => stufe === 6 ? probe.zeilen() : [],
+    zeilenTitel: 'Das Programm im Editor:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum hat 8 / 4 * 5 den Wert 10?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
