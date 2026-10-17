@@ -127,6 +127,11 @@
    "abschnitt": "3.3.4"
   },
   {
+   "pfad": "kap4-primitive-datentypen/go_k4_ausdruecke_interaktiv.html",
+   "titel": "Operatoren und Ausdrücke in Go",
+   "abschnitt": "4.1"
+  },
+  {
    "pfad": "kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
    "abschnitt": "7.3"
