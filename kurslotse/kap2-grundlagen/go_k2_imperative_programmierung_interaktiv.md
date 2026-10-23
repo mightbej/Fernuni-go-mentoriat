@@ -46,6 +46,7 @@ Reiter: sprachen
 - Nach einem Klick auf den Knopf sind zwei Balken braun, und der grüne Kasten nennt die zwei Sprachen mit einer Begründung. Der Knopf heißt dann „Antwort wieder verdecken“.
 - Die Einteilung in imperativ und nicht imperativ ist eine Vereinfachung der Seite. Einige der Sprachen erlauben mehrere Arten zu programmieren.
 - Die Rangliste steht nicht im Kurstext.
+- Unter dem grünen Kasten steht ein Satz mit Link auf den Exkurs „Warum Moodle am 21. Oktober 2026 nicht erreichbar war“. PHP steht in der Rangliste auf Platz 13. Wegen eines Fehlers im Interpreter von PHP war das Moodle der FernUniversität im Oktober 2026 nicht erreichbar. Der Exkurs erklärt das mit Abschnitt 2.7 des Kurstexts.
 
 ### Handgriffe
 

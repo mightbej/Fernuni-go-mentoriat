@@ -71,6 +71,7 @@ Reiter: uebersetzen
 
 ### Aufbau der Darstellung
 
+- Unter der Liste mit den zwei Wegen steht ein gelber Kasten „Wozu das heute gebraucht wird“: Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität von außen nicht erreichbar, weil ein Fehler im Interpreter von PHP steckte, also in dem Programm, das die PHP-Programme von Moodle ausführt. Ein Link führt zum Exkurs „Warum Moodle am 21. Oktober 2026 nicht erreichbar war“. PHP, Moodle und diese Lücke stehen nicht im Kurstext.
 - Der Schritt hat zwei Demos: oben den Ablauf mit Compiler oder Interpreter, darunter unter der Überschrift „Viele Sprachen, viele Prozessoren“ die Zahl der Compiler mit und ohne Zwischensprache.
 - Obere Demo: Zu sehen sind zwei dunkle Kästen nebeneinander. Links steht das Programm in höherer Sprache mit den Zeilen 1 bis 5. Rechts steht das Programm in Maschinensprache in lesbarer Schreibweise, vorn die Adresse.
 - Das Programm läuft immer mit den Eingaben 6 und 4. Die Werte sind nacheinander (6, 4), (2, 4), (2, 2). Die Ausgabe ist 2.
