@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="2.7">
+  <title>Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--aktiv:#fbbf24;--aktiv-bg:#fef3c7;--rot:#b91c1c;--rot-bg:#fee2e2; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { background:var(--aktiv-bg);border-color:#b45309; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile .name { color:var(--muted);font-size:.95rem; }
+    .zaehler { color:var(--muted);font-size:.95rem;margin-left:6px; }
+    .tabellenrahmen { overflow-x:auto; }
+    table { width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem; }
+    th, td { border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top; }
+    th { background:#f9fafb;font-weight:600; }
+    li { margin:6px 0; }
+    h3 { margin:18px 0 8px; }
+    .hinweis { margin:12px 0; }
+    .quelle { color:var(--muted);font-size:.88rem; }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Schritt 2: der Weg einer Anfrage durch den Server */
+    .weg { display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:14px 0; }
+    .weg .station { flex:1 1 150px;background:#fff;border:2px solid #cbd5e1;border-radius:10px;padding:10px 12px; }
+    .weg .station .name { display:block;font-weight:700;color:var(--accent); }
+    .weg .station .aufgabe { display:block;color:var(--muted);font-size:.9rem; }
+    .weg .station.aktiv { border-color:#b45309;background:var(--aktiv-bg);box-shadow:0 0 0 3px var(--aktiv); }
+    .weg .station.fehler { border-color:var(--rot);background:var(--rot-bg);box-shadow:0 0 0 3px #fca5a5; }
+    .weg .station.nie { opacity:.45; }
+    .weg .pfeil { align-self:center;font-size:1.4rem;color:var(--muted); }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0;min-height:4.6em; }
+    .auskunft.fehler { border-left-color:var(--rot);background:#fef2f2; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin:0; }
+    @media (max-width:760px) { .weg .pfeil { display:none; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war</h1>
+    <p>Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität von außen nicht erreichbar. Dieser Exkurs erklärt die Hintergründe. Zum Verständnis genügen die Grundlagen aus Abschnitt 2.7 des Kurstexts.</p>
+    <p>Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–19, und Abschnitt 3.2, Seiten 22–24.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Was geschah</button>
+    <button type="button" class="tab" data-stufe="2">2 Wo der Fehler steckte</button>
+    <button type="button" class="tab" data-stufe="3">3 Wie der Fehler behoben wird</button>
+    <button type="button" class="tab" data-stufe="4">4 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h2>Worum es geht</h2>
+    <p>Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität von außen nicht erreichbar. Zwei Tage lang waren damit auch die Kursseiten, die Foren und die Unterlagen in Moodle nicht zugänglich.</p>
+    <p>Ursache war ein Fehler in einem Programm, das Moodle zum Ausführen braucht. Moodle selbst war fehlerfrei.</p>
+    <p>Wie das sein kann, lässt sich mit Abschnitt 2.7 des Kurstexts erklären. Dort werden zwei Wege beschrieben, wie ein Programm in einer höheren Sprache ausgeführt wird:</p>
+    <ul>
+      <li><strong>Mit Compiler:</strong> Das Programm wird vorher in Maschinensprache übersetzt.</li>
+      <li><strong>Mit Interpreter:</strong> Ein Interpreter liest die Anweisungen des Programms und führt sie aus.</li>
+    </ul>
+    <h3>Was PHP ist</h3>
+    <p>PHP ist wie Go eine imperative Programmiersprache. Ein PHP-Programm besteht aus Anweisungen, die nacheinander ausgeführt werden und Variablen Werte zuweisen, so wie es in Abschnitt 2.1 des Kurstexts beschrieben wird. Entwickelt wurde PHP für Websites: Ein PHP-Programm läuft auf dem Server und stellt dort die HTML-Seite zusammen, die der Browser anzeigt.</p>
+    <p>Moodle ist in PHP geschrieben und wird mit einem Interpreter ausgeführt. Genau genommen übersetzt PHP ein Programm zuerst in einen Zwischencode, die sogenannten Opcodes, und der Interpreter führt diesen Zwischencode aus. Eine Zwischensprache kennst du aus <a href="go_k2_maschinensprache_compiler_interaktiv.html#uebersetzen">Schritt 2 der Lektion zu Abschnitt 2.7</a>. Go-Programme werden dagegen vor der Ausführung vollständig in Maschinensprache übersetzt.</p>
+    <p>Der Exkurs erläutert das Thema in drei Schritten. Schritt 4 ordnet die Inhalte anschließend dem Kurstext zu:</p>
+    <ul>
+      <li><strong>Schritt 1</strong> erläutert, was am 21. Oktober 2026 geschah und warum so viele Betreiber ihre Server abschalteten.</li>
+      <li><strong>Schritt 2</strong> zeigt, wo der Fehler steckte: im Interpreter, bevor die erste Anweisung von Moodle ausgeführt wurde. Er zeigt auch, was Go an dieser Stelle anders macht.</li>
+      <li><strong>Schritt 3</strong> vergleicht, wie ein solcher Fehler bei PHP und bei Go behoben wird.</li>
+    </ul>
+    <p>Die Lektion zu Abschnitt 2.7 heißt <a href="go_k2_maschinensprache_compiler_interaktiv.html">Höhere und niedrigere Programmiersprachen</a>. Dort zeigt Schritt 2 beide Wege an einem Programm.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h2>Schritt 1: Was geschah</h2>
+    <h3>Die Lage am 21. und 22. Oktober 2026</h3>
+    <p>Weltweit nahmen Betreiber ihre Websites vom Netz:</p>
+    <ul>
+      <li><strong>Japan:</strong> Banken wie MUFG und Mizuho, die Fluggesellschaft ANA und die Bahn JR West schalteten Teile ihrer Websites ab. Die Premierministerin forderte die Betreiber auf, ihre Websites zu prüfen und Dienste notfalls auszusetzen.</li>
+      <li><strong>Europa:</strong> In Frankreich, Dänemark, Finnland und den Niederlanden gingen Websites von Behörden vorübergehend vom Netz, in den Niederlanden auch die der Behörde für Cybersicherheit.</li>
+      <li><strong>Hochschulen:</strong> Presseberichten zufolge schalteten zum Beispiel die Universität Wien und die Universität Freiburg ihre Server mit PHP ab. An der FernUniversität war Moodle am 21. und 22. Oktober 2026 von außen nicht erreichbar.</li>
+    </ul>
+    <h3>Die Lücke</h3>
+    <p>Moodle ist in PHP programmiert. Ein Fehler im Interpreter von PHP betraf deshalb auch das Moodle der FernUniversität.</p>
+    <p>Am 21. Oktober 2026 behob das PHP-Projekt zwei kritische Sicherheitslücken und veröffentlichte dazu neue Versionen seines Interpreters: 8.5.12, 8.4.27, 8.3.36 und 8.2.35.</p>
+    <p>Die beiden Lücken ermöglichten es einem Angreifer, ohne Anmeldung eigenen Code auf dem Server auszuführen. Dafür genügte eine gezielt präparierte Anfrage an eine Website, die PHP benutzt.</p>
+    <p>PHP ist weit verbreitet. Nach Schätzungen laufen etwa 70 Prozent aller Websites mit PHP. In der Umfrage von Stack Overflow 2026 steht es auf Platz 13, direkt vor Go. Das zugehörige Balkendiagramm zeigt die Lektion <a href="go_k2_imperative_programmierung_interaktiv.html#sprachen">Imperative Programmierung, Schritt 1</a>.</p>
+    <h3>Warum es so eilte</h3>
+    <p>Zum Problem wurde die Lücke aus zwei Gründen:</p>
+    <ul>
+      <li><strong>Die Lücke selbst:</strong> Sie steckte in jeder verbreiteten Version des Interpreters. Jede Website mit PHP war angreifbar, selbst mit fehlerfreiem eigenem Programm.</li>
+      <li><strong>Die Geschwindigkeit der Angreifer:</strong> Einen ersten Angriffsversuch beobachtete Amazon schon am 17. Oktober. Zehn Stunden vor der Veröffentlichung zählte Cloudflare Tausende Angriffsversuche, nach der Veröffentlichung am 21. Oktober in den folgenden 45 Minuten Zehntausende Angriffsversuche, nach zwei Stunden Hunderttausende und bis zum 22. Oktober Millionen.</li>
+    </ul>
+    <p>Den Betreibern blieb deshalb keine Zeit. Wer den neuen Interpreter nicht sofort einspielen konnte, nahm seine Server vom Netz. Einen gelungenen Einbruch hatten die zuständigen Behörden in Deutschland, den Niederlanden und Japan bis zum 22. Oktober nicht bestätigt.</p>
+    <h3>Was die Meldungen des PHP-Projekts besagen</h3>
+    <ul>
+      <li><strong>Wo der Fehler steckte:</strong> im Interpreter von PHP. Er ist in der Sprache C geschrieben.</li>
+      <li><strong>Wann er wirkte:</strong> bei der Verarbeitung einer Anfrage zum Hochladen einer Datei, noch bevor das eigentliche Programm der Website ausgeführt wurde.</li>
+      <li><strong>Wer betroffen war:</strong> jede Website, deren Server eine betroffene Version des Interpreters benutzte. PHP 8.1 und ältere Versionen erhalten keine Korrektur mehr.</li>
+    </ul>
+    <p class="quelle">Quellen: PHP-Projekt, Meldung vom 21.10.2026, <a href="https://www.php.net/archive/2026.php#2026-10-21-5">php.net</a>; Sicherheitsmeldungen <a href="https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w">GHSA-w8hw-w9fx-j79w</a> und <a href="https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp">GHSA-6wmf-4rv5-p3rp</a>, github.com/php/php-src. Die betroffenen Einrichtungen nennt die Presse: <a href="https://www.japantimes.co.jp/business/2026/10/22/tech/japan-php-vulnerabilities/">Japan Times</a>, <a href="https://abc7ny.com/story/php-vulnerability-2026-websites-shut-down-globally-operators-address-ai-detected-flaw-web-programming-language/19968288/">ABC7</a> und <a href="https://www.ibtimes.sg/websites-go-dark-worldwide-governments-race-patch-critical-php2shell-security-flaw-95384">IBTimes</a>. Den Anteil von 70 Prozent nennt ABC7. Die Zahlen zu den Angriffsversuchen nennen <a href="https://aws.amazon.com/blogs/security/amazon-threat-intelligence-identifies-php2shell-exploitation-prior-to-public-disclosure-in-madpot/">Amazon</a> und, nach Angaben von Cloudflare, <a href="https://thenextweb.com/news/php2shell-millions-exploit-attempts-no-confirmed-breaches">The Next Web</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h2>Schritt 2: Wo der Fehler steckte</h2>
+    <p>Ein Server, auf dem Moodle läuft, erhält eine Anfrage, zum Beispiel: „Zeige die Kursseite.“ An der Verarbeitung sind drei Programme beteiligt:</p>
+    <ul>
+      <li><strong>Webserver:</strong> Er nimmt die Anfrage aus dem Netz an und gibt sie an den Interpreter weiter.</li>
+      <li><strong>Interpreter von PHP:</strong> Er ist in C geschrieben und in Maschinensprache übersetzt worden. Er verarbeitet die Anfrage und führt anschließend Moodle aus.</li>
+      <li><strong>Moodle:</strong> Es ist ein Programm in PHP. Der Interpreter liest die Anweisungen von Moodle und führt sie aus. Erst Moodle prüft, ob der Absender angemeldet ist.</li>
+    </ul>
+    <p>Der Prozessor führt also den Interpreter aus, und der Interpreter führt Moodle aus. Das ist der Weg mit Interpreter aus <a href="go_k2_maschinensprache_compiler_interaktiv.html#uebersetzen">Schritt 2 der Lektion zu Abschnitt 2.7</a>.</p>
+    <div class="hinweis">Überlege zuerst und starte dann den Ablauf: Ein Angreifer schickt eine Anfrage ohne Anmeldung. An welcher Station kann Moodle ihn aufhalten, wenn der Fehler im Interpreter steckt?</div>
+    <div class="zeile">
+      <span class="name">Anfrage</span>
+      <button type="button" data-anfrage="gewoehnlich">Normale Anfrage</button>
+      <button type="button" data-anfrage="angriff">Anfrage des Angreifers</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="haupt" id="weiter">Nächster Schritt</button>
+      <button type="button" id="zurueck">Einen Schritt zurück</button>
+      <button type="button" id="vorn">Von vorn beginnen</button>
+      <span class="zaehler" id="zaehler"></span>
+    </div>
+    <div class="weg">
+      <div class="station" id="s-browser"><span class="name">Absender</span><span class="aufgabe">Er schickt die Anfrage über das Netz.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station" id="s-webserver"><span class="name">Webserver</span><span class="aufgabe">Er nimmt die Anfrage an.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station" id="s-interpreter"><span class="name">Interpreter von PHP</span><span class="aufgabe">In C geschrieben. Er verarbeitet die Anfrage und führt Moodle aus.</span></div>
+      <span class="pfeil">→</span>
+      <div class="station" id="s-moodle"><span class="name">Moodle</span><span class="aufgabe">Programm in PHP. Es prüft die Anmeldung.</span></div>
+    </div>
+    <div class="auskunft" id="ablauf"></div>
+    <h3>Warum der Angriff so gefährlich war</h3>
+    <p>Der Code des Angreifers läuft mit den Rechten des Webservers. Damit darf er alles, was auch Moodle darf:</p>
+    <ul>
+      <li><strong>Die Konfiguration lesen:</strong> In der Konfigurationsdatei von Moodle steht das Passwort für die Datenbank. Mit diesem Passwort kommt der Angreifer an alle Daten, die Moodle speichert, zum Beispiel an Namen, E-Mail-Adressen und Beiträge in den Foren.</li>
+      <li><strong>Programme installieren:</strong> Er kann Programme herunterladen, auf dem Server ablegen und starten, zum Beispiel eine Hintertür, über die er später wiederkommt.</li>
+    </ul>
+    <h3>Was im Speicher schiefging</h3>
+    <p>Dass jede Variable im Hauptspeicher Speicherplatz belegt, zeigt die Lektion <a href="go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher, Schritt 4</a>. Der Interpreter von PHP ist in C geschrieben und verwaltet diesen Speicherplatz selbst: Für eine Anfrage reserviert er Speicherplatz, danach gibt er ihn wieder frei.</p>
+    <p>Dabei unterliefen ihm zwei Fehler. Er las Speicherplatz, in den er noch keinen neuen Wert geschrieben hatte, und er benutzte Speicherplatz weiter, den er schon freigegeben hatte. In beiden Fällen stand dort etwas, das der Angreifer mit seinen Anfragen selbst hineingebracht hatte.</p>
+    <h3>Was Go hier anders macht</h3>
+    <ul>
+      <li><strong>Null-Wert:</strong> In Go bekommt jede Variable sofort einen Wert, den Null-Wert ihres Typs, bei Zahlen also 0. Speicherplatz mit altem Inhalt liest ein Go-Programm deshalb nicht. In C gibt es dagegen Variablen ohne Anfangswert. Das wird in Abschnitt 5.1 des Kurstexts im Sprachvergleich 5.1 auf Seite 115 behandelt. Die Lektion dazu ist <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#var">Variablendeklaration in Go, Schritt 1</a>.</li>
+      <li><strong>Garbage-Collector:</strong> In Go gibt nicht das Programm den Speicherplatz frei, sondern der Garbage-Collector. Er gibt Speicherplatz erst frei, wenn keine Variable ihn mehr benutzt. Freigegebenen Speicherplatz kann ein Go-Programm deshalb nicht weiter benutzen. Der Garbage-Collector wird in Abschnitt 5.1 auf Seite 113 vorgestellt.</li>
+    </ul>
+    <p>In Abschnitt 7.4.4 des Kurstexts wird der umgekehrte Fehler behandelt: Speicher, der nie freigegeben wird, weil das Programm ihn noch erreichen kann. Die Lektion dazu ist <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#lebenszeit">Zeiger in Go, Schritt 5</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h2>Schritt 3: Wie der Fehler behoben wird</h2>
+    <p>Viele Programme benutzen gemeinsame Teile. Steckt ein Fehler in einem solchen Teil, wird er bei PHP anders behoben als bei Go.</p>
+    <h3>PHP: den Interpreter austauschen</h3>
+    <p>Der Betreiber installiert den neuen Interpreter auf seinem Server. Der Quelltext von Moodle bleibt unverändert. Beim nächsten Aufruf führt der neue Interpreter Moodle aus, und die Sicherheitslücke ist geschlossen.</p>
+    <h3>Go: jedes Programm neu übersetzen</h3>
+    <p>Ein Go-Programm benutzt Pakete aus der Standardbibliothek, zum Beispiel <code>fmt</code>. Der Compiler bindet sie beim Übersetzen in die Programmdatei ein. Enthält ein solches Paket einen Fehler, steckt er auch in allen Programmdateien, in die der Code eingebunden wurde. Die Programmdatei ändert sich erst, wenn das Programm mit der neuen Version von Go neu übersetzt wird.</p>
+    <p>Ein Beispiel gab es in derselben Woche: Go 1.26.10 erschien am 19. Oktober 2026 und behebt Fehler im Paket <code>crypto/x509</code>. Dieses Paket prüft bei HTTPS-Verbindungen anhand von Zertifikaten, ob ein Server im Netz wirklich der ist, für den er sich ausgibt. Jedes Go-Programm, das solche Verbindungen herstellt, muss deshalb mit Go 1.26.10 neu übersetzt werden.</p>
+    <div class="tabellenrahmen">
+    <table>
+      <thead><tr><th>Frage</th><th>Antwort bei PHP</th><th>Antwort bei Go</th></tr></thead>
+      <tbody>
+        <tr><td>Wo steckt der gemeinsame Teil?</td><td>Der Interpreter liegt auf dem Server, getrennt vom Programm.</td><td>Die Pakete der Standardbibliothek stecken in jeder übersetzten Programmdatei.</td></tr>
+        <tr><td>Wer muss nach einem Fehler etwas tun?</td><td>Der Betreiber des Servers tauscht den Interpreter aus.</td><td>Wer das Programm übersetzt, übersetzt es neu und stellt die neue Programmdatei bereit.</td></tr>
+        <tr><td>Was geschieht mit dem Programm selbst?</td><td>Das Programm bleibt unverändert.</td><td>Der Quelltext bleibt unverändert. Die Programmdatei wird neu erzeugt.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="hinweis">Überlege zuerst und decke dann die Antwort auf: Eine Hochschule betreibt 12 Server mit Moodle. Ein Entwickler stellt 4 Go-Programme bereit, die 500 Studenten auf ihren eigenen Rechnern benutzen. Ein Fehler steckt einmal im Interpreter von PHP und einmal in einem Paket von Go, das alle 4 Programme benutzen. Wie viele Programme müssen jeweils neu übersetzt werden, und wo wird etwas ausgetauscht?</div>
+    <div class="zeile"><button type="button" id="aufdecken">Antwort aufdecken</button></div>
+    <div class="auskunft" id="antwort" hidden>
+      <p><strong>Bei PHP:</strong> Kein Programm muss neu übersetzt werden, weil PHP-Programme gar nicht übersetzt werden. Auf jedem der 12 Server wird der Interpreter ausgetauscht.</p>
+      <p><strong>Bei Go:</strong> Der Entwickler übersetzt alle 4 Programme mit der neuen Go-Version neu. Anschließend laden die 500 Studenten die neuen Programmdateien herunter. Bis dahin arbeitet jeder von ihnen mit der fehlerhaften Datei.</p>
+    </div>
+    <p>Dein erstes Go-Programm übersetzt du in Abschnitt 3.2 des Kurstexts, Seiten 22–24, mit dem Befehl <code>go run</code>. Er übersetzt das Programm und startet es gleich danach.</p>
+    <p class="quelle">Quelle zu Go: <a href="https://go.dev/doc/devel/release">Go Release History</a>, go.dev.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h2>Schritt 4: Bezug zum Kurstext</h2>
+    <p>Der Exkurs wendet die Grundlagen aus Abschnitt 2.7 auf einen konkreten Fall an. Die Tabelle nennt zu jedem Schritt die Abschnitte und Seiten zum Nachlesen.</p>
+
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>2.1, Seiten 5–8: imperative Programmierung<br>2.7, Seite 18: Compiler und Interpreter</td><td>Die zwei Wege mit Compiler und mit Interpreter stammen aus dem Kurstext, ebenso die imperative Programmierung aus Abschnitt 2.1.</td><td>Dass Moodle in PHP geschrieben ist, PHP mit einem Interpreter läuft und einen Zwischencode verwendet, ergänzt der Exkurs.</td></tr>
+      <tr><td>1 Was geschah</td><td>Im Kurstext gibt es dazu keinen Abschnitt.</td><td>Dieser Schritt enthält keine Inhalte aus dem Kurstext.</td><td>Die Lücken, die PHP-Versionen, die betroffenen Einrichtungen und die Zahl der Angriffsversuche stammen aus den Meldungen des PHP-Projekts, von Amazon und aus der Presse.</td></tr>
+      <tr><td>2 Wo der Fehler steckte</td><td>2.2, Seiten 8–10: Variable als Speicherplatz<br>2.7, Seite 18: Interpreter<br>5.1, Seiten 113 und 115: Garbage-Collector und Null-Wert<br>7.4.4, Seiten 182–183: Lebenszeit von Variablen, als Gegenstück</td><td>In Abschnitt 2.7 wird erklärt, dass der Interpreter ein weiteres Programm ist, das Befehl für Befehl liest. Null-Wert, Garbage-Collector und der Vergleich mit C stehen in Abschnitt 5.1.</td><td>Webserver, Anfrage und die Prüfung der Anmeldung ergänzt der Exkurs. Die Speicherfehler und die Rechte des Angreifers werden nur kurz beschrieben. In Abschnitt 7.4.4 wird der umgekehrte Fehler behandelt: Speicher, der nie freigegeben wird.</td></tr>
+      <tr><td>3 Wie der Fehler behoben wird</td><td>2.7, Seite 18: Bibliotheksprogramme<br>3.1, Seite 21: Standardbibliothek<br>3.2, Seiten 22–24: <code>go run</code></td><td>Dass der Compiler auch Bibliotheksprogramme einbindet, wird in Abschnitt 2.7 nur erwähnt. Die Standardbibliothek von Go wird in Abschnitt 3.1 vorgestellt.</td><td>Der Exkurs folgert daraus, dass jedes Programm neu übersetzt werden muss. Die Angaben zu Go 1.26.10 runden das Beispiel ab.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 2.1, Seiten 5–8, imperative Programmierung:</strong> Lektion: <a href="go_k2_imperative_programmierung_interaktiv.html">Imperative Programmierung</a>.</li>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Variable als Speicherplatz:</strong> Lektion: <a href="go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 2.7, Seiten 17–19, Compiler und Interpreter:</strong> Lektion: <a href="go_k2_maschinensprache_compiler_interaktiv.html#uebersetzen">Höhere und niedrigere Programmiersprachen</a>, Schritt 2.</li>
+      <li><strong>Abschnitt 3.2, Seiten 22–24, das erste Go-Programm:</strong> Der Befehl <code>go run</code> übersetzt das Programm und startet es.</li>
+      <li><strong>Abschnitt 5.1, Seiten 113 und 115, Garbage-Collector und Null-Wert:</strong> Lektion: <a href="../kap5-anweisungen/go_k5_variablen_deklaration_interaktiv.html#var">Variablendeklaration in Go</a>, Schritt 1.</li>
+      <li><strong>Abschnitt 7.4.4, Seiten 182–183, Lebenszeit von Variablen:</strong> Dort wird der umgekehrte Fehler behandelt: Speicher, der nie freigegeben wird. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#lebenszeit">Zeiger in Go</a>, Schritt 5.</li>
+    </ul>
+
+    <h3>Stand der Angaben</h3>
+    <p>Die Versionsnummern von PHP und Go, die Angaben zu den betroffenen Einrichtungen und die Zahlen zu den Angriffsversuchen beziehen sich auf den Stand vom Oktober 2026. Wenn du diesen Text später liest, gibt es womöglich schon neuere Versionen.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+
+  // ---- Reiter ----
+  // Jeder Schritt hat eine eigene Adresse, zum Beispiel …interaktiv.html#fehler
+  var ANKER = ["worum", "geschehen", "fehler", "reparatur", "kurstext"];
+  var stufe = 0;
+  var angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
+
+  function melde(gewechselt) {
+    if (!angemeldet) return;
+    if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert();
+  }
+  function zeigeStufe(nummer, nachOben) {
+    var gewechselt = nummer !== stufe;
+    stufe = nummer;
+    Array.prototype.forEach.call(document.querySelectorAll(".stufe"), function (s) { s.classList.toggle("active", s.id === "stufe-" + nummer); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (k) { k.classList.toggle("active", Number(k.dataset.stufe) === nummer); });
+    if (gewechselt) melde(true);   // die Antworten gehören zum Schritt davor
+    if (nachOben) {
+      history.replaceState(null, "", "#" + ANKER[nummer]);
+      (function () { const r = document.querySelector(".tabs"); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: "smooth", block: "start" }); })();
+    }
+  }
+  function stufeAusAdresse() { return Math.max(0, ANKER.indexOf(location.hash.slice(1))); }
+
+  // ---- Schritt 2: der Weg einer Anfrage ----
+  // aktiv: gelb, fehler: rot, nie: blass, weil die Station nie an die Reihe kommt
+
+  var ABLAUF = {
+    gewoehnlich: [
+      { aktiv: [], text: "Noch ist keine Anfrage unterwegs. Mit „Nächster Schritt“ schickt ein Student eine Anfrage an den Server." },
+      { aktiv: ["browser"], text: "Ein Student schickt eine Anfrage an den Server: Zeige die Kursseite." },
+      { aktiv: ["webserver"], text: "Der Webserver nimmt die Anfrage an und gibt sie an den Interpreter von PHP weiter." },
+      { aktiv: ["interpreter"], text: "Der Interpreter verarbeitet die Anfrage. Bis zu diesem Zeitpunkt wurde noch keine Anweisung von Moodle ausgeführt." },
+      { aktiv: ["interpreter", "moodle"], text: "Der Interpreter liest die Anweisungen von Moodle und führt sie aus. Moodle prüft dabei, ob der Student angemeldet ist." },
+      { aktiv: ["webserver", "browser"], text: "Moodle hat die Kursseite zusammengestellt. Der Webserver schickt sie an den Studenten zurück." }
+    ],
+    angriff: [
+      { aktiv: [], text: "Noch ist keine Anfrage unterwegs. Mit „Nächster Schritt“ schickt ein Angreifer eine Anfrage an den Server." },
+      { aktiv: ["browser"], text: "Ein Angreifer schickt eine Anfrage ohne Anmeldung. Sie enthält eine zum Hochladen bestimmte Datei, die gezielt so präpariert ist, dass sie den Fehler auslöst." },
+      { aktiv: ["webserver"], text: "Der Webserver nimmt die Anfrage an und gibt sie an den Interpreter von PHP weiter. Für den Webserver ist es eine Anfrage wie jede andere." },
+      { aktiv: [], fehler: ["interpreter"], text: "Der Interpreter verarbeitet die Anfrage mit der Datei. Dabei liest er Speicherplatz, dessen Inhalt der Angreifer bestimmt hat. Wie das geschieht, steht unter der Demo. Über diesen Fehler bringt der Angreifer den Interpreter dazu, eigenen Code auszuführen." },
+      { aktiv: [], fehler: ["interpreter"], nie: ["moodle"], text: "Der Code des Angreifers läuft auf dem Server, mit den Rechten des Webservers. Es wurde noch keine Anweisung von Moodle ausgeführt. Daher konnte Moodle die Anmeldung auch nicht prüfen. Auch ein fehlerfreies Moodle hätte diesen Angriff nicht verhindern können." },
+      { aktiv: [], fehler: ["interpreter"], nie: ["moodle"], text: "Mit den Rechten des Webservers darf der Code des Angreifers alles, was auch Moodle darf. Er kann zum Beispiel die Konfigurationsdatei von Moodle mit dem Passwort der Datenbank lesen, eine eigene PHP-Datei als Hintertür auf dem Server ablegen oder ein Programm herunterladen und starten. Daher kommt der Name der Lücke, PHP2Shell: von PHP zu einer Kommandozeile auf dem Server." }
+    ]
+  };
+  var NAMEN = { browser: "Absender", webserver: "Webserver", interpreter: "Interpreter von PHP", moodle: "Moodle" };
+  var anfrage = "gewoehnlich";
+  var schritt = 0;
+
+  function zeigeAblauf() {
+    var T = ABLAUF[anfrage], s = T[schritt];
+    Object.keys(NAMEN).forEach(function (n) {
+      var st = $("s-" + n);
+      st.classList.toggle("aktiv", s.aktiv.indexOf(n) >= 0);
+      st.classList.toggle("fehler", (s.fehler || []).indexOf(n) >= 0);
+      st.classList.toggle("nie", (s.nie || []).indexOf(n) >= 0);
+    });
+    $("ablauf").innerHTML = "<p>" + s.text + "</p>";
+    $("ablauf").classList.toggle("fehler", !!s.fehler);
+    $("zaehler").textContent = schritt === 0 ? "Anfang" : "Schritt " + schritt + " von " + (T.length - 1);
+    $("weiter").disabled = schritt === T.length - 1;
+    $("zurueck").disabled = schritt === 0;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-anfrage]"), function (b) { b.classList.toggle("gewaehlt", b.dataset.anfrage === anfrage); });
+  }
+
+  // ---- Schritt 3: Antwort aufdecken ----
+  var aufgedeckt = false;
+  function zeigeAntwort() {
+    $("antwort").hidden = !aufgedeckt;
+    $("aufdecken").textContent = aufgedeckt ? "Antwort wieder verdecken" : "Antwort aufdecken";
+  }
+
+  // ---- Bedienung ----
+
+  document.addEventListener("click", function (ev) {
+    var k = ev.target.closest("[data-stufe], [data-gehe], [data-anfrage]");
+    if (!k) return;
+    if (k.dataset.anfrage !== undefined) { anfrage = k.dataset.anfrage; schritt = 0; zeigeAblauf(); melde(false); return; }
+    zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true);
+  });
+  window.addEventListener("hashchange", function () { zeigeStufe(stufeAusAdresse(), false); });
+  $("weiter").addEventListener("click", function () { if (schritt < ABLAUF[anfrage].length - 1) { schritt++; zeigeAblauf(); melde(false); } });
+  $("zurueck").addEventListener("click", function () { if (schritt > 0) { schritt--; zeigeAblauf(); melde(false); } });
+  $("vorn").addEventListener("click", function () { schritt = 0; zeigeAblauf(); melde(false); });
+  $("aufdecken").addEventListener("click", function () { aufgedeckt = !aufgedeckt; zeigeAntwort(); melde(false); });
+
+  zeigeAblauf();
+  zeigeAntwort();
+  zeigeStufe(stufeAusAdresse(), false);
+
+  // ---- Kurslotse ----
+  // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demos in Sätzen.
+  var SCHRITTE = ["Worum es geht", "Schritt 1: Was geschah", "Schritt 2: Wo der Fehler steckte", "Schritt 3: Wie der Fehler behoben wird", "Schritt 4: Bezug zum Kurstext"];
+  var ANFRAGEN = { gewoehnlich: "die normale Anfrage eines Studenten", angriff: "die Anfrage des Angreifers" };
+
+  function liste(namen) { return namen.map(function (n) { return NAMEN[n]; }).join(" und "); }
+
+  function standSaetze() {
+    if (stufe === 0 || stufe === 1) return ["Dieser Schritt enthält einen Informationstext und keine interaktive Übung."];
+    if (stufe === 4) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte des Exkurses dem Kurstext zu."];
+    if (stufe === 3) return [aufgedeckt ? "Die Antwort auf die Denkaufgabe ist aufgedeckt." : "Die Antwort auf die Denkaufgabe ist verdeckt. Die Antwort wurde noch nicht angezeigt."];
+    var T = ABLAUF[anfrage], s = T[schritt];
+    var saetze = [
+      "Gewählt ist " + ANFRAGEN[anfrage] + ".",
+      schritt === 0 ? "Der Ablauf steht am Anfang, noch ist keine Anfrage unterwegs." : "Zu sehen ist Schritt " + schritt + " von " + (T.length - 1) + " des Ablaufs.",
+      s.aktiv.length ? "Gelb unterlegt: " + liste(s.aktiv) + "." : "Keine Station ist gelb unterlegt."
+    ];
+    if (s.fehler) saetze.push("Rot unterlegt, weil dort der Fehler wirkt: " + liste(s.fehler) + ".");
+    if (s.nie) saetze.push("Blass, weil die Station nie an die Reihe kommt: " + liste(s.nie) + ".");
+    saetze.push("Die Seite sagt dazu: " + s.text);
+    return saetze;
+  }
+  function kurz() {
+    if (stufe === 2) return (anfrage === "angriff" ? "Anfrage des Angreifers" : "Normale Anfrage") + ", " + (schritt === 0 ? "Anfang" : "Schritt " + schritt + " von " + (ABLAUF[anfrage].length - 1));
+    if (stufe === 3) return aufgedeckt ? "Antwort aufgedeckt" : "Antwort verdeckt";
+    return "";
+  }
+
+  Kurslotse.einrichten({
+    titel: "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    thema: "Interpreter und Compiler am Beispiel der Sicherheitslücke in PHP",
+    bezug: "Kurstext v3.0.6, Abschnitt 2.7, Seiten 17–19, und Abschnitt 3.2, Seiten 22–24",
+    beschreibung: "../kurslotse/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.md",
+    reiter: function () { return ANKER[stufe]; },
+    schritt: function () { return SCHRITTE[stufe]; },
+    sichtbar: function () { return $("stufe-" + stufe); },
+    text: ".card > p:not(.quelle), .card > ul, table, .station, .auskunft:not([hidden]), .hinweis",
+    stand: standSaetze,
+    kurz: kurz,
+    beispiel: "Warum hat ein fehlerfreies Moodle nicht geholfen?"
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>
