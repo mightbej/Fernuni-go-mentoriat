@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-22T09:01",
+ "stand": "2026-10-23T14:46",
  "abschnitte": {
   "1.1": [
    {
@@ -26,6 +26,13 @@
     "beschreibung": "Die Seite ist die erste HTML-Seite zu Kapitel 2. Sie zeigt, was ein imperatives Programm ist, ordnet die vier Programmierparadigmen des Kurstexts ein und lässt die Bausteine Verzweigung und Schleife zum Durchklicken laufen. Klausurstoff ist Schritt 3, Schritt 1 und 2 dienen der Einordnung.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
+    "art": "nennt"
    },
    {
     "titel": "Exkurs: Wie die Laufzeit mit der Datenmenge wächst",
@@ -146,6 +153,13 @@
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
     "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
     "art": "nennt"
    },
    {
@@ -481,6 +495,13 @@
   ],
   "2.7": [
    {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
+    "art": "erklaert"
+   },
+   {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
@@ -571,6 +592,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
+    "art": "nennt"
+   },
+   {
     "titel": "Unterprogramme und Funktionen: aufrufen, übergeben, zurückliefern",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_unterprogramme_funktionen_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.6 des Kurstexts. Sie zeigt das Unterprogramm in vier Schritten: Aufruf mit Rücksprungadresse, Parameter und eigene Variable, Funktion mit Rückgabewert, Rekursion. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
@@ -579,6 +607,13 @@
    }
   ],
   "3.2": [
+   {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
+    "art": "nennt"
+   },
    {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
@@ -1860,6 +1895,13 @@
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap3-einfuehrung/go_k3_bezeichner_interaktiv.html",
     "beschreibung": "Die Seite erklärt, welche Namen Go zulässt: die zwei Regeln für Bezeichner, Groß- und Kleinschreibung, die 25 Schlüsselwörter, die vorgegebenen Bezeichner und den leeren Bezeichner.",
     "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
     "art": "nennt"
    },
    {
@@ -3281,6 +3323,13 @@
     "beschreibung": "Die Seite erklärt Zeiger an den Programmen des Kurstexts: die Adresse als Argument, die Operatoren `&` und `*`, Zeiger als Parameter und als Rückgabe, die Lebenszeit einer Variable und die Funktion `new`.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_exkurs_php_luecke_interaktiv.html",
+    "beschreibung": "Der Exkurs wendet Abschnitt 2.7 auf die Sicherheitslücke in PHP vom 21.10.2026 an. Am 21. und 22. Oktober 2026 war das Moodle der FernUniversität deshalb von außen nicht erreichbar. Der Exkurs zeigt: Der Fehler steckte im Interpreter von PHP und wirkte, bevor Moodle eine Zeile ausgeführt hat. Zum Vergleich steht Go 1.26.10, für das die Lotsen am 22.10.2026 neu übersetzt wurden.",
+    "geprueft": false,
+    "art": "nennt"
    }
   ],
   "7.4.5": [
