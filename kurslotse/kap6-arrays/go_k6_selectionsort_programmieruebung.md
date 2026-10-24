@@ -1,8 +1,8 @@
 # Programmierübung: Sortieren mit Selection Sort
 
-Die Seite ist eine Programmierübung. Zehn ganze Zahlen sollen aufsteigend sortiert werden, mit dem Verfahren Selection Sort: erst das kleinste Element suchen, dann mit einem einzigen Tausch an seinen Platz bringen. Die Übung führt in sieben Schritten zum Programm und vergleicht es mit Bubble Sort. Die Seite gehört zu Kapitel 6 des Kurstexts. Selection Sort selbst kommt im Kurstext nicht vor, die Übung ist eine Ergänzung des Mentors.
+Die Seite ist eine Programmierübung. Zehn ganze Zahlen sollen aufsteigend sortiert werden, mit dem Verfahren Selection Sort: erst das kleinste Element suchen, dann mit einem einzigen Tausch an seinen Platz bringen. Die Übung führt in acht Schritten zum Programm, vergleicht es mit Bubble Sort und lässt es im Editorlotsen ausprobieren. Die Seite gehört zu Kapitel 6 des Kurstexts. Selection Sort selbst kommt im Kurstext nicht vor, die Übung ist eine Ergänzung des Mentors.
 
-Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat neun Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -14,7 +14,7 @@ Für alle Schritte gilt:
 - Der Tausch ist eine Tupel-Zuweisung: `a[pos], a[minIndex] = a[minIndex], a[pos]`.
 - Die Variable heißt `minIndex` und nicht `min`, weil es seit Go 1.21 eine eingebaute Funktion `min` gibt.
 - Das Programm kommt ohne Funktionen aus. Es steht ganz in `main`.
-- Alle Programme und Ausgaben sind mit Go 1.26 nachgeprüft. Auf der Seite läuft kein Go. Die Demos stellen den Lauf im Browser nach.
+- Alle Programme und Ausgaben sind mit Go 1.26 nachgeprüft. Die Demos stellen den Lauf im Browser nach. Ausführen und ändern lässt sich das Programm nur in Schritt 7, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Schritt 2 und 4 beginnen mit einem blauen Kasten mit einer Frage. Darunter steht eine aufklappbare „Auflösung“. Die Antwort ist verdeckt, bis der Student sie aufklappt.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -28,7 +28,7 @@ Reiter: worum
 - Ein Codeblock zeigt das Array am Start und sortiert.
 - Der Text stellt die zwei Verfahren gegenüber: Bubble Sort tauscht Nachbarn sofort und braucht für die zehn Zahlen 23 Tausche. Selection Sort wählt erst aus und tauscht dann, es braucht 7 Tausche. Das englische Wort selection heißt Auswahl.
 - Der Teil „Womit das Programm auskommt“ nennt vier Stellen des Kurstexts mit Links: Kapitel 6, Abschnitt 5.5.3.2, Abschnitt 5.5.1 und Abschnitt 5.3.2.
-- Eine Liste sagt, was die sieben Schritte zeigen.
+- Eine Liste sagt, was die acht Schritte zeigen.
 
 ### Handgriffe
 
@@ -190,7 +190,27 @@ Reiter: vergleich
 
 - 8.4.2
 
-## Schritt 7: Bezug zum Kurstext
+## Schritt 7: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Ein Programm: „Selection Sort“. Es ist das ganze Programm aus Schritt 5. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 5 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Das Programm ansehen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 6.2
+
+## Schritt 8: Bezug zum Kurstext
 
 Reiter: kurstext
 

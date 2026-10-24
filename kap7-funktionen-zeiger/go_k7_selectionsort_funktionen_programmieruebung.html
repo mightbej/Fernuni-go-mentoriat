@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.1">
   <title>Programmierübung: Selection Sort mit Funktionen</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -75,7 +76,8 @@
     <button type="button" class="tab" data-stufe="2">2 Tausch</button>
     <button type="button" class="tab" data-stufe="3">3 Runde für Runde</button>
     <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -259,8 +261,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     <h3>Die Bilanz</h3>
     <ul>
       <li><strong>Lesbarkeit:</strong> In <code>main</code> steht nur noch die äußere Schleife. Jede Runde nennt ihre zwei Teile beim Namen.</li>
-      <li><strong>Aufwand:</strong> Das Programm vergleicht 45-mal und tauscht siebenmal, wie die Fassung aus Kapitel 6. Dazu kommen die Kopien: 9 · 10 + 7 · 20 = 230 kopierte Elemente.</li>
-      <li><strong>Vergleich mit Bubble Sort:</strong> Die Fassung mit <code>isGreater</code> und <code>swap</code> kopiert 910 Elemente. Selection Sort ruft seine Funktionen viel seltener auf.</li>
+      <li><strong>Aufwand:</strong> Das Programm vergleicht 45-mal und tauscht siebenmal, wie das Programm aus Kapitel 6. Dazu kommen die Kopien: 9 · 10 + 7 · 20 = 230 kopierte Elemente.</li>
+      <li><strong>Vergleich mit Bubble Sort:</strong> Das Programm mit <code>isGreater</code> und <code>swap</code> kopiert 910 Elemente. Selection Sort ruft seine Funktionen viel seltener auf.</li>
     </ul>
     <p>Die Programmierübung <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a> schafft die Kopien ab.</p>
 
@@ -280,7 +282,20 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   <section class="stufe" id="stufe-5">
   <div class="card">
-    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier steht das ganze Programm aus Schritt 4. Sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 4.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
     <div class="tabellenrahmen"><table class="text">
       <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
       <tbody>
@@ -292,6 +307,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
         <tr><td>7.2 Übergabe von Argumenten: call-by-value</td><td>169–170</td><td>Beide Funktionen bekommen eine Kopie des Arrays. <code>swap</code> gibt ihre Kopie zurück.</td></tr>
       </tbody>
     </table></div>
+    <p>Schritt 5, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Das Programm und seine Ausgabe stammen aus Schritt 4, festgehalten mit Go 1.26.1.</p>
     <p>Selection Sort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors. Die Funktion <code>swap</code> folgt dem Muster von <code>negToZeroValue</code> in Listing 7.1. Die Variable heißt <code>minIndex</code>, weil es in Go seit Version 1.21 eine eingebaute Funktion <code>min</code> gibt.</p>
 
     <h3>Die Reihe</h3>
@@ -302,7 +318,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -310,6 +326,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -321,8 +338,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#minimum
-  const ANKER = ['worum', 'minimum', 'tausch', 'runden', 'programm', 'kurstext'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Suche als Funktion', 'Schritt 2: Der Tausch als Funktion', 'Schritt 3: Runde für Runde', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  const ANKER = ['worum', 'minimum', 'tausch', 'runden', 'programm', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Suche als Funktion', 'Schritt 2: Der Tausch als Funktion', 'Schritt 3: Runde für Runde', 'Schritt 4: Das ganze Programm', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -426,10 +443,11 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 5) return probe.stand();
     if (stufe !== 3) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 3. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
     return standAblauf(DS).concat('Die Demo zeigt alle neun Runden. Ein Schritt der Demo ist ein Aufruf von findMin, die Prüfung minIndex != pos ohne Tausch, ein Aufruf von swap oder die Zuweisung der Rückgabe von swap.');
   }
-  const kurzStand = () => stufe === 3 ? (DS.stand ? 'Schritt ' + DS.stand + ' von ' + DS.lauf.length : 'nichts ausgeführt') : '';
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 3 ? (DS.stand ? 'Schritt ' + DS.stand + ' von ' + DS.lauf.length : 'nichts ausgeführt') : '';
   // Das Programm der Demo steht in einer Liste und nicht in pre
   function programmZeilen() {
     if (stufe !== 3) return [];
@@ -438,6 +456,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   }
 
   DS.zeichne();
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 4, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+    {
+      "name": "Selection Sort mit Funktionen",
+      "code": "package main\n\nimport \"fmt\"\n\n// liefert den Index des kleinsten Elements ab dem Index pos\nfunc findMin(a [10]int, pos int) int {\n\tminIndex := pos\n\tfor i := pos + 1; i < len(a); i++ {\n\t\tif a[i] < a[minIndex] {\n\t\t\tminIndex = i\n\t\t}\n\t}\n\treturn minIndex\n}\n\n// liefert eine Kopie des Arrays, in der die Elemente\n// an den Indizes i und j getauscht sind\nfunc swap(a [10]int, i int, j int) [10]int {\n\ta[i], a[j] = a[j], a[i]\n\treturn a\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:\", a)\n\n\tfor pos := 0; pos < len(a)-1; pos++ {\n\t\tminIndex := findMin(a, pos)\n\t\tif minIndex != pos {\n\t\t\ta = swap(a, pos, minIndex)\n\t\t}\n\t\tfmt.Printf(\"Nach Runde %d: %v\\n\", pos+1, a)\n\t}\n\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Start: [42 7 19 88 3 25 71 14 60 9]\nNach Runde 1: [3 7 19 88 42 25 71 14 60 9]\nNach Runde 2: [3 7 19 88 42 25 71 14 60 9]\nNach Runde 3: [3 7 9 88 42 25 71 14 60 19]\nNach Runde 4: [3 7 9 14 42 25 71 88 60 19]\nNach Runde 5: [3 7 9 14 19 25 71 88 60 42]\nNach Runde 6: [3 7 9 14 19 25 71 88 60 42]\nNach Runde 7: [3 7 9 14 19 25 42 88 60 71]\nNach Runde 8: [3 7 9 14 19 25 42 60 88 71]\nNach Runde 9: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Selection Sort mit Funktionen',
@@ -448,7 +483,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 5 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
     kurz: kurzStand,

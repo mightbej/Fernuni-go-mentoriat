@@ -2,7 +2,7 @@
 
 Die Seite ist eine Programmierübung. Sie stellt die Funktionen `findMin` und `swap` aus der Übung „Selection Sort mit Funktionen“ auf Zeiger um. Die Funktionen bekommen die Adresse des Arrays, das Programm kopiert kein Element mehr. Die Seite gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.3 und 7.4, Seiten 171–180.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -18,7 +18,7 @@ Für alle Schritte gilt:
 - Die Blöcke in Schritt 3: `a` in den Zellen 100 bis 179, `pos` und `minIndex` von `main` ab 180 und 188. `pa` von `findMin` oder `swap` in den Zellen 196 bis 203 mit dem Inhalt 100, die übrigen Parameter und Variablen der Funktion ab 204 und 212.
 - Selection Sort kommt im Kurstext nicht vor. Das Muster für die Zeiger ist `negToZeroPointer` in Listing 7.2.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
-- Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
+- Die Demos stellen im Browser nach, was das Programm tut. Ausführen und ändern lässt sich das Programm nur in Schritt 5, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Zu den Aufgaben unter „Zum Weiterdenken“ gibt es auf der Seite keine Lösung. Fragt der Student danach, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -28,8 +28,8 @@ Reiter: worum
 
 ### Aufbau der Darstellung
 
-- Zu sehen ist eine Karte mit Text und den drei Zeilen einer Runde aus der Fassung mit Kopien. Eine Demo gibt es hier nicht.
-- Der Text sagt: Die Fassung mit Kopien kopiert für zehn Elemente 230 Elemente, und `swap` muss ihre Kopie zurückgeben.
+- Zu sehen ist eine Karte mit Text und den drei Zeilen einer Runde aus dem Programm mit Kopien. Eine Demo gibt es hier nicht.
+- Der Text sagt: Das Programm mit Kopien kopiert für zehn Elemente 230 Elemente, und `swap` muss ihre Kopie zurückgeben.
 - Unter „Was dazugehört“ stehen Links auf die Lektion „Zeiger in Go“, auf die Programmierübung „Bubble Sort mit Zeigern“ und auf den Exkurs „Das Kopier-Problem“.
 
 ### Handgriffe
@@ -71,7 +71,7 @@ Reiter: suche
 
 - Oben steht ein blauer Kasten mit einer Frage und einer aufklappbaren „Auflösung“.
 - Ein Codeblock zeigt `findMin` mit dem Parameter `pa *[10]int`, mit `len(*pa)` in der Schleife und mit `pa[i] < pa[minIndex]`.
-- Eine Liste nennt die drei Stellen, die anders sind als in der Fassung mit der Kopie: Parameter, Länge, Elemente.
+- Eine Liste nennt die drei Stellen, die anders sind als im Programm mit der Kopie: Parameter, Länge, Elemente.
 - Die Rückgabe bleibt ein `int`. Ein Zeiger als Parameter und eine Rückgabe schließen sich nicht aus, wie bei `incr` in Abschnitt 7.4.1.
 - Die Funktion ändert das Array nicht. Der Zeiger spart die Kopie von zehn Elementen je Runde, zusammen 90.
 - Eine Demo gibt es hier nicht.
@@ -119,7 +119,7 @@ Reiter: programm
 ### Aufbau der Darstellung
 
 - Zu sehen ist das ganze Programm mit den zwei Funktionen und `main` mit der äußeren Schleife.
-- Darunter stehen der Knopf „Programm kopieren“ und die Ausgabe mit neun Zeilen „Nach Runde 1“ bis „Nach Runde 9“. Sie ist die gleiche wie in der Fassung mit Kopien.
+- Darunter stehen der Knopf „Programm kopieren“ und die Ausgabe mit neun Zeilen „Nach Runde 1“ bis „Nach Runde 9“. Sie ist die gleiche wie im Programm mit Kopien.
 - Eine Tabelle „Vier Programme im Vergleich“ nennt Vergleiche, Tausche und kopierte Elemente: Bubble Sort mit Wertübergabe 45, 23 und 910. Bubble Sort mit Zeigern 45, 23 und 0. Selection Sort mit Wertübergabe 45, 7 und 230. Selection Sort mit Zeigern 45, 7 und 0.
 - Darunter steht: Die Zahl der Vergleiche und Tausche gehört zum Verfahren. Die Zahl der kopierten Elemente gehört zur Art der Übergabe.
 - Unter „Zum Weiterdenken“ stehen drei Aufgaben ohne Lösung: eine Funktion `selectionSort(pa *[10]int)` schreiben, `findMin` mit einer Rückgabe vom Typ `*int` schreiben, die Meldung zu einem fehlenden `&` nachsehen.
@@ -136,7 +136,27 @@ Reiter: programm
 - 7.3
 - 7.4.2
 
-## Schritt 5: Bezug zum Kurstext
+## Schritt 5: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Ein Programm: „Selection Sort mit Zeigern“. Es ist das ganze Programm aus Schritt 4. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 4 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Das Programm ansehen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 7.3
+
+## Schritt 6: Bezug zum Kurstext
 
 Reiter: kurstext
 

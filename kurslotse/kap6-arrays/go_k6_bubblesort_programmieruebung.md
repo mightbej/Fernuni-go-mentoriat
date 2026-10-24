@@ -1,8 +1,8 @@
 # Programmierübung: Sortieren mit Bubble Sort
 
-Die Seite ist eine Programmierübung. Zehn ganze Zahlen sollen aufsteigend sortiert werden. Die Übung führt in sechs Schritten zum Programm: zehn einzelne Variablen, ein Array mit einem Durchgang, drei ausgeschriebene Durchgänge, zwei verschachtelte Schleifen, das ganze Programm, der Bezug zum Kurstext. Die Seite gehört zu Kapitel 6 des Kurstexts. Das Verfahren Bubblesort selbst wird im Kurstext erst in Abschnitt 8.4.2 behandelt.
+Die Seite ist eine Programmierübung. Zehn ganze Zahlen sollen aufsteigend sortiert werden. Die Übung führt in sieben Schritten zum Programm: zehn einzelne Variablen, ein Array mit einem Durchgang, drei ausgeschriebene Durchgänge, zwei verschachtelte Schleifen, das ganze Programm, selbst ausprobieren, der Bezug zum Kurstext. Die Seite gehört zu Kapitel 6 des Kurstexts. Das Verfahren Bubblesort selbst wird im Kurstext erst in Abschnitt 8.4.2 behandelt.
 
-Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat acht Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -12,7 +12,7 @@ Für alle Schritte gilt:
 - Ein Durchgang geht einmal von links nach rechts durch das Array. Danach steht der größte Wert des durchlaufenen Teils an dessen Ende.
 - Auf der Seite heißt es „Durchgang“. Im Englischen heißt das „pass“. Auch der Kurstext schreibt in Abschnitt 8.4.2 „Durchgang“.
 - Das Programm kommt ohne Funktionen aus. Es steht ganz in `main`.
-- Alle Programme und Ausgaben sind mit Go 1.26 nachgeprüft. Auf der Seite läuft kein Go. Die Demos stellen den Lauf im Browser nach.
+- Alle Programme und Ausgaben sind mit Go 1.26 nachgeprüft. Die Demos stellen den Lauf im Browser nach. Ausführen und ändern lässt sich das Programm nur in Schritt 6, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Schritt 2 und 4 beginnen mit einem blauen Kasten mit Fragen. Unter jeder Frage steht eine aufklappbare „Auflösung“. Die Antwort ist verdeckt, bis der Student sie aufklappt.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -26,7 +26,7 @@ Reiter: worum
 - Ein Codeblock zeigt das Array unsortiert und sortiert.
 - Der Teil „Die Idee von Bubble Sort“ nennt den einen Handgriff und das Bild der Luftblase: Ein großer Wert steigt Tausch für Tausch nach hinten auf.
 - Der Teil „Womit das Programm auskommt“ nennt vier Stellen des Kurstexts mit Links: Array und Index in Kapitel 6, die for-Klausel in Abschnitt 5.5.3.2, die if-Anweisung in Abschnitt 5.5.1 und die Tupel-Zuweisung in Abschnitt 5.3.2.
-- Eine Liste sagt, was die sechs Schritte zeigen.
+- Eine Liste sagt, was die sieben Schritte zeigen.
 
 ### Handgriffe
 
@@ -151,8 +151,8 @@ Reiter: programm
 
 - Oben stehen zwei Knöpfe für die Werte des Arrays: „feste Werte“ und „Zufallswerte“. Darunter steht der Knopf „Programm kopieren“.
 - Das ganze Programm steht als nummerierte Liste auf dunklem Grund, mit `package main`, `import` und `func main()`.
-- Die Fassung mit festen Werten hat 18 Zeilen. Darunter steht ihre Ausgabe: `Unsortiert:`, die neun Zeilen `Nach Durchgang …` und `Sortiert: [3 7 9 14 19 25 42 60 71 88]`.
-- Die Fassung mit Zufallswerten hat 24 Zeilen. Sie importiert zusätzlich `math/rand`, legt mit `var a [10]int` ein Array aus zehn Nullen an und füllt es mit `for i := range a { a[i] = rand.Intn(100) + 1 }`. `rand.Intn(100)` liefert eine Zufallszahl von 0 bis 99, mit `+ 1` wird daraus 1 bis 100.
+- Das Programm mit festen Werten hat 18 Zeilen. Darunter steht seine Ausgabe: `Unsortiert:`, die neun Zeilen `Nach Durchgang …` und `Sortiert: [3 7 9 14 19 25 42 60 71 88]`.
+- Das Programm mit Zufallswerten hat 24 Zeilen. Es importiert zusätzlich `math/rand`, legt mit `var a [10]int` ein Array aus zehn Nullen an und füllt es mit `for i := range a { a[i] = rand.Intn(100) + 1 }`. `rand.Intn(100)` liefert eine Zufallszahl von 0 bis 99, mit `+ 1` wird daraus 1 bis 100.
 - Der Teil „So startest du das Programm“: einen leeren Ordner anlegen, darin die Datei `bubblesort.go`, das Programm hineinkopieren, im Terminal `go run bubblesort.go` eingeben.
 - Der Teil „Zum Weiterdenken“ stellt drei Aufgaben ohne Lösung: früher aufhören, wenn nichts mehr getauscht wird. Absteigend sortieren. Die Länge auf 20 ändern.
 - Fragt der Student nach einer dieser drei Aufgaben, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm. Hinweise: Für das frühe Aufhören merkt sich das Programm in einer Variable vom Typ `bool`, ob ein Durchgang getauscht hat. Für absteigend dreht sich der Vergleich um. Für die Länge 20 ändert sich nur die Zahl im Typ, weil überall sonst `len(a)` steht.
@@ -168,7 +168,27 @@ Reiter: programm
 - 6
 - 6.2
 
-## Schritt 6: Bezug zum Kurstext
+## Schritt 6: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Zwei Programme zur Wahl: „Feste Werte“ und „Zufallswerte“. Es sind die zwei Programme aus Schritt 5. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 5 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Ein Programm wählen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 6.2
+
+## Schritt 7: Bezug zum Kurstext
 
 Reiter: kurstext
 

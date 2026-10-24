@@ -132,6 +132,31 @@
    "abschnitt": "4.1"
   },
   {
+   "pfad": "kap6-arrays/go_k6_bubblesort_programmieruebung.html",
+   "titel": "Programmierübung: Sortieren mit Bubble Sort",
+   "abschnitt": "6.2"
+  },
+  {
+   "pfad": "kap6-arrays/go_k6_selectionsort_programmieruebung.html",
+   "titel": "Programmierübung: Sortieren mit Selection Sort",
+   "abschnitt": "6.2"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_bubblesort_funktionen_programmieruebung.html",
+   "titel": "Programmierübung: Bubble Sort mit Funktionen",
+   "abschnitt": "7.1"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_bubblesort_rekursiv_programmieruebung.html",
+   "titel": "Programmierübung: Bubble Sort rekursiv",
+   "abschnitt": "7.5"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_bubblesort_zeiger_programmieruebung.html",
+   "titel": "Programmierübung: Bubble Sort mit Zeigern",
+   "abschnitt": "7.3"
+  },
+  {
    "pfad": "kap7-funktionen-zeiger/go_k7_insertionsort_programmieruebung.html",
    "titel": "Programmierübung: Insertion Sort Schritt für Schritt",
    "abschnitt": "7.3"
@@ -140,6 +165,16 @@
    "pfad": "kap7-funktionen-zeiger/go_k7_quicksort_programmieruebung.html",
    "titel": "Programmierübung: Quicksort Schritt für Schritt",
    "abschnitt": "7.5"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_selectionsort_funktionen_programmieruebung.html",
+   "titel": "Programmierübung: Selection Sort mit Funktionen",
+   "abschnitt": "7.1"
+  },
+  {
+   "pfad": "kap7-funktionen-zeiger/go_k7_selectionsort_zeiger_programmieruebung.html",
+   "titel": "Programmierübung: Selection Sort mit Zeigern",
+   "abschnitt": "7.3"
   },
   {
    "pfad": "exkurse/exkurs_live_daten_interaktiv.html",

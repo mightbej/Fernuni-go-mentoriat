@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.5">
   <title>Programmierübung: Bubble Sort rekursiv</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -91,7 +92,8 @@
     <button type="button" class="tab" data-stufe="2">2 Die Funktion</button>
     <button type="button" class="tab" data-stufe="3">3 Schleife oder Rekursion</button>
     <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -211,7 +213,7 @@
       <li><strong>Endrekursion:</strong> Der rekursive Aufruf ist die letzte Operation. Auf dem Rückweg hat kein Aufruf mehr etwas zu tun.</li>
       <li><strong>Terminierung:</strong> Jeder rekursive Aufruf bekommt <code>n-1</code>. Bei <code>n &lt;= 1</code> gibt es keinen Aufruf mehr.</li>
     </ul>
-    <div class="hinweis">Die rekursive Fassung ist hier nicht besser als die Schleife. Sie zeigt an einem bekannten Programm, wie eine Schleife und ein rekursiver Aufruf einander entsprechen. Wo Rekursion die naheliegende Lösung ist, zeigen im Kurstext die Türme von Hanoi und später die Bäume in Kapitel 9.</div>
+    <div class="hinweis">Das rekursive Programm ist hier nicht besser als die Schleife. Es zeigt an einem bekannten Programm, wie eine Schleife und ein rekursiver Aufruf einander entsprechen. Wo Rekursion die naheliegende Lösung ist, zeigen im Kurstext die Türme von Hanoi und später die Bäume in Kapitel 9.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -289,7 +291,20 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   <section class="stufe" id="stufe-5">
   <div class="card">
-    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier steht das ganze Programm aus Schritt 4. Sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 4.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
     <div class="tabellenrahmen"><table class="text">
       <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
       <tbody>
@@ -302,7 +317,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
         <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit zwei Schleifen und einem Array von Verbunden.</td></tr>
       </tbody>
     </table></div>
-    <p>Eine rekursive Fassung von Bubblesort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
+    <p>Schritt 5, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Das Programm und seine Ausgabe stammen aus Schritt 4, festgehalten mit Go 1.26.1.</p>
+    <p>Ein rekursives Bubblesort kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
 
     <h3>Die Reihe</h3>
     <ul>
@@ -311,7 +327,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -319,6 +335,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -330,8 +347,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#idee
-  const ANKER = ['worum', 'idee', 'funktion', 'vergleich', 'programm', 'kurstext'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Schleife oder Rekursion', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  const ANKER = ['worum', 'idee', 'funktion', 'vergleich', 'programm', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Die Funktion', 'Schritt 3: Schleife oder Rekursion', 'Schritt 4: Das ganze Programm', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -494,11 +511,12 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 5) return probe.stand();
     if (stufe !== 2) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 2. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
     return standAblauf(DR).concat('Jeder Aufruf von bubbleSort hat einen eigenen Rahmen mit pa und n. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander, der jüngste Aufruf steht zuletzt.',
       'Ein Schritt der Demo ist ein ganzer Durchgang, ein rekursiver Aufruf oder eine Rückkehr. Der Wert des Zeigers pa steht in Worten da: „Adresse von a“.');
   }
-  const kurzStand = () => stufe === 2 ? (DR.stand ? 'Schritt ' + DR.stand + ' von ' + DR.lauf.length : 'nichts ausgeführt') : '';
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 2 ? (DR.stand ? 'Schritt ' + DR.stand + ' von ' + DR.lauf.length : 'nichts ausgeführt') : '';
   // Das Programm der Demo steht in einer Liste und nicht in pre
   function programmZeilen() {
     if (stufe !== 2) return [];
@@ -507,6 +525,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   }
 
   DR.zeichne();
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 4, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+    {
+      "name": "Bubble Sort rekursiv",
+      "code": "package main\n\nimport \"fmt\"\n\n// liefert true, wenn das Element am Index i\n// größer ist als sein rechter Nachbar\nfunc isGreater(pa *[10]int, i int) bool {\n\treturn pa[i] > pa[i+1]\n}\n\n// tauscht in dem Array, auf das pa zeigt,\n// die Nachbarn an den Indizes i und i+1\nfunc swap(pa *[10]int, i int) {\n\tpa[i], pa[i+1] = pa[i+1], pa[i]\n}\n\n// sortiert die ersten n Elemente des Arrays, auf das pa zeigt\nfunc bubbleSort(pa *[10]int, n int) {\n\tif n <= 1 {\n\t\treturn\n\t}\n\tfor i := 0; i < n-1; i++ {\n\t\tif isGreater(pa, i) {\n\t\t\tswap(pa, i)\n\t\t}\n\t}\n\tfmt.Printf(\"n = %2d: %v\\n\", n, *pa)\n\tbubbleSort(pa, n-1)\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:\", a)\n\tbubbleSort(&a, len(a))\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Start: [42 7 19 88 3 25 71 14 60 9]\nn = 10: [7 19 42 3 25 71 14 60 9 88]\nn =  9: [7 19 3 25 42 14 60 9 71 88]\nn =  8: [7 3 19 25 14 42 9 60 71 88]\nn =  7: [3 7 19 14 25 9 42 60 71 88]\nn =  6: [3 7 14 19 9 25 42 60 71 88]\nn =  5: [3 7 14 9 19 25 42 60 71 88]\nn =  4: [3 7 9 14 19 25 42 60 71 88]\nn =  3: [3 7 9 14 19 25 42 60 71 88]\nn =  2: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Bubble Sort rekursiv',
@@ -517,7 +552,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 5 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
     kurz: kurzStand,

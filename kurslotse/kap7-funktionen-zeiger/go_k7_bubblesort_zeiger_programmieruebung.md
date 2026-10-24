@@ -2,7 +2,7 @@
 
 Die Seite ist eine Programmierübung. Sie stellt die Funktionen `isGreater` und `swap` aus der Übung „Bubble Sort mit Funktionen“ auf Zeiger um. Die Funktionen bekommen die Adresse des Arrays, das Programm kopiert kein Element mehr. Die Seite gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.3 und 7.4, Seiten 171–180.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -18,7 +18,7 @@ Für alle Schritte gilt:
 - Die Blöcke in Schritt 3: `a` in den Zellen 100 bis 179, `i` von `main` ab 180. `pa` von `isGreater` oder `swap` in den Zellen 188 bis 195 mit dem Inhalt 100, der Parameter `i` ab 196.
 - Die Funktionen `isGreater` und `swap` stehen nicht im Kurstext. Das Muster ist `negToZeroPointer` in Listing 7.2.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
-- Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
+- Die Demos stellen im Browser nach, was das Programm tut. Ausführen und ändern lässt sich das Programm nur in Schritt 5, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Zu den Aufgaben unter „Zum Weiterdenken“ gibt es auf der Seite keine Lösung. Fragt der Student danach, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -28,8 +28,8 @@ Reiter: worum
 
 ### Aufbau der Darstellung
 
-- Zu sehen ist eine Karte mit Text und den zwei Funktionen der Fassung mit Kopien. Eine Demo gibt es hier nicht.
-- Eine Liste nennt, was an der Fassung mit Kopien stört: der Umweg über `a = swap(a, i)` und die 910 kopierten Elemente.
+- Zu sehen ist eine Karte mit Text und den zwei Funktionen des Programms mit Kopien. Eine Demo gibt es hier nicht.
+- Eine Liste nennt, was am Programm mit Kopien stört: der Umweg über `a = swap(a, i)` und die 910 kopierten Elemente.
 - Unter „Was dazugehört“ stehen Links auf die Lektion „Zeiger in Go“ und auf den Exkurs „Das Kopier-Problem“.
 
 ### Handgriffe
@@ -50,7 +50,7 @@ Reiter: tausch
 
 - Oben steht ein blauer Kasten „Erst vorhersagen, dann ausprobieren“ mit einer Frage und einer aufklappbaren „Auflösung“.
 - Ein Codeblock zeigt `swap` mit dem Parameter `pa *[10]int`. Eine Liste nennt die vier Änderungen: Parameter, Rumpf mit `pa[i]`, keine Rückgabe, Aufruf `swap(&a, i)`.
-- Ein gelber Kasten sagt: Wer `&` vergisst, bekommt die Meldung `cannot use a (variable of type [10]int) as *[10]int value in argument to swap`. Das vergessene `a =` der Fassung mit Kopien blieb unbemerkt.
+- Ein gelber Kasten sagt: Wer `&` vergisst, bekommt die Meldung `cannot use a (variable of type [10]int) as *[10]int value in argument to swap`. Das vergessene `a =` des Programms mit Kopien blieb unbemerkt.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
@@ -71,9 +71,9 @@ Reiter: vergleich
 ### Aufbau der Darstellung
 
 - Oben steht ein blauer Kasten mit einer Frage und einer aufklappbaren „Auflösung“.
-- Der Text sagt: `isGreater` ändert das Array nicht. Die Fassung mit der Kopie liefert das richtige Ergebnis, kopiert aber bei 45 Vergleichen 450 Elemente. Für den Zeiger sprechen der Aufwand und die Einheitlichkeit.
+- Der Text sagt: `isGreater` ändert das Array nicht. Das Programm mit der Kopie liefert das richtige Ergebnis, kopiert aber bei 45 Vergleichen 450 Elemente. Für den Zeiger sprechen der Aufwand und die Einheitlichkeit.
 - Ein Codeblock zeigt `isGreater` mit dem Parameter `pa *[10]int`.
-- Eine Tabelle stellt die zwei Fassungen gegenüber: Aufruf `isGreater(a, i)` mit 450 kopierten Elementen, Aufruf `isGreater(&a, i)` mit keinem.
+- Eine Tabelle stellt die zwei Programme gegenüber: Aufruf `isGreater(a, i)` mit 450 kopierten Elementen, Aufruf `isGreater(&a, i)` mit keinem.
 - Ein gelber Kasten sagt: Am Aufruf `isGreater(&a, i)` sieht man nicht, ob die Funktion das Array ändert.
 - Die Abwägung steht nicht im Kurstext.
 - Eine Demo gibt es hier nicht.
@@ -120,8 +120,8 @@ Reiter: programm
 ### Aufbau der Darstellung
 
 - Zu sehen ist das ganze Programm mit den zwei Funktionen und `main` mit zwei Schleifen. In der inneren Schleife steht `if isGreater(&a, i) { swap(&a, i) }`.
-- Darunter stehen der Knopf „Programm kopieren“ und die Ausgabe. Sie ist die gleiche wie in der Fassung mit Kopien und endet mit `Sortiert: [3 7 9 14 19 25 42 60 71 88]`.
-- Eine Tabelle „Die Bilanz“ vergleicht drei Fassungen: Kapitel 6 mit allem in `main`, Funktionen mit Wertübergabe, Funktionen mit Zeigern. Alle haben 45 Vergleiche und 23 Tausche. Kopierte Elemente: 0, 910 und 0.
+- Darunter stehen der Knopf „Programm kopieren“ und die Ausgabe. Sie ist die gleiche wie im Programm mit Kopien und endet mit `Sortiert: [3 7 9 14 19 25 42 60 71 88]`.
+- Eine Tabelle „Die Bilanz“ vergleicht drei Programme: Kapitel 6 mit allem in `main`, Funktionen mit Wertübergabe, Funktionen mit Zeigern. Alle haben 45 Vergleiche und 23 Tausche. Kopierte Elemente: 0, 910 und 0.
 - Unter „Zum Weiterdenken“ stehen drei Aufgaben ohne Lösung: die lange Form `(*pa)[i]` schreiben, eine Funktion `sortiere(pa *[10]int)` schreiben, die Ausgabe von `fmt.Println(&a)` vorhersagen. Die Antwort auf die dritte steht im Kurstext in Abschnitt 7.4: `fmt.Println` gibt für die Adresse eines Arrays das Zeichen `&` und dahinter das Array aus.
 - Eine Demo gibt es hier nicht.
 
@@ -134,7 +134,27 @@ Reiter: programm
 - 7.3
 - 7.4
 
-## Schritt 5: Bezug zum Kurstext
+## Schritt 5: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Ein Programm: „Bubble Sort mit Zeigern“. Es ist das ganze Programm aus Schritt 4. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 4 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Das Programm ansehen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 7.3
+
+## Schritt 6: Bezug zum Kurstext
 
 Reiter: kurstext
 

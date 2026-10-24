@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.3">
   <title>Programmierübung: Bubble Sort mit Zeigern</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -91,7 +92,8 @@
     <button type="button" class="tab" data-stufe="2">2 isGreater</button>
     <button type="button" class="tab" data-stufe="3">3 Ein Durchgang</button>
     <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -140,7 +142,7 @@ func swap(a [10]int, i int) [10]int {
 func swap(pa *[10]int, i int) {
     pa[i], pa[i+1] = pa[i+1], pa[i]
 }</pre>
-    <p>Gegenüber der Fassung mit einer Kopie ändern sich vier Stellen:</p>
+    <p>Gegenüber dem Programm mit einer Kopie ändern sich vier Stellen:</p>
     <ul>
       <li><strong>Parameter:</strong> <code>pa *[10]int</code> ist ein Zeiger auf ein Array vom Typ <code>[10]int</code>.</li>
       <li><strong>Rumpf:</strong> <code>pa[i]</code> ist die Kurzschreibweise für <code>(*pa)[i]</code>, also für das Element <code>i</code> des Arrays, auf das <code>pa</code> zeigt.</li>
@@ -148,7 +150,7 @@ func swap(pa *[10]int, i int) {
       <li><strong>Aufruf:</strong> <code>swap(&amp;a, i)</code>. Der Adressoperator <code>&amp;</code> liefert die Adresse von <code>a</code>. Die Zuweisung <code>a = …</code> entfällt.</li>
     </ul>
     <p>Die Funktion ändert eine Variable, die außerhalb ihres Rumpfs deklariert ist. Im Kurstext heißt das Seiteneffekt.</p>
-    <div class="hinweis">Wer <code>&amp;</code> vergisst und <code>swap(a, i)</code> schreibt, bekommt eine Meldung des Compilers: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>. Der Fehler aus der Fassung mit der Kopie, das vergessene <code>a =</code>, blieb unbemerkt.</div>
+    <div class="hinweis">Wer <code>&amp;</code> vergisst und <code>swap(a, i)</code> schreibt, bekommt eine Meldung des Compilers: <code>cannot use a (variable of type [10]int) as *[10]int value in argument to swap</code>. Der Fehler aus dem Programm mit der Kopie, das vergessene <code>a =</code>, blieb unbemerkt.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
@@ -165,7 +167,7 @@ func swap(pa *[10]int, i int) {
           <details><summary>Auflösung</summary>Nein. Zum Lesen genügt die Kopie, das Ergebnis ist das gleiche. Der Zeiger spart hier nur die Kopie von zehn Elementen je Aufruf.</details></li>
       </ol>
     </div>
-    <p><code>isGreater</code> ändert das Array nicht. Die Fassung mit der Kopie liefert deshalb das richtige Ergebnis. Sie kopiert aber bei jedem der 45 Vergleiche zehn Elemente, zusammen 450. Für die Fassung mit einem Zeiger sprechen zwei Gründe:</p>
+    <p><code>isGreater</code> ändert das Array nicht. Das Programm mit der Kopie liefert deshalb das richtige Ergebnis. Es kopiert aber bei jedem der 45 Vergleiche zehn Elemente, zusammen 450. Für das Programm mit einem Zeiger sprechen zwei Gründe:</p>
     <ul>
       <li><strong>Aufwand:</strong> Der Aufruf kopiert eine Adresse und kein Element.</li>
       <li><strong>Einheitlichkeit:</strong> Beide Funktionen bekommen das Array auf die gleiche Art.</li>
@@ -175,9 +177,9 @@ func swap(pa *[10]int, i int) {
 func isGreater(pa *[10]int, i int) bool {
     return pa[i] &gt; pa[i+1]
 }</pre>
-    <p>Die zwei Fassungen im Vergleich:</p>
+    <p>Die zwei Programme im Vergleich:</p>
     <div class="tabellenrahmen"><table class="text">
-      <thead><tr><th>Fassung</th><th>Aufruf in main</th><th>Kopierte Elemente bei 45 Vergleichen</th></tr></thead>
+      <thead><tr><th>Programm</th><th>Aufruf in main</th><th>Kopierte Elemente bei 45 Vergleichen</th></tr></thead>
       <tbody>
         <tr><td><code>isGreater(a [10]int, i int) bool</code></td><td><code>isGreater(a, i)</code></td><td>Die Aufrufe kopieren 450 Elemente.</td></tr>
         <tr><td><code>isGreater(pa *[10]int, i int) bool</code></td><td><code>isGreater(&amp;a, i)</code></td><td>Die Aufrufe kopieren kein Element.</td></tr>
@@ -270,11 +272,11 @@ Nach Durchgang 7: [3 7 9 14 19 25 42 60 71 88]
 Nach Durchgang 8: [3 7 9 14 19 25 42 60 71 88]
 Nach Durchgang 9: [3 7 9 14 19 25 42 60 71 88]
 Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
-    <p>Die Ausgabe ist die gleiche wie in der Fassung mit Kopien.</p>
+    <p>Die Ausgabe ist die gleiche wie im Programm mit Kopien.</p>
 
     <h3>Die Bilanz</h3>
     <div class="tabellenrahmen"><table class="text">
-      <thead><tr><th>Fassung</th><th>Vergleiche</th><th>Tausche</th><th>Kopierte Elemente</th></tr></thead>
+      <thead><tr><th>Programm</th><th>Vergleiche</th><th>Tausche</th><th>Kopierte Elemente</th></tr></thead>
       <tbody>
         <tr><td>Kapitel 6: Alles steht in <code>main</code>.</td><td>45</td><td>23</td><td>0</td></tr>
         <tr><td>Mit Funktionen und Wertübergabe.</td><td>45</td><td>23</td><td>910</td></tr>
@@ -298,7 +300,20 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   <section class="stufe" id="stufe-5">
   <div class="card">
-    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier steht das ganze Programm aus Schritt 4. Sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 4.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
     <div class="tabellenrahmen"><table class="text">
       <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
       <tbody>
@@ -310,6 +325,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
         <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit einem Array von Verbunden.</td></tr>
       </tbody>
     </table></div>
+    <p>Schritt 5, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Das Programm und seine Ausgabe stammen aus Schritt 4, festgehalten mit Go 1.26.1.</p>
     <p>Die Funktionen <code>isGreater</code> und <code>swap</code> kommen im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors. Die Abwägung zwischen Kopie und Zeiger für eine Funktion, die nur liest, steht nicht im Kurstext.</p>
 
     <h3>Die Reihe</h3>
@@ -320,7 +336,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -328,6 +344,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -339,8 +356,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#tausch
-  const ANKER = ['worum', 'tausch', 'vergleich', 'durchgang', 'programm', 'kurstext'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: swap mit einem Zeiger', 'Schritt 2: isGreater mit einem Zeiger', 'Schritt 3: Ein Durchgang', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  const ANKER = ['worum', 'tausch', 'vergleich', 'durchgang', 'programm', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: swap mit einem Zeiger', 'Schritt 2: isGreater mit einem Zeiger', 'Schritt 3: Ein Durchgang', 'Schritt 4: Das ganze Programm', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -487,11 +504,12 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 5) return probe.stand();
     if (stufe !== 3) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 3. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
     return standAblauf(DB).concat('Die Demo zeigt den ersten Durchgang. Ein Schritt der Demo ist ein Aufruf von isGreater oder ein Aufruf von swap.',
       'Der Wert des Zeigers pa steht auf der Seite in Worten: „Adresse von a“. Grün markiert sind im Array von main die zwei Elemente, die der letzte Aufruf gelesen oder getauscht hat.');
   }
-  const kurzStand = () => stufe === 3 ? (DB.stand ? 'Schritt ' + DB.stand + ' von ' + DB.lauf.length : 'nichts ausgeführt') : '';
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 3 ? (DB.stand ? 'Schritt ' + DB.stand + ' von ' + DB.lauf.length : 'nichts ausgeführt') : '';
   // Das Programm der Demo steht in einer Liste und nicht in pre
   function programmZeilen() {
     if (stufe !== 3) return [];
@@ -500,6 +518,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   }
 
   DB.zeichne();
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 4, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+    {
+      "name": "Bubble Sort mit Zeigern",
+      "code": "package main\n\nimport \"fmt\"\n\n// liefert true, wenn das Element am Index i\n// größer ist als sein rechter Nachbar\nfunc isGreater(pa *[10]int, i int) bool {\n\treturn pa[i] > pa[i+1]\n}\n\n// tauscht in dem Array, auf das pa zeigt,\n// die Nachbarn an den Indizes i und i+1\nfunc swap(pa *[10]int, i int) {\n\tpa[i], pa[i+1] = pa[i+1], pa[i]\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:\", a)\n\n\tfor durchgang := 0; durchgang < len(a)-1; durchgang++ {\n\t\tfor i := 0; i < len(a)-1-durchgang; i++ {\n\t\t\tif isGreater(&a, i) {\n\t\t\t\tswap(&a, i)\n\t\t\t}\n\t\t}\n\t\tfmt.Printf(\"Nach Durchgang %d: %v\\n\", durchgang+1, a)\n\t}\n\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Start: [42 7 19 88 3 25 71 14 60 9]\nNach Durchgang 1: [7 19 42 3 25 71 14 60 9 88]\nNach Durchgang 2: [7 19 3 25 42 14 60 9 71 88]\nNach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]\nNach Durchgang 4: [3 7 19 14 25 9 42 60 71 88]\nNach Durchgang 5: [3 7 14 19 9 25 42 60 71 88]\nNach Durchgang 6: [3 7 14 9 19 25 42 60 71 88]\nNach Durchgang 7: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 8: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 9: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Bubble Sort mit Zeigern',
@@ -510,7 +545,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 5 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
     kurz: kurzStand,

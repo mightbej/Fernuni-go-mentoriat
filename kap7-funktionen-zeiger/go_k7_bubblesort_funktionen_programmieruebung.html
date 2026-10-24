@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="7.1">
   <title>Programmierübung: Bubble Sort mit Funktionen</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -75,7 +76,8 @@
     <button type="button" class="tab" data-stufe="2">2 Tausch</button>
     <button type="button" class="tab" data-stufe="3">3 Ein Durchgang</button>
     <button type="button" class="tab" data-stufe="4">4 Das ganze Programm</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -252,7 +254,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     <h3>Die Bilanz</h3>
     <ul>
       <li><strong>Lesbarkeit:</strong> Die innere Schleife sagt in Worten, was sie tut: Ist das linke Element größer, dann tausche.</li>
-      <li><strong>Aufwand:</strong> Das Programm vergleicht 45-mal und tauscht 23-mal, wie die Fassung aus Kapitel 6. Dazu kommen jetzt die Kopien: 45 · 10 + 23 · 20 = 910 kopierte Elemente.</li>
+      <li><strong>Aufwand:</strong> Das Programm vergleicht 45-mal und tauscht 23-mal, wie das Programm aus Kapitel 6. Dazu kommen jetzt die Kopien: 45 · 10 + 23 · 20 = 910 kopierte Elemente.</li>
     </ul>
     <p>Wie stark das mit der Länge des Arrays wächst, rechnet der Exkurs <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> aus. Die Programmierübung <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> schafft die Kopien ab.</p>
 
@@ -272,7 +274,20 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   <section class="stufe" id="stufe-5">
   <div class="card">
-    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <h3>Schritt 5: Selbst ausprobieren</h3>
+    <p>Hier steht das ganze Programm aus Schritt 4. Sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 4.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
+  <div class="card">
+    <h3>Schritt 6: Bezug zum Kurstext</h3>
     <div class="tabellenrahmen"><table class="text">
       <thead><tr><th>Abschnitt im Kurstext</th><th>Gedruckte Seiten</th><th>Was das Programm daraus verwendet</th></tr></thead>
       <tbody>
@@ -285,6 +300,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
         <tr><td>8.4.2 Bubblesort</td><td>225–226</td><td>Dort steht das Verfahren im Kurstext, mit einem Array von Verbunden.</td></tr>
       </tbody>
     </table></div>
+    <p>Schritt 5, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Das Programm und seine Ausgabe stammen aus Schritt 4, festgehalten mit Go 1.26.1.</p>
     <p>Die Zerlegung in <code>isGreater</code> und <code>swap</code> kommt im Kurstext nicht vor. Die Übung ist eine Ergänzung des Mentors.</p>
 
     <h3>Die Reihe</h3>
@@ -295,7 +311,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -303,6 +319,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -314,8 +331,8 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …html#vergleich
-  const ANKER = ['worum', 'vergleich', 'tausch', 'durchgang', 'programm', 'kurstext'];
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Vergleich als Funktion', 'Schritt 2: Der Tausch als Funktion', 'Schritt 3: Ein Durchgang', 'Schritt 4: Das ganze Programm', 'Schritt 5: Bezug zum Kurstext'];
+  const ANKER = ['worum', 'vergleich', 'tausch', 'durchgang', 'programm', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Der Vergleich als Funktion', 'Schritt 2: Der Tausch als Funktion', 'Schritt 3: Ein Durchgang', 'Schritt 4: Das ganze Programm', 'Schritt 5: Selbst ausprobieren', 'Schritt 6: Bezug zum Kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -413,10 +430,11 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   function standSaetze() {
+    if (stufe === 5) return probe.stand();
     if (stufe !== 3) return ['Dieser Schritt hat keine Demo. Die Demo steht in Schritt 3. In diesem Schritt lässt sich nichts ausprobieren' + (stufe === 4 ? ', der Knopf „Programm kopieren“ legt das Programm in die Zwischenablage.' : '.')];
     return standAblauf(DB).concat('Die Demo zeigt den ersten Durchgang. Ein Schritt der Demo ist ein Aufruf von isGreater, ein Aufruf von swap oder die Zuweisung der Rückgabe von swap.');
   }
-  const kurzStand = () => stufe === 3 ? (DB.stand ? 'Schritt ' + DB.stand + ' von ' + DB.lauf.length : 'nichts ausgeführt') : '';
+  const kurzStand = () => stufe === 5 ? probe.kurz() : stufe === 3 ? (DB.stand ? 'Schritt ' + DB.stand + ' von ' + DB.lauf.length : 'nichts ausgeführt') : '';
   // Das Programm der Demo steht in einer Liste und nicht in pre
   function programmZeilen() {
     if (stufe !== 3) return [];
@@ -425,6 +443,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
   }
 
   DB.zeichne();
+  // ---------- Schritt 5: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 4, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="5"]'),
+    fassungen: [
+    {
+      "name": "Bubble Sort mit Funktionen",
+      "code": "package main\n\nimport \"fmt\"\n\n// liefert true, wenn das Element am Index i\n// größer ist als sein rechter Nachbar\nfunc isGreater(a [10]int, i int) bool {\n\treturn a[i] > a[i+1]\n}\n\n// liefert eine Kopie des Arrays, in der die Nachbarn\n// an den Indizes i und i+1 getauscht sind\nfunc swap(a [10]int, i int) [10]int {\n\ta[i], a[i+1] = a[i+1], a[i]\n\treturn a\n}\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:\", a)\n\n\tfor durchgang := 0; durchgang < len(a)-1; durchgang++ {\n\t\tfor i := 0; i < len(a)-1-durchgang; i++ {\n\t\t\tif isGreater(a, i) {\n\t\t\t\ta = swap(a, i)\n\t\t\t}\n\t\t}\n\t\tfmt.Printf(\"Nach Durchgang %d: %v\\n\", durchgang+1, a)\n\t}\n\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Start: [42 7 19 88 3 25 71 14 60 9]\nNach Durchgang 1: [7 19 42 3 25 71 14 60 9 88]\nNach Durchgang 2: [7 19 3 25 42 14 60 9 71 88]\nNach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]\nNach Durchgang 4: [3 7 19 14 25 9 42 60 71 88]\nNach Durchgang 5: [3 7 14 19 9 25 42 60 71 88]\nNach Durchgang 6: [3 7 14 9 19 25 42 60 71 88]\nNach Durchgang 7: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 8: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 9: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 5) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Bubble Sort mit Funktionen',
@@ -435,7 +470,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</div>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > .frage, .hinweis, table.text',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 5 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programm der Demo:',
     stand: standSaetze,
     kurz: kurzStand,

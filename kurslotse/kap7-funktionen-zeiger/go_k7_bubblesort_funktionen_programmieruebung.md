@@ -2,19 +2,19 @@
 
 Die Seite ist eine Programmierübung. Sie zerlegt das Sortierprogramm mit Bubble Sort aus Kapitel 6 in Funktionen: Der Vergleich wird zur Funktion `isGreater`, der Tausch zur Funktion `swap`. Beide bekommen das Array als Kopie. Die Seite gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.1 und 7.2, Seiten 163–170.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
 - Das Array ist `a := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}`.
 - Bubble Sort vergleicht in einem Durchgang jedes Paar von Nachbarn und tauscht, wenn das linke Element größer ist. Nach einem Durchgang steht das größte Element am Ende. Für zehn Elemente braucht es neun Durchgänge.
-- Das Verfahren ändert sich in dieser Übung nicht. Das Programm vergleicht 45-mal und tauscht 23-mal, wie die Fassung aus Kapitel 6.
+- Das Verfahren ändert sich in dieser Übung nicht. Das Programm vergleicht 45-mal und tauscht 23-mal, wie das Programm aus Kapitel 6.
 - `isGreater(a [10]int, i int) bool` liefert `a[i] > a[i+1]`.
 - `swap(a [10]int, i int) [10]int` tauscht in ihrer Kopie die Nachbarn an den Indizes `i` und `i+1` und gibt die Kopie zurück. Der Aufrufer schreibt `a = swap(a, i)`.
 - In Go bekommt eine Funktion von jedem Argument eine Kopie, das heißt call-by-value. Zeiger kommen auf dieser Seite nicht vor, sie stehen in der Programmierübung „Bubble Sort mit Zeigern“.
 - Die Funktionen `isGreater` und `swap` stehen nicht im Kurstext. Bubblesort steht im Kurstext in Abschnitt 8.4.2, dort mit einem Array von Verbunden.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
-- Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
+- Die Demos stellen im Browser nach, was das Programm tut. Ausführen und ändern lässt sich das Programm nur in Schritt 5, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Zu den Aufgaben unter „Zum Weiterdenken“ gibt es auf der Seite keine Lösung. Fragt der Student danach, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -131,7 +131,27 @@ Reiter: programm
 - 7.2
 - 8.4.2
 
-## Schritt 5: Bezug zum Kurstext
+## Schritt 5: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Ein Programm: „Bubble Sort mit Funktionen“. Es ist das ganze Programm aus Schritt 4. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 4 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Das Programm ansehen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 7.1
+
+## Schritt 6: Bezug zum Kurstext
 
 Reiter: kurstext
 

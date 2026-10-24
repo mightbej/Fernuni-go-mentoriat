@@ -2,7 +2,7 @@
 
 Die Seite ist eine Programmierübung. Sie ersetzt die äußere Schleife von Bubble Sort durch einen rekursiven Aufruf: Die Funktion `bubbleSort` macht einen Durchgang und ruft sich dann für ein Element weniger selbst auf. Die Seite gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.5, Seiten 185–193.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt.
 
 Für alle Schritte gilt:
 
@@ -16,9 +16,9 @@ Für alle Schritte gilt:
 - Unter den Rahmen der Demo steht der „Hauptspeicher“ des Modells: je Variable ein Block mit ihren Zellen, ihrem Typ und ihrem Inhalt. Ein Block mit violettem Rand ist ein Zeiger, in ihm steht die Zahl 100, die Adresse des Arrays. Die Adressen sind erfunden. Ein `int` und ein Zeiger belegen im Modell je 8 Zellen. Endet eine Funktion, verschwinden die Blöcke ihrer Variablen.
 - Die Blöcke in Schritt 2: `a` in den Zellen 100 bis 179. Jeder Aufruf von `bubbleSort` belegt 16 Zellen, 8 für `pa` und 8 für `n`: der Aufruf mit n gleich 10 die Zellen 180 bis 195, der mit n gleich 9 die Zellen 196 bis 211, und so weiter bis zum Aufruf mit n gleich 1 in den Zellen 324 bis 339. In jedem `pa` steht 100. Warten zehn Aufrufe, sind 160 Zellen belegt.
 - Im Kurstext steht: Bei Endrekursion muss kein Variablenwert gespeichert werden. Der Go-Compiler nutzt das zurzeit nicht aus, jeder Aufruf belegt Speicher. Die Demo zeigt deshalb für jeden Aufruf einen Rahmen.
-- Eine rekursive Fassung von Bubblesort kommt im Kurstext nicht vor. Bubblesort steht dort in Abschnitt 8.4.2, mit zwei Schleifen und einem Array von Verbunden.
+- Ein rekursives Bubblesort kommt im Kurstext nicht vor. Bubblesort steht dort in Abschnitt 8.4.2, mit zwei Schleifen und einem Array von Verbunden.
 - Die Seite verwendet keine Slices. Der Kurs arbeitet mit Arrays.
-- Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
+- Die Demos stellen im Browser nach, was das Programm tut. Ausführen und ändern lässt sich das Programm nur in Schritt 5, „Selbst ausprobieren“, wenn der Editorlotse die Lektion ausliefert.
 - Zu den Aufgaben unter „Zum Weiterdenken“ gibt es auf der Seite keine Lösung. Fragt der Student danach, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
@@ -98,10 +98,10 @@ Reiter: vergleich
 ### Aufbau der Darstellung
 
 - Oben steht ein blauer Kasten mit einer Frage und einer aufklappbaren „Auflösung“.
-- Eine Tabelle stellt das Programm mit zwei Schleifen und die rekursive Fassung in fünf Zeilen gegenüber: Was die Durchgänge zählt, wie weit ein Durchgang läuft, wann Schluss ist, wie viele Vergleiche und Tausche es sind, was gespeichert bleibt.
+- Eine Tabelle stellt das Programm mit zwei Schleifen und das rekursive Programm in fünf Zeilen gegenüber: Was die Durchgänge zählt, wie weit ein Durchgang läuft, wann Schluss ist, wie viele Vergleiche und Tausche es sind, was gespeichert bleibt.
 - Die Variable `durchgang` zählt von 0 bis 8, der Parameter `n` fällt von 10 bis 1. Es gilt n = 10 − durchgang.
 - Unter „Einordnung nach Abschnitt 7.5 des Kurstexts“ stehen vier Punkte: direkte Rekursion, lineare Rekursion, Endrekursion, Terminierung.
-- Ein gelber Kasten sagt: Die rekursive Fassung ist hier nicht besser als die Schleife. Sie zeigt, wie eine Schleife und ein rekursiver Aufruf einander entsprechen.
+- Ein gelber Kasten sagt: Das rekursive Programm ist hier nicht besser als die Schleife. Es zeigt, wie eine Schleife und ein rekursiver Aufruf einander entsprechen.
 - Eine Demo gibt es hier nicht.
 
 ### Handgriffe
@@ -139,14 +139,34 @@ Reiter: programm
 - 7.5.5
 - 7.5.2
 
-## Schritt 5: Bezug zum Kurstext
+## Schritt 5: Selbst ausprobieren
+
+Reiter: ausprobieren
+
+### Aufbau der Darstellung
+
+- Im Editorlotsen steht ein Editor mit dem Knopf „Ausführen“. Auf GitHub Pages ist der Reiter grau. Dort sieht der Student das Programm und seine Ausgabe, festgehalten mit Go 1.26.1, und einen Satz, wie er die Lektion im Editorlotsen öffnet.
+- Ein Programm: „Bubble Sort rekursiv“. Es ist das ganze Programm aus Schritt 4. Die Ausgabe ist die gleiche wie dort.
+- Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 4 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+
+### Handgriffe
+
+- Das Programm ansehen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen, wenn der Editorlotse die Lektion ausliefert.
+
+### Abschnitte des Kurstexts
+
+- 7.5
+
+## Schritt 6: Bezug zum Kurstext
 
 Reiter: kurstext
 
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Tabelle mit sieben Zeilen: Abschnitt 7.3, 7.4, 7.5, 7.5.2, 7.5.3, 7.5.5 und 8.4.2, jeweils mit den gedruckten Seiten und einem Satz, was das Programm daraus verwendet.
-- Darunter steht: Eine rekursive Fassung von Bubblesort kommt im Kurstext nicht vor.
+- Darunter steht: Ein rekursives Bubblesort kommt im Kurstext nicht vor.
 - Unter „Die Reihe“ stehen Links auf die drei Programmierübungen davor und auf das Quiz.
 
 ### Handgriffe

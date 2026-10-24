@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="6.2">
   <title>Programmierübung: Sortieren mit Selection Sort</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -78,7 +79,8 @@
     <button type="button" class="tab" data-stufe="4">4 Zwei Schleifen</button>
     <button type="button" class="tab" data-stufe="5">5 Das ganze Programm</button>
     <button type="button" class="tab" data-stufe="6">6 Vergleich mit Bubble Sort</button>
-    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="7">7 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="8">8 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -99,7 +101,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
     </ul>
     <p>Funktionen, Slices und Rekursion braucht das Programm nicht.</p>
 
-    <h3>Die sieben Schritte</h3>
+    <h3>Die acht Schritte</h3>
     <ul>
       <li><strong>Schritt 1, die Idee:</strong> Links der sortierte Teil, rechts der Rest.</li>
       <li><strong>Schritt 2, das Minimum suchen:</strong> Eine Schleife findet den Index des kleinsten Werts.</li>
@@ -107,9 +109,10 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
       <li><strong>Schritt 4, zwei Schleifen:</strong> Die Runde wiederholt sich für jede Stelle des Arrays.</li>
       <li><strong>Schritt 5, das ganze Programm:</strong> Zum Kopieren und Ausführen.</li>
       <li><strong>Schritt 6, Vergleich mit Bubble Sort:</strong> Was die zwei Verfahren unterscheidet.</li>
-      <li><strong>Schritt 7, Bezug zum Kurstext:</strong> Welcher Abschnitt wo vorkommt.</li>
+      <li><strong>Schritt 7, selbst ausprobieren:</strong> Das Programm im Editorlotsen ändern und ausführen.</li>
+      <li><strong>Schritt 8, Bezug zum Kurstext:</strong> Welcher Abschnitt wo vorkommt.</li>
     </ul>
-    <div class="hinweis">Alle Programme dieser Seite sind mit Go 1.26 ausgeführt. Die Ausgaben stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <div class="hinweis">Alle Programme dieser Seite sind mit Go 1.26 ausgeführt. Die Ausgaben stammen aus diesen Läufen. Ausführen lässt sich ein Programm nur in Schritt 7, wenn der Editorlotse die Seite ausliefert.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -368,7 +371,20 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 
   <section class="stufe" id="stufe-7">
   <div class="card">
-    <h2>Schritt 7: Bezug zum Kurstext</h2>
+    <h2>Schritt 7: Selbst ausprobieren</h2>
+    <p>Hier steht das ganze Programm aus Schritt 5. Sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 5.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
+    <button type="button" class="haupt" data-gehe="8">Weiter zu Schritt 8</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-8">
+  <div class="card">
+    <h2>Schritt 8: Bezug zum Kurstext</h2>
     <p>Das Programm verwendet nur Stoff aus Kapitel 5 und 6. Die Tabelle nennt, was aus welchem Abschnitt stammt.</p>
     <div class="tabellenrahmen">
     <table class="text">
@@ -382,6 +398,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
       </tbody>
     </table>
     </div>
+    <p>Schritt 7, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Das Programm und seine Ausgabe stammen aus Schritt 5, festgehalten mit Go 1.26.1.</p>
 
     <h3>Selection Sort im Kurstext</h3>
     <p>Selection Sort kommt im Kurstext nicht vor. Das einzige Sortierverfahren dort ist Bubblesort in Abschnitt 8.4.2. Die Übung ist eine Ergänzung des Mentors: Sie zeigt an einem zweiten Verfahren, dass man die gleiche Aufgabe mit den gleichen Mitteln auf verschiedene Weise lösen kann. In Abschnitt 8.4.2 steht nur, dass der Vorkurs zwei einfache Sortierverfahren vorgestellt hat, und dort steht die Zahl der Vergleiche von Bubblesort.</p>
@@ -401,7 +418,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
+    <button type="button" data-gehe="7">Zurück zu Schritt 7</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -409,6 +426,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -420,7 +438,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …programmieruebung.html#minimum
-  const ANKER = ['worum', 'idee', 'minimum', 'runde', 'schleifen', 'programm', 'vergleich', 'kurstext'];
+  const ANKER = ['worum', 'idee', 'minimum', 'runde', 'schleifen', 'programm', 'vergleich', 'ausprobieren', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -528,7 +546,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Das Minimum suchen', 'Schritt 3: Eine Runde', 'Schritt 4: Zwei Schleifen', 'Schritt 5: Das ganze Programm', 'Schritt 6: Vergleich mit Bubble Sort', 'Schritt 7: Bezug zum Kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Die Idee', 'Schritt 2: Das Minimum suchen', 'Schritt 3: Eine Runde', 'Schritt 4: Zwei Schleifen', 'Schritt 5: Das ganze Programm', 'Schritt 6: Vergleich mit Bubble Sort', 'Schritt 7: Selbst ausprobieren', 'Schritt 8: Bezug zum Kurstext'];
   const mitIndex = a => a.map((w, i) => 'Index ' + i + ': ' + w).join(', ');
 
   function standDemo(D, ganz) {
@@ -547,13 +565,14 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
       griffe].filter(Boolean);
   }
   function standSaetze() {
+    if (stufe === 7) return probe.stand();
     if (stufe === 2) return standDemo(SUCHE, false);
     if (stufe === 4) return standDemo(GANZ, true);
     if (stufe === 5) return ['Gezeigt wird das ganze Programm mit ' + PROGRAMM.length + ' Zeilen und seine Ausgabe.',
       'Handgriffe: „Programm kopieren“ wählen. Das Programm läuft nicht auf der Seite. Der Student führt es auf seinem Rechner mit go run aus.'];
     return ['Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. In diesem Schritt lässt sich nichts ausprobieren.'];
   }
-  const kurzStand = () => stufe === 2 ? 'Schritt ' + SUCHE.stand + ' von ' + SUCHE.lauf.length : stufe === 4 ? 'Schritt ' + GANZ.stand + ' von ' + GANZ.lauf.length : '';
+  const kurzStand = () => stufe === 7 ? probe.kurz() : stufe === 2 ? 'Schritt ' + SUCHE.stand + ' von ' + SUCHE.lauf.length : stufe === 4 ? 'Schritt ' + GANZ.stand + ' von ' + GANZ.lauf.length : '';
   // In Schritt 2, 4 und 5 stehen Programme in Listen und nicht in pre
   function programmZeilen() {
     const pre = Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(p => p.textContent.split(NL)).map(t => t.trimEnd()).filter(Boolean);
@@ -566,6 +585,23 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
 
   SUCHE.zeichne();
   GANZ.zeichne();
+  // ---------- Schritt 7: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 5, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="7"]'),
+    fassungen: [
+    {
+      "name": "Selection Sort",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Start:\", a)\n\n\tfor pos := 0; pos < len(a)-1; pos++ {\n\t\tminIndex := pos\n\t\tfor i := pos + 1; i < len(a); i++ {\n\t\t\tif a[i] < a[minIndex] {\n\t\t\t\tminIndex = i\n\t\t\t}\n\t\t}\n\t\tif minIndex != pos {\n\t\t\ta[pos], a[minIndex] = a[minIndex], a[pos]\n\t\t}\n\t\tfmt.Printf(\"Nach Runde %d: %v\\n\", pos+1, a)\n\t}\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Start: [42 7 19 88 3 25 71 14 60 9]\nNach Runde 1: [3 7 19 88 42 25 71 14 60 9]\nNach Runde 2: [3 7 19 88 42 25 71 14 60 9]\nNach Runde 3: [3 7 9 88 42 25 71 14 60 19]\nNach Runde 4: [3 7 9 14 42 25 71 88 60 19]\nNach Runde 5: [3 7 9 14 19 25 71 88 60 42]\nNach Runde 6: [3 7 9 14 19 25 71 88 60 42]\nNach Runde 7: [3 7 9 14 19 25 42 88 60 71]\nNach Runde 8: [3 7 9 14 19 25 42 60 88 71]\nNach Runde 9: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 7) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Sortieren mit Selection Sort',
@@ -576,7 +612,7 @@ Sortiert: [3 7 9 14 19 25 42 60 71 88]</pre>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .card > .frage, .hinweis, table.text',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 7 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programme und Ausgaben des sichtbaren Schritts:',
     stand: standSaetze,
     kurz: kurzStand,

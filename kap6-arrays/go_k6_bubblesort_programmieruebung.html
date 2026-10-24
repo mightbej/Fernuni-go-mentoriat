@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="6.2">
   <title>Programmierübung: Sortieren mit Bubble Sort</title>
   <link rel="stylesheet" href="../stil.css">
   <style>
@@ -75,7 +76,8 @@
     <button type="button" class="tab" data-stufe="3">3 Drei Durchgänge</button>
     <button type="button" class="tab" data-stufe="4">4 Zwei Schleifen</button>
     <button type="button" class="tab" data-stufe="5">5 Das ganze Programm</button>
-    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="6">6 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="7">7 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
@@ -98,16 +100,17 @@ Sortiert:   [3 7 9 14 19 25 42 60 71 88]</pre>
     </ul>
     <p>Funktionen braucht das Programm noch nicht. Sie kommen in Kapitel 7 dazu.</p>
 
-    <h3>Die sechs Schritte</h3>
+    <h3>Die sieben Schritte</h3>
     <ul>
       <li><strong>Schritt 1, zehn Variablen:</strong> Warum es ohne Array nicht geht.</li>
       <li><strong>Schritt 2, ein Durchgang:</strong> Einmal von links nach rechts durch das Array, Vergleich für Vergleich.</li>
       <li><strong>Schritt 3, drei Durchgänge:</strong> Was sich von Durchgang zu Durchgang ändert.</li>
       <li><strong>Schritt 4, zwei Schleifen:</strong> Aus den ausgeschriebenen Durchgängen wird eine äußere Schleife.</li>
       <li><strong>Schritt 5, das ganze Programm:</strong> Zum Kopieren und Ausführen.</li>
-      <li><strong>Schritt 6, Bezug zum Kurstext:</strong> Welcher Abschnitt wo vorkommt.</li>
+      <li><strong>Schritt 6, selbst ausprobieren:</strong> Das Programm im Editorlotsen ändern und ausführen.</li>
+      <li><strong>Schritt 7, Bezug zum Kurstext:</strong> Welcher Abschnitt wo vorkommt.</li>
     </ul>
-    <div class="hinweis">Alle Programme dieser Seite sind mit Go 1.26 ausgeführt. Die Ausgaben stammen aus diesen Läufen. Auf der Seite selbst läuft kein Go.</div>
+    <div class="hinweis">Alle Programme dieser Seite sind mit Go 1.26 ausgeführt. Die Ausgaben stammen aus diesen Läufen. Ausführen lässt sich ein Programm nur in Schritt 6, wenn der Editorlotse die Seite ausliefert.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -330,7 +333,20 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
 
   <section class="stufe" id="stufe-6">
   <div class="card">
-    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <h2>Schritt 6: Selbst ausprobieren</h2>
+    <p>Hier stehen die zwei Programme aus Schritt 5. Wähle eins, sag vorher, was es ausgibt, und führe es aus. Danach kannst du es im Editor ändern, zum Beispiel für die Aufgaben unter „Zum Weiterdenken“ in Schritt 5.</p>
+    <div id="werkstatt"></div>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-7">
+  <div class="card">
+    <h2>Schritt 7: Bezug zum Kurstext</h2>
     <p>Das Programm verwendet nur Stoff aus Kapitel 5 und 6. Die Tabelle nennt, was aus welchem Abschnitt stammt.</p>
     <div class="tabellenrahmen">
     <table class="text">
@@ -341,10 +357,11 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
         <tr><td>5.5.3.2 for-Anweisung mit for-Klausel</td><td>142–146</td><td>Das Programm verwendet zwei verschachtelte Schleifen.</td></tr>
         <tr><td>6 Arrays</td><td>151–154</td><td>Das Programm legt das Array mit dem Literal <code>[10]int{…}</code> an.</td></tr>
         <tr><td>6.1 Index-Position in einem Array</td><td>154–155</td><td>Das Programm verwendet die Index-Ausdrücke <code>a[i]</code> und <code>a[i+1]</code> und die Funktion <code>len</code>.</td></tr>
-        <tr><td>6.2 Durchlaufen eines Arrays</td><td>156–159</td><td>Die Fassung mit Zufallswerten füllt das Array mit <code>for i := range a</code>.</td></tr>
+        <tr><td>6.2 Durchlaufen eines Arrays</td><td>156–159</td><td>Das Programm mit Zufallswerten füllt das Array mit <code>for i := range a</code>.</td></tr>
       </tbody>
     </table>
     </div>
+    <p>Schritt 6, „Selbst ausprobieren“: Das Ausführen im Editorlotsen gibt die Lektion dazu. Die Programme und ihre Ausgaben stammen aus Schritt 5, festgehalten mit Go 1.26.1.</p>
 
     <h3>Bubble Sort im Kurstext</h3>
     <p>Im Kurstext wird Bubblesort erst in Abschnitt 8.4.2 behandelt, Seiten 225–226. Dort sortiert das Verfahren ein Array von Verbunden, und es steht in einer Funktion. Die Übung hier nimmt das Verfahren vorweg, mit einem Array aus ganzen Zahlen und ohne Funktion. Dort steht auch die Zahl der Vergleiche, auf die Schritt 4 eingeht. Schritt 1 folgt der Begründung des Arrays in Kapitel 6 auf Seite 151, dort mit den sechs Variablen <code>z1</code> bis <code>z6</code> der Lottoziehung.</p>
@@ -363,7 +380,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
     </ul>
   </div>
   <div class="zeile schritte">
-    <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
+    <button type="button" data-gehe="6">Zurück zu Schritt 6</button>
     <button type="button" disabled>Weiter</button>
   </div>
   </section>
@@ -371,6 +388,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
 </div>
 
 <script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
 <script>
 (function () {
   'use strict';
@@ -383,7 +401,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
 
   // ---------- Reiter ----------
   // Jeder Schritt hat eine eigene Adresse, zum Beispiel …programmieruebung.html#schleifen
-  const ANKER = ['worum', 'variablen', 'durchgang', 'ausgeschrieben', 'schleifen', 'programm', 'kurstext'];
+  const ANKER = ['worum', 'variablen', 'durchgang', 'ausgeschrieben', 'schleifen', 'programm', 'ausprobieren', 'kurstext'];
   let stufe = 0;
   let angemeldet = false;   // der Kurslotse kennt die Seite erst nach Kurslotse.einrichten
   const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
@@ -465,7 +483,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
     '    fmt.Printf("Nach Durchgang %d: %v\\n", durchgang+1, a)', '}'],
     bubbleLauf(9), 5, 6, true);
 
-  // ---------- Schritt 5: das ganze Programm in zwei Fassungen ----------
+  // ---------- Schritt 5: das ganze Programm, mit festen Werten oder Zufallswerten ----------
   const SORTIEREN = [
     '\tfor durchgang := 0; durchgang < len(a)-1; durchgang++ {',
     '\t\tfor i := 0; i < len(a)-1-durchgang; i++ {',
@@ -507,7 +525,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zehn Variablen', 'Schritt 2: Ein Durchgang', 'Schritt 3: Drei Durchgänge', 'Schritt 4: Zwei Schleifen', 'Schritt 5: Das ganze Programm', 'Schritt 6: Bezug zum Kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Zehn Variablen', 'Schritt 2: Ein Durchgang', 'Schritt 3: Drei Durchgänge', 'Schritt 4: Zwei Schleifen', 'Schritt 5: Das ganze Programm', 'Schritt 6: Selbst ausprobieren', 'Schritt 7: Bezug zum Kurstext'];
   const mitIndex = a => a.map((w, i) => 'Index ' + i + ': ' + w).join(', ');
 
   function standDemo(D, ganz) {
@@ -525,13 +543,14 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
       griffe].filter(Boolean);
   }
   function standSaetze() {
+    if (stufe === 6) return probe.stand();
     if (stufe === 2) return standDemo(EIN, false);
     if (stufe === 4) return standDemo(GANZ, true);
-    if (stufe === 5) return ['Gezeigt wird die Fassung mit ' + (teil === 'fest' ? 'festen Werten' : 'Zufallswerten') + '. Das Programm hat ' + FASSUNG[teil].zeilen.length + ' Zeilen.',
+    if (stufe === 5) return ['Gezeigt wird das Programm mit ' + (teil === 'fest' ? 'festen Werten' : 'Zufallswerten') + '. Das Programm hat ' + FASSUNG[teil].zeilen.length + ' Zeilen.',
       'Handgriffe: zwischen „feste Werte“ und „Zufallswerte“ wählen, „Programm kopieren“ wählen. Das Programm läuft nicht auf der Seite. Der Student führt es auf seinem Rechner mit go run aus.'];
     return ['Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. In diesem Schritt lässt sich nichts ausprobieren.'];
   }
-  const kurzStand = () => stufe === 2 ? 'Vergleich ' + EIN.stand + ' von 9' : stufe === 4 ? 'Vergleich ' + GANZ.stand + ' von 45' : stufe === 5 ? (teil === 'fest' ? 'feste Werte' : 'Zufallswerte') : '';
+  const kurzStand = () => stufe === 6 ? probe.kurz() : stufe === 2 ? 'Vergleich ' + EIN.stand + ' von 9' : stufe === 4 ? 'Vergleich ' + GANZ.stand + ' von 45' : stufe === 5 ? (teil === 'fest' ? 'feste Werte' : 'Zufallswerte') : '';
   // In Schritt 2, 4 und 5 stehen Programme in Listen und nicht in pre
   function programmZeilen() {
     const pre = Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(p => p.textContent.split(NL)).map(t => t.trimEnd()).filter(Boolean);
@@ -545,6 +564,30 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
   EIN.zeichne();
   GANZ.zeichne();
   zeigeTeil('fest');
+  // ---------- Schritt 6: selbst ausprobieren ----------
+  // Das ganze Programm aus Schritt 5, eingerückt mit einem Tabulator wie im Editor. Was Go 1.26.1 ausgibt.
+  const probe = Ausprobieren.einrichten({
+    ziel: document.getElementById('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="6"]'),
+    fassungen: [
+    {
+      "name": "Feste Werte",
+      "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := [10]int{42, 7, 19, 88, 3, 25, 71, 14, 60, 9}\n\tfmt.Println(\"Unsortiert:\", a)\n\n\tfor durchgang := 0; durchgang < len(a)-1; durchgang++ {\n\t\tfor i := 0; i < len(a)-1-durchgang; i++ {\n\t\t\tif a[i] > a[i+1] {\n\t\t\t\ta[i], a[i+1] = a[i+1], a[i]\n\t\t\t}\n\t\t}\n\t\tfmt.Printf(\"Nach Durchgang %d: %v\\n\", durchgang+1, a)\n\t}\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Unsortiert: [42 7 19 88 3 25 71 14 60 9]\nNach Durchgang 1: [7 19 42 3 25 71 14 60 9 88]\nNach Durchgang 2: [7 19 3 25 42 14 60 9 71 88]\nNach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]\nNach Durchgang 4: [3 7 19 14 25 9 42 60 71 88]\nNach Durchgang 5: [3 7 14 19 9 25 42 60 71 88]\nNach Durchgang 6: [3 7 14 9 19 25 42 60 71 88]\nNach Durchgang 7: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 8: [3 7 9 14 19 25 42 60 71 88]\nNach Durchgang 9: [3 7 9 14 19 25 42 60 71 88]\nSortiert: [3 7 9 14 19 25 42 60 71 88]\n"
+      }
+    },
+    {
+      "name": "Zufallswerte",
+      "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math/rand\"\n)\n\nfunc main() {\n\tvar a [10]int\n\tfor i := range a {\n\t\ta[i] = rand.Intn(100) + 1\n\t}\n\tfmt.Println(\"Unsortiert:\", a)\n\n\tfor durchgang := 0; durchgang < len(a)-1; durchgang++ {\n\t\tfor i := 0; i < len(a)-1-durchgang; i++ {\n\t\t\tif a[i] > a[i+1] {\n\t\t\t\ta[i], a[i+1] = a[i+1], a[i]\n\t\t\t}\n\t\t}\n\t\tfmt.Printf(\"Nach Durchgang %d: %v\\n\", durchgang+1, a)\n\t}\n\tfmt.Println(\"Sortiert:\", a)\n}\n",
+      "ergebnis": {
+        "ausgabe": "Unsortiert: [34 10 95 98 96 88 94 21 45 25]\nNach Durchgang 1: [10 34 95 96 88 94 21 45 25 98]\nNach Durchgang 2: [10 34 95 88 94 21 45 25 96 98]\nNach Durchgang 3: [10 34 88 94 21 45 25 95 96 98]\nNach Durchgang 4: [10 34 88 21 45 25 94 95 96 98]\nNach Durchgang 5: [10 34 21 45 25 88 94 95 96 98]\nNach Durchgang 6: [10 21 34 25 45 88 94 95 96 98]\nNach Durchgang 7: [10 21 25 34 45 88 94 95 96 98]\nNach Durchgang 8: [10 21 25 34 45 88 94 95 96 98]\nNach Durchgang 9: [10 21 25 34 45 88 94 95 96 98]\nSortiert: [10 21 25 34 45 88 94 95 96 98]\n"
+      }
+    }
+  ],
+    beiAenderung: () => { if (stufe === 6) melde(false); }
+  });
+
   zeigeStufe(stufeAusAdresse(), false);
   Kurslotse.einrichten({
     titel: 'Programmierübung: Sortieren mit Bubble Sort',
@@ -555,7 +598,7 @@ Nach Durchgang 3: [7 3 19 25 14 42 9 60 71 88]</pre>
     schritt: () => SCHRITTE[stufe],
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .card > ol:not(.programm), .card > .frage, .hinweis, table.text, #p-text p, #p-text ul',
-    zeilen: programmZeilen,
+    zeilen: () => stufe === 6 ? probe.zeilen() : programmZeilen(),
     zeilenTitel: 'Programme und Ausgaben des sichtbaren Schritts:',
     stand: standSaetze,
     kurz: kurzStand,
