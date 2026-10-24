@@ -384,7 +384,13 @@ maxWert = <span class="number">600</span></div>
                     <button class="check-button" onclick="checkAnswer(4, ['a', 'b', 'c'], 'multiple')">Überprüfen</button>
                     <div class="feedback">
                         <h4>Erklärung:</h4>
-                        <p>A, B und C sind alles gültige Gründe für die Verwendung von Konstanten, wie im Studienbrief beschrieben. D ist nicht korrekt – Konstanten bieten keine signifikanten Performance-Vorteile zur Laufzeit, aber sie vermeiden wiederholte Berechnungen zur Compile-Zeit.</p>
+                        <p>A, B und C nennt der Kurstext in Abschnitt 5.2:</p>
+                        <ul>
+                            <li><strong>A, Verständlichkeit:</strong> Ein Name wie <code>math.Pi</code> sagt mehr als ein langer Zahlenwert.</li>
+                            <li><strong>B, zentrale Wartung:</strong> Ein Wert wie <code>maxAnzahl = 500</code> wird an einer einzigen Stelle geändert.</li>
+                            <li><strong>C, wiederholte Berechnungen:</strong> Ein Wert wie <code>math.Log10E</code> muss nicht bei jeder Verwendung mit <code>1 / Ln10</code> neu berechnet werden.</li>
+                        </ul>
+                        <p>D gehört nicht zu den Gründen, die der Kurstext nennt.</p>
                     </div>
                 </div>
 
@@ -595,27 +601,13 @@ fmt.Println(b + <span class="number">88</span>)</div>
         let totalQuestions = 10;
 
         // Event Listener für Option-Auswahl
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const input = this.querySelector('input');
-                if (input.type === 'radio') {
-                    // Bei Radio-Buttons alle anderen deselektieren
-                    const name = input.name;
-                    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                        radio.closest('.option').classList.remove('selected');
-                    });
-                }
-                
-                if (input.type === 'checkbox') {
-                    // Bei Checkboxen Toggle
-                    this.classList.toggle('selected');
-                } else {
-                    this.classList.add('selected');
-                }
-                input.checked = !input.checked;
-                if (input.type === 'checkbox') {
-                    input.checked = this.classList.contains('selected');
-                }
+        // Die Zeile ist ein <label>: Das Häkchen setzt der Browser selbst,
+        // das Skript färbt nur die gewählten Zeilen.
+        document.querySelectorAll('.option input').forEach(input => {
+            input.addEventListener('change', function() {
+                document.querySelectorAll(`input[name="${input.name}"]`).forEach(feld => {
+                    feld.closest('.option').classList.toggle('selected', feld.checked);
+                });
             });
         });
 
@@ -699,7 +691,7 @@ fmt.Println(b + <span class="number">88</span>)</div>
             } else if (percentage >= 60) {
                 message.textContent = '👍 Gut gemacht! Mit etwas mehr Übung wirst du noch besser!';
             } else {
-                message.textContent = '📚 Lies den Studienbrief nochmal durch und versuche es erneut!';
+                message.textContent = '📚 Lies den Kurstext nochmal durch und versuche es erneut!';
             }
             
             results.classList.add('show');

@@ -299,7 +299,7 @@
             <div class="question-card">
                 <div class="question-header">
                     <div class="question-number">2</div>
-                    <div class="question-text">Welche der folgenden Syntaxvarianten ist in Go KORREKT?</div>
+                    <div class="question-text">Welche Schreibweise der if-Anweisung ist in Go die übliche?</div>
                 </div>
                 <div class="options">
                     <div class="option" onclick="selectOption(2, 'a')">
@@ -754,8 +754,8 @@
                     incorrect: '<strong>❌ Leider falsch.</strong> Die richtige Antwort ist: "Sie ermöglicht die bedingte Ausführung von Code". if-Anweisungen steuern den Programmfluss basierend auf Bedingungen.'
                 },
                 2: {
-                    correct: '<strong>✅ Richtig!</strong> In Go ist die Syntax <code>if x > 10 { ... }</code> korrekt: Keine Klammern um die Bedingung, { in derselben Zeile.',
-                    incorrect: '<strong>❌ Leider falsch.</strong> Die richtige Syntax ist <code>if x > 10 { ... }</code>. Klammern um die Bedingung sind nicht idiomatisch, und { muss in derselben Zeile stehen.'
+                    correct: '<strong>✅ Richtig!</strong> So schreibt man die if-Anweisung in Go: Bedingung ohne runde Klammern, { in derselben Zeile.<br><code>if (x > 10) { ... }</code> übersetzt Go auch. Die Klammern sind aber überflüssig, und das Werkzeug gofmt entfernt sie.<br>Steht { in der nächsten Zeile, übersetzt Go das Programm nicht. <code>endif</code> gibt es in Go nicht.',
+                    incorrect: '<strong>❌ Leider falsch.</strong> Die übliche Schreibweise ist <code>if x > 10 { ... }</code>.<br><code>if (x > 10) { ... }</code> übersetzt Go auch. Die Klammern sind aber überflüssig, und das Werkzeug gofmt entfernt sie.<br>Steht { in der nächsten Zeile, übersetzt Go das Programm nicht. <code>endif</code> gibt es in Go nicht.'
                 },
                 3: {
                     correct: '<strong>✅ Richtig!</strong> Bei if-else wird genau ein Zweig ausgeführt: entweder der if-Zweig (bei true) oder der else-Zweig (bei false).',

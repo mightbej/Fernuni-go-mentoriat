@@ -597,7 +597,7 @@ x %= <span class="number">5</span></div>
                     <button class="check-button" onclick="checkAnswer(11, 'c', 'single')">Überprüfen</button>
                     <div class="feedback">
                         <h4>Erklärung:</h4>
-                        <p>In Go sind Kettenzuweisungen wie <code>x = y = z = 5</code> nicht erlaubt. Das ist eine bewusste Design-Entscheidung für bessere Lesbarkeit. Jede Variable muss separat zugewiesen werden: <code>x = 5; y = 5; z = 5</code> oder mit Tupel-Zuweisung: <code>x, y, z = 5, 5, 5</code>.</p>
+                        <p>In Go sind Kettenzuweisungen wie <code>x = y = z = 5</code> nicht erlaubt. Der Grund: In Go ist eine Zuweisung eine Anweisung und kein Ausdruck. <code>z = 5</code> hat also keinen Wert, den man <code>y</code> zuweisen könnte (Kurstext, Abschnitt 5.3). Jede Variable muss separat zugewiesen werden: <code>x = 5; y = 5; z = 5</code> oder mit Tupel-Zuweisung: <code>x, y, z = 5, 5, 5</code>.</p>
                     </div>
                 </div>
 
@@ -630,7 +630,7 @@ MaxWert = <span class="number">200</span></div>
                     <button class="check-button" onclick="checkAnswer(12, 'b', 'single')">Überprüfen</button>
                     <div class="feedback">
                         <h4>Erklärung:</h4>
-                        <p>Konstanten (<code>const</code>) können nach der Deklaration nicht mehr geändert werden. Der Versuch, einer Konstante einen neuen Wert zuzuweisen, führt zu einem Compile-Fehler: "cannot assign to MaxWert (declared const)". Verwende <code>var</code> statt <code>const</code>, wenn der Wert änderbar sein soll.</p>
+                        <p>Konstanten (<code>const</code>) können nach der Deklaration nicht mehr geändert werden. Der Versuch, einer Konstante einen neuen Wert zuzuweisen, führt zu einem Compile-Fehler. Go 1.26 meldet: "cannot assign to MaxWert (neither addressable nor a map index expression)". Die Meldung bedeutet: <code>MaxWert</code> hat keinen eigenen Platz im Speicher wie eine Variable, also kann man ihr nichts zuweisen. Verwende <code>var</code> statt <code>const</code>, wenn der Wert änderbar sein soll.</p>
                     </div>
                 </div>
 
@@ -672,7 +672,8 @@ MaxWert = <span class="number">200</span></div>
                     <button class="check-button" onclick="checkAnswer(13, ['a', 'c', 'e'], 'multiple')">Überprüfen</button>
                     <div class="feedback">
                         <h4>Erklärung:</h4>
-                        <p><strong>Erlaubt:</strong> <code>x = 20</code> (int zu int), <code>y = "Welt"</code> (string zu string), <code>z = false</code> (bool zu bool). <strong>Nicht erlaubt:</strong> <code>x = "20"</code> (string zu int), <code>z = 1</code> (int zu bool), <code>x = 3.14</code> (float zu int). Go verlangt exakte Typ-Übereinstimmung - automatische Konvertierungen gibt es nicht!</p>
+                        <p><strong>Erlaubt:</strong> <code>x = 20</code> (int zu int), <code>y = "Welt"</code> (string zu string), <code>z = false</code> (bool zu bool). <strong>Nicht erlaubt:</strong> <code>x = "20"</code> (string zu int), <code>z = 1</code> (int zu bool), <code>x = 3.14</code> (Kommazahl zu int).</p>
+                        <p>Den Wert einer Variable wandelt Go nie von selbst in einen anderen Typ um. Ein Literal passt Go aber an, wenn sein Wert in den Typ passt: Nach <code>var f float64</code> übersetzt <code>f = 3</code>, weil die 3 auch ein <code>float64</code> sein kann (Kurstext, Expertenwissen 5.6). Der Wert 3.14 passt nicht in ein <code>int</code>. Go meldet: "cannot use 3.14 (untyped float constant) as int value in assignment (truncated)".</p>
                     </div>
                 </div>
             </div>
@@ -691,27 +692,13 @@ MaxWert = <span class="number">200</span></div>
         let totalQuestions = 13;
 
         // Event Listener für Option-Auswahl
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const input = this.querySelector('input');
-                if (input.type === 'radio') {
-                    // Bei Radio-Buttons alle anderen deselektieren
-                    const name = input.name;
-                    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                        radio.closest('.option').classList.remove('selected');
-                    });
-                }
-                
-                if (input.type === 'checkbox') {
-                    // Bei Checkboxen Toggle
-                    this.classList.toggle('selected');
-                } else {
-                    this.classList.add('selected');
-                }
-                input.checked = !input.checked;
-                if (input.type === 'checkbox') {
-                    input.checked = this.classList.contains('selected');
-                }
+        // Die Zeile ist ein <label>: Das Häkchen setzt der Browser selbst,
+        // das Skript färbt nur die gewählten Zeilen.
+        document.querySelectorAll('.option input').forEach(input => {
+            input.addEventListener('change', function() {
+                document.querySelectorAll(`input[name="${input.name}"]`).forEach(feld => {
+                    feld.closest('.option').classList.toggle('selected', feld.checked);
+                });
             });
         });
 
@@ -795,7 +782,7 @@ MaxWert = <span class="number">200</span></div>
             } else if (percentage >= 60) {
                 message.textContent = '👍 Gut gemacht! Mit etwas mehr Übung wirst du noch besser!';
             } else {
-                message.textContent = '📚 Lies den Studienbrief nochmal durch und versuche es erneut!';
+                message.textContent = '📚 Lies den Kurstext nochmal durch und versuche es erneut!';
             }
             
             results.classList.add('show');

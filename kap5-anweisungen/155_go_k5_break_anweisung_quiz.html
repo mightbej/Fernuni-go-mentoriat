@@ -195,8 +195,8 @@
             <h3>1. Was bewirkt die break-Anweisung?</h3>
             <ul class="options">
                 <li data-answer="wrong">Sie beendet das gesamte Programm</li>
-                <li data-answer="correct">Sie verlässt die umschließende Schleife sofort und beendet die for-Anweisung</li>
                 <li data-answer="wrong">Sie überspringt nur den aktuellen Durchlauf</li>
+                <li data-answer="correct">Sie verlässt die umschließende Schleife sofort und beendet die for-Anweisung</li>
                 <li data-answer="wrong">Sie setzt die Laufvariable zurück</li>
             </ul>
             <div class="feedback"></div>
@@ -211,8 +211,8 @@
     }
 }</code></div>
             <ul class="options">
-                <li data-answer="wrong">i++ wird noch einmal ausgeführt, dann endet die Schleife</li>
                 <li data-answer="correct">i++ wird NICHT mehr ausgeführt - die Schleife endet sofort</li>
+                <li data-answer="wrong">i++ wird noch einmal ausgeführt, dann endet die Schleife</li>
                 <li data-answer="wrong">i++ wird zweimal ausgeführt</li>
                 <li data-answer="wrong">i++ wird in eine Warteschlange verschoben</li>
             </ul>
@@ -225,8 +225,8 @@
             <ul class="options">
                 <li data-answer="wrong">Überall im Programm</li>
                 <li data-answer="wrong">Nur in if-Anweisungen</li>
-                <li data-answer="correct">Nur innerhalb von for-Anweisungen und switch-Anweisungen</li>
                 <li data-answer="wrong">Nur in Funktionen</li>
+                <li data-answer="correct">Nur innerhalb von for-Anweisungen und switch-Anweisungen</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -272,9 +272,9 @@ problem <span class="operator">:=</span> <span class="keyword">false</span>
 }</code></div>
             <ul class="options">
                 <li data-answer="wrong">Variante A ist besser, weil kürzer</li>
-                <li data-answer="correct">Variante B ist besser, weil die Schleifenbedingung allein kontrolliert, wann die Schleife endet</li>
                 <li data-answer="wrong">Beide sind gleich gut</li>
                 <li data-answer="wrong">Variante A ist schneller in der Ausführung</li>
+                <li data-answer="correct">Variante B ist besser, weil die Schleifenbedingung allein kontrolliert, wann die Schleife endet</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -283,8 +283,8 @@ problem <span class="operator">:=</span> <span class="keyword">false</span>
         <div class="question" data-question="7">
             <h3>7. Wie prüft man, ob fak * i zu einem Überlauf führt?</h3>
             <ul class="options">
-                <li data-answer="wrong">if fak * i > math.MaxInt</li>
                 <li data-answer="correct">if math.MaxInt/fak >= i (dann ist kein Überlauf)</li>
+                <li data-answer="wrong">if fak * i > math.MaxInt</li>
                 <li data-answer="wrong">if i > math.MaxInt</li>
                 <li data-answer="wrong">Man kann Überläufe nicht vorab prüfen</li>
             </ul>
@@ -314,9 +314,9 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>9. Wann ist break legitim?</h3>
             <ul class="options">
                 <li data-answer="wrong">Niemals - break sollte komplett vermieden werden</li>
-                <li data-answer="correct">Wenn die Alternative mit Flag-Variablen zu unübersichtlichem Code führen würde und break die pragmatischste Lösung ist</li>
                 <li data-answer="wrong">Immer - break ist der beste Weg, Schleifen zu beenden</li>
                 <li data-answer="wrong">Nur in switch-Anweisungen</li>
+                <li data-answer="correct">Wenn die Alternative mit Flag-Variablen zu unübersichtlichem Code führen würde und break die pragmatischste Lösung ist</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -344,8 +344,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
 }</code></div>
             <ul class="options">
                 <li data-answer="wrong">1 2 3 4 5</li>
-                <li data-answer="correct">1 2</li>
                 <li data-answer="wrong">1 2 3</li>
+                <li data-answer="correct">1 2</li>
                 <li data-answer="wrong">3 4 5</li>
             </ul>
             <div class="feedback"></div>
@@ -359,8 +359,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
     <span class="comment">// Am Ende des Rumpfes</span>
 }</code></div>
             <ul class="options">
-                <li data-answer="wrong">Weil die Schleife unendlich läuft</li>
                 <li data-answer="correct">Weil nach dem letzten Statement im Rumpf ohnehin das Ende des Durchlaufs erreicht ist - break würde nichts ändern</li>
+                <li data-answer="wrong">Weil die Schleife unendlich läuft</li>
                 <li data-answer="wrong">Weil break in dieser Schleife verboten ist</li>
                 <li data-answer="wrong">Weil i++ automatisch break aufruft</li>
             </ul>
@@ -377,8 +377,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
     }
 }</code></div>
             <ul class="options">
-                <li data-answer="wrong">Ja, break beendet die if-Anweisung</li>
                 <li data-answer="correct">Nein, break ist nur in Schleifen und switch erlaubt, nicht in if-Anweisungen</li>
+                <li data-answer="wrong">Ja, break beendet die if-Anweisung</li>
                 <li data-answer="wrong">Ja, break beendet die Funktion</li>
                 <li data-answer="wrong">Nein, aber nur weil x falsch initialisiert ist</li>
             </ul>
@@ -390,9 +390,9 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>14. Was sollte man tun, wenn man break in einer Schleife verwendet?</h3>
             <ul class="options">
                 <li data-answer="wrong">Nichts Besonderes</li>
-                <li data-answer="correct">Einen expliziten Kommentar am Schleifenanfang hinzufügen, der darauf hinweist</li>
                 <li data-answer="wrong">break zweimal aufrufen zur Sicherheit</li>
                 <li data-answer="wrong">Eine Warnung in die Konsole ausgeben</li>
+                <li data-answer="correct">Einen expliziten Kommentar am Schleifenanfang hinzufügen, der darauf hinweist</li>
             </ul>
             <div class="feedback"></div>
         </div>

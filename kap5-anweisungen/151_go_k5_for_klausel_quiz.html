@@ -195,8 +195,8 @@
             <h3>1. Aus wie vielen Komponenten besteht die for-Klausel?</h3>
             <ul class="options">
                 <li data-answer="wrong">Aus zwei Komponenten</li>
-                <li data-answer="correct">Aus drei Komponenten, die durch Semikolons getrennt sind</li>
                 <li data-answer="wrong">Aus vier Komponenten</li>
+                <li data-answer="correct">Aus drei Komponenten, die durch Semikolons getrennt sind</li>
                 <li data-answer="wrong">Aus einer einzigen Komponente</li>
             </ul>
             <div class="feedback"></div>
@@ -206,8 +206,8 @@
         <div class="question" data-question="2">
             <h3>2. Wie heißen die drei Komponenten der for-Klausel?</h3>
             <ul class="options">
-                <li data-answer="wrong">Start-Anweisung, Loop-Bedingung, End-Anweisung</li>
                 <li data-answer="correct">Init-Anweisung, Schleifenbedingung, Post-Anweisung</li>
+                <li data-answer="wrong">Start-Anweisung, Loop-Bedingung, End-Anweisung</li>
                 <li data-answer="wrong">Begin-Statement, Condition, After-Statement</li>
                 <li data-answer="wrong">Deklaration, Prüfung, Inkrement</li>
             </ul>
@@ -218,10 +218,10 @@
         <div class="question" data-question="3">
             <h3>3. Wann wird die Init-Anweisung ausgeführt?</h3>
             <ul class="options">
-                <li data-answer="correct">Genau einmal zu Beginn der for-Anweisung, bevor die Schleifenbedingung zum ersten Mal ausgewertet wird</li>
                 <li data-answer="wrong">Vor jedem Schleifendurchlauf</li>
                 <li data-answer="wrong">Nach jedem Schleifendurchlauf</li>
                 <li data-answer="wrong">Am Ende der Schleife</li>
+                <li data-answer="correct">Genau einmal zu Beginn der for-Anweisung, bevor die Schleifenbedingung zum ersten Mal ausgewertet wird</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -231,8 +231,8 @@
             <h3>4. Wann wird die Post-Anweisung ausgeführt?</h3>
             <ul class="options">
                 <li data-answer="wrong">Vor jedem Schleifendurchlauf</li>
-                <li data-answer="wrong">Vor der Prüfung der Schleifenbedingung</li>
                 <li data-answer="correct">Immer erst nach der Ausführung des Schleifenrumpfes, nach Abschluss eines Schleifendurchlaufs</li>
+                <li data-answer="wrong">Vor der Prüfung der Schleifenbedingung</li>
                 <li data-answer="wrong">Gleichzeitig mit der Init-Anweisung</li>
             </ul>
             <div class="feedback"></div>
@@ -259,9 +259,9 @@
 fmt.<span class="function">Println</span>(i) <span class="comment">// Was passiert hier?</span></code></div>
             <ul class="options">
                 <li data-answer="wrong">Die Variable behält ihren letzten Wert und kann verwendet werden</li>
-                <li data-answer="correct">Die Variable existiert nicht mehr - es gibt einen Compiler-Fehler</li>
                 <li data-answer="wrong">Die Variable wird auf 0 zurückgesetzt</li>
                 <li data-answer="wrong">Die Variable wird automatisch als globale Variable verfügbar</li>
+                <li data-answer="correct">Die Variable existiert nicht mehr - es gibt einen Compiler-Fehler</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -270,8 +270,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
         <div class="question" data-question="7">
             <h3>7. Welche Bezeichner sind typisch für Laufvariablen?</h3>
             <ul class="options">
-                <li data-answer="wrong">counter, index, loopVar</li>
                 <li data-answer="correct">i, j, k (einzelne Buchstaben)</li>
+                <li data-answer="wrong">counter, index, loopVar</li>
                 <li data-answer="wrong">var1, var2, var3</li>
                 <li data-answer="wrong">x, y, z</li>
             </ul>
@@ -283,8 +283,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>8. Warum sind kurze Namen wie 'i' für Laufvariablen akzeptabel?</h3>
             <ul class="options">
                 <li data-answer="wrong">Weil Go nur kurze Variablennamen erlaubt</li>
-                <li data-answer="correct">Weil der Gültigkeitsbereich sehr beschränkt ist - je lokaler der Scope, desto kürzer darf der Name sein</li>
                 <li data-answer="wrong">Weil lange Namen zu langsamen Code führen</li>
+                <li data-answer="correct">Weil der Gültigkeitsbereich sehr beschränkt ist - je lokaler der Scope, desto kürzer darf der Name sein</li>
                 <li data-answer="wrong">Aus historischen Gründen - es ist nur eine Konvention ohne praktischen Nutzen</li>
             </ul>
             <div class="feedback"></div>
@@ -295,9 +295,9 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>9. Welche Aussage über die Init-Anweisung ist korrekt?</h3>
             <ul class="options">
                 <li data-answer="wrong">Es dürfen keine Variablen deklariert werden</li>
-                <li data-answer="correct">Es können mittels kurzer Variablendeklaration auch mehrere Variablen gleichzeitig deklariert werden (z.B. i, j := 0, 100)</li>
                 <li data-answer="wrong">Es muss immer genau eine Variable deklariert werden</li>
                 <li data-answer="wrong">Es dürfen nur bereits existierende Variablen zugewiesen werden</li>
+                <li data-answer="correct">Es können mittels kurzer Variablendeklaration auch mehrere Variablen gleichzeitig deklariert werden (z.B. i, j := 0, 100)</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -307,9 +307,9 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>10. Welche Anweisung ist in der Post-Anweisung NICHT erlaubt?</h3>
             <ul class="options">
                 <li data-answer="wrong">i++</li>
+                <li data-answer="correct">k := 5 (kurze Variablendeklaration)</li>
                 <li data-answer="wrong">i += 2</li>
                 <li data-answer="wrong">i, j = i+1, j-5 (Tupel-Zuweisung)</li>
-                <li data-answer="correct">k := 5 (kurze Variablendeklaration)</li>
             </ul>
             <div class="feedback"></div>
         </div>
@@ -323,8 +323,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
 }</code></div>
             <ul class="options">
                 <li data-answer="wrong">Das ist ein Syntaxfehler</li>
-                <li data-answer="correct">Man erhält eine for-Anweisung mit Bedingung (entspricht einer while-Schleife in anderen Sprachen)</li>
                 <li data-answer="wrong">Die Schleife läuft unendlich</li>
+                <li data-answer="correct">Man erhält eine for-Anweisung mit Bedingung (entspricht einer while-Schleife in anderen Sprachen)</li>
                 <li data-answer="wrong">Die Schleife wird nie ausgeführt</li>
             </ul>
             <div class="feedback"></div>
@@ -337,8 +337,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
     <span class="comment">// Code hier</span>
 }</code></div>
             <ul class="options">
-                <li data-answer="wrong">Eine Schleife, die nie ausgeführt wird</li>
                 <li data-answer="correct">Eine Endlosschleife (implizite Bedingung: true)</li>
+                <li data-answer="wrong">Eine Schleife, die nie ausgeführt wird</li>
                 <li data-answer="wrong">Eine Schleife mit Syntaxfehler</li>
                 <li data-answer="wrong">Eine Schleife, die genau einmal ausgeführt wird</li>
             </ul>
@@ -352,8 +352,8 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
     fmt.<span class="function">Println</span>(<span class="string">"i, j:"</span>, i, j)
 }</code></div>
             <ul class="options">
-                <li data-answer="wrong">i, j: 19 5</li>
                 <li data-answer="correct">i, j: 16 20</li>
+                <li data-answer="wrong">i, j: 19 5</li>
                 <li data-answer="wrong">i, j: 20 0</li>
                 <li data-answer="wrong">i, j: 15 25</li>
             </ul>
@@ -365,9 +365,9 @@ fmt.<span class="function">Println</span>(i) <span class="comment">// Was passie
             <h3>14. Was ist der Hauptvorteil der for-Klausel gegenüber der for-Anweisung mit Bedingung?</h3>
             <ul class="options">
                 <li data-answer="wrong">Sie ist schneller in der Ausführung</li>
-                <li data-answer="correct">Sie fasst alle wichtigen Elemente (Initialisierung, Bedingung, Veränderung) kompakt in einer Zeile zusammen und ist idiomatischer</li>
                 <li data-answer="wrong">Sie erlaubt komplexere Bedingungen</li>
                 <li data-answer="wrong">Sie benötigt weniger Speicher</li>
+                <li data-answer="correct">Sie fasst alle wichtigen Elemente (Initialisierung, Bedingung, Veränderung) kompakt in einer Zeile zusammen und ist idiomatischer</li>
             </ul>
             <div class="feedback"></div>
         </div>
