@@ -84,7 +84,7 @@
     <ul>
       <li><strong>Abschnitt 2.1, Seiten 5–8, Bedingung und Block:</strong> Dort steht die bedingte Anweisung ohne Go, als <code>IF b THEN {…}</code> und mit <code>ELSE</code>. Der Block in geschweiften Klammern ersetzt den Sprung mit <code>GOTO</code>. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_imperative_programmierung_interaktiv.html#bausteine">Imperative Programmierung</a>, Schritt 3.</li>
       <li><strong>Abschnitt 2.5, Seiten 13–14, das Programm als Bild:</strong> Im Flussdiagramm und im Struktogramm ist eine Bedingung eine Stelle, an der sich der Weg teilt. Dazu gibt es die Seite <a href="../kap2-grundlagen/go_k2_ggt_darstellung_interaktiv.html">Größter gemeinsamer Teiler</a>.</li>
-      <li><strong>Abschnitt 4.5, Seiten 93–98, der boolesche Ausdruck:</strong> Die Bedingung einer if-Anweisung ist ein Ausdruck vom Typ <code>bool</code>. Er hat den Wert <code>true</code> oder <code>false</code>. Beispiel: <code>alter &lt; 18</code>.</li>
+      <li><strong>Abschnitt 4.5, Seiten 93–98, der boolesche Ausdruck:</strong> Die Bedingung einer if-Anweisung ist ein Ausdruck vom Typ <code>bool</code>. Er hat den Wert <code>true</code> oder <code>false</code>. Beispiel: <code>alter &lt; 18</code>. Dazu gibt es die Seiten <a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche in Go</a> und <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</li>
     </ul>
 
     <h3>Die fünf Schritte</h3>
@@ -313,7 +313,7 @@
   <section class="stufe" id="stufe-5">
   <div class="card">
     <h2>Aus der Praxis</h2>
-    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.1 des Kurstexts. Go übersetzt in jedem Beispiel beide Fassungen.</div>
+    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.1 des Kurstexts. Go übersetzt in jedem Beispiel beide Programmstücke.</div>
 
     <h3>1. Die Ausnahme steht vor der Regel</h3>
     <p>In einer Kette mit <code>else if</code> steht die engste Bedingung oben. Sonst fängt eine weite Bedingung die Fälle ab, die für einen Zweig weiter unten gedacht waren.</p>
@@ -343,7 +343,7 @@ if schaltjahr {           // so steht es in Listing 5.2</pre>
 if istSchaltjahr {
     fmt.Println("Schaltjahr")
 }</pre>
-    <p>Beide Fassungen sind in Ordnung. Der Name lohnt sich, wenn der Leser die Bedingung erst entziffern muss oder wenn sie an mehreren Stellen gebraucht wird.</p>
+    <p>Beide Programmstücke sind in Ordnung. Der Name lohnt sich, wenn der Leser die Bedingung erst entziffern muss oder wenn sie an mehreren Stellen gebraucht wird.</p>
 
     <h3>4. Kein if im if, wenn eine Bedingung genügt</h3>
 <pre class="code-block">if alter >= 18 {
@@ -355,6 +355,7 @@ if istSchaltjahr {
 <pre class="code-block">if alter >= 18 &amp;&amp; hatAusweis {
     fmt.Println("Einlass")
 }</pre>
+    <p>Wann Go den rechten Teil von <code>&amp;&amp;</code> gar nicht erst auswertet, zeigt die Seite <a href="../kap4-primitive-datentypen/go_k4_kurzschluss_interaktiv.html">Wahrheitswerte und Kurzschluss-Auswertung</a>.</p>
     <p>Jede Stufe der Verschachtelung rückt den Code weiter nach rechts. Der Leser muss sich dann für jede Zeile merken, welche Bedingungen an dieser Stelle gelten.</p>
 
     <h3>Ausblick auf Kapitel 7</h3>
@@ -702,7 +703,7 @@ if istSchaltjahr {
         f.fehler ? "Go übersetzt diese Schreibweise nicht. Die Meldung des Compilers: " + f.ergebnis : "Go übersetzt diese Schreibweise."];
     }
     if (stufe === 2) {
-      return ["Zu sehen ist die Fassung " + (mitElse ? "mit else." : "ohne else."),
+      return ["Zu sehen ist das Programm " + (mitElse ? "mit else." : "ohne else."),
         "alter hat den Wert " + alter2 + ". Erlaubt sind 0 bis 120.",
         "Die Bedingung " + alter2 + " >= 18 ergibt " + (alter2 >= 18) + ".",
         "Ausgeführte Zweige: " + zweige2() + ".",

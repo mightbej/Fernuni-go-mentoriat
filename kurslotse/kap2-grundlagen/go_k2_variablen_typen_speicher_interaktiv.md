@@ -18,7 +18,7 @@ Reiter: worum
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Karte mit Text und einem Bild des Rechners. Eine Demo gibt es hier nicht.
-- Eine Liste ordnet drei Abschnitte des Kurstexts je einem Werk des Rechners zu: Abschnitt 2.1 dem Steuerwerk, Abschnitt 2.2 dem Speicherwerk, Abschnitt 2.3 dem Rechenwerk.
+- Eine Liste ordnet drei Abschnitte des Kurstexts je einem Werk des Rechners zu: Abschnitt 2.1 dem Steuerwerk, Abschnitt 2.2 dem Speicherwerk, Abschnitt 2.3 dem Rechenwerk. Beim Steuerwerk steht ein Link auf die Lektion „Imperative Programmierung“. Dort ändern Verzweigung und Schleife die Reihenfolge der Anweisungen.
 - Das Bild zeigt vier Kästen. Oben stehen Steuerwerk und Rechenwerk nebeneinander in einem gestrichelten Rahmen mit der Aufschrift „Prozessor“. Darunter stehen Speicherwerk und „Ein- und Ausgabe“ nebeneinander.
 - Der Kasten „Speicherwerk“ ist gelb hervorgehoben, weil die Seite zu Abschnitt 2.2 gehört. Die Kästen lassen sich nicht anklicken.
 - Die Aufteilung in vier Werke geht auf John von Neumann zurück. Der Kurstext nennt den Namen von Neumann nicht.
@@ -28,7 +28,7 @@ Reiter: worum
 ### Handgriffe
 
 - Mit den Reitern oben oder mit „Weiter zu Schritt 1“ zu einem anderen Schritt wechseln.
-- Dem Link zum Exkurs folgen.
+- Dem Link zum Exkurs oder dem Link zur Lektion „Imperative Programmierung“ folgen.
 
 ### Abschnitte des Kurstexts
 

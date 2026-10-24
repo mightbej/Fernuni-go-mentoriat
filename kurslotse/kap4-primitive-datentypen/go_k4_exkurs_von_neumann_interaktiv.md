@@ -89,15 +89,16 @@ Reiter: werke
 - Das gewählte Werk ist gelb unterlegt. Es ist immer nur ein Werk gewählt. Am Anfang ist keines gewählt.
 - Unter dem Bild steht in einem grünen Kasten die Auskunft zum gewählten Werk: was das Werk tut und wo es im Kurstext vorkommt.
 - Auskunft zum Steuerwerk: Es holt Anweisung für Anweisung aus dem Speicherwerk und beauftragt die anderen Werke. Welche Anweisung als nächste an der Reihe ist, regeln in Go `if`, `switch` und `for`. Das ist Kapitel 5 des Kurstexts.
-- Auskunft zum Rechenwerk: Es bekommt Bitmuster und liefert ein neues Bitmuster. Jede Operation des Rechenwerks hat in Go einen Operator, zum Beispiel `+`, `<` oder `&&`. Die Operatoren stehen in Abschnitt 4.1. Ein Link führt zur Seite „Rechenwerk“.
+- Auskunft zum Rechenwerk: Es bekommt Bitmuster und liefert ein neues Bitmuster. Jede Operation des Rechenwerks hat in Go einen Operator, zum Beispiel `+`, `<` oder `&&`. Die Operatoren stehen in Abschnitt 4.1. Ein Link führt zur Seite „Rechenwerk“, ein zweiter zur Seite „Gatter aus Schaltern“: Dort ist zu sehen, woraus ein Rechenwerk gebaut ist.
 - Auskunft zum Speicherwerk: Es hält die Werte der Variablen und das Programm als Bitmuster. Der Typ einer Variable legt fest, wie viele Bits sie braucht und welche Werte hineinpassen. Das steht für die Ganzzahlen in Abschnitt 4.3.4. Ein Link führt zur Seite „Speichermodell“.
 - Auskunft zu „Ein- und Ausgabe“: Über die Eingabe kommen Daten in den Rechner, über die Ausgabe verlassen sie ihn. Die Funktion `fmt.Printf` gibt Werte aus, das steht in Abschnitt 4.2.
 - Unter dem grünen Kasten steht ein Hinweis: Auch das Programm liegt als Bitmuster im Speicherwerk. Einem Bitmuster sieht man nicht an, ob es eine Zahl, ein Zeichen oder eine Anweisung bedeutet.
+- Darunter steht ein Link auf die Lektion „Operatoren und Ausdrücke in Go“. Dort steht, welche Operationen das Rechenwerk für welchen Typ ausführt und wie Go sie in einem Ausdruck schreibt.
 
 ### Handgriffe
 
 - Eines der vier Werke anklicken: Steuerwerk, Rechenwerk, Speicherwerk oder „Ein- und Ausgabe“.
-- Den Links zu den Seiten „Speichermodell“ und „Rechenwerk“ folgen. Der Link zur Seite „Rechenwerk“ erscheint erst, wenn das Rechenwerk gewählt ist.
+- Den Links zu den Seiten „Speichermodell“, „Rechenwerk“, „Gatter aus Schaltern“ und „Operatoren und Ausdrücke in Go“ folgen. Die Links zu „Rechenwerk“ und „Gatter aus Schaltern“ erscheinen erst, wenn das Rechenwerk gewählt ist.
 - Ein Programm läuft in diesem Schritt nicht. Den Ablauf zeigt Schritt 1 der Seite.
 
 ### Abschnitte des Kurstexts

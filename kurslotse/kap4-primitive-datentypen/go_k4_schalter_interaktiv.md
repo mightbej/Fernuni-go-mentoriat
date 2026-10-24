@@ -22,6 +22,7 @@ Reiter: worum
 ### Aufbau der Darstellung
 
 - Zu sehen sind zwei Karten mit Text. Schaltbilder gibt es hier nicht.
+- In der ersten Karte steht ein Link auf den Exkurs „Speichern und Rechnen im Rechner“. Dort ist zu sehen, wo das Rechenwerk im Rechner sitzt und wie es mit Speicherwerk und Steuerwerk zusammenarbeitet.
 - Über der Tabelle wird die Schreibweise von Go eingeführt: `a & b` für AND, `a | b` für OR, `a ^ b` für XOR, `^a` für NOT, `a ^ b ^ c` für zweimal XOR hintereinander. Dieselben Ausdrücke stehen in den nächsten Schritten unter den Schaltbildern, dahinter ihr Wert.
 - Die Tabelle „Gatter und ihre Verdrahtung“ nennt zu jedem Gatter die Schreibweise in Go, die Verdrahtung und ein Beispiel aus dem Alltag.
 - Unter der Tabelle steht, was davon im Kurstext vorkommt.
@@ -29,6 +30,7 @@ Reiter: worum
 ### Handgriffe
 
 - Mit den Reitern oben zu einem anderen Schritt wechseln.
+- Dem Link zum Exkurs „Speichern und Rechnen im Rechner“ folgen.
 
 ### Abschnitte des Kurstexts
 

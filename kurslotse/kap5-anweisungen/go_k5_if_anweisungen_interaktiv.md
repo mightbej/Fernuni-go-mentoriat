@@ -22,7 +22,7 @@ Reiter: worum
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Oben steht, was eine bedingte Anweisung ist: Ein Stück des Programms läuft nur, wenn eine Bedingung erfüllt ist. Das entscheidet sich erst, während das Programm läuft.
-- Eine Liste nennt drei frühere Stellen des Kurstexts: Abschnitt 2.1 mit `IF b THEN {…}` und dem Block, Abschnitt 2.5 mit Flussdiagramm und Struktogramm, Abschnitt 4.5 mit dem booleschen Ausdruck.
+- Eine Liste nennt drei frühere Stellen des Kurstexts: Abschnitt 2.1 mit `IF b THEN {…}` und dem Block, Abschnitt 2.5 mit Flussdiagramm und Struktogramm, Abschnitt 4.5 mit dem booleschen Ausdruck. Beim booleschen Ausdruck stehen Links auf die Lektionen „Logische Operatoren und Vergleiche in Go“ und „Wahrheitswerte und Kurzschluss-Auswertung“.
 - Eine zweite Liste sagt, was die fünf Schritte der Seite zeigen.
 - Ein gelber Kasten sagt, dass die Programme der Seite mit Go 1.26 ausgeführt sind.
 
@@ -77,9 +77,9 @@ Reiter: else
 ### Aufbau der Darstellung
 
 - Oben steht, was `else` bewirkt: Ergibt die Bedingung `true`, läuft der if-Zweig. Ergibt sie `false`, läuft der else-Zweig.
-- Die Demo zeigt ein Programm in zwei Fassungen. Zu sehen ist immer nur eine. Der Knopf der gewählten Fassung ist grün.
-- Fassung „mit else“, acht Zeilen: Zeile 1 deklariert `alter`. Zeile 3 ist `if alter >= 18 {`. Zeile 4 ist der if-Zweig und gibt „Du bist volljährig.“ aus. Zeile 5 ist `} else {`. Zeile 6 ist der else-Zweig und gibt „Du bist minderjährig.“ aus. Zeile 8 gibt immer „Fertig.“ aus.
-- Fassung „ohne else“, sechs Zeilen: Die Zeilen 1 bis 4 sind gleich. Zeile 5 ist `}`. Zeile 6 gibt immer „Fertig.“ aus.
+- Die Demo zeigt zwei Programme. Zu sehen ist immer nur eines. Der Knopf des gewählten Programms ist grün.
+- Programm „mit else“, acht Zeilen: Zeile 1 deklariert `alter`. Zeile 3 ist `if alter >= 18 {`. Zeile 4 ist der if-Zweig und gibt „Du bist volljährig.“ aus. Zeile 5 ist `} else {`. Zeile 6 ist der else-Zweig und gibt „Du bist minderjährig.“ aus. Zeile 8 gibt immer „Fertig.“ aus.
+- Programm „ohne else“, sechs Zeilen: Die Zeilen 1 bis 4 sind gleich. Zeile 5 ist `}`. Zeile 6 gibt immer „Fertig.“ aus.
 - Hinter der Bedingung in Zeile 3 steht ein Schild mit `true` oder `false`.
 - Unter dem Programm stehen drei Angaben: „Bedingung“ mit der Rechnung, „Ausgeführte Zweige“ und „Ausgabe“.
 - Mit `else` wird genau ein Zweig ausgeführt. Ohne `else` wird höchstens ein Zweig ausgeführt: Bei `false` läuft keiner.
@@ -87,7 +87,7 @@ Reiter: else
 
 ### Handgriffe
 
-- Die Fassung wählen: „mit else“ oder „ohne else“.
+- Das Programm wählen: „mit else“ oder „ohne else“.
 - `alter` mit den Knöpfen − und + um 1 verändern. Erlaubt sind 0 bis 120. Die Knöpfe „17“ und „18“ setzen den Wert direkt.
 - Die Programmzeilen lassen sich nicht ändern.
 
@@ -163,13 +163,13 @@ Reiter: praxis
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Karte mit Text und Codeblöcken. Eine Demo gibt es hier nicht.
-- Oben sagt ein gelber Kasten: Die Faustregeln stammen vom Mentor und stehen nicht in Abschnitt 5.5.1 des Kurstexts. Go übersetzt in jedem Beispiel beide Fassungen.
+- Oben sagt ein gelber Kasten: Die Faustregeln stammen vom Mentor und stehen nicht in Abschnitt 5.5.1 des Kurstexts. Go übersetzt in jedem Beispiel beide Programmstücke.
 - Stoff des Kurses ist, was im Kurstext steht: die if-Anweisung aus Abschnitt 5.5.1, wie sie Schritt 1 bis 4 zeigen. Die vier Faustregeln dieses Schritts sind Ratschläge zum Stil und gehören nicht zu diesem Stoff.
 - Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 - Faustregel 1, die Ausnahme steht vor der Regel: In einer Kette steht die engste Bedingung oben. Das Beispiel prüft `punkte >= 50` vor `punkte >= 90`. Für 95 Punkte gibt es „Note: Ausreichend“ aus, der zweite Zweig kann nie laufen.
 - Faustregel 2, eine boolesche Variable braucht keinen Vergleich: `if schaltjahr {` statt `if schaltjahr == true {`. Für das Gegenteil `if !schaltjahr {`.
-- Faustregel 3, eine lange Bedingung bekommt einen Namen: Die Schaltjahr-Regel als ein Ausdruck, `jahr%400 == 0 || (jahr%4 == 0 && jahr%100 != 0)`, einmal direkt hinter `if`, einmal in der Variable `istSchaltjahr`. Beide Fassungen sind in Ordnung.
-- Faustregel 4, kein if im if, wenn eine Bedingung genügt: zwei verschachtelte if-Anweisungen mit `alter >= 18` und `hatAusweis`, daneben eine if-Anweisung mit `&&`.
+- Faustregel 3, eine lange Bedingung bekommt einen Namen: Die Schaltjahr-Regel als ein Ausdruck, `jahr%400 == 0 || (jahr%4 == 0 && jahr%100 != 0)`, einmal direkt hinter `if`, einmal in der Variable `istSchaltjahr`. Beide Programmstücke sind in Ordnung.
+- Faustregel 4, kein if im if, wenn eine Bedingung genügt: zwei verschachtelte if-Anweisungen mit `alter >= 18` und `hatAusweis`, daneben eine if-Anweisung mit `&&`. Darunter steht ein Link auf die Lektion „Wahrheitswerte und Kurzschluss-Auswertung“: Dort steht, wann Go den rechten Teil von `&&` gar nicht erst auswertet.
 - Am Ende steht ein Ausblick auf Kapitel 7: Ein Sonderfall lässt sich in einer Funktion vorab mit `if` und `return` erledigen.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
 

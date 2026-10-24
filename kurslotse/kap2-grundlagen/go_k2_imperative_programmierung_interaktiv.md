@@ -110,6 +110,7 @@ Reiter: bausteine
 - Die Tabelle in der unteren Karte hat vier Zeilen und vier Spalten: der Baustein im Kurstext, die Schreibweise in Go, der Abschnitt im Kurstext dazu und die HTML-Seite dazu.
 - Nach der Tabelle schreibt Go `if` und `else` für den Block mit `IF`, `for` mit einer Bedingung für die `WHILE`-Schleife und `break` für den Sprung aus einer Schleife heraus. Für `REPEAT-UNTIL` hat Go keine eigene Schreibweise. Die Tabelle nennt dafür Sprachvergleich 5.14 in Abschnitt 5.5.3.1, Seiten 141–142, und die Variable `ersterLauf`. Mit ihr läuft eine `for`-Schleife mindestens einmal durch.
 - `BREAK` steht nur in der Tabelle. In den Programmen der Demo kommt es nicht vor. Auch `ELSE` und die `FOR`-Schleife zeigt die Demo nicht.
+- Unter der Tabelle steht eine Karte „Zum Weiterlesen“ mit drei Links: die Lektion „Größter gemeinsamer Teiler“ mit Sprung und Block an einem ganzen Programm, als Flussdiagramm und Struktogramm; der Exkurs „Speichern und Rechnen im Rechner“, in dem das Steuerwerk eine Anweisung nach der anderen holt; die Lektion „Variablen, Typen und Speicher“ als nächste Lektion zu Kapitel 2.
 
 ### Handgriffe
 
@@ -120,6 +121,7 @@ Reiter: bausteine
 - „einen Schritt zurück“: Beide Programme gehen einen Schritt zurück.
 - „von vorn“: Der Lauf beginnt neu, Baustein und Startwert bleiben.
 - Den vier Links der Tabelle folgen: „if-Anweisungen“, „for-Anweisung mit Bedingung“ zweimal und „break-Anweisung“. Der Link in der Zeile zu `REPEAT-UNTIL` führt zu Schritt 4 der Lektion zur for-Anweisung mit Bedingung. Das sind eigene HTML-Seiten zu Kapitel 5 und keine Reiter dieser Seite.
+- Den drei Links unter „Zum Weiterlesen“ folgen.
 - Die Programme lassen sich nicht ändern. Nur ein Programm allein laufen zu lassen geht nicht.
 
 ### Abschnitte des Kurstexts
