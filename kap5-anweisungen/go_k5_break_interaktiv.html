@@ -233,7 +233,7 @@ for i := 1; i &lt;= eingabe; i++ {
     </div>
     <pre class="code-block" id="o-programm"></pre>
     <div class="auskunft" id="o-text"></div>
-    <p>Beide Fassungen geben für jede Eingabe das Gleiche aus.</p>
+    <p>Beide Programme geben für jede Eingabe das Gleiche aus.</p>
     <p>Der gleiche Kunstgriff steht schon in Abschnitt 5.5.3.1: Dort erzwingt die Flag-Variable <code>ersterLauf</code> in der Schleifenbedingung einen ersten Schleifendurchlauf. Die Seite <a href="go_k5_for_bedingung_interaktiv.html#flag">for-Anweisung mit Bedingung</a> zeigt ihn in Schritt 4. Die Operatoren <code>&amp;&amp;</code> und <code>!</code> stehen auf der Seite <a href="../kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html">Logische Operatoren und Vergleiche</a>.</p>
   </div>
   <div class="zeile schritte">
@@ -255,7 +255,7 @@ for i := 1; i &lt;= eingabe; i++ {
     <h3>Wann break trotzdem in Ordnung ist</h3>
     <ul>
       <li><strong>Hinter dem Grund für den Abbruch folgen noch Anweisungen im Schleifenrumpf,</strong> die dann nicht mehr laufen sollen. Ohne <code>break</code> bräuchte man mehrere Flag-Variablen und if-Anweisungen, und der Code würde unübersichtlicher als mit <code>break</code>.</li>
-      <li><strong>In Listing 5.7 ist das anders:</strong> Hinter dem Überlauf ist der Schleifenrumpf ohnehin zu Ende. Deshalb ist dort die Fassung aus Schritt 3 die bessere.</li>
+      <li><strong>In Listing 5.7 ist das anders:</strong> Hinter dem Überlauf ist der Schleifenrumpf ohnehin zu Ende. Deshalb ist dort das Programm aus Schritt 3 das bessere.</li>
     </ul>
     <p>Wer eine Schleife aus gutem Grund mit <code>break</code> baut, schreibt das in einen Kommentar an den Anfang der Schleife.</p>
 
@@ -608,15 +608,15 @@ for i := 1; i &lt;= eingabe; i++ {
     }
     if (stufe === 3) {
       var o = OHNE[ohne];
-      return ["Gewählt ist die Fassung „" + o.name + "“. Wählbar sind nur die zwei Fassungen „mit break“ und „mit Flag in der Schleifenbedingung“.",
-        "Der Kopf der Schleife in dieser Fassung: " + o.zeilen[0],
-        "Der Vergleich gilt für die Eingabe 25 und den Schleifendurchlauf mit i = 21. Beide Fassungen geben das Gleiche aus: Achtung: 2432902008176640000 * 21 führt zu Überlauf: -4249290049419214848 ; Fakultät von 25 ist zu groß, um mit int berechnet werden zu können.",
+      return ["Gewählt ist das Programm „" + o.name + "“. Wählbar sind nur die zwei Programme „mit break“ und „mit Flag in der Schleifenbedingung“.",
+        "Der Kopf der Schleife in diesem Programm: " + o.zeilen[0],
+        "Der Vergleich gilt für die Eingabe 25 und den Schleifendurchlauf mit i = 21. Beide Programme geben das Gleiche aus: Achtung: 2432902008176640000 * 21 führt zu Überlauf: -4249290049419214848 ; Fakultät von 25 ist zu groß, um mit int berechnet werden zu können.",
         "Die Demo führt das Programm nicht Anweisung für Anweisung aus. Eine Eingabe lässt sich hier nicht wählen."];
     }
     var w = WO[wo];
-    return ["Gewählt ist die Fassung „" + w.name + "“. Gelb markiert ist Zeile " + w.marke + " mit break.",
-      w.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + w.meldung : "Go übersetzt diese Fassung. Die Ausgabe: " + w.ausgabe.replace(/\n/g, " ; "),
-      "Wählbar sind nur die vier Fassungen: " + WO.map(function (x) { return "„" + x.name + "“"; }).join(", ") + ". Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
+    return ["Gewählt ist das Programm „" + w.name + "“. Gelb markiert ist Zeile " + w.marke + " mit break.",
+      w.fehler ? "Go übersetzt dieses Programm nicht. Die Meldung des Compilers: " + w.meldung : "Go übersetzt dieses Programm. Die Ausgabe: " + w.ausgabe.replace(/\n/g, " ; "),
+      "Wählbar sind nur die vier Programme: " + WO.map(function (x) { return "„" + x.name + "“"; }).join(", ") + ". Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
   }
   function kurz() {
     if (stufe === 1) return "i = " + PRUEF[pruef].i;
@@ -631,7 +631,7 @@ for i := 1; i &lt;= eingabe; i++ {
       return alle.concat(["---"], p.textContent.split("\n").filter(function (z) { return z.trim(); }));
     }, []);
     var demo = stufe === 2 ? mitNummern(LISTING)
-      : stufe === 3 ? ["Fassung „" + OHNE[ohne].name + "“:"].concat(OHNE[ohne].zeilen)
+      : stufe === 3 ? ["Programm „" + OHNE[ohne].name + "“:"].concat(OHNE[ohne].zeilen)
       : stufe === 4 ? mitNummern(WO[wo].zeilen) : [];
     return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
   }

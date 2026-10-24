@@ -147,17 +147,17 @@ Reiter: ausprobieren
 ### Aufbau der Darstellung
 
 - Seit 2026-10-15. Ein kurzes Programm deklariert eine Variable und gibt sie aus, in Zeile 6 und 7 im Rumpf von `main`.
-- Sechs Fassungen zur Wahl: `größe` (zulässig), `2alter` (beginnt mit einer Ziffer), `mein-name` (Bindestrich), `func` (Schlüsselwort), `tempC und tempc` (deklariert ist `tempC`, ausgegeben `tempc`), `int als Name` (danach ist `int` kein Typ mehr).
-- Läuft die Lektion im Editorlotsen, steht die gewählte Fassung in einem Editor. Der Student ändert sie, zum Beispiel mit einem eigenen Namen, und wählt „Ausführen“. Der Editorlotse übersetzt das Programm und zeigt die Ausgabe oder die Meldung. Ein Link über dem Editor führt zurück zum Editor des Editorlotsen.
+- Sechs Programme zur Wahl: `größe` (zulässig), `2alter` (beginnt mit einer Ziffer), `mein-name` (Bindestrich), `func` (Schlüsselwort), `tempC und tempc` (deklariert ist `tempC`, ausgegeben `tempc`), `int als Name` (danach ist `int` kein Typ mehr).
+- Läuft die Lektion im Editorlotsen, steht das gewählte Programm in einem Editor. Der Student ändert es, zum Beispiel mit einem eigenen Namen, und wählt „Ausführen“. Der Editorlotse übersetzt das Programm und zeigt die Ausgabe oder die Meldung. Ein Link über dem Editor führt zurück zum Editor des Editorlotsen.
 - Auf GitHub Pages zeigt der Schritt das Programm und darunter, was Go 1.26.1 dazu meldet oder ausgibt, dazu wie der Student die Lektion im Editorlotsen öffnet.
 - Vorschläge: der eigene Vorname, `_`, `__` oder `x_1_`, ein Schlüsselwort wie `for` oder `range`.
-- Der Stand der Demo sagt, welche Fassung gewählt ist, ob der Student sie geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind die Fassung im Editor.
+- Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
 - Zu einer Meldung erklärt die Antwort, welche Regel aus Schritt 1 bis 4 der Name verletzt.
 
 ### Handgriffe
 
-- Eine Fassung wählen.
-- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Fassung zurücksetzen“ wählen.
+- Ein Programm wählen.
+- Im Editor schreiben, „Ausführen“, „Stopp“ oder „Programm zurücksetzen“ wählen.
 
 ### Abschnitte des Kurstexts
 
@@ -175,7 +175,7 @@ Reiter: kurstext
 - Schritt 2, Abschnitt 3.3.4, Seite 31: Das Beispiel `tempC` und `tempc`, der Export und die Konvention stammen aus dem Kurstext. Die zwei Meldungen gibt die Lektion dazu.
 - Schritt 3, Abschnitt 3.3.4, Seiten 31–32: Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext. Die Farben der Schlüsselwörter, die Hinweise auf ihre erste Stelle und die vier Zeilen der Auswahl gibt die Lektion dazu.
 - Schritt 4, Abschnitt 3.3.4, Seiten 31–32: Die drei Listen, die Warnung und der leere Bezeichner stammen aus dem Kurstext. Die vier Zeilenpaare gibt die Lektion dazu.
-- Schritt 5, Abschnitt 3.3.4, Seiten 30–32: Die Namen `größe`, `tempC` und `tempc` stammen aus dem Kurstext. Das Ausführen, die übrigen Fassungen und die Vorschläge gibt die Lektion dazu.
+- Schritt 5, Abschnitt 3.3.4, Seiten 30–32: Die Namen `größe`, `tempC` und `tempc` stammen aus dem Kurstext. Das Ausführen, die übrigen Programme und die Vorschläge gibt die Lektion dazu.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen fünf Abschnitte:
   - 2.2, Seiten 8–10, Variablen: Lektion „Variablen, Typen und Speicher“.
   - 2.7, Seiten 17–19, Token: Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 3.

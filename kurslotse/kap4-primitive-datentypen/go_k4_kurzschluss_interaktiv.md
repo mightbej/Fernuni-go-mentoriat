@@ -73,7 +73,7 @@ Reiter: division
 - Die Demo untersucht den Ausdruck `x != 0 && (100 / x) > 10` aus dem Kurstext. `x` hat den Typ `int`, die Division ist eine Division ganzer Zahlen.
 - Der Student wählt den Wert von `x` und die Reihenfolge der zwei Teile. Die gewählte Reihenfolge ist grün.
 - Reihenfolge wie im Kurstext: `x != 0 && (100 / x) > 10`. Die Prüfung auf 0 steht links und schützt die Division.
-- Vertauschte Reihenfolge: `(100 / x) > 10 && x != 0`. Die Division steht links und läuft immer zuerst. Diese Fassung steht nicht im Kurstext.
+- Vertauschte Reihenfolge: `(100 / x) > 10 && x != 0`. Die Division steht links und läuft immer zuerst. Diese Möglichkeit steht nicht im Kurstext.
 - In einem hellen Kasten steht der Ausdruck groß mit seinen zwei Teilen. Jeder Teil ist gefärbt: grün für wahr, rot für falsch, grau und durchgestrichen für „Go wertet ihn nicht aus“, schwarz für den Abbruch.
 - Darunter stehen zwei Zeilen „Schritt 1“ und „Schritt 2“ der Auswertung und ein farbiger Balken mit dem Ergebnis. Diese „Schritte“ sind die zwei Schritte der Auswertung, nicht die Schritte der Seite.
 - Unter dem Kasten steht ein dunkler Codeblock mit zwei Programmzeilen und der Ausgabe als Kommentar.
@@ -102,13 +102,13 @@ Reiter: funktion
 ### Aufbau der Darstellung
 
 - Oben steht der blaue Kasten mit zwei Fragen zu `true || f()` und `false || f()`.
-- Die Demo zeigt Listing 4.2 des Kurstexts in einer Fassung zum Umbauen. Links steht das Programm, rechts die Ausgabe in einem schwarzen Kasten und darunter ein gelber Kasten mit der Erklärung.
+- Die Demo zeigt Listing 4.2 des Kurstexts als Programm zum Umbauen. Links steht das Programm, rechts die Ausgabe in einem schwarzen Kasten und darunter ein gelber Kasten mit der Erklärung.
 - Das Programm hat zwei Funktionen. `f` gibt die Zeile `<<Funktion f wird aufgerufen>>` aus und liefert einen Wahrheitswert zurück. `main` gibt mit `fmt.Println("ergibt", … f())` das Wort „ergibt“ und den Wert des Ausdrucks aus.
 - Der Student stellt dreierlei ein, je mit zwei Knöpfen: den linken Operanden `true` oder `false`, den Operator `&&` oder `||`, den Rückgabewert von `f`. Der gewählte Knopf ist grün.
 - Wird `f` aufgerufen, hat die Ausgabe zwei Zeilen: erst `<<Funktion f wird aufgerufen>>`, dann `ergibt` mit dem Wert. Wird `f` nicht aufgerufen, hat die Ausgabe nur die Zeile mit `ergibt`.
 - `f` wird aufgerufen bei `true && f()` und bei `false || f()`. `f` wird nicht aufgerufen bei `false && f()` und bei `true || f()`.
 - Die Zeile von `f` erscheint vor der Zeile mit „ergibt“, weil Go erst den ganzen Ausdruck auswertet und dann `fmt.Println` ausführt.
-- Im Kurstext hat das Listing zwei Ausgaben in einem Programm, `true && f()` und `true || f()`, und `f` liefert `false`. Die übrigen Fassungen hat die Seite gebaut.
+- Im Kurstext hat das Listing zwei Ausgaben in einem Programm, `true && f()` und `true || f()`, und `f` liefert `false`. Die übrigen Programme hat die Seite gebaut.
 - Eine Wirkung einer Funktion neben ihrem Rückgabewert heißt Seiteneffekt. Hier ist es die Ausgabe der Zeile.
 - Funktionen mit Rückgabewert werden im Kurstext in Abschnitt 3.4 kurz und in Kapitel 7 ganz erklärt.
 
@@ -133,8 +133,8 @@ Reiter: kurstext
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Zwei Wahrheitswerte, 4.5, Seite 93: bool; 4.5.1, Seiten 93–96: Kurzschluss-Auswertung; 4.5.2, Seiten 96–98: Sprachvergleich 4.17: Der Typ bool, die Operatoren &&, || und ! und der Sprachvergleich stammen aus dem Kurstext. Die Demo mit zwei umschaltbaren Werten gibt die Lektion dazu.
-  - 2 Die Division, die nicht stattfindet, 4.5.1, Seiten 94–95: Die Bedingung, die eine Division durch 0 verhindert, stammt aus dem Kurstext. Die Fassung mit vertauschten Teilen und die Meldung zum Abbruch gibt die Lektion dazu.
-  - 3 Die Funktion, die nicht aufgerufen wird, 4.5.1, Seiten 95–96: Listing 4.2: Listing 4.2 mit true && f() und true || f() stammt aus dem Kurstext. Die übrigen Fassungen sind für die Lektion gebaut.
+  - 2 Die Division, die nicht stattfindet, 4.5.1, Seiten 94–95: Die Bedingung, die eine Division durch 0 verhindert, stammt aus dem Kurstext. Die Möglichkeit mit vertauschten Teilen und die Meldung zum Abbruch gibt die Lektion dazu.
+  - 3 Die Funktion, die nicht aufgerufen wird, 4.5.1, Seiten 95–96: Listing 4.2: Listing 4.2 mit true && f() und true || f() stammt aus dem Kurstext. Die übrigen Programme sind für die Lektion gebaut.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.3, Seiten 10–11, Abkürzen: Dort steht das Beispiel a > b ∧ c/d ≥ 0 mit d = 0 zum ersten Mal, ohne Go. Schritt 2 dieser Lektion zeigt es in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.
   - Abschnitt 3.3.3, Seiten 29–30, bool: Der Typ bool mit den Werten true und false. Eine Lektion zu diesem Abschnitt gibt es nicht.

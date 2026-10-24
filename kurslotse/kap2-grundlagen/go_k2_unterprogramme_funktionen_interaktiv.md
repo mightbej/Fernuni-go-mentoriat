@@ -55,7 +55,7 @@ Reiter: aufruf
 - „nächste Anweisung ausführen“: Der Ablauf geht einen Schritt weiter.
 - „eine Anweisung zurück“: Der Ablauf geht einen Schritt zurück.
 - „von vorn“: Der Ablauf beginnt neu.
-- Die Werte 5 und 3 lassen sich nicht ändern. Die Fassungen mit Minus und Plus und mit XOR lassen sich auf der Seite nicht ausführen.
+- Die Werte 5 und 3 lassen sich nicht ändern. Die Möglichkeiten mit Minus und Plus und mit XOR lassen sich auf der Seite nicht ausführen.
 
 ### Abschnitte des Kurstexts
 

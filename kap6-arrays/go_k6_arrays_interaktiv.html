@@ -252,7 +252,7 @@ fmt.Println(c)    // [0 0 0 0 6]</pre>
     <div class="frage"><strong>Erst vorhersagen, dann ausprobieren</strong>
       <ol>
         <li>In einer for-range-Schleife über <code>a</code> steht im Rumpf <code>v = 99</code>. Was enthält <code>a</code> nach der Schleife?
-          <details><summary>Auflösung</summary>Die alten Werte. <code>v</code> ist eine Kopie des Elements. Wer das Element ändern will, schreibt <code>a[i] = 99</code>. Die fünfte Fassung der Demo zeigt es.</details></li>
+          <details><summary>Auflösung</summary>Die alten Werte. <code>v</code> ist eine Kopie des Elements. Wer das Element ändern will, schreibt <code>a[i] = 99</code>. Das fünfte Programm der Demo zeigt es.</details></li>
       </ol>
     </div>
     <p>Wer alle Elemente eines Arrays der Reihe nach braucht, nimmt eine Schleife. Mit der for-Klausel aus Kapitel 5 sieht sie fast immer gleich aus:</p>
@@ -411,7 +411,7 @@ fmt.Println(cap(zahlen))    // 6</pre>
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
       <tr><td>1 Array und Literal</td><td>6, Seiten 151–154</td><td>Die ersten fünf Deklarationen der Demo stammen aus dem Kurstext. Die Deklaration von <code>kurz</code> steht dort als <code>lotto</code> mit sechs Werten.</td><td>Die vier Deklarationen danach und die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>2 Index</td><td>6.1, Seiten 154–155</td><td>Das Array mit 11, 22, 33 und 44 und die zwei falschen Zugriffe stammen aus dem Kurstext. Dort greifen die Zugriffe auf <code>lotto</code> zu, mit den Indizes 10 und 8.</td><td>Im Kurstext endet die Meldung des Compilers mit <code>[0:4]</code>. Go 1.26 nennt für <code>lotto</code> die Länge 6: <code>[0:6]</code>.</td></tr>
-      <tr><td>3 Durchlaufen</td><td>6.2, Seiten 156–159: Hinweis 6.1</td><td>Die ersten vier Fassungen der Demo stammen aus dem Kurstext.</td><td>Die fünfte Fassung mit <code>v = 99</code> steht im Kurstext nur als Satz und nicht als Programm.</td></tr>
+      <tr><td>3 Durchlaufen</td><td>6.2, Seiten 156–159: Hinweis 6.1</td><td>Die ersten vier Programme der Demo stammen aus dem Kurstext.</td><td>Zum fünften Programm mit <code>v = 99</code> steht im Kurstext nur ein Satz.</td></tr>
       <tr><td>4 Zwei Dimensionen</td><td>6.3, Seiten 160–162</td><td>Beide Matrizen und beide Programme stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
       <tr><td>5 Slices</td><td>6.4, Seite 162</td><td>Das Programm stammt aus dem Kurstext.</td><td>Die Ausgabe 6 für die Kapazität stammt aus einem Lauf mit Go 1.26.</td></tr>
     </table>
@@ -758,15 +758,15 @@ fmt.Println(cap(zahlen))    // 6</pre>
     }
     if (stufe === 3) {
       const F = FASSUNGEN[fassung], L = F.lauf, z = stand3 ? L.z[stand3 - 1] : null;
-      return ['Gewählt ist die Fassung „' + F.knopf + '“. Das Array a enthält am Anfang 8, −5, 14 und 3.',
+      return ['Gewählt ist das Programm „' + F.knopf + '“. Das Array a enthält am Anfang 8, −5, 14 und 3.',
         z ? 'Ausgeführt sind ' + stand3 + ' von ' + L.z.length + ' Anweisungen. Der Lauf steht in Zeile ' + z.zeile + ': ' + L.zeilen[z.zeile - 1].trim() : 'Noch ist keine Anweisung ausgeführt.',
         z ? 'Das Array a: ' + mitIndex(z.a) + '.' + (z.dran >= 0 ? ' Gelb markiert ist das Element mit dem Index ' + z.dran + '.' : '') : '',
         z ? 'Die Variablen: ' + (z.vars.length ? z.vars.map(v => v[0] + ' = ' + v[1]).join(', ') : 'keine außer a') + '.' : '',
         z ? 'Bisherige Ausgabe: ' + (z.aus.length ? z.aus.join(' ; ') : 'noch keine') + '.' : '',
         z ? 'Die Seite sagt dazu: ' + z.sagt : '',
         stand3 >= L.z.length ? 'Das Programm ist zu Ende.' : '',
-        'Die fünf Fassungen: ' + FASSUNGEN.map(f => f.knopf).join(', ') + '.',
-        'Handgriffe: eine der fünf Fassungen wählen, „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Die Werte des Arrays und die Programme lassen sich nicht ändern.'].filter(Boolean);
+        'Die fünf Programme: ' + FASSUNGEN.map(f => f.knopf).join(', ') + '.',
+        'Handgriffe: eines der fünf Programme wählen, „nächste Anweisung“, „eine Anweisung zurück“, „von vorn“. Die Werte des Arrays und die Programme lassen sich nicht ändern.'].filter(Boolean);
     }
     const z = stand4 ? B_LAUF[stand4 - 1] : null;
     return ['Erste Demo, die Matrix a vom Typ [3][2]int mit den Zeilen [1 2], [3 4] und [5 6]: Gewählt ist a[' + s4.i + '][' + s4.j + '] mit dem Wert ' + MA[s4.i][s4.j] + '. a[' + s4.i + '] ist die Zeile ' + goArray(MA[s4.i]) + '.',
@@ -782,7 +782,7 @@ fmt.Println(cap(zahlen))    // 6</pre>
   function programmZeilen() {
     const pre = Array.from(el('stufe-' + stufe).querySelectorAll('pre')).flatMap(p => p.textContent.split(NL)).map(t => t.trimEnd()).filter(Boolean);
     const nummeriert = z => z.map((t, i) => (i + 1) + '  ' + t);
-    if (stufe === 3) return pre.concat(['', 'Das Programm der gewählten Fassung der Demo, mit Zeilennummern:'], nummeriert(FASSUNGEN[fassung].lauf.zeilen));
+    if (stufe === 3) return pre.concat(['', 'Das gewählte Programm der Demo, mit Zeilennummern:'], nummeriert(FASSUNGEN[fassung].lauf.zeilen));
     if (stufe === 4) return pre.concat(['', 'Das Programm der zweiten Demo, mit Zeilennummern:'], nummeriert(B_ZEILEN));
     return pre;
   }

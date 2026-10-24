@@ -122,16 +122,16 @@ Reiter: flag
 - Oben steht: Die bessere Lösung kommt ohne `break` aus. Die Flag-Variable `überlauf` wandert in die Schleifenbedingung.
 - Der Codeblock zeigt den neuen Kopf der Schleife: `for i := 1; i <= eingabe && !überlauf; i++ {`.
 - `&&` ist der Operator für „und“. `!überlauf` kehrt den Wahrheitswert von `überlauf` um und ist `true`, solange kein Überlauf festgestellt wurde.
-- Die Demo heißt „Vergleich: was nach dem Überlauf geschieht“. Sie gilt für die Eingabe 25 und den Schleifendurchlauf mit `i` gleich 21. Zwei Knöpfe wählen die Fassung, der gewählte Knopf ist grün.
-- Unter den Knöpfen steht die Schleife der gewählten Fassung in einem dunklen Kasten ohne Zeilennummern, darunter erklärt ein grüner Kasten, was nach dem Überlauf geschieht.
+- Die Demo heißt „Vergleich: was nach dem Überlauf geschieht“. Sie gilt für die Eingabe 25 und den Schleifendurchlauf mit `i` gleich 21. Zwei Knöpfe wählen das Programm, der gewählte Knopf ist grün.
+- Unter den Knöpfen steht die Schleife des gewählten Programms in einem dunklen Kasten ohne Zeilennummern, darunter erklärt ein grüner Kasten, was nach dem Überlauf geschieht.
 - „mit break“: Nach `überlauf = true` folgt `break`. Die Schleife ist sofort zu Ende, `i` bleibt 21.
 - „mit Flag in der Schleifenbedingung“: Nach `überlauf = true` ist der Schleifenrumpf zu Ende. Die Post-Anweisung erhöht `i` auf 22. Die Prüfung `22 <= 25 && !überlauf` ergibt `false`, weil `!überlauf` jetzt `false` ist. Die Schleife endet.
-- Beide Fassungen geben für jede Eingabe das Gleiche aus.
-- Im Kurstext steht von der Fassung ohne `break` nur der Kopf der Schleife. Den Schleifenrumpf hat die Seite aus Listing 5.7 übernommen.
+- Beide Programme geben für jede Eingabe das Gleiche aus.
+- Im Kurstext steht vom Programm ohne `break` nur der Kopf der Schleife. Den Schleifenrumpf hat die Seite aus Listing 5.7 übernommen.
 
 ### Handgriffe
 
-- Die Fassung wählen: „mit break“ oder „mit Flag in der Schleifenbedingung“.
+- Das Programm wählen: „mit break“ oder „mit Flag in der Schleifenbedingung“.
 - Kein Code dieses Schritts lässt sich ändern oder ausführen. Einen Lauf Anweisung für Anweisung gibt es hier nicht. Eine Eingabe lässt sich hier nicht wählen, der Vergleich gilt für die Eingabe 25.
 - Den Links zu den Seiten „for-Anweisung mit Bedingung“ und „Logische Operatoren und Vergleiche“ folgen. Beide sind eigene HTML-Seiten.
 
@@ -159,7 +159,7 @@ Reiter: wann
 
 ### Handgriffe
 
-- Eine der vier Fassungen wählen: nur mit den vier Knöpfen.
+- Eines der vier Programme wählen: nur mit den vier Knöpfen.
 - Die Programmzeilen lassen sich nicht ändern. Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht.
 - Dem Link zum Quiz folgen. Es ist eine eigene HTML-Seite.
 

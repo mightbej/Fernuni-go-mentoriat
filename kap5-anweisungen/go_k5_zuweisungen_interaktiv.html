@@ -381,7 +381,7 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
       <tr><td>1 Zuweisung mit =</td><td>3.3.5, Seiten 33–35: Hinweis 3.6<br>5.3, Seiten 126–128</td><td>Die Zuweisung und ihre Richtung stammen aus dem Kurstext.</td><td>Die sieben Zeilen der Demo und die Meldungen des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>2 Kombinierte Operatoren</td><td>5.3, Seiten 126–127</td><td>Die kombinierten Operatoren wie <code>+=</code> stammen aus dem Kurstext.</td><td>Die Werte der Demo und das Beispiel mit <code>wetter</code> sind eigene Beispiele.</td></tr>
       <tr><td>3 ++ und --</td><td>5.3.1, Seiten 127–128: Sprachvergleich 5.7</td><td>Die Anweisungen <code>++</code> und <code>--</code> und der Sprachvergleich stammen aus dem Kurstext.</td><td>Die Meldungen des Compilers und die Werte zum Beispiel in Java gibt die Lektion dazu.</td></tr>
-      <tr><td>4 Tupel-Zuweisung</td><td>5.3.2, Seiten 128–129</td><td>Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext.</td><td>Die Fassung ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>4 Tupel-Zuweisung</td><td>5.3.2, Seiten 128–129</td><td>Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext.</td><td>Das Programm ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>5 Einfache Anweisungen</td><td>5.4, Seite 129<br>5.5.3.2, Seiten 142–146</td><td>Der Begriff der einfachen Anweisung stammt aus dem Kurstext.</td><td>Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
     </table>
     </div>
@@ -566,7 +566,7 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
     { name: "ohne Hilfsvariable", zeilen: ["a, b := 3, 8", "a = b", "b = a"], schritte: [
       { zeile: 1, a: 3, b: 8, neu: ["a", "b"], text: "Die kurze Deklaration erzeugt a mit dem Wert 3 und b mit dem Wert 8." },
       { zeile: 2, a: 8, b: 8, neu: ["a"], text: "a wird mit dem Wert von b überschrieben. Der alte Wert 3 von a ist verloren, niemand hat ihn aufgehoben." },
-      { zeile: 3, a: 8, b: 8, neu: ["b"], text: "b bekommt den Wert von a. a hat aber schon den Wert 8. Am Ende haben beide Variablen den Wert 8. Diese Fassung vertauscht nicht. Go übersetzt sie trotzdem, der Fehler steckt in der Logik." }
+      { zeile: 3, a: 8, b: 8, neu: ["b"], text: "b bekommt den Wert von a. a hat aber schon den Wert 8. Am Ende haben beide Variablen den Wert 8. Dieses Programm vertauscht nicht. Go übersetzt es trotzdem, der Fehler steckt in der Logik." }
     ] }
   ];
   var tFassung = 0, tOrt = 0;
@@ -661,11 +661,11 @@ x, y, z = 22, 33, 44    // Tupel-Zuweisung an drei Variablen</pre>
     if (stufe === 3) return standDrei(KOPF3, INK, inkWahl);
     if (stufe === 4) {
       var f = TAUSCH[tFassung], s = f.schritte[tOrt], ende = f.schritte[f.schritte.length - 1];
-      return ["Gewählt ist die Fassung „" + f.name + "“. Wählbar sind nur die drei Fassungen „mit Tupel-Zuweisung“, „mit Hilfsvariable tmp“ und „ohne Hilfsvariable“.",
-        "Der Lauf steht bei Zeile " + s.zeile + ", gelb markiert. Das ist Schritt " + (tOrt + 1) + " von " + f.schritte.length + " dieser Fassung.",
+      return ["Gewählt ist das Programm „" + f.name + "“. Wählbar sind nur die drei Programme „mit Tupel-Zuweisung“, „mit Hilfsvariable tmp“ und „ohne Hilfsvariable“.",
+        "Der Lauf steht bei Zeile " + s.zeile + ", gelb markiert. Das ist Schritt " + (tOrt + 1) + " von " + f.schritte.length + " dieses Programms.",
         "Zu diesem Schritt sagt die HTML-Seite: " + s.text,
         "Die Kästen zeigen: a = " + s.a + ", b = " + s.b + (s.tmp !== undefined ? ", tmp = " + s.tmp : "") + (s.merk ? ". Im gestrichelten Kasten „gemerkt“ stehen die Werte " + s.merk.join(" und ") : "") + ".",
-        tOrt === f.schritte.length - 1 ? "Der Lauf ist zu Ende." : "Der Lauf ist noch nicht zu Ende. Am Ende dieser Fassung gilt: a = " + ende.a + ", b = " + ende.b + ".",
+        tOrt === f.schritte.length - 1 ? "Der Lauf ist zu Ende." : "Der Lauf ist noch nicht zu Ende. Am Ende dieses Programms gilt: a = " + ende.a + ", b = " + ende.b + ".",
         "Die Anfangswerte 3 und 8 stehen fest."];
     }
     var e = EINFACH[einfachWahl];

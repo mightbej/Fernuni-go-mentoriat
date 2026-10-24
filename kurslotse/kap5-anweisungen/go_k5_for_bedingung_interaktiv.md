@@ -52,20 +52,20 @@ Reiter: begriffe
 - Die Abbruchbedingung ist das Gegenteil der Schleifenbedingung. Zu `n > 0` gehört `n <= 0`.
 - Darunter steht, wann Go die Schleifenbedingung prüft: vor jedem Schleifendurchlauf. Ergibt sie schon vor dem ersten `false`, läuft der Schleifenrumpf kein einziges Mal.
 - Die Demo zeigt ein Programm mit sieben Zeilen. Zeile 1 deklariert `n` mit dem gewählten Startwert. Zeile 3 ist `for n > 0 {`. Zeile 4 gibt `n` aus. Zeile 5 ist `n--`. Zeile 6 ist `}`. Zeile 7 steht hinter der Schleife und gibt „Ende“ aus.
-- Das Programm gibt es in zwei Fassungen. In der Fassung „ohne n--“ steht in Zeile 5 nur der Kommentar `// hier fehlt n--`. Zu sehen ist immer nur eine Fassung, ihr Knopf ist grün.
+- Die Demo zeigt zwei Programme. Im Programm „ohne n--“ steht in Zeile 5 nur der Kommentar `// hier fehlt n--`. Zu sehen ist immer nur eines, sein Knopf ist grün.
 - Der Student geht den Lauf Anweisung für Anweisung durch. Der Lauf hält bei den Zeilen 1, 3, 4, 5 und 7. Zeile 3 kommt bei jeder Prüfung wieder dran.
 - Über dem Programm stehen vier Angaben: der Wert von `n`, „Prüfungen der Bedingung bisher“, „Schleifendurchläufe bisher“ und „Ausgabe bisher“. Darunter erklärt ein grüner Kasten die markierte Zeile.
 - Beispiel mit Startwert 3 und `n--`: Die Ausgabe ist 3, 2, 1, Ende. Der Schleifenrumpf läuft dreimal, die Schleifenbedingung wird viermal geprüft.
-- Mit Startwert 0 ergibt die erste Prüfung `false`. Der Schleifenrumpf läuft kein einziges Mal, die Ausgabe ist nur „Ende“. Das gilt in beiden Fassungen.
-- In der Fassung „ohne n--“ ist das Programm mit jedem Startwert von 1 bis 5 eine Endlosschleife: `n` ändert sich nie. Die Demo hält nach fünf Schleifendurchläufen bei der sechsten Prüfung an und sagt das. Ein echtes Programm liefe weiter.
+- Mit Startwert 0 ergibt die erste Prüfung `false`. Der Schleifenrumpf läuft kein einziges Mal, die Ausgabe ist nur „Ende“. Das gilt in beiden Programmen.
+- Das Programm „ohne n--“ ist mit jedem Startwert von 1 bis 5 eine Endlosschleife: `n` ändert sich nie. Die Demo hält nach fünf Schleifendurchläufen bei der sechsten Prüfung an und sagt das. Ein echtes Programm liefe weiter.
 - Unter der Demo steht der Teil „Woran man eine Endlosschleife erkennt“. Dort steht auch: Im Terminal beendet man ein solches Programm mit den Tasten Strg und C.
 
 ### Handgriffe
 
 - Den Startwert von `n` wählen: nur mit den Knöpfen 0, 1, 2, 3, 4 und 5. Ein Eingabefeld gibt es nicht, andere Werte gehen nicht.
-- Die Fassung wählen: „mit n--“ oder „ohne n--“.
+- Das Programm wählen: „mit n--“ oder „ohne n--“.
 - „Nächste Anweisung“ führt die nächste Anweisung aus. „Bis zum Ende“ führt den Rest aus. „Von vorn“ beginnt wieder bei Zeile 1. Einen Schritt zurück gibt es nicht.
-- Ein neuer Startwert oder eine andere Fassung beginnt den Lauf von vorn.
+- Ein neuer Startwert oder ein anderes Programm beginnt den Lauf von vorn.
 - Die Programmzeilen lassen sich nicht ändern. Die Bedingung `n > 0` steht fest.
 
 ### Abschnitte des Kurstexts
@@ -87,7 +87,7 @@ Reiter: eingabe
 - Der Lauf hält bei den Zeilen 9, 11, 12, 13, 14, 15 und 17. Leerzeilen, die Zeilen 1 bis 8 und Zeilen, die nur `}` enthalten, sind kein eigener Halt. Zeile 17 ist der Halt am Ende.
 - Über dem Programm stehen drei Angaben: der Wert von `eingabe`, „Schleifendurchläufe bisher“ und „Eingaben bisher“. Darunter erklärt ein grüner Kasten die markierte Zeile.
 - Unter dem Programm steht ein schwarzer Kasten „Ausgabe bisher“. Er zeigt, was auf dem Bildschirm steht. Eine Zeile mit `>` davor ist eine Eingabe des Benutzers.
-- Zeile 9 gibt es in zwei Fassungen. „wie im Kurstext“: `= 1.0`. „geändert“: `= 0.0`. Die Fassung mit 0.0 steht nicht im Kurstext, die Seite hat sie zum Vergleich gebaut.
+- Für Zeile 9 gibt es zwei Möglichkeiten. „wie im Kurstext“: `= 1.0`. „geändert“: `= 0.0`. Das Programm mit 0.0 steht nicht im Kurstext, die Seite hat sie zum Vergleich gebaut.
 - Mit 0.0 ergibt die erste Prüfung `0 != 0` den Wert `false`. Das Programm überspringt den Schleifenrumpf und endet, ohne zu fragen. Der Lauf hat dann nur drei Halte: Zeile 9, 11 und 17.
 - Die 1.0 dient nur dazu, dass die erste Prüfung `true` ergibt. Jeder andere Wert ungleich 0 täte dasselbe.
 - Unter der Demo stehen drei Teile: „Warum eingabe mit 1.0 beginnt“, „Drei Stellen im Programm“ mit `if`, `math.Sqrt` und `&eingabe`, und „Das zweite Beispiel des Kurstexts“ mit zwei Links zum größten gemeinsamen Teiler aus Listing 5.5.
@@ -96,7 +96,7 @@ Reiter: eingabe
 
 ### Handgriffe
 
-- Die Fassung von Zeile 9 wählen: „= 1.0“ oder „= 0.0“. Das beginnt den Lauf von vorn.
+- Eine der zwei Möglichkeiten für Zeile 9 wählen: „= 1.0“ oder „= 0.0“. Das beginnt den Lauf von vorn.
 - „Nächste Anweisung“ führt die nächste Anweisung aus. Wartet das Programm in Zeile 13, ist der Knopf gesperrt.
 - Wartet das Programm in Zeile 13: eine Eingabe wählen, nur mit den Knöpfen 16, 25, 2, −4 und 0. Ein Eingabefeld gibt es nicht, andere Zahlen gehen nicht. Die fünf Knöpfe sind nur wählbar, während das Programm in Zeile 13 wartet.
 - Ein Lauf nimmt höchstens sechs Eingaben an. Nach fünf Eingaben ist nur noch der Knopf 0 wählbar.
@@ -116,9 +116,9 @@ Reiter: while
 
 - Oben steht: Viele Sprachen leiten diese Schleife mit `while` ein, sie heißt deshalb allgemein while-Schleife. Go hat sie auch und schreibt `for`.
 - Der Schritt hat zwei Auswahlen mit Knöpfen. Sie hängen nicht zusammen. Der gewählte Knopf ist grün.
-- Obere Auswahl, „Dieselbe Schleife in vier Sprachen“: Knöpfe Go, Java, Python und C++. Darunter steht die Schleife in der gewählten Sprache in einem dunklen Kasten ohne Zeilennummern, darunter eine Erklärung. Jede Fassung gibt die Zahlen von `i` bis 9 aus.
+- Obere Auswahl, „Dieselbe Schleife in vier Sprachen“: Knöpfe Go, Java, Python und C++. Darunter steht die Schleife in der gewählten Sprache in einem dunklen Kasten ohne Zeilennummern, darunter eine Erklärung. Jedes Programm gibt die Zahlen von `i` bis 9 aus.
 - Go: `for i < 10 {`. Java und C++: `while (i < 10) {`, die runden Klammern sind dort Pflicht. Python: `while i < 10:`, der Schleifenrumpf ist eingerückt, und statt `i++` steht `i += 1`.
-- Nur der Code unter dem Knopf „Go“ ist Go. Die drei anderen Fassungen sind Java, Python und C++.
+- Nur der Code unter dem Knopf „Go“ ist Go. Die drei anderen Programme sind Java, Python und C++.
 - Untere Auswahl, „Was Go bei der Schreibweise verlangt“: vier Knöpfe mit vier Schreibweisen derselben Schleife in Go. Darunter steht die Schreibweise, darunter „Ergebnis“ oder „Meldung des Compilers“ in roter Schrift, darunter eine Erklärung.
 - „wie üblich“: `for i < 10 {`. Go übersetzt das Programm.
 - „mit runden Klammern“: `for (i < 10) {`. Go übersetzt das Programm. Nach Idiomatic Go lässt man die Klammern weg, das Werkzeug `gofmt` entfernt sie.
@@ -153,7 +153,7 @@ Reiter: flag
 - Ab der zweiten Prüfung hat `ersterLauf` den Wert `false`. Dann entscheidet nur noch `eingabe != 0`.
 - Zeile 10 wird in jedem Schleifendurchlauf ausgeführt. Ab dem zweiten ändert sie nichts mehr, weil `ersterLauf` schon `false` ist.
 - Der Student spielt wieder den Benutzer. Der Lauf hält in Zeile 6 an und wartet. Die Eingaben und die Wurzeln sind dieselben wie in Schritt 2: 16, 25, 2, −4 und 0.
-- Gibt der Student gleich als Erstes 0 ein, hat das Programm trotzdem einmal gefragt. Das ist der Unterschied zur Fassung mit `0.0` in Schritt 2.
+- Gibt der Student gleich als Erstes 0 ein, hat das Programm trotzdem einmal gefragt. Das ist der Unterschied zum Programm mit `0.0` in Schritt 2.
 - Über dem Programm stehen vier Angaben: `eingabe`, `ersterLauf`, „Schleifendurchläufe bisher“ und „Eingaben bisher“. Darunter erklärt ein grüner Kasten die markierte Zeile. Unter dem Programm steht der schwarze Kasten „Ausgabe bisher“.
 - Unter dem schwarzen Kasten steht eine Tabelle. Sie bekommt bei jeder Prüfung der Schleifenbedingung in Zeile 4 eine Zeile mit vier Spalten: die Nummer der Prüfung, der Wert von `ersterLauf`, das Ergebnis von `eingabe != 0` und das Ergebnis der ganzen Bedingung.
 - In der ersten Zeile der Tabelle steht bei `eingabe != 0` „nicht ausgewertet“: Der linke Teil von `||` ergab schon `true`, den rechten Teil wertet Go dann nicht mehr aus. Das heißt Kurzschluss-Auswertung.
@@ -218,7 +218,7 @@ Reiter: kurstext
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Bedingung und Rumpf, 5.5.3, Seiten 137–138: Die Begriffe Schleifenbedingung und Schleifenrumpf stammen aus dem Kurstext. Das Programm mit n ist ein eigenes Beispiel.
-  - 2 Wiederholte Eingabe, 5.5.3.1, Seiten 138–142: Listing 5.4: Listing 5.4 zur wiederholten Eingabe stammt aus dem Kurstext. Die Fassung mit 0.0 in Zeile 9 gibt die Lektion dazu.
+  - 2 Wiederholte Eingabe, 5.5.3.1, Seiten 138–142: Listing 5.4: Listing 5.4 zur wiederholten Eingabe stammt aus dem Kurstext. Das Programm mit 0.0 in Zeile 9 gibt die Lektion dazu.
   - 3 while in anderen Sprachen, 5.5.3.1, Seiten 138–142: Sprachvergleich 5.13: Der Sprachvergleich zu while stammt aus dem Kurstext. Die Programme mit i sind eigene Beispiele.
   - 4 Mindestens ein Durchlauf, 5.5.3.1, Seiten 138–142: Sprachvergleich 5.14: Der Codeausschnitt mit der Flag-Variable und der Sprachvergleich stammen aus dem Kurstext. Dort steht in der Mitte ein Kommentar. An der Stelle des Kommentars hat die Lektion die Zeilen aus Listing 5.4 eingesetzt. Die Codeblöcke in Java und Pascal sind eigene Beispiele.
   - 5 Aus der Praxis, 4.4.4, Seiten 90–91: Vergleich von Gleitkommazahlen; 5.5.3.3, Seiten 146–149: break: Dass errechnete Gleitkommazahlen nicht mit == verglichen werden, steht in Abschnitt 4.4.4. Warum eine Schleife möglichst ohne break auskommt, steht in Abschnitt 5.5.3.3. Die Faustregeln stammen aus der Praxis des Mentors.

@@ -88,9 +88,9 @@ Reiter: vergleich
 - Obere Auswahl: die Zuordnung der Wochentage „mit switch“ oder „mit if“. Darunter steht der Code in einem dunklen Kasten ohne Zeilennummern. Darunter steht die Angabe „So oft steht num im Code“.
 - „mit switch“: `num` steht einmal im Code, hinter `switch`.
 - „mit if“: `num` steht siebenmal im Code: `num == 1` bis `num == 5` und `num == 6 || num == 7`. Der Operator `||` bedeutet „oder“.
-- Beide Fassungen tun das Gleiche. In der Fassung mit `if` steht der Vergleich `num ==` in jedem Zweig neu da. Im Kurstext steht dazu, die Fassung mit `if` sei etwas länger und weniger übersichtlich.
+- Beide Programme tun das Gleiche. Im Programm mit `if` steht der Vergleich `num ==` in jedem Zweig neu da. Im Kurstext steht dazu, das Programm mit `if` sei etwas länger und weniger übersichtlich.
 - Der Teil „Ein Funktionsaufruf als switch-Ausdruck“ zeigt eine Funktion `f`. Sie erhöht bei jedem Aufruf die globale Variable `aufrufe` um 1 und liefert den Wert 1.
-- Untere Auswahl: drei Fassungen eines Programmstücks. Darunter stehen der Code und zwei Angaben: „Wert von text danach“ und „Wert von aufrufe danach“.
+- Untere Auswahl: drei Programmstücke. Darunter stehen der Code und zwei Angaben: „Wert von text danach“ und „Wert von aufrufe danach“.
 - „if mit f()“: `if f() == -1 {` und `} else if f() == 1 {`. `text` bekommt „plus“, `aufrufe` hat den Wert 2. `f` wird zweimal aufgerufen, weil `f()` in zwei Bedingungen steht.
 - „if mit Variable“: `fWert := f()` vor der if-Anweisung. `text` bekommt „plus“, `aufrufe` hat den Wert 1.
 - „switch mit f()“: `switch f() {` mit `case -1:` und `case 1:`. `text` bekommt „plus“, `aufrufe` hat den Wert 1. Go wertet den switch-Ausdruck nur einmal aus.
@@ -101,7 +101,7 @@ Reiter: vergleich
 ### Handgriffe
 
 - Obere Auswahl: „mit switch“ oder „mit if“ wählen.
-- Untere Auswahl: eine der drei Fassungen wählen.
+- Untere Auswahl: eines der drei Programmstücke wählen.
 - Kein Code dieses Schritts lässt sich ändern oder ausführen. Einen Lauf Anweisung für Anweisung gibt es hier nicht. Eine Eingabe für `num` gibt es hier nicht.
 - Dem Link zur Seite „Variablendeklaration“ folgen. Sie ist eine eigene HTML-Seite.
 
@@ -145,18 +145,18 @@ Reiter: sprachen
 
 - Oben steht: In Java, C++ und anderen Sprachen aus der Familie von C ist die switch-Anweisung nach einem Anweisungsteil nicht zu Ende. Das Programm führt den Anweisungsteil des nächsten case-Abschnitts mit aus. Das heißt Fallthrough. Wer das nicht will, schreibt `break` ans Ende jedes Anweisungsteils.
 - Die Demo hat zwei Reihen von Knöpfen. Der gewählte Knopf ist grün.
-- Obere Reihe, die Fassung: „Go“, „Java ohne break“, „Java mit break“.
+- Obere Reihe, das Programm: „Go“, „Java ohne break“, „Java mit break“.
 - Untere Reihe, der Wert von `x`: 1, 2 oder 3.
-- Darunter steht das Programm der gewählten Fassung in einem dunklen Kasten ohne Zeilennummern. Jede Fassung hat `case 1:` mit der Ausgabe „Eins“, `case 2:` mit der Ausgabe „Zwei“ und `default:` mit der Ausgabe „Anderes“. Darunter steht die Angabe „Ausgabe“, darunter erklärt ein grüner Kasten das Ergebnis.
+- Darunter steht das gewählte Programm in einem dunklen Kasten ohne Zeilennummern. Jedes Programm hat `case 1:` mit der Ausgabe „Eins“, `case 2:` mit der Ausgabe „Zwei“ und `default:` mit der Ausgabe „Anderes“. Darunter steht die Angabe „Ausgabe“, darunter erklärt ein grüner Kasten das Ergebnis.
 - „Go“ und „Java mit break“ geben genau ein Wort aus: „Eins“ für 1, „Zwei“ für 2, „Anderes“ für 3.
 - „Java ohne break“ gibt für 1 drei Wörter aus: „Eins“, „Zwei“, „Anderes“. Für 2 gibt es „Zwei“ und „Anderes“ aus. Für 3 gibt es nur „Anderes“ aus. Eine Ausgabe mit mehr als einem Wort steht in roter Schrift.
-- Nur die Fassung „Go“ ist Go. Die zwei anderen Fassungen sind Java und nicht ausgeführt. Ihre Ausgaben folgen aus der Regel für den Fallthrough.
+- Nur das Programm „Go“ ist Go. Die zwei anderen Programme sind Java und nicht ausgeführt. Ihre Ausgaben folgen aus der Regel für den Fallthrough.
 - Der Teil „Der Typ des switch-Ausdrucks“ sagt: In Go darf der switch-Ausdruck jeden Typ haben. In manchen anderen Sprachen ist er auf bestimmte primitive Typen beschränkt.
 - Im Kurstext ist das der Sprachvergleich 5.12. Dort steht kein Code.
 
 ### Handgriffe
 
-- Die Fassung wählen: nur „Go“, „Java ohne break“ und „Java mit break“. Andere Sprachen gibt es nicht.
+- Das Programm wählen: nur „Go“, „Java ohne break“ und „Java mit break“. Andere Sprachen gibt es nicht.
 - Den Wert von `x` wählen: nur 1, 2 und 3.
 - Kein Code dieses Schritts lässt sich ändern oder ausführen.
 
@@ -176,7 +176,7 @@ Reiter: praxis
 - Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt: Es steht weder auf dieser Seite noch im Kurstext. Ob eine Faustregel in der Klausur vorkommt oder nicht, lässt sich deshalb nicht sagen. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 - Was in der Klausur vorkommen darf und was nicht, steht ebenfalls nicht auf dieser Seite. Auskunft dazu gibt nur Moodle der FernUniversität.
-- Zu jeder Faustregel stehen beide Fassungen schon auf der Seite, die falsche und die richtige. Ausprobieren oder umstellen lässt sich in diesem Schritt nichts.
+- Zu jeder Faustregel stehen der falsche und der richtige Code schon auf der Seite. Ausprobieren oder umstellen lässt sich in diesem Schritt nichts.
 - Faustregel 1, ein leerer case-Abschnitt tut nichts: `case 6:` ohne Anweisungsteil und darunter `case 7:` mit `text = "Wochenende"`. Bei `num` gleich 6 passt der erste Abschnitt, sein Anweisungsteil ist leer, `text` bleibt der leere String. Richtig ist `case 6, 7:`.
 - Faustregel 2, der default-case fängt den Wert ab, an den niemand gedacht hat: eine switch-Anweisung ohne default-case mit `case 1:` und `case 6, 7:`. Bei `num` gleich 9 tut sie nichts, und das Programm gibt „9 ist  zugeordnet.“ mit leerem Text aus.
 - Faustregel 3, ohne switch-Ausdruck entscheidet die Reihenfolge: Mit `case t < 25:` an erster Stelle gibt das Programm für −5 „angenehm“ aus. Mit `case t < 0:` an erster Stelle gibt es „frostig“ aus. Die engste Bedingung steht zuerst.
@@ -201,7 +201,7 @@ Reiter: kurstext
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Aufbau und Ablauf, 5.5.2, Seiten 133–134: Listing 5.3: Listing 5.3 zu den Wochentagen stammt aus dem Kurstext. Die zwei Meldungen des Compilers und das Beispiel mit wort gibt die Lektion dazu.
   - 2 switch oder if, 5.5.2, Seiten 134–136: Expertenwissen 5.11: Der Vergleich von switch und if und das Expertenwissen 5.11 stammen aus dem Kurstext. Die Funktion f mit dem Zähler ist ein eigenes Beispiel.
-  - 3 Ohne switch-Ausdruck, 5.5.2, Seite 135: Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext. Die Fassung mit if und die Meldung des Compilers gibt die Lektion dazu.
+  - 3 Ohne switch-Ausdruck, 5.5.2, Seite 135: Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext. Das Programm mit if und die Meldung des Compilers gibt die Lektion dazu.
   - 4 In anderen Sprachen, 5.5.2, Seite 137: Sprachvergleich 5.12: Der Sprachvergleich mit dem Fallthrough stammt aus dem Kurstext. Die drei Programme sind eigene Beispiele.
   - 5 Aus der Praxis, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Faustregeln stammen aus der Praxis des Mentors.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:

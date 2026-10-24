@@ -223,7 +223,7 @@ var pFarbe *rgb = &amp;rgb{128, 0, 80}
 var pFarbe *rgb = new(rgb) // anonyme Variable
 *pFarbe = rgb{128, 0, 80}  // Literal-Wert zuweisen</pre>
     <p>Hinter der kurzen Schreibweise geschieht also Folgendes: <code>new</code> erzeugt eine anonyme Verbund-Variable, und sie bekommt den Wert des Literals. Der Zeiger enthält ihre Adresse.</p>
-    <p>Die Demo führt erst die kurze und dann die ausgeschriebene Fassung aus, mit zwei Zeigern <code>pFarbe</code> und <code>pZwei</code>.</p>
+    <p>Die Demo führt erst den kurzen und dann den ausgeschriebenen Code aus, mit zwei Zeigern <code>pFarbe</code> und <code>pZwei</code>.</p>
 
     <ol class="programm" id="l-programm"></ol>
     <div class="zeile">
@@ -294,7 +294,7 @@ fügeHinzu(h)</pre>
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
       <tr><td>1 Feld-Zugriff über einen Zeiger</td><td>8.2.4, Seiten 205–206: Hinweis 8.2</td><td>Die zwei Schreibweisen stammen aus dem Kurstext. Dort weisen beide den Wert <code>"Meier"</code> zu.</td><td>Die Demo nimmt für die zweite <code>"Maier"</code>, damit man beide Zuweisungen sieht. Die vier Zeilen zum Ausprobieren sind eine Ergänzung, geprüft mit Go 1.26.</td></tr>
       <tr><td>2 Im Speicher</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Speichersicht steht nicht im Kurstext. Das Modell zeigen die Lektionen „Speichermodell: Zeiger“ und „Speichermodell: Verbund“ ausführlich.</td></tr>
-      <tr><td>3 Adresse eines Literals</td><td>8.2.4, Seite 206</td><td>Die zwei Fassungen stammen aus dem Kurstext.</td><td>Die zwei Zeilen mit <code>fmt.Println</code> und der Name <code>pZwei</code> sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.</td></tr>
+      <tr><td>3 Adresse eines Literals</td><td>8.2.4, Seite 206</td><td>Der kurze und der ausgeschriebene Code stammen aus dem Kurstext.</td><td>Die zwei Zeilen mit <code>fmt.Println</code> und der Name <code>pZwei</code> sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.</td></tr>
       <tr><td>4 Literal als Argument</td><td>8.2.4, Seiten 206–207: Expertenwissen 8.3</td><td>Die Funktion <code>fügeHinzu</code> und die Zeiger <code>f1</code> und <code>f2</code> stammen aus dem Kurstext.</td><td>Die letzte Zeile der Demo, <code>*f1 == *f2</code>, ist ergänzt.</td></tr>
     </table>
     </div>

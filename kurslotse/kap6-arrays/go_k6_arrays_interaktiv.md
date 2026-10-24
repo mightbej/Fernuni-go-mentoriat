@@ -108,22 +108,22 @@ Reiter: durchlaufen
 - Oben steht der blaue Kasten mit einer Frage.
 - Der Text nennt das Muster der for-Klausel für ein Array: `i := 0`, `i < len(a)`, `i++`.
 - Der Teil zur range-Klausel: `for i, v := range a`. Rechts von `range` steht das Array. Die erste Variable ist die Index-Variable vom Typ `int`. Die zweite hat den Element-Typ und bekommt vor jedem Durchlauf den Wert von `a[i]`. Beide gelten nur im Rumpf.
-- Die Demo zeigt fünf Knöpfe für fünf Fassungen: „for-Klausel“, „for i, v := range a“, „for _, v := range a“, „for i := range a“ und „v = 99 im Rumpf“. Alle arbeiten mit `a := [...]int{8, -5, 14, 3}`.
-- Das Programm der gewählten Fassung steht als nummerierte Liste auf dunklem Grund. Die Zeile, in der der Lauf steht, ist hell unterlegt mit gelbem Strich.
+- Die Demo zeigt fünf Knöpfe für fünf Programme: „for-Klausel“, „for i, v := range a“, „for _, v := range a“, „for i := range a“ und „v = 99 im Rumpf“. Alle arbeiten mit `a := [...]int{8, -5, 14, 3}`.
+- Das gewählte Programm steht als nummerierte Liste auf dunklem Grund. Die Zeile, in der der Lauf steht, ist hell unterlegt mit gelbem Strich.
 - Darunter stehen drei Knöpfe: „nächste Anweisung“, „eine Anweisung zurück“ und „von vorn“.
 - Das Array `a` steht als Reihe von Kästen da. Das Element, das gerade dran ist, ist gelb.
 - Darunter stehen die Variablen als Kästen mit Name und Wert, zum Beispiel `sum`, `i` und `v`. Eine Variable, die sich gerade geändert hat, ist gelb.
 - Ein dunkles Feld zeigt die Ausgabe des Programms. Ein Kasten darunter sagt, was die letzte Anweisung getan hat.
-- Fassung „for-Klausel“ und Fassung „for i, v := range a“ geben das Gleiche aus: `Index: 0 Wert: 8`, `Index: 1 Wert: -5`, `Index: 2 Wert: 14`, `Index: 3 Wert: 3` und `Summe aller Werte: 20`.
-- Fassung „for _, v := range a“ rechnet das Produkt: `Produkt aller Werte: -1680`.
-- Fassung „for i := range a“ kehrt mit `a[i] = -a[i]` jedes Vorzeichen um: `negiertes Array: [-8 5 -14 -3]`.
-- Fassung „v = 99 im Rumpf“ gibt viermal 99 aus und danach `[8 -5 14 3]`. Das Array ist unverändert, weil `v` eine Kopie des Elements ist. Wer ein Element ändern will, schreibt `a[i] = 99`.
+- Das Programm „for-Klausel“ und das Programm „for i, v := range a“ geben das Gleiche aus: `Index: 0 Wert: 8`, `Index: 1 Wert: -5`, `Index: 2 Wert: 14`, `Index: 3 Wert: 3` und `Summe aller Werte: 20`.
+- Das Programm „for _, v := range a“ rechnet das Produkt: `Produkt aller Werte: -1680`.
+- Das Programm „for i := range a“ kehrt mit `a[i] = -a[i]` jedes Vorzeichen um: `negiertes Array: [-8 5 -14 -3]`.
+- Das Programm „v = 99 im Rumpf“ gibt viermal 99 aus und danach `[8 -5 14 3]`. Das Array ist unverändert, weil `v` eine Kopie des Elements ist. Wer ein Element ändern will, schreibt `a[i] = 99`.
 - Der Teil „Welche Variable man weglassen kann“: Wird der Index nicht gebraucht, steht `_` an seiner Stelle, sonst meldet Go eine ungenutzte Variable: `declared and not used: i`. Wird der Wert nicht gebraucht, fällt die zweite Variable weg. `for range a` führt den Rumpf einmal je Element aus.
 - Der letzte Teil nennt die for-range-Schleife über eine ganze Zahl seit Go 1.22: `for i := range 10` zählt von 0 bis 9.
 
 ### Handgriffe
 
-- Eine der fünf Fassungen wählen. Der Lauf beginnt dann von vorn.
+- Eines der fünf Programme wählen. Der Lauf beginnt dann von vorn.
 - „nächste Anweisung“ wählen: Der Lauf geht eine Anweisung weiter.
 - „eine Anweisung zurück“ wählen.
 - „von vorn“ wählen.
@@ -152,7 +152,7 @@ Reiter: matrix
 - Das Element, das gerade bearbeitet ist, ist im Gitter gelb. Wurde es auf 0 gesetzt, ist es grün.
 - Die Ausgabe am Ende, drei Zeilen: `0 12 5 0`, dann `0 0 91 55`, dann `2 46 0 28`, jede Zahl drei Zeichen breit.
 - Ein weiterer Codeblock zeigt das Durchlaufen von `a` mit `for i, zeile := range a` und `for _, element := range zeile`. Die Ausgabe: `Zeile 0: 1 2`, `Zeile 1: 3 4`, `Zeile 2: 5 6`.
-- Im Kurstext steht für `a` auch eine Fassung mit zwei for-Klauseln und `len(a[i])`. Sie steht nicht auf der Seite, liefert aber die gleiche Ausgabe.
+- Im Kurstext steht für `a` auch ein Programm mit zwei for-Klauseln und `len(a[i])`. Es steht nicht auf der Seite, liefert aber die gleiche Ausgabe.
 - Ein Zugriff neben die Matrix übersetzt Go nicht, zum Beispiel `a[3][0]` mit der Meldung `invalid argument: index 3 out of bounds [0:3]`.
 
 ### Handgriffe
@@ -199,7 +199,7 @@ Reiter: kurstext
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Array und Literal, 6, Seiten 151–154: Die ersten fünf Deklarationen der Demo stammen aus dem Kurstext. Die Deklaration von kurz steht dort als lotto mit sechs Werten. Die vier Deklarationen danach und die Meldungen des Compilers gibt die Lektion dazu.
   - 2 Index, 6.1, Seiten 154–155: Das Array mit 11, 22, 33 und 44 und die zwei falschen Zugriffe stammen aus dem Kurstext. Dort greifen die Zugriffe auf lotto zu, mit den Indizes 10 und 8. Im Kurstext endet die Meldung des Compilers mit [0:4]. Go 1.26 nennt für lotto die Länge 6: [0:6].
-  - 3 Durchlaufen, 6.2, Seiten 156–159: Hinweis 6.1: Die ersten vier Fassungen der Demo stammen aus dem Kurstext. Die fünfte Fassung mit v = 99 steht im Kurstext nur als Satz und nicht als Programm.
+  - 3 Durchlaufen, 6.2, Seiten 156–159: Hinweis 6.1: Die ersten vier Programme der Demo stammen aus dem Kurstext. Zum fünften Programm mit v = 99 steht im Kurstext nur ein Satz.
   - 4 Zwei Dimensionen, 6.3, Seiten 160–162: Beide Matrizen und beide Programme stammen aus dem Kurstext. Die Demo gibt die Lektion dazu.
   - 5 Slices, 6.4, Seite 162: Das Programm stammt aus dem Kurstext. Die Ausgabe 6 für die Kapazität stammt aus einem Lauf mit Go 1.26.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:

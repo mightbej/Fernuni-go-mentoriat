@@ -113,7 +113,7 @@
       <li><strong>Lesen:</strong> Lies das Programm und überlege, was falsch ist.</li>
       <li><strong>Übersetzen:</strong> Mit „weiter“ erscheint die Meldung des Compilers.</li>
       <li><strong>Korrigieren:</strong> Mit dem nächsten „weiter“ erscheint das korrigierte Programm mit seiner Ausgabe.</li>
-      <li><strong>Selbst ausprobieren:</strong> „Diese Fassung kopieren“ legt das Programm in die Zwischenablage. Füge es in deinen Editor ein und übersetze es mit <code>go run</code>.</li>
+      <li><strong>Selbst ausprobieren:</strong> „Dieses Programm kopieren“ legt das Programm in die Zwischenablage. Füge es in deinen Editor ein und übersetze es mit <code>go run</code>.</li>
       <li><strong>Nachlesen:</strong> Schritt 4 ordnet jeden der drei Fehler einem Abschnitt des Kurstexts zu und nennt die Lektion dazu.</li>
     </ul>
 
@@ -138,7 +138,7 @@
       <button type="button" class="haupt" id="a-weiter">weiter</button>
       <button type="button" id="a-zurueck">zurück</button>
       <button type="button" id="a-vorn">von vorn</button>
-      <button type="button" id="a-kopieren">Diese Fassung kopieren</button>
+      <button type="button" id="a-kopieren">Dieses Programm kopieren</button>
     </div>
     <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
     <div class="konsole" id="a-ausgabe"></div>
@@ -163,7 +163,7 @@
       <button type="button" class="haupt" id="b-weiter">weiter</button>
       <button type="button" id="b-zurueck">zurück</button>
       <button type="button" id="b-vorn">von vorn</button>
-      <button type="button" id="b-kopieren">Diese Fassung kopieren</button>
+      <button type="button" id="b-kopieren">Dieses Programm kopieren</button>
     </div>
     <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
     <div class="konsole" id="b-ausgabe"></div>
@@ -189,7 +189,7 @@
       <button type="button" class="haupt" id="c-weiter">weiter</button>
       <button type="button" id="c-zurueck">zurück</button>
       <button type="button" id="c-vorn">von vorn</button>
-      <button type="button" id="c-kopieren">Diese Fassung kopieren</button>
+      <button type="button" id="c-kopieren">Dieses Programm kopieren</button>
     </div>
     <p><strong>Meldung des Compilers oder Ausgabe</strong></p>
     <div class="konsole" id="c-ausgabe"></div>
@@ -392,18 +392,18 @@
     el(kurz + '-zurueck').addEventListener('click', () => { if (F.i > 0) { F.i--; F.zeichne(); } });
     el(kurz + '-vorn').addEventListener('click', () => { F.i = 0; F.zeichne(); });
     el(kurz + '-kopieren').addEventListener('click', () => { const k = el(kurz + '-kopieren');
-      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Diese Fassung kopieren'; }, 1500); }); });
+      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Dieses Programm kopieren'; }, 1500); }); });
     return F;
   }
   function standFassungen(F) {
     const x = F.liste[F.i];
-    return ['Die Demo zeigt ein Programm in ' + F.liste.length + ' Fassungen nacheinander. Zu sehen ist Fassung ' + (F.i + 1) + ': ' + x.titel + '.',
+    return ['Die Demo zeigt ' + F.liste.length + ' Programme nacheinander. Zu sehen ist Programm ' + (F.i + 1) + ': ' + x.titel + '.',
       x.mark && x.mark.length ? 'Gelb hervorgehoben ist Zeile ' + x.mark.join(' und ') + ': ' + x.mark.map(n => x.zeilen[n - 1].trim()).join(' | ') : 'Keine Zeile ist hervorgehoben.',
-      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt diese Fassung nicht. Die Meldung des Compilers: ') : 'Go übersetzt diese Fassung. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
+      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt dieses Programm nicht. Die Meldung des Compilers: ') : 'Go übersetzt dieses Programm. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
       'Die Seite sagt dazu: ' + x.satz,
-      F.i === 0 ? 'Der Student hat das Programm noch nicht übersetzt und soll die Fehler jetzt selbst suchen. Die Fehler und ihre Zeilen werden in dieser Fassung nicht genannt. Auf die Frage nach den Fehlern folgt ein einziger Hinweis, wonach er suchen kann, und die Aufforderung, „weiter“ zu wählen.' : '',
-      F.i === F.liste.length - 1 ? 'Das ist die letzte Fassung.' : 'Die nächste Fassung heißt: ' + F.liste[F.i + 1].titel + '.',
-      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann eine Fassung kopieren und im eigenen Editor übersetzen.'].filter(Boolean);
+      F.i === 0 ? 'Der Student hat das Programm noch nicht übersetzt und soll die Fehler jetzt selbst suchen. Die Fehler und ihre Zeilen werden bei diesem Programm nicht genannt. Auf die Frage nach den Fehlern folgt ein einziger Hinweis, wonach er suchen kann, und die Aufforderung, „weiter“ zu wählen.' : '',
+      F.i === F.liste.length - 1 ? 'Das ist das letzte Programm.' : 'Das nächste Programm heißt: ' + F.liste[F.i + 1].titel + '.',
+      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Dieses Programm kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann jedes Programm kopieren und im eigenen Editor übersetzen.'].filter(Boolean);
   }
   const zeilenFassung = F => F ? F.liste[F.i].zeilen.map((t, i) => (i + 1) + '  ' + t) : [];
   // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs
@@ -452,7 +452,7 @@
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß: der Stand der Demo in Sätzen.
   const DEMO = () => stufe === 1 ? FA : stufe === 2 ? FB : stufe === 3 ? FC : null;
   const standSaetze = () => DEMO() ? standFassungen(DEMO()) : ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
-  const kurzStand = () => DEMO() ? 'Fassung ' + (DEMO().i + 1) + ' von ' + DEMO().liste.length : '';
+  const kurzStand = () => DEMO() ? 'Programm ' + (DEMO().i + 1) + ' von ' + DEMO().liste.length : '';
 
   FA.zeichne(); FB.zeichne(); FC.zeichne();
   zeigeStufe(stufeAusAdresse(), false);
@@ -466,7 +466,7 @@
     sichtbar: () => el('stufe-' + stufe),
     text: '.card > h3, .card > p:not(.quelle), .card > ul, .hinweis, table.text',
     zeilen: () => zeilenFassung(DEMO()),
-    zeilenTitel: 'Das Programm in der Fassung, die gerade zu sehen ist:',
+    zeilenTitel: 'Das Programm, das gerade zu sehen ist:',
     stand: standSaetze,
     kurz: kurzStand,
     beispiel: 'Was bedeutet „mismatched types“?'

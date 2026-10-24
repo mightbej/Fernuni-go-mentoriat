@@ -42,8 +42,8 @@ Reiter: deklaration
 ### Aufbau der Darstellung
 
 - Oben steht, worin sich die Deklaration einer Konstante von der ausführlichen Deklaration einer Variable unterscheidet: Sie beginnt mit `const`, und der Wert muss dastehen.
-- Darunter steht die Demo „Vier Fassungen zum Ausprobieren“ mit vier Knöpfen: „mit Typ“, „ohne Typ“, „ohne Wert“, „Wert später ändern“. Der gewählte Knopf ist grün.
-- Unter den Knöpfen steht in einem dunklen Kasten das Programmstück der gewählten Fassung. Darunter steht entweder „Ausgabe“ mit der Ausgabe oder „Meldung des Compilers“ mit der Meldung in roter Schrift. Darunter erklärt ein grüner Kasten die Fassung.
+- Darunter steht die Demo „Vier Möglichkeiten zum Ausprobieren“ mit vier Knöpfen: „mit Typ“, „ohne Typ“, „ohne Wert“, „Wert später ändern“. Der gewählte Knopf ist grün.
+- Unter den Knöpfen steht in einem dunklen Kasten das Programmstück der gewählten Möglichkeit. Darunter steht entweder „Ausgabe“ mit der Ausgabe oder „Meldung des Compilers“ mit der Meldung in roter Schrift. Darunter erklärt ein grüner Kasten die Möglichkeit.
 - „mit Typ“: `const maxAnzahl int = 500`, die Ausgabe ist 500.
 - „ohne Typ“: `const maxAnzahl = 500`, die Ausgabe ist 500.
 - „ohne Wert“: `const maxAnzahl int`. Der Compiler meldet `missing init expr for maxAnzahl`. Auf Deutsch: Der Ausdruck für den Anfangswert fehlt.
@@ -55,7 +55,7 @@ Reiter: deklaration
 
 ### Handgriffe
 
-- Eine der vier Fassungen wählen. Andere Fassungen gibt es nicht.
+- Eine der vier Möglichkeiten wählen. Andere Möglichkeiten gibt es nicht.
 - Dem Link zur Seite „Variablendeklaration“ folgen.
 - Die Programmzeilen lassen sich nicht ändern.
 
@@ -94,26 +94,26 @@ Reiter: suchen
 - Die Aufgabe: Ein Jahr soll 13 Monate haben. Der Student ändert das Programm so, dass es mit 13 Monaten rechnet. Die Uhr behält ihre 12 Stunden.
 - Zu sehen ist ein Go-Programm in einem dunklen Kasten, mit Zeilennummern am linken Rand.
 - Das Programm rechnet drei Werte aus: das Jahresgehalt aus dem Monatsgehalt 3000, den Monatsbeitrag aus dem Jahresbeitrag 1560 und die Stunde auf einem Zifferblatt mit 12 Stunden für 15 Uhr.
-- Das Programm gibt es in zwei Fassungen. Zu sehen ist immer nur eine. Der Knopf der gewählten Fassung ist grün.
-- Fassung mit Literal: 15 Zeilen. Die Zahl 12 steht an fünf Stellen. In den Zeilen 7, 8 und 14 bedeutet sie die Monate im Jahr. In den Zeilen 10 und 11 bedeutet sie die Stunden auf der Uhr.
-- Fassung mit Konstante: 16 Zeilen. Zeile 6 deklariert `const monateImJahr = 12`. Der Name `monateImJahr` steht außerdem in den Zeilen 8, 9 und 15. Die Zahl 12 steht in Zeile 6 und in den Zeilen 11 und 12, dort bedeutet sie die Stunden auf der Uhr.
+- Die Demo zeigt zwei Programme. Zu sehen ist immer nur eines. Der Knopf des gewählten Programms ist grün.
+- Programm mit Literal: 15 Zeilen. Die Zahl 12 steht an fünf Stellen. In den Zeilen 7, 8 und 14 bedeutet sie die Monate im Jahr. In den Zeilen 10 und 11 bedeutet sie die Stunden auf der Uhr.
+- Programm mit Konstante: 16 Zeilen. Zeile 6 deklariert `const monateImJahr = 12`. Der Name `monateImJahr` steht außerdem in den Zeilen 8, 9 und 15. Die Zahl 12 steht in Zeile 6 und in den Zeilen 11 und 12, dort bedeutet sie die Stunden auf der Uhr.
 - Jede Zahl 12 im Programm ist ein heller Knopf. Eine Zahl, die auf 13 geändert ist, hat einen roten Rand.
 - Eine Suche markiert ihre Treffer gelb. Gesucht wird nach `12` oder nach `monateImJahr`.
 - Unter dem Programm stehen zwei Zeilen: „Treffer der Suche“ mit der Anzahl und „Ausgabe des Programms“ mit dem, was das Programm mit den eingestellten Zahlen ausgibt.
 - Die Ausgabe ohne Änderung: `36000 130 3` und `Monate im Jahr: 12`. Die Ausgabe der gelösten Aufgabe: `39000 120 3` und `Monate im Jahr: 13`.
 - Darunter sagt ein grüner Kasten, was die Suche gefunden hat und wie weit die Aufgabe gelöst ist.
 - Die Aufgabe ist gelöst, wenn alle Stellen mit der Bedeutung „Monate“ auf 13 stehen und die zwei Stellen der Uhr auf 12.
-- In der Fassung mit Literal sind dafür drei Zahlen zu ändern, in der Fassung mit Konstante eine, die in der Deklaration.
-- Die Suche nach `monateImJahr` findet in der Fassung mit Literal keine Stelle, in der Fassung mit Konstante vier: die Deklaration und drei Verwendungen.
-- Die zwei Fassungen behalten ihre Änderungen getrennt.
+- Im Programm mit Literal sind dafür drei Zahlen zu ändern, im Programm mit Konstante eine, die in der Deklaration.
+- Die Suche nach `monateImJahr` findet im Programm mit Literal keine Stelle, im Programm mit Konstante vier: die Deklaration und drei Verwendungen.
+- Die zwei Programme behalten ihre Änderungen getrennt.
 - Unter der Demo stehen zwei Listen: „Was die Aufgabe zeigt“ und vier Faustregeln.
 
 ### Handgriffe
 
-- Die Fassung wählen: „Fassung mit Literal 12“ oder „Fassung mit Konstante monateImJahr“.
+- Das Programm wählen: „Programm mit Literal 12“ oder „Programm mit Konstante monateImJahr“.
 - „nach 12 suchen“ oder „nach monateImJahr suchen“ wählen. Nach anderen Wörtern lässt sich nicht suchen. „Suche aufheben“ nimmt die Markierung weg.
 - Eine Zahl 12 im Programm anklicken: Sie wird zur 13. Ein zweiter Klick macht sie wieder zur 12. Andere Werte als 12 und 13 gibt es nicht.
-- „von vorn“: In beiden Fassungen stehen wieder alle Zahlen auf 12, die Suche ist aufgehoben.
+- „von vorn“: In beiden Programmen stehen wieder alle Zahlen auf 12, die Suche ist aufgehoben.
 - Die übrigen Teile des Programms lassen sich nicht ändern, auch nicht 3000, 1560 und 15.
 
 ### Abschnitte des Kurstexts

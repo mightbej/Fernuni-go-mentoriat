@@ -344,7 +344,7 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
     <p>Go übersetzt ein Programm nicht, wenn eine lokale Variable deklariert ist und nie gelesen wird.</p>
     <p>„Nicht benutzt“ heißt hier: Das Programm greift nie lesend auf die Variable zu. Eine Zuweisung an die Variable zählt nicht. Ein Wert, den niemand liest, kann den Ablauf des Programms nicht beeinflussen. Die Deklaration ist dann nutzlos.</p>
 
-    <h3>Ausprobieren: vier Fassungen eines Programms</h3>
+    <h3>Ausprobieren: vier Programme</h3>
     <div class="zeile" id="u-knoepfe">
       <button type="button" data-fassung="0">b wird nie gelesen</button>
       <button type="button" data-fassung="1">b wird ausgegeben</button>
@@ -357,7 +357,7 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
       <span class="was">Ausgabe</span><span class="wie" id="u-ausgabe"></span>
     </div>
     <div class="auskunft" id="u-text"></div>
-    <p class="legende">Gelb markiert sind die Zeilen, in denen sich die gewählte Fassung von der ersten unterscheidet. Die vier Programme sind Ausschnitte ohne <code>package</code> und <code>import</code>.</p>
+    <p class="legende">Gelb markiert sind die Zeilen, in denen sich das gewählte Programm vom ersten unterscheidet. Die vier Programme sind Ausschnitte ohne <code>package</code> und <code>import</code>.</p>
 
     <h3>Warum Go so streng ist</h3>
     <p>Andere Sprachen geben bei einer ungenutzten Variable nur eine Warnung aus und übersetzen das Programm trotzdem. Go macht daraus einen Fehler. Der Gedanke dahinter: Eine ungenutzte Variable deutet oft auf ein Problem im Code hin, und der Programmierer soll sich gleich darum kümmern.</p>
@@ -392,7 +392,7 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
       <tr><td>2 Kurze Deklaration</td><td>5.1.2, Seiten 116–118: Hinweis 5.2 und Expertenwissen 5.3</td><td>Die kurze Deklaration mit <code>:=</code> und die Regel zur Mischform stammen aus dem Kurstext.</td><td>Die Zeilen der Demo sind eigene Beispiele.</td></tr>
       <tr><td>3 Lokal und global</td><td>5.1.3, Seiten 119–120: Listing 5.1 und Hinweis 5.5</td><td>Listing 5.1 mit der globalen Variable <code>klima</code> stammt aus dem Kurstext.</td><td>Die zwei Meldungen des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>4 Welche Form wann</td><td>5.1.4, Seite 121<br>5.1.2, Seite 118: Hinweis 5.4</td><td>Die Empfehlung, wann welche Form passt, stammt aus dem Kurstext.</td><td>Das Beispiel mit <code>int8</code> und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
-      <tr><td>5 Ungenutzte Variablen</td><td>5.1.5, Seiten 122–123</td><td>Die Meldung zur ungenutzten Variable und der leere Bezeichner als Ausweg stammen aus dem Kurstext.</td><td>Die Fassung mit der globalen Variable <code>b</code> ist ein eigenes Beispiel.</td></tr>
+      <tr><td>5 Ungenutzte Variablen</td><td>5.1.5, Seiten 122–123</td><td>Die Meldung zur ungenutzten Variable und der leere Bezeichner als Ausweg stammen aus dem Kurstext.</td><td>Das Programm mit der globalen Variable <code>b</code> ist ein eigenes Beispiel.</td></tr>
     </table>
     </div>
 
@@ -716,17 +716,17 @@ c := a / b   // c hat den Typ int und den Wert 2</pre>
         "Wählbar sind nur die vier Knöpfe: " + WAHL.map(function (x) { return x.zeile; }).join(" ; ") + ". Alle vier erzeugen eine Variable s vom Typ string mit dem leeren String als Wert."];
     }
     var f = FASSUNG[fassung];
-    return ["Gewählt ist die Fassung „" + f.name + "“.",
-      f.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + f.ergebnis : "Go übersetzt diese Fassung. Die Ausgabe: " + f.ausgabe.replace(/\n/g, " ; "),
-      f.marke.length ? "Gelb markiert " + (f.marke.length > 1 ? "sind die Zeilen " : "ist die Zeile ") + nummern(f.marke) + ". Dort unterscheidet sich die Fassung von der ersten." : "In dieser Fassung ist keine Zeile markiert. Sie ist die erste Fassung.",
-      "Wählbar sind nur die vier Fassungen: " + FASSUNG.map(function (x) { return "„" + x.name + "“"; }).join(", ") + ". Die Programmzeilen lassen sich nicht ändern."];
+    return ["Gewählt ist das Programm „" + f.name + "“.",
+      f.fehler ? "Go übersetzt dieses Programm nicht. Die Meldung des Compilers: " + f.ergebnis : "Go übersetzt dieses Programm. Die Ausgabe: " + f.ausgabe.replace(/\n/g, " ; "),
+      f.marke.length ? "Gelb markiert " + (f.marke.length > 1 ? "sind die Zeilen " : "ist die Zeile ") + nummern(f.marke) + ". Dort unterscheidet sich das Programm vom ersten." : "In diesem Programm ist keine Zeile markiert. Es ist das erste Programm.",
+      "Wählbar sind nur die vier Programme: " + FASSUNG.map(function (x) { return "„" + x.name + "“"; }).join(", ") + ". Die Programmzeilen lassen sich nicht ändern."];
   }
   function kurz() {
     if (stufe === 1) return deklaration();
     if (stufe === 2) return "Zeile 2: " + KURZ[kurzWahl].zeile;
     if (stufe === 3) return "Zeile " + LAUF[ort3].zeile + ", klima = " + q(LAUF[ort3].klima);
     if (stufe === 4) return WAHL[wahl].zeile;
-    if (stufe === 5) return "Fassung „" + FASSUNG[fassung].name + "“";
+    if (stufe === 5) return "Programm „" + FASSUNG[fassung].name + "“";
     return "";
   }
   // Programmzeilen: die Programme der Demos mit Zeilennummern, dazu jeder feste Codeblock des Schritts

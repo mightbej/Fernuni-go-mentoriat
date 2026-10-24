@@ -382,14 +382,14 @@ Ausgabe n</div>
     </div>
 
     <h3>Ausprobieren</h3>
-    <p>Zur Wahl stehen die richtige Fassung des Programms und drei Fassungen mit je einem Fehler in einer Zeile.</p>
-    <div class="hinweis">Erst vorhersagen, dann ausführen: Welche Fassung hat welche Art von Fehler? Bei einer Fassung fällt der Fehler nur mit einer der zwei Eingaben auf.</div>
+    <p>Zur Wahl stehen das richtige Programm und drei Programme mit je einem Fehler in einer Zeile.</p>
+    <div class="hinweis">Erst vorhersagen, dann ausführen: Welches Programm hat welche Art von Fehler? Bei einem Programm fällt der Fehler nur mit einer der zwei Eingaben auf.</div>
     <div class="zeile">
-      <span class="name">Fassung</span>
-      <button type="button" data-fassung="ok">richtige Fassung</button>
-      <button type="button" data-fassung="A">Fassung A</button>
-      <button type="button" data-fassung="B">Fassung B</button>
-      <button type="button" data-fassung="C">Fassung C</button>
+      <span class="name">Programm</span>
+      <button type="button" data-fassung="ok">richtiges Programm</button>
+      <button type="button" data-fassung="A">Programm A</button>
+      <button type="button" data-fassung="B">Programm B</button>
+      <button type="button" data-fassung="C">Programm C</button>
     </div>
     <div class="zeile">
       <span class="name">Eingabe</span>
@@ -439,7 +439,7 @@ Ausgabe n</div>
       <tr><td>1 Maschinensprache</td><td>2.7, Seiten 17–18<br>2.5, Seite 13</td><td>Dass ein Befehl aus Befehlscode und Argumenten besteht, verschieden lang ist und dass Maschinensprache Sprungbefehle hat, stammt aus dem Kurstext. Das Programm in höherer Sprache stammt aus Abschnitt 2.5.</td><td>Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind für die Lektion erfunden.</td></tr>
       <tr><td>2 Compiler und Interpreter</td><td>2.7, Seite 18</td><td>Compiler, Interpreter und die Zwischensprache mit n + m statt n · m Compilern stammen aus dem Kurstext.</td><td>Die Eingaben 6 und 4, die Zählung der gelesenen Zeilen und das Bild mit den Strichen gibt die Lektion dazu.</td></tr>
       <tr><td>3 Token und Syntax</td><td>2.7, Seiten 18–19</td><td>Der Vergleich mit einem Übersetzer von Deutsch nach Englisch, Syntax und Semantik, Token, lexikalische und syntaktische Analyse, das Beispiel <code>a + b</code> und das Wort <code>IF</code> stammen aus dem Kurstext.</td><td>Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen gibt die Lektion dazu.</td></tr>
-      <tr><td>4 Fehler</td><td>2.7, Seite 19</td><td>Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext.</td><td>Die drei fehlerhaften Fassungen und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.</td></tr>
+      <tr><td>4 Fehler</td><td>2.7, Seite 19</td><td>Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext.</td><td>Die drei fehlerhaften Programme und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.</td></tr>
     </table>
     </div>
 
@@ -761,10 +761,10 @@ Ausgabe n</div>
 
   // ---------- Schritt 4: vier Fassungen des Programms ----------
   const FASSUNG = {
-    ok: { name: 'richtige Fassung', zeile: null, bed: (n, m) => n !== m, sonst: (n, m) => m - n },
-    A: { name: 'Fassung A', zeile: [3, '   IF n > THEN n ← n − m'], fehler: 'Zeile 3: Hinter dem Zeichen > muss ein Name, eine Zahl oder eine Klammer stehen. Dort steht THEN.' },
-    B: { name: 'Fassung B', zeile: [4, '   ELSE m ← n'], bed: (n, m) => n !== m, sonst: (n, m) => n, sonstText: 'm ← n' },
-    C: { name: 'Fassung C', zeile: [2, 'WHILE n ≠ 0'], bed: (n, m) => n !== 0, sonst: (n, m) => m - n, bedText: 'n ≠ 0' }
+    ok: { name: 'richtiges Programm', zeile: null, bed: (n, m) => n !== m, sonst: (n, m) => m - n },
+    A: { name: 'Programm A', zeile: [3, '   IF n > THEN n ← n − m'], fehler: 'Zeile 3: Hinter dem Zeichen > muss ein Name, eine Zahl oder eine Klammer stehen. Dort steht THEN.' },
+    B: { name: 'Programm B', zeile: [4, '   ELSE m ← n'], bed: (n, m) => n !== m, sonst: (n, m) => n, sonstText: 'm ← n' },
+    C: { name: 'Programm C', zeile: [2, 'WHILE n ≠ 0'], bed: (n, m) => n !== 0, sonst: (n, m) => m - n, bedText: 'n ≠ 0' }
   };
   const GRENZE = 7;                                                    // so viele Durchläufe der Schleife zeigt die Seite höchstens
   let fassung = 'ok', eingabe4 = [6, 4];
@@ -806,7 +806,7 @@ Ausgabe n</div>
     aus = String(n);
     const richtig = n === soll;
     merke(5, [], 'Die Bedingung ' + bedText + ' ist nicht mehr erfüllt, die Schleife endet. Das Programm gibt ' + n + ' aus. Laut Spezifikation ist ' + soll + ' richtig. ' +
-      (richtig ? (fassung === 'ok' ? 'Die Ausgabe stimmt.' : 'Die Ausgabe stimmt, obwohl diese Fassung einen Fehler hat. Mit dieser Eingabe fällt er nicht auf. Probiere die andere Eingabe.')
+      (richtig ? (fassung === 'ok' ? 'Die Ausgabe stimmt.' : 'Die Ausgabe stimmt, obwohl dieses Programm einen Fehler hat. Mit dieser Eingabe fällt er nicht auf. Probiere die andere Eingabe.')
                : 'Die Ausgabe ist falsch. Das ist ein semantischer Fehler: Das Programm ist übersetzbar und läuft, tut aber nicht, was es soll.'),
       { ende: richtig ? 'richtig' : 'falsch' });
     return T;
@@ -822,7 +822,7 @@ Ausgabe n</div>
       : S && S.ende === 'syntax' ? '<span class="leer">Das Programm läuft nicht.</span>'
       : S && S.ende === 'endlos' ? '<span class="leer">Das Programm läuft weiter und gibt nichts aus.</span>'
       : '<span class="leer">Das Programm hat noch nichts ausgegeben.</span>';
-    el('erkl4').textContent = S ? S.text : 'Gewählt ist die ' + FASSUNG[fassung].name + ' mit den Eingaben ' + eingabe4[0] + ' und ' + eingabe4[1] + '. Der erste Schritt übersetzt das Programm, die weiteren führen es aus.';
+    el('erkl4').textContent = S ? S.text : 'Gewählt ist ' + (fassung === 'ok' ? 'das richtige Programm' : FASSUNG[fassung].name) + ' mit den Eingaben ' + eingabe4[0] + ' und ' + eingabe4[1] + '. Der erste Schritt übersetzt das Programm, die weiteren führen es aus.';
     el('zaehler4').textContent = 'Schritt ' + k + ' von ' + T4.length;
     document.querySelectorAll('[data-fassung]').forEach(b => b.classList.toggle('gewaehlt', b.dataset.fassung === fassung));
     document.querySelectorAll('[data-eingabe]').forEach(b => b.classList.toggle('gewaehlt', b.dataset.eingabe === eingabe4.join(',')));
@@ -933,7 +933,7 @@ Ausgabe n</div>
     if (stufe === 4) {
       const F = FASSUNG[fassung], k = POS[4], S = k ? T4[k - 1] : null;
       const t = ['Gewählt ist die ' + F.name + ' mit den Eingaben ' + eingabe4[0] + ' und ' + eingabe4[1] + '. Laut Spezifikation ist die richtige Ausgabe ' + ggT(eingabe4[0], eingabe4[1]) + '.'];
-      t.push(F.zeile ? 'Diese Fassung weicht in Zeile ' + F.zeile[0] + ' von der richtigen Fassung ab. Dort steht: ' + F.zeile[1].trim() + '. In der richtigen Fassung steht: ' + HOCH[F.zeile[0] - 1].trim() + '. Die Seite markiert die abweichende Zeile nicht, der Student soll sie selbst finden.' : 'Das ist die Fassung ohne Fehler.');
+      t.push(F.zeile ? 'Dieses Programm weicht in Zeile ' + F.zeile[0] + ' vom richtigen Programm ab. Dort steht: ' + F.zeile[1].trim() + '. Im richtigen Programm steht: ' + HOCH[F.zeile[0] - 1].trim() + '. Die Seite markiert die abweichende Zeile nicht, der Student soll sie selbst finden.' : 'Das ist das Programm ohne Fehler.');
       t.push('Schritt ' + k + ' von ' + T4.length + '.');
       if (!S) t.push('Das Programm ist noch nicht übersetzt.');
       else {

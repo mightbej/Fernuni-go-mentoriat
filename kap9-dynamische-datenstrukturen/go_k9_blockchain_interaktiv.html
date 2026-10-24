@@ -411,7 +411,7 @@ type blockkette struct {
     el('g-ohne').textContent = 'guthaben: ' + ohne.toString();
     el('g-mit').textContent = b > 75 ? 'abgelehnt' + NL + 'guthaben: 75' : 'guthaben: ' + (75 - b);
     el('g-urteil').className = 'auskunft' + (b > 75 ? ' fehler' : '');
-    el('g-urteil').innerHTML = '<p>' + esc(b > 75 ? '75 − ' + b + ' ergäbe −' + (b - 75) + '. Der Typ uint64 hat keine negativen Zahlen, der Wert springt an das obere Ende: ' + ohne.toString() + '. Mit Prüfung wird die Überweisung abgelehnt, und Alice behält 75 Coins.' : 'Der Betrag ist nicht größer als das Guthaben. Beide Fassungen ziehen ab, Alice hat danach ' + (75 - b) + ' Coins.') + '</p>';
+    el('g-urteil').innerHTML = '<p>' + esc(b > 75 ? '75 − ' + b + ' ergäbe −' + (b - 75) + '. Der Typ uint64 hat keine negativen Zahlen, der Wert springt an das obere Ende: ' + ohne.toString() + '. Mit Prüfung wird die Überweisung abgelehnt, und Alice behält 75 Coins.' : 'Der Betrag ist nicht größer als das Guthaben. Mit und ohne Prüfung wird der Betrag abgezogen, Alice hat danach ' + (75 - b) + ' Coins.') + '</p>';
     melde(false);
   }
   el('g-wahl').addEventListener('click', ev => { const k = ev.target.closest('button'); if (k) { g = Number(k.dataset.i); zeichneGuthaben(); } });

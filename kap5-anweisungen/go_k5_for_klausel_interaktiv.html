@@ -186,10 +186,10 @@ for i &lt;= 10 {
     <ol class="programm" id="a-programm"></ol>
     <div class="konsole" id="a-konsole"></div>
     <p class="legende">Die gelb markierte Zeile ist die Zeile, die gerade ausgeführt wurde. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Das Schild hinter Zeile 6 nennt den Teil der for-Klausel, der gerade gelaufen ist: grau für Init-Anweisung und Post-Anweisung, grün oder rot für das Ergebnis der Schleifenbedingung.</p>
-    <p class="quelle">Listing 5.6, <code>for_klausel_quadrat.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.2. Die Fassung mit <code>i &lt;= 3</code> ist für diese Seite geändert.</p>
+    <p class="quelle">Listing 5.6, <code>for_klausel_quadrat.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 5.5.3.2. Das Programm mit <code>i &lt;= 3</code> ist für diese Seite geändert.</p>
 
     <h3>Das Ende genau betrachtet</h3>
-    <p>Nach dem letzten Schleifendurchlauf läuft die Post-Anweisung noch einmal. In der Fassung des Kurstexts hat <code>i</code> im zehnten Schleifendurchlauf den Wert 10. Danach erhöht <code>i++</code> den Wert auf 11. Erst die nächste Prüfung <code>11 &lt;= 10</code> ergibt <code>false</code> und beendet die Schleife.</p>
+    <p>Nach dem letzten Schleifendurchlauf läuft die Post-Anweisung noch einmal. Im Programm des Kurstexts hat <code>i</code> im zehnten Schleifendurchlauf den Wert 10. Danach erhöht <code>i++</code> den Wert auf 11. Erst die nächste Prüfung <code>11 &lt;= 10</code> ergibt <code>false</code> und beendet die Schleife.</p>
     <p>Die Schleifenbedingung wird also elfmal geprüft, der Schleifenrumpf läuft zehnmal.</p>
   </div>
   <div class="zeile schritte">
@@ -216,7 +216,7 @@ for i &lt;= 10 {
       <span class="was">Ausgabe</span><span class="wie" id="l-ausgabe"></span>
     </div>
     <div class="auskunft" id="l-text"></div>
-    <p class="legende">Gelb markiert ist die Zeile, auf die es in der gewählten Fassung ankommt. Die drei Programme sind Ausschnitte ohne <code>package</code>, <code>import</code> und <code>func main</code>.</p>
+    <p class="legende">Gelb markiert ist die Zeile, auf die es im gewählten Programm ankommt. Die drei Programme sind Ausschnitte ohne <code>package</code>, <code>import</code> und <code>func main</code>.</p>
 
     <h3>Wie die Laufvariable heißt</h3>
     <p>Laufvariablen heißen üblicherweise <code>i</code>, <code>j</code> oder <code>k</code>. Dafür gibt es zwei Gründe:</p>
@@ -271,7 +271,7 @@ for i &lt;= 10 {
   <section class="stufe" id="stufe-5">
   <div class="card">
     <h2>Aus der Praxis</h2>
-    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.3.2 des Kurstexts. Go übersetzt jede Fassung, auch die vier mit dem Kommentar „falsch“. <code>{ … }</code> steht für einen beliebigen Schleifenrumpf.</div>
+    <div class="hinweis">Die Faustregeln in diesem Schritt stammen vom Mentor. Sie stehen nicht in Abschnitt 5.5.3.2 des Kurstexts. Go übersetzt jedes Beispiel, auch die vier mit dem Kommentar „falsch“. <code>{ … }</code> steht für einen beliebigen Schleifenrumpf.</div>
 
     <h3>1. Startwert und Vergleich gehören zusammen</h3>
 <pre class="code-block">for i := 0; i &lt; 10; i++ { … }    // zehn Schleifendurchläufe: i von 0 bis 9
@@ -292,7 +292,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     <h3>3. Wer herunterzählt, dreht alle drei Teile um</h3>
 <pre class="code-block">for i := 10; i &gt;= 1; i-- { … }   // zehn Schleifendurchläufe: i von 10 bis 1</pre>
 <pre class="code-block">for i := 10; i &lt;= 1; i-- { … }   // falsch: kein einziger Schleifendurchlauf</pre>
-    <p>Beim Herunterzählen ändern sich der Startwert, der Vergleich und die Post-Anweisung. In der zweiten Fassung ist der Vergleich stehen geblieben: <code>10 &lt;= 1</code> ergibt schon bei der ersten Prüfung <code>false</code>, und die Schleife läuft nie.</p>
+    <p>Beim Herunterzählen ändern sich der Startwert, der Vergleich und die Post-Anweisung. Im zweiten Programm ist der Vergleich stehen geblieben: <code>10 &lt;= 1</code> ergibt schon bei der ersten Prüfung <code>false</code>, und die Schleife läuft nie.</p>
     <p>Die Prüffrage ist die gleiche wie bei der for-Anweisung mit Bedingung: Ergibt die Schleifenbedingung am Anfang <code>true</code>, und sorgt die Post-Anweisung dafür, dass sie irgendwann <code>false</code> ergibt?</p>
 
     <p>Faustregeln zur for-Anweisung mit Bedingung stehen auf der Seite <a href="go_k5_for_bedingung_interaktiv.html#praxis">for-Anweisung mit Bedingung</a>, Schritt 5.</p>
@@ -312,7 +312,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     <table class="text">
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
       <tr><td>1 Die for-Klausel</td><td>5.5.3.2, Seiten 143–144</td><td>Init-Anweisung, Schleifenbedingung und Post-Anweisung stammen aus dem Kurstext.</td><td>Die drei Meldungen des Compilers und die Erklärung der Formatangabe gibt die Lektion dazu.</td></tr>
-      <tr><td>2 Der Ablauf</td><td>5.5.3.2, Seiten 143–144: Listing 5.6</td><td>Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext.</td><td>Die Fassung mit <code>i &lt;= 3</code> gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Der Ablauf</td><td>5.5.3.2, Seiten 143–144: Listing 5.6</td><td>Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext.</td><td>Das Programm mit <code>i &lt;= 3</code> gibt die Lektion dazu.</td></tr>
       <tr><td>3 Die Laufvariable</td><td>5.5.3.2, Seiten 143–145: Expertenwissen 5.15</td><td>Dass die Laufvariable nur in der for-Anweisung gilt und einen kurzen Namen wie <code>i</code> bekommt, steht im Kurstext. Das Expertenwissen 5.15 zeigt Init- und Post-Anweisung mit mehreren Variablen.</td><td>Die drei Programme der Demo und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>4 Eine Schleife, vier Schreibweisen</td><td>5.5.3.2, Seiten 145–146: Expertenwissen 5.16</td><td>Dass Teile der for-Klausel fehlen dürfen, steht im Expertenwissen 5.16.</td><td>Die vier Programme sind eigene Beispiele.</td></tr>
       <tr><td>5 Aus der Praxis</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Faustregeln stammen aus der Praxis des Mentors.</td></tr>
@@ -528,7 +528,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
   function standSaetze() {
     if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
-    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen der falsche und der richtige Code schon da."];
     if (stufe === 1) {
       var t = TEILE[teil];
       return ["Gewählt ist der Teil „" + t.name + "“. Gelb markiert ist in beiden Programmen das Stück " + t.stueck + ".",
@@ -537,7 +537,7 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     }
     if (stufe === 2) {
       var s = lauf2(), e = s[ort2], fertig = ort2 === s.length - 1, ende = s[s.length - 1];
-      return ["In Zeile 6 steht i <= " + grenze + (grenze === 10 ? ", wie im Kurstext." : ". Diese Fassung ist für die Seite geändert, im Kurstext steht i <= 10.") + " Wählbar sind nur die zwei Fassungen i <= 10 und i <= 3.",
+      return ["In Zeile 6 steht i <= " + grenze + (grenze === 10 ? ", wie im Kurstext." : ". Dieses Programm ist für die Seite geändert, im Kurstext steht i <= 10.") + " Wählbar sind nur die zwei Möglichkeiten i <= 10 und i <= 3.",
         "Der Lauf steht bei Zeile " + e.zeile + ", gelb markiert. Das ist Anweisung " + (ort2 + 1) + " von " + s.length + " dieses Laufs." + (e.teil ? " Hinter Zeile 6 steht das Schild „" + schild(e) + "“." : " Hinter Zeile 6 steht gerade kein Schild."),
         "Zu dieser Zeile sagt die HTML-Seite: " + e.text,
         "Die Laufvariable i " + (e.i === null ? (ort2 === 0 ? "gibt es noch nicht." : "gibt es nicht mehr.") : "hat den Wert " + e.i + ".") + " Die Schleifenbedingung wurde bisher " + e.k + "-mal geprüft. Der Schleifenrumpf ist bisher " + e.d + "-mal gelaufen.",
@@ -547,9 +547,9 @@ for i := 0; i &lt;= 10; i++ { … }   // falsch: elf Schleifendurchläufe</pre>
     }
     if (stufe === 3) {
       var g = GELTUNG[geltung];
-      return ["Gewählt ist die Fassung „" + g.name + "“. Gelb markiert ist Zeile " + g.marke + ".",
-        g.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + g.meldung : "Go übersetzt diese Fassung. Die Ausgabe: " + g.ausgabe.replace(/\n/g, " ; "),
-        "Wählbar sind nur die drei Fassungen „i im Schleifenrumpf“, „i hinter der Schleife“ und „i vor der Schleife deklariert“. Die Demo zeigt das Ergebnis, einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
+      return ["Gewählt ist das Programm „" + g.name + "“. Gelb markiert ist Zeile " + g.marke + ".",
+        g.fehler ? "Go übersetzt dieses Programm nicht. Die Meldung des Compilers: " + g.meldung : "Go übersetzt dieses Programm. Die Ausgabe: " + g.ausgabe.replace(/\n/g, " ; "),
+        "Wählbar sind nur die drei Programme „i im Schleifenrumpf“, „i hinter der Schleife“ und „i vor der Schleife deklariert“. Die Demo zeigt das Ergebnis, einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht."];
     }
     var v = VARIANTE[variante];
     return ["Gewählt ist die Schreibweise „" + v.name + "“. Ihre Zeilen: " + v.zeilen.join(" ; "),

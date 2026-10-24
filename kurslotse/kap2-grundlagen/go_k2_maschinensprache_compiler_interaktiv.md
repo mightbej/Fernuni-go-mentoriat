@@ -137,14 +137,14 @@ Reiter: fehler
 
 - Oben steht die Spezifikation des Programms: Gültig sind zwei positive ganze Zahlen n und m. Richtig ist als Ausgabe ihr größter gemeinsamer Teiler. Für 6 und 4 ist das 2, für 4 und 6 auch.
 - Darunter steht eine Tabelle mit drei Arten von Fehlern: Syntaxfehler, semantischer Fehler mit falscher Ausgabe, semantischer Fehler ohne Ausgabe, die Nichtterminierung.
-- Unter „Ausprobieren“ stehen vier Fassungen des Programms zur Wahl und zwei Eingaben.
-- Die richtige Fassung ist das Programm aus Abschnitt 2.5.
-- Fassung A hat in Zeile 3 `IF n > THEN n ← n − m`. Hinter `>` fehlt der rechte Teil des Vergleichs. Das ist ein Syntaxfehler. Der Compiler meldet ihn, und das Programm läuft nicht. Der Ablauf hat nur einen Schritt.
-- Fassung B hat in Zeile 4 `ELSE m ← n`. Das ist ein semantischer Fehler. Mit den Eingaben 6 und 4 gibt das Programm 2 aus, das stimmt zufällig. Mit 4 und 6 gibt es 4 aus, richtig wäre 2.
-- Fassung C hat in Zeile 2 `WHILE n ≠ 0`. Die Bedingung der Schleife ist schlecht gewählt. Die Werte erreichen (2, 2), dann (2, 0), und danach ändert sich nichts mehr. Das Programm endet nie. Die Seite bricht nach sieben Durchläufen der Schleife ab und sagt das.
-- Der Compiler dieser Seite prüft nur, ob jede Zeile die Syntax einhält. Was das Programm beim Laufen mit den Werten tut, prüft er nicht. Deshalb meldet er bei Fassung B und bei Fassung C nichts. In Fassung C hält `WHILE n ≠ 0` die Syntax ein. Beim Laufen wird m zu 0, n behält den Wert 2 und wird nie 0.
-- Die vier Fassungen stehen in der Schreibweise von Kapitel 2 und nicht in Go. Go hat kein `WHILE`.
-- Die Seite markiert die geänderte Zeile nicht und nennt die Art des Fehlers erst am Ende des Ablaufs. Der Student soll beides vorher selbst finden. Fragt er, welche Fassung welchen Fehler hat, bekommt er einen Hinweis, worauf er achten soll, und führt die Fassung dann selbst aus.
+- Unter „Ausprobieren“ stehen vier Programme zur Wahl und zwei Eingaben.
+- Das richtige Programm stammt aus Abschnitt 2.5.
+- Programm A hat in Zeile 3 `IF n > THEN n ← n − m`. Hinter `>` fehlt der rechte Teil des Vergleichs. Das ist ein Syntaxfehler. Der Compiler meldet ihn, und das Programm läuft nicht. Der Ablauf hat nur einen Schritt.
+- Programm B hat in Zeile 4 `ELSE m ← n`. Das ist ein semantischer Fehler. Mit den Eingaben 6 und 4 gibt das Programm 2 aus, das stimmt zufällig. Mit 4 und 6 gibt es 4 aus, richtig wäre 2.
+- Programm C hat in Zeile 2 `WHILE n ≠ 0`. Die Bedingung der Schleife ist schlecht gewählt. Die Werte erreichen (2, 2), dann (2, 0), und danach ändert sich nichts mehr. Das Programm endet nie. Die Seite bricht nach sieben Durchläufen der Schleife ab und sagt das.
+- Der Compiler dieser Seite prüft nur, ob jede Zeile die Syntax einhält. Was das Programm beim Laufen mit den Werten tut, prüft er nicht. Deshalb meldet er bei Programm B und bei Programm C nichts. In Programm C hält `WHILE n ≠ 0` die Syntax ein. Beim Laufen wird m zu 0, n behält den Wert 2 und wird nie 0.
+- Die vier Programme stehen in der Schreibweise von Kapitel 2 und nicht in Go. Go hat kein `WHILE`.
+- Die Seite markiert die geänderte Zeile nicht und nennt die Art des Fehlers erst am Ende des Ablaufs. Der Student soll beides vorher selbst finden. Fragt er, welches Programm welchen Fehler hat, bekommt er einen Hinweis, worauf er achten soll, und führt das Programm dann selbst aus.
 - Zu sehen ist das Programm in einem dunklen Kasten mit den Zeilen 1 bis 5. Hell markiert ist die Zeile des letzten Schritts.
 - Darunter stehen die Meldung des Compilers, die Variablen n und m als Kästen, die Reihe „Werte (n, m) bisher“ und die Ausgabe des Programms. Darunter steht in einem grünen Feld ein Satz zum letzten Schritt.
 - Der erste Schritt des Ablaufs übersetzt das Programm. Der zweite liest die Eingaben. Danach ist jeder Schritt ein Durchlauf der Schleife. Der letzte Schritt gibt aus und vergleicht mit der Spezifikation.
@@ -152,7 +152,7 @@ Reiter: fehler
 
 ### Handgriffe
 
-- Eine Fassung wählen: „richtige Fassung“, „Fassung A“, „Fassung B“ oder „Fassung C“. Der Ablauf beginnt dann von vorn.
+- Ein Programm wählen: „richtiges Programm“, „Programm A“, „Programm B“ oder „Programm C“. Der Ablauf beginnt dann von vorn.
 - Eine Eingabe wählen: „6 und 4“ oder „4 und 6“. Andere Zahlen lassen sich nicht eingeben.
 - „nächster Schritt“, „einen Schritt zurück“, „von vorn“.
 - Die Programme lassen sich nicht ändern. Eigene Fehler lassen sich nicht einbauen.
@@ -175,7 +175,7 @@ Reiter: kurstext
   - 1 Maschinensprache, 2.7, Seiten 17–18; 2.5, Seite 13: Dass ein Befehl aus Befehlscode und Argumenten besteht, verschieden lang ist und dass Maschinensprache Sprungbefehle hat, stammt aus dem Kurstext. Das Programm in höherer Sprache stammt aus Abschnitt 2.5. Die sieben Befehle, ihre Befehlscodes, die lesbare Schreibweise und die Adressen sind für die Lektion erfunden.
   - 2 Compiler und Interpreter, 2.7, Seite 18: Compiler, Interpreter und die Zwischensprache mit n + m statt n · m Compilern stammen aus dem Kurstext. Die Eingaben 6 und 4, die Zählung der gelesenen Zeilen und das Bild mit den Strichen gibt die Lektion dazu.
   - 3 Token und Syntax, 2.7, Seiten 18–19: Der Vergleich mit einem Übersetzer von Deutsch nach Englisch, Syntax und Semantik, Token, lexikalische und syntaktische Analyse, das Beispiel a + b und das Wort IF stammen aus dem Kurstext. Die übrigen Beispiele und die Darstellung des Aufbaus als Kästen gibt die Lektion dazu.
-  - 4 Fehler, 2.7, Seite 19: Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext. Die drei fehlerhaften Fassungen und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.
+  - 4 Fehler, 2.7, Seite 19: Syntaxfehler, semantische Fehler, Spezifikation und Nichtterminierung stammen aus dem Kurstext. Die drei fehlerhaften Programme und die Eingaben sind eigene Beispiele. Das Halteproblem am Ende des Abschnitts lässt die Lektion aus.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.5, Seiten 13–14, Flussdiagramm und Struktogramm: Das Beispielprogramm zum größten gemeinsamen Teiler. Lektion: Größter gemeinsamer Teiler.
   - Abschnitt 3.2, Seiten 22–24, go run: Der Befehl übersetzt ein Go-Programm und startet es gleich danach. Eine Lektion zu diesem Abschnitt gibt es nicht.

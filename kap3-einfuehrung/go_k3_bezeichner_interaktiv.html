@@ -265,7 +265,7 @@ fmt.Println(tempc)</pre>
   <section class="stufe" id="stufe-5">
   <div class="card">
     <h3>Schritt 5: Selbst ausprobieren</h3>
-    <p>Hier steht ein kurzes Programm: Es deklariert eine Variable und gibt sie aus. Wähle eine Fassung, sag vorher, ob Go den Namen annimmt, und führe sie aus. Danach kannst du im Editor eigene Namen versuchen.</p>
+    <p>Hier steht ein kurzes Programm: Es deklariert eine Variable und gibt sie aus. Wähle ein Programm, sag vorher, ob Go den Namen annimmt, und führe es aus. Danach kannst du im Editor eigene Namen versuchen.</p>
     <p>Vorschläge zum Ausprobieren:</p>
     <ul>
       <li><strong>Eigener Name:</strong> Gib der Variablen deinen Vornamen als Namen, mit Umlaut, wenn er einen hat.</li>
@@ -273,7 +273,7 @@ fmt.Println(tempc)</pre>
       <li><strong>Schlüsselwort:</strong> Versuch ein Schlüsselwort aus Schritt 3, zum Beispiel <code>for</code> oder <code>range</code>.</li>
     </ul>
     <div id="werkstatt"></div>
-    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder die Fassung der Lektion.</p>
+    <p>Die Lektion speichert nicht, was du hier schreibst. Lädst du sie neu, steht dort wieder das Programm der Lektion.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
@@ -292,7 +292,7 @@ fmt.Println(tempc)</pre>
       <tr><td>2 Groß und klein</td><td>3.3.4, Seite 31</td><td>Das Beispiel mit <code>tempC</code> und <code>tempc</code>, der Export und die Konvention zum großen Anfangsbuchstaben stammen aus dem Kurstext.</td><td>Die zwei Meldungen von Go 1.26 gibt die Lektion dazu.</td></tr>
       <tr><td>3 Schlüsselwörter</td><td>3.3.4, Seiten 31–32</td><td>Die Liste der 25 Schlüsselwörter stammt aus dem Kurstext.</td><td>Die Farben der Schlüsselwörter, die Hinweise auf ihre erste Stelle im Kurstext und die vier Zeilen der Auswahl mit ihren Meldungen gibt die Lektion dazu.</td></tr>
       <tr><td>4 Vorgegebene Bezeichner</td><td>3.3.4, Seiten 31–32</td><td>Die drei Listen der vorgegebenen Bezeichner, die Warnung und der leere Bezeichner stammen aus dem Kurstext.</td><td>Die vier Zeilenpaare der Auswahl mit ihren Ausgaben und Meldungen gibt die Lektion dazu.</td></tr>
-      <tr><td>5 Selbst ausprobieren</td><td>3.3.4, Seiten 30–32</td><td>Die Namen <code>größe</code>, <code>tempC</code> und <code>tempc</code> stammen aus dem Kurstext.</td><td>Das Ausführen im Editorlotsen, die übrigen Fassungen, ihre Meldungen von Go 1.26.1 und die Vorschläge gibt die Lektion dazu.</td></tr>
+      <tr><td>5 Selbst ausprobieren</td><td>3.3.4, Seiten 30–32</td><td>Die Namen <code>größe</code>, <code>tempC</code> und <code>tempc</code> stammen aus dem Kurstext.</td><td>Das Ausführen im Editorlotsen, die übrigen Programme, ihre Meldungen von Go 1.26.1 und die Vorschläge gibt die Lektion dazu.</td></tr>
     </table>
     </div>
 
@@ -443,9 +443,9 @@ fmt.Println(tempc)</pre>
       x.fehler ? (x.laufzeit ? 'Go übersetzt die Zeile, das Programm bricht aber ab. Die Meldung: ' : 'Go übersetzt die Zeile nicht. Die Meldung des Compilers: ') + x.aus : (x.aus ? 'Die Ausgabe: ' + x.aus.split(NL).join(' | ') : 'Das Programm gibt nichts aus.'),
       'Die Seite sagt dazu: ' + x.satz, 'Handgriff: eine der ' + W.liste.length + ' festen Zeilen wählen. Eine eigene Zeile lässt sich nicht eingeben.'];
   }
-  // ---------- Ein Programm in mehreren Fassungen ----------
+  // ---------- Ein Programm in mehreren Schritten ----------
   // liste: Einträge mit zeilen (Programm), mark (Nummern hervorgehobener Zeilen), aus (Meldung oder Ausgabe), fehler, laufzeit, titel, satz.
-  // Der Student geht von Fassung zu Fassung: fehlerhaftes Programm, Meldung des Compilers, Korrektur, nächste Meldung.
+  // Der Student geht von Schritt zu Schritt: fehlerhaftes Programm, Meldung des Compilers, Korrektur, nächste Meldung.
   function fassungen(kurz, liste) {
     const F = { i: 0, liste: liste };
     F.zeichne = function () {
@@ -462,17 +462,17 @@ fmt.Println(tempc)</pre>
     el(kurz + '-zurueck').addEventListener('click', () => { if (F.i > 0) { F.i--; F.zeichne(); } });
     el(kurz + '-vorn').addEventListener('click', () => { F.i = 0; F.zeichne(); });
     el(kurz + '-kopieren').addEventListener('click', () => { const k = el(kurz + '-kopieren');
-      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Diese Fassung kopieren'; }, 1500); }); });
+      navigator.clipboard.writeText(liste[F.i].zeilen.join(NL) + NL).then(() => { k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Dieses Programm kopieren'; }, 1500); }); });
     return F;
   }
-  function standFassungen(F) {
+  function standProgramme(F) {
     const x = F.liste[F.i];
-    return ['Die Demo zeigt ein Programm in ' + F.liste.length + ' Fassungen nacheinander. Zu sehen ist Fassung ' + (F.i + 1) + ': ' + x.titel + '.',
+    return ['Die Demo zeigt ein Programm in ' + F.liste.length + ' Schritten nacheinander. Zu sehen ist Schritt ' + (F.i + 1) + ': ' + x.titel + '.',
       x.mark && x.mark.length ? 'Gelb hervorgehoben ist Zeile ' + x.mark.join(' und ') + ': ' + x.mark.map(n => x.zeilen[n - 1].trim()).join(' | ') : 'Keine Zeile ist hervorgehoben.',
-      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt diese Fassung nicht. Die Meldung des Compilers: ') : 'Go übersetzt diese Fassung. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
+      x.aus ? (x.fehler ? (x.laufzeit ? 'Das Programm bricht ab. Die Meldung: ' : 'Go übersetzt dieses Programm nicht. Die Meldung des Compilers: ') : 'Go übersetzt dieses Programm. Die Ausgabe: ') + x.aus.split(NL).join(' | ') : 'Unter dem Programm steht noch keine Meldung und keine Ausgabe.',
       'Die Seite sagt dazu: ' + x.satz,
-      F.i === F.liste.length - 1 ? 'Das ist die letzte Fassung.' : 'Die nächste Fassung heißt: ' + F.liste[F.i + 1].titel + '.',
-      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann eine Fassung kopieren und im eigenen Editor übersetzen.'];
+      F.i === F.liste.length - 1 ? 'Das ist der letzte Schritt.' : 'Der nächste Schritt heißt: ' + F.liste[F.i + 1].titel + '.',
+      'Handgriffe: „weiter“, „zurück“, „von vorn“ und „Dieses Programm kopieren“. Das Programm lässt sich auf der Seite nicht ändern. Der Student kann ein Programm kopieren und im eigenen Editor übersetzen.'];
   }
   const zeilenFassung = F => F ? F.liste[F.i].zeilen.map((t, i) => (i + 1) + '  ' + t) : [];
   // Die Programmzeilen einer Demo für den Kurslotsen, mit der Stelle des Laufs

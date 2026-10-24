@@ -1,6 +1,6 @@
 # Das Kopier-Problem: Arrays als Argument
 
-Die Seite ist ein Exkurs. Sie rechnet an einer Funktion `swap` aus, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt die Fassung mit einem Zeiger. Sie gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.2 und 7.3, Seiten 169–172.
+Die Seite ist ein Exkurs. Sie rechnet an einer Funktion `swap` aus, wie viele Elemente ein Programm kopiert, wenn es ein Array als Wert an eine Funktion übergibt, und zeigt das Programm mit einem Zeiger. Sie gehört zu Kapitel 7 des Kurstexts, Abschnitt 7.2 und 7.3, Seiten 169–172.
 
 Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 

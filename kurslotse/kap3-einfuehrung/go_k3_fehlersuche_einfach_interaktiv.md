@@ -6,12 +6,12 @@ Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Schritt 1 bis 3 
 
 Für Schritt 1 bis 3 gilt:
 
-- Jede Demo zeigt ein Programm in drei Fassungen nacheinander. Fassung 1 „Das Programm lesen“: das fehlerhafte Programm ohne Meldung. Fassung 2 „Übersetzen“: das gleiche Programm mit der Meldung des Compilers, die gemeldete Zeile ist gelb. Fassung 3 „Korrigieren“: das berichtigte Programm mit seiner Ausgabe, die geänderte Zeile ist gelb.
-- Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
-- Solange Fassung 1 zu sehen ist, soll der Student den Fehler selbst suchen. Fragt er in Fassung 1 nach dem Fehler, bekommt er einen Hinweis auf die Zeile oder auf die Art des Fehlers und nicht die Lösung. Ab Fassung 2 darf die Antwort den Fehler nennen.
+- Jede Demo zeigt drei Programme nacheinander. Programm 1 „Das Programm lesen“: das fehlerhafte Programm ohne Meldung. Programm 2 „Übersetzen“: das gleiche Programm mit der Meldung des Compilers, die gemeldete Zeile ist gelb. Programm 3 „Korrigieren“: das berichtigte Programm mit seiner Ausgabe, die geänderte Zeile ist gelb.
+- Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Dieses Programm kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
+- Solange Programm 1 zu sehen ist, soll der Student den Fehler selbst suchen. Fragt er in Programm 1 nach dem Fehler, bekommt er einen Hinweis auf die Zeile oder auf die Art des Fehlers und nicht die Lösung. Ab Programm 2 darf die Antwort den Fehler nennen.
 - Eine Meldung des Compilers hat die Form Datei, Zeile, Spalte, Text, zum Beispiel `.\main.go:10:28: syntax error: …`. Die Meldung nennt die Stelle, an der der Compiler nicht weiterkam. Der Fehler steht dort oder kurz davor.
 - Englische Wörter der Meldungen: `syntax error` heißt Syntaxfehler, `unexpected` unerwartet, `expected` erwartet, `literal` ein Wert, der wörtlich im Programm steht, `newline` Zeilenumbruch, `mismatched types` nicht zusammenpassende Typen, `argument list` Liste der Argumente.
-- Auf der Seite läuft kein Go. Der Browser zeigt, was Go 1.26 gemeldet oder ausgegeben hat. Der Student kann das Programm auf der Seite nicht ändern. Er kann eine Fassung kopieren und im eigenen Editor mit `go run` übersetzen.
+- Auf der Seite läuft kein Go. Der Browser zeigt, was Go 1.26 gemeldet oder ausgegeben hat. Der Student kann das Programm auf der Seite nicht ändern. Er kann jedes Programm kopieren und im eigenen Editor mit `go run` übersetzen.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
 ## Worum es geht
@@ -49,7 +49,7 @@ Reiter: argumente
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 
@@ -70,7 +70,7 @@ Reiter: text
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 
@@ -94,7 +94,7 @@ Reiter: klammer
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 

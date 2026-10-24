@@ -102,8 +102,8 @@
     </ul>
     <p>Wie bei der Variable darf der Typ fehlen. Die ausführliche Deklaration einer Variable zeigt die Seite <a href="go_k5_variablen_deklaration_interaktiv.html">Variablendeklaration</a>.</p>
 
-    <h3>Vier Fassungen zum Ausprobieren</h3>
-    <p>Jeder Knopf zeigt eine Fassung der Deklaration von <code>maxAnzahl</code>. Darunter steht, was Go daraus macht: eine Ausgabe oder eine Meldung des Compilers.</p>
+    <h3>Vier Möglichkeiten zum Ausprobieren</h3>
+    <p>Jeder Knopf zeigt eine Möglichkeit, <code>maxAnzahl</code> zu deklarieren. Darunter steht, was Go daraus macht: eine Ausgabe oder eine Meldung des Compilers.</p>
     <div class="zeile" id="d-knoepfe">
       <button type="button" data-dekl="0">mit Typ</button>
       <button type="button" data-dekl="1">ohne Typ</button>
@@ -192,10 +192,10 @@ umfang := 2 * 3.141592653589793 * radius</pre>
       <li><strong>Monatsbeitrag:</strong> Ein Jahresbeitrag von 1560 wird durch die Zahl der Monate geteilt.</li>
       <li><strong>Stunde auf der Uhr:</strong> Aus 15 Uhr wird 3 Uhr, weil das Zifferblatt nur 12 Stunden hat.</li>
     </ul>
-    <p>Das Programm gibt es in zwei Fassungen. In der einen steht die Zahl der Monate als Literal <code>12</code> im Programm, in der anderen als Konstante <code>monateImJahr</code>.</p>
+    <p>Die Demo zeigt zwei Programme. Im einen steht die Zahl der Monate als Literal <code>12</code>, im anderen als Konstante <code>monateImJahr</code>.</p>
     <div class="zeile" id="s-fassung">
-      <button type="button" data-fassung="literal">Fassung mit Literal 12</button>
-      <button type="button" data-fassung="konstante">Fassung mit Konstante monateImJahr</button>
+      <button type="button" data-fassung="literal">Programm mit Literal 12</button>
+      <button type="button" data-fassung="konstante">Programm mit Konstante monateImJahr</button>
     </div>
     <div class="zeile">
       <button type="button" data-suche="12">nach 12 suchen</button>
@@ -424,7 +424,7 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
   };
   var MONATE = { literal: ["gehalt", "beitrag", "ausgabe"], konstante: ["dekl"] };   // hier bedeutet die Zahl die Monate im Jahr
   var UHR = ["vergleich", "abzug"];                                                  // hier bedeutet sie die Stunden auf der Uhr
-  var FASSUNG = { literal: "Fassung mit Literal 12", konstante: "Fassung mit Konstante monateImJahr" };
+  var FASSUNG = { literal: "Programm mit Literal 12", konstante: "Programm mit Konstante monateImJahr" };
   var fassung = "literal";
   var wert, suche;
 
@@ -460,7 +460,7 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
   function trefferSatz() {
     if (!suche) return "Es läuft keine Suche.";
     var zeilen = zeilenMit(istTreffer);
-    if (!zeilen.length) return "Die Suche nach " + suche + " findet in dieser Fassung keine Stelle.";
+    if (!zeilen.length) return "Die Suche nach " + suche + " findet in diesem Programm keine Stelle.";
     return "Die Suche nach " + suche + " findet " + (zeilen.length === 1 ? "eine Stelle, in Zeile " : zeilen.length + " Stellen, in den Zeilen ") + nummern(zeilen) + ".";
   }
   // Wie weit die Aufgabe „13 Monate“ gelöst ist, in Sätzen
@@ -554,13 +554,13 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
     if (stufe === 0 || stufe === 2) return ["Dieser Schritt hat keine Demo."];
     if (stufe === 1) {
       var d = DEKL[dekl];
-      return ["Gewählt ist die Fassung „" + d.name + "“. Ihre Programmzeilen: " + d.zeilen.join(" ; ") + ".",
-        d.fehler ? "Go übersetzt diese Fassung nicht. Die Meldung des Compilers: " + d.ergebnis : "Go übersetzt diese Fassung. Die Ausgabe: " + d.ergebnis];
+      return ["Gewählt ist die Möglichkeit „" + d.name + "“. Ihre Programmzeilen: " + d.zeilen.join(" ; ") + ".",
+        d.fehler ? "Go übersetzt diese Deklaration nicht. Die Meldung des Compilers: " + d.ergebnis : "Go übersetzt diese Deklaration. Die Ausgabe: " + d.ergebnis];
     }
     if (stufe === 3) {
       var w = wert[fassung];
       var geaendert = Object.keys(w).filter(function (s) { return w[s] === 13; });
-      return ["Zu sehen ist die " + FASSUNG[fassung] + ". Das Programm steht unten mit Zeilennummern.",
+      return ["Zu sehen ist das " + FASSUNG[fassung] + ". Es steht unten mit Zeilennummern.",
         geaendert.length ? "Auf 13 geändert " + (geaendert.length === 1 ? "ist die Zahl in Zeile " : "sind die Zahlen in den Zeilen ") + nummern(geaendert.map(zeileVon)) + ". Alle anderen Zahlen stehen auf 12." : "Noch ist keine Zahl geändert, überall steht 12.",
         trefferSatz() + (suche ? " Die Treffer sind gelb markiert." : ""),
         "Die Ausgabe des Programms mit diesen Zahlen: " + ausgabe().text.replace("\n", " ; ")].concat(bewertung());
@@ -569,7 +569,7 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
     return ["Gewählt ist „" + k.name + "“. Markiert ist Zeile " + k.zeile + ": " + KONTEXT_ZEILEN[k.zeile - 1], "Das Literal 88 hat an dieser Stelle den Typ " + k.typ + "."];
   }
   function kurz() {
-    if (stufe === 1) return "Fassung „" + DEKL[dekl].name + "“";
+    if (stufe === 1) return "Möglichkeit „" + DEKL[dekl].name + "“";
     if (stufe === 3) {
       var w = wert[fassung], n = Object.keys(w).filter(function (s) { return w[s] === 13; }).length;
       return (fassung === "literal" ? "mit Literal" : "mit Konstante") + ", " + (n === 0 ? "keine Zahl" : n === 1 ? "eine Zahl" : n + " Zahlen") + " auf 13" +(suche ? ", Suche nach " + suche : "");

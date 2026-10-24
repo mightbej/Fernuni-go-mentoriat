@@ -176,7 +176,7 @@ default:
   <section class="stufe" id="stufe-2">
   <div class="card">
     <h2>switch oder if</h2>
-    <p>Die Zuordnung der Wochentage lässt sich auch mit einer if-Anweisung schreiben. Beide Fassungen tun das Gleiche.</p>
+    <p>Die Zuordnung der Wochentage lässt sich auch mit einer if-Anweisung schreiben. Beide Programme tun das Gleiche.</p>
     <div class="zeile" id="v-knoepfe">
       <button type="button" data-fassung="0">mit switch</button>
       <button type="button" data-fassung="1">mit if</button>
@@ -349,7 +349,7 @@ case t &lt; 25:
 default:
     fmt.Println("warm")
 }</pre>
-    <p>Go nimmt den ersten case-Ausdruck, der <code>true</code> ergibt. In der ersten Fassung ist das für jede Temperatur unter 25 der erste Abschnitt. Für −5 gibt sie „angenehm“ aus, die Abschnitte „kühl“ und „frostig“ erreicht das Programm nie.</p>
+    <p>Go nimmt den ersten case-Ausdruck, der <code>true</code> ergibt. Im ersten Programm ist das für jede Temperatur unter 25 der erste Abschnitt. Für −5 gibt es „angenehm“ aus, die Abschnitte „kühl“ und „frostig“ erreicht das Programm nie.</p>
     <p>Bei Bedingungen, die einander einschließen, steht die engste zuerst. Bei einer switch-Anweisung mit switch-Ausdruck stellt sich die Frage nicht: Dort kann jeder Wert nur in einem case-Abschnitt stehen.</p>
 
     <p>Faustregeln zur if-Anweisung stehen auf der Seite <a href="go_k5_if_anweisungen_interaktiv.html#praxis">if-Anweisung</a>, Schritt 5.</p>
@@ -370,7 +370,7 @@ default:
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
       <tr><td>1 Aufbau und Ablauf</td><td>5.5.2, Seiten 133–134: Listing 5.3</td><td>Listing 5.3 zu den Wochentagen stammt aus dem Kurstext.</td><td>Die zwei Meldungen des Compilers und das Beispiel mit <code>wort</code> gibt die Lektion dazu.</td></tr>
       <tr><td>2 switch oder if</td><td>5.5.2, Seiten 134–136: Expertenwissen 5.11</td><td>Der Vergleich von switch und if und das Expertenwissen 5.11 stammen aus dem Kurstext.</td><td>Die Funktion <code>f</code> mit dem Zähler ist ein eigenes Beispiel.</td></tr>
-      <tr><td>3 Ohne switch-Ausdruck</td><td>5.5.2, Seite 135</td><td>Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext.</td><td>Die Fassung mit if und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
+      <tr><td>3 Ohne switch-Ausdruck</td><td>5.5.2, Seite 135</td><td>Die switch-Anweisung ohne switch-Ausdruck stammt aus dem Kurstext.</td><td>Das Programm mit if und die Meldung des Compilers gibt die Lektion dazu.</td></tr>
       <tr><td>4 In anderen Sprachen</td><td>5.5.2, Seite 137: Sprachvergleich 5.12</td><td>Der Sprachvergleich mit dem Fallthrough stammt aus dem Kurstext.</td><td>Die drei Programme sind eigene Beispiele.</td></tr>
       <tr><td>5 Aus der Praxis</td><td>kein Abschnitt</td><td>Aus dem Kurstext stammt nichts.</td><td>Die Faustregeln stammen aus der Praxis des Mentors.</td></tr>
     </table>
@@ -638,7 +638,7 @@ default:
   function standSaetze() {
     if (stufe === 6) return ["Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu."];
     if (stufe === 0) return ["Dieser Schritt hat keine Demo."];
-    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen die falsche und die richtige Fassung schon da."];
+    if (stufe === 5) return ["Dieser Schritt hat keine Demo. Die Codeblöcke sind fest. Zu jeder Faustregel stehen der falsche und der richtige Code schon da."];
     if (stufe === 1) {
       var s = lauf1(), e = s[ort1], letzter = ort1 === s.length - 1;
       var geprueft = Object.keys(e.marken).map(Number).sort(function (a, b) { return a - b; });
@@ -655,20 +655,20 @@ default:
     }
     if (stufe === 2) {
       var f = FASSUNG[fassung], a = AUFRUF[aufruf];
-      return ["Obere Auswahl: Zu sehen ist die Zuordnung der Wochentage „" + f.name + "“. Dort steht num " + f.num + "-mal im Code. In der anderen Fassung „" + FASSUNG[1 - fassung].name + "“ steht num " + FASSUNG[1 - fassung].num + "-mal.",
-        "Untere Auswahl: Gewählt ist die Fassung „" + a.name + "“. Ihre Zeilen: " + a.zeilen.join(" ; "),
-        "Nach dieser Fassung hat text den Wert \"plus\" und aufrufe den Wert " + a.aufrufe + ". f wurde also " + a.aufrufe + "-mal aufgerufen.",
-        "Die drei Fassungen der unteren Auswahl: „if mit f()“ ergibt aufrufe = 2, „if mit Variable“ ergibt aufrufe = 1, „switch mit f()“ ergibt aufrufe = 1."];
+      return ["Obere Auswahl: Zu sehen ist die Zuordnung der Wochentage „" + f.name + "“. Dort steht num " + f.num + "-mal im Code. Im anderen Programm „" + FASSUNG[1 - fassung].name + "“ steht num " + FASSUNG[1 - fassung].num + "-mal.",
+        "Untere Auswahl: Gewählt ist das Programm „" + a.name + "“. Ihre Zeilen: " + a.zeilen.join(" ; "),
+        "Nach diesem Programm hat text den Wert \"plus\" und aufrufe den Wert " + a.aufrufe + ". f wurde also " + a.aufrufe + "-mal aufgerufen.",
+        "Die drei Programme der unteren Auswahl: „if mit f()“ ergibt aufrufe = 2, „if mit Variable“ ergibt aufrufe = 1, „switch mit f()“ ergibt aufrufe = 1."];
     }
     if (stufe === 3) {
       var t = tagless();
       return ["x hat den Wert " + x + ". Wählbar sind nur die Knöpfe −5, 0 und 7."].concat(text3(t),
         ["Gelb markiert ist Zeile " + t.zeile + ". Die Ausgabe: " + t.ausgabe]);
     }
-    return ["Gewählt sind die Fassung „" + SPRACHE[sprache].name + "“ und x = " + sx + ". Wählbar sind nur die drei Fassungen und die Werte 1, 2 und 3.",
-      "Die Ausgabe dieser Fassung: " + ausgabe4().join(" ; "),
+    return ["Gewählt sind das Programm „" + SPRACHE[sprache].name + "“ und x = " + sx + ". Wählbar sind nur die drei Programme und die Werte 1, 2 und 3.",
+      "Die Ausgabe dieses Programms: " + ausgabe4().join(" ; "),
       "Dazu sagt die HTML-Seite: " + text4(),
-      "Ausgeführt ist nur die Fassung in Go. Die Ausgaben der zwei Fassungen in Java folgen aus der Regel für den Fallthrough."];
+      "Ausgeführt ist nur das Programm in Go. Die Ausgaben der zwei Programme in Java folgen aus der Regel für den Fallthrough."];
   }
   function kurz() {
     if (stufe === 1) { var e = lauf1()[ort1]; return "num = " + e.num + ", Zeile " + e.zeile + (e.wartet ? ", wartet auf Eingabe" : ""); }
@@ -685,7 +685,7 @@ default:
     var demo = stufe === 1 ? mitNummern(LISTING)
       : stufe === 2 ? ["Obere Auswahl, „" + FASSUNG[fassung].name + "“:"].concat(FASSUNG[fassung].zeilen, ["---", "Untere Auswahl, „" + AUFRUF[aufruf].name + "“:"], AUFRUF[aufruf].zeilen)
       : stufe === 3 ? mitNummern(TAGLESS)
-      : stufe === 4 ? ["Fassung „" + SPRACHE[sprache].name + "“:"].concat(SPRACHE[sprache].zeilen) : [];
+      : stufe === 4 ? ["Programm „" + SPRACHE[sprache].name + "“:"].concat(SPRACHE[sprache].zeilen) : [];
     return demo.length ? demo.concat(bloecke) : bloecke.slice(1);
   }
 

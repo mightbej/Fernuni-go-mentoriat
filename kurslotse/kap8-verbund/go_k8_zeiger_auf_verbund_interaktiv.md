@@ -96,7 +96,7 @@ Reiter: literal
 ### Aufbau der Darstellung
 
 - Oben steht ein blauer Kasten mit einer Frage und einer aufklappbaren „Auflösung“.
-- Ein Codeblock stellt die kurze Fassung `var pFarbe *rgb = &rgb{128, 0, 80}` neben die ausgeschriebene mit `new(rgb)` und `*pFarbe = rgb{128, 0, 80}`.
+- Ein Codeblock stellt den kurzen Code `var pFarbe *rgb = &rgb{128, 0, 80}` neben den ausgeschriebenen mit `new(rgb)` und `*pFarbe = rgb{128, 0, 80}`.
 - Die Demo zeigt fünf Zeilen: `var pFarbe *rgb = &rgb{128, 0, 80}`, `fmt.Println(*pFarbe, pFarbe.green)`, `var pZwei *rgb = new(rgb)`, `*pZwei = rgb{128, 0, 80}`, `fmt.Println(*pZwei == *pFarbe, pZwei == pFarbe)`.
 - Der Ablauf: Die erste Zeile erzeugt die erste anonyme Variable mit dem Wert `{128 0 80}`. Die Ausgabe ist `{128 0 80} 0`. `new(rgb)` erzeugt die zweite anonyme Variable mit dem Null-Wert `{0 0 0}`, danach bekommt sie den Wert des Literals. Die letzte Ausgabe ist `true false`: gleicher Wert, zwei verschiedene Variablen.
 - Der Name `pZwei` und die zwei Zeilen mit `fmt.Println` stehen nicht im Kurstext.
@@ -143,7 +143,7 @@ Reiter: kurstext
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Feld-Zugriff über einen Zeiger, 8.2.4, Seiten 205–206: Hinweis 8.2: Die zwei Schreibweisen stammen aus dem Kurstext. Dort weisen beide den Wert "Meier" zu. Die Demo nimmt für die zweite "Maier", damit man beide Zuweisungen sieht. Die vier Zeilen zum Ausprobieren sind eine Ergänzung, geprüft mit Go 1.26.
   - 2 Im Speicher, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Speichersicht steht nicht im Kurstext. Das Modell zeigen die Lektionen „Speichermodell: Zeiger“ und „Speichermodell: Verbund“ ausführlich.
-  - 3 Adresse eines Literals, 8.2.4, Seite 206: Die zwei Fassungen stammen aus dem Kurstext. Die zwei Zeilen mit fmt.Println und der Name pZwei sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.
+  - 3 Adresse eines Literals, 8.2.4, Seite 206: Der kurze und der ausgeschriebene Code stammen aus dem Kurstext. Die zwei Zeilen mit fmt.Println und der Name pZwei sind ergänzt. Die Namen „erste“ und „zweite“ für die anonymen Variablen gehören zur Darstellung der Lektion.
   - 4 Literal als Argument, 8.2.4, Seiten 206–207: Expertenwissen 8.3: Die Funktion fügeHinzu und die Zeiger f1 und f2 stammen aus dem Kurstext. Die letzte Zeile der Demo, *f1 == *f2, ist ergänzt.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.

@@ -142,20 +142,20 @@ Reiter: tupel
 - Oben stehen zwei Zeilen: `x, y, z := 10, 8, -5` ist eine Deklaration von drei Variablen, `x, y, z = 22, 33, 44` ist eine Tupel-Zuweisung an drei Variablen.
 - Links und rechts vom `=` stehen gleich viele Einträge. Zu `x, y = 22, 33, 44` meldet der Compiler `assignment mismatch: 2 variables but 3 values`.
 - Der Teil „Zwei Schritte“ sagt: Go wertet erst alle Ausdrücke rechts aus und merkt sich die Werte. Dann weist es die gemerkten Werte den Variablen links zu.
-- Die Demo heißt „Ausprobieren: zwei Werte vertauschen“. `a` beginnt mit 3, `b` mit 8. Drei Knöpfe wählen die Fassung. Der gewählte Knopf ist grün.
-- Der Student geht jede Fassung Schritt für Schritt durch. Über dem Programm stehen Kästen mit den Werten von `a` und `b`, in der zweiten Fassung auch von `tmp`.
+- Die Demo heißt „Ausprobieren: zwei Werte vertauschen“. `a` beginnt mit 3, `b` mit 8. Drei Knöpfe wählen das Programm. Der gewählte Knopf ist grün.
+- Der Student geht jedes Programm Schritt für Schritt durch. Über dem Programm stehen Kästen mit den Werten von `a` und `b`, im zweiten Programm auch von `tmp`.
 - Die gelb markierte Programmzeile ist die Zeile, die gerade ausgeführt wird oder wurde. Ein grüner Strich links bedeutet: Die Zeile ist schon gelaufen. Ein gelb unterlegter Kasten hat sich mit dem letzten Schritt geändert.
-- Fassung „mit Tupel-Zuweisung“, zwei Zeilen: `a, b := 3, 8` und `a, b = b, a`. Der Lauf hat drei Schritte, weil Zeile 2 in ihre zwei Schritte zerlegt ist. Nach dem Auswerten zeigt ein gestrichelter Kasten „gemerkt“ die Werte 8, 3, und `a` und `b` sind noch unverändert. Nach dem Zuweisen gilt `a = 8, b = 3`.
+- Programm „mit Tupel-Zuweisung“, zwei Zeilen: `a, b := 3, 8` und `a, b = b, a`. Der Lauf hat drei Schritte, weil Zeile 2 in ihre zwei Schritte zerlegt ist. Nach dem Auswerten zeigt ein gestrichelter Kasten „gemerkt“ die Werte 8, 3, und `a` und `b` sind noch unverändert. Nach dem Zuweisen gilt `a = 8, b = 3`.
 - Der gestrichelte Kasten „gemerkt“ ist keine Variable des Programms. Er zeigt die Werte, die Go sich für diese eine Anweisung merkt.
-- Fassung „mit Hilfsvariable tmp“, vier Zeilen: `a, b := 3, 8`, `tmp := a`, `a = b`, `b = tmp`. Der Lauf hat vier Schritte. Am Ende gilt `a = 8, b = 3`.
-- Fassung „ohne Hilfsvariable“, drei Zeilen: `a, b := 3, 8`, `a = b`, `b = a`. Der Lauf hat drei Schritte. Am Ende gilt `a = 8, b = 8`. Diese Fassung vertauscht nicht: Der Wert 3 ist in Zeile 2 verloren gegangen. Go übersetzt sie trotzdem.
+- Programm „mit Hilfsvariable tmp“, vier Zeilen: `a, b := 3, 8`, `tmp := a`, `a = b`, `b = tmp`. Der Lauf hat vier Schritte. Am Ende gilt `a = 8, b = 3`.
+- Programm „ohne Hilfsvariable“, drei Zeilen: `a, b := 3, 8`, `a = b`, `b = a`. Der Lauf hat drei Schritte. Am Ende gilt `a = 8, b = 8`. Dieses Programm vertauscht nicht: Der Wert 3 ist in Zeile 2 verloren gegangen. Go übersetzt es trotzdem.
 - Unter der Demo steht der Teil „Wann man die Tupel-Zuweisung nimmt“: wenn die Variablen zusammengehören und rechts einfache Ausdrücke stehen, und zum Vertauschen.
 - Am Ende steht ein Link zur Seite „Unterprogramme und Funktionen“. Dort wird in Abschnitt 2.6 mit einer dritten Variable k vertauscht.
 
 ### Handgriffe
 
-- Die Fassung wählen: nur „mit Tupel-Zuweisung“, „mit Hilfsvariable tmp“ und „ohne Hilfsvariable“. Eine neue Fassung beginnt von vorn.
-- „Nächster Schritt“ führt den nächsten Schritt aus. „Von vorn“ beginnt die gewählte Fassung neu. Einen Schritt zurück gibt es nicht.
+- Das Programm wählen: nur „mit Tupel-Zuweisung“, „mit Hilfsvariable tmp“ und „ohne Hilfsvariable“. Ein neues Programm beginnt von vorn.
+- „Nächster Schritt“ führt den nächsten Schritt aus. „Von vorn“ beginnt das gewählte Programm neu. Einen Schritt zurück gibt es nicht.
 - Die Anfangswerte 3 und 8 und die Programmzeilen lassen sich nicht ändern.
 - Dem Link zur Seite „Unterprogramme und Funktionen“ folgen. Sie ist eine eigene HTML-Seite.
 
@@ -202,7 +202,7 @@ Reiter: kurstext
   - 1 Zuweisung mit =, 3.3.5, Seiten 33–35: Hinweis 3.6; 5.3, Seiten 126–128: Die Zuweisung und ihre Richtung stammen aus dem Kurstext. Die sieben Zeilen der Demo und die Meldungen des Compilers gibt die Lektion dazu.
   - 2 Kombinierte Operatoren, 5.3, Seiten 126–127: Die kombinierten Operatoren wie += stammen aus dem Kurstext. Die Werte der Demo und das Beispiel mit wetter sind eigene Beispiele.
   - 3 ++ und --, 5.3.1, Seiten 127–128: Sprachvergleich 5.7: Die Anweisungen ++ und -- und der Sprachvergleich stammen aus dem Kurstext. Die Meldungen des Compilers und die Werte zum Beispiel in Java gibt die Lektion dazu.
-  - 4 Tupel-Zuweisung, 5.3.2, Seiten 128–129: Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext. Die Fassung ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.
+  - 4 Tupel-Zuweisung, 5.3.2, Seiten 128–129: Die Tupel-Zuweisung und das Vertauschen mit einer Hilfsvariable stammen aus dem Kurstext. Das Programm ohne Hilfsvariable und die Meldung des Compilers gibt die Lektion dazu.
   - 5 Einfache Anweisungen, 5.4, Seite 129; 5.5.3.2, Seiten 142–146: Der Begriff der einfachen Anweisung stammt aus dem Kurstext. Die Zuordnung der acht Zeilen der Demo und die Meldung des Compilers gibt die Lektion dazu.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.3, Seiten 10–11, Zuweisung: Ein Ausdruck wird ausgewertet und sein Wert einer Variable zugewiesen. Lektion: Exkurs: Speichern und Rechnen im Rechner, Schritt 1.

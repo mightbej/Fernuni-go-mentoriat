@@ -78,7 +78,7 @@ Reiter: ablauf
 - Oben steht, wann die drei Teile laufen: die Init-Anweisung einmal am Anfang, die Schleifenbedingung vor jedem Schleifendurchlauf, die Post-Anweisung nach jedem Schleifendurchlauf.
 - Die Demo zeigt Listing 5.6 des Kurstexts, `for_klausel_quadrat.go`, mit neun Zeilen und Zeilennummern.
 - Zeile 5: `func main() {`. Zeile 6: `for i := 1; i <= 10; i++ {`. Zeile 7: die Ausgabe mit `fmt.Printf`. Zeile 8: die schließende Klammer der Schleife. Zeile 9: die schließende Klammer von `main`.
-- Zeile 6 gibt es in zwei Fassungen. „wie im Kurstext“: `i <= 10`. „geändert“: `i <= 3`. Die Fassung mit 3 steht nicht im Kurstext, die Seite hat sie gebaut, damit der Lauf kürzer ist. Beim ersten Öffnen der Seite ist die Fassung mit 3 gewählt.
+- Für Zeile 6 gibt es zwei Möglichkeiten. „wie im Kurstext“: `i <= 10`. „geändert“: `i <= 3`. Das Programm mit 3 steht nicht im Kurstext, die Seite hat es gebaut, damit der Lauf kürzer ist. Beim ersten Öffnen der Seite ist die Möglichkeit mit 3 gewählt.
 - Der Student geht den Lauf Anweisung für Anweisung durch. Der Lauf hält bei Zeile 5, dann immer wieder bei Zeile 6 und Zeile 7 und am Ende bei Zeile 9.
 - Zeile 6 kommt in drei Rollen dran. Hinter ihr steht dann ein kleines Schild: grau „Init-Anweisung“, grün „Schleifenbedingung: true“ oder rot „Schleifenbedingung: false“, grau „Post-Anweisung“.
 - Die Reihenfolge eines Laufs: Init-Anweisung. Dann je Schleifendurchlauf: Schleifenbedingung, Zeile 7, Post-Anweisung. Am Ende einmal die Schleifenbedingung mit `false`.
@@ -91,7 +91,7 @@ Reiter: ablauf
 
 ### Handgriffe
 
-- Die Fassung von Zeile 6 wählen: „i <= 10“ oder „i <= 3“. Das beginnt den Lauf von vorn. Andere Grenzen gibt es nicht.
+- Eine der zwei Möglichkeiten für Zeile 6 wählen: „i <= 10“ oder „i <= 3“. Das beginnt den Lauf von vorn. Andere Grenzen gibt es nicht.
 - „Nächste Anweisung“ führt die nächste Anweisung aus. „Bis zum Ende“ führt den Rest aus. „Von vorn“ beginnt wieder bei Zeile 5. Einen Schritt zurück gibt es nicht.
 - Der Startwert 1 und die Post-Anweisung `i++` stehen fest. Die Programmzeilen lassen sich nicht ändern. Das Programm hat keine Eingabe.
 
@@ -107,18 +107,18 @@ Reiter: laufvariable
 
 - Oben steht: Die Init-Anweisung ist fast immer eine kurze Variablendeklaration. Die Variable, die sie einführt, heißt Laufvariable oder Kontrollvariable.
 - Der Gültigkeitsbereich einer Laufvariable aus der Init-Anweisung umfasst die for-Klausel und den Schleifenrumpf. Hinter der Schleife gibt es sie nicht mehr.
-- Die Demo hat drei Knöpfe für drei Fassungen. Der gewählte Knopf ist grün. Darunter steht das Programm der Fassung mit Zeilennummern, darunter „Ergebnis“ oder „Meldung des Compilers“ und „Ausgabe“, darunter ein grüner Kasten mit der Erklärung.
-- Gelb markiert ist hier die Zeile, auf die es in der Fassung ankommt. Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht.
-- Fassung „i im Schleifenrumpf“, drei Zeilen: `for i := 1; i <= 3; i++ {`, `fmt.Println(i)`, `}`. Go übersetzt. Ausgabe: 1, 2, 3. Markiert ist Zeile 2.
-- Fassung „i hinter der Schleife“, vier Zeilen: wie die erste, dazu Zeile 4 `fmt.Println(i)` hinter der Schleife. Meldung des Compilers: `undefined: i`. Markiert ist Zeile 4.
-- Fassung „i vor der Schleife deklariert“, fünf Zeilen: `i := 1`, `for ; i <= 3; i++ {`, `fmt.Println(i)`, `}`, `fmt.Println("danach:", i)`. Go übersetzt. Ausgabe: 1, 2, 3 und „danach: 4“. Markiert ist Zeile 5.
-- In der dritten Fassung ist die Init-Anweisung leer, das erste Semikolon bleibt stehen. `i` ist dann keine Variable der Schleife und gilt auch dahinter. Der Wert 4 ist der Wert, mit dem die Prüfung `4 <= 3` die Schleife beendet hat.
+- Die Demo hat drei Knöpfe für drei Programme. Der gewählte Knopf ist grün. Darunter steht das gewählte Programm mit Zeilennummern, darunter „Ergebnis“ oder „Meldung des Compilers“ und „Ausgabe“, darunter ein grüner Kasten mit der Erklärung.
+- Gelb markiert ist hier die Zeile, auf die es im Programm ankommt. Einen Lauf Anweisung für Anweisung gibt es in diesem Schritt nicht.
+- Programm „i im Schleifenrumpf“, drei Zeilen: `for i := 1; i <= 3; i++ {`, `fmt.Println(i)`, `}`. Go übersetzt. Ausgabe: 1, 2, 3. Markiert ist Zeile 2.
+- Programm „i hinter der Schleife“, vier Zeilen: wie die erste, dazu Zeile 4 `fmt.Println(i)` hinter der Schleife. Meldung des Compilers: `undefined: i`. Markiert ist Zeile 4.
+- Programm „i vor der Schleife deklariert“, fünf Zeilen: `i := 1`, `for ; i <= 3; i++ {`, `fmt.Println(i)`, `}`, `fmt.Println("danach:", i)`. Go übersetzt. Ausgabe: 1, 2, 3 und „danach: 4“. Markiert ist Zeile 5.
+- Im dritten Programm ist die Init-Anweisung leer, das erste Semikolon bleibt stehen. `i` ist dann keine Variable der Schleife und gilt auch dahinter. Der Wert 4 ist der Wert, mit dem die Prüfung `4 <= 3` die Schleife beendet hat.
 - Der Teil „Wie die Laufvariable heißt“ sagt: üblich sind `i`, `j` und `k`. Der Grundsatz: Je kleiner der Gültigkeitsbereich einer Variable ist, desto kürzer darf ihr Bezeichner sein.
 - Der Teil „Zwei Laufvariablen“ zeigt `for i, j := 0, 100; i < j; i, j = i+1, j-5 {`. Die Schleife gibt 17 Zeilen aus, die erste ist `i, j: 0 100`, die letzte `i, j: 16 20`. Im Kurstext ist das Expertenwissen 5.15.
 
 ### Handgriffe
 
-- Eine der drei Fassungen wählen: nur mit den drei Knöpfen.
+- Eines der drei Programme wählen: nur mit den drei Knöpfen.
 - Die Programmzeilen lassen sich nicht ändern. Der Codeblock mit den zwei Laufvariablen ist fest und hat keine Knöpfe.
 
 ### Abschnitte des Kurstexts
@@ -162,11 +162,11 @@ Reiter: praxis
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Karte mit Text und Codeblöcken. Eine Demo gibt es hier nicht.
-- Oben sagt ein gelber Kasten: Die Faustregeln stammen vom Mentor und stehen nicht in Abschnitt 5.5.3.2 des Kurstexts. Go übersetzt jede Fassung, auch die vier mit dem Kommentar „falsch“. `{ … }` steht für einen beliebigen Schleifenrumpf.
+- Oben sagt ein gelber Kasten: Die Faustregeln stammen vom Mentor und stehen nicht in Abschnitt 5.5.3.2 des Kurstexts. Go übersetzt jedes Beispiel, auch die vier mit dem Kommentar „falsch“. `{ … }` steht für einen beliebigen Schleifenrumpf.
 - Stoff des Kurses ist, was im Kurstext steht: die for-Anweisung mit for-Klausel aus Abschnitt 5.5.3.2, wie sie Schritt 1 bis 4 zeigen. Die drei Faustregeln dieses Schritts sind Ratschläge des Mentors und gehören nicht zu diesem Stoff.
 - Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt: Es steht weder auf dieser Seite noch im Kurstext. Ob eine Faustregel in der Klausur vorkommt oder nicht, lässt sich deshalb nicht sagen. Verbindlich sind der Kurstext und Moodle der FernUniversität.
-- Zu jeder Faustregel stehen die falsche und die richtige Fassung schon auf der Seite. Ausprobieren oder umstellen lässt sich in diesem Schritt nichts.
+- Zu jeder Faustregel stehen der falsche und der richtige Code schon auf der Seite. Ausprobieren oder umstellen lässt sich in diesem Schritt nichts.
 - Faustregel 1, Startwert und Vergleich gehören zusammen: `for i := 0; i < 10; i++` und `for i := 1; i <= 10; i++` laufen beide zehnmal. `for i := 1; i < 10; i++` läuft nur neunmal, `for i := 0; i <= 10; i++` läuft elfmal. Der Fehler heißt off-by-one error. In Go ist die Form ab 0 häufiger, weil das erste Element eines Arrays den Index 0 hat.
 - Faustregel 2, die Laufvariable ändert nur die Post-Anweisung: Eine Schleife `for i := 1; i <= 10; i++` mit einem zusätzlichen `i++` im Schleifenrumpf gibt 1, 3, 5, 7 und 9 aus. Wer in Schritten von 2 zählen will, schreibt `i += 2` in die Post-Anweisung.
 - Faustregel 3, wer herunterzählt, dreht alle drei Teile um: `for i := 10; i >= 1; i--` läuft zehnmal. `for i := 10; i <= 1; i--` läuft kein einziges Mal, weil `10 <= 1` schon bei der ersten Prüfung `false` ergibt.
@@ -190,7 +190,7 @@ Reiter: kurstext
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Die for-Klausel, 5.5.3.2, Seiten 143–144: Init-Anweisung, Schleifenbedingung und Post-Anweisung stammen aus dem Kurstext. Die drei Meldungen des Compilers und die Erklärung der Formatangabe gibt die Lektion dazu.
-  - 2 Der Ablauf, 5.5.3.2, Seiten 143–144: Listing 5.6: Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext. Die Fassung mit i <= 3 gibt die Lektion dazu.
+  - 2 Der Ablauf, 5.5.3.2, Seiten 143–144: Listing 5.6: Listing 5.6 zu den Quadratzahlen stammt aus dem Kurstext. Das Programm mit i <= 3 gibt die Lektion dazu.
   - 3 Die Laufvariable, 5.5.3.2, Seiten 143–145: Expertenwissen 5.15: Dass die Laufvariable nur in der for-Anweisung gilt und einen kurzen Namen wie i bekommt, steht im Kurstext. Das Expertenwissen 5.15 zeigt Init- und Post-Anweisung mit mehreren Variablen. Die drei Programme der Demo und die Meldung des Compilers gibt die Lektion dazu.
   - 4 Eine Schleife, vier Schreibweisen, 5.5.3.2, Seiten 145–146: Expertenwissen 5.16: Dass Teile der for-Klausel fehlen dürfen, steht im Expertenwissen 5.16. Die vier Programme sind eigene Beispiele.
   - 5 Aus der Praxis, kein Abschnitt: Aus dem Kurstext stammt nichts. Die Faustregeln stammen aus der Praxis des Mentors.

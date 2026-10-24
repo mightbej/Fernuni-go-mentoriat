@@ -51,7 +51,7 @@ Reiter: fakultaet
 - Die Bedienung: drei Knöpfe „nächste Anweisung“, „eine Anweisung zurück“ und „von vorn“. Darunter stehen Rahmen, die Ausgabe und ein Kasten mit einem Satz zur letzten Anweisung.
 - Jeder Aufruf hat einen eigenen Rahmen, zum Beispiel „Funktion fakultätRek, Aufruf mit n = 3“. Die Rahmen stehen in der Reihenfolge der Aufrufe nebeneinander. Ein gestrichelter Rahmen gehört zu einem Aufruf, der beendet ist. Der Kasten „Rückgabe“ zeigt den Wert, den ein Aufruf zurückgibt.
 - Der Ablauf hat neun Schritte: Aufruf mit 4. Dann rufen die Aufrufe mit 4, 3 und 2 je den nächsten auf und warten. Der Aufruf mit 1 gibt 1 zurück. Dann rechnet der Aufruf mit 2 das Produkt 2 * 1 = 2, der Aufruf mit 3 rechnet 3 * 2 = 6, der Aufruf mit 4 rechnet 4 * 6 = 24. `main` gibt 24 aus. Die Funktion läuft viermal.
-- Unter „Was gegen dieses Beispiel spricht“ stehen zwei Punkte aus dem Kurstext: Die rekursive Fassung spart keinen Speicher, weil für jeden wartenden Aufruf ein Wert von `n` gespeichert bleibt. In der Praxis nimmt man die Fakultät aus einer Tabelle.
+- Unter „Was gegen dieses Beispiel spricht“ stehen zwei Punkte aus dem Kurstext: Die rekursive Funktion spart keinen Speicher, weil für jeden wartenden Aufruf ein Wert von `n` gespeichert bleibt. In der Praxis nimmt man die Fakultät aus einer Tabelle.
 - 20! ist 2432902008176640000 und passt noch in `int64`. 21! passt nicht mehr. Im Kurstext steht dazu nur, 20! sei in der Größenordnung von 10 hoch 18.
 - `fakultätRek(0)` endet nicht: Die Bedingung `n == 1` wird nie erfüllt, das Argument wird immer kleiner. Die Funktion ist im Kurstext für n ≥ 1 gedacht.
 
@@ -106,7 +106,7 @@ Reiter: fibonacci
 - Die Zahl aller Aufrufe: n = 1 und 2: 1. n = 3: 3. n = 4: 5. n = 5: 9. n = 6: 15. n = 7: 25. n = 8: 41. n = 9: 67. n = 10: 109.
 - Beispiel n = 5: Wert 5, 9 Aufrufe. Mit dem Argument 4 läuft die Funktion einmal, mit 3 zweimal, mit 2 dreimal, mit 1 zweimal.
 - Beispiel n = 9, das Beispiel des Kurstexts: Wert 34, 67 Aufrufe. Mit dem Argument 7 läuft die Funktion zweimal, mit 6 dreimal, mit 5 fünfmal.
-- Die Seite sagt: Die rekursive Fassung ist elegant geschrieben und nicht effizient, weil sie das Gleiche mehrmals rechnet.
+- Die Seite sagt: Die rekursive Funktion ist elegant geschrieben und nicht effizient, weil sie das Gleiche mehrmals rechnet.
 
 ### Handgriffe
 
@@ -133,7 +133,7 @@ Reiter: hanoi
 - Darunter stehen die Ausgabe des Programms, zum Beispiel „Zug von 1 nach 3“, und ein Kasten mit einem Satz zum letzten Zug. Der Satz nennt den Aufruf, der die Zeile ausgibt: Die Scheibe mit der Nummer k bewegt der Aufruf `move(start, ziel, k)`.
 - Die Zahl der Züge: 1 Scheibe 1 Zug, 2 Scheiben 3 Züge, 3 Scheiben 7 Züge, 4 Scheiben 15 Züge. Allgemein sind es 2 hoch n minus 1. Diese Formel steht nicht im Kurstext.
 - Die Ausgabe für 3 Scheiben: von 1 nach 3, von 1 nach 2, von 3 nach 2, von 1 nach 3, von 2 nach 1, von 2 nach 3, von 1 nach 3.
-- Unter „Indirekte Rekursion“ steht die Fassung des Kurstexts mit sechs Funktionen `moveAB`, `moveAC`, `moveBA`, `moveBC`, `moveCA`, `moveCB`. Gezeigt ist `moveAB`. `moveAB` ruft `moveAC` auf, und `moveAC` ruft `moveAB` auf.
+- Unter „Indirekte Rekursion“ steht das Programm des Kurstexts mit sechs Funktionen `moveAB`, `moveAC`, `moveBA`, `moveBC`, `moveCA`, `moveCB`. Gezeigt ist `moveAB`. `moveAB` ruft `moveAC` auf, und `moveAC` ruft `moveAB` auf.
 - Die Funktion `move` mit den Stangen als Parametern ist direkt rekursiv.
 
 ### Handgriffe

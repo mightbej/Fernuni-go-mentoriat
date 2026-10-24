@@ -182,7 +182,7 @@
     <p>In diesem Schritt benutzt das Unterprogramm die Variablen n, m und k des Hauptprogramms. Schritt 2 zeigt, warum das ungeschickt ist.</p>
 
     <h3>Zwei andere Wege zu vertauschen</h3>
-    <p>Im Kurstext stehen zwei weitere Fassungen, die ohne dritte Variable auskommen. Mit dem Thema Unterprogramm haben sie nichts zu tun. Sie greifen zwei späteren Themen vor:</p>
+    <p>Im Kurstext stehen zwei weitere Möglichkeiten, die ohne dritte Variable auskommen. Mit dem Thema Unterprogramm haben sie nichts zu tun. Sie greifen zwei späteren Themen vor:</p>
     <ul>
       <li><strong>Mit Minus und Plus:</strong> <code>n ← n − m; m ← n + m; n ← m − n</code>. Mit n = 5 und m = 3 entstehen nacheinander n = 2, m = 5, n = 3. Bei sehr großen Zahlen passt n − m nicht mehr in den Typ. Das ist der Überlauf aus Abschnitt 4.3.8, Seiten 78–84. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis, Schritt 3</a>.</li>
       <li><strong>Mit XOR:</strong> <code>n ← n XOR m; m ← n XOR m; n ← n XOR m</code>. XOR vergleicht zwei Bitmuster Stelle für Stelle und liefert eine 1, wo die Bits verschieden sind. Mit n = 101 und m = 011 entstehen nacheinander n = 110, m = 101, n = 011. XOR wird in Abschnitt 4.3.7.2.1 behandelt, Seiten 72–74. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html">Rechenwerk</a>.</li>

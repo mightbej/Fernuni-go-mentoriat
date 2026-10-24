@@ -107,7 +107,7 @@
     <h3>Die Schritte</h3>
     <ul>
       <li><strong>Schritt 1:</strong> Die Fakultät als Schleife und als rekursive Funktion. Du führst <code>fakultätRek(4)</code> Aufruf für Aufruf aus.</li>
-      <li><strong>Schritt 2:</strong> Die endrekursive Fassung rechnet auf dem Hinweg und reicht das Ergebnis nur noch zurück.</li>
+      <li><strong>Schritt 2:</strong> Die endrekursive Funktion rechnet auf dem Hinweg und reicht das Ergebnis nur noch zurück.</li>
       <li><strong>Schritt 3:</strong> Die rekursive Funktion für die Fibonacci-Zahlen ruft sich zweimal auf. Du zählst die Aufrufe.</li>
       <li><strong>Schritt 4:</strong> Die Türme von Hanoi, mit einer Funktion von sieben Zeilen.</li>
       <li><strong>Schritt 5:</strong> Wann eine Rekursion endet, und wie man das zeigt.</li>
@@ -166,7 +166,7 @@
 
     <h3>Was gegen dieses Beispiel spricht</h3>
     <ul>
-      <li><strong>Speicher:</strong> Die rekursive Fassung hat keine Variablen <code>i</code> und <code>fac</code>. Sie spart trotzdem keinen Speicher, denn für jeden wartenden Aufruf bleibt ein Wert von <code>n</code> gespeichert.</li>
+      <li><strong>Speicher:</strong> Die rekursive Funktion hat keine Variablen <code>i</code> und <code>fac</code>. Sie spart trotzdem keinen Speicher, denn für jeden wartenden Aufruf bleibt ein Wert von <code>n</code> gespeichert.</li>
       <li><strong>Tabelle:</strong> Eine Funktion für die Fakultät nimmt man in der Praxis aus einer Tabelle. Die Werte wachsen so schnell, dass nur wenige in einen Ganzzahltyp passen.</li>
     </ul>
   </div>
@@ -246,7 +246,7 @@
 }</pre>
 
     <h3>Rekursiv</h3>
-    <p>Die rekursive Fassung ist kürzer und folgt der Definition Wort für Wort:</p>
+    <p>Die rekursive Funktion ist kürzer und folgt der Definition Wort für Wort:</p>
     <pre class="code-block">func fibonacciRek(n int) int {
     if n &lt;= 2 {
         return 1
@@ -264,7 +264,7 @@
     <div class="auskunft" id="fi-urteil"></div>
     <div class="tabellenrahmen"><table class="text" id="fi-tabelle"></table></div>
     <div class="baum" id="fi-baum"></div>
-    <p>Die Funktion rechnet viel, und sie rechnet das Gleiche mehrmals: Für das gleiche Argument läuft sie immer wieder, obwohl der Wert schon einmal berechnet war. Die rekursive Fassung ist elegant geschrieben und nicht effizient.</p>
+    <p>Die Funktion rechnet viel, und sie rechnet das Gleiche mehrmals: Für das gleiche Argument läuft sie immer wieder, obwohl der Wert schon einmal berechnet war. Die rekursive Funktion ist elegant geschrieben und nicht effizient.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
@@ -321,7 +321,7 @@
     <div class="auskunft" id="h-urteil"></div>
 
     <h3>Indirekte Rekursion</h3>
-    <p>Im Kurstext steht vor <code>move</code> eine Fassung mit sechs Funktionen, eine für jedes Paar von Stangen: <code>moveAB</code>, <code>moveAC</code>, <code>moveBA</code>, <code>moveBC</code>, <code>moveCA</code> und <code>moveCB</code>.</p>
+    <p>Im Kurstext steht vor <code>move</code> ein Programm mit sechs Funktionen, eine für jedes Paar von Stangen: <code>moveAB</code>, <code>moveAC</code>, <code>moveBA</code>, <code>moveBC</code>, <code>moveCA</code> und <code>moveCB</code>.</p>
     <pre class="code-block">func moveAB(n int) {
     if n == 1 {
         fmt.Println("Zug von A nach B")

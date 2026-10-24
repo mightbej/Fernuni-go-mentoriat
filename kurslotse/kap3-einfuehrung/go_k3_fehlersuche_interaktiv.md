@@ -6,13 +6,13 @@ Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt. Schritt 1 bis 3 
 
 Für Schritt 1 bis 3 gilt:
 
-- Jede Demo zeigt ein Programm in vier oder fünf Fassungen nacheinander. Fassung 1 heißt „Das Programm lesen“ und zeigt das fehlerhafte Programm ohne Meldung. Jede weitere Fassung ist ein Schritt der Suche: übersetzen, eine Stelle korrigieren, wieder übersetzen. Gelb sind die Zeilen, die der Compiler meldet oder auf die es gerade ankommt.
-- Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Diese Fassung kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
-- Solange Fassung 1 zu sehen ist, soll der Student die Fehler selbst suchen. Fragt er in Fassung 1 nach den Fehlern, bekommt er einen Hinweis auf eine Zeile oder auf die Art eines Fehlers und nicht die ganze Lösung. Bei jeder späteren Fassung darf die Antwort die Fehler nennen, die bis dahin gezeigt sind.
+- Jede Demo zeigt vier oder fünf Programme nacheinander. Programm 1 heißt „Das Programm lesen“ und zeigt das fehlerhafte Programm ohne Meldung. Jedes weitere Programm ist ein Schritt der Suche: übersetzen, eine Stelle korrigieren, wieder übersetzen. Gelb sind die Zeilen, die der Compiler meldet oder auf die es gerade ankommt.
+- Unter dem Programm stehen vier Knöpfe: „weiter“, „zurück“, „von vorn“ und „Dieses Programm kopieren“. Darunter stehen die Meldung oder die Ausgabe und ein Kasten mit einem Satz. Bei einer Meldung ist der Kasten rot.
+- Solange Programm 1 zu sehen ist, soll der Student die Fehler selbst suchen. Fragt er in Programm 1 nach den Fehlern, bekommt er einen Hinweis auf eine Zeile oder auf die Art eines Fehlers und nicht die ganze Lösung. Bei jedem späteren Programm darf die Antwort die Fehler nennen, die bis dahin gezeigt sind.
 - Zwei Arten von Fehlern: Fehler, die der Compiler meldet, zum Beispiel ein fehlendes Komma oder ein unbekannter Bezeichner. Und Fehler, die er nicht meldet, zum Beispiel eine falsche Formel. Das Programm läuft dann und gibt falsche Werte aus.
 - Nach einem Syntaxfehler bricht der Compiler ab. Weitere Fehler erscheinen erst, wenn der erste behoben ist.
 - Englische Wörter der Meldungen: `undefined` heißt nicht definiert, `declared and not used` deklariert und nicht verwendet, `mismatched types` nicht zusammenpassende Typen, `unexpected newline` unerwarteter Zeilenumbruch.
-- Auf der Seite läuft kein Go. Der Browser zeigt, was Go 1.26 gemeldet oder ausgegeben hat. Der Student kann das Programm auf der Seite nicht ändern. Er kann eine Fassung kopieren und im eigenen Editor mit `go run` übersetzen.
+- Auf der Seite läuft kein Go. Der Browser zeigt, was Go 1.26 gemeldet oder ausgegeben hat. Der Student kann das Programm auf der Seite nicht ändern. Er kann jedes Programm kopieren und im eigenen Editor mit `go run` übersetzen.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.
 
 ## Worum es geht
@@ -43,17 +43,17 @@ Reiter: quader
 ### Aufbau der Darstellung
 
 - Das Programm ist Listing 3.3 mit kürzeren Ausgaben und drei eingebauten Fehlern. Es hat 21 Zeilen: `rechteck(seiteA int, seiteB int) int` in den Zeilen 5 bis 8 mit der Variable `fläche`, `quader(grundfläche int, höhe int) int` in den Zeilen 10 bis 13 mit der Variable `volumen`, `main` in den Zeilen 15 bis 21 mit `a` = 3, `b` = 4, `c` = 5. Erwartet sind die Ausgaben „Fläche: 12“ und „Volumen: 60“.
-- Die Demo hat fünf Fassungen.
-- Fassung 2: Der Compiler meldet nur Zeile 19: `syntax error: unexpected name b in argument list; possibly missing comma or )`. In `rechteck(a b)` fehlt das Komma.
-- Fassung 3, nach dem Komma: zwei Meldungen. Zeile 11: `declared and not used: volumen`. Zeile 20: `undefined: fläche`. In Zeile 20 steht `quader(fläche, c)`, und `fläche` ist nur im Rumpf von `rechteck` gültig.
-- Fassung 4: In Zeile 20 steht `quader(rechteck(a, b), c)`, wie in Listing 3.3. Es bleibt die Meldung zu Zeile 11. Sie führt zu Zeile 12: `return grundfläche`.
-- Fassung 5: Zeile 12 lautet `return volumen`. Das Programm gibt „Fläche: 12“ und „Volumen: 60“ aus.
+- Die Demo hat fünf Programme.
+- Programm 2: Der Compiler meldet nur Zeile 19: `syntax error: unexpected name b in argument list; possibly missing comma or )`. In `rechteck(a b)` fehlt das Komma.
+- Programm 3, nach dem Komma: zwei Meldungen. Zeile 11: `declared and not used: volumen`. Zeile 20: `undefined: fläche`. In Zeile 20 steht `quader(fläche, c)`, und `fläche` ist nur im Rumpf von `rechteck` gültig.
+- Programm 4: In Zeile 20 steht `quader(rechteck(a, b), c)`, wie in Listing 3.3. Es bleibt die Meldung zu Zeile 11. Sie führt zu Zeile 12: `return grundfläche`.
+- Programm 5: Zeile 12 lautet `return volumen`. Das Programm gibt „Fläche: 12“ und „Volumen: 60“ aus.
 - Hätte `quader` das Volumen ohne eigene Variable berechnet, hätte der Compiler den dritten Fehler nicht gemeldet. Das Programm hätte dann „Volumen: 12“ ausgegeben.
 - Eine Liste erklärt Gültigkeitsbereich, Rückgabewert und die Regel zur unbenutzten Variable.
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 
@@ -66,17 +66,17 @@ Reiter: temperatur
 ### Aufbau der Darstellung
 
 - Das Programm ist ein Auszug aus Listing 3.2 mit drei eingebauten Fehlern. Es hat 14 Zeilen. In `main` stehen `tempC` = 22 vom Typ `float64`, `tempText` = "Temperatur in", in Zeile 8 `tempF` und in Zeile 9 `tempK`, dann drei Aufrufe von `fmt.Println` in den Zeilen 11 bis 13. Erwartet sind 71,6 °F und 295,15 K.
-- Die Demo hat fünf Fassungen.
-- Fassung 2: Der Compiler meldet Zeile 11: `invalid operation: tempText + " °C:" + tempC (mismatched types string and float64)`.
-- Fassung 3: Zeile 11 übergibt `tempC` als eigenes Argument. Das Programm läuft und gibt 97.2 für Fahrenheit und -251.14999999999998 für Kelvin aus. In Zeile 8 steht `(32 + tempC) * 1.8`.
-- Fassung 4: Zeile 8 lautet `32 + tempC*1.8`. Fahrenheit ist 71.6. Kelvin ist weiter negativ, in Zeile 9 steht `tempC - 273.15`.
-- Fassung 5: Zeile 9 lautet `tempC + 273.15`. Die Ausgabe ist „Temperatur in °C: 22“, „Temperatur in °F: 71.6“, „Temperatur in  K: 295.15“.
+- Die Demo hat fünf Programme.
+- Programm 2: Der Compiler meldet Zeile 11: `invalid operation: tempText + " °C:" + tempC (mismatched types string and float64)`.
+- Programm 3: Zeile 11 übergibt `tempC` als eigenes Argument. Das Programm läuft und gibt 97.2 für Fahrenheit und -251.14999999999998 für Kelvin aus. In Zeile 8 steht `(32 + tempC) * 1.8`.
+- Programm 4: Zeile 8 lautet `32 + tempC*1.8`. Fahrenheit ist 71.6. Kelvin ist weiter negativ, in Zeile 9 steht `tempC - 273.15`.
+- Programm 5: Zeile 9 lautet `tempC + 273.15`. Die Ausgabe ist „Temperatur in °C: 22“, „Temperatur in °F: 71.6“, „Temperatur in  K: 295.15“.
 - Die Ausgabe -251.14999999999998 an der Stelle von -251.15 kommt von der Darstellung von Gleitkommazahlen. Das erklärt die Lektion „Gleitkommazahlen“ zu Kapitel 4, auf der Seite steht dazu nichts.
 - Eine Liste erklärt die Bindungsstärke von `*` und `+` und das Prüfen einer Formel mit einem bekannten Wert: 0 °C sind 32 °F und 273,15 K.
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 
@@ -91,10 +91,10 @@ Reiter: kopie
 ### Aufbau der Darstellung
 
 - Das Programm ist ein eigenes Beispiel mit zwei Fehlern. Die Funktion `addiereEins(zahl int) int` erhöht `zahl` um eins und gibt `zahl` zurück. In `main` steht `var x int = 7`, eine Anweisung `if x > 0` mit der Klammer `{` in einer eigenen Zeile, der Aufruf `addiereEins(x)` und die Ausgabe von `x`. Erwartet ist am Ende der Wert 8.
-- Die Demo hat vier Fassungen.
-- Fassung 2: Der Compiler meldet Zeile 12: `syntax error: unexpected newline, expected { after if clause`.
-- Fassung 3: Die Klammer steht am Ende der Zeile mit `if`. Das Programm läuft und gibt „x ist positiv“ und „Wert von x: 7“ aus. Der Aufruf steht in Zeile 15.
-- Fassung 4: Zeile 15 lautet `x = addiereEins(x)`. Die Ausgabe ist „Wert von x: 8“.
+- Die Demo hat vier Programme.
+- Programm 2: Der Compiler meldet Zeile 12: `syntax error: unexpected newline, expected { after if clause`.
+- Programm 3: Die Klammer steht am Ende der Zeile mit `if`. Das Programm läuft und gibt „x ist positiv“ und „Wert von x: 7“ aus. Der Aufruf steht in Zeile 15.
+- Programm 4: Zeile 15 lautet `x = addiereEins(x)`. Die Ausgabe ist „Wert von x: 8“.
 - Eine Liste erklärt: Der Parameter `zahl` ist eine eigene Variable der Funktion und bekommt eine Kopie des Werts von `x`. Der Rückgabewert geht verloren, wenn der Aufruf allein in einer Zeile steht.
 - Go meldet einen nicht verwendeten Rückgabewert einer eigenen Funktion nicht.
 - Die öffnende Klammer `{` muss in der gleichen Zeile stehen wie `if` und die Bedingung. In einer neuen Zeile ist sie immer ein Fehler.
@@ -102,7 +102,7 @@ Reiter: kopie
 
 ### Handgriffe
 
-- „weiter“, „zurück“, „von vorn“ oder „Diese Fassung kopieren“ wählen.
+- „weiter“, „zurück“, „von vorn“ oder „Dieses Programm kopieren“ wählen.
 
 ### Abschnitte des Kurstexts
 

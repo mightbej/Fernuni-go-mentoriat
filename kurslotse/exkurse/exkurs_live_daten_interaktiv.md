@@ -9,7 +9,7 @@ Für alle Schritte gilt:
 - Die drei Programme stehen nicht im Kurstext. Sie stammen vom Mentor und liegen im Repository des Mentoriats unter `exkurse/go`: `aktien_portfolio.go`, `wetter_vergleich.go` und `reiseangebote.go`.
 - Die Programme arbeiten mit Arrays fester Länge und einer Zählvariable, nicht mit Slices. Sie verwenden keine Maps.
 - Neu gegenüber dem Kurs sind nur die Pakete `net/http`, `encoding/json`, `encoding/xml` und `regexp`, dazu `time` für Wartezeiten und Datumsangaben. Sie stecken in wenigen Funktionen am Ende jedes Programms. Die Seite erklärt sie nicht.
-- Im Editorlotsen steht in jedem Programm-Schritt ein Editor mit dem ganzen Programm. Der Student kann es ändern, mit „Ausführen“ starten und mit „Fassung zurücksetzen“ wiederherstellen. Anderswo, zum Beispiel auf GitHub Pages, zeigt der Schritt das Programm und seine Ausgabe vom 15.10.2026. Im Editorlotsen steht die Lektion im Menü „Programm wählen“ unter „Exkurse“.
+- Im Editorlotsen steht in jedem Programm-Schritt ein Editor mit dem ganzen Programm. Der Student kann es ändern, mit „Ausführen“ starten und mit „Programm zurücksetzen“ wiederherstellen. Anderswo, zum Beispiel auf GitHub Pages, zeigt der Schritt das Programm und seine Ausgabe vom 15.10.2026. Im Editorlotsen steht die Lektion im Menü „Programm wählen“ unter „Exkurse“.
 - Die Programme brauchen eine Verbindung zum Internet. Die Ausgabe ist bei jedem Lauf anders.
 - Eine Frage „Erst vorhersagen“ gibt es auf dieser Seite nicht. Jeder Programm-Schritt endet mit „Ideen zum Ändern“.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität. Die drei Programme gehören nicht zum Stoff des Kurstexts.
@@ -54,7 +54,7 @@ Reiter: aktien
 
 ### Handgriffe
 
-- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Fassung zurücksetzen“.
+- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Programm zurücksetzen“.
 - Anderswo lässt sich das Programm nur lesen.
 
 ### Abschnitte des Kurstexts
@@ -83,7 +83,7 @@ Reiter: wetter
 
 ### Handgriffe
 
-- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Fassung zurücksetzen“.
+- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Programm zurücksetzen“.
 - Anderswo lässt sich das Programm nur lesen.
 
 ### Abschnitte des Kurstexts
@@ -112,7 +112,7 @@ Reiter: reisen
 
 ### Handgriffe
 
-- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Fassung zurücksetzen“.
+- Im Editorlotsen: das Programm ändern, „Ausführen“, „Stopp“, „Programm zurücksetzen“.
 - Anderswo lässt sich das Programm nur lesen.
 
 ### Abschnitte des Kurstexts
