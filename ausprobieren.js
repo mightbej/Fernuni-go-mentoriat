@@ -17,6 +17,9 @@
 //                     das Kapitel und darin die Lektion wählen.
 //                     Ein Link dorthin fehlt mit Absicht, Thomas' Beschluss vom 2026-10-15: Mit ihm hätte der Student
 //                     zwei Tabs, die Seite des Editorlotsen und die Lektion. Der Reiter ist grau.
+//                     Seit 2026-10-24, Thomas' Weg 1 für Studenten ohne Editorlotsen: Der Knopf „Dieses Programm
+//                     kopieren“ legt das gewählte Programm in die Zwischenablage, für Go Playground oder den eigenen
+//                     Editor. Er funktioniert auch, wenn die Lektion als Datei im Browser geöffnet ist (file://).
 //
 // Eine Lektion bindet die Datei ein und richtet den Kasten ein:
 //
@@ -36,6 +39,7 @@
   // Liefert ein Lotse die Seite selbst aus, fragt der Kasten ihn. Von GitHub Pages aus fragt er keinen.
   const LOKAL = location.protocol === 'http:' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
   const ANLEITUNG = 'https://mightbej.github.io/Fernuni-go-mentoriat/lotsen/editorlotse.html';
+  const PLAYGROUND = 'https://go.dev/play/';
   // Das Kapitel der Lektion, wie es im Menü des Editorlotsen steht: aus dem Ordner, zum Beispiel kap3-einfuehrung.
   const kapitel = () => { const k = location.pathname.match(/\/kap(\d+)-/); return k ? 'Kapitel ' + k[1] : 'Exkurse'; };
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -74,6 +78,25 @@
     const d = await r.json().catch(() => null);
     if (!r.ok || d === null) throw new Error((d && d.fehler) || 'Fehler ' + r.status);
     return d;
+  }
+  // Legt Text in die Zwischenablage. navigator.clipboard fehlt, wo der Browser die Seite nicht für sicher hält. Dann
+  // kopiert ein verstecktes Textfeld mit execCommand, das geht auch in einer Datei, die per Doppelklick geöffnet ist.
+  function kopiere(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).catch(() => kopiereAlt(text));
+    return kopiereAlt(text);
+  }
+  function kopiereAlt(text) {
+    const feld = document.createElement('textarea');
+    feld.value = text;
+    feld.setAttribute('readonly', '');
+    feld.style.position = 'fixed';
+    feld.style.opacity = '0';
+    document.body.appendChild(feld);
+    feld.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (fehler) {}
+    feld.remove();
+    return ok ? Promise.resolve() : Promise.reject(new Error('Kopieren ging nicht. Markiere das Programm und kopiere es mit Strg+C.'));
   }
   let editorGeladen = null;   // das Laden von editor.js, einmal je Seite
   function ladeEditor() {
@@ -148,6 +171,7 @@
         <button type="button" class="haupt ausfuehren" hidden>Ausführen</button>
         <button type="button" class="stopp" hidden>Stopp</button>
         <button type="button" class="zuruecksetzen" hidden>Programm zurücksetzen</button>
+        <button type="button" class="kopieren">Dieses Programm kopieren</button>
         <span class="stand"></span>
       </div>
       <p><strong class="ueber">Was Go dazu meldet oder ausgibt</strong></p>
@@ -233,12 +257,14 @@
       $('.griff').hidden = !bereit;
       $('.ausfuehren').hidden = !bereit;
       $('.zuruecksetzen').hidden = !bereit;
+      $('.kopieren').hidden = !!bereit;
       $('.ueber').textContent = bereit ? 'Ausgabe' : 'Was Go dazu meldet oder ausgibt';
       if (zustand === 'ohne') {
         setzeLage('<p>Hier steht das Programm, und darunter, was Go dazu meldet oder ausgibt. Ändern und ausführen kannst du es im Editorlotsen auf deinem Rechner:</p>' +
           '<ol><li>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>.</li>' +
           '<li>Wähle dort im Menü „Programm wählen“ den Eintrag „' + esc(kapitel()) + '“ und darin „' + esc(document.title) + '“.</li></ol>' +
-          '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>');
+          '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>' +
+          '<p>Ohne Editorlotsen: „Dieses Programm kopieren“ legt das Programm in die Zwischenablage. Füge es in <a href="' + PLAYGROUND + '" target="_blank" rel="noopener">Go Playground</a> oder in deinen Editor ein und übersetze es mit <code>go run</code>.</p>');
       } else if (!ed) {
         setzeLage('<p>Der Editor wird geladen …</p>');
       } else {
@@ -342,6 +368,12 @@
     $('.ausfuehren').addEventListener('click', fuehreAus);
     $('.stopp').addEventListener('click', () => hole('/api/lauf/stopp', {}).catch(() => {}));
     $('.zuruecksetzen').addEventListener('click', () => waehle(gewaehlt));
+    $('.kopieren').addEventListener('click', () => {
+      const k = $('.kopieren');
+      kopiere(code()).then(
+        () => { $('.stand').textContent = ''; k.textContent = 'Kopiert'; setTimeout(() => { k.textContent = 'Dieses Programm kopieren'; }, 1500); },
+        fehler => { $('.stand').textContent = fehler.message; });
+    });
     $('.eingabezeile').addEventListener('submit', async e => {
       e.preventDefault();
       const feld = $('.eingabezeile input');
@@ -364,6 +396,7 @@
         const saetze = ['Gewählt ist das Programm „' + f.name + '“.'];
         if (zustand !== 'bereit') {
           saetze.push('Die Seite läuft nicht im Editorlotsen. Der Student kann hier nichts ändern und nichts ausführen. Die Seite zeigt das Programm und darunter, was Go 1.26.1 dazu gemeldet oder ausgegeben hat.');
+          saetze.push('Mit dem Knopf „Dieses Programm kopieren“ kann der Student das Programm kopieren und in Go Playground oder in seinem eigenen Editor übersetzen und ausführen.');
         } else {
           saetze.push('Die Seite läuft im Editorlotsen. Der Student kann das Programm im Editor ändern und mit „Ausführen“ ausführen.');
           saetze.push(ed && ed.text() !== f.code ? 'Der Student hat das Programm im Editor geändert. Die Programmzeilen unten zeigen seinen geänderten Code.' : 'Das Programm im Editor ist so, wie die Seite es lädt.');
