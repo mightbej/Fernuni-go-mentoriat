@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-26T15:12",
+ "stand": "2026-10-26T16:14",
  "abschnitte": {
   "1.1": [
    {
@@ -329,6 +329,13 @@
     "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -770,6 +777,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Variablen, Typen und Speicher: was eine Variable im Programm ist",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.2 des Kurstexts. Sie zeigt, was eine Variable im Programm ist: ein Stück Speicher mit einem Namen und einem Typ. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts. Zellen und Adressen führt sie nicht ein, das tut erst das Speichermodell.",
@@ -817,6 +831,13 @@
     "titel": "Operatoren und Ausdrücke in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_ausdruecke_interaktiv.html",
     "beschreibung": "Die Seite erklärt Abschnitt 4.1 bis 4.1.2: welche Operatoren es für welche primitiven Typen gibt, woraus ein Ausdruck besteht, nach welchen Regeln Go ihn auswertet und was ein konstanter Ausdruck ist.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
     "geprueft": true,
     "art": "nennt"
    }
@@ -995,6 +1016,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
@@ -1044,6 +1072,13 @@
     "titel": "Logische Operatoren und Vergleiche in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_logische_operatoren_interaktiv.html",
     "beschreibung": "Die Seite zeigt die sechs Vergleichsoperatoren, den Vergleich von Strings und wie man mehrere Vergleiche mit `&&`, `||` und `!` zu einer Bedingung verknüpft.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1339,6 +1374,13 @@
   ],
   "4.3.7.1": [
    {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Operatoren und Ausdrücke in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_ausdruecke_interaktiv.html",
     "beschreibung": "Die Seite erklärt Abschnitt 4.1 bis 4.1.2: welche Operatoren es für welche primitiven Typen gibt, woraus ein Ausdruck besteht, nach welchen Regeln Go ihn auswertet und was ein konstanter Ausdruck ist.",
@@ -1467,6 +1509,13 @@
     "titel": "Rechenwerk: Wie ein Computer mit Bits addiert und subtrahiert",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_rechenwerk_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wie aus Strom an und Strom aus eine Addition wird. Sie behandelt die bitweisen Operatoren aus Abschnitt 4.3.7.2.1 als Bausteine des Addierers. Der Addierer selbst wird im Kurstext nicht behandelt. Thomas' Grundsatz dazu: Ein Informatiker soll wissen, wie ein Rechenwerk arbeitet, ob es im Kurstext steht oder nicht.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1882,6 +1931,13 @@
     "titel": "Programmierübung: Zahlenraten mit Statistik",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap5-anweisungen/go_k5_zahlenraten_programmieruebung.html",
     "beschreibung": "Die Seite baut das Go-Programm zum Zahlenratespiel in sieben Schritten auf und ordnet jeden Teil einem Abschnitt des Kurstexts zu. Sie setzt den Exkurs Exkurs Von der Problemstellung zum Go-Programm fort: Der Ablauf aus dessen Stufe 5 wird hier zu Go.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
+    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+    "beschreibung": "Auftrag der Didaktik vom 2026-10-25, von Thomas ausdrücklich freigegeben. Eigene Lektion zu Abschnitt 4.3.7.1 mit Einstieg über 17 Gegenstände in Schachteln mit je 5 Plätzen. Ort GitHub Pages, da kein Listing abgedruckt wird. Die Beispiele und Programme sind eigene Ausarbeitungen.",
     "geprueft": true,
     "art": "nennt"
    },
