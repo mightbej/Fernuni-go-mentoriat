@@ -2,9 +2,9 @@
 
 Die Seite stellt alle Bitmuster eines Ganzzahl-Typs auf einen Kreis. Ein Zeiger zeigt auf ein Bitmuster. Addieren bewegt den Zeiger im Uhrzeigersinn, Subtrahieren gegen den Uhrzeigersinn. Der Kreis zeigt entweder ein Modell mit 4 Bit oder 8 Bit, und 8 Bit sind in Go die Typen `uint8` und `int8`.
 
-Die Seite hat sechs Reiter. Sichtbar ist immer nur ein Schritt. Der Kreis ist in Schritt 1, Schritt 2 und Schritt 3 derselbe: Die Zahl der Bits, die Lesart mit oder ohne Vorzeichen und die Stelle des Zeigers bleiben beim Wechsel des Schritts erhalten.
+Die Seite hat sieben Reiter. Sichtbar ist immer nur ein Schritt. Der Kreis ist in Schritt 1, 2, 3 und 5 derselbe: Die Zahl der Bits, die Lesart mit oder ohne Vorzeichen und die Stelle des Zeigers bleiben beim Wechsel des Schritts erhalten.
 
-Den Code auf der Seite kann der Student nicht ändern und nicht ausführen. Die Seite schreibt die Programmzeilen selbst, nachdem der Student in Schritt 3 gerechnet hat.
+Den Code auf der Seite kann der Student nicht ändern und nicht ausführen. Die Seite schreibt die Programmzeilen selbst, nachdem der Student in Schritt 3 oder 5 gerechnet hat.
 
 ## Worum es geht
 
@@ -12,8 +12,9 @@ Reiter: worum
 
 ### Aufbau der Darstellung
 
-- Zu sehen ist nur Text: was der Kreis zeigt, was die Nahtstelle ist und welche vier Schritte folgen.
-- Ein Kreis ist hier noch nicht zu sehen. Er steht in Schritt 1, Schritt 2 und Schritt 3.
+- Zu sehen ist nur Text: was der Kreis zeigt, was die Nahtstelle ist und welche fünf Schritte folgen.
+- Der Text grenzt zwei Fälle ab: Liegt das rechnerische Ergebnis über dem größten Wert oder bei einem Typ mit Vorzeichen unter dem kleinsten, ist das der arithmetische Überlauf. Ein negatives Ergebnis bei einem Typ ohne Vorzeichen ist das Repräsentationsproblem aus Schritt 5.
+- Ein Kreis ist hier noch nicht zu sehen. Er steht in Schritt 1, 2, 3 und 5.
 
 ### Handgriffe
 
@@ -22,6 +23,7 @@ Reiter: worum
 ### Abschnitte des Kurstexts
 
 - 4.3.5
+- 4.3.6
 - 4.3.8
 
 ## Schritt 1: Bitmuster und Wert
@@ -100,7 +102,7 @@ Reiter: ueberlauf
 - Die rote gestrichelte Linie ist die Nahtstelle. Dort liegt der größte Wert neben dem kleinsten. Ohne Vorzeichen liegt sie oben, bei 8 Bit zwischen 255 und 0. Mit Vorzeichen liegt sie unten, bei 8 Bit zwischen 127 und −128.
 - Rechnet der Student, läuft der Zeiger Stelle für Stelle: im Uhrzeigersinn beim Addieren einer positiven Zahl, gegen den Uhrzeigersinn beim Addieren einer negativen Zahl. Bis 16 Stellen läuft er langsam, darüber schnell.
 - Läuft der Zeiger über die Nahtstelle, wird die rote Linie kurz dick und durchgezogen. Jeder Lauf über die Nahtstelle macht das Ergebnis um 2^n falsch: um 16 bei 4 Bit, um 256 bei 8 Bit.
-- Nach der Rechnung steht im Kasten die Meldung. Ohne Überlauf ist der Kasten grün und nennt Rechnung und Ergebnis. Mit Überlauf ist der Kasten rot. Er nennt das rechnerische Ergebnis, wie oft der Zeiger über die Nahtstelle gelaufen ist und welcher Wert gespeichert wird.
+- Nach der Rechnung steht im Kasten die Meldung. Ohne Überlauf ist der Kasten grün und nennt Rechnung und Ergebnis. Beim Überschreiten der Nahtstelle ist der Kasten rot. Bei einem negativen Ergebnis ohne Vorzeichen steht „Negativer Wert nicht darstellbar.“, sonst „Überlauf.“. Er nennt das rechnerische Ergebnis, wie oft der Zeiger über die Nahtstelle gelaufen ist und welcher Wert gespeichert wird.
 - Unter der Meldung stehen bei 8 Bit drei oder mehr Programmzeilen in Go mit derselben Rechnung. Hinter `//` steht die Ausgabe. Bei 4 Bit steht dort der Satz, dass Go keinen Typ mit 4 Bit kennt.
 - Ist die Zahl größer als der größte Wert des Typs, steht im Go-Code eine Schleife mit `x++` oder `x--`. Der Grund: Die Zahl selbst passt dann nicht in den Typ, zum Beispiel 200 nicht in `int8` mit dem größten Wert 127. Die Zeile `x = x + 200` übersetzt Go deshalb nicht. Mit der Summe hat das nichts zu tun. Die Schleife zählt stattdessen 200-mal um 1 weiter.
 - Einen Knopf für eine bestimmte Zahl gibt es nicht. Der Student trägt die Zahl in das Feld neben „addieren“ ein.
@@ -130,21 +132,47 @@ Reiter: typen
 
 ### Aufbau der Darstellung
 
-- Zu sehen ist eine Tabelle mit den Ganzzahl-Typen von Go. Die Spalten heißen Typ, Bits, Kleinster Wert, Größter Wert und Stellen auf dem Kreis.
-- Oben stehen die vier Typen ohne Vorzeichen: `uint8`, `uint16`, `uint32`, `uint64`. Darunter stehen die vier Typen mit Vorzeichen: `int8`, `int16`, `int32`, `int64`. Am Ende stehen `uint`, `int`, `byte` und `rune`.
-- Gelb markiert ist die Zeile des Typs, den der Kreis in den Schritten 1 bis 3 gerade zeigt: `uint8` oder `int8`. Zeigt der Kreis das Modell mit 4 Bit, ist keine Zeile markiert.
 - Ein Kreis ist in diesem Schritt nicht zu sehen.
+- Oben steht über die ganze Breite die Tabelle der Ganzzahl-Typen mit Typ, Bits, kleinstem und größtem Wert sowie Stellen auf dem Kreis. Die Zeile des 8-Bit-Typs, auf den der Kreis zuletzt gestellt war, ist gelb markiert. Beim 4-Bit-Modell ist keine Zeile markiert. Die Tabelle ist nicht anklickbar, die Zeilen byte und rune werden nie markiert.
+- Unter der Tabelle steht „Welchen Typ wähle ich?“ mit drei Punkten: `int` als Normalfall, wenn sein Wertebereich ausreicht. Eine feste Bitzahl braucht einen Grund, etwa einen großen Wertebereich, geringen Speicherbedarf oder ein Dateiformat. Vermeintlich nur positive Werte sind kein Grund für `uint`, vorzeichenlose Typen nimmt man nur dann, wenn man mit Bitmustern arbeitet.
+- Darunter steht „Gleiche Größe bedeutet nicht gleicher Typ“: `int` und `int64` sind verschiedene Typen, auch bei gleicher Bitzahl, eine Zuweisung zwischen ihnen braucht eine Typkonvertierung. `byte` und `uint8` bezeichnen dagegen denselben Typ, ebenso `rune` und `int32`. Mit `byte` betont man die Verwendung als Folge von 8 Bit. Die Zeichen erklärt die verlinkte Lektion zu Strings.
 
 ### Handgriffe
 
-- In der Tabelle lässt sich nichts anklicken.
-- Mit den Reitern oben zu einem anderen Schritt wechseln. In Schritt 1, Schritt 2 und Schritt 3 wählt der Student zwischen 4 Bit und 8 Bit und zwischen „ohne Vorzeichen“ und „mit Vorzeichen“. Wählen lassen sich damit nur `uint8` und `int8`. Die anderen Typen der Tabelle zeigt der Kreis nicht.
+- Den Links zur Typkonvertierung und zu Strings folgen.
+- In diesem Schritt lässt sich nichts ausprobieren. Den Kreis gibt es in Schritt 1, 2, 3 und 5.
 
 ### Abschnitte des Kurstexts
 
 - 4.3.4
+- 4.3.6
 
-## Schritt 5: Bezug zum Kurstext
+## Schritt 5: 10 minus 15 mit uint8
+
+Reiter: uint8
+
+### Aufbau der Darstellung
+
+- Oben stehen nebeneinander zwei feste Programme, die der Student nicht ändern und nicht ausführen kann: `var anzahl int = 10` beziehungsweise `var anzahl uint8 = 10`, dann `anzahl = anzahl - 15` und `fmt.Println(anzahl)`. Die Ausgaben sind -5 und 251, beide Programme laufen ohne Fehlermeldung.
+- Ein gelber Kasten stellt eine Frage zum Vorhersagen: An welcher Stelle überschreitet der Zeiger die Nahtstelle?
+- Darunter steht der Knopf „10 − 15 im Zahlenkreis“ und derselbe Kreis wie in Schritt 1 bis 3, mit Einstellungen, Bits, Anzeige, Meldung und Go-Code. Er zeigt nur das 4-Bit-Modell oder `int8` beziehungsweise `uint8`, keinen `int` mit 32 oder 64 Bit.
+- Der Knopf stellt immer 8 Bit ohne Vorzeichen und Startwert 10 ein, auch wenn vorher `int8` gewählt war, und lässt den Zeiger 15 Stellen zurücklaufen. Von 10 geht es über 0 und 255 bis 251, Bitmuster 1111 1011, denn −5 + 256 = 251. Die Meldung lautet dann „Negativer Wert nicht darstellbar.“
+- Darunter steht ein zugeklappter Abschnitt „Warum 251?“: `uint8` kann −5 nicht darstellen. In einer Fußnote zu Hinweis 4.7 im Kurstext wird dieses Überschwappen vom arithmetischen Überlauf unterschieden, es ist ein Repräsentationsproblem. `int` speichert −5 mit 32 oder 64 Bit. Darf eine Anzahl nicht negativ sein, ist ein negatives Ergebnis ein Fehler der Berechnung, den man mit `int` erkennen kann. Vor Rechenfehlern und Überläufen schützt `int` nicht.
+- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Zweierkomplement“, auf das Quiz zu den Wertebereichen und als Ausblick auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“, in dem ein Guthaben im Typ `uint64` steht.
+
+### Handgriffe
+
+- „10 − 15 im Zahlenkreis“ wählen, um den Fall mit `uint8` zu starten oder zu wiederholen. Während der Zeiger läuft, sind dieser Knopf und die Knöpfe der Demo gesperrt.
+- Alle Handgriffe des Kreises aus Schritt 3 stehen auch hier bereit: 4 oder 8 Bit, Lesart, Bits und Startwert ändern, −1 oder +1 und ganze Zahlen von −2000 bis 2000 addieren.
+- „Warum 251?“ auf- und zuklappen.
+- Beim Wechsel in Schritt 1 bis 3 bleibt der Stand des Kreises erhalten.
+
+### Abschnitte des Kurstexts
+
+- 4.3.6
+- 4.3.8
+
+## Schritt 6: Bezug zum Kurstext
 
 Reiter: kurstext
 
@@ -154,17 +182,17 @@ Reiter: kurstext
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
   - 1 Bitmuster und Wert, 4.3.5, Seiten 64–66: Die Wertigkeit der Bits und der Wert als Summe der Wertigkeiten stammen aus dem Kurstext. Der Kreis und das Modell mit 4 Bit gibt die Lektion dazu.
   - 2 Vorzeichen, 4.3.5, Seiten 64–66: Zweierkomplement: Das Zweierkomplement mit der negativen Wertigkeit des vordersten Bits stammt aus dem Kurstext. Die Färbung der Werte auf dem Kreis gibt die Lektion dazu.
-  - 3 Überlauf, 4.3.8, Seiten 78–84: Der arithmetische Überlauf stammt aus dem Kurstext. Die Nahtstelle auf dem Kreis und das Programm zur Rechnung gibt die Lektion dazu.
-  - 4 Die Typen in Go, 4.3.4, Seite 63: Die Tabelle der Ganzzahl-Typen stammt aus dem Kurstext. Die gelbe Markierung des Typs, den der Kreis gerade zeigt, gibt die Lektion dazu.
+  - 3 Überlauf, 4.3.8, Seiten 78–84: Der arithmetische Überlauf stammt aus dem Kurstext. Die Nahtstelle auf dem Kreis und das Programm der Demo zum Rechnen gibt die Lektion dazu.
+  - 4 Die Typen in Go, 4.3.4, Seite 63 und 4.3.6, Seiten 66–68: Die Ganzzahl-Typen, die Wahl des Typs, der Unterschied zwischen `int` und `int64` und der Alias stammen aus dem Kurstext. Die Markierung der Tabellenzeile ergänzt die Lektion.
+  - 5 10 − 15 mit uint8, 4.3.6, Seiten 66–68, Hinweis 4.7: Die Rechnung, das Ergebnis 251 und die Unterscheidung vom arithmetischen Überlauf stammen aus Hinweis 4.7 und seiner Fußnote. Der Vergleich mit `int`, der Weg am Kreis und der Ausblick auf den Blockchain-Exkurs ergänzen die Lektion.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.2, Seiten 8–10, Speicherelemente: Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: Variablen, Typen und Speicher, Schritt 4.
   - Abschnitt 2.3, Seiten 10–11, Wertebereich: Bei großen Zahlen kann ein Ergebnis zu groß für den Wertebereich sein. Lektion: Überlauf bei Ganzzahlen in Go, Schritt 4.
   - Abschnitt 4.3.1, Seiten 59–61, Literale: Lektion: Zahlensysteme in Go.
-- Unter „Wie es weitergeht“ stehen Links auf: „Zweierkomplement“, „Quiz zu den Wertebereichen der Ganzzahl-Typen“.
 
 ### Handgriffe
 
-- Mit den Reitern oben oder mit „Zurück zu Schritt 4“ zu einem anderen Schritt wechseln.
+- Mit den Reitern oben oder mit „Zurück zu Schritt 5“ zu einem anderen Schritt wechseln.
 - In diesem Schritt lässt sich nichts ausprobieren.
 
 ### Abschnitte des Kurstexts
@@ -174,4 +202,5 @@ Reiter: kurstext
 - 4.3.1
 - 4.3.4
 - 4.3.5
+- 4.3.6
 - 4.3.8

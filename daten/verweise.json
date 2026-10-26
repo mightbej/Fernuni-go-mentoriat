@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-23T14:46",
+ "stand": "2026-10-26T15:12",
  "abschnitte": {
   "1.1": [
    {
@@ -172,7 +172,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -314,7 +314,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -677,7 +677,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1265,7 +1265,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "nennt"
    },
@@ -1292,6 +1292,13 @@
    }
   ],
   "4.3.6": [
+   {
+    "titel": "Zahlenkreis: Ganzzahlen und Überlauf in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.html",
+    "beschreibung": "Die Seite stellt die Bitmuster eines Ganzzahl-Typs auf einen Kreis und zeigt, dass Zählen über das letzte Bitmuster hinaus beim ersten ankommt.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
    {
     "titel": "Blockchain: eine verkettete Liste mit Fingerabdruck",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html",
@@ -1508,11 +1515,20 @@
     "art": "nennt"
    }
   ],
+  "4.4.1": [
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
   "4.4.2": [
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "erklaert"
    },
@@ -1528,7 +1544,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "erklaert"
    },
@@ -1551,7 +1567,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "erklaert"
    },
@@ -1561,6 +1577,15 @@
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 5.5.3.1 des Kurstexts. Sie führt die Begriffe der Schleife aus Abschnitt 5.5.3 ein und führt drei Programme Anweisung für Anweisung aus: eine Schleife mit `n > 0`, die wiederholte Eingabe aus Listing 5.4 und die Fassung mit der Flag-Variable `ersterLauf`.",
     "geprueft": true,
     "art": "nennt"
+   }
+  ],
+  "4.4.5": [
+   {
+    "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
+    "geprueft": true,
+    "art": "erklaert"
    }
   ],
   "4.5": [
@@ -1835,7 +1860,7 @@
    {
     "titel": "Gleitkommazahlen: Mantisse, Exponent und Rundungsfehler in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_gleitkomma_interaktiv.html",
-    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Der letzte Schritt zeigt das Gleiche in Go mit `float64` und nennt die Regel für den Vergleich.",
+    "beschreibung": "Die Seite zeigt am 8-Bit-Modell des Kurstexts, warum eine Gleitkommazahl nur endlich viele Stellen hat und wo Darstellungsfehler und Rundungsfehler entstehen. Schritt 1 erklärt die dezimale Schreibweise im Quelltext, Schritt 4 den Vergleich mit `float64`. Schritt 5 zeigt die Grenzen beim Rechnen.",
     "geprueft": true,
     "art": "nennt"
    },

@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-16T11:30",
+ "stand": "2026-10-26T15:12",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -130,6 +130,11 @@
    "pfad": "kap4-primitive-datentypen/go_k4_ausdruecke_interaktiv.html",
    "titel": "Operatoren und Ausdrücke in Go",
    "abschnitt": "4.1"
+  },
+  {
+   "pfad": "kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
+   "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
+   "abschnitt": "4.3.7.1"
   },
   {
    "pfad": "kap6-arrays/go_k6_bubblesort_programmieruebung.html",

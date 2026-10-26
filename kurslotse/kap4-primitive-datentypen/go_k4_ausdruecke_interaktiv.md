@@ -9,7 +9,7 @@ Für alle Schritte gilt:
 - Ein Operator verbindet seine Operanden zu einem Ausdruck. Die Auswertung rechnet den Ausdruck aus und liefert seinen Wert.
 - Ein unärer Operator hat einen Operanden und steht davor, zum Beispiel `-a`. Ein binärer Operator hat zwei Operanden und steht zwischen ihnen, zum Beispiel `a + b`.
 - Die Begriffe Ausdruck, Auswertung und Bindungsstärke wurden in Abschnitt 3.3.5 und 3.3.6 schon einmal kurz eingeführt, am Programm zur Umrechnung von Temperaturen, Listing 3.2. Die Lektion dazu heißt „Zuweisen, rechnen, ausgeben“ und liegt im Editorlotsen unter Kapitel 3, nicht auf GitHub Pages.
-- Die Division zweier Ganzzahlen und der Rest `%` gehören zu Abschnitt 4.3.7.1. Die Seite nennt sie nur, wo eine Demo sie enthält, zum Beispiel `7 / 2` mit dem Wert 3 oder `3/4` mit dem Wert 0.
+- Die Division zweier Ganzzahlen und der Rest `%` gehören zu Abschnitt 4.3.7.1. Die Kästen „Mehr dazu später“ in Schritt 1 und 4 verlinken die Lektion „Rechnen mit Ganzzahlen: Division und Rest in Go“; sie ersetzt dort den bisherigen Verweis auf Typkonvertierung. Die Seite nennt sie nur, wo eine Demo sie enthält, zum Beispiel `7 / 2` mit dem Wert 3 oder `3/4` mit dem Wert 0.
 - Alle Ausgaben und Meldungen auf der Seite hat Go 1.26.1 erzeugt. Auf der Seite selbst läuft kein Go, außer in Schritt 6 im Editorlotsen.
 - Schritt 1 bis 5 enden mit einem violetten Kasten „Mehr dazu später“. Er nennt Abschnitte, in denen ein Thema genauer behandelt wird, und die Lektionen dazu.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Verbindlich sind der Kurstext und Moodle der FernUniversität.

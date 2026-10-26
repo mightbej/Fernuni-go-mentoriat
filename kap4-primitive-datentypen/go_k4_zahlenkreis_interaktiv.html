@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
+  <meta name="abschnitt" content="4.3.4">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zahlenkreis: Ganzzahlen und Überlauf in Go</title>
   <link rel="stylesheet" href="../stil.css">
@@ -14,6 +15,7 @@
     code { color:inherit;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
     pre { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre-wrap; }
     .layout { display:grid;grid-template-columns:minmax(320px,560px) 1fr;gap:24px;align-items:start; }
+    .layout > div { min-width:0; }
     @media (max-width:900px) { .layout { grid-template-columns:1fr; } }
     svg { width:100%;height:auto;display:block; }
     .schalter { display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px; }
@@ -39,10 +41,10 @@
     /* Tabelle der Go-Typen */
     .tabellenrahmen { overflow-x:auto; }
     table { margin:12px 0;font-size:.95rem; }
-    th,td { white-space:nowrap; }
-    td[colspan] { white-space:normal; }
+    table:not(.text) td { white-space:nowrap; }
+    table:not(.text) td[colspan] { white-space:normal; }
     th { font-weight:600; }
-    td:nth-child(3),td:nth-child(4) { font-family:Consolas,monospace; }
+    table:not(.text) td:nth-child(3),table:not(.text) td:nth-child(4) { font-family:Consolas,monospace; }
     tr.trenner td { border-top:2px solid #cbd5e1; }
     tr.gewaehlt td { background:var(--highlight);font-weight:700; }
 
@@ -98,7 +100,7 @@
   <div class="hero">
     <h1>Zahlenkreis: Ganzzahlen und Überlauf in Go</h1>
     <p>Ein Ganzzahl-Typ hat nur endlich viele Bitmuster. Wer über das letzte hinauszählt, kommt wieder beim ersten an.</p>
-    <p>Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63, Abschnitt 4.3.5, Seiten 64–66, und Abschnitt 4.3.8, Seiten 78–84.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63, Abschnitt 4.3.5, Seiten 64–66, Abschnitt 4.3.6, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84.</p>
   </div>
 
   <div class="tabs" id="tabs">
@@ -107,20 +109,33 @@
     <button type="button" class="tab" data-stufe="2">2 Vorzeichen</button>
     <button type="button" class="tab" data-stufe="3">3 Überlauf</button>
     <button type="button" class="tab" data-stufe="4">4 Die Typen in Go</button>
-    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+    <button type="button" class="tab" data-stufe="5">5 10 − 15 mit uint8</button>
+    <button type="button" class="tab" data-stufe="6">6 Bezug zum Kurstext</button>
   </div>
 
   <section class="stufe active" id="stufe-0">
     <div class="card">
       <h2>Was der Kreis zeigt</h2>
-      <p>Mit <em>n</em> Bit gibt es genau 2<sup><em>n</em></sup> Bitmuster. Auf dem Kreis stehen sie in der Reihenfolge, in der man beim Zählen an ihnen vorbeikommt. Addieren heißt: im Uhrzeigersinn weitergehen. Subtrahieren heißt: gegen den Uhrzeigersinn gehen.</p>
-      <p>Die Nahtstelle ist der Ort, an dem der größte Wert neben dem kleinsten liegt. Ohne Vorzeichen liegt sie zwischen 2<sup><em>n</em></sup> − 1 und 0. Mit Vorzeichen liegt sie zwischen 2<sup><em>n</em>−1</sup> − 1 und −2<sup><em>n</em>−1</sup>. Läuft der Zeiger darüber, ist das Ergebnis um 2<sup><em>n</em></sup> zu klein oder zu groß. Das ist der arithmetische Überlauf.</p>
-      <p>Die Seite geht in vier Schritten vor. Jeder Schritt hat oben einen Reiter.</p>
+      <p>Mit <em>n</em> Bit gibt es genau 2<sup><em>n</em></sup> Bitmuster.</p>
+      <p>Auf dem Kreis stehen sie in der Reihenfolge, in der man beim Zählen an ihnen vorbeikommt.</p>
+      <ul>
+        <li>Addieren heißt: im Uhrzeigersinn weitergehen.</li>
+        <li>Subtrahieren heißt: gegen den Uhrzeigersinn gehen.</li>
+      </ul>
+      <p>An der Nahtstelle liegt der größte Wert neben dem kleinsten.</p>
+      <ul>
+        <li>Ohne Vorzeichen: zwischen 2<sup><em>n</em></sup> − 1 und 0.</li>
+        <li>Mit Vorzeichen: zwischen 2<sup><em>n</em>−1</sup> − 1 und −2<sup><em>n</em>−1</sup>.</li>
+      </ul>
+      <p>Läuft der Zeiger über die Nahtstelle, ist das Ergebnis um 2<sup><em>n</em></sup> zu klein oder zu groß.</p>
+      <p>Liegt das rechnerische Ergebnis über dem größten Wert des Typs oder bei einem Typ mit Vorzeichen unter dem kleinsten, ist das der arithmetische Überlauf. Ein negatives Ergebnis bei einem Typ ohne Vorzeichen ist ein anderer Fall: das Repräsentationsproblem aus Schritt 5.</p>
+      <p>Die Lektion umfasst fünf Schritte. Jeder Schritt hat oben einen Reiter.</p>
       <ul>
         <li>Schritt 1, Bitmuster und Wert: Der Wert ist die Summe der Wertigkeiten aller Bits, die auf 1 stehen.</li>
         <li>Schritt 2, Vorzeichen: Dasselbe Bitmuster bedeutet mit und ohne Vorzeichen zwei verschiedene Werte.</li>
         <li>Schritt 3, Überlauf: Beim Rechnen läuft der Zeiger über die Nahtstelle.</li>
-        <li>Schritt 4, die Typen in Go: Jeder Ganzzahl-Typ ist ein solcher Kreis.</li>
+        <li>Schritt 4, die Typen in Go: Jeder Ganzzahl-Typ ist ein solcher Kreis. Du entscheidest, welcher Typ zu deiner Rechnung passt.</li>
+        <li>Schritt 5, 10 − 15 mit <code>uint8</code>: Ein vorzeichenloser Typ macht aus einem negativen Ergebnis einen großen positiven Wert.</li>
       </ul>
     </div>
     <div class="nav">
@@ -236,8 +251,8 @@
         <ol>
           <li>8 Bit mit Vorzeichen, Startwert 127. Was zeigt der Kreis nach <code>+ 1</code>?
             <details><summary>Auflösung</summary>−128. Der Zeiger läuft über die Nahtstelle vom größten zum kleinsten Wert.</details></li>
-          <li>8 Bit ohne Vorzeichen, Startwert 0. Was zeigt der Kreis nach <code>− 1</code>?
-            <details><summary>Auflösung</summary>255. Bei <code>uint8</code> liegt die Nahtstelle zwischen 255 und 0.</details></li>
+          <li>8 Bit ohne Vorzeichen, Startwert 255. Was zeigt der Kreis nach <code>+ 1</code>?
+            <details><summary>Auflösung</summary>0. Bei <code>uint8</code> liegt die Nahtstelle zwischen 255 und 0. Ein negatives Ergebnis wie bei 0 − 1 ist ein anderer Fall, er kommt in Schritt 5.</details></li>
           <li>8 Bit mit Vorzeichen, Startwert 100. Erst 100 addieren, dann −100 addieren. Wo steht der Zeiger am Ende?
             <details><summary>Auflösung</summary>Wieder bei 100. Das Zwischenergebnis ist −56, also falsch. Der zweite Schritt läuft über dieselbe Nahtstelle zurück. Zwei Überläufe können sich ausgleichen.</details></li>
           <li>8 Bit ohne Vorzeichen, beliebiger Startwert. Welche Zahl muss man addieren, um wieder beim Startwert anzukommen?
@@ -256,7 +271,7 @@
   <section class="stufe" id="stufe-4">
     <div class="card">
       <h2>Schritt 4: Die Ganzzahl-Typen in Go</h2>
-      <p>Jeder Ganzzahl-Typ in Go ist ein solcher Kreis. Die Typen unterscheiden sich in der Zahl der Bits und darin, ob das vorderste Bit als Vorzeichen gelesen wird. Der Kreis in den Schritten 1 bis 3 zeigt <code>uint8</code> und <code>int8</code>, die Zeile des gewählten Typs ist markiert. Die größeren Typen verhalten sich genauso, ihr Kreis hat nur mehr Stellen.</p>
+      <p>Jeder Ganzzahl-Typ in Go ist ein solcher Kreis. Die Typen unterscheiden sich in der Zahl der Bits und darin, ob das vorderste Bit als Vorzeichen gelesen wird. Der Kreis aus Schritt 1 bis 3 zeigt <code>uint8</code> und <code>int8</code>. Markiert ist die Zeile des Typs, auf den er zuletzt gestellt war. Die größeren Typen verhalten sich genauso, ihr Kreis hat nur mehr Stellen.</p>
       <div class="tabellenrahmen">
       <table>
         <thead><tr><th>Typ</th><th>Bits</th><th>Kleinster Wert</th><th>Größter Wert</th><th>Stellen auf dem Kreis</th></tr></thead>
@@ -276,43 +291,81 @@
         </tbody>
       </table>
       </div>
+
+      <h3>Welchen Typ wähle ich?</h3>
+      <ul>
+        <li><strong>Im Normalfall <code>int</code>:</strong> Für Anzahlen und Rechnungen mit ganzen Zahlen nimmst du <code>int</code>, sofern sein Wertebereich ausreicht. Er hat mindestens 32 Bit.</li>
+        <li><strong>Eine feste Bitzahl braucht einen Grund:</strong> Wähle zum Beispiel <code>int64</code> für einen großen Wertebereich, <code>int8</code> für geringen Speicherbedarf oder einen Typ mit fester Größe für ein Dateiformat. Prüfe dabei den Wertebereich aller Zwischenergebnisse.</li>
+        <li><strong>Vermeintlich nur positive Werte sind kein Grund für <code>uint</code>:</strong> Auch bei einer Anzahl kann eine fehlerhafte Subtraktion ein negatives Ergebnis liefern. Vorzeichenlose Typen nimmst du nur dann, wenn du mit Bitmustern arbeitest, etwa beim Verarbeiten von Binärdateien.</li>
+      </ul>
+
+      <h3>Gleiche Größe bedeutet nicht gleicher Typ</h3>
+      <p><code>int</code> und <code>int64</code> sind verschiedene Typen, auch wenn <code>int</code> auf deinem Rechner ebenfalls 64 Bit hat. Eine Variable vom Typ <code>int</code> lässt sich deshalb nicht ohne <a href="go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a> einer Variablen vom Typ <code>int64</code> zuweisen.</p>
+      <p>Ein <strong>Alias</strong> ist dagegen ein anderer Name für denselben Typ: <code>byte</code> ist ein Alias für <code>uint8</code>, <code>rune</code> für <code>int32</code>. Mit <code>byte</code> betonst du, dass ein Wert als Folge von 8 Bit verwendet wird. Die Bedeutung von <code>rune</code> für Zeichen lernst du in <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen in Go</a> kennen.</p>
     </div>
     <div class="nav">
       <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
-      <button type="button" data-gehe="5">Weiter zu Schritt 5</button>
+      <button type="button" class="aktiv" data-gehe="5">Weiter zu Schritt 5</button>
     </div>
   </section>
 
   <section class="stufe" id="stufe-5">
+    <div class="card">
+      <h2>Schritt 5: 10 minus 15 mit <code>uint8</code></h2>
+      <p>Von einer Anzahl 10 werden 15 abgezogen. Mit <code>int</code> bleibt das negative Ergebnis sichtbar, mit <code>uint8</code> entsteht ein großer positiver Wert. Beide Programme laufen ohne Fehlermeldung:</p>
+      <div class="layout">
+        <div><p><strong>Mit <code>int</code></strong></p><pre>var anzahl int = 10
+anzahl = anzahl - 15
+fmt.Println(anzahl) // -5</pre></div>
+        <div><p><strong>Mit <code>uint8</code></strong></p><pre>var anzahl uint8 = 10
+anzahl = anzahl - 15
+fmt.Println(anzahl) // 251</pre></div>
+      </div>
+      <div class="hinweis"><strong>Erst vorhersagen, dann ausprobieren:</strong> An welcher Stelle überschreitet der Zeiger die Nahtstelle? Der Knopf stellt den Kreis auf <code>uint8</code> und rechnet von 10 aus 15 zurück.</div>
+      <button type="button" id="typwahl-demo">10 − 15 im Zahlenkreis</button>
+      <div id="platz-5"></div>
+      <details>
+        <summary>Warum 251?</summary>
+        <p><code>uint8</code> kann −5 nicht darstellen. Auf seinem Kreis führt der Weg von 10 um 15 Stellen gegen den Uhrzeigersinn über 0 und 255 bis 251, denn −5 + 256 = 251. Im Kurstext wird dieses „Überschwappen“ in einer Fußnote zu Hinweis 4.7 vom arithmetischen Überlauf unterschieden: Es ist ein Repräsentationsproblem, weil ein vorzeichenloser Typ negative Werte gar nicht darstellen kann. Der Typ <code>int</code> speichert −5 dagegen mit 32 oder 64 Bit, deshalb zeigt der Kreis keinen <code>int</code>.</p>
+        <p>Darf die Anzahl nicht negativ sein, ist das negative Ergebnis ein Fehler der Berechnung. Mit <code>int</code> kannst du diesen Fall erkennen und prüfen. Vor Rechenfehlern und vor Überläufen bei zu großen Zahlen schützt <code>int</code> nicht.</p>
+      </details>
+      <h3>Wie es weitergeht</h3>
+      <ul>
+        <li><strong>Zweierkomplement:</strong> Die Lektion <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a> zeigt, wie man eine Zahl negiert.</li>
+        <li><strong>Quiz:</strong> <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen der Ganzzahl-Typen</a>.</li>
+        <li><strong>Ausblick:</strong> Im Exkurs <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_interaktiv.html#guthaben">Blockchain: eine verkettete Liste mit Fingerabdruck</a> wird ein Guthaben mit dem Typ <code>uint64</code> verwaltet. Dort begegnet dir das Problem wieder.</li>
+      </ul>
+    </div>
+    <div class="nav">
+      <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    </div>
+  </section>
+
+  <section class="stufe" id="stufe-6">
   <div class="card">
-    <h2>Schritt 5: Bezug zum Kurstext</h2>
-    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt und die Seiten des Kurstexts zum Nachlesen. Sie trennt, was aus dem Kurstext stammt und was die Lektion dazugibt.</p>
+    <h2>Schritt 6: Bezug zum Kurstext</h2>
+    <p>Die Tabelle nennt zu jedem Schritt den passenden Abschnitt und die Seiten im Kurstext. Sie trennt, was aus dem Kurstext stammt und was die Lektion ergänzt.</p>
 
     <div class="tabellenrahmen">
     <table class="text">
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
-      <tr><td>1 Bitmuster und Wert</td><td>4.3.5, Seiten 64–66</td><td>Die Wertigkeit der Bits und der Wert als Summe der Wertigkeiten stammen aus dem Kurstext.</td><td>Der Kreis und das Modell mit 4 Bit gibt die Lektion dazu.</td></tr>
-      <tr><td>2 Vorzeichen</td><td>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Das Zweierkomplement mit der negativen Wertigkeit des vordersten Bits stammt aus dem Kurstext.</td><td>Die Färbung der Werte auf dem Kreis gibt die Lektion dazu.</td></tr>
-      <tr><td>3 Überlauf</td><td>4.3.8, Seiten 78–84</td><td>Der arithmetische Überlauf stammt aus dem Kurstext.</td><td>Die Nahtstelle auf dem Kreis und das Programm zur Rechnung gibt die Lektion dazu.</td></tr>
-      <tr><td>4 Die Typen in Go</td><td>4.3.4, Seite 63</td><td>Die Tabelle der Ganzzahl-Typen stammt aus dem Kurstext.</td><td>Die gelbe Markierung des Typs, den der Kreis gerade zeigt, gibt die Lektion dazu.</td></tr>
+      <tr><td>1 Bitmuster und Wert</td><td>4.3.5, Seiten 64–66</td><td>Die Wertigkeit der Bits und der Wert als Summe der Wertigkeiten stammen aus dem Kurstext.</td><td>Der Kreis und das Modell mit 4 Bit stammen aus dieser Lektion.</td></tr>
+      <tr><td>2 Vorzeichen</td><td>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Das Zweierkomplement mit der negativen Wertigkeit des vordersten Bits stammt aus dem Kurstext.</td><td>Die Färbung der Werte auf dem Kreis stammt aus dieser Lektion.</td></tr>
+      <tr><td>3 Überlauf</td><td>4.3.8, Seiten 78–84</td><td>Die Erklärung des arithmetischen Überlaufs stammt aus dem Kurstext.</td><td>Die Nahtstelle auf dem Kreis und das Programm der Demo zum Rechnen stammen aus dieser Lektion.</td></tr>
+      <tr><td>4 Die Typen in Go</td><td>4.3.4, Seite 63; 4.3.6, Seiten 66–68</td><td>Die Ganzzahl-Typen, die Wahl des Typs, der Unterschied zwischen <code>int</code> und <code>int64</code> sowie der Alias stammen aus dem Kurstext.</td><td>Die Markierung der Tabellenzeile stammt aus dieser Lektion.</td></tr>
+      <tr><td>5 10 − 15 mit uint8</td><td>4.3.6, Seiten 66–68: Hinweis 4.7</td><td>Die Rechnung 10 − 15 mit <code>uint8</code>, das Ergebnis 251 und die Abgrenzung zum arithmetischen Überlauf stammen aus Hinweis 4.7 und der zugehörigen Fußnote.</td><td>Der Vergleich mit <code>int</code>, der Weg auf dem Kreis und der Ausblick auf den Blockchain-Exkurs stammen aus dieser Lektion.</td></tr>
     </table>
     </div>
 
     <h3>Wo das Thema im Kurstext noch vorkommt</h3>
     <ul>
-      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherelemente:</strong> Wie Folgen von 0 und 1 als Werte gelesen werden, hängt vom Typ ab. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
-      <li><strong>Abschnitt 2.3, Seiten 10–11, Wertebereich:</strong> Bei großen Zahlen kann ein Ergebnis zu groß für den Wertebereich sein. Lektion: <a href="go_k4_overflow_interaktiv.html#teilausdruecke">Überlauf bei Ganzzahlen in Go</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 2.2, Seiten 8–10, Speicherelemente:</strong> Wie Folgen aus Nullen und Einsen als Werte interpretiert werden, bestimmt der Typ. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#speicher">Variablen, Typen und Speicher</a>, Schritt 4.</li>
+      <li><strong>Abschnitt 2.3, Seiten 10–11, Wertebereich:</strong> Bei großen Zahlen kann ein Ergebnis den Wertebereich überschreiten. Lektion: <a href="go_k4_overflow_interaktiv.html#teilausdruecke">Überlauf bei Ganzzahlen in Go</a>, Schritt 4.</li>
       <li><strong>Abschnitt 4.3.1, Seiten 59–61, Literale:</strong> Lektion: <a href="go_k4_zahlensysteme_interaktiv.html">Zahlensysteme in Go</a>.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Zweierkomplement:</strong> Die Lektion <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement</a> zeigt, wie man eine Zahl negiert.</li>
-      <li><strong>Quiz:</strong> <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen der Ganzzahl-Typen</a>.</li>
     </ul>
   </div>
   <div class="nav">
-      <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+      <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
       <button type="button" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
@@ -420,6 +473,7 @@
   function sperre(an) {
     st.laeuft = an;
     el('demo').querySelectorAll('button').forEach(b => b.disabled = an);
+    el('typwahl-demo').disabled = an;
   }
 
   function melde(html, ueberlauf) {
@@ -476,7 +530,7 @@
     } else {
       const mal = ueb === 1 ? 'einmal' : ueb + '-mal';
       const korr = (k > 0 ? ' − ' : ' + ') + (ueb === 1 ? '' : ueb + ' · ') + N();
-      melde('<strong>Überlauf.</strong> Rechnerisch ist ' + rechnung + ' = ' + z(wahr) + '. Dieser Wert liegt außerhalb von ' + z(min()) + ' … ' + z(max()) + '.<br>' +
+      melde('<strong>' + (!st.signed && wahr < 0 ? 'Negativer Wert nicht darstellbar.' : 'Überlauf.') + '</strong> Rechnerisch ist ' + rechnung + ' = ' + z(wahr) + '. Dieser Wert liegt außerhalb von ' + z(min()) + ' … ' + z(max()) + '.<br>' +
             'Der Zeiger ist ' + mal + ' über die Nahtstelle gelaufen. Gespeichert wird ' + z(wahr) + korr + ' = <strong>' + z(erg) + '</strong>.', true);
     }
     goCode(start, k, erg);
@@ -491,6 +545,13 @@
     melde('Bitmuster <code>' + bits(st.idx) + '</code> wird als ' + typ() + ' gelesen: Wert ' + z(wert(st.idx)) + '.');
     el('gocode').innerHTML = ''; el('fehler').textContent = '';
   }
+
+  el('typwahl-demo').onclick = () => {
+    if (st.laeuft) return;
+    stelleUm(8, false); springe(10);
+    el('start').value = '10'; el('zahl').value = '-15';
+    rechne(-15);
+  };
 
   el('b4').onclick = () => stelleUm(4, st.signed);
   el('b8').onclick = () => stelleUm(8, st.signed);
@@ -510,15 +571,15 @@
 
   // ---------- Reiter ----------
   // Jede Stufe hat eine eigene Adresse, zum Beispiel …interaktiv.html#ueberlauf
-  const ANKER = ['worum', 'bitmuster', 'vorzeichen', 'ueberlauf', 'typen', 'kurstext'];
+  const ANKER = ['worum', 'bitmuster', 'vorzeichen', 'ueberlauf', 'typen', 'uint8', 'kurstext'];
   let aktuell = 0;                                                     // Nummer der sichtbaren Stufe
   function zeigeStufe(nummer, nachOben) {
     const gewechselt = nummer !== aktuell;
     aktuell = nummer;
-    // Der Kreis ist in Schritt 1 bis 3 derselbe. Er zieht in den sichtbaren Schritt um und behält seinen Stand.
-    if (nummer >= 1 && nummer <= 3) el('platz-' + nummer).appendChild(el('demo'));
-    el('rechnen').hidden = nummer !== 3;                               // gerechnet wird erst in Schritt 3
-    el('gocode').hidden = nummer !== 3;
+    // Der Kreis ist in Schritt 1, 2, 3 und 5 derselbe. Er zieht in den sichtbaren Schritt um und behält seinen Stand.
+    if ((nummer >= 1 && nummer <= 3) || nummer === 5) el('platz-' + nummer).appendChild(el('demo'));
+    el('rechnen').hidden = nummer !== 3 && nummer !== 5;                    // Rechnen in Schritt 3 und 5
+    el('gocode').hidden = nummer !== 3 && nummer !== 5;
     if (gewechselt) Kurslotse.schrittGewechselt();                     // die Antworten gehören zum Schritt davor
     document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
     document.querySelectorAll('.tab').forEach(k => k.classList.toggle('active', Number(k.dataset.stufe) === nummer));
@@ -536,16 +597,14 @@
 
   // ---------- Kurslotse ----------
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
-  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitmuster und Wert', 'Schritt 2: Mit und ohne Vorzeichen', 'Schritt 3: Überlauf', 'Schritt 4: Die Ganzzahl-Typen in Go', 'Schritt 5: Bezug zum Kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitmuster und Wert', 'Schritt 2: Mit und ohne Vorzeichen', 'Schritt 3: Überlauf', 'Schritt 4: Die Ganzzahl-Typen in Go', 'Schritt 5: 10 minus 15 mit uint8', 'Schritt 6: Bezug zum Kurstext'];
 
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function standSaetze() {
-    if (aktuell === 5) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
+    if (aktuell === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
+    if (aktuell === 4) return [st.n === 8 ? 'In der Tabelle ist die Zeile ' + typ() + ' gelb markiert, weil der Kreis zuletzt auf diesen Typ gestellt war. Der Kreis selbst ist in diesem Schritt nicht zu sehen.' : 'In der Tabelle ist keine Zeile markiert, weil der Kreis zuletzt das Modell mit 4 Bit zeigte. Der Kreis selbst ist in diesem Schritt nicht zu sehen.'];
     const acht = st.n === 8, lesart = st.signed ? 'mit Vorzeichen' : 'ohne Vorzeichen';
     if (aktuell === 0) return ['Unter „Worum es geht“ ist kein Kreis zu sehen.'];
-    if (aktuell === 4) return [acht
-      ? 'In der Tabelle ist die Zeile ' + typ() + ' gelb markiert. Der Kreis in den Schritten 1 bis 3 zeigt gerade 8 Bit ' + lesart + '.'
-      : 'In der Tabelle ist keine Zeile markiert. Der Kreis in den Schritten 1 bis 3 zeigt gerade das Modell mit 4 Bit, und Go kennt keinen Typ mit 4 Bit.'];
     const w = wert(st.idx), alle = [], an = [];
     for (let j = st.n - 1; j >= 0; j--) { alle.push(gewicht(j)); if ((st.idx >> j) & 1) an.push(gewicht(j)); }
     const anders = st.signed ? st.idx : (st.idx >= N() / 2 ? st.idx - N() : st.idx);
@@ -561,19 +620,19 @@
         : 'Auf 1 stehen die Bits mit den Wertigkeiten ' + an.join(', ') + '. Ihre Summe ist ' + w + '.',
       'Dasselbe Bitmuster ' + (st.signed ? 'ohne' : 'mit') + ' Vorzeichen gelesen hat den Wert ' + anders + '.'
     ];
-    if (aktuell === 3) {
+    if (aktuell === 3 || aktuell === 5) {
       const l = st.letzte;
       if (!l) t.push('Seit der Zeiger auf diesen Wert gesetzt wurde, hat der Student nicht gerechnet.');
       else t.push('Letzte Rechnung: ' + l.start + (l.k < 0 ? ' - ' + (-l.k) : ' + ' + l.k) + '. Rechnerisch ergibt das ' + l.wahr + '.',
         l.ueb === 0 ? 'Der Zeiger ist nicht über die Nahtstelle gelaufen. Es gibt keinen Überlauf, der Kreis zeigt ' + l.erg + '.'
-                    : 'Der Zeiger ist ' + l.ueb + '-mal über die Nahtstelle gelaufen. Das ist ein Überlauf. Der Kreis zeigt ' + l.erg + ', denn ' + l.wahr + (l.k > 0 ? ' - ' : ' + ') + (l.ueb === 1 ? '' : l.ueb + ' · ') + N() + ' = ' + l.erg + '.');
+                    : 'Der Zeiger ist ' + l.ueb + '-mal über die Nahtstelle gelaufen. ' + (!st.signed && l.wahr < 0 ? 'Der negative Wert ist im vorzeichenlosen Typ grundsätzlich nicht darstellbar (Repräsentationsproblem nach Hinweis 4.7). ' : 'Das ist ein Überlauf. ') + 'Der Kreis zeigt ' + l.erg + ', denn ' + l.wahr + (l.k > 0 ? ' - ' : ' + ') + (l.ueb === 1 ? '' : l.ueb + ' · ') + N() + ' = ' + l.erg + '.');
     }
+    if (aktuell === 5) t.push('Die festen Vergleichsprogramme zeigen int: 10 - 15 = -5 und uint8: 10 - 15 = 251, jeweils ohne Fehlermeldung. Der Kreis zeigt nur das Modell mit 4 Bit oder int8 beziehungsweise uint8, keinen int mit 32 oder 64 Bit. Der Knopf 10 − 15 im Zahlenkreis setzt uint8, Start 10 und addiert -15.');
     return t;
   }
   // Der Stand in einer Zeile, sie steht über dem Eingabefeld des Dialogs
   function kurz() {
-    if (aktuell === 0) return '';
-    if (aktuell === 4) return st.n === 8 ? 'markiert ist ' + typ() : '';
+    if (aktuell === 0 || aktuell === 4 || aktuell === 6) return '';
     return typ() + ', Bitmuster ' + bits(st.idx) + ', Wert ' + z(wert(st.idx));
   }
 
@@ -583,12 +642,12 @@
   Kurslotse.einrichten({
     titel: 'Zahlenkreis: Ganzzahlen und Überlauf in Go',
     thema: 'Zahlenkreis, Ganzzahlen und Überlauf',
-    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63, Abschnitt 4.3.5, Seiten 64–66, und Abschnitt 4.3.8, Seiten 78–84',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.3.4, Seite 63, Abschnitt 4.3.5, Seiten 64–66, Abschnitt 4.3.6, Seiten 66–68, und Abschnitt 4.3.8, Seiten 78–84',
     beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_zahlenkreis_interaktiv.md',
     reiter: () => ANKER[aktuell],
     schritt: () => SCHRITTE[aktuell],
     sichtbar: () => el('stufe-' + aktuell),
-    text: '.card > p:not(.quelle), .card > ul, .hinweis, .bitkopf, .bitfuss, .meldung, #gocode p, table',
+    text: '.card > h3, .layout h3, .layout ul, .layout p, .card > details p, .card > p:not(.quelle), .card > ul, .hinweis, .bitkopf, .bitfuss, .meldung, #gocode p, table',
     stand: standSaetze,
     kurz: kurz,
     beispiel: 'Warum springt der Wert von 127 auf −128?'

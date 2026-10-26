@@ -118,6 +118,8 @@ Reiter: abschneiden
 
 Reiter: division
 
+Die Lektion „Rechnen mit Ganzzahlen: Division und Rest in Go“ ist hier für Ganzzahlquotient, Rest und negative Operanden verlinkt. Dieser Schritt bleibt bei der Typkonvertierung vor der Division.
+
 ### Aufbau der Darstellung
 
 - Oben steht als Liste, wie `/` bei zwei Operanden vom Typ `int` und bei zwei Operanden vom Typ `float64` rechnet.

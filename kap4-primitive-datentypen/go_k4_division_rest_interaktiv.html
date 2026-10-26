@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="abschnitt" content="4.3.7.1"><title>Rechnen mit Ganzzahlen: Division und Rest in Go</title><link rel="stylesheet" href="../stil.css"><style>
+.container{max-width:1120px}.hero p+p{margin-top:12px;font-size:.95rem}.tabs,.wahl,.eingaben{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.tab.active{background:#0f766e;color:#fff;border-color:#0f766e}.stufe{display:none}.stufe.active{display:block}.nav{display:flex;justify-content:space-between;gap:12px;margin:14px 0 24px}.nav button{white-space:normal}button{cursor:pointer;font:inherit;padding:9px 13px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;color:#1f2937}button.gewaehlt{background:#dbeafe;border:2px solid #1e40af}button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #0f766e;outline-offset:3px}input{display:block;width:110px;padding:8px;border:1px solid #94a3b8;border-radius:6px;font:inherit}input[aria-invalid=true]{border-color:#b91c1c}.tabellenrahmen{overflow-x:auto}table{margin:12px 0}pre{background:#1e293b;color:#e2e8f0;border-radius:8px;padding:14px;white-space:pre;overflow-x:auto;line-height:1.6}code{font-family:Consolas,monospace}h3{margin-top:24px}.card>ul{padding-left:24px}.card>p{margin:12px 0}.demo{border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;padding:16px;margin:18px 0}.programmbild{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}.schachteln{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.schachtel,.uebrig{padding:10px;border:2px solid #1e40af;border-radius:8px;background:white;max-width:170px}.uebrig{border-color:#c2410c}.punkte{display:flex;gap:6px;flex-wrap:wrap;max-width:132px;margin-top:10px}.punkt{width:16px;height:16px;border-radius:50%;background:#1e40af}.uebrig .punkt{background:#c2410c}.ergebnis{background:#eff6ff;border-left:4px solid #1e40af;padding:12px;font-weight:600}.fehler{color:#b91c1c}.legende{font-size:.9rem;color:#475569}#zahlengerade{display:block;width:100%;height:auto;background:white}#zahlengerade text{font-size:16px;font-family:Consolas,monospace}details{padding:12px;border:1px solid #cbd5e1;border-radius:8px;margin-top:20px}summary{cursor:pointer;font-weight:600;color:#1e40af}h4{margin:12px 0 6px}@media(max-width:650px){.container{padding:12px}.card{padding:14px}.programmbild{grid-template-columns:1fr}.demo{padding:10px}.tabs{gap:6px}.tab{font-size:.9rem}.nav{flex-wrap:wrap}#zahlengerade text{font-size:26px}}
+</style></head><body><main class="container"><div class="hero"><h1>Rechnen mit Ganzzahlen: Division und Rest in Go</h1><p>17 Gegenstände sollen in Schachteln mit je 5 Plätzen gepackt werden. Wie viele Schachteln werden voll, und wie viele Gegenstände bleiben übrig? Mit <code>/</code> und <code>%</code> berechnest du beides. Bei negativen Zahlen kommt es darauf an, in welche Richtung Go den Quotienten abschneidet.</p>
+<p>Kurstext v3.0.6, Abschnitt 4.3.7.1, Seiten 69–71.</p></div><nav class="tabs" id="tabs" aria-label="Schritte der Lektion"><button type="button" class="tab" data-stufe="0" aria-controls="stufe-0">Worum es geht</button><button type="button" class="tab" data-stufe="1" aria-controls="stufe-1">1 Rechenzeichen</button><button type="button" class="tab" data-stufe="2" aria-controls="stufe-2">2 Vollständige Gruppen</button><button type="button" class="tab" data-stufe="3" aria-controls="stufe-3">3 Negative Operanden</button><button type="button" class="tab" data-stufe="4" aria-controls="stufe-4">4 Quotient und Rest</button><button type="button" class="tab" data-stufe="5" aria-controls="stufe-5">5 Typische Fehler</button><button type="button" class="tab" data-stufe="6" aria-controls="stufe-6">6 Selbst ausprobieren</button><button type="button" class="tab" data-stufe="7" aria-controls="stufe-7">7 Bezug zum Kurstext</button></nav><section class="stufe" id="stufe-0"><div class="card"><h2>Worum es geht</h2><h3>Vom Ausdruck zum Ergebnis</h3>
+<p>In Abschnitt 2.3 hast du Ausdrücke als Rechenvorschriften kennengelernt. In den Abschnitten 3.3.5 und 3.3.6 kamen Zuweisungen und die Auswertungsreihenfolge in Go hinzu. Hier betrachten wir die Rechenoperationen für ganze Zahlen genauer.</p>
+<p>Du verteilst 17 Gegenstände auf Schachteln mit je 5 Plätzen. 3 Schachteln werden vollständig gefüllt; 2 Gegenstände bleiben übrig. Die Anzahl voller Schachteln heißt <strong>Ganzzahlquotient</strong>, die Anzahl übriger Gegenstände heißt <strong>Rest</strong>.</p>
+<pre data-go>var anzahl int = 17
+var plaetze int = 5
+fmt.Println(anzahl / plaetze)
+fmt.Println(anzahl % plaetze)</pre>
+<p>Die Ausgabe besteht aus zwei Zeilen: zuerst <code>3</code>, dann <code>2</code>. <code>/</code> liefert den Ganzzahlquotienten, <code>%</code> den Rest. Beide Ergebnisse haben hier den Typ <code>int</code>.</p>
+<p>Die Schachteln veranschaulichen zunächst nur nichtnegative Anzahlen und positive Gruppengrößen. Negative Zahlen betrachten wir danach gesondert auf einer Zahlengeraden.</p>
+<h3>Der Weg durch die Lektion</h3>
+<ul><li>Rechenzeichen auffrischen und die zwei Bedeutungen von <code>-</code> unterscheiden.</li><li>Vollständige Gruppen und übrige Gegenstände sichtbar machen.</li><li>Bei negativen Operanden in Richtung null abschneiden.</li><li>Quotient und Rest gemeinsam berechnen und typische Fehler untersuchen.</li></ul>
+<p>Die Lektion <a href="go_k4_ausdruecke_interaktiv.html">Operatoren und Ausdrücke</a> erklärt den Aufbau und die Auswertung von Ausdrücken. Die Grundlagen aus Kapitel 3 kannst du in „Zuweisen, rechnen, ausgeben“ im Editorlotsen wiederholen.</p></div><div class="nav"><span></span><button type="button" class="btn-primary" data-gehe="1">Weiter: 1 Rechenzeichen</button></div></section>
+<section class="stufe" id="stufe-1"><div class="card"><h2>1 Rechenzeichen</h2><h3>Addition, Subtraktion und Multiplikation</h3>
+<p>Die binären Operatoren <code>+</code>, <code>-</code> und <code>*</code> verbinden jeweils zwei Operanden. Die Tabelle zeigt Rechnungen mit zwei Variablen vom Typ <code>int</code>.</p>
+<div class="tabellenrahmen"><table><thead><tr><th>Ausdruck</th><th>Bedeutung</th><th>Wert bei a = 7 und b = 2</th></tr></thead><tbody><tr><td><code>a + b</code></td><td>Addition</td><td><code>9</code></td></tr><tr><td><code>a - b</code></td><td>Subtraktion</td><td><code>5</code></td></tr><tr><td><code>a * b</code></td><td>Multiplikation</td><td><code>14</code></td></tr></tbody></table></div>
+<p>Das Ergebnis hat denselben Typ wie die Operanden. Für diese Rechnungen gilt die gewohnte Arithmetik, solange das Ergebnis in den Wertebereich des Typs passt. Zu den Grenzen führt die Lektion <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</p>
+<h3>Ein Minuszeichen, zwei Aufgaben</h3>
+<p>In <code>-a</code> steht der <strong>unäre Negationsoperator</strong>: Er hat einen Operanden und liefert dessen negierten Wert. <code>-a</code> bedeutet <code>0 - a</code>. In <code>a - b</code> steht dagegen der <strong>binäre Subtraktionsoperator</strong> mit zwei Operanden.</p>
+<pre data-go>var a int = 7
+var b int = 2
+fmt.Println(-a)
+fmt.Println(a - b)
+fmt.Println(a - (-b))
+fmt.Println(+a)</pre>
+<p>Die Ausgabe lautet <code>-7</code>, <code>5</code>, <code>9</code>, <code>7</code>, jeweils in einer eigenen Zeile. In <code>a - (-b)</code> ist das äußere Minus binär, das innere unär. Auch das unäre Plus gibt es: <code>+a</code> bedeutet <code>0 + a</code> und lässt den Wert unverändert.</p>
+<p><strong>Erst vorhersagen:</strong> Welchen Wert hat <code>-a</code>, wenn <code>a</code> den Wert <code>-7</code> hat? Begründe mit <code>0 - a</code>. Prüfe deine Antwort später im Reiter „Selbst ausprobieren“.</p></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="0">Zurück</button><button type="button" class="btn-primary" data-gehe="2">Weiter: 2 Vollständige Gruppen</button></div></section>
+<section class="stufe" id="stufe-2"><div class="card"><h2>2 Vollständige Gruppen</h2><h3>Wie viele Schachteln werden voll?</h3>
+<p>Bei zwei ganzzahligen Operanden liefert <code>/</code> einen ganzzahligen Wert. Hier zählt nur, wie viele vollständige Gruppen entstehen. Bei 17 Gegenständen und 5 Plätzen sind es 3 volle Schachteln. Die 2 übrigen Gegenstände bilden keine weitere volle Schachtel.</p>
+<p>Ändere die Anzahl von 0 bis 30 und die Plätze je Schachtel von 1 bis 10. Die blau umrandeten Schachteln sind vollständig gefüllt. Daneben stehen die übrigen Gegenstände in Orange. Ein Punkt steht für einen Gegenstand.</p>
+<div class="demo"><div class="eingaben"><label>Anzahl (0 bis 30)<input id="anzahl" type="number" min="0" max="30" step="1" value="17" aria-describedby="gruppenfehler"></label><label>Plätze je Schachtel (1 bis 10)<input id="plaetze" type="number" min="1" max="10" step="1" value="5" aria-describedby="gruppenfehler"></label></div><p id="gruppenfehler" class="fehler" role="status"></p><div class="wahl"><button type="button" data-gruppe="17,5">17 und 5</button><button type="button" data-gruppe="9,5">9 und 5</button><button type="button" data-gruppe="15,5">15 und 5</button><button type="button" data-gruppe="0,5">0 und 5</button></div><div id="schachtelbild" class="schachteln" role="img"></div><p id="gruppenwert" class="ergebnis" aria-live="polite"></p><div class="programmbild"><div><h4>Go-Code</h4><pre id="gruppencode" data-go></pre></div><div><h4>Ausgabe</h4><pre id="gruppenausgabe"></pre></div></div></div>
+<p>Bei <code>9 / 5</code> entsteht eine vollständige Gruppe; 4 Gegenstände bleiben übrig. Das Ergebnis der Division ist <code>1</code>. Es ist weder <code>1.8</code> noch die gerundete Zahl <code>2</code>.</p>
+<p>Wenn alle Gegenstände verpackt werden sollen, braucht der Rest gegebenenfalls eine weitere Schachtel. <code>anzahl / plaetze</code> zählt hier ausschließlich die vollen Schachteln.</p>
+<p><strong>Erst vorhersagen:</strong> Wie viele volle Schachteln und wie viele übrige Gegenstände ergeben sich bei 14 Gegenständen und 5 Plätzen? Stelle die Werte anschließend ein.</p></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="1">Zurück</button><button type="button" class="btn-primary" data-gehe="3">Weiter: 3 Negative Operanden</button></div></section>
+<section class="stufe" id="stufe-3"><div class="card"><h2>3 Negative Operanden</h2><h3>Abschneiden in Richtung null</h3>
+<p>Der Dividend ist die Zahl links von <code>/</code>, der Divisor die Zahl rechts davon. Bei <code>-9 / 5</code> ist der Dividend <code>-9</code> und der Divisor <code>5</code>. Für negative Operanden reicht das Bild mit den Schachteln nicht aus.</p>
+<p>Die übliche Division von −9 durch 5 liefert den rationalen Quotienten −1,8. Go schneidet bei der ganzzahligen Division den Nachkommateil in Richtung null ab. Deshalb ergibt <code>-9 / 5</code> den Wert <code>-1</code>.</p>
+<p>Abrunden würde zur nächsten ganzen Zahl führen, die nicht größer als −1,8 ist: zu −2. <strong>Abschneiden und Abrunden sind bei einem negativen, nicht ganzzahligen Quotienten verschieden.</strong></p>
+<h3>Die Richtung auf der Zahlengeraden</h3>
+<p>Wähle eines der Beispiele. Der grüne Punkt zeigt den rationalen Quotienten, der blaue Ring das Ergebnis der ganzzahligen Division in Go. Der Pfeil führt in Richtung null zum blauen Ring. Das rote Quadrat zeigt zum Vergleich das Ergebnis beim Abrunden.</p>
+<div class="demo"><div class="wahl"><button type="button" data-neg="0">9 / 5</button><button type="button" data-neg="1">-9 / 5</button><button type="button" data-neg="2">9 / (-5)</button><button type="button" data-neg="3">-9 / (-5)</button><button type="button" data-neg="4">-2 / 5</button><button type="button" data-neg="5">-10 / 5</button></div><svg id="zahlengerade" viewBox="0 0 720 205" role="img" aria-label="Zahlengerade"></svg><p class="legende">Grüner Punkt: rationaler Quotient · Blauer Ring: Go-Ergebnis · Rotes Quadrat: Abrunden</p><p id="negwert" class="ergebnis" aria-live="polite"></p></div>
+<p>Bei einem bereits ganzzahligen Quotienten fallen keine Nachkommastellen weg. Dann liegen die Markierungen übereinander, und es gibt keinen Pfeil. Bei <code>-2 / 5</code> liefert Go <code>0</code>; ein Integer-Wert hat keine gesonderte negative Null.</p>
+<p>Die Zahlengerade vergleicht Rechenregeln. Im Go-Programm wird bei einer ganzzahligen Division vorher nichts in <code>float64</code> umgewandelt. Wenn du ein Ergebnis mit Nachkommastellen brauchst, konvertiere vor der Division: <a href="go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung, Schritt 4</a>.</p></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="2">Zurück</button><button type="button" class="btn-primary" data-gehe="4">Weiter: 4 Quotient und Rest</button></div></section>
+<section class="stufe" id="stufe-4"><div class="card"><h2>4 Quotient und Rest</h2><h3>Zwei Ergebnisse derselben Teilung</h3>
+<p><code>a / b</code> liefert den Ganzzahlquotienten, <code>a % b</code> den Rest. <code>%</code> heißt auch Modulo-Operator und ist in Go nur für ganze Zahlen definiert. Der Rest ist keine Nachkommastelle: Bei 17 und 5 ist er <code>2</code>, nicht <code>0.4</code>.</p>
+<p>Für die mathematische Beschreibung nennen wir den Quotienten <strong>q</strong> und den Rest <strong>r</strong>. Mit dem Divisor <strong>b</strong> kannst du aus beiden den Dividenden <strong>a</strong> wieder zusammensetzen:</p>
+<pre>a = q * b + r
+a = (a / b) * b + a % b</pre>
+<p>Das Gleichheitszeichen bezeichnet hier mathematische Gleichheit, keine Zuweisung in Go. Zum Prüfen auf Gleichheit verwendet Go <code>==</code>.</p>
+<p>Bei 17 und 5 lautet die Rechnung <code>17 = 3 * 5 + 2</code>. Bei −17 und 5 lautet sie <code>-17 = (-3) * 5 + (-2)</code>. Der Rest ergänzt das Produkt zum ursprünglichen Dividenden.</p>
+<h3>Alle Vorzeichenkombinationen ausprobieren</h3>
+<p>Stelle <code>a</code> und <code>b</code> auf ganze Zahlen von −30 bis 30. Der Divisor <code>b</code> darf hier auch null sein; die Demo zeigt dann eine Erklärung statt eines Ergebnisses. Die Tabelle darunter zeigt alle vier Vorzeichenkombinationen mit 17 und 5. Ihre Spalten nennen Dividend, Divisor, Ganzzahlquotient und Rest.</p>
+<div class="demo"><div class="eingaben"><label>Dividend a (−30 bis 30)<input id="dividend" type="number" min="-30" max="30" step="1" value="17" aria-describedby="restfehler"></label><label>Divisor b (−30 bis 30)<input id="divisor" type="number" min="-30" max="30" step="1" value="5" aria-describedby="restfehler"></label></div><p id="restfehler" class="fehler" role="status"></p><div class="wahl"><button type="button" data-rest="17,5">a = 17, b = 5</button><button type="button" data-rest="-17,5">a = -17, b = 5</button><button type="button" data-rest="17,-5">a = 17, b = -5</button><button type="button" data-rest="-17,-5">a = -17, b = -5</button><button type="button" data-rest="0,5">a = 0, b = 5</button><button type="button" data-rest="17,0">a = 17, b = 0</button></div><p id="restwert" class="ergebnis" aria-live="polite"></p><div class="programmbild"><div><h4>Go-Code</h4><pre id="restcode" data-go></pre></div><div><h4>Ausgabe oder Erklärung der Demo</h4><pre id="restausgabe"></pre></div></div><div class="tabellenrahmen"><table><thead><tr><th>Dividend a</th><th>Divisor b</th><th>Quotient a / b</th><th>Rest a % b</th></tr></thead><tbody><tr><td>17</td><td>5</td><td>3</td><td>2</td></tr><tr><td>−17</td><td>5</td><td>−3</td><td>−2</td></tr><tr><td>17</td><td>−5</td><td>−3</td><td>2</td></tr><tr><td>−17</td><td>−5</td><td>3</td><td>−2</td></tr></tbody></table></div></div>
+<p>Für einen von null verschiedenen Divisor gilt: Der Betrag des Rests ist kleiner als der Betrag des Divisors. Der Betrag ist der Abstand einer Zahl von null. Mit Betragsstrichen geschrieben lautet die Regel <code>|r| &lt; |b|</code>.</p>
+<p>Ein <strong>von null verschiedener Rest</strong> hat dasselbe Vorzeichen wie der Dividend <code>a</code>. Das Vorzeichen des Divisors bestimmt das Vorzeichen des Rests nicht. Geht die Division auf, ist der Rest <code>0</code>.</p>
+<details><summary>Ergänzung: eine Grenze des Wertebereichs</summary>
+<p>Die Regel zum Abschneiden gilt, wenn sich der Quotient im Typ darstellen lässt. Eine Ausnahme betrifft den kleinsten Wert eines vorzeichenbehafteten Integer-Typs geteilt durch <code>-1</code>: Der positive mathematische Quotient passt nicht in denselben Typ. Für eine Variable <code>a</code> vom Typ <code>int8</code> mit dem Wert <code>-128</code> liefert <code>a / -1</code> deshalb wieder <code>-128</code> und <code>a % -1</code> liefert <code>0</code>, ohne Abbruch. Als mathematische Gleichung mit unbegrenzten ganzen Zahlen gilt die obige Zerlegung dann nicht. Bei der Rechnung im Go-Typ entsteht auch im Produkt ein Überlauf.</p>
+<p>Dasselbe gilt beim Negieren dieses kleinsten Werts: <code>-a</code> liefert für diese Variable wieder <code>-128</code>. Bei Konstanten prüft der Compiler den Wertebereich dagegen schon beim Übersetzen, wie im <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis, Schritt 3</a>. Diese Ergänzung stammt aus der <a href="https://go.dev/ref/spec#Integer_operators">Go-Sprachspezifikation</a>; in Abschnitt 4.3.7.1 des Kurstexts wird dieser Sonderfall nicht behandelt. Mehr zu Grenzen des Wertebereichs steht in <a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>.</p></details></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="3">Zurück</button><button type="button" class="btn-primary" data-gehe="5">Weiter: 5 Typische Fehler</button></div></section>
+<section class="stufe" id="stufe-5"><div class="card"><h2>5 Typische Fehler</h2><h3>Nach der Division ist der Rest nicht mehr im Quotienten</h3>
+<p><code>/</code> und <code>*</code> haben dieselbe Bindungsstärke und werden in diesem Ausdruck von links nach rechts verknüpft:</p>
+<pre>7 / 2 * 2
+= 3 * 2
+= 6</pre>
+<p>Die Division liefert <code>3</code>. Das anschließende Multiplizieren holt den abgeschnittenen Teil nicht zurück. Mit dem Rest stimmt die Rechnung wieder: <code>(7 / 2) * 2 + 7 % 2</code> ergibt <code>7</code>.</p>
+<p>Eine andere Klammerung verändert die Rechnung: <code>7 / (2 * 2)</code> ergibt <code>1</code>. Die Regeln dazu erklärt <a href="go_k4_ausdruecke_interaktiv.html#auswertung">Operatoren und Ausdrücke, Schritt 4</a>.</p>
+<h3>Auch bei Variablen entscheidet der Typ</h3>
+<p>Sind <code>a</code> und <code>b</code> vom Typ <code>int</code>, liefert <code>a / b</code> einen Integer-Wert. Das gilt auch weit entfernt von der Deklaration. Bei <code>a = 9</code> und <code>b = 2</code> ist das Ergebnis <code>4</code>. Eine spätere Konvertierung kann die verlorenen Nachkommastellen nicht zurückholen. Vergleiche <a href="go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung, Schritt 4</a>.</p>
+<h3>Division durch null</h3>
+<p>Bei Ganzzahlen sind sowohl <code>/ 0</code> als auch <code>% 0</code> unzulässig. Ist der Divisor eine Konstante mit dem Wert null, meldet Go den Fehler schon beim Übersetzen. Stammt die Null aus einer Variablen, bricht das Programm bei der Division oder Restberechnung zur Laufzeit mit einer <strong>panic</strong> ab.</p>
+<pre data-go>fmt.Println(7 / 0)</pre>
+<p>Der Compiler meldet <code>invalid operation: division by zero</code>. Dasselbe gilt für <code>fmt.Println(7 % 0)</code>.</p>
+<pre data-go>var b int = 0
+fmt.Println(7 / b)</pre>
+<p>Go übersetzt dieses Programm. Beim Ausführen bricht es mit <code>panic: runtime error: integer divide by zero</code> ab. Bei <code>7 % b</code> bricht das Programm genauso ab. Es entstehen weder ein Quotient noch ein Rest. Die Demo in Schritt 4 führt diese unzulässigen Operationen nicht aus, sondern erklärt den Fehler.</p></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="4">Zurück</button><button type="button" class="btn-primary" data-gehe="6">Weiter: 6 Selbst ausprobieren</button></div></section>
+<section class="stufe" id="stufe-6"><div class="card"><h2>6 Selbst ausprobieren</h2><h3>Erst vorhersagen, dann mit Go prüfen</h3>
+<ul><li>Ändere im Programm „Rechenzeichen“ <code>a</code> von <code>7</code> auf <code>-7</code>. Sage besonders die Werte von <code>-a</code> und <code>a - (-b)</code> voraus.</li><li>Setze im Programm „Quotient und Rest“ zuerst <code>a</code> auf <code>-17</code>, dann auch <code>b</code> auf <code>-5</code>. Sage jeweils beide Ergebnisse voraus.</li><li>Vergleiche im Programm „Kürzen?“ die beiden Klammerungen. Erkläre den Unterschied anhand des ersten Rechenschritts.</li><li>Wähle „Null zur Laufzeit“. Sage voraus, was bei <code>7 % b</code> statt <code>7 / b</code> geschieht, und prüfe es.</li></ul>
+<div id="werkstatt"></div>
+<p>Im Editorlotsen kannst du die Programme ändern und mit „Ausführen“ starten. Auf GitHub Pages zeigt der Kasten die Programme und die mit Go geprüften Ausgaben oder Meldungen. „Programm zurücksetzen“ stellt das gewählte Programm wieder her.</p>
+<h3>Wie es weitergeht</h3>
+<ul><li><a href="go_k4_ausdruecke_interaktiv.html">Operatoren und Ausdrücke</a>: Aufbau und Auswertung, Abschnitt 4.1 bis 4.1.2, Seiten 45–52.</li><li><a href="go_k4_overflow_interaktiv.html">Überlauf bei Ganzzahlen</a>: Wertebereichsgrenzen, Abschnitt 4.3.8, Seiten 78–84.</li><li><a href="go_k4_typkonvertierung_interaktiv.html#division">Typkonvertierung</a>: vor der Division nach float64 konvertieren, Abschnitt 4.7, Seiten 109–111.</li><li><a href="go_k4_integer_division_modulo_quiz.html">Quiz zu Division und Rest</a>: getrennt von dieser Lektion.</li></ul></div><div class="nav"><button type="button" class="btn-secondary" data-gehe="5">Zurück</button><button type="button" class="btn-primary" data-gehe="7">Weiter: 7 Bezug zum Kurstext</button></div></section>
+<section class="stufe" id="stufe-7"><div class="card"><h2>7 Bezug zum Kurstext</h2><h3>Was aus dem Kurstext stammt</h3>
+<p>Die Tabelle ordnet die Schritte dem Kurstext zu. Eigene Bilder, Aufgaben und zusätzliche Erklärungen stehen in der letzten Spalte.</p>
+<div class="tabellenrahmen"><table><thead><tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr></thead><tbody><tr><td>Worum es geht</td><td>2.3, Seiten 10–11; 3.3.5 und 3.3.6, Seiten 33–36</td><td>Ausdrücke, Zuweisung und Rechnen mit typisierten Werten als Vorwissen.</td><td>17 Gegenstände in Schachteln als Einstieg.</td></tr><tr><td>1 Rechenzeichen</td><td>4.3.7.1, Seite 69</td><td>Unäres Plus und Minus, binäre Grundrechenarten und der Vorbehalt des Wertebereichs.</td><td>Eigene Zahlen und Gegenüberstellung der zwei Minuszeichen.</td></tr><tr><td>2 Vollständige Gruppen</td><td>4.3.7.1, Seiten 69–70</td><td>Ganzzahlquotient und das Beispiel 9 / 5.</td><td>Veränderbare Schachteln und Punkte.</td></tr><tr><td>3 Negative Operanden</td><td>4.3.7.1, Seite 70, einschließlich Fußnote 19</td><td>Abschneiden in Richtung null und Abgrenzung vom Abrunden.</td><td>Zahlengerade und zusätzliche Beispiele.</td></tr><tr><td>4 Quotient und Rest</td><td>4.3.7.1, Seiten 70–71, einschließlich Fußnoten 20 und 21</td><td>Rest, Zerlegung, Betragsregel und Vorzeichenkombinationen.</td><td>Veränderbare Werte, Schachtelbeispiel und Ergänzung zum kleinsten Integer-Wert nach der Go-Sprachspezifikation.</td></tr><tr><td>5 Typische Fehler</td><td>4.3.7.1, Seiten 70–71, Hinweis 4.8; 4.1.2, Seiten 50–52</td><td>7 / 2 * 2, Typen der Variablen und unzulässige Division durch null.</td><td>Unterscheidung der Fehlermeldung beim Übersetzen vom Abbruch zur Laufzeit; Prüfung auch für %.</td></tr><tr><td>6 Selbst ausprobieren</td><td>4.3.7.1, Seiten 69–71</td><td>Rechenregeln der Operatoren.</td><td>Eigene Programme, Vorhersageaufgaben und mit Go geprüfte Ausgaben.</td></tr></tbody></table></div>
+<h3>Wo das Thema im Kurstext noch vorkommt</h3>
+<p>In Abschnitt 2.3, Seiten 10–11, werden Ausdrücke und typabhängige Operationen eingeführt. Dazu passt der <a href="go_k4_exkurs_von_neumann_interaktiv.html">Exkurs Speichern und Rechnen</a>. Die Abschnitte 3.3.5 und 3.3.6, Seiten 33–36, kannst du mit „Zuweisen, rechnen, ausgeben“ im Editorlotsen wiederholen.</p>
+</div><div class="nav"><button type="button" class="btn-secondary" data-gehe="6">Zurück</button></div></section></main><script src="../kurslotse.js"></script><script src="../ausprobieren.js"></script><script>
+const PROGRAMME = [{"name": "Rechenzeichen", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar a int = 7\n\tvar b int = 2\n\tfmt.Println(a + b, a - b, a * b)\n\tfmt.Println(-a, a - b, a - (-b), +a)\n}\n", "ergebnis": {"ausgabe": "9 5 14\n-7 5 9 7\n"}}, {"name": "Quotient und Rest", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar a int = 17\n\tvar b int = 5\n\tfmt.Println(a / b, a % b)\n\tfmt.Println(a == (a / b) * b + a % b)\n}\n", "ergebnis": {"ausgabe": "3 2\ntrue\n"}}, {"name": "Kürzen?", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(7 / 2 * 2)\n\tfmt.Println(7 / (2 * 2))\n\tfmt.Println((7 / 2) * 2 + 7 % 2)\n}\n", "ergebnis": {"ausgabe": "6\n1\n7\n"}}, {"name": "Null zur Laufzeit", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar b int = 0\n\tfmt.Println(7 / b)\n}\n", "ergebnis": {"meldungen": ["panic: runtime error: integer divide by zero"]}}, {"name": "Null beim Übersetzen", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(7 % 0)\n}\n", "ergebnis": {"meldungen": ["invalid operation: division by zero"]}}, {"name": "Grenze von int8", "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar a int8 = -128\n\tfmt.Println(a / -1, a % -1, -a)\n\tfmt.Println((a / -1) * -1 + a % -1)\n}\n", "ergebnis": {"ausgabe": "-128 0 -128\n-128\n"}}];
+(() => {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const ANKER = ['worum','rechenzeichen','gruppen','negative','rest','fehler','ausprobieren','kurstext'];
+  const SCHRITTE = ['Worum es geht','1 Rechenzeichen','2 Vollständige Gruppen','3 Negative Operanden','4 Quotient und Rest','5 Typische Fehler','6 Selbst ausprobieren','7 Bezug zum Kurstext'];
+  let aktuell = 0, anzahl = 17, plaetze = 5, neg = 1, a = 17, b = 5;
+  const NEG = [[9,5],[-9,5],[9,-5],[-9,-5],[-2,5],[-10,5]];
+  // Alle Werte liegen im kleinen, in JavaScript wie in Go exakt darstellbaren Bereich.
+  const quotient = (x,y) => Math.trunc(x/y) || 0;
+  const rest = (x,y) => x % y || 0;
+  const klammer = n => n < 0 ? '(' + n + ')' : String(n);
+  const code = zeilen => zeilen.join('\n');
+  function gruppen() {
+    const q = quotient(anzahl,plaetze), r = rest(anzahl,plaetze);
+    const punkt = '<span class="punkt" aria-hidden="true"></span>';
+    el('schachtelbild').innerHTML = Array.from({length:q},(_,i)=>'<div class="schachtel"><strong>Schachtel '+(i+1)+'</strong><div class="punkte">'+punkt.repeat(plaetze)+'</div></div>').join('') +
+      '<div class="uebrig"><strong>Übrig: '+r+'</strong><div class="punkte">'+punkt.repeat(r)+'</div></div>';
+    el('schachtelbild').setAttribute('aria-label',q+' volle Schachteln mit je '+plaetze+' Gegenständen und '+r+' Gegenstände übrig.');
+    el('gruppenwert').textContent = anzahl+' / '+plaetze+' = '+q+'; '+anzahl+' % '+plaetze+' = '+r;
+    el('gruppencode').textContent = code(['var anzahl int = '+anzahl,'var plaetze int = '+plaetze,'fmt.Println(anzahl / plaetze)','fmt.Println(anzahl % plaetze)']);
+    el('gruppenausgabe').textContent = q+'\n'+r;
+  }
+  const SCHMAL = window.matchMedia('(max-width:650px)');
+  SCHMAL.addEventListener('change', () => negative());
+  function negative() {
+    const [x,y] = NEG[neg], v=x/y, q=quotient(x,y), f=Math.floor(v), px=t=>60+(t+2.5)*120;
+    // Auf schmalem Bildschirm ist die Schrift größer, die Beschriftungen rücken weiter auseinander.
+    const schmal=SCHMAL.matches, yq=schmal?36:42, yt=schmal?136:126, yg=schmal?170:155, ya=schmal?204:184;
+    el('zahlengerade').setAttribute('viewBox','0 0 720 '+(schmal?215:205));
+    let svg='<defs><marker id="richtung" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1e40af"/></marker></defs>';
+    svg+='<line x1="60" y1="100" x2="660" y2="100" stroke="#64748b" stroke-width="2"/>';
+    for(let t=-2;t<=2;t++) svg+='<line x1="'+px(t)+'" y1="92" x2="'+px(t)+'" y2="108" stroke="#64748b"/><text x="'+px(t)+'" y="'+yt+'" text-anchor="middle">'+t+'</text>';
+    if(v!==q) svg+='<line x1="'+px(v)+'" y1="66" x2="'+px(q)+'" y2="66" stroke="#1e40af" stroke-width="3" marker-end="url(#richtung)"/>';
+    svg+='<rect x="'+(px(f)-8)+'" y="92" width="16" height="16" fill="none" stroke="#b91c1c" stroke-width="3"/>';
+    svg+='<circle cx="'+px(q)+'" cy="100" r="12" fill="white" stroke="#1e40af" stroke-width="3"/><circle cx="'+px(v)+'" cy="100" r="5" fill="#0f766e"/>';
+    svg+='<text x="'+px(v)+'" y="'+yq+'" text-anchor="middle" fill="#0f766e">Quotient: '+String(v).replace('.',',')+'</text>';
+    svg+='<text x="'+px(q)+'" y="'+yg+'" text-anchor="middle" fill="#1e40af">Go: '+q+'</text>';
+    svg+='<text x="'+px(f)+'" y="'+ya+'" text-anchor="middle" fill="#b91c1c">Abrunden: '+f+'</text>';
+    el('zahlengerade').innerHTML=svg;
+    el('zahlengerade').setAttribute('aria-label','Rationaler Quotient '+v+', Go-Ergebnis '+q+', Abrunden '+f+'. '+(v===q?'Kein Pfeil.':'Pfeil in Richtung null.'));
+    el('negwert').textContent = x+' / '+klammer(y)+' ergibt in Go '+q+'. '+(v===q?'Die Division geht auf.': 'Abschneiden führt nach '+(v<0?'rechts':'links')+' in Richtung null; Abrunden ergibt '+f+'.');
+    document.querySelectorAll('[data-neg]').forEach(k=>{k.classList.toggle('gewaehlt',Number(k.dataset.neg)===neg);k.setAttribute('aria-pressed',String(Number(k.dataset.neg)===neg));});
+  }
+  function reste() {
+    const nullteiler=b===0;
+    el('restwert').textContent = nullteiler ? 'b ist 0: Es gibt weder einen Ganzzahlquotienten noch einen Rest. Mit einer Variablen als Divisor würde Go beim Ausführen abbrechen.' :
+      'q = '+quotient(a,b)+'; r = '+rest(a,b)+'. Zusammensetzen: '+a+' = '+klammer(quotient(a,b))+' * '+klammer(b)+' + '+klammer(rest(a,b))+'. Betrag des Rests: '+Math.abs(rest(a,b))+' < '+Math.abs(b)+'.';
+    el('restcode').textContent=code(['var a int = '+a,'var b int = '+b,'fmt.Println(a / b, a % b)','fmt.Println(a == (a / b) * b + a % b)']);
+    el('restausgabe').textContent=nullteiler?'Die Demo führt / und % mit b = 0 nicht aus.':quotient(a,b)+' '+rest(a,b)+'\ntrue';
+  }
+  function zeige(n,adresse=false) {
+    const wechsel=n!==aktuell;
+    aktuell=n;
+    document.querySelectorAll('.stufe').forEach((s,i)=>s.classList.toggle('active',i===n));
+    document.querySelectorAll('[data-stufe]').forEach(k=>{k.classList.toggle('active',Number(k.dataset.stufe)===n);k.setAttribute('aria-current',Number(k.dataset.stufe)===n?'step':'false');});
+    if(adresse){history.replaceState(null,'','#'+ANKER[n]);const tabs=el('tabs');if(tabs.getBoundingClientRect().top<0)tabs.scrollIntoView({behavior:'smooth',block:'start'});}
+    if(wechsel)Kurslotse.schrittGewechselt();
+  }
+  const ausAdresse=()=>Math.max(0,ANKER.indexOf(location.hash.slice(1)));
+  document.addEventListener('click',e=>{
+    const k=e.target.closest('[data-stufe],[data-gehe],[data-gruppe],[data-neg],[data-rest]');
+    if(!k)return;
+    if(k.dataset.stufe!==undefined || k.dataset.gehe!==undefined){zeige(Number(k.dataset.stufe??k.dataset.gehe),true);return;}
+    if(k.dataset.gruppe){[anzahl,plaetze]=k.dataset.gruppe.split(',').map(Number);el('anzahl').value=anzahl;el('plaetze').value=plaetze;['anzahl','plaetze'].forEach(id=>el(id).removeAttribute('aria-invalid'));el('gruppenfehler').textContent='';gruppen();}
+    if(k.dataset.neg!==undefined){neg=Number(k.dataset.neg);negative();}
+    if(k.dataset.rest){[a,b]=k.dataset.rest.split(',').map(Number);el('dividend').value=a;el('divisor').value=b;['dividend','divisor'].forEach(id=>el(id).removeAttribute('aria-invalid'));el('restfehler').textContent='';reste();}
+    Kurslotse.standGeaendert();
+  });
+  document.addEventListener('input',e=>{
+    const i=e.target;
+    if(!['anzahl','plaetze','dividend','divisor'].includes(i.id))return;
+    const gruppe=i.id==='anzahl'||i.id==='plaetze', feld=gruppe?'gruppenfehler':'restfehler';
+    if(i.value===''||!i.checkValidity()){el(feld).textContent='Bitte eine ganze Zahl im angegebenen Bereich eintragen. Die Darstellung zeigt weiter die zuletzt gültigen Werte.';i.setAttribute('aria-invalid','true');Kurslotse.standGeaendert();return;}
+    i.removeAttribute('aria-invalid');
+    const inputs=gruppe?['anzahl','plaetze']:['dividend','divisor'];
+    if(inputs.some(id=>!el(id).value||!el(id).checkValidity()))return;
+    el(feld).textContent='';
+    if(gruppe){anzahl=Number(el('anzahl').value);plaetze=Number(el('plaetze').value);gruppen();}else{a=Number(el('dividend').value);b=Number(el('divisor').value);reste();}
+    Kurslotse.standGeaendert();
+  });
+  window.addEventListener('hashchange',()=>zeige(ausAdresse()));
+  const probe=Ausprobieren.einrichten({ziel:el('werkstatt'),reiter:document.querySelector('[data-stufe="6"]'),fassungen:PROGRAMME,beiAenderung:()=>Kurslotse.standGeaendert()});
+  function standSaetze(){
+    if(aktuell===2)return ['Anzahl '+anzahl+', Plätze je Schachtel '+plaetze+'. Blau: '+quotient(anzahl,plaetze)+' volle Schachteln. Orange: '+rest(anzahl,plaetze)+' übrige Gegenstände.',el('gruppenfehler').textContent].filter(Boolean);
+    if(aktuell===3){const[x,y]=NEG[neg];return ['Ausgewählter Knopf: '+x+' / '+klammer(y)+'. Dividend '+x+', Divisor '+y+'. Grüner Punkt: rationaler Quotient '+x/y+'. Blauer Ring: Go-Ergebnis '+quotient(x,y)+'. Rotes Quadrat: Abrunden '+Math.floor(x/y)+'.',x/y===quotient(x,y)?'In der aktuellen Darstellung gibt es keinen Pfeil. Grüner Punkt, blauer Ring und rotes Quadrat liegen bei '+quotient(x,y)+' übereinander.':'In der aktuellen Darstellung zeigt der Pfeil vom rationalen Quotienten '+x/y+' zum Go-Ergebnis '+quotient(x,y)+', in Richtung null.',el('negwert').textContent];}
+    if(aktuell===4)return ['a und b haben den Typ int. Dividend a = '+a+', Divisor b = '+b+'. Die Seite sagt dazu: '+el('restwert').textContent,el('restfehler').textContent].filter(Boolean);
+    if(aktuell===6)return probe.stand();
+    return ['Dieser Schritt hat keine veränderbare Demo. Die Codeblöcke und Rechnungen sind fest; hier kann der Student kein Programm ändern oder ausführen.'];
+  }
+  gruppen();negative();reste();zeige(ausAdresse());
+  Kurslotse.einrichten({titel:'Rechnen mit Ganzzahlen: Division und Rest in Go',thema:'Ganzzahlige Division und Rest',bezug:'Kurstext v3.0.6, Abschnitt 4.3.7.1, Seiten 69–71',beschreibung:'../kurslotse/kap4-primitive-datentypen/go_k4_division_rest_interaktiv.md',reiter:()=>ANKER[aktuell],schritt:()=>SCHRITTE[aktuell],sichtbar:()=>el('stufe-'+aktuell),text:'.card > p, .card > ul, .card > h3, .hinweis, .erklaerung, .legende, table, details, pre:not([data-go])',zeilen:()=>aktuell===6?probe.zeilen():Array.from(el('stufe-'+aktuell).querySelectorAll('pre[data-go]')).flatMap(p=>p.textContent.split('\n')),stand:standSaetze,kurz:()=>aktuell===2?anzahl+' Gegenstände, '+plaetze+' Plätze':aktuell===3?NEG[neg].join(' / '):aktuell===4?'a = '+a+', b = '+b:SCHRITTE[aktuell],beispiel:'Warum ist bei -17 / 5 der Rest negativ?'});
+})();
+
+</script></body></html>
