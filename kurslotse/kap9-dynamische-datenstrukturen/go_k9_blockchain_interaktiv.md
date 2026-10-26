@@ -120,6 +120,7 @@ Reiter: regeln
 - Die Demo: Am Anfang hat Alice 75, Bob 45, Charlie 10, und die Kette hat die vier Blöcke aus Schritt 2. Vier Knöpfe: „Alice überweist Bob 25“, „Herausgeber sperrt Alice“, „Alice überweist Charlie 10“, „Bob überweist Charlie 100“, dazu „von vorn“. Ein Kasten erklärt den letzten Klick. Darunter stehen die drei Konten und die neuesten vier Blöcke.
 - Unter „Was das Modell zeigt“: Eine einzige Stelle entscheidet, wer zahlen darf. Solche Funktionen stehen im Programm des digitalen Dollars USDT, Link auf die Lektion zu Tether.
 - Die Funktion auf dieser Seite ist kürzer als in der Vertiefung. Dort sucht `überweisen` die Konten selbst und gibt zusätzlich eine Meldung zurück.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Vertiefung mit dem Programm `blockchain.go` und auf „Binäre Suchbäume in Go“.
 
 ### Handgriffe
 
@@ -152,7 +153,6 @@ Reiter: kurstext
 - Unter „Was über den Kurstext hinausgeht“ steht:
   - Die Blockchain: Sie kommt im Kurstext nicht vor.
   - FNV-1a: Die Hashfunktion ist ein veröffentlichtes Verfahren von Fowler, Noll und Vo.
-- Unter „Wie es weitergeht“ stehen Links auf die Vertiefung mit dem Programm `blockchain.go` und auf „Binäre Suchbäume in Go“.
 
 ### Handgriffe
 

@@ -168,6 +168,7 @@ Reiter: vorbeugen
 - Die Bedingung stellt `a + b > 127` so um, dass nichts überlaufen kann. Sie gilt für ein positives `b`. `math.MaxInt8` ist die Konstante 127.
 - Ein gelber Kasten sagt: Im Kurstext steht nur, dass man vor der Addition prüfen kann. Das Programm ist eine Ergänzung des Mentors.
 - Der Teil „Wenn kein Typ reicht“ nennt das Paket `math/big` aus dem Expertenwissen 4.15.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
 
 ### Handgriffe
 
@@ -195,7 +196,6 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Teilausdrücke: Bei großen Zahlen kann a · c zu groß für den Wertebereich sein. Dann liefern (a − b) · c und a · c − b · c verschiedene Ergebnisse. Das ist der Gedanke von Schritt 4, dort in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.
   - Abschnitt 4.3.4 und 4.3.5, Seiten 63–66, Wertebereiche: Lektion: Zahlenkreis.
   - Abschnitt 7.1, Seiten 163–165, mehrere Rückgaben: Eine Funktion kann einen Fehler als zweite Rückgabe melden. Die Lektion Funktionen in Go zeigt in Schritt 4 die Funktion safeAdd, die so einen Überlauf meldet.
-- Unter „Wie es weitergeht“ steht ein Link auf die Seite „Funktionen in Go“ zu Kapitel 7. Dort wird aus der Prüfung die Funktion `safeAdd(a, b int32) (int32, error)`, die die Summe und einen Fehler zurückgibt.
 - Unter „Wie es weitergeht“ stehen Links zum Quiz zu den Wertebereichen und zu den Seiten „Zahlenkreis“, „Rechenwerk“, „Vertiefung: Blockchain in Go“ und „break-Anweisung in Go“. Der Exkurs zur Blockchain zeigt in Schritt 2 eine Hashfunktion, die den Überlauf von `uint32` bewusst einsetzt, und in Schritt 4 das Ergebnis von 75 − 76 im Typ `uint64`. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe

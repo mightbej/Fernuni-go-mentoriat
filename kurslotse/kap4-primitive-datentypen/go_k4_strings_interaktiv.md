@@ -171,6 +171,7 @@ Reiter: unveraenderbar
 - Der Ablauf: Nach Zeile 1 hat `a` den Wert „Sommer“. Nach Zeile 2 hat auch `b` den Wert „Sommer“. Nach Zeile 3 hat `a` den Wert „Sommerzeit“, `b` hat weiter „Sommer“. Zeile 4 gibt `Sommerzeit` aus, Zeile 5 gibt `Sommer` aus.
 - Die Verkettung ändert keinen String. Sie baut aus zwei Strings einen neuen und weist ihn `a` zu.
 - Der Teil „Was die Regel bringt“ nennt das Expertenwissen 4.19: Kopien eines Strings und Substrings können sich den gleichen Platz im Arbeitsspeicher teilen.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Strings: Bytes und Zeichen“ und „Zuweisungen in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -202,7 +203,6 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Konkatenation: Für Zeichenketten gibt es eigene Operationen, zum Beispiel das Aneinanderhängen. Lektion: Variablen, Typen und Speicher.
   - Abschnitt 3.3.7, Seite 36, Verkettung: Der Operator + mit zwei Strings in Listing 3.2. Lektion: Fehlersuche: drei kurze Go-Programme, Schritt 2.
   - Abschnitt 5.3, Seiten 126–128, Zuweisung: a += "zeit". Lektion: Zuweisungen in Go.
-- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Strings: Bytes und Zeichen“ und „Zuweisungen in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

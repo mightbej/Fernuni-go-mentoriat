@@ -111,6 +111,7 @@ Reiter: komma
 - Der Exponent ist im Zweierkomplement gespeichert, wie ein Wert vom Typ `int8`.
 - Unter den zwei Bytes steht der Wert der Gleitkommazahl als Rechnung: Mantisse mal 2 hoch Exponent.
 - Das Vorzeichen der Gleitkommazahl lässt die Seite weg.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Quiz zur Bitverschiebung“.
 
 ### Handgriffe
 
@@ -141,7 +142,6 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Rechnen: Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: Exkurs: Speichern und Rechnen im Rechner.
   - Abschnitt 4.3.7.2.1, Seiten 72–74, bit-weise Operatoren: &, | und ^. Lektion: Rechenwerk.
   - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Was mit dem Bit geschieht, das links hinausgeschoben wird. Lektion: Überlauf bei Ganzzahlen in Go.
-- Unter „Wie es weitergeht“ stehen Links auf: „Quiz zur Bitverschiebung“.
 
 ### Handgriffe
 

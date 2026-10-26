@@ -178,6 +178,7 @@ Reiter: ausprobieren
 - Zwei Programme zur Wahl: „Feste Werte“ und „Zufallswerte“. Es sind die zwei Programme aus Schritt 5. Die Ausgabe ist die gleiche wie dort.
 - Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 5 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
 
 ### Handgriffe
 
@@ -199,7 +200,6 @@ Reiter: kurstext
 - Der Teil „Bubble Sort im Kurstext“: Im Kurstext wird Bubblesort in Abschnitt 8.4.2 behandelt, Seiten 225–226. Dort sortiert die Funktion `bubblesort` ein Array von Verbunden nach dem Namen und bekommt einen Zeiger auf das Array. Die Übung nimmt das Verfahren vorweg, mit ganzen Zahlen und ohne Funktion.
 - Der Teil „Was über den Kurstext hinausgeht“: die Ausgabe mit `%d` und `%v` und das Paket `math/rand`.
 - Der Reiter nennt außerdem: Abschnitt 8.4.2 nennt die Zahl der Vergleiche. Schritt 1 folgt der Begründung des Arrays in Kapitel 6, Seite 151, mit den Variablen z1 bis z6 der Lottoziehung. Alle Programme der Übung sind eigene Beispiele.
-- Unter „Wie es weitergeht“ stehen Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
 
 ### Handgriffe
 

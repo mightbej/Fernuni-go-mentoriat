@@ -94,6 +94,7 @@ Reiter: werke
 - Auskunft zu „Ein- und Ausgabe“: Über die Eingabe kommen Daten in den Rechner, über die Ausgabe verlassen sie ihn. Die Funktion `fmt.Printf` gibt Werte aus, das steht in Abschnitt 4.2.
 - Unter dem grünen Kasten steht ein Hinweis: Auch das Programm liegt als Bitmuster im Speicherwerk. Einem Bitmuster sieht man nicht an, ob es eine Zahl, ein Zeichen oder eine Anweisung bedeutet.
 - Darunter steht ein Link auf die Lektion „Operatoren und Ausdrücke in Go“. Dort steht, welche Operationen das Rechenwerk für welchen Typ ausführt und wie Go sie in einem Ausdruck schreibt.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zur Seite „Speichermodell“.
 
 ### Handgriffe
 
@@ -122,7 +123,6 @@ Reiter: kurstext
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.2, Seiten 8–10, Speichern: Eine Variable belegt Speicherplatz aus Speicherelementen mit 0 oder 1. Lektion: Variablen, Typen und Speicher, Schritt 4.
   - Abschnitt 2.7, Seiten 17–19, Maschinensprache: Lektion: Höhere und niedrigere Programmiersprachen.
-- Unter „Wie es weitergeht“ steht ein Link zur Seite „Speichermodell“.
 
 ### Handgriffe
 

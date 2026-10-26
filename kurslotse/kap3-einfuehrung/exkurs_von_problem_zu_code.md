@@ -167,6 +167,7 @@ Reiter: programm
 - Diese Stufe hat keine Spezifikation zum Kopieren. Das ganze Go-Programm steht auf der Seite „Programmierübung: Zahlenraten mit Statistik“, der Link steht unter der Tabelle.
 - Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt. Ein Satz verlinkt die Lektion „Binäre Suche in einem Verbund-Array“, dort kommt das Halbieren aus Stufe 3 wieder vor.
 - Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link auf die Programmierübung „Zahlenraten mit Statistik“.
 
 ### Handgriffe
 
@@ -203,7 +204,6 @@ Reiter: kurstext
   - Abschnitt 2.7, Seiten 17–19, Spezifikation: Sie legt fest, welche Eingaben gültig sind und welche Ausgabe zu welcher Eingabe richtig ist. Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 4.
   - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: das Halbieren aus Stufe 3. Lektion „Binäre Suche in einem Verbund-Array“.
 - Unter „Was über den Kurstext hinausgeht“ steht: Die Stufen 1 bis 5 und das Sprachmodell als Entwicklungsabteilung stehen nicht im Kurstext. Das Paket `math/rand` mit `rand.Intn` kommt im Kurstext nicht vor.
-- Unter „Wie es weitergeht“ steht ein Link auf die Programmierübung „Zahlenraten mit Statistik“.
 
 ### Handgriffe
 

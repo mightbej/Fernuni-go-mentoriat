@@ -136,6 +136,7 @@ Reiter: untyped
 - Darunter steht der Teil „Eine benannte Konstante ohne Typ“. `const ohneTyp = 500` hat den Typ untyped integer, `const mitTyp int = 500` hat den Typ `int`.
 - Ein Codeblock zeigt die Folge: `var x float64 = ohneTyp` ist erlaubt. `var y float64 = mitTyp` übersetzt der Compiler nicht, seine Meldung steht in roter Schrift darunter. Dieser Codeblock ist fest und hat keine Knöpfe.
 - Am Ende steht der Teil „Der Compiler rechnet genauer als float64“: Der Compiler rechnet mit nicht-typisierten Konstanten auf mindestens 256 Bit genau. `math.Pi` ist mit mehr als 60 Dezimalziffern deklariert, ein `float64` hält etwa 16.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen zwei Links: zur Seite „Typkonvertierung“ und zum Quiz zu den Konstanten.
 
 ### Handgriffe
 
@@ -164,7 +165,6 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Konstante und Literal: Eine Konstante ist ein Name für einen Wert, der sich nie ändert. Ein Literal ist der Wert selbst. Lektion: Variablen, Typen und Speicher, Schritt 2.
   - Abschnitt 3.3.3, Seiten 29–30, die erste Konstante: const nullpunkt float64 = -273.15 in Listing 3.2. Eine Lektion zu diesem Abschnitt gibt es nicht.
   - Abschnitt 4.7, Seiten 109–111, implizite Typanpassung: Lektion: Typkonvertierung.
-- Unter „Wie es weitergeht“ stehen zwei Links: zur Seite „Typkonvertierung“ und zum Quiz zu den Konstanten.
 
 ### Handgriffe
 

@@ -134,6 +134,7 @@ Reiter: kette
 - Eine Tabelle stellt Stammbaum und verkettete Liste gegenüber: Das Feld `vater` entspricht dem Feld `nächstes`, das Ende ist in beiden Fällen `nil`, und eine Schleife läuft hindurch, bis der Zeiger `nil` ist.
 - Der Text sagt: Ein Array hat eine feste Länge, eine Kette aus Verbünden wächst mit jedem Verbund, der angehängt wird.
 - Wie eine Liste aufgebaut, durchlaufen und sortiert gehalten wird, steht in Abschnitt 9.2. Diese Seite greift dem nicht vor. Im Kurstext gibt es dort außerdem den Typ `sortierteListe` mit dem Feld `kopf *listenElement`.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Anonyme Felder und eingebettete Verbünde“, die Lektionen „Verkettete Listen in Go“ und „Binäre Suchbäume in Go“ zu Kapitel 9 und das Go-Programm `S224_rekursive_verbunde_demo.go`.
 
 ### Handgriffe
 
@@ -161,7 +162,6 @@ Reiter: kurstext
   - Abschnitt 7.5, Seite 185, Rekursion: Rekursiv ist dort eine Funktion, hier ein Typ. Lektion: Rekursion in Go.
   - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
   - Abschnitt 9.2, Seiten 229–236, verkettete Listen: Lektion: Verkettete Listen in Go.
-- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Anonyme Felder und eingebettete Verbünde“, die Lektionen „Verkettete Listen in Go“ und „Binäre Suchbäume in Go“ zu Kapitel 9 und das Go-Programm `S224_rekursive_verbunde_demo.go`.
 
 ### Handgriffe
 

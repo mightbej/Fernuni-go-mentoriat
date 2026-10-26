@@ -99,6 +99,7 @@ Reiter: kopie
 - Go meldet einen nicht verwendeten Rückgabewert einer eigenen Funktion nicht.
 - Die öffnende Klammer `{` muss in der gleichen Zeile stehen wie `if` und die Bedingung. In einer neuen Zeile ist sie immer ein Fehler.
 - Unter dem Programm stehen Links auf die Lektionen „if-Anweisung in Go“ und „Funktionen in Go: Rückgaben und Wertübergabe“.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
 
 ### Handgriffe
 
@@ -130,7 +131,6 @@ Reiter: kurstext
 - Unter „Was die Lektion voraussetzt“ stehen Abschnitt 2.6 und 2.7 mit Links auf die Lektionen „Unterprogramme und Funktionen“ und „Höhere und niedrigere Programmiersprachen“.
 - Unter „Woher die Programme stammen“ steht: Schritt 1 ist Listing 3.3, Schritt 2 ein Auszug aus Listing 3.2, Schritt 3 ein eigenes Beispiel.
 - Unter „Was über den Kurstext hinausgeht“ steht: Die acht Fehler stehen nicht im Kurstext. Für die Klammer in einer neuen Zeile nennt Abschnitt 3.3.2 die Meldung `unexpected semicolon or newline before {`, Go 1.26 meldet nach `if` `unexpected newline, expected { after if clause`.
-- Unter „Wie es weitergeht“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
 
 ### Handgriffe
 

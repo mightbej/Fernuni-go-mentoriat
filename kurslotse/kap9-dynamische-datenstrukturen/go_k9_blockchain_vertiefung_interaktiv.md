@@ -197,6 +197,7 @@ Reiter: sperren
 - Unter „Was das Programm zeigt“: Die Kette ist technisch in Ordnung, und trotzdem entscheidet eine einzige Stelle, wer zahlen darf. Solche Funktionen stehen im Vertrag des Stablecoins USDT von Tether. Ein Link führt zur Lektion „Vom Eisenbahnzug in den Maschinenraum von Tether“.
 - Unter „Das ganze Programm“ steht ein Link auf `blockchain.go` und die Ausgabe des Programms mit Go 1.26. `main` spielt die Schritte 5 und 6 durch und ändert am Ende den Eintrag in Block 2. Die letzten zwei Zeilen der Ausgabe: „Kette gültig: true“ und „Block 2 geändert, Kette gültig: false“.
 - Unter „Zum Weiterdenken“ stehen drei Aufgaben ohne Lösung: eine Funktion `entsperren` schreiben, ein viertes Konto für Dora, und nach dem Ändern von Block 2 alle Hashwerte bis zum Kopf neu berechnen. Zur zweiten Aufgabe: Die Länge des Arrays in `blockkette` und die Zeilen in `main` ändern sich. Zur dritten: `ketteGültig` gibt dann `true` zurück, aber der Kopf hat einen anderen Hashwert als bei den anderen Rechnern.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektion zu Tether und auf „Binäre Suchbäume in Go“.
 
 ### Handgriffe
 
@@ -233,7 +234,6 @@ Reiter: kurstext
   - Ohne Abschnitt im Kurstext, Tether: Wie echtes digitales Geld mit den gleichen Bausteinen arbeitet, zeigt der Exkurs Vom Eisenbahnzug in den Maschinenraum von Tether.
 - Unter „Was über den Kurstext hinausgeht“ steht:
   - Die Blockchain: Sie kommt im Kurstext nicht vor.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion zu Tether und auf „Binäre Suchbäume in Go“.
 
 ### Handgriffe
 

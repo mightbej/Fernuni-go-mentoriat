@@ -316,10 +316,16 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
 
     <h3>Was die Regel bringt</h3>
     <p>Weil kein String sich ändern kann, dürfen sich Kopien eines Strings den gleichen Platz im Arbeitsspeicher teilen. Bei <code>b = a</code> muss Go die Zeichen nicht noch einmal ablegen. Das gilt auch für einen Substring wie <code>s[1:]</code>. Im Kurstext steht das als Expertenwissen 4.19.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_string_typ_quiz.html">Quiz zum Typ string</a> und der <a href="go_k4_strings_selbsttest_quiz.html">Selbsttest zu den Strings</a> fragen den Stoff von Abschnitt 4.6 ab.</li>
+      <li><strong>Bytes und Zeichen:</strong> Die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a> zeigt, wie ein String im Speicher liegt.</li>
+      <li><strong>Zuweisung:</strong> Was <code>a = a + "zeit"</code> und die Kurzform <code>a += "zeit"</code> tun, zeigt die Seite <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
-    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
   </div>
   </section>
 
@@ -344,13 +350,6 @@ s = "U" + s[1:]     // ein neuer String aus "U" und dem Rest des alten</pre>
       <li><strong>Abschnitt 2.2, Seiten 8–10, Konkatenation:</strong> Für Zeichenketten gibt es eigene Operationen, zum Beispiel das Aneinanderhängen. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a>.</li>
       <li><strong>Abschnitt 3.3.7, Seite 36, Verkettung:</strong> Der Operator <code>+</code> mit zwei Strings in Listing 3.2. Lektion: <a href="../kap3-einfuehrung/go_k3_fehlersuche_einfach_interaktiv.html#text">Fehlersuche: drei kurze Go-Programme</a>, Schritt 2.</li>
       <li><strong>Abschnitt 5.3, Seiten 126–128, Zuweisung:</strong> <code>a += "zeit"</code>. Lektion: <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Quiz:</strong> Das <a href="go_k4_string_typ_quiz.html">Quiz zum Typ string</a> und der <a href="go_k4_strings_selbsttest_quiz.html">Selbsttest zu den Strings</a> fragen den Stoff von Abschnitt 4.6 ab.</li>
-      <li><strong>Bytes und Zeichen:</strong> Die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a> zeigt, wie ein String im Speicher liegt.</li>
-      <li><strong>Zuweisung:</strong> Was <code>a = a + "zeit"</code> und die Kurzform <code>a += "zeit"</code> tun, zeigt die Seite <a href="../kap5-anweisungen/go_k5_zuweisungen_interaktiv.html">Zuweisungen in Go</a>.</li>
     </ul>
   </div>
   <div class="zeile schritte">

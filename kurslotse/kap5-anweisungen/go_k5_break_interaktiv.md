@@ -156,6 +156,7 @@ Reiter: wann
 - „in switch in einer Schleife“: `for i := 1; i <= 5; i++ {` mit `switch i { case 3: break }` und `fmt.Print(i, " ")`. Ausgabe: `1 2 3 4 5`. `break` verlässt nur die switch-Anweisung, die Schleife läuft weiter.
 - „außerhalb einer Schleife“: `if x > 3 { break }` ohne Schleife. Meldung des Compilers: `break is not in a loop, switch, or select`.
 - Im Kurstext steht, dass `break` nur in einer Schleife und in einer switch-Anweisung zulässig ist. Die vier Programme und der Fall der geschachtelten Schleifen stehen nicht im Kurstext.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -185,7 +186,6 @@ Reiter: kurstext
   - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Warum die Fakultät geprüft wird. Lektion: Überlauf bei Ganzzahlen in Go.
   - Abschnitt 5.5.3.2, Seiten 142–146, Endlosschleife for {: Sie endet nur mit break. Lektion: for-Anweisung mit for-Klausel in Go, Schritt 4.
   - Abschnitt 5.5.2, Seiten 133–137, switch: Ein break in einer switch-Anweisung verlässt nur diese. Lektion: switch-Anweisung in Go.
-- Unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

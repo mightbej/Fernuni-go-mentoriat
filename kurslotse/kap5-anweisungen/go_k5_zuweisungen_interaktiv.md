@@ -178,6 +178,7 @@ Reiter: einfach
 - Keine einfachen Anweisungen sind: `var zahl int = 20` (ausführliche Variablendeklaration) und `if x > 0 { x-- }` (bedingte Anweisung, eine Kontrollfluss-Anweisung).
 - Zu `for var i int = 1; i <= 10; i++ {` meldet der Compiler `syntax error: var declaration not allowed in for initializer`.
 - `quader` ist im Kurstext nur ein Beispielname für eine Funktion. Die Funktion selbst steht nicht auf der Seite.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -208,7 +209,6 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Zuweisung: Ein Ausdruck wird ausgewertet und sein Wert einer Variable zugewiesen. Lektion: Exkurs: Speichern und Rechnen im Rechner, Schritt 1.
   - Abschnitt 2.6, Seiten 15–17, Vertauschen: Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 1.
   - Abschnitt 4.6.2.2, Seiten 107–108, Verketten: a += "zeit". Lektion: Strings in Go, Schritt 4.
-- Unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

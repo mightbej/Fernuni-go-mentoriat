@@ -118,6 +118,7 @@ Reiter: kopie
 - Die Demo zeigt zehn Zeilen: die Funktion `tüvErneuernWert(a auto)` mit dem gleichen Rumpf, darunter das gleiche `main` mit dem Aufruf `tüvErneuernWert(golf)`.
 - Der Ablauf hat sechs Schritte: `golf` anlegen. Ausgabe `TÜV vorher:  2024`. Aufruf: `a` ist eine neue Verbund-Variable mit Kopien aller vier Feld-Werte. `a.tüvJahr += 2` erhöht das Feld der Kopie auf 2026. Die Funktion endet, die Kopie gibt es nicht mehr. Ausgabe `TÜV nachher:  2024`.
 - Unter „Wert oder Zeiger: Wann nimmt man was?“ stehen drei Fälle aus dem Kurstext: Soll die Funktion den Verbund ändern, braucht sie einen Zeiger. Liest sie nur und ist der Verbund groß, ist ein Zeiger oft auch sinnvoll, weil die Kopie Speicherplatz und Rechenzeit kostet. Soll die Funktion den Verbund auf keinen Fall ändern können, nimmt man die Kopie.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Links: die Lektion „Hierarchische Verbünde“, der Exkurs „Das Kopier-Problem“ und das Quiz.
 
 ### Handgriffe
 
@@ -145,7 +146,6 @@ Reiter: kurstext
   - Abschnitt 7.2, Seiten 169–170, Kopie des Arguments: Eine Funktion bekommt eine Kopie. Lektion: Funktionen in Go, Schritt 5.
   - Abschnitt 7.4.2, Seite 180, Zeiger als Rückgabe: Lektion: Zeiger in Go, Schritt 4.
   - Abschnitt 7.2, Seiten 169–170, wie viel kopiert wird: Lektion: Das Kopier-Problem.
-- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Hierarchische Verbünde“, der Exkurs „Das Kopier-Problem“ und das Quiz.
 
 ### Handgriffe
 

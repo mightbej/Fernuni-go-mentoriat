@@ -122,6 +122,7 @@ Reiter: argument
 - Den Rumpf von `fügeHinzu` zeigt der Kurstext nicht, die Seite auch nicht.
 - Die Demo zeigt vier Zeilen: `f1 := &rgb{22, 33, 44}`, `f2 := &rgb{22, 33, 44}`, `fmt.Println(f1 == f2)`, `fmt.Println(*f1 == *f2)`.
 - Der Ablauf: Jedes `&rgb{…}` erzeugt eine neue anonyme Variable. `f1 == f2` gibt `false` aus, `*f1 == *f2` gibt `true` aus.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen vier Links: die Lektionen „Vergleich von Verbünden“, „Verbünde und Funktionen“ und „Hierarchische Verbünde“ und das Quiz.
 
 ### Handgriffe
 
@@ -148,7 +149,6 @@ Reiter: kurstext
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
   - Abschnitt 7.4.5, Seiten 183–184, anonyme Variable: new erzeugt eine Variable ohne Namen, wie das Literal mit &. Lektion: Zeiger in Go, Schritt 6.
-- Unter „Wie es weitergeht“ stehen vier Links: die Lektionen „Vergleich von Verbünden“, „Verbünde und Funktionen“ und „Hierarchische Verbünde“ und das Quiz.
 
 ### Handgriffe
 

@@ -424,10 +424,19 @@ func neueIntVarNew() *int {
     return new(int)
 }</pre>
     <p>Für die Variable macht es keinen Unterschied, ob eine Deklaration oder <code>new</code> sie erzeugt hat. Auch eine Variable aus <code>new</code> gibt der Garbage-Collector frei, sobald sie unerreichbar ist.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a> zeigt <code>&amp;b</code>, <code>*p</code> und <code>new(int32)</code> Zelle für Zelle.</li>
+      <li><strong>Kapitel 9:</strong> Zeiger tragen die dynamischen Datenstrukturen, zum Beispiel verkettete Listen und binäre Bäume. Das ist der Ausblick in Abschnitt 7.4.6.</li>
+      <li><strong>Kapitel 8:</strong> Die Lektion <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> verwendet Zeiger auf Verbunde.</li>
+      <li><strong>Rekursion:</strong> Der letzte Abschnitt von Kapitel 7 steht in der Lektion <a href="go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
+      <li><strong>Programmieren:</strong> Zwei Programmierübungen sortieren ein Array über einen Zeiger: <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="5">Zurück zu Schritt 5</button>
-    <button type="button" class="haupt" data-gehe="7">Weiter zu Schritt 7</button>
   </div>
   </section>
 
@@ -454,16 +463,6 @@ func neueIntVarNew() *int {
       <li><strong>Abschnitt 4.3.4, Seite 63, Zellen und Adressen im Modell:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Speichermodell</a>.</li>
       <li><strong>Abschnitt 8.2.4, Seite 205, Zeiger auf Verbünde:</strong> Lektion: <a href="../kap8-verbund/go_k8_zeiger_auf_verbund_interaktiv.html">Zeiger auf Verbünde in Go</a>.</li>
       <li><strong>Abschnitt 9.2, Seiten 229–236, verkettete Listen:</strong> Jedes Element zeigt mit einem Zeiger auf das nächste. Lektion: <a href="../kap9-dynamische-datenstrukturen/go_k9_verkettete_listen_interaktiv.html">Verkettete Listen in Go</a>.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Im Speicher:</strong> Die Seite <a href="go_k7_speichermodell_zeiger_interaktiv.html">Speichermodell: Zeiger</a> zeigt <code>&amp;b</code>, <code>*p</code> und <code>new(int32)</code> Zelle für Zelle.</li>
-      <li><strong>Kapitel 9:</strong> Zeiger tragen die dynamischen Datenstrukturen, zum Beispiel verkettete Listen und binäre Bäume. Das ist der Ausblick in Abschnitt 7.4.6.</li>
-      <li><strong>Kapitel 8:</strong> Die Lektion <a href="../kap8-verbund/go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> verwendet Zeiger auf Verbunde.</li>
-      <li><strong>Rekursion:</strong> Der letzte Abschnitt von Kapitel 7 steht in der Lektion <a href="go_k7_rekursion_interaktiv.html">Rekursion in Go</a>.</li>
-      <li><strong>Programmieren:</strong> Zwei Programmierübungen sortieren ein Array über einen Zeiger: <a href="go_k7_bubblesort_zeiger_programmieruebung.html">Bubble Sort mit Zeigern</a> und <a href="go_k7_selectionsort_zeiger_programmieruebung.html">Selection Sort mit Zeigern</a>.</li>
-      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
     </ul>
   </div>
   <div class="zeile schritte">

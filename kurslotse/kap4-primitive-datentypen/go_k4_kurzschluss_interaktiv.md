@@ -111,6 +111,7 @@ Reiter: funktion
 - Im Kurstext hat das Listing zwei Ausgaben in einem Programm, `true && f()` und `true || f()`, und `f` liefert `false`. Die übrigen Programme hat die Seite gebaut.
 - Eine Wirkung einer Funktion neben ihrem Rückgabewert heißt Seiteneffekt. Hier ist es die Ausgabe der Zeile.
 - Funktionen mit Rückgabewert werden im Kurstext in Abschnitt 3.4 kurz und in Kapitel 7 ganz erklärt.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -139,7 +140,6 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Abkürzen: Dort steht das Beispiel a > b ∧ c/d ≥ 0 mit d = 0 zum ersten Mal, ohne Go. Schritt 2 dieser Lektion zeigt es in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.
   - Abschnitt 3.3.3, Seiten 29–30, bool: Der Typ bool mit den Werten true und false. Eine Lektion zu diesem Abschnitt gibt es nicht.
   - Abschnitt 5.5.1, Seiten 129–132, Bedingung: Wo ein Wahrheitswert gebraucht wird. Lektion: if-Anweisung in Go.
-- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

@@ -100,6 +100,7 @@ Reiter: zeiger
 - Der Wert des Zeigers steht in Worten da: „Adresse von a“.
 - Eine Tabelle vergleicht `swap` mit einer Kopie und `swap` mit einem Zeiger in fünf Zeilen. Die letzte Zeile: Fehlt bei der Kopie `a =`, bleibt das Array unverändert, und Go meldet nichts. Fehlt beim Zeiger `&`, übersetzt Go das Programm nicht. Die Meldung lautet `cannot use a (variable of type [10]int) as *[10]int value in argument to swap`.
 - Ein gelber Kasten sagt: Auch der Zeiger wird kopiert. Die Kopie einer Adresse ist immer gleich groß.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die vier Programmierübungen: Bubble Sort und Selection Sort, je mit Funktionen und mit Zeigern.
 
 ### Handgriffe
 
@@ -126,7 +127,6 @@ Reiter: kurstext
   - Abschnitt 2.6, Seiten 15–17, Vertauschen: Zwei Werte mit einer dritten Variable vertauschen, ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 1.
   - Abschnitt 5.3.2, Seiten 128–129, Tupel-Zuweisung: a, b = b, a. Lektion: Zuweisungen in Go, Schritt 4.
   - Kapitel 6, Seiten 151–162, Arrays: Die zwei Sortierverfahren mit ihren Zahlen der Vergleiche und Tausche. Lektion: Sortieren mit Bubble Sort.
-- Unter „Wie es weitergeht“ stehen Links auf die vier Programmierübungen: Bubble Sort und Selection Sort, je mit Funktionen und mit Zeigern.
 
 ### Handgriffe
 

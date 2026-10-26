@@ -102,6 +102,7 @@ Reiter: literale
   4. `r = rad{x: 5}` meldet `unknown field x in struct literal of type rad`.
   5. `r = rad{kreis{punkt{22, 33}, 55}}` meldet `too few values in struct literal of type rad`.
 - Darunter steht das zweite Literal über mehrere Zeilen, wie im Kurstext.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
 
 ### Handgriffe
 
@@ -128,7 +129,6 @@ Reiter: kurstext
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 8.3, Seiten 212–214, hierarchische Verbünde: Ein Verbund als benanntes Feld. Lektion: Hierarchische Verbünde: ein Verbund als Feld.
   - Abschnitt 8.2.2, Seiten 202–203, Ausgabe: %+v gibt Feldnamen mit aus. Lektion: Verbund in Go, Schritt 4.
-- Unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
 
 ### Handgriffe
 

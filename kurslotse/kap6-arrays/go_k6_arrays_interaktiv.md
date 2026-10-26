@@ -180,6 +180,7 @@ Reiter: slices
 - Der Teil „Was dahinter steckt“: Ein Slice benutzt intern ein Array fester Größe. `len` liefert die Länge des Slice, `cap` die Kapazität, also die Größe des internen Arrays. Reicht der Platz nicht, legt Go ein größeres Array an und kopiert die Elemente.
 - Die Zahl 6 für die Kapazität stammt aus einem Lauf mit Go 1.26. Im Kurstext steht keine Zahl. Wie viel Platz Go schafft, legt die Sprache nicht fest.
 - Ein gelber Kasten sagt: Im Kurstext werden Slices nur in Abschnitt 6.4 gezeigt. Alle Beispiele des Kurses verwenden Arrays.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zum Quiz zu den Arrays, zur Seite „Speichermodell: Arrays“ und zu zwei Programmierübungen zum Sortieren. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -207,7 +208,6 @@ Reiter: kurstext
   - Abschnitt 4.6.2.1, Seiten 105–107, Index bei Strings: Auch ein String hat Elemente mit Index, seine Bytes. Lektion: Strings: Bytes und Zeichen.
   - Abschnitt 5.5.3.2, Seiten 142–146, for-Klausel: Mit ihr läuft der Index durch das Array. Lektion: for-Anweisung mit for-Klausel in Go.
   - Abschnitt 7.2, Seiten 169–170, Array als Argument: Eine Funktion bekommt eine Kopie des ganzen Arrays. Lektion: Das Kopier-Problem.
-- Unter „Wie es weitergeht“ stehen Links zum Quiz zu den Arrays, zur Seite „Speichermodell: Arrays“ und zu zwei Programmierübungen zum Sortieren. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

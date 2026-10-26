@@ -146,6 +146,7 @@ Reiter: aufwand
 - Zur zweiten Aufgabe: Das Telefonbuch ist nach `name` sortiert und nicht nach `telefonnummer`. Erst ein Array, das nach der Nummer sortiert ist, lässt sich nach der Nummer durchsuchen. So steht es in Abschnitt 8.4.1 am Beispiel des gedruckten Telefonbuchs.
 - Zur dritten Aufgabe: Die Funktion liefert die Nummer des Eintrags, den sie zuerst als Mitte trifft. Das muss nicht der erste der beiden sein.
 - Eine Demo gibt es hier nicht.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
 
 ### Handgriffe
 
@@ -175,7 +176,6 @@ Reiter: kurstext
   - Abschnitt 7.5, Seite 185, Rekursion: binSuche ruft sich selbst auf. Lektion: Rekursion in Go.
   - Abschnitt 9.3, Seite 237, binäre Bäume: Die Suche im Baum halbiert ebenfalls. Lektion: Binäre Suchbäume in Go.
   - Ohne Abschnitt im Kurstext, Laufzeit: Wie die Zahl der Schritte mit der Datenmenge wächst, zeigt der Exkurs Wie die Laufzeit mit der Datenmenge wächst.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
 
 ### Handgriffe
 

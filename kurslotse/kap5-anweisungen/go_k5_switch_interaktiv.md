@@ -181,6 +181,7 @@ Reiter: praxis
 - Faustregel 2, der default-case fängt den Wert ab, an den niemand gedacht hat: eine switch-Anweisung ohne default-case mit `case 1:` und `case 6, 7:`. Bei `num` gleich 9 tut sie nichts, und das Programm gibt „9 ist  zugeordnet.“ mit leerem Text aus.
 - Faustregel 3, ohne switch-Ausdruck entscheidet die Reihenfolge: Mit `case t < 25:` an erster Stelle gibt das Programm für −5 „angenehm“ aus. Mit `case t < 0:` an erster Stelle gibt es „frostig“ aus. Die engste Bedingung steht zuerst.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 
@@ -208,7 +209,6 @@ Reiter: kurstext
   - Abschnitt 2.1, Seiten 5–8, Sprünge und Schleifen: Ohne Kontrollanweisungen laufen die Anweisungen der Reihe nach. Bedingte Sprünge und Schleifen ändern diese Reihenfolge. Lektion: Imperative Programmierung, Schritt 3.
   - Abschnitt 5.5.1, Seiten 129–132, if-Anweisung: Lektion: if-Anweisung in Go.
   - Abschnitt 4.5.1, Seiten 93–96, Kurzschluss-Auswertung: Warum f() in einer Kette aus else if mehrmals aufgerufen wird. Lektion: Wahrheitswerte und Kurzschluss-Auswertung.
-- Unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 

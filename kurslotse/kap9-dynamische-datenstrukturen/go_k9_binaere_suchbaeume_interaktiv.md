@@ -184,6 +184,7 @@ Reiter: loeschen
 - Ebenso ginge der kleinste Wert im rechten Teilbaum, hier die 93.
 - Go-Code zum Löschen steht im Kurstext nicht und auf der Seite nicht. Fragt der Student danach, bekommt er die drei Fälle erklärt und kein fertiges Programm.
 - Eine Demo gibt es hier nicht.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektionen „Verkettete Listen in Go“ und „Rekursion in Go“ und auf den Exkurs zur Laufzeit.
 
 ### Handgriffe
 
@@ -213,7 +214,6 @@ Reiter: kurstext
   - Abschnitt 8.4.1, Seiten 221–225, binäre Suche: Auch dort halbiert jeder Schritt den Suchbereich. Lektion: Binäre Suche in einem Verbund-Array.
   - Abschnitt 8.3.1, Seiten 215–216, rekursive Verbund-Typen: Ein Verbund hat ein Feld mit einem Zeiger auf den eigenen Typ. Lektion: Rekursive Verbund-Typen in Go, Schritt 4.
   - Abschnitt 9.2, Seiten 229–236, verkettete Liste: Lektion: Verkettete Listen in Go.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektionen „Verkettete Listen in Go“ und „Rekursion in Go“ und auf den Exkurs zur Laufzeit.
 
 ### Handgriffe
 

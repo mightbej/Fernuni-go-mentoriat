@@ -134,6 +134,7 @@ Reiter: aufwand
 - Zur zweiten Aufgabe: Es ändert sich nur der Vergleich, `a[i].telefonnummer > a[i+1].telefonnummer`.
 - Zur dritten Aufgabe: Das Zeichen `>` im Vergleich entscheidet.
 - Eine Demo gibt es hier nicht.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
 
 ### Handgriffe
 
@@ -162,7 +163,6 @@ Reiter: kurstext
   - Abschnitt 7.3, Seiten 171–172, Zeiger auf ein Array: Lektion: Bubble Sort mit Zeigern.
   - Abschnitt 4.5.2, Seiten 96–98, Strings vergleichen: Lektion: Logische Operatoren und Vergleiche in Go, Schritt 2.
   - Ohne Abschnitt im Kurstext, Laufzeit: Wie die Zahl der Schritte mit der Datenmenge wächst, zeigt der Exkurs Wie die Laufzeit mit der Datenmenge wächst.
-- Unter „Wie es weitergeht“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
 
 ### Handgriffe
 

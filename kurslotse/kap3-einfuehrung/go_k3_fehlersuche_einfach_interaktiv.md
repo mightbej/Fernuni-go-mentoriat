@@ -91,6 +91,7 @@ Reiter: klammer
 - Ein gelber Kasten nennt die Faustregel: Eine öffnende Klammer steht nie am Anfang einer neuen Zeile.
 - Im Kurstext steht für diesen Fehler die Meldung `unexpected semicolon or newline before {`. Go 1.26 meldet ihn nach `if` mit dem Wortlaut der Demo.
 - Unter dem Text steht ein Link auf die Lektion „if-Anweisung in Go“.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die zweite Lektion zur Fehlersuche und auf drei Quiz: „Implizite Semikolons“, „Parameter und Argument“, „Ausgabe und String-Verkettung“.
 
 ### Handgriffe
 
@@ -114,7 +115,6 @@ Reiter: kurstext
 - Unter „Was die Lektion voraussetzt“ steht Abschnitt 2.7, Seiten 17–19, mit der Lektion „Höhere und niedrigere Programmiersprachen“, Schritt 4.
 - Unter „Woher die Programme stammen“ steht: Schritt 1 ist ein eigenes Beispiel nach Listing 3.3, Schritt 2 nach Listing 3.2, Schritt 3 ein eigenes Beispiel.
 - Unter „Was über den Kurstext hinausgeht“ steht: Die drei Fehler stehen nicht im Kurstext. Für die Klammer in einer neuen Zeile nennt Abschnitt 3.3.2 die Meldung `unexpected semicolon or newline before {`, Go 1.26 meldet nach `if` `unexpected newline, expected { after if clause`.
-- Unter „Wie es weitergeht“ stehen Links auf die zweite Lektion zur Fehlersuche und auf drei Quiz: „Implizite Semikolons“, „Parameter und Argument“, „Ausgabe und String-Verkettung“.
 
 ### Handgriffe
 

@@ -253,10 +253,16 @@
       <li><strong>Die Funktion liest nur, und der Verbund ist groß:</strong> oft auch Zeiger. Die Kopie des ganzen Verbunds kostet Speicherplatz und Rechenzeit, und in einer Schleife über viele große Verbünde merkt man das.</li>
       <li><strong>Die Funktion soll den Verbund auf keinen Fall ändern können:</strong> Kopie. Dann ist der Verbund des Aufrufers sicher, auch wenn der Rumpf durch einen Programmierfehler ein Feld ändert. Ein solcher Fehler bleibt dann aber leicht lange unbemerkt.</li>
     </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Verbund im Verbund:</strong> Die Lektion <a href="go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> zu Abschnitt 8.3 verwendet den Typ <code>auto</code> als Feld.</li>
+      <li><strong>Die Kopie bei Arrays:</strong> Der Exkurs <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, was die Kopie beim Sortieren kostet.</li>
+      <li><strong>Quiz:</strong> Das <a href="S219_verbund_parameter_demo_quiz.html">Quiz zu Verbund-Parametern</a>.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
-    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
   </div>
   </section>
 
@@ -280,13 +286,6 @@
       <li><strong>Abschnitt 7.2, Seiten 169–170, Kopie des Arguments:</strong> Eine Funktion bekommt eine Kopie. Lektion: <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#kopie">Funktionen in Go</a>, Schritt 5.</li>
       <li><strong>Abschnitt 7.4.2, Seite 180, Zeiger als Rückgabe:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html#rueckgabe">Zeiger in Go</a>, Schritt 4.</li>
       <li><strong>Abschnitt 7.2, Seiten 169–170, wie viel kopiert wird:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a>.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Verbund im Verbund:</strong> Die Lektion <a href="go_k8_hierarchische_verbunde_interaktiv.html">Hierarchische Verbünde</a> zu Abschnitt 8.3 verwendet den Typ <code>auto</code> als Feld.</li>
-      <li><strong>Die Kopie bei Arrays:</strong> Der Exkurs <a href="../kap7-funktionen-zeiger/go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, was die Kopie beim Sortieren kostet.</li>
-      <li><strong>Quiz:</strong> Das <a href="S219_verbund_parameter_demo_quiz.html">Quiz zu Verbund-Parametern</a>.</li>
     </ul>
   </div>
   <div class="zeile schritte">

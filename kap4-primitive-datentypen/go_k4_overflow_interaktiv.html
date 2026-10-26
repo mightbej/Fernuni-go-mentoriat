@@ -333,10 +333,19 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
 
     <h3>Wenn kein Typ reicht</h3>
     <p>Für ganze Zahlen beliebiger Größe gibt es in der Standardbibliothek das Paket <code>math/big</code>. Im Kurstext wird es im Expertenwissen 4.15 genannt und nicht weiter verwendet.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Quiz:</strong> Das <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen</a> fragt nach den Grenzen der Ganzzahl-Typen.</li>
+      <li><strong>Der Überlauf am Kreis:</strong> Die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3, zeigt den Sprung von 127 nach −128.</li>
+      <li><strong>Der Übertrag im Addierer:</strong> Wohin das neunte Bit im Rechenwerk fällt, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#addierer">Rechenwerk</a>, Schritt 4.</li>
+      <li><strong>Die Prüfung als Funktion:</strong> In Kapitel 7 wird aus der Prüfung die Funktion <code>safeAdd</code>. Sie gibt die Summe und einen Fehler zurück. Das zeigt die Seite <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#fehler">Funktionen in Go</a>, Schritt 4.</li>
+      <li><strong>Ein gewollter Überlauf:</strong> Eine Hashfunktion setzt den Überlauf bewusst ein, so steht es in Abschnitt 4.3.8. Das rechnet der Exkurs <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html#hash">Vertiefung: Blockchain in Go</a> in Schritt 2 Byte für Byte vor. Dort steht in Schritt 4 auch, was bei <code>uint64</code> aus 75 − 76 wird.</li>
+      <li><strong>Ein Überlauf in einer Schleife:</strong> Die Seite <a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a> rechnet Fakultäten und prüft vor jeder Multiplikation, ob das Produkt noch passt.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
-    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
   </div>
   </section>
 
@@ -361,16 +370,6 @@ if a > math.MaxInt8-b {      // 120 > 127 - 20
       <li><strong>Abschnitt 2.3, Seiten 10–11, Teilausdrücke:</strong> Bei großen Zahlen kann <code>a · c</code> zu groß für den Wertebereich sein. Dann liefern <code>(a − b) · c</code> und <code>a · c − b · c</code> verschiedene Ergebnisse. Das ist der Gedanke von Schritt 4, dort in Go. Eine Lektion zu diesem Teil von Abschnitt 2.3 gibt es nicht.</li>
       <li><strong>Abschnitt 4.3.4 und 4.3.5, Seiten 63–66, Wertebereiche:</strong> Lektion: <a href="go_k4_zahlenkreis_interaktiv.html">Zahlenkreis</a>.</li>
       <li><strong>Abschnitt 7.1, Seiten 163–165, mehrere Rückgaben:</strong> Eine Funktion kann einen Fehler als zweite Rückgabe melden. Die Lektion <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#fehler">Funktionen in Go</a> zeigt in Schritt 4 die Funktion <code>safeAdd</code>, die so einen Überlauf meldet.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Quiz:</strong> Das <a href="go_k4_integer_wertebereiche_quiz.html">Quiz zu den Wertebereichen</a> fragt nach den Grenzen der Ganzzahl-Typen.</li>
-      <li><strong>Der Überlauf am Kreis:</strong> Die Seite <a href="go_k4_zahlenkreis_interaktiv.html#ueberlauf">Zahlenkreis</a>, Schritt 3, zeigt den Sprung von 127 nach −128.</li>
-      <li><strong>Der Übertrag im Addierer:</strong> Wohin das neunte Bit im Rechenwerk fällt, zeigt die Seite <a href="go_k4_rechenwerk_interaktiv.html#addierer">Rechenwerk</a>, Schritt 4.</li>
-      <li><strong>Die Prüfung als Funktion:</strong> In Kapitel 7 wird aus der Prüfung die Funktion <code>safeAdd</code>. Sie gibt die Summe und einen Fehler zurück. Das zeigt die Seite <a href="../kap7-funktionen-zeiger/go_k7_funktionen_interaktiv.html#fehler">Funktionen in Go</a>, Schritt 4.</li>
-      <li><strong>Ein gewollter Überlauf:</strong> Eine Hashfunktion setzt den Überlauf bewusst ein, so steht es in Abschnitt 4.3.8. Das rechnet der Exkurs <a href="../kap9-dynamische-datenstrukturen/go_k9_blockchain_vertiefung_interaktiv.html#hash">Vertiefung: Blockchain in Go</a> in Schritt 2 Byte für Byte vor. Dort steht in Schritt 4 auch, was bei <code>uint64</code> aus 75 − 76 wird.</li>
-      <li><strong>Ein Überlauf in einer Schleife:</strong> Die Seite <a href="../kap5-anweisungen/go_k5_break_interaktiv.html">break-Anweisung in Go</a> rechnet Fakultäten und prüft vor jeder Multiplikation, ob das Produkt noch passt.</li>
     </ul>
   </div>
   <div class="zeile schritte">

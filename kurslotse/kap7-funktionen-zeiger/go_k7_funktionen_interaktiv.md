@@ -169,6 +169,7 @@ Reiter: kopie
 - Der Ablauf hat zwölf Schritte: `nums` anlegen mit `[8 -5 6 -3 -7 1 -4 3 -9 2]`. `nums` ausgeben. Aufruf: Der Parameter `a` bekommt eine Kopie aller zehn Elemente. Dann setzt die Schleife nacheinander `a[1]`, `a[3]`, `a[4]`, `a[6]` und `a[8]` auf 0. Dann `return a`. Dann legt `main` die Rückgabe in `posNums` ab, wieder als Kopie. Dann gibt `main` `nums` aus, unverändert. Dann gibt `main` `posNums` aus: `[8 0 6 0 0 1 0 3 0 2]`.
 - Die Demo überspringt die Durchläufe der Schleife, in denen das Element nicht negativ ist.
 - Unter „Was daran stört“ steht: Das Array wird zweimal kopiert. Sprachen wie Pascal haben Referenzparameter, die Übergabe heißt dort call-by-reference. Go hat sie nicht, in Go übergibt man einen Zeiger.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen vier Links: die Lektion „Zeiger in Go“, der Exkurs „Das Kopier-Problem“, die Programmierübung „Bubble Sort mit Funktionen“ und das Quiz zu Kapitel 7.
 
 ### Handgriffe
 
@@ -198,7 +199,6 @@ Reiter: kurstext
   - Abschnitt 2.6, Seiten 15–17, Unterprogramme und Funktionen: Aufruf, Parameter und Rückgabe ohne Go. Lektion: Unterprogramme und Funktionen, Schritt 3.
   - Abschnitt 3.4, Seiten 37–41, Funktionen in einem Go-Programm: Parameter, Rückgabewert und return an Listing 3.3. Eine Lektion zu diesem Abschnitt gibt es nicht. Die Lektion Fehlersuche: drei Go-Programme mit mehreren Fehlern übt sie in Schritt 1.
   - Abschnitt 4.3.8, Seiten 78–84, Überlauf: Den Überlauf meldet safeAdd. Lektion: Überlauf bei Ganzzahlen in Go, Schritt 5.
-- Unter „Wie es weitergeht“ stehen vier Links: die Lektion „Zeiger in Go“, der Exkurs „Das Kopier-Problem“, die Programmierübung „Bubble Sort mit Funktionen“ und das Quiz zu Kapitel 7.
 
 ### Handgriffe
 

@@ -106,6 +106,7 @@ Reiter: kopie
 - Nach der ersten Zeile stehen zwei Verbünde mit den gleichen Werten im Rahmen. Die zweite Zeile ändert nur `kopie`. Die Ausgabe ist `Ulm Bonn`.
 - Ein Satz verweist auf den Tausch `personA, personB = personB, personA` aus Abschnitt 8.1.
 - Das Programm mit `kopie` steht nicht im Kurstext. Es ist ein eigenes Beispiel zum Satz, dass sich der Wert einer Verbund-Variable aus den Werten ihrer Felder zusammensetzt.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
 
 ### Handgriffe
 
@@ -132,7 +133,6 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
   - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
   - Abschnitt 6.1, Seiten 154–155, Index: Ein Array-Element spricht man mit dem Index an, ein Feld mit seinem Namen. Lektion: Arrays in Go, Schritt 2.
-- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
 
 ### Handgriffe
 

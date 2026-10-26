@@ -172,6 +172,7 @@ Reiter: ausprobieren
 - Darunter steht ein Editor mit sechs Programmen zur Wahl: „Punkt vor Strich“ gibt 11, 21, 10, -9, 3 aus. „Vergleich und ODER“ gibt zweimal false aus. „Funktionen im Ausdruck“ mit `f`, `g` und `h` gibt 10 und 0 aus. „Typen mischen“ meldet `mismatched types int and float64`. „Ausdruck allein“ meldet `x + 1 (value of type int) is not used`. „Konstante Division durch 0“ meldet `division by zero`.
 - Im Editorlotsen übersetzt Go das Programm auf dem Rechner des Studenten und führt es aus. Auf GitHub Pages ist der Reiter grau. Dort zeigt er nur, was Go 1.26.1 zu jedem Programm gemeldet oder ausgegeben hat, und sagt, wie der Student die Lektion im Editorlotsen öffnet.
 - Die Lösung des ersten Vorschlags ist `24/(8 - 3*4)`: `8 - 12` ergibt −4, `24/-4` ergibt −6. Die Seite nennt die Lösung nicht.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Abschnitt 4.2 zu `fmt.Printf` mit dem Hinweis auf die Lektion im Editorlotsen und die Quiz „Auswertungsreihenfolge und Bindungsstärken“ und „Quiz zu Kapitel 4“.
 
 ### Handgriffe
 
@@ -194,7 +195,6 @@ Reiter: kurstext
 - Aus dem Kurstext stammen der Satz über Wertebereich und Operationen, unär und binär, Tabelle 4.1, die Regeln zu Typ und Ergebnistyp, Expertenwissen 4.2 und 4.3, die Ausdrücke in Schritt 3 und 4, die Tabelle der Bindungsstärken, die drei Regeln, die konstanten Ausdrücke mit 13.75 und 640 und die Division durch 0 mit `const fix`.
 - Die Lektion gibt dazu: den Einstieg über Daten, Speicher und Rechenwerk, die Tabelle mit vier Typen, die Demo Typ und Operator, die Kästen in Kästen, den Rechenweg mit Begründung, die Rümpfe von `f`, `g` und `h` und die Werte von x und y, das Programm mit der Variable `fix` und alle Ausgaben und Meldungen von Go 1.26.1.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen Abschnitt 2.3, 3.3.5 und 3.3.6, 4.5.1, 4.7, 5.2 und 5.3 mit ihren Lektionen.
-- Unter „Wie es weitergeht“ stehen Abschnitt 4.2 zu `fmt.Printf` mit dem Hinweis auf die Lektion im Editorlotsen und die Quiz „Auswertungsreihenfolge und Bindungsstärken“ und „Quiz zu Kapitel 4“.
 
 ### Handgriffe
 

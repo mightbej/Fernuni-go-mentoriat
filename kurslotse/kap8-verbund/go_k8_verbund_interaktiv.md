@@ -131,6 +131,7 @@ Reiter: ausgabe
 - `fmt.Println(anna)` und `fmt.Printf("%v\n", anna)` geben `{Anna Schmidt 1966 Hamburg false}` aus.
 - `fmt.Printf("%+v\n", anna)` gibt `{vorname:Anna nachname:Schmidt gebJahr:1966 ort:Hamburg verheiratet:false}` aus.
 - `fmt.Printf("%#v\n", anna)` gibt `main.person{vorname:"Anna", nachname:"Schmidt", gebJahr:1966, ort:"Hamburg", verheiratet:false}` aus.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
 
 ### Handgriffe
 
@@ -157,7 +158,6 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
   - Abschnitt 5.1, Seiten 113–114, Deklaration: Ein Verbund-Typ steht in einer Deklaration an der Stelle von int. Lektion: Variablendeklaration in Go.
   - Kapitel 6, Seiten 151–154, Array-Literal: Das Verbund-Literal ähnelt dem Array-Literal. Lektion: Arrays in Go, Schritt 1.
-- Unter „Wie es weitergeht“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
 
 ### Handgriffe
 

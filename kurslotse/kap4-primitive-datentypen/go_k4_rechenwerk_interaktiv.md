@@ -162,6 +162,7 @@ Reiter: subtraktion
 - 10 − 15: Die Summe ist 1111 1011. Als `uint8` gelesen ist das 251 und falsch, als `int8` gelesen ist es −5 und richtig.
 - 0 − 1: Die Summe ist 1111 1111. Als `uint8` gelesen ist das 255, als `int8` gelesen −1.
 - Ein gelber Kasten sagt: Ein echtes Rechenwerk dreht die Bits von `b` um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist das gleiche.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Zahlenkreis“, „Bitverschiebung“, „Quiz zur Bitverschiebung“.
 
 ### Handgriffe
 
@@ -190,7 +191,6 @@ Reiter: kurstext
   - Abschnitt 2.3, Seiten 10–11, Rechnen: Der Rechner wandelt Folgen von 0 und 1 in andere Folgen um. Lektion: Exkurs: Speichern und Rechnen im Rechner.
   - Abschnitt 4.3.5, Seiten 64–66, Zweierkomplement: Lektion: Zweierkomplement.
   - Ohne Abschnitt im Kurstext: Wie man die Gatter aus Schaltern baut, zeigt die Lektion Gatter aus Schaltern.
-- Unter „Wie es weitergeht“ stehen Links auf: „Zahlenkreis“, „Bitverschiebung“, „Quiz zur Bitverschiebung“.
 
 ### Handgriffe
 

@@ -171,6 +171,7 @@ Reiter: praxis
 - Faustregel 2, die Laufvariable ändert nur die Post-Anweisung: Eine Schleife `for i := 1; i <= 10; i++` mit einem zusätzlichen `i++` im Schleifenrumpf gibt 1, 3, 5, 7 und 9 aus. Wer in Schritten von 2 zählen will, schreibt `i += 2` in die Post-Anweisung.
 - Faustregel 3, wer herunterzählt, dreht alle drei Teile um: `for i := 10; i >= 1; i--` läuft zehnmal. `for i := 10; i <= 1; i--` läuft kein einziges Mal, weil `10 <= 1` schon bei der ersten Prüfung `false` ergibt.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
+- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 
@@ -199,7 +200,6 @@ Reiter: kurstext
   - Abschnitt 5.4, Seite 129, einfache Anweisungen: Was als Init-Anweisung und Post-Anweisung stehen darf. Lektion: Zuweisungen in Go, Schritt 5.
   - Abschnitt 5.5.3.1, Seiten 138–142, for mit Bedingung: Lektion: for-Anweisung mit Bedingung in Go.
   - Abschnitt 6.2, Seiten 156–159, Arrays durchlaufen: Die for-Klausel zählt den Index eines Arrays hoch. Lektion: Arrays in Go.
-- Unter „Wie es weitergeht“ steht ein Link zum Quiz.
 
 ### Handgriffe
 

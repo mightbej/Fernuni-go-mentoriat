@@ -284,10 +284,15 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
       <li><strong>Rechnung nur aus Konstanten:</strong> Ein Ausdruck wie <code>2 * math.Pi</code> enthält nur Konstanten. Der Compiler rechnet ihn mit der hohen Genauigkeit aus.</li>
       <li><strong>Verwendung:</strong> Erst wenn das Ergebnis mit einer Variable zusammentrifft, wird es an deren Typ angepasst, zum Beispiel an <code>float64</code>. Dabei gehen die überzähligen Ziffern verloren.</li>
     </ul>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Implizite Typanpassung:</strong> Wann Go den Typ eines konstanten Ausdrucks von selbst anpasst, steht in Abschnitt 4.7, Seiten 109–111. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
+      <li><strong>Quiz:</strong> Das <a href="127_go_k5_konstanten_quiz.html">Quiz zu den Konstanten</a> hat zehn Fragen zu Abschnitt 5.2.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
-    <button type="button" class="haupt" data-gehe="5">Weiter zu Schritt 5</button>
   </div>
   </section>
 
@@ -311,12 +316,6 @@ var y float64 = mitTyp  // Fehler beim Übersetzen</pre>
       <li><strong>Abschnitt 2.2, Seiten 8–10, Konstante und Literal:</strong> Eine Konstante ist ein Name für einen Wert, der sich nie ändert. Ein Literal ist der Wert selbst. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#begriffe">Variablen, Typen und Speicher</a>, Schritt 2.</li>
       <li><strong>Abschnitt 3.3.3, Seiten 29–30, die erste Konstante:</strong> <code>const nullpunkt float64 = -273.15</code> in Listing 3.2. Eine Lektion zu diesem Abschnitt gibt es nicht.</li>
       <li><strong>Abschnitt 4.7, Seiten 109–111, implizite Typanpassung:</strong> Lektion: <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
-    </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Implizite Typanpassung:</strong> Wann Go den Typ eines konstanten Ausdrucks von selbst anpasst, steht in Abschnitt 4.7, Seiten 109–111. Dazu gibt es die Seite <a href="../kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html">Typkonvertierung</a>.</li>
-      <li><strong>Quiz:</strong> Das <a href="127_go_k5_konstanten_quiz.html">Quiz zu den Konstanten</a> hat zehn Fragen zu Abschnitt 5.2.</li>
     </ul>
   </div>
   <div class="zeile schritte">

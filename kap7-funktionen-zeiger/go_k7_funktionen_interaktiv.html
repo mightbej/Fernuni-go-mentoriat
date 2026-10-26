@@ -335,10 +335,18 @@ if err != nil {
     <h3>Was daran stört</h3>
     <p>Die Funktion erfüllt die Aufgabe, aber auf einem Umweg: Das Array wird zweimal kopiert, einmal beim Aufruf und einmal bei der Rückgabe. Praktischer wäre eine Funktion, die das Array des Aufrufers selbst ändert.</p>
     <p>Sprachen wie Pascal haben dafür eine zweite Art von Parametern, die Referenzparameter. Die Übergabe heißt dort <strong>call-by-reference</strong>. Go hat sie nicht. In Go übergibt man der Funktion einen <strong>Zeiger</strong> auf das Array.</p>
+
+    <h3>Wie es weitergeht</h3>
+    <ul>
+      <li><strong>Zeiger:</strong> Die Lektion <a href="go_k7_zeiger_interaktiv.html">Zeiger in Go</a> beginnt mit dem gleichen Array und der Funktion <code>negToZeroPointer</code>.</li>
+      <li><strong>Wie teuer die Kopie ist:</strong> Der Exkurs <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, wie viele Elemente eine Funktion <code>swap</code> beim Sortieren kopiert.</li>
+      <li><strong>Programmieren:</strong> Die Programmierübung <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> zerlegt das Sortierprogramm aus Kapitel 6 in Funktionen.</li>
+      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
+    </ul>
+    <p class="quelle">Listing 7.1, <code>array_per_wert.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 7.2, Seiten 169–170, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
-    <button type="button" class="haupt" data-gehe="6">Weiter zu Schritt 6</button>
   </div>
   </section>
 
@@ -364,15 +372,6 @@ if err != nil {
       <li><strong>Abschnitt 3.4, Seiten 37–41, Funktionen in einem Go-Programm:</strong> Parameter, Rückgabewert und <code>return</code> an Listing 3.3. Eine Lektion zu diesem Abschnitt gibt es nicht. Die Lektion <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html#quader">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a> übt sie in Schritt 1.</li>
       <li><strong>Abschnitt 4.3.8, Seiten 78–84, Überlauf:</strong> Den Überlauf meldet <code>safeAdd</code>. Lektion: <a href="../kap4-primitive-datentypen/go_k4_overflow_interaktiv.html#vorbeugen">Überlauf bei Ganzzahlen in Go</a>, Schritt 5.</li>
     </ul>
-
-    <h3>Wie es weitergeht</h3>
-    <ul>
-      <li><strong>Zeiger:</strong> Die Lektion <a href="go_k7_zeiger_interaktiv.html">Zeiger in Go</a> beginnt mit dem gleichen Array und der Funktion <code>negToZeroPointer</code>.</li>
-      <li><strong>Wie teuer die Kopie ist:</strong> Der Exkurs <a href="go_k7_kopier_problem_interaktiv.html">Das Kopier-Problem</a> zählt, wie viele Elemente eine Funktion <code>swap</code> beim Sortieren kopiert.</li>
-      <li><strong>Programmieren:</strong> Die Programmierübung <a href="go_k7_bubblesort_funktionen_programmieruebung.html">Bubble Sort mit Funktionen</a> zerlegt das Sortierprogramm aus Kapitel 6 in Funktionen.</li>
-      <li><strong>Quiz:</strong> Das <a href="169-201_go_k7_funktionen_zeiger_rekursion_quiz.html">Quiz zu Funktionen, Zeigern und Rekursion</a> fragt den Stoff von Kapitel 7 ab.</li>
-    </ul>
-    <p class="quelle">Listing 7.1, <code>array_per_wert.go</code>, aus dem Kurstext „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen, Abschnitt 7.2, Seiten 169–170, ohne die Zeilen mit <code>package</code> und <code>import</code> und ohne Kommentare.</p>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="5">Zurück zu Schritt 5</button>

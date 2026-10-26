@@ -126,6 +126,7 @@ Reiter: programm
 - Zur zweiten Aufgabe: `istSortiert` vergleicht jedes Element mit seinem rechten Nachbarn, das sind höchstens 5 Vergleiche.
 - Zur vierten Aufgabe: Ohne Zeiger gibt `main` das Telefonbuch in der ursprünglichen Reihenfolge aus.
 - Eine Demo gibt es hier nicht.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektionen „Bubblesort auf einem Verbund-Array“ und „Verkettete Listen in Go“.
 
 ### Handgriffe
 
@@ -144,7 +145,6 @@ Reiter: kurstext
 
 - Zu sehen ist eine Tabelle mit sechs Zeilen: Abschnitt 5.3.2, Kapitel 6, Abschnitt 7.4, 8.2.3, 8.2.5 und 8.4.2, jeweils mit den gedruckten Seiten und einem Satz, was das Programm daraus verwendet.
 - Darunter steht: Die vier Funktionen kommen im Kurstext nicht vor.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektionen „Bubblesort auf einem Verbund-Array“ und „Verkettete Listen in Go“.
 - Unter der Tabelle steht außerdem: Die Funktionen sind eigene Beispiele, geprüft mit Go 1.26. Der Zeiger auf das Array folgt Listing 8.2, Seite 226. Die Formel für die Zahl der Vergleiche in Schritt 2 steht in Abschnitt 8.4.2, Seite 225.
 
 ### Handgriffe

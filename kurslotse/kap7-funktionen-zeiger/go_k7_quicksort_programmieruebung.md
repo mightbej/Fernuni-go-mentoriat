@@ -177,6 +177,7 @@ Reiter: ausprobieren
 - Das letzte Programm gibt bei jedem Aufruf `quickSort(pa, start, end)` aus und nach jedem Aufteilen das Array mit Pivot und Index.
 - Vier Vorschläge: andere Werte in Stufe 2, ein Array mit gleichen Werten in Stufe 5, die Aufrufe zählen, bei denen das Ende greift (sieben), die drei Zeilen mit `if start >= end` löschen.
 - Zum letzten Vorschlag: Ohne das Ende ruft der Aufruf für den Bereich 0 bis −1 sich immer wieder mit dem gleichen Bereich auf. Go bricht ab mit `fatal error: stack overflow`.
+- Am Ende des Schritts unter „Wie es weitergeht“: die Programmierübungen „Bubble Sort mit Zeigern“ und „Bubble Sort rekursiv“, der Exkurs zur Laufzeit und das Quiz zu Funktionen, Zeigern und Rekursion.
 
 ### Handgriffe
 
@@ -194,7 +195,6 @@ Reiter: kurstext
 
 - Eine Tabelle nennt zu jedem Schritt den Abschnitt im Kurstext, was daraus stammt und was nicht im Kurstext steht: 5.3 Tupel-Zuweisung, 6.1 und 6.2 Array und Durchlaufen, 7.1 und 7.2 Funktion und Wertübergabe, 7.3 und 7.4 Zeiger auf ein Array, 7.5 Rekursion.
 - Unter „Wo das Thema im Kurstext noch vorkommt“: Abschnitt 2.6 Unterprogramme, die Türme von Hanoi in Abschnitt 7.5.4, die binäre Suche in Abschnitt 8.4.1, Bubblesort in Abschnitt 8.4.2, je mit Lektion.
-- Unter „Wie es weitergeht“: die Programmierübungen „Bubble Sort mit Zeigern“ und „Bubble Sort rekursiv“, der Exkurs zur Laufzeit und das Quiz zu Funktionen, Zeigern und Rekursion.
 
 ### Handgriffe
 

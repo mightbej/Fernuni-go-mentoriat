@@ -93,6 +93,7 @@ Reiter: zeichen
 - „Grüße“ hat 7 Bytes und 5 Zeichen. `utf8.RuneCountInString(s)` zählt die Zeichen, ohne den String umzuwandeln.
 - Ein gelber Kasten sagt: Ein `[]rune` belegt 4 Bytes je Zeichen, und die Umwandlung kopiert den ganzen Text.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Ob `[]rune` in der Klausur vorkommt, lässt sich deshalb nicht sagen. Verbindlich sind der Kurstext und Moodle der FernUniversität.
+- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
@@ -118,7 +119,6 @@ Reiter: kurstext
   - Abschnitt 2.2, Seiten 8–10, Zeichenketten: Variablen können auch Zeichenketten sein, mit eigenen Operationen. Lektion: Variablen, Typen und Speicher.
   - Abschnitt 3.3.7, Seite 36, Strings: Eine Lektion gibt es nicht, dazu gibt es das Quiz Ausgabe und String-Verkettung.
   - Abschnitt 4.6.1, Seiten 99–102, String-Literale: Lektion: Strings in Go.
-- Unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
