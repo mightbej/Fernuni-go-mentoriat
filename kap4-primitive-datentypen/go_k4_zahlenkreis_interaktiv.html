@@ -599,6 +599,18 @@ fmt.Println(anzahl) // 251</pre></div>
   // Der Dialog selbst steht in kurslotse.js. Hier steht, was nur diese Seite weiß.
   const SCHRITTE = ['Worum es geht', 'Schritt 1: Bitmuster und Wert', 'Schritt 2: Mit und ohne Vorzeichen', 'Schritt 3: Überlauf', 'Schritt 4: Die Ganzzahl-Typen in Go', 'Schritt 5: 10 minus 15 mit uint8', 'Schritt 6: Bezug zum Kurstext'];
 
+  // Welche Bits gerade hinterlegt sind und welche nicht. Ohne diesen Satz erklärt das Modell auch Farben, die gerade fehlen.
+  function farben() {
+    const vorn = (st.idx >> (st.n - 1)) & 1, gruen = [];
+    for (let j = st.n - 1; j >= 0; j--) if (((st.idx >> j) & 1) && !(st.signed && j === st.n - 1)) gruen.push(gewicht(j));
+    const g = gruen.length === 0 ? 'Kein Bit ist grün hinterlegt.'
+      : gruen.length === 1 ? 'Grün hinterlegt ist nur das Bit mit der Wertigkeit ' + gruen[0] + '.'
+      : 'Grün hinterlegt sind die Bits mit den Wertigkeiten ' + gruen.join(', ') + '.';
+    if (!st.signed) return g + ' Kein Bit ist blau hinterlegt. Blau ist das vorderste Bit nur mit Vorzeichen und auf 1.';
+    return g + (vorn ? ' Das vorderste Bit ist blau hinterlegt, weil es auf 1 steht und die negative Wertigkeit ' + gewicht(st.n - 1) + ' hat.'
+                     : ' Das vorderste Bit steht auf 0. Es ist deshalb nicht blau hinterlegt.');
+  }
+
   // Der Stand der Demo in Sätzen, wie ihn das Sprachmodell lesen soll
   function standSaetze() {
     if (aktuell === 6) return ['Dieser Schritt hat keine Demo. Er ordnet die Schritte der Lektion dem Kurstext zu.'];
@@ -618,7 +630,9 @@ fmt.Println(anzahl) // 251</pre></div>
       an.length === 0 ? 'Kein Bit steht auf 1.'
         : an.length === 1 ? 'Auf 1 steht nur das Bit mit der Wertigkeit ' + an[0] + '.'
         : 'Auf 1 stehen die Bits mit den Wertigkeiten ' + an.join(', ') + '. Ihre Summe ist ' + w + '.',
-      'Dasselbe Bitmuster ' + (st.signed ? 'ohne' : 'mit') + ' Vorzeichen gelesen hat den Wert ' + anders + '.'
+      'Dasselbe Bitmuster ' + (st.signed ? 'ohne' : 'mit') + ' Vorzeichen gelesen hat den Wert ' + anders + '.',
+      'Die Stelle des Zeigers auf dem Kreis ist ' + (w < 0 ? 'blau, weil der Wert negativ ist.' : 'grün, weil der Wert nicht negativ ist.'),
+      farben()
     ];
     if (aktuell === 3 || aktuell === 5) {
       const l = st.letzte;
