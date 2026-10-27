@@ -182,6 +182,20 @@
     });
   }
 
+  // Eine Adresse für einen Link: https, eine Adresse auf dem eigenen Rechner oder eine relative Adresse. Alles andere,
+  // zum Beispiel javascript:…, liefert null, und der Titel steht als Text da. Seit 2026-10-26, Block 3 der Aufräumarbeit.
+  function sicher(adresse) {
+    let u;
+    try { u = new URL(adresse, location.href); } catch (fehler) { return null; }
+    const eigen = u.origin === location.origin || (u.protocol === 'http:' && (u.hostname === 'localhost' || u.hostname === '127.0.0.1'));
+    return u.protocol === 'https:' || eigen ? u.href : null;
+  }
+
+  // So viele Zeichen einer markierten Stelle gehen mit der Frage mit, in jedem Lotsen gleich. Der gleiche Wert steht als
+  // GrenzeMarkierung im Modul lotsen. Bis 2026-10-26 waren es 1500, Thomas' Beschluss vom selben Tag: 3000, weil eine
+  // markierte Stelle im PDF oft ein ganzer Absatz ist.
+  const GRENZE_MARKIERUNG = 3000;
+
   // ---------- Darstellung einer Antwort ----------
 
   // Text ohne Codeblock: Zeilen mit „- “ oder „1. “ werden zu einer Liste, eine Tabelle bleibt, wie sie ist, der Rest wird zu Absätzen.
@@ -439,8 +453,11 @@
     function htmlSeiten(q) {
       const liste = (q.htmlSeiten || []).filter(v => v.adresse);
       if (!liste.length) return '';
-      return '<ul>' + liste.map(v => '<li>' + (v.art === 'erklaert' ? 'Im Mentoriat erklärt' : 'Im Mentoriat genannt') + ': <a href="' +
-        esc(angaben.link ? angaben.link(v.adresse) : v.adresse) + '" target="_blank" rel="noopener">' + esc(v.titel) + '</a></li>').join('') + '</ul>';
+      return '<ul>' + liste.map(v => {
+        const adresse = sicher(angaben.link ? angaben.link(v.adresse) : v.adresse);
+        return '<li>' + (v.art === 'erklaert' ? 'Im Mentoriat erklärt' : 'Im Mentoriat genannt') + ': ' +
+          (adresse ? '<a href="' + esc(adresse) + '" target="_blank" rel="noopener">' + esc(v.titel) + '</a>' : esc(v.titel)) + '</li>';
+      }).join('') + '</ul>';
     }
     // Die Abschnitte des Kurstexts unter einer Antwort. Die Liste stammt vom Programm, nicht vom Sprachmodell.
     function quellenHTML(d) {
@@ -627,7 +644,7 @@
         clearTimeout(markierUhr);
         markierUhr = setTimeout(() => {
           const auswahl = document.getSelection();
-          const text = auswahl.toString().replace(/[ \t]+\n/g, '\n').trim().slice(0, 1500);
+          const text = auswahl.toString().replace(/[ \t]+\n/g, '\n').trim().slice(0, GRENZE_MARKIERUNG);
           const knoten = auswahl.anchorNode && (auswahl.anchorNode.nodeType === 1 ? auswahl.anchorNode : auswahl.anchorNode.parentElement);
           if (!text || !knoten || knoten.closest('.lotse') || wurzel.hidden || gesperrt || !angaben.markieren(knoten)) return;
           let wo = null;
@@ -652,7 +669,7 @@
       oeffne: offen => { if (da) oeffne(offen, false); },
       sperre: sperre,
       leere: leere,
-      markiere: (text, wo) => { if (!gesperrt) zeigeMarkierung(String(text || '').slice(0, 1500), text ? wo || null : null); },
+      markiere: (text, wo) => { if (!gesperrt) zeigeMarkierung(String(text || '').slice(0, GRENZE_MARKIERUNG), text ? wo || null : null); },
       frage: auftrag => stelle(auftrag),
       einzeln: einzeln,
       neuerStand: () => { abHier = verlauf.length; },
