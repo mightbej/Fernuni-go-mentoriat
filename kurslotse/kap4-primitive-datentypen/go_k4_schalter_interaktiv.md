@@ -121,6 +121,9 @@ Reiter: prozessor
 - Unter den Diagrammen steht eine Tabelle mit sieben Rechnern und Prozessoren: Jahr, Name, Takt, Zahl der Schalter.
 - Zweite Karte, „Die Baumarkt-Rechnung“: fünf Eingabefelder und darunter das Ergebnis in vier Punkten: Preis im Prozessor, Preis im Baumarkt, von Hand geschaltet, Platz an der Wand.
 - Die Diagramme lassen sich nicht verändern. Die Rechnung ändert sich mit jeder Eingabe.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: Wie Speicher und Rechenwerk zusammenarbeiten, zeigt der „Exkurs: Speichern und Rechnen im Rechner nach von Neumann“.
+  - In Go: In der Lektion „Rechenwerk“ werden die Gatter mit den Bit-Operatoren von Go zu einem Addierer zusammengesetzt.
 
 ### Handgriffe
 
