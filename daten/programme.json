@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-26T15:12",
+ "stand": "2026-10-27T16:08",
  "programme": [
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
@@ -63,7 +63,7 @@
    "titel": "Binäre Suche in Verbund-Arrays (Abschnitt 8.4.1)",
    "datei": "S230_binaere_suche_demo",
    "gruppe": "Programme des Mentoriats zu Kapitel 8",
-   "sha256": "2604f8fd0a2f622e41623edcf76ce45db599cc4542bb275c5a3c74bfa7827673"
+   "sha256": "b8670b19f77e859fc7ecb58de49c713171e65fb1b396fff69da736dc8ee89201"
   },
   {
    "pfad": "kap9-dynamische-datenstrukturen/go/blockchain.go",
@@ -77,7 +77,7 @@
    "titel": "Bubblesort auf Verbund-Arrays (Abschnitt 8.4.2)",
    "datei": "S234_bubblesort_demo",
    "gruppe": "Programme des Mentoriats zu Kapitel 9",
-   "sha256": "5f2a17855894482c5d0b572940f50b0825f3f882111463962e83de62145cecda",
+   "sha256": "7dd4bff6047f474e4000c44581c23fbcb8e7ba4787da14aef83d9af09487e35e",
    "slices": true
   },
   {

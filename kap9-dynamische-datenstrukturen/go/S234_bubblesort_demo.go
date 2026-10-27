@@ -7,7 +7,7 @@ import "fmt"
 // =============================================================================
 //
 // Quelle: Die Funktion bubblesort folgt dem Listing bubblesort.go aus dem Kurstext
-// „Imperative Programmierung“ (Kurs 01613) der FernUniversität in Hagen.
+// zum Modul 63811 „Einführung in die imperative Programmierung“ der FernUniversität in Hagen.
 // Die Ausgaben und die übrigen Funktionen sind eigene Ergänzungen.
 //
 // Dieses Programm demonstriert:
