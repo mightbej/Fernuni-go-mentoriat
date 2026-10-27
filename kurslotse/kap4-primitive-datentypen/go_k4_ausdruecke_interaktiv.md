@@ -172,7 +172,7 @@ Reiter: ausprobieren
 - Darunter steht ein Editor mit sechs Programmen zur Wahl: „Punkt vor Strich“ gibt 11, 21, 10, -9, 3 aus. „Vergleich und ODER“ gibt zweimal false aus. „Funktionen im Ausdruck“ mit `f`, `g` und `h` gibt 10 und 0 aus. „Typen mischen“ meldet `mismatched types int and float64`. „Ausdruck allein“ meldet `x + 1 (value of type int) is not used`. „Konstante Division durch 0“ meldet `division by zero`.
 - Im Editorlotsen übersetzt Go das Programm auf dem Rechner des Studenten und führt es aus. Auf GitHub Pages ist der Reiter grau. Dort zeigt er nur, was Go 1.26.1 zu jedem Programm gemeldet oder ausgegeben hat, und sagt, wie der Student die Lektion im Editorlotsen öffnet.
 - Die Lösung des ersten Vorschlags ist `24/(8 - 3*4)`: `8 - 12` ergibt −4, `24/-4` ergibt −6. Die Seite nennt die Lösung nicht.
-- Am Ende des Schritts unter „Nächste Schritte“ stehen Abschnitt 4.2 zu `fmt.Printf` mit dem Hinweis auf die Lektion im Editorlotsen und die Quiz „Auswertungsreihenfolge und Bindungsstärken“ und „Quiz zu Kapitel 4“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Abschnitt 4.2 zu `fmt.Printf` mit dem Hinweis auf die Lektion im Editorlotsen und die Quiz „Selbsttest: Operatoren und Ausdrücke“ mit 12 Fragen zu dieser Lektion, „Auswertungsreihenfolge und Bindungsstärken“ und „Quiz zu Kapitel 4“.
 
 ### Handgriffe
 

@@ -150,7 +150,7 @@ Reiter: aufgaben
 - Die zweite Karte nennt die vier HTML-Seiten mit dem Speichermodell: diese zu Kapitel 4, dann Arrays in Kapitel 6, Zeiger in Kapitel 7 und Verbund in Kapitel 8.
 - Am Ende des Schritts steht „Nächste Schritte“:
   - Nächste Lektion: „Zweierkomplement: negative Zahlen als Bitmuster in Go“.
-  - Quiz: „Grundlagen der primitiven Datentypen“.
+  - Quiz: „Selbsttest: Speichermodell“ mit 12 Fragen zu dieser Lektion und „Grundlagen der primitiven Datentypen“.
 
 ### Handgriffe
 

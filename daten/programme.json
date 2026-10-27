@@ -1,6 +1,20 @@
 {
- "stand": "2026-10-27T16:08",
+ "stand": "2026-10-27T19:21",
  "programme": [
+  {
+   "pfad": "kap4-primitive-datentypen/go/ueberraschung1_int8_demo.go",
+   "titel": "Überraschung 1: 127 + 1 mit int8. Schätze die Ausgabe, bevor du es ausführst.",
+   "datei": "ueberraschung1_int8_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 4",
+   "sha256": "e4fc228717dd9ac7d5f2fa1aaab239de28a000c78d6857b0ef498756cfad0e35"
+  },
+  {
+   "pfad": "kap4-primitive-datentypen/go/ueberraschung2_float64_demo.go",
+   "titel": "Überraschung 2: 0.1 + 0.2 == 0.3 mit float64. Schätze die Ausgabe, bevor du es ausführst.",
+   "datei": "ueberraschung2_float64_demo",
+   "gruppe": "Programme des Mentoriats zu Kapitel 4",
+   "sha256": "6f123c2a9151dcedd825fadb7453f197cd1e01ac3c645551747d3114cd699278"
+  },
   {
    "pfad": "kap8-verbund/go/S207_struct_demo.go",
    "titel": "Grundlegende struct-Definition (zeilenweise - üblich und übersichtlich)",

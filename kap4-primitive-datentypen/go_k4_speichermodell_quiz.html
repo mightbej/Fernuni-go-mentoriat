@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Selbsttest: Speichermodell</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--gut:#10b981;--gut-bg:#d1fae5;--rot:#dc2626;--rot-bg:#fee2e2;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1000px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin:0 0 12px;font-size:1.1rem;color:var(--accent); }
+    a { color:#1e40af; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:0 0 12px;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:12px 14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .antworten { display:grid;gap:8px; }
+    .antwort { display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;border:2px solid var(--line);border-radius:8px;padding:10px 14px;font-size:1rem;font-family:inherit;background:#f9fafb;color:#111827;cursor:pointer; }
+    .antwort:hover:not(:disabled) { border-color:var(--accent); }
+    .antwort .buchstabe { font-weight:700;color:var(--muted); }
+    .antwort.gewaehlt { background:#f0fdfa;border-color:var(--accent); }
+    .antwort.richtig { background:var(--gut-bg);border-color:var(--gut); }
+    .antwort.falsch { background:var(--rot-bg);border-color:var(--rot); }
+    .antwort:disabled { cursor:default;color:#111827; }
+    .aufloesung { margin-top:12px;padding:12px 14px;border-radius:8px;border-left:4px solid var(--gut);background:var(--gut-bg); }
+    .aufloesung.falsch { border-left-color:var(--rot);background:var(--rot-bg); }
+    .aufloesung.offen { border-left-color:#f59e0b;background:var(--highlight); }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 18px; }
+    button.knopf { border:1px solid var(--line);border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:1rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button.knopf.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .ergebnis { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:12px;padding:20px;text-align:center;font-size:1.3rem;font-weight:600;margin-bottom:18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Selbsttest: Speichermodell</h1>
+    <p>12 Fragen mit je vier Antworten. Kurstext v3.0.6, Abschnitt 2.2, Seiten 8–10, und Abschnitte 4.3.1 bis 4.3.4, Seiten 59–63.</p>
+  </div>
+
+  <p>Die Erklärungen zu den Fragen stehen auf der Seite <a href="go_k4_speichermodell_interaktiv.html">Speichermodell: Name, Typ und Adresse</a>.</p>
+
+  <div id="fragen"></div>
+
+  <div class="zeile">
+    <button class="knopf haupt" id="auswerten" type="button">Quiz auswerten</button>
+    <button class="knopf" id="vonvorn" type="button">von vorn</button>
+  </div>
+  <div id="ergebnis"></div>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+</div>
+
+<script>
+(function () {
+  // f: Frage, c: Go-Code zur Frage, a: vier Antworten, r: Index der richtigen Antwort, l: Auflösung
+  const FRAGEN = [
+    { f: 'Was steht in einer Zeile der Tabelle des Rechners?',
+      a: ['Name, Typ und Wert', 'Name, Typ und Adresse', 'Adresse und Wert', 'Name und Wert'], r: 1,
+      l: 'In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Liest der Rechner im Programm einen Namen, sucht er ihn in der Tabelle und findet dort Adresse und Typ.' },
+    { f: 'Wo steht der Wert einer Variable?',
+      a: ['in der Tabelle des Rechners', 'in der Tabelle und im Hauptspeicher', 'in der Tabelle neben der Adresse', 'nur im Hauptspeicher'], r: 3,
+      l: 'Der Wert einer Variable steht nur im Hauptspeicher, in den Zellen ab ihrer Adresse. In der Tabelle steht er nicht.' },
+    { f: 'Wie viele Zellen im Hauptspeicher belegt eine Variable vom Typ int32?',
+      a: ['1', '2', '4', '32'], r: 2,
+      l: 'Jede Zelle fasst 8 Bit, also 1 Byte. int32 hat 32 Bit, belegt also 4 Zellen.' },
+    { f: 'Das Programm führt die zwei Zeilen aus. Wie viele Zellen sind danach reserviert?',
+      c: 'var a int8\nvar b int32',
+      a: ['5', '2', '40', '8'], r: 0,
+      l: 'int8 braucht 1 Zelle, int32 braucht 4. Zusammen sind es 5 Zellen.' },
+    { f: 'Was legt der Typ einer Variable fest?',
+      a: ['ihre Adresse', 'ihren Namen', 'ihren Wert', 'wie viele Zellen zu ihr gehören und wie ihre Bits zu lesen sind'], r: 3,
+      l: 'Der Typ legt fest, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten. Die Adresse steht in der Tabelle, der Wert in den Zellen.' },
+    { f: 'Das Programm hat diese Zeilen ausgeführt. Danach schaltet man in der Zelle von a ein Bit um. Was geschieht mit c?',
+      c: 'var a int8\na = 17\nvar c int8\nc = a',
+      a: ['c ändert sich mit, denn c und a teilen sich eine Zelle.', 'c ändert sich nicht, denn c hat eine eigene Zelle.', 'c ändert sich erst bei der nächsten Zuweisung.', 'c bekommt den Wert 0.'], r: 1,
+      l: 'c hat eine eigene Zelle mit einer eigenen Adresse. Die Zuweisung c = a hat das Bitmuster von a dorthin kopiert.' },
+    { f: 'Welches Literal hat einen anderen Wert als die übrigen drei?',
+      a: ['123', '0x7b', '0o173', '173'], r: 3,
+      l: '0x7b ist 7 · 16 + 11 = 123, 0o173 ist 1 · 64 + 7 · 8 + 3 = 123. Das sind drei Schreibweisen für denselben Wert. 173 ist eine andere Zahl.' },
+    { f: 'Welchen Wert hat das Literal 0173?',
+      a: ['173', '0', '123', 'Go übersetzt das Literal nicht.'], r: 2,
+      l: 'Auch eine führende 0 ohne Buchstaben leitet eine Oktalzahl ein. 0173 ist deshalb 123, wie 0o173. Der Kurstext warnt davor in Abschnitt 4.3.1.' },
+    { f: 'Eine Zelle enthält das Bitmuster 11111111. Wie lautet das Literal hexadezimal und oktal?',
+      a: ['0xff und 0o377', '0xff und 0o777', '0x1f und 0o377', '0xf und 0o17'], r: 0,
+      l: 'Vier Bits ergeben eine Hexadezimalziffer: zweimal 1111, also ff. Drei Bits ergeben eine Oktalziffer. Für die linke Ziffer bleiben nur zwei Bits, darum beginnt die Zahl mit 3.' },
+    { f: 'Welchen Wert hat das Bitmuster 11111111 als int8 und als uint8?',
+      a: ['255 und 255', '−127 und 255', '−1 und 255', '−128 und 127'], r: 2,
+      l: 'Das linke Bit hat bei int8 die Wertigkeit −128, bei uint8 die Wertigkeit 128. Die übrigen sieben Bits ergeben in beiden Typen 127. Also −128 + 127 = −1 und 128 + 127 = 255.' },
+    { f: 'Welches Zeichen ergibt das Bitmuster 01000001, wenn man es als Zeichen liest?',
+      a: ['A', 'a', '1', 'Das Byte steht nicht allein für ein Zeichen.'], r: 0,
+      l: '01000001 ist die Nummer 65, und das ist das große A. Das kleine a hat die Nummer 97, also 01100001. Ab der Nummer 128 steht ein Byte nicht mehr allein für ein Zeichen.' },
+    { f: 'Im Quelltext stehen die Literale 123 und 0x7b. Was macht der Compiler daraus?',
+      a: ['zwei verschiedene Bitmuster', 'dasselbe Bitmuster', 'einmal ein Bitmuster und einmal einen Text', 'gar nichts, 0x7b ist nur mit dem Typ uint8 erlaubt'], r: 1,
+      l: 'Zwei Literale, ein Wert. Der Compiler rechnet jede Schreibweise in dasselbe Bitmuster um. In der Zelle kommt nur der Wert an.' }
+  ];
+
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const wahl = {};
+  let fertig = false;
+
+  function zeige() {
+    el('fragen').innerHTML = FRAGEN.map((q, i) => {
+      const g = wahl[i];
+      let s = '<div class="card"><h2>Frage ' + (i + 1) + ': ' + esc(q.f) + '</h2>' + (q.c ? '<pre>' + esc(q.c) + '</pre>' : '') + '<div class="antworten">';
+      q.a.forEach((t, k) => {
+        const kl = fertig ? (k === q.r ? ' richtig' : (k === g ? ' falsch' : '')) : (k === g ? ' gewaehlt' : '');
+        s += '<button type="button" class="antwort' + kl + '" data-frage="' + i + '" data-antwort="' + k + '"' + (fertig ? ' disabled' : '') + '><span class="buchstabe">' + 'ABCD'[k] + ')</span><span>' + esc(t) + '</span></button>';
+      });
+      s += '</div>';
+      if (fertig) {
+        const art = g === undefined ? 'offen' : (g === q.r ? '' : 'falsch');
+        const vor = g === undefined ? 'Keine Antwort gewählt. Richtig ist ' + 'ABCD'[q.r] + '. ' : (g === q.r ? 'Richtig. ' : 'Falsch, richtig ist ' + 'ABCD'[q.r] + '. ');
+        s += '<div class="aufloesung ' + art + '">' + vor + esc(q.l) + '</div>';
+      }
+      return s + '</div>';
+    }).join('');
+    if (fertig) {
+      const n = FRAGEN.filter((q, i) => wahl[i] === q.r).length;
+      el('ergebnis').innerHTML = '<div class="ergebnis">' + n + ' von ' + FRAGEN.length + ' Fragen richtig</div>';
+    } else el('ergebnis').innerHTML = '';
+    el('auswerten').disabled = fertig;
+  }
+
+  el('fragen').addEventListener('click', ev => {
+    const k = ev.target.closest('[data-frage]');
+    if (!k || fertig) return;
+    wahl[k.dataset.frage] = Number(k.dataset.antwort);
+    document.querySelectorAll('[data-frage="' + k.dataset.frage + '"]').forEach(b => b.classList.toggle('gewaehlt', b === k));
+  });
+  el('auswerten').onclick = () => { fertig = true; zeige(); el('ergebnis').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  el('vonvorn').onclick = () => { for (const k in wahl) delete wahl[k]; fertig = false; zeige(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  zeige();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Selbsttest: Zweierkomplement</title>
+  <style>
+    :root { --bg:#f7f9fc;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#0f766e;--gut:#10b981;--gut-bg:#d1fae5;--rot:#dc2626;--rot-bg:#fee2e2;--highlight:#fef3c7; }
+    * { box-sizing:border-box; }
+    body { margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at 18% -12%,#d9fbe8 0%,#f7f9fc 46%);line-height:1.6; }
+    .container { max-width:1000px;margin:0 auto;padding:24px; }
+    .hero { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(15,118,110,.25);margin-bottom:20px; }
+    .hero h1 { margin:0 0 10px;font-size:1.9rem; }
+    .hero p { margin:0;opacity:.96;font-size:1.05rem; }
+    .card { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px; }
+    h2 { margin:0 0 12px;font-size:1.1rem;color:var(--accent); }
+    a { color:#1e40af; }
+    code { background:#f3f4f6;padding:2px 7px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:.92rem; }
+    pre { margin:0 0 12px;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:12px 14px;font-family:Consolas,monospace;font-size:.95rem;line-height:1.5;white-space:pre;overflow-x:auto; }
+    .antworten { display:grid;gap:8px; }
+    .antwort { display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;border:2px solid var(--line);border-radius:8px;padding:10px 14px;font-size:1rem;font-family:inherit;background:#f9fafb;color:#111827;cursor:pointer; }
+    .antwort:hover:not(:disabled) { border-color:var(--accent); }
+    .antwort .buchstabe { font-weight:700;color:var(--muted); }
+    .antwort.gewaehlt { background:#f0fdfa;border-color:var(--accent); }
+    .antwort.richtig { background:var(--gut-bg);border-color:var(--gut); }
+    .antwort.falsch { background:var(--rot-bg);border-color:var(--rot); }
+    .antwort:disabled { cursor:default;color:#111827; }
+    .aufloesung { margin-top:12px;padding:12px 14px;border-radius:8px;border-left:4px solid var(--gut);background:var(--gut-bg); }
+    .aufloesung.falsch { border-left-color:var(--rot);background:var(--rot-bg); }
+    .aufloesung.offen { border-left-color:#f59e0b;background:var(--highlight); }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 18px; }
+    button.knopf { border:1px solid var(--line);border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:1rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button.knopf.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .ergebnis { background:linear-gradient(135deg,#0f766e 0%,#1e40af 100%);color:#fff;border-radius:12px;padding:20px;text-align:center;font-size:1.3rem;font-weight:600;margin-bottom:18px; }
+    .zurueck { display:inline-block;margin:4px 0 24px;color:var(--muted);font-size:.95rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Selbsttest: Zweierkomplement</h1>
+    <p>12 Fragen mit je vier Antworten. Kurstext v3.0.6, Abschnitt 4.3.5, Seiten 64–66.</p>
+  </div>
+
+  <p>Die Erklärungen zu den Fragen stehen auf der Seite <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement: negative Zahlen als Bitmuster</a>.</p>
+
+  <div id="fragen"></div>
+
+  <div class="zeile">
+    <button class="knopf haupt" id="auswerten" type="button">Quiz auswerten</button>
+    <button class="knopf" id="vonvorn" type="button">von vorn</button>
+  </div>
+  <div id="ergebnis"></div>
+
+  <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
+</div>
+
+<script>
+(function () {
+  // f: Frage, c: Go-Code zur Frage, a: vier Antworten, r: Index der richtigen Antwort, l: Auflösung
+  const FRAGEN = [
+    { f: 'Welchen Wert hat das Bitmuster 1000 0001 als int8?',
+      a: ['129', '−1', '−127', '−126'], r: 2,
+      l: 'Beim Typ int8 hat das linke Bit die Wertigkeit −128. Dazu kommt das rechte Bit mit 1: −128 + 1 = −127.' },
+    { f: 'Welchen Wert hat dasselbe Bitmuster 1000 0001 als uint8?',
+      a: ['129', '−127', '1', '127'], r: 0,
+      l: 'Beim Typ uint8 hat das linke Bit die Wertigkeit 128: 128 + 1 = 129. Die Bits sind dieselben wie in Frage 1, nur der Typ liest sie anders.' },
+    { f: 'Welches Bitmuster hat die Zahl −1 als int8?',
+      a: ['1000 0001', '1111 1111', '1000 0000', '0111 1111'], r: 1,
+      l: 'Die sieben rechten Bits ergeben zusammen 127, und −128 + 127 = −1. 1000 0001 ist −127, 1000 0000 ist −128 und 0111 1111 ist 127.' },
+    { f: 'Welche Wertigkeit hat beim Typ int8 das linke Bit, also Bit 7?',
+      a: ['128', '−1', '−127', '−128'], r: 3,
+      l: 'Bei einem Typ mit Vorzeichen hat das linke Bit eine negative Wertigkeit. Beim Typ int8 ist das −128 statt 128. Alle anderen Bits behalten ihre Wertigkeit.' },
+    { f: 'Die Zahl 9 hat das Bitmuster 0000 1001. Welchen Wert hat das Bitmuster, wenn man zusätzlich nur das linke Bit auf 1 setzt?',
+      a: ['−9', '137', '−1', '−119'], r: 3,
+      l: '1000 1001 ergibt −128 + 9 = −119. Das linke Bit ist kein Minuszeichen. Es zählt wie jedes andere Bit mit, nur mit negativer Wertigkeit.' },
+    { f: 'Welches Bitmuster hat −9 als int8?',
+      a: ['1000 1001', '1111 0110', '1111 0111', '0000 1001'], r: 2,
+      l: 'Kehrt man alle Bits von 0000 1001 um, erhält man 1111 0110. Addiert man 1, ergibt das 1111 0111. Probe: −128 + 64 + 32 + 16 + 4 + 2 + 1 = −9.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var x int8 = 42\nfmt.Println(^x + 1)',
+      a: ['-42', '-43', '43', '42'], r: 0,
+      l: 'Der Operator ^ kehrt alle Bits um. Addiert man danach 1, erhält man das Negative der Zahl. In Go ist ^x + 1 deshalb das Gleiche wie -x.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var x int8 = 42\nfmt.Println(^x)',
+      a: ['-42', '213', '41', '-43'], r: 3,
+      l: 'Kehrt man alle Bits von x um und addiert das Ergebnis zu x, steht an jeder Stelle eine 1. Als int8 entspricht das der Zahl −1. Es gilt also x + ^x = -1, und damit ist ^x gleich −1 − 42 = −43.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var m int8 = -128\nfmt.Println(-m)',
+      a: ['128', '-128', '0', 'Go übersetzt das Programm nicht.'], r: 1,
+      l: 'Der Typ int8 hat 128 negative Werte, aber nur 127 positive. Zu −128 fehlt das Gegenstück. Das Umkehren der Bits ergibt 0111 1111, und addiert man 1, entsteht wieder 1000 0000. Go meldet dabei keinen Fehler.' },
+    { f: 'Was geschieht mit dieser Zeile?',
+      c: 'var b int8 = 0b11110111',
+      a: ['Go übersetzt die Zeile, und b hat den Wert −9.', 'Go übersetzt die Zeile, und b hat den Wert −119.', 'Go übersetzt die Zeile nicht, denn das Literal hat den Wert 247.', 'Go übersetzt die Zeile, und b hat den Wert 247.'], r: 2,
+      l: 'Ein binäres Literal steht immer für eine Zahl ab 0. 0b11110111 ist 247, und diese Zahl passt nicht in einen int8. Go meldet: cannot use 0b11110111 (untyped int constant 247) as int8 value in variable declaration (overflows).' },
+    { f: 'Mit welcher Zeile bekommt b den Wert −9?',
+      a: ['var b int8 = -0b1001', 'var b int8 = 0b11110111', 'var b int8 = 0b10001001', 'var b int8 = 0b11111001'], r: 0,
+      l: 'Eine negative Zahl schreibt man im Quelltext als Betrag mit einem Minus davor. Das Bitmuster 1111 0111 im Speicher berechnet der Compiler selbst. Das Literal 0b10001001 entspricht 137, 0b11111001 entspricht 249. Beide passen nicht in einen int8.' },
+    { f: 'Was gibt das Programm aus?',
+      c: 'var b int8 = -9\nfmt.Printf("%b\\n", b)',
+      a: ['11110111', '-1001', '10001001', '-11110111'], r: 1,
+      l: 'Das Verb %b gibt bei einer negativen Zahl den Betrag mit einem Minus aus und nicht das Bitmuster im Speicher. Das Bitmuster erhält man mit fmt.Printf("%08b\\n", uint8(b)), nämlich 11110111.' }
+  ];
+
+  const el = id => document.getElementById(id);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const wahl = {};
+  let fertig = false;
+
+  function zeige() {
+    el('fragen').innerHTML = FRAGEN.map((q, i) => {
+      const g = wahl[i];
+      let s = '<div class="card"><h2>Frage ' + (i + 1) + ': ' + esc(q.f) + '</h2>' + (q.c ? '<pre>' + esc(q.c) + '</pre>' : '') + '<div class="antworten">';
+      q.a.forEach((t, k) => {
+        const kl = fertig ? (k === q.r ? ' richtig' : (k === g ? ' falsch' : '')) : (k === g ? ' gewaehlt' : '');
+        s += '<button type="button" class="antwort' + kl + '" data-frage="' + i + '" data-antwort="' + k + '"' + (fertig ? ' disabled' : '') + '><span class="buchstabe">' + 'ABCD'[k] + ')</span><span>' + esc(t) + '</span></button>';
+      });
+      s += '</div>';
+      if (fertig) {
+        const art = g === undefined ? 'offen' : (g === q.r ? '' : 'falsch');
+        const vor = g === undefined ? 'Keine Antwort gewählt. Richtig ist ' + 'ABCD'[q.r] + '. ' : (g === q.r ? 'Richtig. ' : 'Falsch, richtig ist ' + 'ABCD'[q.r] + '. ');
+        s += '<div class="aufloesung ' + art + '">' + vor + esc(q.l) + '</div>';
+      }
+      return s + '</div>';
+    }).join('');
+    if (fertig) {
+      const n = FRAGEN.filter((q, i) => wahl[i] === q.r).length;
+      el('ergebnis').innerHTML = '<div class="ergebnis">' + n + ' von ' + FRAGEN.length + ' Fragen richtig</div>';
+    } else el('ergebnis').innerHTML = '';
+    el('auswerten').disabled = fertig;
+  }
+
+  el('fragen').addEventListener('click', ev => {
+    const k = ev.target.closest('[data-frage]');
+    if (!k || fertig) return;
+    wahl[k.dataset.frage] = Number(k.dataset.antwort);
+    document.querySelectorAll('[data-frage="' + k.dataset.frage + '"]').forEach(b => b.classList.toggle('gewaehlt', b === k));
+  });
+  el('auswerten').onclick = () => { fertig = true; zeige(); el('ergebnis').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  el('vonvorn').onclick = () => { for (const k in wahl) delete wahl[k]; fertig = false; zeige(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  zeige();
+})();
+</script>
+</body>
+</html>

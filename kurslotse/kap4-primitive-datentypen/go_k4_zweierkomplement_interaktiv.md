@@ -114,7 +114,7 @@ Reiter: literal
 - `var e int8 = int8(d)` mit `d` vom Typ `uint8` und dem Wert 247: Wert −9, Bitmuster 1111 0111. Die Konvertierung einer Variable lässt die Bits stehen.
 - `var m int8 = -0b10000000`: Wert −128, Bitmuster 1000 0000.
 - Der Teil „Das Bitmuster sichtbar machen“ zeigt drei Zeilen: `fmt.Printf("%b\n", b)` gibt für −9 `-1001` aus, also den Betrag mit Minus. `fmt.Printf("%08b\n", uint8(b))` gibt `11110111` aus, das Bitmuster im Speicher.
-- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zum Quiz zu den Wertebereichen und zu den Seiten „Rechenwerk“, „Zahlenkreis“ und „Überlauf bei Ganzzahlen“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zum „Selbsttest: Zweierkomplement“ mit 12 Fragen zu dieser Lektion, zum Quiz zu den Wertebereichen und zu den Seiten „Rechenwerk“, „Zahlenkreis“ und „Überlauf bei Ganzzahlen“. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
