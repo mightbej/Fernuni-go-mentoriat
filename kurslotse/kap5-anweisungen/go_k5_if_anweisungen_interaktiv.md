@@ -172,7 +172,7 @@ Reiter: praxis
 - Faustregel 4, kein if im if, wenn eine Bedingung genügt: zwei verschachtelte if-Anweisungen mit `alter >= 18` und `hatAusweis`, daneben eine if-Anweisung mit `&&`. Darunter steht ein Link auf die Lektion „Wahrheitswerte und Kurzschluss-Auswertung“: Dort steht, wann Go den rechten Teil von `&&` gar nicht erst auswertet.
 - Am Ende steht ein Ausblick auf Kapitel 7: Ein Sonderfall lässt sich in einer Funktion vorab mit `if` und `return` erledigen.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Quiz zu den if-Anweisungen“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf: „Quiz zu den if-Anweisungen“.
 
 ### Handgriffe
 

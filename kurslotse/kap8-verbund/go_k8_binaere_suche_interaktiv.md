@@ -146,7 +146,7 @@ Reiter: aufwand
 - Zur zweiten Aufgabe: Das Telefonbuch ist nach `name` sortiert und nicht nach `telefonnummer`. Erst ein Array, das nach der Nummer sortiert ist, lässt sich nach der Nummer durchsuchen. So steht es in Abschnitt 8.4.1 am Beispiel des gedruckten Telefonbuchs.
 - Zur dritten Aufgabe: Die Funktion liefert die Nummer des Eintrags, den sie zuerst als Mitte trifft. Das muss nicht der erste der beiden sein.
 - Eine Demo gibt es hier nicht.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf die Lektion „Bubblesort auf einem Verbund-Array“ zu Abschnitt 8.4.2, auf die Programmierübung „Ein Telefonbuch als Verbund-Array“ und auf die Lektion „Binäre Suchbäume in Go“ zu Abschnitt 9.3.1.
 
 ### Handgriffe
 

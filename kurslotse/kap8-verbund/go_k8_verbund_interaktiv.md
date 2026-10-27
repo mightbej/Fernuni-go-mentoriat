@@ -131,7 +131,7 @@ Reiter: ausgabe
 - `fmt.Println(anna)` und `fmt.Printf("%v\n", anna)` geben `{Anna Schmidt 1966 Hamburg false}` aus.
 - `fmt.Printf("%+v\n", anna)` gibt `{vorname:Anna nachname:Schmidt gebJahr:1966 ort:Hamburg verheiratet:false}` aus.
 - `fmt.Printf("%#v\n", anna)` gibt `main.person{vorname:"Anna", nachname:"Schmidt", gebJahr:1966, ort:"Hamburg", verheiratet:false}` aus.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen drei Links: die Lektion „Verbund-Variablen und Feld-Variablen“, die Seite „Speichermodell: Verbund“ und das Quiz zu struct.
 
 ### Handgriffe
 

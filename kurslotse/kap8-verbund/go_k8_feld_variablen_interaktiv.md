@@ -106,7 +106,7 @@ Reiter: kopie
 - Nach der ersten Zeile stehen zwei Verbünde mit den gleichen Werten im Rahmen. Die zweite Zeile ändert nur `kopie`. Die Ausgabe ist `Ulm Bonn`.
 - Ein Satz verweist auf den Tausch `personA, personB = personB, personA` aus Abschnitt 8.1.
 - Das Programm mit `kopie` steht nicht im Kurstext. Es ist ein eigenes Beispiel zum Satz, dass sich der Wert einer Verbund-Variable aus den Werten ihrer Felder zusammensetzt.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen drei Links: die Lektion „Zeiger auf Verbünde“, die Seite „Speichermodell: Verbund“ und das Quiz.
 
 ### Handgriffe
 

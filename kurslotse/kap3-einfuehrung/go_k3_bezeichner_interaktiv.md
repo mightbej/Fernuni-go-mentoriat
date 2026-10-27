@@ -153,7 +153,7 @@ Reiter: ausprobieren
 - Vorschläge: der eigene Vorname, `_`, `__` oder `x_1_`, ein Schlüsselwort wie `for` oder `range`.
 - Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
 - Zu einer Meldung erklärt die Antwort, welche Regel aus Schritt 1 bis 4 der Name verletzt.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektion „Fehlersuche: drei kurze Go-Programme“ und auf das Quiz „Bezeichner und Schlüsselwörter“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf die Lektion „Fehlersuche: drei kurze Go-Programme“ und auf das Quiz „Bezeichner und Schlüsselwörter“.
 
 ### Handgriffe
 

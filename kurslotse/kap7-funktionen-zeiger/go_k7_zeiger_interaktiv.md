@@ -189,7 +189,7 @@ Reiter: new
 - Der grüne Rahmen heißt „Anonyme Variablen“. Darin stehen die Variablen „erste“, „zweite“ und „dritte“. Diese Namen gehören zur Darstellung der Seite.
 - Der Ablauf: Die erste anonyme Variable hat den Wert 0, Ausgabe 0. `*p = 15` setzt sie auf 15, Ausgabe 15. `q` und `r` zeigen auf zwei weitere anonyme Variablen. `q == r` gibt `false` aus.
 - Unter „Zwei Schreibweisen, die gleiche Variable“ stehen die Funktionen `neueIntVar` mit `var v int` und `return &v` und `neueIntVarNew` mit `return new(int)`. Für die Variable macht es keinen Unterschied, wie sie erzeugt wurde.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen sechs Links: „Speichermodell: Zeiger“, der Ausblick auf Kapitel 9 aus Abschnitt 7.4.6, „Hierarchische Verbünde“ in Kapitel 8, „Rekursion in Go“, die zwei Programmierübungen mit Zeigern und das Quiz.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen sechs Links: „Speichermodell: Zeiger“, der Ausblick auf Kapitel 9 aus Abschnitt 7.4.6, „Hierarchische Verbünde“ in Kapitel 8, „Rekursion in Go“, die zwei Programmierübungen mit Zeigern und das Quiz.
 
 ### Handgriffe
 

@@ -102,7 +102,7 @@ Reiter: literale
   4. `r = rad{x: 5}` meldet `unknown field x in struct literal of type rad`.
   5. `r = rad{kreis{punkt{22, 33}, 55}}` meldet `too few values in struct literal of type rad`.
 - Darunter steht das zweite Literal über mehrere Zeilen, wie im Kurstext.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen drei Punkte: die Lektion „Rekursive Verbund-Typen“, Abschnitt 8.4 mit binärer Suche und Bubblesort, und das Go-Programm `S225_anonyme_felder_demo.go`.
 
 ### Handgriffe
 

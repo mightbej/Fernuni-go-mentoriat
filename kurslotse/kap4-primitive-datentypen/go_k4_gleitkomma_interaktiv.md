@@ -179,7 +179,7 @@ Reiter: grenzen
 - Im zweiten Go-Beispiel ist h = 1e-20 positiv, aber `1+h == 1` ist true. Die kleine Änderung geht bei der Addition verloren. Das ist Rundung bei 1, kein Unterlauf von h. Der Fragekasten deckt diesen Unterschied auf.
 - Ratschläge: eine passende darstellbare Fehlerschranke wählen, unveränderte gespeicherte Ergebnisse erkennen, Wiederholungen begrenzen. Die Lektion führt keine Schleifensyntax ein.
 - Abschnitt 4.4.5 enthält eine Steigungsberechnung mit ε. Die vereinfachte Halbierungsfolge und die festen Go-Beispiele sind eigene Ergänzungen; subnormale Zahlen und +Inf präzisieren das Verhalten von Go anhand der Sprachspezifikation.
-- Am Ende von Schritt 5 steht „Wie es weitergeht“ mit drei Links: das Quiz zu den Gleitkomma-Typen, die Lektion „for-Anweisung mit Bedingung“, Schritt 5, mit einer Schleife, die wegen eines Rundungsfehlers nie endet, und die Lektion „Bitverschiebung“, Schritt 4. Welche Fragen das Quiz stellt, steht in dieser Lektion nicht.
+- Am Ende von Schritt 5 steht „Nächste Schritte“ mit drei Links: das Quiz zu den Gleitkomma-Typen, die Lektion „for-Anweisung mit Bedingung“, Schritt 5, mit einer Schleife, die wegen eines Rundungsfehlers nie endet, und die Lektion „Bitverschiebung“, Schritt 4. Welche Fragen das Quiz stellt, steht in dieser Lektion nicht.
 
 ### Handgriffe
 

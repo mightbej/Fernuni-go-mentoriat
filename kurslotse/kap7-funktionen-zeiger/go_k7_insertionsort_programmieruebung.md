@@ -153,7 +153,7 @@ Reiter: ausprobieren
 - „Stufe 1 mit der Funktion ordne“ ist eine Zwischenstufe aus Thomas' Vorlage: `ordne(x, y int) (int, int)` liefert die zwei Werte geordnet, `main` ruft sie zehnmal auf, zum Beispiel `b, c = ordne(b, c)`.
 - „Stufe 4 mit Ausgabe jedes Einfügens“ gibt nach jeder Runde `i`, `key` und das Array aus und am Ende `Vergleiche: 30`. Damit es jeden Vergleich zählen kann, steht der Vergleich dort in `if pa[j] <= key { break }`.
 - Vier Vorschläge: die Bedingung umdrehen (Abbruch mit `index out of range [-1]`), absteigend sortieren (in der inneren Schleife `a[j] < key` statt `a[j] > key`), Vergleiche für ein sortiertes und ein umgekehrt sortiertes Array zählen (9 und 45), `pa[j] >= key` statt `pa[j] > key` (das Ergebnis bleibt richtig, gleiche Werte rücken jetzt aneinander vorbei).
-- Am Ende des Schritts unter „Wie es weitergeht“: die Programmierübungen „Bubble Sort mit Zeigern“, „Selection Sort mit Zeigern“ und „Quicksort Schritt für Schritt“, der Exkurs zur Laufzeit und das Quiz zu Funktionen, Zeigern und Rekursion.
+- Am Ende des Schritts unter „Nächste Schritte“: die Programmierübungen „Bubble Sort mit Zeigern“, „Selection Sort mit Zeigern“ und „Quicksort Schritt für Schritt“, der Exkurs zur Laufzeit und das Quiz zu Funktionen, Zeigern und Rekursion.
 
 ### Handgriffe
 

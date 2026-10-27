@@ -115,6 +115,8 @@ Reiter: aufgaben
 - Die Antworten: Aufgabe 1: Die Deklaration des Typs reserviert keine Zelle. Aufgabe 2: `s.note` liegt an 100 + 6 = 106. Aufgabe 3: `t = s` beschreibt 8 Zellen. Aufgabe 4: In `s` steht weiter die Note 2, `t.note` liegt an 108 + 6 = 114. Aufgabe 5: Die Felder sind verschieden groß, deshalb steht der Abstand im Bauplan.
 - Fragt der Student nach einer Aufgabe, deren Antwort er noch nicht aufgeklappt hat, bekommt er einen Hinweis auf den Weg und nicht gleich das Ergebnis.
 - Die zweite Karte nennt die vier HTML-Seiten mit dem Speichermodell: primitive Datentypen in Kapitel 4, Arrays in Kapitel 6, Zeiger in Kapitel 7 und diese zu Kapitel 8.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Verbünde und Funktionen: Zeiger oder Kopie“.
 
 ### Handgriffe
 

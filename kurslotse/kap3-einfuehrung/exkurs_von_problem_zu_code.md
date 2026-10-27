@@ -167,7 +167,7 @@ Reiter: programm
 - Diese Stufe hat keine Spezifikation zum Kopieren. Das ganze Go-Programm steht auf der Seite „Programmierübung: Zahlenraten mit Statistik“, der Link steht unter der Tabelle.
 - Die zweite Karte „Was wir gesehen haben“ fasst zusammen: Auf jeder Stufe fiel eine Entscheidung, die vorher offen war. Das Go-Programm ist die Spezifikation, die nichts mehr offen lässt. Ein Satz verlinkt die Lektion „Binäre Suche in einem Verbund-Array“, dort kommt das Halbieren aus Stufe 3 wieder vor.
 - Am Ende steht ein Link zur Übung „Sortieren mit Bubble Sort“ in Kapitel 6.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link auf die Programmierübung „Zahlenraten mit Statistik“.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link auf die Programmierübung „Zahlenraten mit Statistik“.
 
 ### Handgriffe
 

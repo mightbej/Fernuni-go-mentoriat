@@ -127,6 +127,10 @@ Reiter: vergleich
 - Die Beispiele in der Tabelle stammen aus Schritt 2 mit `mike` und `bmw` und aus Schritt 3 mit `audi`, `olaf` und `olga`.
 - Unter der Tabelle steht die Aussage des Kurstexts, dass in der Praxis meist Zeiger auf Verbünde als Feld-Typ verwendet werden.
 - Unter der Karte steht auf jedem Reiter der Link zum Quiz.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Abschnitt 8.3.1, Seiten 215–216: Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum. Dazu gibt es die Lektion „Rekursive Verbund-Typen“.
+  - Abschnitt 8.3.2, Seiten 216–220: Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds. Dazu gibt es die Lektion „Anonyme Felder und eingebettete Verbünde“.
+  - Quiz: „Quiz: Hierarchische Verbünde“ mit 10 Fragen.
 
 ### Handgriffe
 
@@ -154,7 +158,6 @@ Reiter: kurstext
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.2, Seiten 8–10, Datenverbund: Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: Variablen, Typen und Speicher, Schritt 3.
   - Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger: Lektion: Zeiger in Go.
-- Die Liste „Wie es im Kurstext weitergeht“ nennt Abschnitt 8.3.1 mit den rekursiven Verbund-Typen und Abschnitt 8.3.2 mit den anonymen Feldern. Zu beiden gibt es seit 2026-10-13 eine HTML-Seite, die Liste verlinkt sie: „Rekursive Verbund-Typen“ und „Anonyme Felder und eingebettete Verbünde“.
 - Darunter steht ein Link auf das Go-Programm `S220_hierarchische_verbunde_demo.go`.
 
 ### Handgriffe

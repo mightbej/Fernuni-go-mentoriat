@@ -171,7 +171,7 @@ Reiter: praxis
 - Faustregel 2, die Laufvariable ändert nur die Post-Anweisung: Eine Schleife `for i := 1; i <= 10; i++` mit einem zusätzlichen `i++` im Schleifenrumpf gibt 1, 3, 5, 7 und 9 aus. Wer in Schritten von 2 zählen will, schreibt `i += 2` in die Post-Anweisung.
 - Faustregel 3, wer herunterzählt, dreht alle drei Teile um: `for i := 10; i >= 1; i--` läuft zehnmal. `for i := 10; i <= 1; i--` läuft kein einziges Mal, weil `10 <= 1` schon bei der ersten Prüfung `false` ergibt.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link zum Quiz.
 
 ### Handgriffe
 

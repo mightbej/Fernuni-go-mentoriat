@@ -99,7 +99,7 @@ Reiter: kopie
 - Go meldet einen nicht verwendeten Rückgabewert einer eigenen Funktion nicht.
 - Die öffnende Klammer `{` muss in der gleichen Zeile stehen wie `if` und die Bedingung. In einer neuen Zeile ist sie immer ein Fehler.
 - Unter dem Programm stehen Links auf die Lektionen „if-Anweisung in Go“ und „Funktionen in Go: Rückgaben und Wertübergabe“.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf vier Quiz und auf die Übersicht der Quiz zu Kapitel 3.
 
 ### Handgriffe
 

@@ -97,6 +97,9 @@ Reiter: faustregeln
 - Eine Tabelle zeigt, was bei zehnfacher Größe des Arrays geschieht, mit den Schritten bei n = 1000 und bei n = 1.000.000.
 - Ein grüner Kasten rechnet in Zeit um: Bei einer Milliarde Vergleichen in der Sekunde sortiert Bubble Sort eine Million Elemente in gut acht Minuten, ein Verfahren mit O(n log n) in zwei Hundertstelsekunden.
 - Eine Demo gibt es hier nicht.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Anwendung: Wie viele Vergleiche Bubble Sort braucht, zeigt die Lektion „Bubblesort auf einem Verbund-Array“.
+  - Gegenstück: Bei der „binären Suche in einem Verbund-Array“ wächst die Zahl der Schritte nur logarithmisch.
 
 ### Handgriffe
 

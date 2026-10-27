@@ -149,6 +149,9 @@ Reiter: fehler
 - Darunter stehen die Meldung des Compilers, die Variablen n und m als Kästen, die Reihe „Werte (n, m) bisher“ und die Ausgabe des Programms. Darunter steht in einem grünen Feld ein Satz zum letzten Schritt.
 - Der erste Schritt des Ablaufs übersetzt das Programm. Der zweite liest die Eingaben. Danach ist jeder Schritt ein Durchlauf der Schleife. Der letzte Schritt gibt aus und vergleicht mit der Spezifikation.
 - Unter der Demo steht eine Liste „So geht es in Go weiter“ mit Links zu Kapitel 3 und Kapitel 5.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Exkurs: Warum Moodle am 21. Oktober 2026 nicht erreichbar war“.
+  - Danach: In Kapitel 3 übersetzt du dein erstes Go-Programm. Die Lektion „Das erste Go-Programm: Hello, World!“ öffnest du im Editorlotsen.
 
 ### Handgriffe
 

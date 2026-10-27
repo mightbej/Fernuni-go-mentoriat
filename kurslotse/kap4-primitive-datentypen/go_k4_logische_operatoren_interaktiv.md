@@ -113,7 +113,7 @@ Reiter: verknuepfen
 - Die Werte: `x >= 0 && x <= 9` ist `true` für 0, 5 und 9 und `false` für −3 und 12. Die zwei anderen Ausdrücke sind `true` für −3 und 12 und `false` für 0, 5 und 9.
 - `0 <= x <= 9` übersetzt Go bei keinem Wert von `x`. Die Meldung: `invalid operation: 0 <= x <= 9 (mismatched types untyped bool and untyped int)`. Go rechnet von links, `0 <= x` ist ein Wahrheitswert, und der lässt sich nicht mit 9 vergleichen.
 - Der Teil „Zwei Vergleiche hintereinander“ zeigt die zwei Zeilen des Kurstexts: `5 != 7 != (2 != 2)` und `4 > 2 == (5 < 9)`. Beide sind `true`, und beide brauchen die Klammern.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Wahrheitswerte und Kurzschluss-Auswertung“, „if-Anweisung in Go“ und „for-Anweisung mit Bedingung in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zu zwei Quizseiten und zu den Seiten „Wahrheitswerte und Kurzschluss-Auswertung“, „if-Anweisung in Go“ und „for-Anweisung mit Bedingung in Go“. Welche Fragen die Quizseiten stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

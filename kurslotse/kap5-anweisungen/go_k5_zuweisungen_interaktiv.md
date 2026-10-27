@@ -178,7 +178,7 @@ Reiter: einfach
 - Keine einfachen Anweisungen sind: `var zahl int = 20` (ausführliche Variablendeklaration) und `if x > 0 { x-- }` (bedingte Anweisung, eine Kontrollfluss-Anweisung).
 - Zu `for var i int = 1; i <= 10; i++ {` meldet der Compiler `syntax error: var declaration not allowed in for initializer`.
 - `quader` ist im Kurstext nur ein Beispielname für eine Funktion. Die Funktion selbst steht nicht auf der Seite.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

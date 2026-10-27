@@ -147,6 +147,8 @@ Reiter: programm
 - Im Feld „Ausgabe“ steht am Ende der ganze Satz, zum Beispiel „6 ist der ggT von 42 und 78.“
 - Unter dem Feld stehen drei Listenpunkte zu den Zeilen 7 bis 13, zu Zeile 22 und zu Zeile 23.
 - Die `else`-Zeilen 24 und 25 mit der Meldung „unzulässig“ lassen sich auf der Seite nicht erreichen, weil die Felder nur Zahlen von 1 bis 99 annehmen.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Unterprogramme und Funktionen“.
 
 ### Handgriffe
 

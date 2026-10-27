@@ -143,11 +143,14 @@ Reiter: aufgaben
 ### Aufbau der Darstellung
 
 - Zu sehen sind zwei Karten mit Text. Eine Demo gibt es hier nicht.
-- Die erste Karte heißt „Erst vorhersagen, dann ausprobieren“ und stellt acht Aufgaben. Die Aufgaben 1 bis 5 gehören zu Schritt 1, Aufgabe 6 gehört zu Schritt 2, die Aufgaben 7 und 8 gehören zu Schritt 3.
+- Die erste Karte heißt „Erst vorhersagen, dann ausprobieren“ und stellt acht Aufgaben. Vor jeder Aufgabe steht ein Link „In Schritt 1 lösen“, „In Schritt 2 lösen“ oder „In Schritt 3 lösen“, der diesen Schritt öffnet; die Demo behält dabei ihren Stand. Die Aufgaben 1 bis 5 gehören zu Schritt 1, Aufgabe 6 gehört zu Schritt 2, die Aufgaben 7 und 8 gehören zu Schritt 3.
 - Unter jeder Aufgabe steht eine aufklappbare „Antwort“. Sie ist verdeckt, bis der Student sie aufklappt.
 - Die Antworten: Aufgabe 1: 5 Zellen. Aufgabe 2: 23. Aufgabe 3: 1000 braucht 10 Bit. Aufgabe 4: Nein, `c` hat eine eigene Zelle. Aufgabe 5: −125. Aufgabe 6: `0xff` und `0o377`. Aufgabe 7: −1 und 255. Aufgabe 8: 01100001, das ist die Nummer 97.
 - Fragt der Student nach einer Aufgabe, deren Antwort er noch nicht aufgeklappt hat, bekommt er einen Hinweis auf den Weg und nicht gleich das Ergebnis.
 - Die zweite Karte nennt die vier HTML-Seiten mit dem Speichermodell: diese zu Kapitel 4, dann Arrays in Kapitel 6, Zeiger in Kapitel 7 und Verbund in Kapitel 8.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Zweierkomplement: negative Zahlen als Bitmuster in Go“.
+  - Quiz: „Grundlagen der primitiven Datentypen“.
 
 ### Handgriffe
 

@@ -134,7 +134,7 @@ Reiter: aufwand
 - Zur zweiten Aufgabe: Es ändert sich nur der Vergleich, `a[i].telefonnummer > a[i+1].telefonnummer`.
 - Zur dritten Aufgabe: Das Zeichen `>` im Vergleich entscheidet.
 - Eine Demo gibt es hier nicht.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf die Programmierübung „Ein Telefonbuch als Verbund-Array“, auf die Lektion „Verkettete Listen in Go“ und auf die vier Programmierübungen der Reihe Bubble Sort.
 
 ### Handgriffe
 

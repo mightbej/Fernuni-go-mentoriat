@@ -136,7 +136,7 @@ Reiter: untyped
 - Darunter steht der Teil „Eine benannte Konstante ohne Typ“. `const ohneTyp = 500` hat den Typ untyped integer, `const mitTyp int = 500` hat den Typ `int`.
 - Ein Codeblock zeigt die Folge: `var x float64 = ohneTyp` ist erlaubt. `var y float64 = mitTyp` übersetzt der Compiler nicht, seine Meldung steht in roter Schrift darunter. Dieser Codeblock ist fest und hat keine Knöpfe.
 - Am Ende steht der Teil „Der Compiler rechnet genauer als float64“: Der Compiler rechnet mit nicht-typisierten Konstanten auf mindestens 256 Bit genau. `math.Pi` ist mit mehr als 60 Dezimalziffern deklariert, ein `float64` hält etwa 16.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen zwei Links: zur Seite „Typkonvertierung“ und zum Quiz zu den Konstanten.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen zwei Links: zur Seite „Typkonvertierung“ und zum Quiz zu den Konstanten.
 
 ### Handgriffe
 

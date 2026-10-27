@@ -143,12 +143,12 @@ Reiter: ausprobieren
 - Der Kasten enthält sechs eigene Programme: Rechenzeichen, Quotient und Rest, Kürzen?, Null zur Laufzeit, Null beim Übersetzen und Grenze von int8.
 - Die festgehaltenen Ausgaben und Meldungen wurden mit Go geprüft. Die vollständigen Programme stehen im Kasten; die Grundstruktur und fmt.Println sind aus Kapitel 3 bekannt.
 - Im Editorlotsen ist der Editor mit „Ausführen“ verfügbar. Auf GitHub Pages steht der feste Code mit Ausgabe oder Meldung und der Anleitung zum Öffnen im Editorlotsen. Der aktuelle Code und das Ergebnis gehen über probe.zeilen() und probe.stand() an den Kurslotsen.
-- Am Ende des Schritts steht „Wie es weitergeht“ mit Links auf die Lektionen „Operatoren und Ausdrücke“, „Überlauf bei Ganzzahlen“ und „Typkonvertierung“, Schritt 4, und auf das Quiz zu Division und Rest.
+- Am Ende des Schritts steht „Nächste Schritte“ mit Links auf die Lektionen „Operatoren und Ausdrücke“, „Überlauf bei Ganzzahlen“ und „Typkonvertierung“, Schritt 4, und auf das Quiz zu Division und Rest.
 
 ### Handgriffe
 
 - Programm wählen. Im Editorlotsen ändern und ausführen, „Programm zurücksetzen“. Auf GitHub Pages lassen sich Programme wählen, aber nicht ausführen.
-- Den Links unter „Wie es weitergeht“ folgen.
+- Den Links unter „Nächste Schritte“ folgen.
 
 ### Abschnitte des Kurstexts
 

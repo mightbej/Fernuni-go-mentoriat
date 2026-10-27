@@ -156,7 +156,7 @@ Reiter: wann
 - „in switch in einer Schleife“: `for i := 1; i <= 5; i++ {` mit `switch i { case 3: break }` und `fmt.Print(i, " ")`. Ausgabe: `1 2 3 4 5`. `break` verlässt nur die switch-Anweisung, die Schleife läuft weiter.
 - „außerhalb einer Schleife“: `if x > 3 { break }` ohne Schleife. Meldung des Compilers: `break is not in a loop, switch, or select`.
 - Im Kurstext steht, dass `break` nur in einer Schleife und in einer switch-Anweisung zulässig ist. Die vier Programme und der Fall der geschachtelten Schleifen stehen nicht im Kurstext.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link zum Quiz. Welche Fragen das Quiz stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

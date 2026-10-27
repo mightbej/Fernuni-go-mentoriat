@@ -219,7 +219,7 @@ b := koordinate{0, -7, 8}  // liegt in den Zellen 103 bis 105</pre>
     <p><code>&amp;a</code> ist in diesem Modell die Adresse 100, <code>&amp;b</code> ist die Adresse 103. Der Vergleich <code>&amp;a == &amp;b</code> vergleicht diese zwei Zahlen und sieht die Zellen gar nicht an. Er liefert deshalb <code>false</code>, gleich was in den Zellen steht.</p>
     <div class="hinweis">Das Modell vereinfacht. Für Ganzzahlen stimmt es genau: gleicher Wert, gleiches Bitmuster. Go vergleicht aber Feld für Feld nach den Regeln des Feld-Typs. Bei einem Feld vom Typ <code>string</code> vergleicht Go die Zeichen der zwei Strings. Die Zellen, die Adressen 100 bis 105 und der Typ <code>int8</code> für die Felder gehören zum Modell dieser Seite, im Kurstext hat <code>koordinate</code> Felder vom Typ <code>int</code>.</div>
 
-    <h3>Wie es weitergeht</h3>
+    <h3>Nächste Schritte</h3>
     <ul>
       <li><strong>Funktionen:</strong> Die Lektion <a href="go_k8_verbund_funktionen_interaktiv.html">Verbünde und Funktionen</a> übergibt einen Verbund als Zeiger und als Kopie.</li>
       <li><strong>Sortieren:</strong> Für Verbünde gibt es kein <code>&lt;</code>. Ein Sortierprogramm vergleicht deshalb ein Feld, zum Beispiel <code>p1.gebJahr &lt; p2.gebJahr</code>. Im Kurstext steht das in Abschnitt 8.4.</li>

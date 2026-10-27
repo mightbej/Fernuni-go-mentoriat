@@ -178,7 +178,7 @@ Reiter: ausprobieren
 - Zwei Programme zur Wahl: „Feste Werte“ und „Zufallswerte“. Es sind die zwei Programme aus Schritt 5. Die Ausgabe ist die gleiche wie dort.
 - Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 5 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zur Programmierübung zu Selection Sort und zur HTML-Seite „Bubble Sort mit Funktionen“ in Kapitel 7.
 
 ### Handgriffe
 

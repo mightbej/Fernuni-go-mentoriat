@@ -162,7 +162,7 @@ Reiter: subtraktion
 - 10 − 15: Die Summe ist 1111 1011. Als `uint8` gelesen ist das 251 und falsch, als `int8` gelesen ist es −5 und richtig.
 - 0 − 1: Die Summe ist 1111 1111. Als `uint8` gelesen ist das 255, als `int8` gelesen −1.
 - Ein gelber Kasten sagt: Ein echtes Rechenwerk dreht die Bits von `b` um und setzt den ersten Übertrag ganz rechts auf 1. Das Ergebnis ist das gleiche.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Zahlenkreis“, „Bitverschiebung“, „Quiz zur Bitverschiebung“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf: „Zahlenkreis“, „Bitverschiebung“, „Quiz zur Bitverschiebung“.
 
 ### Handgriffe
 

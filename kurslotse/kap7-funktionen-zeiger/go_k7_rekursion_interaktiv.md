@@ -163,7 +163,7 @@ Reiter: terminierung
 - Die Werte der Abstiegsfunktion für den Anfang 9: 11, 10, 7, 6, 5, 4, 2, 1.
 - Im Kurstext wird der Abstieg für vier Fälle nachgerechnet. Die Seite nennt die vier Fälle und rechnet sie nicht vor.
 - Unter „Was geschieht, wenn eine Rekursion nicht endet“ steht die Funktion `ohneEnde` ohne Zweig für das Ende. Go bricht ab mit `runtime: goroutine stack exceeds 1000000000-byte limit` und `fatal error: stack overflow`. Das steht nicht im Kurstext.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen vier Punkte: die Programmierübung „Bubble Sort rekursiv“, der Exkurs „Laufzeit und Datenmenge“, der Ausblick auf Kapitel 9 und das Quiz zu Kapitel 7.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen vier Punkte: die Programmierübung „Bubble Sort rekursiv“, der Exkurs „Laufzeit und Datenmenge“, der Ausblick auf Kapitel 9 und das Quiz zu Kapitel 7.
 
 ### Handgriffe
 

@@ -111,7 +111,7 @@ Reiter: komma
 - Der Exponent ist im Zweierkomplement gespeichert, wie ein Wert vom Typ `int8`.
 - Unter den zwei Bytes steht der Wert der Gleitkommazahl als Rechnung: Mantisse mal 2 hoch Exponent.
 - Das Vorzeichen der Gleitkommazahl lässt die Seite weg.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Quiz zur Bitverschiebung“.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link auf den „Selbsttest: Bitverschiebung“ mit 12 Fragen und je vier Antworten.
 
 ### Handgriffe
 

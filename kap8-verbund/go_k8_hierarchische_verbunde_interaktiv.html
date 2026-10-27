@@ -275,8 +275,16 @@ fmt.Println("Mike mit altem Auto:", mike)
       </table>
       </div>
       <p>Im Kurstext steht dazu: Hierarchische Verbünde mit Zeigern als Feldern sind flexibler einsetzbar als solche mit ganzen Verbund-Werten als Feldern. In der Praxis werden deshalb meist Zeiger auf Verbünde als Feld-Typ verwendet.</p>
-    </div>
-    <div class="nav">
+
+    <h3>Nächste Schritte</h3>
+      <ul>
+        <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum. Dazu gibt es die Lektion <a href="go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a>.</li>
+        <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds. Dazu gibt es die Lektion <a href="go_k8_anonyme_felder_interaktiv.html">Anonyme Felder und eingebettete Verbünde</a>.</li>
+      <li><strong>Quiz:</strong> <a href="S220_hierarchische_verbunde_demo_quiz.html">Quiz: Hierarchische Verbünde</a> mit 10 Fragen.</li>
+    </ul>
+      <p>Ein längeres Go-Programm zu dieser Lektion liegt im Repository: <a href="go/S220_hierarchische_verbunde_demo.go">S220_hierarchische_verbunde_demo.go</a>.</p>
+  </div>
+  <div class="nav">
       <button type="button" class="knopf" data-gehe="3">Zurück zu Schritt 3</button>
     </div>
   </section>
@@ -302,24 +310,12 @@ fmt.Println("Mike mit altem Auto:", mike)
       <li><strong>Abschnitt 2.2, Seiten 8–10, Datenverbund:</strong> Ohne Go steht dort das Beispiel einer Person mit Vorname, Nachname, Adresse und Telefonnummer. Die Adresse ist selbst wieder zusammengesetzt. Lektion: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html#typen">Variablen, Typen und Speicher</a>, Schritt 3.</li>
       <li><strong>Abschnitt 7.3 und 7.4, Seiten 171–184, Zeiger:</strong> Lektion: <a href="../kap7-funktionen-zeiger/go_k7_zeiger_interaktiv.html">Zeiger in Go</a>.</li>
     </ul>
-
-    <h3>Wie es im Kurstext weitergeht</h3>
-      <ul>
-        <li><strong>Abschnitt 8.3.1, Seiten 215–216:</strong> Ein Verbund-Typ darf ein Feld mit einem Zeiger auf den eigenen Typ haben. So entsteht ein rekursiver Verbund-Typ, zum Beispiel ein Stammbaum. Dazu gibt es die Seite <a href="go_k8_rekursive_verbunde_interaktiv.html">Rekursive Verbund-Typen</a>.</li>
-        <li><strong>Abschnitt 8.3.2, Seiten 216–220:</strong> Ein Feld ohne Namen heißt anonymes Feld. Es verkürzt den Zugriff auf die Felder des eingebetteten Verbunds. Dazu gibt es die Seite <a href="go_k8_anonyme_felder_interaktiv.html">Anonyme Felder und eingebettete Verbünde</a>.</li>
-      </ul>
-      <p>Ein längeres Go-Programm zu dieser Seite liegt im Repository: <a href="go/S220_hierarchische_verbunde_demo.go">S220_hierarchische_verbunde_demo.go</a>.</p>
   </div>
   <div class="nav">
       <button type="button" class="knopf" data-gehe="4">Zurück zu Schritt 4</button>
       <button type="button" class="knopf" data-gehe="0">Zum Anfang</button>
     </div>
   </section>
-
-  <div class="card">
-    <h2>Zum Quiz</h2>
-    <p>Die Aufgaben zu dieser Seite stehen auf einer eigenen Seite: <a href="S220_hierarchische_verbunde_demo_quiz.html">Quiz: Hierarchische Verbünde</a>, 10 Fragen.</p>
-  </div>
 
   <a class="zurueck" href="../index.html">← Zurück zur Startseite</a>
 

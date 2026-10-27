@@ -149,6 +149,9 @@ Reiter: ausprobieren
 - Ein Programm: „Bubble Sort rekursiv“. Es ist das ganze Programm aus Schritt 4. Die Ausgabe ist die gleiche wie dort.
 - Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 4 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Davor: „Sortieren mit Bubble Sort“, „Bubble Sort mit Funktionen“ und „Bubble Sort mit Zeigern“.
+  - Quiz: „Funktionen, Zeiger und Rekursion“.
 
 ### Handgriffe
 
@@ -167,7 +170,6 @@ Reiter: kurstext
 
 - Zu sehen ist eine Tabelle mit sieben Zeilen: Abschnitt 7.3, 7.4, 7.5, 7.5.2, 7.5.3, 7.5.5 und 8.4.2, jeweils mit den gedruckten Seiten und einem Satz, was das Programm daraus verwendet.
 - Darunter steht: Ein rekursives Bubblesort kommt im Kurstext nicht vor.
-- Unter „Die Reihe“ stehen Links auf die drei Programmierübungen davor und auf das Quiz.
 
 ### Handgriffe
 

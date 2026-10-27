@@ -108,6 +108,9 @@ Reiter: reparatur
 - Ein gelber Kasten stellt eine Frage zum Vorhersagen: Eine Hochschule betreibt 12 Server mit Moodle, ein Entwickler stellt 4 Go-Programme bereit, die 500 Studenten auf ihren eigenen Rechnern benutzen. Wie viele Programme müssen nach einem Fehler im Interpreter von PHP und nach einem Fehler in einem Paket von Go neu übersetzt werden, und wo wird etwas ausgetauscht?
 - Die Antwort ist verdeckt, bis der Student auf „Antwort aufdecken“ klickt. Erst dann geht ihr Text mit dem Text der Seite mit. Sie lautet: Bei PHP wird kein Programm neu übersetzt, auf jedem der 12 Server wird der Interpreter ausgetauscht. Bei Go übersetzt der Entwickler die 4 Programme neu, danach laden die 500 Studenten die neuen Programmdateien herunter, bis dahin arbeitet jeder mit der fehlerhaften.
 - Darunter steht, dass der Student in Abschnitt 3.2 sein erstes Go-Programm mit `go run` übersetzt.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: In Kapitel 3 übersetzt du dein erstes Go-Programm. Die Lektion „Das erste Go-Programm: Hello, World!“ öffnest du im Editorlotsen.
+  - Zum Nachlesen: Beide Wege, mit Compiler und mit Interpreter, zeigt Schritt 2 der Lektion „Höhere und niedrigere Programmiersprachen“.
 
 ### Handgriffe
 

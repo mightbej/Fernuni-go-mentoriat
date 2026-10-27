@@ -187,7 +187,7 @@ Reiter: ungenutzt
 - `a` ist in allen Programmen in Ordnung, weil `b = a * 100` und `fmt.Println(a)` den Wert von `a` lesen.
 - Unter der Demo stehen drei Teile: „Warum Go so streng ist“, „Der leere Bezeichner _“ mit `_ = b` und `_, _ = a, b`, und „Globale Variablen“.
 - Ein gelber Kasten sagt: Im Kurstext steht die Meldung als `b declared but not used`, Go 1.26 schreibt `declared and not used: b`. Gemeint ist das Gleiche.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zum Selbsttest. Welche Fragen der Selbsttest stellt, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link zum Selbsttest. Welche Fragen der Selbsttest stellt, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

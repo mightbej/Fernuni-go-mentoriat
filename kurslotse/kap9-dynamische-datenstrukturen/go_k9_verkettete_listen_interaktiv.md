@@ -187,7 +187,7 @@ Reiter: vergleich
 - Zur ersten Aufgabe: In einer sortierten Liste darf die Suche aufhören, sobald ein Element größer ist als der Suchwert.
 - Zur zweiten Aufgabe: Das Feld `nächstes` des Vorgängers bekommt die Adresse des Nachfolgers. Das erste Element hat keinen Vorgänger, dort bekommt `kopf` den neuen Wert.
 - Eine Demo gibt es hier nicht.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektion „Binäre Suchbäume in Go“, auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“ und auf den Exkurs zur Laufzeit. Der Exkurs zur Blockchain baut eine Liste, in der jeder neue Block auf seinen Vorgänger zeigt und dessen Hashwert trägt.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf die Lektion „Binäre Suchbäume in Go“, auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“ und auf den Exkurs zur Laufzeit. Der Exkurs zur Blockchain baut eine Liste, in der jeder neue Block auf seinen Vorgänger zeigt und dessen Hashwert trägt.
 
 ### Handgriffe
 

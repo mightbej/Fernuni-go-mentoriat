@@ -158,7 +158,7 @@ Reiter: uint8
 - Darunter steht der Knopf „10 − 15 im Zahlenkreis“ und derselbe Kreis wie in Schritt 1 bis 3, mit Einstellungen, Bits, Anzeige, Meldung und Go-Code. Er zeigt nur das 4-Bit-Modell oder `int8` beziehungsweise `uint8`, keinen `int` mit 32 oder 64 Bit.
 - Der Knopf stellt immer 8 Bit ohne Vorzeichen und Startwert 10 ein, auch wenn vorher `int8` gewählt war, und lässt den Zeiger 15 Stellen zurücklaufen. Von 10 geht es über 0 und 255 bis 251, Bitmuster 1111 1011, denn −5 + 256 = 251. Die Meldung lautet dann „Negativer Wert nicht darstellbar.“
 - Darunter steht ein zugeklappter Abschnitt „Warum 251?“: `uint8` kann −5 nicht darstellen. In einer Fußnote zu Hinweis 4.7 im Kurstext wird dieses Überschwappen vom arithmetischen Überlauf unterschieden, es ist ein Repräsentationsproblem. `int` speichert −5 mit 32 oder 64 Bit. Darf eine Anzahl nicht negativ sein, ist ein negatives Ergebnis ein Fehler der Berechnung, den man mit `int` erkennen kann. Vor Rechenfehlern und Überläufen schützt `int` nicht.
-- Unter „Wie es weitergeht“ stehen Links auf die Lektion „Zweierkomplement“, auf das Quiz zu den Wertebereichen und als Ausblick auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“, in dem ein Guthaben im Typ `uint64` steht.
+- Unter „Nächste Schritte“ stehen Links auf die Lektion „Zweierkomplement“, auf das Quiz zu den Wertebereichen und als Ausblick auf den Exkurs „Blockchain: eine verkettete Liste mit Fingerabdruck“, in dem ein Guthaben im Typ `uint64` steht.
 
 ### Handgriffe
 

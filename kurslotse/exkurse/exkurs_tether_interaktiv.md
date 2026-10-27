@@ -98,6 +98,8 @@ Reiter: kontrolle
 - Unter „Und der digitale Euro?“ vier Punkte, Stand Oktober 2026: Das Gesetz ist noch nicht beschlossen, frühestens 2029 könnte es ihn geben. Er soll nicht auf einer Blockchain laufen, die Zentralbanken des Euroraums führen das Kassenbuch zentral. Er soll kein programmiertes Geld sein. Sperren würden die Banken, wie bei einem Girokonto heute, zum Beispiel bei Sanktionen der EU. Diese Pflicht steht im Entwurf des Gesetzes und gilt für alle Banken gleich. Das Eurosystem selbst kennt die Namen der Nutzer nicht und hat keine Sperrliste wie USDT.
 - Unter „Zum Diskutieren“ stehen zwei offene Fragen ohne Auflösung. Die Seite bezieht keine Stellung, auf beide Fragen gibt es Argumente in beide Richtungen.
 - Unter „Was du jetzt kannst“: Wer imperative Programme lesen kann, kann nachprüfen, welche Regeln in digitalem Geld stecken.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Zurück zum Programm: Sperren und Überweisen baust du in der Lektion „Vertiefung: Blockchain in Go“ selbst in Go nach.
 
 ### Handgriffe
 

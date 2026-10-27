@@ -111,7 +111,7 @@ Reiter: funktion
 - Im Kurstext hat das Listing zwei Ausgaben in einem Programm, `true && f()` und `true || f()`, und `f` liefert `false`. Die übrigen Programme hat die Seite gebaut.
 - Eine Wirkung einer Funktion neben ihrem Rückgabewert heißt Seiteneffekt. Hier ist es die Ausgabe der Zeile.
 - Funktionen mit Rückgabewert werden im Kurstext in Abschnitt 3.4 kurz und in Kapitel 7 ganz erklärt.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

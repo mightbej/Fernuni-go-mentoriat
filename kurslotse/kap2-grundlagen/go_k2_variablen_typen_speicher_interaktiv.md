@@ -166,6 +166,8 @@ Reiter: speicher
 - Fehlt der Anfangswert, stehen in den Speicherelementen noch die Werte aus ihrer vorherigen Nutzung. Die Variable heißt dann undefiniert. Die Fragezeichen der Demo stehen für diesen Zustand.
 - In Go bekommt jede Variable bei der Deklaration einen Wert. Eine undefinierte Variable gibt es in Go nicht.
 - Die Demo selbst zeigt keine Deklaration. Name und Typ der Variable mit den acht Speicherelementen nennt die Seite nicht.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Größter gemeinsamer Teiler: vom Struktogramm zum Go-Programm“.
 
 ### Handgriffe
 

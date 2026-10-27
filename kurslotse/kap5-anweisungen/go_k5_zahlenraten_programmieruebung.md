@@ -184,6 +184,8 @@ Reiter: programm
 - Der Teil „Zum Ausprobieren“ nennt drei Aufgaben für das eigene Terminal: immer die Mitte tippen, `MAX_VERSUCHE` auf 5 ändern, eine Runde mit Absicht verlieren.
 - Wer `MAX_VERSUCHE` ändert, ändert nur Zeile 10. Dafür sind Konstanten da.
 - Wer immer die Mitte des möglichen Bereichs tippt, gewinnt jede Runde: Sieben Versuche reichen für 100 Zahlen. Das steht im Exkurs in Stufe 3.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Arrays in Go“. Damit beginnt Kapitel 6.
 
 ### Handgriffe
 

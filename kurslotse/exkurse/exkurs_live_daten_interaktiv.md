@@ -109,7 +109,7 @@ Reiter: reisen
 - „Was neu ist“ sagt: `leseFeed` liest den Feed mit `encoding/xml` Element für Element, `werteAus` sucht mit `regexp`. Das Programm rät: „Flüge: Paris – Westkanada“ gilt als Angebot nach Paris. Am 15.10.2026 nannten 7 von 70 Angeboten Zielort und Preis.
 - Darunter steht der Editor mit `reiseangebote.go` und die Ausgabe. Ein Fragezeichen in der Spalte „Nächte“ heißt: Das Angebot nennt keine Zahl der Nächte. Der Preis je Nacht ist dann der ganze Preis.
 - „Ideen zum Ändern“: ein eigenes Ziel in `orte`, nur Angebote unter 100 € je Nacht, nur Ziele wärmer als 20 °C.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht der Link auf den Exkurs zu Tether.
+- Am Ende des Schritts unter „Nächste Schritte“ steht der Link auf den Exkurs zu Tether.
 
 ### Handgriffe
 

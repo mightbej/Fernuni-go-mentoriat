@@ -105,7 +105,7 @@ Reiter: speicher
 - Ein gelber Kasten sagt, wo das Modell vereinfacht: Für Ganzzahlen gilt genau, dass ein gleicher Wert ein gleiches Bitmuster hat. Go vergleicht Feld für Feld nach den Regeln des Feld-Typs. Bei einem Feld vom Typ `string` vergleicht Go die Zeichen der zwei Strings und nicht die Zellen der Variable.
 - Auch bei Gleitkommazahlen stimmt die Gleichung von Wert und Bitmuster nicht immer: +0 und −0 haben verschiedene Bitmuster und sind gleich. Das steht nicht auf der Seite.
 - Die Speichersicht steht nicht im Kurstext. Sie ist eine Ergänzung des Mentors.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen drei Punkte: die Lektion „Verbünde und Funktionen“, ein Satz zum Sortieren mit dem Vergleich eines Felds nach Abschnitt 8.4 und das Quiz.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen drei Punkte: die Lektion „Verbünde und Funktionen“, ein Satz zum Sortieren mit dem Vergleich eines Felds nach Abschnitt 8.4 und das Quiz.
 
 ### Handgriffe
 

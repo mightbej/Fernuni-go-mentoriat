@@ -200,7 +200,7 @@ Reiter: ausprobieren
 - Ein Programm: „Selection Sort“. Es ist das ganze Programm aus Schritt 5. Die Ausgabe ist die gleiche wie dort.
 - Der Text schlägt vor, im Editor die Aufgaben unter „Zum Weiterdenken“ aus Schritt 5 zu lösen. Fragt der Student nach einer Lösung, bekommt er einen Hinweis auf den Weg und nicht das fertige Programm.
 - Der Stand der Demo sagt, welches Programm gewählt ist, ob der Student es geändert hat und was der letzte Lauf ausgegeben oder gemeldet hat. Die Programmzeilen sind das Programm im Editor.
-- Am Ende des Schritts unter „Wie es weitergeht“ steht ein Link zur HTML-Seite „Selection Sort mit Funktionen“ in Kapitel 7 und nennt Quicksort und Mergesort als schnellere Verfahren, die im Kurstext nicht behandelt werden.
+- Am Ende des Schritts unter „Nächste Schritte“ steht ein Link zur HTML-Seite „Selection Sort mit Funktionen“ in Kapitel 7 und nennt Quicksort und Mergesort als schnellere Verfahren, die im Kurstext nicht behandelt werden.
 
 ### Handgriffe
 

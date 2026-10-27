@@ -125,6 +125,9 @@ Reiter: aufgaben
 - Fragt der Student nach einer Aufgabe, deren Antwort er noch nicht aufgeklappt hat, bekommt er einen Hinweis auf den Weg und nicht gleich das Ergebnis.
 - Zu Aufgabe 4 gehört aus dem Kurstext: Eine Variable, auf die kein Zeiger mehr zeigt, ist unerreichbar. Die Speicherbereinigung von Go gibt ihren Speicherplatz frei. Das steht in Abschnitt 7.4.3 und 7.4.4.
 - Die zweite Karte nennt die vier HTML-Seiten mit dem Speichermodell: primitive Datentypen in Kapitel 4, Arrays in Kapitel 6, diese zu Kapitel 7 und Verbund in Kapitel 8.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Das Kopier-Problem: Arrays als Argument“.
+  - Quiz: „Funktionen, Zeiger und Rekursion“.
 
 ### Handgriffe
 

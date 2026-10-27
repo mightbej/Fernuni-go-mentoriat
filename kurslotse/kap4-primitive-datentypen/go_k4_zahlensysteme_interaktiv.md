@@ -105,7 +105,7 @@ Reiter: printf
 - Für 78 lauten die Ausgaben `78:  1001110  116  4e`, dann `78:  0b1001110 0116 0x4e`, dann `78:  1001110  0o116  4E`.
 - Im Kurstext gibt die dritte Zeile die Variable `b` mit dem Wert 163 aus und liefert `163:  10100011  0o243  A3`. Auf der Seite geben alle drei Zeilen `a` aus.
 - `fmt.Println` gibt eine ganze Zahl immer dezimal aus.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten und zu den Seiten „Zahlenkreis“, „Zweierkomplement“ und „Rechenwerk“. Das Quiz „Zahlensysteme umrechnen“ würfelt Aufgaben aus: ein binäres, oktales oder hexadezimales Literal in eine Dezimalzahl umrechnen oder einen Wert als Literal schreiben. Das Quiz zu den Integer-Literalen stellt zehn Aussagen zur Wahl. Welche Aussagen das sind, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zu zwei Quizseiten und zu den Seiten „Zahlenkreis“, „Zweierkomplement“ und „Rechenwerk“. Das Quiz „Zahlensysteme umrechnen“ würfelt Aufgaben aus: ein binäres, oktales oder hexadezimales Literal in eine Dezimalzahl umrechnen oder einen Wert als Literal schreiben. Das Quiz zu den Integer-Literalen stellt zehn Aussagen zur Wahl. Welche Aussagen das sind, steht auf dieser Seite nicht.
 
 ### Handgriffe
 

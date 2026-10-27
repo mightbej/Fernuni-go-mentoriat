@@ -126,7 +126,7 @@ Reiter: programm
 - Zur zweiten Aufgabe: `istSortiert` vergleicht jedes Element mit seinem rechten Nachbarn, das sind höchstens 5 Vergleiche.
 - Zur vierten Aufgabe: Ohne Zeiger gibt `main` das Telefonbuch in der ursprünglichen Reihenfolge aus.
 - Eine Demo gibt es hier nicht.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf die Lektionen „Bubblesort auf einem Verbund-Array“ und „Verkettete Listen in Go“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf die Lektionen „Bubblesort auf einem Verbund-Array“ und „Verkettete Listen in Go“.
 
 ### Handgriffe
 

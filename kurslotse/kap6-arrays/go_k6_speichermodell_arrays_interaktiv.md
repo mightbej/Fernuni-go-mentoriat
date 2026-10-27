@@ -111,6 +111,9 @@ Reiter: aufgaben
 - Die Antworten: Aufgabe 1: 8 Zellen und eine Zeile in der Tabelle. Aufgabe 2: 100 + 3 · 2 = 106. Aufgabe 3: Der Index sagt, wie viele Elemente vor dem gesuchten liegen. Aufgabe 4: Go prüft den Index und bricht ab. Aufgabe 5: Nein, der Rechner rechnet in beiden Fällen einmal.
 - Fragt der Student nach einer Aufgabe, deren Antwort er noch nicht aufgeklappt hat, bekommt er einen Hinweis auf den Weg und nicht gleich das Ergebnis.
 - Die zweite Karte nennt die vier HTML-Seiten mit dem Speichermodell: primitive Datentypen in Kapitel 4, diese zu Kapitel 6, Zeiger in Kapitel 7 und Verbund in Kapitel 8.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Programmierübung: Sortieren mit Bubble Sort“.
+  - Quiz: „Arrays in Go“.
 
 ### Handgriffe
 

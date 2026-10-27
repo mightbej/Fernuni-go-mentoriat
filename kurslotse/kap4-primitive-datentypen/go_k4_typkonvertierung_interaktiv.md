@@ -131,6 +131,9 @@ Die Lektion „Rechnen mit Ganzzahlen: Division und Rest in Go“ ist hier für 
 - Jede Rechnung ist eine nummerierte Liste. Der erste Punkt setzt die Werte ein, die folgenden rechnen von innen nach außen. Darunter stehen fett Wert und Typ des Ausdrucks.
 - Unter den drei Rechnungen steht das Programm mit den drei Ausgaben, darunter die Erklärung in Worten.
 - Der gelbe Kasten sagt, dass Go `float64(a) / b` nicht übersetzt.
+- Am Ende des Schritts steht „Nächste Schritte“:
+  - Nächste Lektion: „Logische Operatoren und Vergleiche in Go“.
+  - Quiz: der „Selbsttest: Typkonvertierung“ mit 10 Fragen und je vier Antworten und die „Quizrunde richtig oder falsch: Typkonvertierung“.
 
 ### Handgriffe
 

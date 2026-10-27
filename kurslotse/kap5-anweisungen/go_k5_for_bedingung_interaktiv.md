@@ -196,7 +196,7 @@ Reiter: praxis
 - Der Teil „Wer zählt, nimmt die for-Klausel“ verweist auf Abschnitt 5.5.3.2.
 - Der Teil „Ausblick auf break“ zeigt eine Schleife `for {` ohne Bedingung, die mit `if eingabe == 0 { break }` verlassen wird. Die Schleife ohne Bedingung steht im Kurstext im Expertenwissen 5.16, `break` in Abschnitt 5.5.3.3. Im Kurstext steht, dass eine Schleife möglichst ohne `break` auskommen soll, und für „mindestens ein Durchlauf“ wird dort die Flag-Variable verwendet.
 - Die Codeblöcke sind fest und haben keine Knöpfe.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links auf: „Quiz zur for-Anweisung mit Bedingung“.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links auf: „Quiz zur for-Anweisung mit Bedingung“.
 
 ### Handgriffe
 

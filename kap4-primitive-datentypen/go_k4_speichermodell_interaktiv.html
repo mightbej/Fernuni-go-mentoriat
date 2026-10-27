@@ -316,23 +316,23 @@
   <section class="stufe" id="stufe-4">
   <div class="card">
     <h2>Erst vorhersagen, dann ausprobieren</h2>
-    <p>Die Aufgaben 1 bis 5 gehören zu Schritt 1, Aufgabe 6 gehört zu Schritt 2, die Aufgaben 7 und 8 gehören zu Schritt 3.</p>
+    <p>Jede Aufgabe nennt den Schritt, in dem du sie löst. Ein Klick auf den Link öffnet diesen Schritt. Die Demo behält dabei ihren Stand.</p>
     <ol>
-      <li>Führe die ersten zwei Zeilen aus. Wie viele Zellen sind jetzt reserviert?
+      <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe die ersten zwei Zeilen aus. Wie viele Zellen sind jetzt reserviert?
         <details><summary>Antwort</summary>5 Zellen. <code>int8</code> braucht 1 Zelle, <code>int32</code> braucht 4.</details></li>
-      <li>Führe das Programm bis <code>a = a + 4</code> aus. Schalte dann in Zelle 100 das Bit mit der Wertigkeit 2 an. Welchen Wert hat <code>a</code> jetzt?
+      <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe das Programm bis <code>a = a + 4</code> aus. Schalte dann in Zelle 100 das Bit mit der Wertigkeit 2 an. Welchen Wert hat <code>a</code> jetzt?
         <details><summary>Antwort</summary>23. In der Tabelle hat sich nichts geändert. Der Wert steht nur in der Zelle.</details></li>
-      <li>Warum braucht <code>b = 1000</code> mehr als eine Zelle?
+      <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Warum braucht <code>b = 1000</code> mehr als eine Zelle?
         <details><summary>Antwort</summary>Mit 8 Bit gibt es 256 Bitmuster. Die Zahl 1000 hat das Bitmuster 11 1110 1000, das sind 10 Bit. Sie verteilen sich auf die Zellen 103 und 104.</details></li>
-      <li>Führe das Programm bis <code>c = a</code> aus. Schalte dann in Zelle 100 ein Bit um. Ändert sich <code>c</code>?
+      <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe das Programm bis <code>c = a</code> aus. Schalte dann in Zelle 100 ein Bit um. Ändert sich <code>c</code>?
         <details><summary>Antwort</summary>Nein. <code>c</code> hat eine eigene Zelle mit der Adresse 105. Die Zuweisung hat das Bitmuster dorthin kopiert.</details></li>
-      <li>Geh zurück bis nach <code>a = 17</code>. Stelle in Zelle 100 das Bitmuster 01111111 ein, das ist 127. Was steht nach <code>a = a + 4</code> in der Zelle?
+      <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Geh zurück bis nach <code>a = 17</code>. Stelle in Zelle 100 das Bitmuster 01111111 ein, das ist 127. Was steht nach <code>a = a + 4</code> in der Zelle?
         <details><summary>Antwort</summary>−125. Die Summe 131 passt nicht in einen <code>int8</code>. Das ist der Überlauf vom Zahlenkreis.</details></li>
-      <li>Stelle in Schritt 2 das Bitmuster 11111111 ein. Wie lautet das Literal hexadezimal, wie oktal?
+      <li><a class="wo" href="#schreibweisen">In Schritt 2 lösen</a>: Stelle das Bitmuster 11111111 ein. Wie lautet das Literal hexadezimal, wie oktal?
         <details><summary>Antwort</summary><code>0xff</code> und <code>0o377</code>. Hexadezimal sind es zwei Gruppen aus vier Einsen, jede ergibt <code>f</code>. Oktal bleiben für die linke Ziffer nur zwei Bits, darum beginnt die Zahl mit 3.</details></li>
-      <li>Stelle in Schritt 3 das Bitmuster 11111111 ein. Welchen Wert hat es als <code>int8</code>, welchen als <code>uint8</code>?
+      <li><a class="wo" href="#typen">In Schritt 3 lösen</a>: Stelle das Bitmuster 11111111 ein. Welchen Wert hat es als <code>int8</code>, welchen als <code>uint8</code>?
         <details><summary>Antwort</summary>−1 und 255. Das linke Bit hat bei <code>int8</code> die Wertigkeit −128, bei <code>uint8</code> die Wertigkeit 128. Die übrigen sieben Bits zählen in beiden Typen gleich.</details></li>
-      <li>Welches Bitmuster ergibt als Zeichen gelesen ein kleines <code>a</code>? Geh vom großen <code>A</code> mit 01000001 aus.
+      <li><a class="wo" href="#typen">In Schritt 3 lösen</a>: Welches Bitmuster ergibt als Zeichen gelesen ein kleines <code>a</code>? Geh vom großen <code>A</code> mit 01000001 aus.
         <details><summary>Antwort</summary>01100001. Das ist die Nummer 97. Zwischen einem großen und dem kleinen Buchstaben liegt immer 32, also genau ein Bit.</details></li>
     </ol>
   </div>
@@ -346,6 +346,12 @@
       <li><a href="../kap7-funktionen-zeiger/go_k7_speichermodell_zeiger_interaktiv.html">Zeiger: eine Adresse als Wert (Kapitel 7)</a></li>
       <li><a href="../kap8-verbund/go_k8_speichermodell_verbund_interaktiv.html">Verbund: ein Name für Felder verschiedener Typen (Kapitel 8)</a></li>
     </ol>
+
+    <h3>Nächste Schritte</h3>
+    <ul>
+      <li><strong>Nächste Lektion:</strong> <a href="go_k4_zweierkomplement_interaktiv.html">Zweierkomplement: negative Zahlen als Bitmuster in Go</a>.</li>
+      <li><strong>Quiz:</strong> <a href="go_k4_primitive_grundlagen_quiz.html">Grundlagen der primitiven Datentypen</a>.</li>
+    </ul>
   </div>
   <div class="zeile schritte">
     <button type="button" data-gehe="3">Zurück zu Schritt 3</button>

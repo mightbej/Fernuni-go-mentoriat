@@ -93,7 +93,7 @@ Reiter: zeichen
 - „Grüße“ hat 7 Bytes und 5 Zeichen. `utf8.RuneCountInString(s)` zählt die Zeichen, ohne den String umzuwandeln.
 - Ein gelber Kasten sagt: Ein `[]rune` belegt 4 Bytes je Zeichen, und die Umwandlung kopiert den ganzen Text.
 - Welche Aufgaben die Klausur stellt, ist nicht bekannt. Ob `[]rune` in der Klausur vorkommt, lässt sich deshalb nicht sagen. Verbindlich sind der Kurstext und Moodle der FernUniversität.
-- Am Ende des Schritts unter „Wie es weitergeht“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
+- Am Ende des Schritts unter „Nächste Schritte“ stehen Links zu zwei Quizseiten. Welche Fragen sie stellen, steht auf dieser Seite nicht.
 
 ### Handgriffe
 
