@@ -36,6 +36,14 @@
     .note { color:var(--muted);font-size:.92rem; }
     .back { display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem; }
     .back:hover { text-decoration:underline; }
+    /* Auf schmalen Bildschirmen stehen Aussage, Auswahl und Auflösung untereinander. */
+    @media (max-width:600px) {
+      thead { display:none; }
+      table,tbody,tr,td { display:block;width:100%; }
+      tr { border-bottom:1px solid var(--line);padding:6px 0; }
+      tr:last-child { border-bottom:none; }
+      td { border-bottom:none;padding:4px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -90,7 +98,7 @@ fmt.Println(a % b)   // 2  (17 = 3×5 + 2)</pre>
         <tr data-correct="richtig">
           <td>Die Nachkommastellen bei <code>int / int</code> werden abgeschnitten, nicht gerundet.</td>
           <td><div class="option-wrap"><label><input type="radio" name="q5" value="richtig"> richtig</label><label><input type="radio" name="q5" value="falsch"> falsch</label></div></td>
-          <td><span class="solution ok">Richtig: 7/2 = 3, nicht 4 (obwohl 3.5 näher an 4 wäre).</span></td>
+          <td><span class="solution ok">Richtig: <code>9 / 5</code> ergibt 1, obwohl 1,8 näher an 2 liegt.</span></td>
         </tr>
         <tr data-correct="falsch">
           <td><code>-7 / 2</code> ergibt in Go <code>-4</code> (abrunden auf ganze Zahl).</td>
@@ -98,9 +106,9 @@ fmt.Println(a % b)   // 2  (17 = 3×5 + 2)</pre>
           <td><span class="solution bad">Falsch: Go schneidet Richtung null ab. -7/2 = -3 (nicht -4).</span></td>
         </tr>
         <tr data-correct="richtig">
-          <td>Der Ausdruck <code>a / b * b + a % b</code> ergibt immer den ursprünglichen Wert von <code>a</code>.</td>
+          <td>Der Ausdruck <code>a / b * b + a % b</code> ergibt für <code>b</code> ungleich 0 immer den ursprünglichen Wert von <code>a</code>.</td>
           <td><div class="option-wrap"><label><input type="radio" name="q7" value="richtig"> richtig</label><label><input type="radio" name="q7" value="falsch"> falsch</label></div></td>
-          <td><span class="solution ok">Richtig: Das ist die Identität aus Quotient und Rest der ganzzahligen Division.</span></td>
+          <td><span class="solution ok">Richtig: Das ist die Identität aus Quotient und Rest der ganzzahligen Division. Für <code>b</code> gleich 0 bricht das Programm bei <code>a / b</code> ab.</span></td>
         </tr>
         <tr data-correct="falsch">
           <td><code>%</code> ist in Go auch für <code>float64</code>-Variablen anwendbar.</td>
@@ -115,7 +123,17 @@ fmt.Println(a % b)   // 2  (17 = 3×5 + 2)</pre>
         <tr data-correct="richtig">
           <td>Um den echten (rationalen) Quotienten zweier Integer-Variablen zu berechnen, muss man sie zuerst nach <code>float64</code> konvertieren.</td>
           <td><div class="option-wrap"><label><input type="radio" name="q10" value="richtig"> richtig</label><label><input type="radio" name="q10" value="falsch"> falsch</label></div></td>
-          <td><span class="solution ok">Richtig: float64(a) / float64(b) liefert das vollständige Ergebnis.</span></td>
+          <td><span class="solution ok">Richtig: <code>float64(a) / float64(b)</code> liefert den Quotienten als Gleitkommazahl, etwa 0.3333333333333333 für 1 / 3.</span></td>
+        </tr>
+        <tr data-correct="falsch">
+          <td><code>17 % -5</code> ergibt <code>-2</code>.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q11" value="richtig"> richtig</label><label><input type="radio" name="q11" value="falsch"> falsch</label></div></td>
+          <td><span class="solution bad">Falsch: Der Rest hat das Vorzeichen des Dividenden. 17 ist positiv, also ist der Rest 2, denn 17 = (−3) · (−5) + 2.</span></td>
+        </tr>
+        <tr data-correct="richtig">
+          <td><code>-17 % 5</code> ergibt <code>-2</code>.</td>
+          <td><div class="option-wrap"><label><input type="radio" name="q12" value="richtig"> richtig</label><label><input type="radio" name="q12" value="falsch"> falsch</label></div></td>
+          <td><span class="solution ok">Richtig: Der Rest hat das Vorzeichen des Dividenden −17. Es gilt −17 = (−3) · 5 + (−2).</span></td>
         </tr>
       </tbody>
     </table>
@@ -125,7 +143,7 @@ fmt.Println(a % b)   // 2  (17 = 3×5 + 2)</pre>
     </div>
     <div id="resultBox" class="result-box" aria-live="polite">Noch nicht ausgewertet.</div>
   </section>
-  <p class="note">Kapitel 4 – Primitive Datentypen in Go | Stand: 25.04.2026</p>
+  <p class="note">Kapitel 4 – Primitive Datentypen in Go | Stand: 27.10.2026</p>
 </main>
 <script>
 (function () {
