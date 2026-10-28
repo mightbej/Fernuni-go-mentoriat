@@ -113,7 +113,7 @@
 
   <div class="hero">
     <h1>Speichermodell: Verbund</h1>
-    <p>Ein Verbund fasst Felder verschiedener Typen unter einem Namen zusammen. In der Tabelle steht nur der Anfang. Wo ein Feld liegt, legt der Bauplan des Typs fest.</p>
+    <p>Ein Verbund fasst Felder verschiedener Typen unter einem Namen zusammen. In der Namenstabelle im Modell steht nur der Anfang. Wo ein Feld liegt, legt der Bauplan des Typs fest.</p>
     <p>Kurstext v3.0.6, Abschnitt 8.2 und 8.2.3, Seiten 199–205.</p>
   </div>
 
@@ -129,17 +129,18 @@
 
   <div class="card">
     <h2>Worum es geht</h2>
-    <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Der Rechner führt eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
-    <p>Ein Verbund ist eine Variable mit mehreren Feldern. Die Felder liegen lückenlos hintereinander und dürfen verschiedene Typen haben. Die Tabelle bekommt für den ganzen Verbund eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Feldes.</p>
-    <p>Bei einem Array rechnet der Rechner die Adresse eines Elements aus dem Index aus, denn alle Elemente sind gleich groß. Die Felder eines Verbunds sind verschieden groß. Darum merkt sich der Rechner zu jedem Verbund-Typ einen Bauplan.</p>
-    <p>Die Seite geht in zwei Schritten vor. Schritt 1 zeigt den Bauplan des Typs <code>student</code>. Schritt 2 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Danach folgen fünf Aufgaben.</p>
+    <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse. Neben dem Hauptspeicher zeigt die HTML-Seite eine Namenstabelle im Modell. Jede Zeile enthält einen Namen, einen Typ und eine Adresse. Der Typ legt fest, wie viele Zellen zu einer Variable gehören und was ihre Bits bedeuten. Der Wert steht nur im Hauptspeicher.</p>
+    <p>Diese Tabelle gibt es so nicht. Sie ist ein Modell dafür, wie der Compiler einem Namen einen Typ und eine Adresse zuordnet. Das laufende Programm kennt nur noch Adressen.</p>
+    <p>Ein Verbund ist eine Variable mit mehreren Feldern. Die Felder liegen lückenlos hintereinander und dürfen verschiedene Typen haben. Die Namenstabelle hat für den ganzen Verbund eine einzige Zeile. Dort stehen der Name, der Typ und die Adresse des ersten Feldes.</p>
+    <p>Bei einem Array rechnet der Rechner die Adresse eines Elements aus dem Index aus, denn alle Elemente sind gleich groß. Die Felder eines Verbunds sind verschieden groß. Darum legt der Compiler für jeden Verbund-Typ einen Bauplan an.</p>
+    <p>Die Seite geht in zwei Schritten vor. Schritt 1 zeigt den Bauplan des Typs <code>student</code>. Schritt 2 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Namenstabelle. Danach folgen fünf Aufgaben.</p>
     <p>Drei HTML-Seiten gehen dieser voraus:</p>
     <ul>
       <li>Der Verbund in Go: <a href="go_k8_verbund_interaktiv.html">Verbund in Go: der Datentyp struct</a> zeigt Typ, Literal und Ausgabe.</li>
       <li>Felder als Variablen: <a href="go_k8_feld_variablen_interaktiv.html">Verbund-Variablen und Feld-Variablen</a> zeigt die Punkt-Notation und die Kopie eines Verbunds.</li>
       <li>Das Modell bei Arrays: <a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Speichermodell: Arrays</a> zeigt, wie der Rechner die Adresse eines Elements aus dem Index bestimmt.</li>
     </ul>
-    <div class="hinweis">Das Modell vereinfacht. Die Wörter „Zelle“, „Tabelle des Rechners“ und „Bauplan“ gehören zum Modell dieser Seite. Im Kurstext steht in Abschnitt 8.2.3: Jedes Feld einer Verbund-Variable ist selbst eine Variable, und Verbund und Felder sind adressierbar.</div>
+    <div class="hinweis">Das Modell vereinfacht. Die Wörter „Zelle“, „Namenstabelle im Modell“ und „Bauplan“ gehören zum Modell dieser Seite. Im Kurstext steht in Abschnitt 8.2.3: Jedes Feld einer Verbund-Variable ist selbst eine Variable, und Verbund und Felder sind adressierbar.</div>
   </div>
   <div class="zeile schritte">
     <button type="button" disabled>Zurück</button>
@@ -211,7 +212,7 @@
       </div>
 
       <div>
-        <h3>Tabelle des Rechners</h3>
+        <h3>Namenstabelle im Modell</h3>
         <div class="tabellenrahmen">
         <table id="namen">
           <thead><tr><th>Name</th><th>Typ</th><th>Adresse</th><th>Zellen</th></tr></thead>
@@ -250,7 +251,7 @@
 
   <div class="card">
     <h2>Das Modell auf vier HTML-Seiten</h2>
-    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder der vier HTML-Seiten gleich aus. Von HTML-Seite zu HTML-Seite kommt eine Art von Typ dazu.</p>
+    <p>Hauptspeicher, Namenstabelle und Programm sehen auf jeder der vier HTML-Seiten gleich aus. Von HTML-Seite zu HTML-Seite kommt eine Art von Typ dazu.</p>
     <ol class="seiten">
       <li><a href="../kap4-primitive-datentypen/go_k4_speichermodell_interaktiv.html">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4)</a></li>
       <li><a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Arrays: ein Name für viele Elemente (Kapitel 6)</a></li>
@@ -277,7 +278,7 @@
     <table class="text">
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
       <tr><td>1 Der Bauplan des Typs</td><td>8.2, Seiten 199–200</td><td>Der Verbund-Typ mit Feldern verschiedener Typen stammt aus dem Kurstext.</td><td>Der Typ <code>student</code> ist ein eigenes Beispiel. Der Bauplan mit den Abständen steht nicht im Kurstext.</td></tr>
-      <tr><td>2 Ein Programm im Speicher</td><td>8.2, Seiten 199–200<br>8.2.3, Seiten 204–205</td><td>Deklaration und Zugriff mit Punkt-Notation stammen aus dem Kurstext.</td><td>Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.</td></tr>
+      <tr><td>2 Ein Programm im Speicher</td><td>8.2, Seiten 199–200<br>8.2.3, Seiten 204–205</td><td>Deklaration und Zugriff mit Punkt-Notation stammen aus dem Kurstext.</td><td>Das Programm Zeile für Zeile mit Hauptspeicher und Namenstabelle gibt die Lektion dazu.</td></tr>
       <tr><td>Aufgaben</td><td>kein eigener Abschnitt</td><td>Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2.</td><td>Die Aufgaben gibt die Lektion dazu.</td></tr>
     </table>
     </div>
@@ -384,7 +385,7 @@
   function ort(ausdruck) {
     var m = /^(\w+)(?:\[(\w+)\]|\.(\w+))?$/.exec(ausdruck), e = finde(m[1]), t;
     var o = { e: e, zeilen: [e], lesen: [], punkte: [] };
-    var kopf = "Der Rechner sucht den Namen " + c(e.name) + " in der Tabelle. In der Zeile stehen die Adresse " + e.adr + " und der Typ " + c(e.typ) + ".";
+    var kopf = "In der Namenstabelle stehen zu " + c(e.name) + " die Adresse " + e.adr + " und der Typ " + c(e.typ) + ".";
     if (m[2] !== undefined) {
       var el = e.teile[0], index;
       if (/^\d+$/.test(m[2])) index = BigInt(m[2]);
@@ -392,7 +393,7 @@
         var iv = finde(m[2]);
         index = wertVon(iv);
         o.zeilen.push(iv); o.lesen = adressen(iv.adr, iv.n);
-        o.punkte.push("Der Rechner sucht den Namen " + c(iv.name) + " in der Tabelle und liest an der Adresse " + iv.adr + " den Wert " + index + ".");
+        o.punkte.push("Laut Namenstabelle liegt " + c(iv.name) + " an der Adresse " + iv.adr + ". Der Rechner liest dort den Wert " + index + ".");
       }
       o.punkte.push(kopf + " Ein Element hat den Typ " + c(el.typ) + " und braucht " + zellenWort(el.n) + ".");
       if (index < 0n || index >= BigInt(e.teile.length)) {
@@ -413,7 +414,7 @@
     } else {
       o.adr = e.adr; o.n = e.n; o.typ = e.typ;
       o.punkte.push(kopf + " Der Typ legt fest: " + zellenWort(e.n) + ".");
-      o.kurz = c(ausdruck) + " liegt laut Tabelle an der Adresse " + e.adr + ".";
+      o.kurz = c(ausdruck) + " liegt laut Namenstabelle an der Adresse " + e.adr + ".";
       return o;
     }
     o.adr = t.adr; o.n = t.n; o.typ = t.typ;
@@ -442,7 +443,7 @@
     }).join(", ");
     return fertig([], [], [], [
       "Diese Zeile reserviert keine Zelle. Sie legt einen Bauplan mit dem Namen " + c(typ) + " fest.",
-      "Der Rechner merkt sich für jedes Feld den Typ und den Abstand vom Anfang: " + liste + ".",
+      "Der Compiler merkt sich für jedes Feld den Typ und den Abstand vom Anfang: " + liste + ".",
       "Eine Variable vom Typ " + c(typ) + " braucht zusammen " + zellenWort(groesse(typ)) + "."
     ]);
   }
@@ -459,7 +460,7 @@
     return fertig([e], [], adressen(e.adr, n), [
       art,
       "Die nächste freie Zelle hat die Adresse " + e.adr + ". Der Rechner reserviert " + bereich(e.adr, n) + ".",
-      "Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c(typ) + ", Adresse " + e.adr + "." + zusatz,
+      "Die Namenstabelle im Modell zeigt jetzt die Zeile für " + c(name) + ": Typ " + c(typ) + ", Adresse " + e.adr + ". Diese Zuordnung hat der Compiler beim Übersetzen festgelegt." + zusatz,
       "Go füllt jede neue Variable mit Nullen."
     ]);
   }
@@ -469,8 +470,8 @@
     schreibe(e.adr, e.n, wert);
     return fertig([e], [], adressen(e.adr, e.n), [
       "Die Kurzform " + c(":=") + " legt eine neue Variable an. Die Zahl " + wert + " ist eine ganze Zahl, darum bekommt " + c(name) + " den Typ " + c("int") + ". Auf einem 64-Bit-Rechner braucht " + c("int") + " 8 Zellen.",
-      "Der Rechner reserviert " + bereich(e.adr, e.n) + ". Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c("int") + ", Adresse " + e.adr + ".",
-      "Er schreibt den Wert " + wert + " hinein. Für diese kleine Zahl genügt die letzte der acht Zellen."
+      "Der Rechner reserviert " + bereich(e.adr, e.n) + ". Die Namenstabelle im Modell zeigt jetzt die Zeile für " + c(name) + ": Typ " + c("int") + ", Adresse " + e.adr + ". Diese Zuordnung hat der Compiler beim Übersetzen festgelegt.",
+      "Der Rechner schreibt den Wert " + wert + " hinein. Für diese kleine Zahl genügt die letzte der acht Zellen."
     ]);
   }
 
@@ -490,7 +491,7 @@
     var neu = wertBei(o.adr, o.typ);
     var punkte = [
       o.punkte[0],
-      "Er liest " + bereich(o.adr, o.n) + ": " + c(altesMuster) + ". Als " + c(o.typ) + " gelesen ist das der Wert " + alt + ".",
+      "Der Rechner liest " + bereich(o.adr, o.n) + ": " + c(altesMuster) + ". Als " + c(o.typ) + " gelesen ist das der Wert " + alt + ".",
       "Er rechnet " + alt + " + " + summand + " = " + summe + ".",
       "Er schreibt das Ergebnis zurück an die Adresse " + o.adr + ": " + c(muster(o.adr, o.n))
     ];
@@ -501,11 +502,11 @@
   function kopiere(ziel, quelle) {
     var q = ort(quelle), z = ort(ziel), i;
     var punkte = [q.punkte.join(" ")];
-    punkte.push("Er liest " + bereich(q.adr, q.n) + ": " + c(muster(q.adr, q.n)) + (TYPEN[q.typ] ? ". Als " + c(q.typ) + " gelesen ist das der Wert " + wertBei(q.adr, q.typ) + "." : ""));
+    punkte.push("Der Rechner liest " + bereich(q.adr, q.n) + ": " + c(muster(q.adr, q.n)) + (TYPEN[q.typ] ? ". Als " + c(q.typ) + " gelesen ist das der Wert " + wertBei(q.adr, q.typ) + "." : ""));
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Der Rechner schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -523,7 +524,7 @@
     lesen = lesen.concat(oz.lesen);
     if (oz.fehler) return abbruch(fertig(oz.zeilen, lesen, [], punkte));
     schreibe(oz.adr, oz.n, summe);
-    punkte.push("Er schreibt " + wertBei(oz.adr, oz.typ) + " in " + bereich(oz.adr, oz.n) + ": " + c(muster(oz.adr, oz.n)));
+    punkte.push("Der Rechner schreibt " + wertBei(oz.adr, oz.typ) + " in " + bereich(oz.adr, oz.n) + ": " + c(muster(oz.adr, oz.n)));
     return fertig(oz.zeilen, lesen, adressen(oz.adr, oz.n), punkte);
   }
 
@@ -542,7 +543,7 @@
       }
     });
     return fertig(zeilen, lesen, [], [
-      c("fmt.Println") + " gibt Werte aus. Der Rechner sucht dazu jeden Namen in der Tabelle und liest die Zellen so, wie der Typ es vorgibt.",
+      c("fmt.Println") + " gibt Werte aus. Dazu liest der Rechner für jede Variable die Zellen ab ihrer Adresse so, wie der Typ es vorgibt.",
       "Die Ausgabe lautet: " + c(werte.join(" "))
     ]);
   }
@@ -553,7 +554,7 @@
     var ziel = finde(vonName), typ = "*" + ziel.typ, e = reserviere(name, typ);
     schreibe(e.adr, e.n, ziel.adr);
     return fertig([ziel, e], [], adressen(e.adr, e.n), [
-      c("&" + vonName) + " fragt: An welcher Adresse liegt " + c(vonName) + "? Die Antwort steht in der Tabelle: " + ziel.adr + ".",
+      c("&" + vonName) + " fragt: An welcher Adresse liegt " + c(vonName) + "? Die Antwort steht in der Namenstabelle: " + ziel.adr + ".",
       c(name) + " ist eine neue Variable vom Typ " + c(typ) + ". Eine Adresse braucht 8 Zellen. Der Rechner reserviert " + bereich(e.adr, e.n) + ".",
       "In diese Zellen schreibt er die Zahl " + ziel.adr + ". Der Pfeil zeigt, wohin die Adresse führt.",
       c(name) + " hat einen Wert wie jede Variable. Dieser Wert ist die Adresse einer anderen Variable. Eine solche Variable heißt Zeiger."
@@ -563,7 +564,7 @@
   function geheZu(zeigerName) {     // *p: die Adresse lesen, die im Zeiger steht
     var z = finde(zeigerName), typ = TYPEN[z.typ].ziel, n = TYPEN[typ].n, adr = wertVon(z);
     var w = { z: z, typ: typ, n: n, lesen: adressen(z.adr, z.n), gueltig: imModell(adr, n), adr: adr };
-    w.punkt = c("*" + zeigerName) + " heißt: Geh zu der Adresse, die in " + c(zeigerName) + " steht. Der Rechner sucht " + c(zeigerName) + " in der Tabelle und liest die 8 Zellen ab Adresse " + z.adr + ". Darin steht " + adr + ".";
+    w.punkt = c("*" + zeigerName) + " heißt: Geh zu der Adresse, die in " + c(zeigerName) + " steht. Laut Namenstabelle liegt " + c(zeigerName) + " an der Adresse " + z.adr + ". Der Rechner liest die 8 Zellen ab dieser Adresse. Darin steht " + adr + ".";
     w.keinZiel = "An der Adresse " + adr + " liegen keine " + n + " Zellen des Modells. Der Rechner führt die Zeile hier nicht aus. In Go lässt sich eine Adresse nicht von Hand verstellen.";
     if (w.gueltig) w.adr = Number(adr);
     return w;
@@ -587,7 +588,7 @@
     schreibe(e.adr, e.n, ohne.adr);
     return fertig([ohne, e], [], adressen(ohne.adr, ohne.n).concat(adressen(e.adr, e.n)), [
       c("new(" + typ + ")") + " reserviert " + bereich(ohne.adr, ohne.n) + " für einen Wert vom Typ " + c(typ) + ".",
-      "Diese Zellen bekommen keinen Namen. In der Tabelle bleibt das Feld für den Namen leer.",
+      "Diese Zellen bekommen keinen Namen. In der Namenstabelle bleibt das Feld für den Namen leer.",
       c(name) + " ist eine neue Variable vom Typ " + c("*" + typ) + ". Der Rechner reserviert " + bereich(e.adr, e.n) + " und schreibt die Adresse " + ohne.adr + " hinein.",
       "Den Wert in den Zellen ohne Namen erreicht das Programm nur über die Adresse, die in " + c(name) + " steht."
     ]);
@@ -620,7 +621,7 @@
     { code: "fmt.Println(s, t)", tun: function () { return gibAus(["s", "t"]); } }
   ];
 
-  var ANFANG = "Noch ist keine Zeile ausgeführt. Alle 32 Zellen sind frei, und die Tabelle ist leer.";
+  var ANFANG = "Noch ist keine Zeile ausgeführt. Alle 32 Zellen sind frei. Die Namenstabelle zeigt eine Zeile, sobald das Programm die Variable anlegt.";
 
   // ---- Ablauf ----
 
@@ -724,7 +725,7 @@
     k.textContent = "";
     if (!tabelle.length) {
       var tr0 = document.createElement("tr"), td0 = document.createElement("td");
-      td0.colSpan = 4; td0.className = "leer"; td0.textContent = "Die Tabelle hat noch keine Zeile.";
+      td0.colSpan = 4; td0.className = "leer"; td0.textContent = "Die Namenstabelle hat noch keine Zeile.";
       tr0.appendChild(td0); k.appendChild(tr0);
       return;
     }
@@ -761,7 +762,7 @@
     var stelle = t ? auswahl - t.adr : 0, n = t ? t.n : 1;
     var wer = e ? (e.name ? c(e.name + t.anhang) : "der Variable ohne Namen") : "";
     var kopf = "Zelle " + auswahl + ": ";
-    if (!e) kopf += "Die Zelle ist frei. Kein Name in der Tabelle führt zu ihr.";
+    if (!e) kopf += "Die Zelle ist frei. Kein Name in der Namenstabelle führt zu ihr.";
     else if (n === 1) kopf += "Sie ist die einzige Zelle von " + wer + " mit dem Typ " + c(t.typ) + ".";
     else kopf += "Sie ist die " + (stelle + 1) + ". von " + n + " Zellen von " + wer + " mit dem Typ " + c(t.typ) + ".";
     $("bitkopf").innerHTML = kopf + " Über jedem Bit steht seine Wertigkeit.";
@@ -870,14 +871,14 @@
         "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + einzeilig(PROGRAMM[schritt - 1].code),
       abgebrochen ? "Das Programm ist abgebrochen. Es lässt sich nur mit „eine Zeile zurück“ oder „von vorn“ fortsetzen." :
         schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + einzeilig(PROGRAMM[schritt].code),
-      zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+      zeilen.length ? "Die Namenstabelle im Modell hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Namenstabelle im Modell hat noch keine Zeile.",
       "Der Bauplan des Typs student: matrikel int32 mit Abstand 0 und 4 Zellen, semester int16 mit Abstand 4 und 2 Zellen, note int8 mit Abstand 6 und 1 Zelle, versuch int8 mit Abstand 7 und 1 Zelle.",
       belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
         "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
       "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
       "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
-      "Ein Bit, das der Student von Hand umschaltet, ändert den Wert des Feldes sofort. Die Tabelle bleibt gleich.",
-      "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten. Das Programm lässt sich nicht ändern."
+      "Ein Bit, das der Student von Hand umschaltet, ändert den Wert des Feldes sofort. Die Namenstabelle bleibt gleich.",
+      "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Namenstabelle anklicken, ein Bit der groß gezeigten Zelle umschalten. Das Programm lässt sich nicht ändern."
     ];
   }
   function kurzStand() {

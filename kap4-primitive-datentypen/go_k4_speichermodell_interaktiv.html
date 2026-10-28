@@ -141,20 +141,21 @@
   <div class="card">
     <h2>Worum es geht</h2>
     <p>Der Hauptspeicher ist eine lange Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte. Jede Zelle hat eine Nummer, ihre Adresse. Der Rechner findet eine Zelle nur über ihre Adresse.</p>
-    <p>Im Programm stehen aber Namen wie <code>a</code> und <code>b</code>. Darum führt der Rechner eine Tabelle. In jeder Zeile der Tabelle stehen ein Name, ein Typ und eine Adresse. Liest der Rechner im Programm den Namen <code>a</code>, dann geht er so vor:</p>
+    <p>Im Programm stehen jedoch Namen wie <code>a</code> und <code>b</code>. Die HTML-Seite zeigt deshalb neben dem Hauptspeicher eine Namenstabelle im Modell. Jede Zeile enthält einen Namen, einen Typ und eine Adresse.</p>
+    <p>Diese Tabelle gibt es so nicht. Sie ist ein Modell dafür, wie der Compiler einem Namen einen Typ und eine Adresse zuordnet. Das laufende Programm kennt nur noch Adressen.</p>
+    <p>Zum Namen <code>a</code> nennt die Namenstabelle zwei Angaben:</p>
     <ol>
-      <li>Er sucht den Namen in der Tabelle.</li>
-      <li>Er liest aus der Zeile die Adresse. Dort beginnt die Variable.</li>
-      <li>Er liest aus der Zeile den Typ. Der Typ legt fest, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten.</li>
+      <li>die Adresse: Dort beginnt die Variable.</li>
+      <li>den Typ: Er legt fest, wie viele Zellen zur Variable gehören und was ihre Bits bedeuten.</li>
     </ol>
-    <p>Der Wert einer Variable steht nur im Hauptspeicher. In der Tabelle steht er nicht.</p>
-    <p>Die Seite geht in drei Schritten vor. Schritt 1 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Tabelle. Schritt 2 zeigt einen Wert in vier Schreibweisen: dezimal, binär, oktal und hexadezimal. Schritt 3 liest ein Bitmuster mit verschiedenen Typen. Jeder Schritt hat oben einen Reiter.</p>
+    <p>Der Wert einer Variable steht nur im Hauptspeicher, nicht in der Namenstabelle.</p>
+    <p>Die Seite geht in drei Schritten vor. Schritt 1 führt ein Programm Zeile für Zeile aus und zeigt Hauptspeicher und Namenstabelle. Schritt 2 zeigt einen Wert in vier Schreibweisen: dezimal, binär, oktal und hexadezimal. Schritt 3 liest ein Bitmuster mit verschiedenen Typen. Jeder Schritt hat oben einen Reiter.</p>
     <p>Zwei HTML-Seiten gehen diesem Modell voraus:</p>
     <ul>
       <li>Abschnitt 2.2, ohne Go: <a href="../kap2-grundlagen/go_k2_variablen_typen_speicher_interaktiv.html">Variablen, Typen und Speicher</a> zeigt die Variable als Speicherplatz aus acht Speicherelementen, noch ohne Zellen und Adressen.</li>
       <li>Exkurs: <a href="go_k4_exkurs_von_neumann_interaktiv.html">Speichern und Rechnen im Rechner</a> zeigt, woher die Aufteilung in Hauptspeicher und Rechenwerk kommt.</li>
     </ul>
-    <div class="hinweis">Das Modell vereinfacht. In Go benutzt der Compiler die Tabelle, während er das Programm übersetzt, und setzt die Adressen fest in das Programm ein. Andere Sprachen wie Python schlagen Namen auch dann noch nach, wenn das Programm läuft.</div>
+    <div class="hinweis">Das Modell vereinfacht: In Go ordnet der Compiler jedem Namen beim Übersetzen einen Typ und eine Adresse zu und setzt die Adressen fest in das Programm ein. Andere Sprachen wie Python schlagen Namen auch dann noch nach, wenn das Programm läuft.</div>
   </div>
 
   <div class="card">
@@ -217,7 +218,7 @@
       </div>
 
       <div>
-        <h3>Tabelle des Rechners</h3>
+        <h3>Namenstabelle im Modell</h3>
         <div class="tabellenrahmen">
         <table id="namen">
           <thead><tr><th>Name</th><th>Typ</th><th>Adresse</th><th>Zellen</th></tr></thead>
@@ -321,7 +322,7 @@
       <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe die ersten zwei Zeilen aus. Wie viele Zellen sind jetzt reserviert?
         <details><summary>Antwort</summary>5 Zellen. <code>int8</code> braucht 1 Zelle, <code>int32</code> braucht 4.</details></li>
       <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe das Programm bis <code>a = a + 4</code> aus. Schalte dann in Zelle 100 das Bit mit der Wertigkeit 2 an. Welchen Wert hat <code>a</code> jetzt?
-        <details><summary>Antwort</summary>23. In der Tabelle hat sich nichts geändert. Der Wert steht nur in der Zelle.</details></li>
+        <details><summary>Antwort</summary>23. In der Namenstabelle hat sich nichts geändert. Der Wert steht nur in der Zelle.</details></li>
       <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Warum braucht <code>b = 1000</code> mehr als eine Zelle?
         <details><summary>Antwort</summary>Mit 8 Bit gibt es 256 Bitmuster. Die Zahl 1000 hat das Bitmuster 11 1110 1000, das sind 10 Bit. Sie verteilen sich auf die Zellen 103 und 104.</details></li>
       <li><a class="wo" href="#speicher">In Schritt 1 lösen</a>: Führe das Programm bis <code>c = a</code> aus. Schalte dann in Zelle 100 ein Bit um. Ändert sich <code>c</code>?
@@ -339,7 +340,7 @@
 
   <div class="card">
     <h2>Dasselbe Modell auf vier Seiten</h2>
-    <p>Hauptspeicher, Tabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
+    <p>Hauptspeicher, Namenstabelle und Programm sehen auf jeder Seite gleich aus. Von Seite zu Seite kommt eine Art von Typ dazu.</p>
     <ol class="seiten">
       <li class="hier">Primitive Datentypen: Name, Typ und Adresse (Kapitel 4). Das ist diese Seite.</li>
       <li><a href="../kap6-arrays/go_k6_speichermodell_arrays_interaktiv.html">Arrays: ein Name für viele Elemente (Kapitel 6)</a></li>
@@ -366,7 +367,7 @@
     <div class="tabellenrahmen">
     <table class="text">
       <tr><th>Schritt</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
-      <tr><td>Worum es geht</td><td>2.2, Seiten 8–10: Speicherplatz<br>4.3.4, Seite 63: Ganzzahl-Typen</td><td>Dass eine Variable Speicherplatz aus Speicherelementen belegt, steht in Abschnitt 2.2. Die Tabelle der Ganzzahl-Typen stammt aus Abschnitt 4.3.4.</td><td>Zellen mit Adressen und die Tabelle des Rechners mit Name, Typ und Adresse gibt die Lektion dazu.</td></tr>
+      <tr><td>Worum es geht</td><td>2.2, Seiten 8–10: Speicherplatz<br>4.3.4, Seite 63: Ganzzahl-Typen</td><td>Dass eine Variable Speicherplatz aus Speicherelementen belegt, steht in Abschnitt 2.2. Die Tabelle der Ganzzahl-Typen stammt aus Abschnitt 4.3.4.</td><td>Zellen mit Adressen und die Namenstabelle im Modell mit Name, Typ und Adresse gibt die Lektion dazu.</td></tr>
       <tr><td>1 Name, Typ und Adresse</td><td>2.2, Seiten 8–10<br>4.3.4, Seite 63</td><td>Die Typen und ihre Größe in Bit stammen aus dem Kurstext.</td><td>Der Hauptspeicher mit den Zellen 100 bis 131 und das Programm Zeile für Zeile gibt die Lektion dazu.</td></tr>
       <tr><td>2 Ein Wert, mehrere Schreibweisen</td><td>4.3.1 bis 4.3.3, Seiten 59–63: Literale</td><td>Literale in vier Zahlensystemen und der Unterschied zwischen Literal und Wert stammen aus dem Kurstext.</td><td>Die Demo gibt die Lektion dazu.</td></tr>
       <tr><td>3 Ein Bitmuster, mehrere Werte</td><td>2.2, Seiten 8–10<br>4.3.5, Seiten 64–66: Zweierkomplement</td><td>Dass der Typ festlegt, wie die Bits gelesen werden, steht in Abschnitt 2.2.</td><td>Das Lesen derselben Zelle als <code>int8</code>, <code>uint8</code>, Zeichen und <code>bool</code> gibt die Lektion dazu.</td></tr>
@@ -478,7 +479,7 @@
   function ort(ausdruck) {
     var m = /^(\w+)(?:\[(\w+)\]|\.(\w+))?$/.exec(ausdruck), e = finde(m[1]), t;
     var o = { e: e, zeilen: [e], lesen: [], punkte: [] };
-    var kopf = "Der Rechner sucht den Namen " + c(e.name) + " in der Tabelle. In der Zeile stehen die Adresse " + e.adr + " und der Typ " + c(e.typ) + ".";
+    var kopf = "In der Namenstabelle stehen zu " + c(e.name) + " die Adresse " + e.adr + " und der Typ " + c(e.typ) + ".";
     if (m[2] !== undefined) {
       var el = e.teile[0], index;
       if (/^\d+$/.test(m[2])) index = BigInt(m[2]);
@@ -486,7 +487,7 @@
         var iv = finde(m[2]);
         index = wertVon(iv);
         o.zeilen.push(iv); o.lesen = adressen(iv.adr, iv.n);
-        o.punkte.push("Der Rechner sucht den Namen " + c(iv.name) + " in der Tabelle und liest an der Adresse " + iv.adr + " den Wert " + index + ".");
+        o.punkte.push("Laut Namenstabelle liegt " + c(iv.name) + " an der Adresse " + iv.adr + ". Der Rechner liest dort den Wert " + index + ".");
       }
       o.punkte.push(kopf + " Ein Element hat den Typ " + c(el.typ) + " und braucht " + zellenWort(el.n) + ".");
       if (index < 0n || index >= BigInt(e.teile.length)) {
@@ -507,7 +508,7 @@
     } else {
       o.adr = e.adr; o.n = e.n; o.typ = e.typ;
       o.punkte.push(kopf + " Der Typ legt fest: " + zellenWort(e.n) + ".");
-      o.kurz = c(ausdruck) + " liegt laut Tabelle an der Adresse " + e.adr + ".";
+      o.kurz = c(ausdruck) + " liegt laut Namenstabelle an der Adresse " + e.adr + ".";
       return o;
     }
     o.adr = t.adr; o.n = t.n; o.typ = t.typ;
@@ -536,7 +537,7 @@
     }).join(", ");
     return fertig([], [], [], [
       "Diese Zeile reserviert keine Zelle. Sie legt einen Bauplan mit dem Namen " + c(typ) + " fest.",
-      "Der Rechner merkt sich für jedes Feld den Typ und den Abstand vom Anfang: " + liste + ".",
+      "Der Compiler merkt sich für jedes Feld den Typ und den Abstand vom Anfang: " + liste + ".",
       "Eine Variable vom Typ " + c(typ) + " braucht zusammen " + zellenWort(groesse(typ)) + "."
     ]);
   }
@@ -553,7 +554,7 @@
     return fertig([e], [], adressen(e.adr, n), [
       art,
       "Die nächste freie Zelle hat die Adresse " + e.adr + ". Der Rechner reserviert " + bereich(e.adr, n) + ".",
-      "Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c(typ) + ", Adresse " + e.adr + "." + zusatz,
+      "Die Namenstabelle im Modell zeigt jetzt die Zeile für " + c(name) + ": Typ " + c(typ) + ", Adresse " + e.adr + ". Diese Zuordnung hat der Compiler beim Übersetzen festgelegt." + zusatz,
       "Go füllt jede neue Variable mit Nullen."
     ]);
   }
@@ -563,8 +564,8 @@
     schreibe(e.adr, e.n, wert);
     return fertig([e], [], adressen(e.adr, e.n), [
       "Die Kurzform " + c(":=") + " legt eine neue Variable an. Die Zahl " + wert + " ist eine ganze Zahl, darum bekommt " + c(name) + " den Typ " + c("int") + ". Auf einem 64-Bit-Rechner braucht " + c("int") + " 8 Zellen.",
-      "Der Rechner reserviert " + bereich(e.adr, e.n) + ". Die Tabelle bekommt eine Zeile: Name " + c(name) + ", Typ " + c("int") + ", Adresse " + e.adr + ".",
-      "Er schreibt den Wert " + wert + " hinein. Für diese kleine Zahl genügt die letzte der acht Zellen."
+      "Der Rechner reserviert " + bereich(e.adr, e.n) + ". Die Namenstabelle im Modell zeigt jetzt die Zeile für " + c(name) + ": Typ " + c("int") + ", Adresse " + e.adr + ". Diese Zuordnung hat der Compiler beim Übersetzen festgelegt.",
+      "Der Rechner schreibt den Wert " + wert + " hinein. Für diese kleine Zahl genügt die letzte der acht Zellen."
     ]);
   }
 
@@ -584,7 +585,7 @@
     var neu = wertBei(o.adr, o.typ);
     var punkte = [
       o.punkte[0],
-      "Er liest " + bereich(o.adr, o.n) + ": " + c(altesMuster) + ". Als " + c(o.typ) + " gelesen ist das der Wert " + alt + ".",
+      "Der Rechner liest " + bereich(o.adr, o.n) + ": " + c(altesMuster) + ". Als " + c(o.typ) + " gelesen ist das der Wert " + alt + ".",
       "Er rechnet " + alt + " + " + summand + " = " + summe + ".",
       "Er schreibt das Ergebnis zurück an die Adresse " + o.adr + ": " + c(muster(o.adr, o.n))
     ];
@@ -595,11 +596,11 @@
   function kopiere(ziel, quelle) {
     var q = ort(quelle), z = ort(ziel), i;
     var punkte = [q.punkte.join(" ")];
-    punkte.push("Er liest " + bereich(q.adr, q.n) + ": " + c(muster(q.adr, q.n)) + (TYPEN[q.typ] ? ". Als " + c(q.typ) + " gelesen ist das der Wert " + wertBei(q.adr, q.typ) + "." : ""));
+    punkte.push("Der Rechner liest " + bereich(q.adr, q.n) + ": " + c(muster(q.adr, q.n)) + (TYPEN[q.typ] ? ". Als " + c(q.typ) + " gelesen ist das der Wert " + wertBei(q.adr, q.typ) + "." : ""));
     var inhalt = adressen(q.adr, q.n).map(function (a) { return zellen[a - START]; });
     for (i = 0; i < z.n; i++) zellen[z.adr - START + i] = inhalt[i];
     punkte.push(z.punkte.join(" "));
-    punkte.push("Er schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
+    punkte.push("Der Rechner schreibt " + (z.n === 1 ? "das gleiche Bitmuster" : "die gleichen Bitmuster") + " in " + bereich(z.adr, z.n) + ".");
     punkte.push("Der Wert steht jetzt an zwei Stellen im Hauptspeicher. Wer später " + c(quelle) + " ändert, ändert " + c(ziel) + " nicht mit.");
     return fertig([q.e, z.e], adressen(q.adr, q.n), adressen(z.adr, z.n), punkte);
   }
@@ -617,7 +618,7 @@
     lesen = lesen.concat(oz.lesen);
     if (oz.fehler) return abbruch(fertig(oz.zeilen, lesen, [], punkte));
     schreibe(oz.adr, oz.n, summe);
-    punkte.push("Er schreibt " + wertBei(oz.adr, oz.typ) + " in " + bereich(oz.adr, oz.n) + ": " + c(muster(oz.adr, oz.n)));
+    punkte.push("Der Rechner schreibt " + wertBei(oz.adr, oz.typ) + " in " + bereich(oz.adr, oz.n) + ": " + c(muster(oz.adr, oz.n)));
     return fertig(oz.zeilen, lesen, adressen(oz.adr, oz.n), punkte);
   }
 
@@ -636,7 +637,7 @@
       }
     });
     return fertig(zeilen, lesen, [], [
-      c("fmt.Println") + " gibt Werte aus. Der Rechner sucht dazu jeden Namen in der Tabelle und liest die Zellen so, wie der Typ es vorgibt.",
+      c("fmt.Println") + " gibt Werte aus. Dazu liest der Rechner für jede Variable die Zellen ab ihrer Adresse so, wie der Typ es vorgibt.",
       "Die Ausgabe lautet: " + c(werte.join(" "))
     ]);
   }
@@ -647,7 +648,7 @@
     var ziel = finde(vonName), typ = "*" + ziel.typ, e = reserviere(name, typ);
     schreibe(e.adr, e.n, ziel.adr);
     return fertig([ziel, e], [], adressen(e.adr, e.n), [
-      c("&" + vonName) + " fragt: An welcher Adresse liegt " + c(vonName) + "? Die Antwort steht in der Tabelle: " + ziel.adr + ".",
+      c("&" + vonName) + " fragt: An welcher Adresse liegt " + c(vonName) + "? Die Antwort steht in der Namenstabelle: " + ziel.adr + ".",
       c(name) + " ist eine neue Variable vom Typ " + c(typ) + ". Eine Adresse braucht 8 Zellen. Der Rechner reserviert " + bereich(e.adr, e.n) + ".",
       "In diese Zellen schreibt er die Zahl " + ziel.adr + ". Der Pfeil zeigt, wohin die Adresse führt.",
       c(name) + " hat einen Wert wie jede Variable. Dieser Wert ist die Adresse einer anderen Variable. Eine solche Variable heißt Zeiger."
@@ -657,7 +658,7 @@
   function geheZu(zeigerName) {     // *p: die Adresse lesen, die im Zeiger steht
     var z = finde(zeigerName), typ = TYPEN[z.typ].ziel, n = TYPEN[typ].n, adr = wertVon(z);
     var w = { z: z, typ: typ, n: n, lesen: adressen(z.adr, z.n), gueltig: imModell(adr, n), adr: adr };
-    w.punkt = c("*" + zeigerName) + " heißt: Geh zu der Adresse, die in " + c(zeigerName) + " steht. Der Rechner sucht " + c(zeigerName) + " in der Tabelle und liest die 8 Zellen ab Adresse " + z.adr + ". Darin steht " + adr + ".";
+    w.punkt = c("*" + zeigerName) + " heißt: Geh zu der Adresse, die in " + c(zeigerName) + " steht. Laut Namenstabelle liegt " + c(zeigerName) + " an der Adresse " + z.adr + ". Der Rechner liest die 8 Zellen ab dieser Adresse. Darin steht " + adr + ".";
     w.keinZiel = "An der Adresse " + adr + " liegen keine " + n + " Zellen des Modells. Der Rechner führt die Zeile hier nicht aus. In Go lässt sich eine Adresse nicht von Hand verstellen.";
     if (w.gueltig) w.adr = Number(adr);
     return w;
@@ -681,7 +682,7 @@
     schreibe(e.adr, e.n, ohne.adr);
     return fertig([ohne, e], [], adressen(ohne.adr, ohne.n).concat(adressen(e.adr, e.n)), [
       c("new(" + typ + ")") + " reserviert " + bereich(ohne.adr, ohne.n) + " für einen Wert vom Typ " + c(typ) + ".",
-      "Diese Zellen bekommen keinen Namen. In der Tabelle bleibt das Feld für den Namen leer.",
+      "Diese Zellen bekommen keinen Namen. In der Namenstabelle bleibt das Feld für den Namen leer.",
       c(name) + " ist eine neue Variable vom Typ " + c("*" + typ) + ". Der Rechner reserviert " + bereich(e.adr, e.n) + " und schreibt die Adresse " + ohne.adr + " hinein.",
       "Den Wert in den Zellen ohne Namen erreicht das Programm nur über die Adresse, die in " + c(name) + " steht."
     ]);
@@ -713,7 +714,7 @@
     { code: "fmt.Println(a, b, c)", tun: function () { return gibAus(["a", "b", "c"]); } }
   ];
 
-  var ANFANG = "Noch ist keine Zeile ausgeführt. Alle 32 Zellen sind frei, und die Tabelle ist leer.";
+  var ANFANG = "Noch ist keine Zeile ausgeführt. Alle 32 Zellen sind frei. Die Namenstabelle zeigt eine Zeile, sobald das Programm die Variable anlegt.";
 
   // ---- Ablauf ----
 
@@ -817,7 +818,7 @@
     k.textContent = "";
     if (!tabelle.length) {
       var tr0 = document.createElement("tr"), td0 = document.createElement("td");
-      td0.colSpan = 4; td0.className = "leer"; td0.textContent = "Die Tabelle hat noch keine Zeile.";
+      td0.colSpan = 4; td0.className = "leer"; td0.textContent = "Die Namenstabelle hat noch keine Zeile.";
       tr0.appendChild(td0); k.appendChild(tr0);
       return;
     }
@@ -932,7 +933,7 @@
     var stelle = t ? auswahl - t.adr : 0, n = t ? t.n : 1;
     var wer = e ? (e.name ? c(e.name + t.anhang) : "der Variable ohne Namen") : "";
     var kopf = "Zelle " + auswahl + ": ";
-    if (!e) kopf += "Die Zelle ist frei. Kein Name in der Tabelle führt zu ihr.";
+    if (!e) kopf += "Die Zelle ist frei. Kein Name in der Namenstabelle führt zu ihr.";
     else if (n === 1) kopf += "Sie ist die einzige Zelle von " + wer + " mit dem Typ " + c(t.typ) + ".";
     else kopf += "Sie ist die " + (stelle + 1) + ". von " + n + " Zellen von " + wer + " mit dem Typ " + c(t.typ) + ".";
     $("bitkopf").innerHTML = kopf + " Über jedem Bit steht seine Wertigkeit.";
@@ -1032,13 +1033,13 @@
         schritt === 0 ? "Noch ist keine Zeile des Programms ausgeführt." :
           "Ausgeführt sind " + schritt + " von " + PROGRAMM.length + " Zeilen. Zuletzt ausgeführt wurde Zeile " + schritt + ": " + PROGRAMM[schritt - 1].code,
         schritt >= PROGRAMM.length ? "Das Programm ist zu Ende." : "Als nächste Zeile folgt Zeile " + (schritt + 1) + ": " + PROGRAMM[schritt].code,
-        zeilen.length ? "Die Tabelle des Rechners hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Tabelle des Rechners hat noch keine Zeile.",
+        zeilen.length ? "Die Namenstabelle im Modell hat diese Zeilen: " + zeilen.join(" ; ") + "." : "Die Namenstabelle im Modell hat noch keine Zeile.",
         belegt.length ? "Reservierte Zellen im Hauptspeicher: " + belegt.join(", ") + ". Alle anderen Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei." :
           "Alle 32 Zellen von " + START + " bis " + (START + ANZAHL - 1) + " sind frei.",
         "Unter „Was der Rechner in dieser Zeile tut“ steht: " + textVon("meldung"),
         "Groß gezeigt wird Zelle " + auswahl + " mit dem Bitmuster " + bits(zellen[auswahl - START]) + ". Darüber steht: " + textVon("bitkopf") + " Darunter steht: " + textVon("bitsumme"),
-        "Ein Bit, das der Student von Hand umschaltet, ändert den Inhalt der Zelle sofort. Die Tabelle ändert sich dabei nicht.",
-        "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Tabelle anklicken, ein Bit der groß gezeigten Zelle umschalten."
+        "Ein Bit, das der Student von Hand umschaltet, ändert den Inhalt der Zelle sofort. Die Namenstabelle ändert sich dabei nicht.",
+        "Handgriffe: „nächste Zeile ausführen“, „eine Zeile zurück“, „von vorn“, eine Zelle im Hauptspeicher anklicken, eine Zeile der Namenstabelle anklicken, ein Bit der groß gezeigten Zelle umschalten."
       ];
     }
     var b = bits(probe);
@@ -1090,7 +1091,7 @@
     zeilenTitel: "Programm von Schritt 1, die Zeilen stehen im Rumpf von main:",
     stand: standSaetze,
     kurz: kurzStand,
-    beispiel: "Warum steht der Wert nicht in der Tabelle?"
+    beispiel: "Warum steht der Wert nicht in der Namenstabelle?"
   });
   angemeldet = true;
 })();

@@ -7,15 +7,16 @@ Die Seite hat fünf Reiter. Sichtbar ist immer nur ein Schritt.
 Für alle Schritte gilt:
 
 - Der Hauptspeicher ist eine Reihe von Zellen. Jede Zelle fasst 8 Bit, also 1 Byte, und hat eine Adresse.
-- Der Rechner führt eine Tabelle. In jeder Zeile stehen ein Name, ein Typ und eine Adresse. Der Wert steht nur im Hauptspeicher.
+- Neben dem Hauptspeicher zeigt die Seite eine Namenstabelle im Modell. In jeder Zeile stehen ein Name, ein Typ und eine Adresse. Der Wert steht nur im Hauptspeicher.
+- Die Seite sagt dazu wörtlich: „Diese Tabelle gibt es so nicht. Sie ist ein Modell dafür, wie der Compiler einem Namen einen Typ und eine Adresse zuordnet. Das laufende Programm kennt nur noch Adressen.“ Der Rechner führt keine solche Tabelle und schlägt beim Lauf keinen Namen nach.
 - Ein Zeiger ist eine Variable. Sein Wert ist die Adresse einer anderen Variable. Im Modell braucht jeder Zeiger 8 Zellen, gleich auf welchen Typ er zeigt, weil auf einem 64-Bit-Rechner jede Adresse 8 Zellen lang ist.
 - Der Typ `*int32` sagt zweierlei: In den Zellen des Zeigers steht eine Adresse, und an dieser Adresse liegt ein `int32` mit 4 Zellen.
 - `&b` liefert die Adresse von `b`. Im Kurstext heißt `&` Adressoperator.
 - `*p` geht zu den Zellen an der Adresse, die in `p` steht. Im Kurstext heißt `*` vor einem Zeiger Dereferenzierungsoperator, und `*p` ist die Variable, auf die `p` zeigt.
 - `new(int32)` reserviert 4 Zellen ohne Namen, füllt sie mit dem Null-Wert und liefert ihre Adresse. Im Kurstext heißt eine solche Variable anonyme Variable.
 - Das Modell hat 32 Zellen mit den Adressen 100 bis 131. Die Adressen sind erfunden. Ein echtes Go-Programm gibt Adressen wie `0xc000012345` aus.
-- Die Wörter „Zelle“ und „Tabelle des Rechners“ gehören zum Modell der Seite. Im Kurstext steht in Abschnitt 7.4: Der Wert eines Zeigers ist die Adresse, unter der eine Variable im Speicher abgelegt ist. Was der Rechner dabei mit Tabelle und Zellen tut, steht nicht im Kurstext. Dass ein Zeiger 8 Zellen braucht, steht dort auch nicht.
-- Das Modell vereinfacht. In Go benutzt der Compiler die Tabelle beim Übersetzen. Ein laufendes Go-Programm schlägt keinen Namen mehr nach.
+- Die Wörter „Zelle“ und „Namenstabelle im Modell“ gehören zum Modell der Seite. Im Kurstext steht in Abschnitt 7.4: Der Wert eines Zeigers ist die Adresse, unter der eine Variable im Speicher abgelegt ist. Was der Rechner dabei mit den Zellen tut und was die Namenstabelle im Modell dazu angibt, steht nicht im Kurstext. Dass ein Zeiger 8 Zellen braucht, steht dort auch nicht.
+- Das Modell vereinfacht. In Go ordnet der Compiler jedem Namen beim Übersetzen einen Typ und eine Adresse zu. Ein laufendes Go-Programm schlägt keinen Namen mehr nach.
 - Ein Wert aus mehreren Zellen steht im Modell so, dass die vorderen Bits in der Zelle mit der kleineren Adresse stehen. Die hinteren Bits einer Adresse stehen also in der letzten Zelle des Zeigers.
 - In Go lässt sich mit einer Adresse nicht rechnen, und ein Programm kann eine Adresse nicht Bit für Bit verstellen. Das Modell erlaubt es in Schritt 2, damit man sieht, was eine Adresse ist.
 - Auf der Seite läuft kein Go. Der Browser stellt nach, was das Programm tut. Der Student kann keinen eigenen Code eingeben.
@@ -29,9 +30,9 @@ Reiter: worum
 ### Aufbau der Darstellung
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
-- Der Text erklärt Zelle, Adresse und Tabelle. Bisher kam der Rechner immer über einen Namen zur Adresse. Die Adresse ist selbst eine Zahl und lässt sich in einer Variable ablegen. Eine solche Variable heißt Zeiger.
-- Ein Zeiger hat in der Tabelle eine Zeile wie jede Variable.
-- Mit `new` reserviert das Programm Zellen, für die in der Tabelle kein Name steht.
+- Der Text erklärt Zelle, Adresse und Namenstabelle im Modell, mit dem Satz, dass es diese Tabelle so nicht gibt. Bisher kam der Rechner immer über einen Namen zur Adresse. Die Adresse ist selbst eine Zahl und lässt sich in einer Variable ablegen. Eine solche Variable heißt Zeiger.
+- Ein Zeiger hat in der Namenstabelle eine Zeile wie jede Variable.
+- Mit `new` reserviert das Programm Zellen, für die in der Namenstabelle kein Name steht.
 - Eine Liste nennt zwei HTML-Seiten, die dieser vorausgehen: „Speichermodell: Name, Typ und Adresse“ zu Kapitel 4 und „Speichermodell: Arrays“ zu Kapitel 6.
 - Ein gelber Kasten sagt, dass das Modell vereinfacht und was in Abschnitt 7.4 des Kurstexts steht.
 
@@ -54,7 +55,7 @@ Reiter: schreibweisen
 
 - Zu sehen ist eine Karte mit einer Tabelle und Text. Eine Demo gibt es hier nicht.
 - Die Tabelle hat die Spalten „Schreibweise“ und „Was der Rechner tut“ und drei Zeilen.
-- `&b`: Der Rechner sucht `b` in der Tabelle und liefert den Eintrag aus der Spalte Adresse.
+- `&b`: Das Ergebnis ist die Adresse von `b`. Der Compiler hat sie beim Übersetzen festgelegt. Im Modell steht sie in der Namenstabelle in der Spalte Adresse.
 - `*p`: Der Rechner liest die Adresse, die in `p` steht, und geht zu den Zellen an dieser Adresse.
 - `new(int32)`: Der Rechner reserviert 4 Zellen ohne Namen und liefert ihre Adresse.
 - Darunter steht: Jeder Zeiger braucht 8 Zellen. Im Kurstext heißt `&` Adressoperator und `*` Dereferenzierungsoperator, und eine Variable, die `new` erzeugt hat, heißt anonyme Variable.
@@ -83,7 +84,7 @@ Reiter: speicher
 - Die Zellen einer Variable haben eine Farbe. Ein schwarzer Pfeil führt von einem Zeiger zu der Zelle, deren Adresse in ihm steht.
 - Eine Zelle mit blauem Rand hat die letzte Zeile gelesen. Eine Zelle mit rotem Rand hat die letzte Zeile beschrieben.
 - Unter dem Hauptspeicher steht eine Zelle groß: acht Bits als Knöpfe, über jedem Bit seine Wertigkeit. Darüber steht, zu welcher Variable die Zelle gehört.
-- Rechts steht die „Tabelle des Rechners“ mit den Spalten Name, Typ, Adresse und Zellen. Bei der Variable, die `new` angelegt hat, ist das Feld für den Namen leer.
+- Rechts steht die „Namenstabelle im Modell“ mit den Spalten Name, Typ, Adresse und Zellen. Bei der Variable, die `new` angelegt hat, ist das Feld für den Namen leer.
 - Darunter steht der Kasten „Was der Rechner in dieser Zeile tut“ mit den Handlungen des Rechners als nummerierte Liste.
 - Der Ablauf, Zeile für Zeile:
   1. `var b int32` reserviert die Zellen 100 bis 103 und füllt sie mit Nullen.
@@ -101,9 +102,9 @@ Reiter: speicher
 
 - „nächste Zeile ausführen“ wählen.
 - „eine Zeile zurück“ wählen: Der Stand vor der letzten Zeile kommt zurück, auch von Hand umgeschaltete Bits.
-- „von vorn“ wählen: Alle Zellen sind wieder frei, die Tabelle ist leer.
+- „von vorn“ wählen: Alle Zellen sind wieder frei, die Namenstabelle zeigt noch keine Zeile.
 - Eine Zelle im Hauptspeicher anklicken: Sie erscheint unten groß.
-- Eine Zeile der Tabelle anklicken. Der Mauszeiger über einer Zeile hebt die Zellen der Variable hervor.
+- Eine Zeile der Namenstabelle anklicken. Der Mauszeiger über einer Zeile hebt die Zellen der Variable hervor.
 - Ein Bit der groß gezeigten Zelle anklicken: Es wechselt zwischen 0 und 1.
 - Das Programm lässt sich nicht ändern.
 
@@ -150,8 +151,8 @@ Reiter: kurstext
 
 - Zu sehen ist eine Karte mit Text. Eine Demo gibt es hier nicht.
 - Eine Tabelle hat je Schritt eine Zeile. Die Spalten: Schritt, Abschnitt im Kurstext mit gedruckten Seiten, was aus dem Kurstext stammt, was nicht im Kurstext steht.
-  - 1 Drei Schreibweisen, 7.4, Seiten 173–174; 7.4.5, Seiten 183–184: new: Die Operatoren & und * und die Funktion new stammen aus dem Kurstext. Was der Rechner dabei mit Tabelle und Zellen tut, steht nicht im Kurstext.
-  - 2 Ein Programm im Speicher, 7.4, Seiten 173–178: Zeiger, Adresse und Dereferenzieren stammen aus dem Kurstext. Das Programm Zeile für Zeile mit Hauptspeicher und Tabelle gibt die Lektion dazu.
+  - 1 Drei Schreibweisen, 7.4, Seiten 173–174; 7.4.5, Seiten 183–184: new: Die Operatoren & und * und die Funktion new stammen aus dem Kurstext. Was der Rechner dabei mit den Zellen tut und was die Namenstabelle im Modell dazu angibt, steht nicht im Kurstext.
+  - 2 Ein Programm im Speicher, 7.4, Seiten 173–178: Zeiger, Adresse und Dereferenzieren stammen aus dem Kurstext. Das Programm Zeile für Zeile mit Hauptspeicher und Namenstabelle gibt die Lektion dazu.
   - Aufgaben, kein eigener Abschnitt: Die Aufgaben beziehen sich auf die Abschnitte der Schritte 1 und 2. Die Aufgaben gibt die Lektion dazu.
 - Unter „Wo das Thema im Kurstext noch vorkommt“ stehen diese Abschnitte:
   - Abschnitt 2.2, Seiten 8–10, Speicherplatz: Lektion: Variablen, Typen und Speicher, Schritt 4.
