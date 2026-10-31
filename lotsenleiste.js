@@ -404,6 +404,21 @@
     // ----- kleine Helfer -----
 
     let meldeUhr;
+    // Zeigt einen Fehler als Beitrag. Lehnt KI:connect den Schlüssel ab, steht darunter der Link zur Seite des Lotsen, auf
+    // der der Student einen neuen einrichtet. Auf GitHub Pages führt er zum Lotsen auf dem eigenen Rechner, siehe hole.
+    function zeigeFehler(stelle, text, fehler) {
+      stelle.className = 'beitrag fehler';
+      stelle.textContent = text;
+      const ziel = fehler.einrichten ? sicher(fehler.einrichten) : null;
+      if (!ziel) return;
+      const link = document.createElement('a');
+      link.href = ziel;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Schlüssel neu einrichten';
+      stelle.append(document.createElement('br'), link);
+    }
+
     function melde(html) {
       teil('lotse-meldung').innerHTML = html;
       clearTimeout(meldeUhr);
@@ -518,8 +533,7 @@
         if (meiner !== lauf) return;
         if (warte) {
           verlauf.pop();                             // die Frage zählt nicht, der Student stellt sie neu
-          warte.className = 'beitrag fehler';
-          warte.textContent = 'Die Frage ist nicht angekommen: ' + fehler.message;
+          zeigeFehler(warte, 'Die Frage ist nicht angekommen: ' + fehler.message, fehler);
           // Frage und markierte Stelle stehen wieder da, wenn der Student inzwischen nichts Neues begonnen hat.
           if (mitMarkierung && !feld.value) feld.value = getippt;
           if (mitMarkierung && zitat && !markiert) zeigeMarkierung(zitat, wo);
@@ -566,11 +580,10 @@
         warte.scrollIntoView({ block: 'nearest' });
       } catch (fehler) {
         if (meiner !== lauf) return;
-        warte.className = 'beitrag fehler';
         // Ein Lotse aus der Zeit vor dem Knopf kennt /api/forum nicht und liefert seine Startseite oder „Fehler 404“.
-        warte.textContent = /^Fehler \d+$/.test(fehler.message)
+        zeigeFehler(warte, /^Fehler \d+$/.test(fehler.message)
           ? 'Dieser ' + name + ' kann noch keinen Entwurf schreiben. Hol dir das neue Paket aus Moodle.'
-          : 'Der Entwurf ist nicht entstanden: ' + fehler.message;
+          : 'Der Entwurf ist nicht entstanden: ' + fehler.message, fehler);
       } finally {
         if (meiner === lauf) { wartet = false; schalte(); }
       }
@@ -690,7 +703,11 @@
   async function hole(pfad, daten) {
     const r = await fetch(pfad, daten ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(daten) } : undefined);
     const d = await r.json().catch(() => null);
-    if (!r.ok || d === null) throw new Error((d && d.fehler) || 'Fehler ' + r.status);
+    if (!r.ok || d === null) {
+      const fehler = new Error((d && d.fehler) || 'Fehler ' + r.status);
+      if (d && d.einrichten) fehler.einrichten = new URL(d.einrichten, r.url).href; // r.url ist die Adresse des Lotsen
+      throw fehler;
+    }
     return d;
   }
 
