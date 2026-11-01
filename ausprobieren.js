@@ -13,10 +13,11 @@
 //                     Editorlotsen, im selben Tab.
 //   anderswo          Auf GitHub Pages oder bei einem Lotsen ohne Go wählt der Student eine Fassung und sieht das
 //                     Programm und was Go dazu gemeldet oder ausgegeben hat, festgehalten mit Go 1.26.1. Ein Satz sagt,
-//                     wie der Student die Lektion im Editorlotsen öffnet: Editorlotse starten, im Menü „Programm wählen“
-//                     das Kapitel und darin die Lektion wählen.
-//                     Ein Link dorthin fehlt mit Absicht, Thomas' Beschluss vom 2026-10-15: Mit ihm hätte der Student
-//                     zwei Tabs, die Seite des Editorlotsen und die Lektion. Der Reiter ist grau.
+//                     dass der Student den Editorlotsen startet. Der Knopf „Diese Lektion im Editorlotsen öffnen“ führt
+//                     dann im selben Tab zur Lektion im Editorlotsen, in den gleichen Schritt. Thomas' Beschluss vom
+//                     2026-11-01, er hebt den vom 2026-10-15 auf, nach dem es keinen Link dorthin gab: Der Student kam
+//                     von der Lektion nicht in den Editorlotsen. Der Weg über das Menü „Programm wählen“ bleibt. Der
+//                     Reiter ist grau.
 //                     Seit 2026-10-24, Thomas' Weg 1 für Studenten ohne Editorlotsen: Der Knopf „Dieses Programm
 //                     kopieren“ legt das gewählte Programm in die Zwischenablage, für Go Playground oder den eigenen
 //                     Editor. Er funktioniert auch, wenn die Lektion als Datei im Browser geöffnet ist (file://).
@@ -38,8 +39,13 @@
   'use strict';
   // Liefert ein Lotse die Seite selbst aus, fragt der Kasten ihn. Von GitHub Pages aus fragt er keinen.
   const LOKAL = location.protocol === 'http:' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  const EDITORLOTSE = 'http://localhost:8617/';
   const ANLEITUNG = 'https://mightbej.github.io/Fernuni-go-mentoriat/lotsen/editorlotse.html';
   const PLAYGROUND = 'https://go.dev/play/';
+  // Die Wurzel des Repositorys: Dort liegt diese Datei. Der Pfad der Lektion ab hier gilt auch im Editorlotsen.
+  const WURZEL = new URL('.', document.currentScript.src).href;
+  // Die Lektion im Editorlotsen, im gleichen Schritt. Im Exkurs zu den Live-Daten hat jedes Programm einen eigenen Schritt.
+  const imEditorlotsen = () => EDITORLOTSE + location.href.slice(WURZEL.length).split(/[?#]/)[0] + (location.hash || '#ausprobieren');
   // Das Kapitel der Lektion, wie es im Menü des Editorlotsen steht: aus dem Ordner, zum Beispiel kap3-einfuehrung.
   const kapitel = () => { const k = location.pathname.match(/\/kap(\d+)-/); return k ? 'Kapitel ' + k[1] : 'Exkurse'; };
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -50,6 +56,8 @@
     .probe .lage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.95rem; }
     .probe .lage p { margin:0 0 8px; } .probe .lage p:last-child { margin-bottom:0; }
     .probe .lage.fehler { border-left-color:#b91c1c;background:#fef2f2; }
+    .probe .lage button.imeditor { background:#0f766e;color:#fff;border-color:#0f766e; }
+    .probe .lage button.imeditor:hover { background:#0d5f59; }
     .probe .balken { height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden;margin:8px 0; }
     .probe .balken span { display:block;height:100%;width:0;background:#0f766e;transition:width .3s; }
     .probe pre.quelltext { margin:10px 0;background:#1e293b;color:#e2e8f0;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.6;overflow-x:auto; }
@@ -260,11 +268,13 @@
       $('.kopieren').hidden = !!bereit;
       $('.ueber').textContent = bereit ? 'Ausgabe' : 'Was Go dazu meldet oder ausgibt';
       if (zustand === 'ohne') {
-        setzeLage('<p>Hier steht das Programm, und darunter, was Go dazu meldet oder ausgibt. Ändern und ausführen kannst du es im Editorlotsen auf deinem Rechner:</p>' +
-          '<ol><li>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>.</li>' +
-          '<li>Wähle dort im Menü „Programm wählen“ den Eintrag „' + esc(kapitel()) + '“ und darin „' + esc(document.title) + '“.</li></ol>' +
+        setzeLage('<p>Hier steht das Programm und darunter, was Go dazu meldet oder ausgibt. Du kannst es im Editorlotsen auf deinem Rechner ändern und ausführen.</p>' +
+          '<p>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>. Klick danach auf diesen Knopf. Die Lektion öffnet sich dann in diesem Tab im Editorlotsen.</p>' +
+          '<p><button type="button" class="haupt imeditor">Diese Lektion im Editorlotsen öffnen</button></p>' +
+          '<p>Du kannst die Lektion auch im Editorlotsen selbst öffnen: Wähle dort im Menü „Programm wählen“ den Eintrag „' + esc(kapitel()) + '“ und darin „' + esc(document.title) + '“.</p>' +
           '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>' +
           '<p>Ohne Editorlotsen: „Dieses Programm kopieren“ legt das Programm in die Zwischenablage. Füge es in <a href="' + PLAYGROUND + '" target="_blank" rel="noopener">Go Playground</a> oder in deinen Editor ein und übersetze es mit <code>go run</code>.</p>');
+        $('.imeditor').addEventListener('click', () => { location.href = imEditorlotsen(); });
       } else if (!ed) {
         setzeLage('<p>Der Editor wird geladen …</p>');
       } else {
@@ -396,6 +406,7 @@
         const saetze = ['Gewählt ist das Programm „' + f.name + '“.'];
         if (zustand !== 'bereit') {
           saetze.push('Die Seite läuft nicht im Editorlotsen. Der Student kann hier nichts ändern und nichts ausführen. Die Seite zeigt das Programm und darunter, was Go 1.26.1 dazu gemeldet oder ausgegeben hat.');
+          saetze.push('Läuft der Editorlotse auf seinem Rechner, öffnet der Knopf „Diese Lektion im Editorlotsen öffnen“ die Lektion dort im selben Tab.');
           saetze.push('Mit dem Knopf „Dieses Programm kopieren“ kann der Student das Programm kopieren und in Go Playground oder in seinem eigenen Editor übersetzen und ausführen.');
         } else {
           saetze.push('Die Seite läuft im Editorlotsen. Der Student kann das Programm im Editor ändern und mit „Ausführen“ ausführen.');
