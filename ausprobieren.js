@@ -18,6 +18,11 @@
 //                     2026-11-01, er hebt den vom 2026-10-15 auf, nach dem es keinen Link dorthin gab: Der Student kam
 //                     von der Lektion nicht in den Editorlotsen. Der Weg über das Menü „Programm wählen“ bleibt. Der
 //                     Reiter ist grau.
+//                     Thomas' Beschluss vom 2026-11-01, Teil 2: Läuft der Editorlotse, wechselt die Lektion von selbst
+//                     zu ihm, solange der Kasten sichtbar ist. Der Editorlotse lässt von GitHub Pages aus nur /api/bereit
+//                     zu. Nach einem Wechsel oder einem Klick auf den Knopf merkt sich der Tab die Lektion: Geht der
+//                     Student zurück, schaltet sie nicht noch einmal um. UMSCHALTEN unten bleibt aus, bis der Editorlotse
+//                     mit dieser Freigabe in Moodle liegt. Bis dahin schaltet nur die Probeseite ein, mit umschalten: true.
 //                     Seit 2026-10-24, Thomas' Weg 1 für Studenten ohne Editorlotsen: Der Knopf „Dieses Programm
 //                     kopieren“ legt das gewählte Programm in die Zwischenablage, für Go Playground oder den eigenen
 //                     Editor. Er funktioniert auch, wenn die Lektion als Datei im Browser geöffnet ist (file://).
@@ -48,6 +53,16 @@
   const imEditorlotsen = () => EDITORLOTSE + location.href.slice(WURZEL.length).split(/[?#]/)[0] + (location.hash || '#ausprobieren');
   // Das Kapitel der Lektion, wie es im Menü des Editorlotsen steht: aus dem Ordner, zum Beispiel kap3-einfuehrung.
   const kapitel = () => { const k = location.pathname.match(/\/kap(\d+)-/); return k ? 'Kapitel ' + k[1] : 'Exkurse'; };
+  // Das Umschalten für alle Lektionen. Erst einschalten, wenn das editorlotse.zip mit der Freigabe in Moodle liegt.
+  const UMSCHALTEN = false;
+  const WARTEN = 3000;   // so viele Millisekunden liegen zwischen zwei Fragen an den Editorlotsen
+  // Der Tab merkt sich, aus welcher Lektion er zum Editorlotsen gewechselt ist. Ohne sessionStorage schaltet nichts um.
+  const MERKEN_WECHSEL = 'probeGewechselt:' + location.pathname;
+  const gewechselt = () => { try { return sessionStorage.getItem(MERKEN_WECHSEL) !== null; } catch (fehler) { return true; } };
+  function wechsle() {
+    try { sessionStorage.setItem(MERKEN_WECHSEL, '1'); } catch (fehler) {}
+    location.href = imEditorlotsen();
+  }
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   const GESTALTUNG = `
@@ -197,6 +212,7 @@
     let lauf = 0, quelle = null;
     let protokoll = '';       // was der letzte Lauf ausgegeben oder gemeldet hat, für die Leiste
     let gelaufen = false;     // ob der Student die Fassung im Kasten ausgeführt hat
+    const umschalten = angaben.umschalten || (UMSCHALTEN && location.protocol === 'https:');
 
     const code = () => ed ? ed.text() : fassungen[gewaehlt].code;
 
@@ -269,12 +285,12 @@
       $('.ueber').textContent = bereit ? 'Ausgabe' : 'Was Go dazu meldet oder ausgibt';
       if (zustand === 'ohne') {
         setzeLage('<p>Hier steht das Programm und darunter, was Go dazu meldet oder ausgibt. Du kannst es im Editorlotsen auf deinem Rechner ändern und ausführen.</p>' +
-          '<p>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>. Klick danach auf diesen Knopf. Die Lektion öffnet sich dann in diesem Tab im Editorlotsen.</p>' +
+          '<p>Starte den Editorlotsen mit einem Doppelklick auf <code>editorlotse.exe</code>. Klick danach auf diesen Knopf. Die Lektion öffnet sich dann in diesem Tab im Editorlotsen.' + (umschalten && !gewechselt() ? ' Sobald der Editorlotse läuft, wechselt sie von selbst dorthin.' : '') + '</p>' +
           '<p><button type="button" class="haupt imeditor">Diese Lektion im Editorlotsen öffnen</button></p>' +
           '<p>Du kannst die Lektion auch im Editorlotsen selbst öffnen: Wähle dort im Menü „Programm wählen“ den Eintrag „' + esc(kapitel()) + '“ und darin „' + esc(document.title) + '“.</p>' +
           '<p>Den Editorlotsen und seine Anleitung findest du unter <a href="' + ANLEITUNG + '" target="_blank" rel="noopener">Editorlotse</a>.</p>' +
           '<p>Ohne Editorlotsen: „Dieses Programm kopieren“ legt das Programm in die Zwischenablage. Füge es in <a href="' + PLAYGROUND + '" target="_blank" rel="noopener">Go Playground</a> oder in deinen Editor ein und übersetze es mit <code>go run</code>.</p>');
-        $('.imeditor').addEventListener('click', () => { location.href = imEditorlotsen(); });
+        $('.imeditor').addEventListener('click', wechsle);
       } else if (!ed) {
         setzeLage('<p>Der Editor wird geladen …</p>');
       } else {
@@ -306,6 +322,20 @@
       protokoll = '';
       zeigeZustand();
       melde();
+    }
+
+    // Fragt den Editorlotsen auf dem Rechner des Studenten, solange der Kasten zu sehen ist, und wechselt zu ihm, sobald er
+    // läuft und Go hat. Läuft er nicht oder lässt der Browser die Anfrage nicht zu, geschieht nichts, der Knopf bleibt.
+    let fragt = false;
+    async function frageEditorlotsen() {
+      if (fragt || document.hidden || kasten.offsetParent === null || gewechselt()) return;
+      fragt = true;
+      try {
+        const r = await fetch(EDITORLOTSE + 'api/bereit', { signal: AbortSignal.timeout(2000) });
+        const d = await r.json();
+        if (d.go === true && !gewechselt()) wechsle();
+      } catch (fehler) {}
+      fragt = false;
     }
 
     // ---------- Ausführen ----------
@@ -398,6 +428,7 @@
     waehle(0);
     zeigeZustand();
     if (LOKAL) pruefe();
+    if (umschalten) { frageEditorlotsen(); setInterval(frageEditorlotsen, WARTEN); }
 
     return {
       zeilen: () => code().split('\n'),
