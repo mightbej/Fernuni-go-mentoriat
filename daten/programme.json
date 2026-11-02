@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-27T19:21",
+ "stand": "2026-11-02T10:34",
  "programme": [
   {
    "pfad": "kap4-primitive-datentypen/go/ueberraschung1_int8_demo.go",
@@ -149,6 +149,11 @@
    "pfad": "kap4-primitive-datentypen/go_k4_division_rest_interaktiv.html",
    "titel": "Rechnen mit Ganzzahlen: Division und Rest in Go",
    "abschnitt": "4.3.7.1"
+  },
+  {
+   "pfad": "kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+   "titel": "Formatierte Ausgabe mit fmt.Printf",
+   "abschnitt": "4.2"
   },
   {
    "pfad": "kap6-arrays/go_k6_bubblesort_programmieruebung.html",

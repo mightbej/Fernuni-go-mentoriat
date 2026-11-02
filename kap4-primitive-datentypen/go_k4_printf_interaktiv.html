@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="abschnitt" content="4.2">
+  <title>Formatierte Ausgabe mit fmt.Printf</title>
+  <link rel="stylesheet" href="../stil.css">
+  <style>
+    :root { --line:#e5e7eb;--muted:#4b5563;--accent:#0f766e;--blau:#1e40af;--aktiv:#fbbf24;--aktiv-bg:#fef3c7; }
+    .hero p + p { margin-top:8px;font-size:.95rem; }
+    button { border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:.95rem;background:#f3f4f6;color:#111827;font-family:inherit; }
+    button:hover { background:#e5e7eb; }
+    button.haupt { background:var(--accent);color:#fff;border-color:var(--accent); }
+    button.haupt:hover { background:#0d5f59; }
+    button.gewaehlt { border-color:var(--accent);background:#ecfdf5; }
+    button:disabled { opacity:.5;cursor:default; }
+    button:focus-visible, a:focus-visible { outline:2px solid var(--accent);outline-offset:2px; }
+    .zeile { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0; }
+    .zeile .marke { min-width:9.5em;font-weight:600; }
+    li { margin:6px 0; }
+    .hinweis { margin:12px 0;background:var(--aktiv-bg);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 14px; }
+    .frage { border-left:4px solid #1e40af;background:#eff6ff;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft { border-left:4px solid var(--accent);background:#f0fdfa;border-radius:8px;padding:12px 14px;margin:12px 0; }
+    .auskunft p { margin:0 0 8px; } .auskunft p:last-child { margin-bottom:0; }
+    table.text td, table.text th { font-size:.95rem; }
+    .konsole { background:#111827;color:#f9fafb;border-radius:8px;padding:10px 14px;font-family:Consolas,"Courier New",monospace;white-space:pre;min-height:1.6em;overflow-x:auto; }
+    .konsole .wert { background:#334155;border-radius:2px; }
+    .quelle { color:var(--muted);font-size:.9rem;margin:4px 0 12px; }
+    .format { font-family:Consolas,"Courier New",monospace;font-size:1.3rem;font-weight:700;color:var(--blau); }
+
+    /* Reiter und Stufen: sichtbar ist immer nur eine Stufe */
+    .tabs { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
+    .tab:hover { background:#ecfdf5; }
+    .tab.active { border-color:var(--accent); }
+    .stufe { display:none; }
+    .stufe.active { display:block; }
+    .schritte { justify-content:space-between;margin:0 0 24px; }
+
+    /* Programm mit Zeilennummern */
+    .programm { margin:12px 0;background:#1e293b;border-radius:8px;padding:10px 0;font-family:Consolas,"Courier New",monospace;font-size:.95rem;line-height:1.7;list-style:none;overflow-x:auto;tab-size:4; }
+    .programm li { margin:0;padding:1px 14px 1px 0;color:#e2e8f0;border-left:4px solid transparent;white-space:pre;min-height:1.7em; }
+    .programm li .nr { display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:#64748b;user-select:none; }
+    .programm li.aktuell { background:#334155;border-left-color:var(--aktiv);font-weight:700; }
+    .tabellenrahmen { overflow-x:auto;margin:12px 0; }
+    @media (max-width:600px) { #b-aufruf,#b-ausgabe { font-size:.64rem;padding:8px 6px; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>Formatierte Ausgabe mit fmt.Printf</h1>
+    <p>Vier Kreisflächen, einmal mit <code>fmt.Println</code> und einmal mit <code>fmt.Printf</code> ausgegeben. Du siehst, wie ein Format-String festlegt, wie breit eine Zahl wird und wie viele Nachkommastellen sie zeigt.</p>
+    <p>Kurstext v3.0.6, Abschnitt 4.2, Seiten 53–58.</p>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab active" data-stufe="0">Worum es geht</button>
+    <button type="button" class="tab" data-stufe="1">1 Format-String und Verben</button>
+    <button type="button" class="tab" data-stufe="2">2 Breite und Nachkommastellen</button>
+    <button type="button" class="tab" data-stufe="3">3 Prozentzeichen und falsche Verben</button>
+    <button type="button" class="tab" data-stufe="4">4 Selbst ausprobieren</button>
+    <button type="button" class="tab" data-stufe="5">5 Bezug zum Kurstext</button>
+  </div>
+
+  <section class="stufe active" id="stufe-0">
+  <div class="card">
+    <h3>Worum es geht</h3>
+    <p>Das Programm berechnet die Flächen von vier Kreisen. Die Funktion <code>kreisflaeche</code> enthält die Formel π · r · r, die Kreiszahl π liefert das Paket <code>math</code> als <code>math.Pi</code>. In <code>main</code> gibt je ein Aufruf von <code>fmt.Println</code> einen Radius und die Fläche dazu aus:</p>
+    <ol class="programm" id="w-programm"></ol>
+    <p class="quelle">Ein Programm dieser Lektion, <code>kreisflaechen.go</code></p>
+    <div class="hinweis">Im Kurstext zeigt Listing 4.1 auf Seite 53 das gleiche Problem an vier Temperaturen. Aus Urheberrechtsgründen zeigt diese Lektion nicht Listing 4.1, sondern ein eigenes Programm. Der Stoff ist der gleiche.</div>
+    <p>Das Programm gibt diese vier Zeilen aus:</p>
+    <div class="konsole" id="w-ausgabe"></div>
+
+    <h3>Was an der Ausgabe stört</h3>
+    <ul>
+      <li><strong>Nicht untereinander:</strong> Die Zahlen stehen nicht am Punkt ausgerichtet untereinander. Jede Zeile beginnt mit ihrer Zahl, ob sie kurz ist oder lang.</li>
+      <li><strong>Uneinheitliche Nachkommastellen:</strong> Die Radien haben keine oder eine Nachkommastelle, die Flächen zwölf bis sechzehn. So viele Stellen sind für eine Fläche in Quadratmetern viel zu genau.</li>
+    </ul>
+    <p><code>fmt.Println</code> gibt jede Zahl im Standardformat ihres Typs aus. Auf das Format hast du dabei keinen Einfluss. Mit der Funktion <code>fmt.Printf</code> aus demselben Paket <code>fmt</code> bestimmst du das Format selbst.</p>
+
+    <h3>So arbeitest du mit der Lektion</h3>
+    <ul>
+      <li><strong>Schritt 1, Format-String und Verben:</strong> Wie ein Aufruf von <code>fmt.Printf</code> aufgebaut ist.</li>
+      <li><strong>Schritt 2, Breite und Nachkommastellen:</strong> Du stellst das Format ein und siehst sofort, wie die vier Zeilen aussehen.</li>
+      <li><strong>Schritt 3, Prozentzeichen und falsche Verben:</strong> Was <code>fmt.Printf</code> tut, wenn ein Format-String nicht zu den Argumenten passt.</li>
+      <li><strong>Schritt 4, selbst ausprobieren:</strong> Im Editorlotsen änderst du die Programme und führst sie aus.</li>
+      <li><strong>Schritt 5:</strong> Wo das alles im Kurstext steht.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" disabled>Zurück</button>
+    <button type="button" class="haupt" data-gehe="1">Weiter zu Schritt 1</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-1">
+  <div class="card">
+    <h3>Schritt 1: Format-String und Verben</h3>
+    <p>Dieser Aufruf gibt die erste Zeile genauso aus wie der Aufruf von <code>fmt.Println</code> in Zeile 19:</p>
+    <div class="konsole">fmt.Printf("Radius %v m ergibt %v m²\n", r0, kreisflaeche(r0))</div>
+    <div class="konsole">Radius 0.5 m ergibt 0.7853981633974483 m²</div>
+
+    <h3>Die Teile des Aufrufs</h3>
+    <ul>
+      <li><strong>Format-String:</strong> Das erste Argument ist immer ein String. Er enthält den Text der Ausgabe und legt fest, in welchem Format die übrigen Argumente erscheinen.</li>
+      <li><strong>Verb:</strong> Ein Platzhalter im Format-String. Er beginnt mit <code>%</code> und endet mit einem Buchstaben, hier <code>%v</code>. Bei der Ausgabe steht an seiner Stelle ein Argument.</li>
+      <li><strong>Reihenfolge:</strong> Die Verben werden der Reihe nach ersetzt. Das erste <code>%v</code> bekommt den Wert von <code>r0</code>, das zweite den Rückgabewert von <code>kreisflaeche(r0)</code>.</li>
+      <li><strong>Anzahl:</strong> Zu jedem Verb gehört ein Argument. Was geschieht, wenn die Anzahlen nicht übereinstimmen, zeigt Schritt 3.</li>
+      <li><strong><code>%v</code>:</strong> Das Verb gibt einen Wert im Standardformat seines Typs aus, so wie <code>fmt.Println</code>. Eine Gleitkommazahl bekommt dabei so viele Nachkommastellen, wie nötig sind, um sie eindeutig zu bestimmen. Daher kommen die sechzehn Stellen.</li>
+    </ul>
+
+    <h3>Der Zeilenumbruch \n</h3>
+    <p><code>fmt.Println</code> beendet seine Ausgabe von selbst mit einem Zeilenumbruch. <code>fmt.Printf</code> tut das nicht. Soll die Zeile enden, steht im Format-String am Ende <code>\n</code>. Diese zwei Zeichen heißen Escape-Sequenz. In einem String-Literal stehen sie für einen einzigen Zeilenumbruch. Mehr zu Escape-Sequenzen zeigt die Lektion <a href="go_k4_strings_interaktiv.html#backslash">Strings in Go</a> in Schritt 1.</p>
+
+    <h3>Verb und Escape-Sequenz</h3>
+    <ul>
+      <li><strong>Verb:</strong> Nur <code>fmt.Printf</code> und verwandte Funktionen lesen <code>%v</code> als Platzhalter. Für jede andere Funktion sind es zwei gewöhnliche Zeichen.</li>
+      <li><strong>Escape-Sequenz:</strong> <code>\n</code> gehört zur Sprache Go. In jedem interpretierten String-Literal steht es für einen Zeilenumbruch, ganz gleich, welche Funktion den String erhält.</li>
+    </ul>
+
+    <div class="frage"><strong>Erst vorhersagen:</strong> Was gibt dieses Programm aus? Achte auf die zwei Aufrufe von <code>fmt.Printf</code> ohne <code>\n</code> und auf den Aufruf von <code>fmt.Println</code> mit <code>%v</code>.</div>
+    <ol class="programm" id="v-programm"></ol>
+    <div class="zeile"><button type="button" class="haupt" id="v-zeigen">Was gibt Go aus?</button></div>
+    <div class="konsole" id="v-ausgabe" hidden></div>
+    <div class="auskunft" id="v-erklaerung" hidden>
+      <p><strong>Zeile 6 und 7:</strong> Beide Aufrufe von <code>fmt.Printf</code> schreiben in dieselbe Zeile, weil kein <code>\n</code> im Format-String steht. So entsteht <code>0.5 m2 m</code>. Erst <code>fmt.Println()</code> in Zeile 8 beendet die Zeile.</p>
+      <p><strong>Zeile 9:</strong> <code>fmt.Println</code> kennt keine Verben. Die Funktion gibt <code>%v</code> als zwei Zeichen aus, danach den übrigen Text und durch ein Leerzeichen getrennt das zweite Argument <code>0.5</code>.</p>
+    </div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="0">Zurück zu „Worum es geht“</button>
+    <button type="button" class="haupt" data-gehe="2">Weiter zu Schritt 2</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-2">
+  <div class="card">
+    <h3>Schritt 2: Breite und Nachkommastellen</h3>
+
+    <h3>Das Verb %f</h3>
+    <p>Das Verb <code>%f</code> ist für Gleitkommazahlen gedacht. Ohne weitere Angabe gibt es jede Zahl mit sechs Nachkommastellen aus. Die Ausgabe wird damit einheitlicher, die Zahlen stehen aber noch nicht untereinander.</p>
+
+    <h3>Mindestbreite und Genauigkeit</h3>
+    <p>Zwischen <code>%</code> und <code>f</code> dürfen zwei Angaben stehen. Am Beispiel <code>%8.2f</code>:</p>
+    <ul>
+      <li><strong>Mindestbreite <code>8</code>:</strong> Die Zahl direkt nach <code>%</code> bestimmt, wie viele Zeichen die Ausgabe des Werts mindestens belegt. Ein Vorzeichen, der Punkt und die Nachkommastellen zählen mit. Ist der Wert kürzer, stehen links davon Leerzeichen.</li>
+      <li><strong>Genauigkeit <code>.2</code>:</strong> Der Punkt und die Zahl danach bestimmen bei <code>%f</code>, wie viele Nachkommastellen erscheinen. Die letzte Stelle wird gerundet.</li>
+      <li><strong>Nur eine Angabe:</strong> Ohne Mindestbreite folgt die Genauigkeit direkt auf <code>%</code>, zum Beispiel <code>%.2f</code>. Ohne Genauigkeit entfällt der Punkt, zum Beispiel <code>%8f</code>.</li>
+    </ul>
+
+    <div class="frage" id="b-frage"><strong>Erst vorhersagen:</strong> Mit zwei Nachkommastellen lauten die vier Flächen <code>0.79</code>, <code>12.57</code>, <code>314.16</code> und <code>49087.39</code>. Welche Mindestbreite brauchst du, damit alle vier am Punkt untereinander stehen?</div>
+    <div class="zeile"><button type="button" class="haupt" id="b-zeigen">Antwort zeigen</button></div>
+    <div class="auskunft" id="b-antwort" hidden>
+      <p>Die Mindestbreite 8. Der längste Wert, <code>49087.39</code>, hat acht Zeichen: fünf Ziffern, den Punkt und zwei Nachkommastellen. Mit <code>%8.2f</code> belegen auch die kürzeren Werte acht Zeichen, und die Punkte stehen untereinander. Für die Radien genügte die Mindestbreite 6, denn <code>125.00</code> hat sechs Zeichen. Mit dem gleichen Format für beide Werte stehen auch die Radien untereinander.</p>
+    </div>
+
+    <h3>Selbst einstellen</h3>
+    <p>Wähle Verb, Mindestbreite und Genauigkeit. Darunter stehen der Aufruf für die erste Zeile und die Ausgabe aller vier Zeilen, so wie Go sie erzeugt. Der Platz, den ein Wert belegt, ist grau hinterlegt.</p>
+    <div class="zeile"><span class="marke">Verb</span><span id="b-verb"></span></div>
+    <div class="zeile"><span class="marke">Mindestbreite</span><span id="b-breite"></span></div>
+    <div class="zeile"><span class="marke">Genauigkeit</span><span id="b-genau"></span></div>
+    <p>Format: <span class="format" id="b-format"></span></p>
+    <div class="konsole" id="b-aufruf"></div>
+    <div class="konsole" id="b-ausgabe"></div>
+    <div class="auskunft" id="b-satz" aria-live="polite"></div>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="1">Zurück zu Schritt 1</button>
+    <button type="button" class="haupt" data-gehe="3">Weiter zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-3">
+  <div class="card">
+    <h3>Schritt 3: Prozentzeichen und falsche Verben</h3>
+    <p>Go übersetzt ein Programm auch dann, wenn ein Format-String nicht zu den Argumenten passt. <code>fmt.Printf</code> bricht das Programm deshalb nicht ab, sondern schreibt einen Hinweis in die Ausgabe. Du erkennst den Hinweis an <code>%!</code>.</p>
+    <p>Wähle einen der vier Aufrufe, sag vorher, was er ausgibt, und deck dann die Ausgabe auf.</p>
+    <div class="zeile" id="s-wahl"></div>
+    <div class="konsole" id="s-aufruf"></div>
+    <div class="zeile"><button type="button" class="haupt" id="s-zeigen">Was gibt Go aus?</button></div>
+    <div class="konsole" id="s-ausgabe" hidden></div>
+    <div class="auskunft" id="s-erklaerung" hidden></div>
+    <p>Weitere Verben und Angaben beschreibt die englische <a href="https://pkg.go.dev/fmt" target="_blank" rel="noopener">Dokumentation des Pakets fmt</a>.</p>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="2">Zurück zu Schritt 2</button>
+    <button type="button" class="haupt" data-gehe="4">Weiter zu Schritt 4</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-4">
+  <div class="card">
+    <h3>Schritt 4: Selbst ausprobieren</h3>
+    <p>Hier findest du das Programm mit den Kreisflächen, drei Programme mit <code>fmt.Printf</code> und die Programme aus Schritt 1 und 3. Wenn du die Lektion im Editorlotsen auf deinem Rechner öffnest, kannst du ein Programm hier im Editor ändern und ausführen. Andernfalls siehst du, was Go zu jedem Programm ausgibt.</p>
+    <p>Vorschläge zum Ausprobieren:</p>
+    <ul>
+      <li><strong>Drei Nachkommastellen:</strong> Stell im Programm mit <code>%8.2f</code> auf drei Nachkommastellen um. Welche Mindestbreite brauchst du jetzt?</li>
+      <li><strong>Fünfter Kreis:</strong> Ergänze <code>r4</code> mit dem Radius <code>1000</code> und gib ihn im gleichen Format aus. Was geschieht mit der Ausrichtung?</li>
+      <li><strong>Tabelle mit Kopf:</strong> Gib vor den vier Zeilen eine Überschrift aus, deren Spalten über den Zahlen stehen.</li>
+    </ul>
+    <div id="werkstatt"></div>
+    <p>Die Seite speichert nicht, was du im Editor schreibst. Lädst du die Seite neu, steht dort wieder das Programm der Lektion.</p>
+
+    <h3>Nächste Schritte</h3>
+    <ul>
+      <li><strong>Nächste Lektion:</strong> <a href="../kap3-einfuehrung/go_k3_fehlersuche_interaktiv.html">Fehlersuche: drei Go-Programme mit mehreren Fehlern</a>.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="3">Zurück zu Schritt 3</button>
+  </div>
+  </section>
+
+  <section class="stufe" id="stufe-5">
+  <div class="card">
+    <h3>Schritt 5: Bezug zum Kurstext</h3>
+    <p>Die Tabelle nennt zu jedem Schritt den Abschnitt im Kurstext, was aus dem Kurstext stammt und was die Lektion ergänzt.</p>
+    <div class="tabellenrahmen">
+    <table class="text">
+      <tr><th>Schritt der Lektion</th><th>Abschnitt im Kurstext</th><th>Was aus dem Kurstext stammt</th><th>Was nicht im Kurstext steht</th></tr>
+      <tr><td>Worum es geht</td><td>4.2, Seiten 53–54</td><td>Die zwei Mängel einer Ausgabe mit <code>fmt.Println</code>. Der Kurstext zeigt sie an Listing 4.1 mit vier Temperaturen.</td><td>Das Programm mit den Kreisflächen und seine Ausgabe stammen aus dieser Lektion.</td></tr>
+      <tr><td>1 Format-String und Verben</td><td>4.2.1, Seiten 54–56</td><td>Format-String, Verb <code>%v</code>, Standardformat, <code>\n</code>, Hinweis 4.4 zu Verb und Escape-Sequenz</td><td>Die Aufrufe mit den Kreisflächen, das Programm zum Vorhersagen und seine Ausgabe stehen nicht im Kurstext.</td></tr>
+      <tr><td>2 Breite und Nachkommastellen</td><td>4.2.1, Seiten 56–57</td><td><code>%f</code> mit sechs Nachkommastellen, Mindestbreite und Genauigkeit. Im Kurstext werden sie an <code>%7.2f</code> gezeigt.</td><td>Das Format <code>%8.2f</code> samt Begründung sowie das Einstellen von Verb, Breite und Genauigkeit zum Ausprobieren ergänzen diese Lektion. Die Ausgaben hat Go 1.26 erzeugt.</td></tr>
+      <tr><td>3 Prozentzeichen und falsche Verben</td><td>4.2.2, Seiten 57–58</td><td><code>%%</code> für das Prozentzeichen, Expertenwissen 4.5 zu <code>%f</code> mit einer ganzen Zahl</td><td>Alle vier Aufrufe und ihre Ausgaben stammen aus dieser Lektion. Bei zu wenigen oder zu vielen Argumenten erwähnt der Kurstext nur, dass die Anzahl stimmen muss.</td></tr>
+      <tr><td>4 Selbst ausprobieren</td><td>4.2, Seiten 53–58</td><td>Die Aufrufe mit <code>%v</code>, <code>%f</code> sowie Mindestbreite und Genauigkeit</td><td>Die Programme, das Ausführen im Editorlotsen und die Vorschläge ergänzt das Mentoriat.</td></tr>
+    </table>
+    </div>
+
+    <h3>Wo das Thema im Kurstext noch vorkommt</h3>
+    <ul>
+      <li><strong>Abschnitt 3.2, das erste Go-Programm:</strong> <code>fmt.Println</code> zum ersten Mal. Die Lektion „Das erste Go-Programm“ stammt aus Moodle und liegt im Editorlotsen.</li>
+      <li><strong>Abschnitt 4.4, Gleitkommazahlen:</strong> wie eine Zahl wie <code>0.7853981633974483</code> gespeichert wird und warum sie nicht genau gespeichert sein muss. Lektion: <a href="go_k4_gleitkomma_interaktiv.html">Gleitkommazahlen</a>.</li>
+      <li><strong>Abschnitt 4.6.1, String-Literale:</strong> Escape-Sequenzen wie <code>\n</code>. Lektion: <a href="go_k4_strings_interaktiv.html#backslash">Strings in Go</a>, Schritt 1.</li>
+    </ul>
+  </div>
+  <div class="zeile schritte">
+    <button type="button" data-gehe="4">Zurück zu Schritt 4</button>
+    <button type="button" disabled>Weiter</button>
+  </div>
+  </section>
+
+</div>
+
+<script src="../kurslotse.js"></script>
+<script src="../ausprobieren.js"></script>
+<script>
+(function () {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // ---------- Reiter ----------
+  const ANKER = ['worum', 'verben', 'breite', 'sonderfaelle', 'ausprobieren', 'kurstext'];
+  const SCHRITTE = ['Worum es geht', 'Schritt 1: Format-String und Verben', 'Schritt 2: Breite und Nachkommastellen', 'Schritt 3: Prozentzeichen und falsche Verben', 'Schritt 4: Selbst ausprobieren', 'Schritt 5: Bezug zum Kurstext'];
+  let stufe = 0;
+  let angemeldet = false;
+  const melde = gewechselt => { if (angemeldet) { if (gewechselt) Kurslotse.schrittGewechselt(); else Kurslotse.standGeaendert(); } };
+  function zeigeStufe(nummer, nachOben) {
+    const gewechselt = nummer !== stufe;
+    stufe = nummer;
+    document.querySelectorAll('.stufe').forEach(s => s.classList.toggle('active', s.id === 'stufe-' + nummer));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', Number(t.dataset.stufe) === nummer));
+    if (gewechselt) melde(true);
+    if (nachOben) { history.replaceState(null, '', '#' + ANKER[nummer]); (function () { const r = document.querySelector('.tabs'); if (r && r.getBoundingClientRect().top < 0) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); })(); }
+  }
+  const stufeAusAdresse = () => Math.max(0, ANKER.indexOf(location.hash.slice(1)));
+  document.querySelectorAll('[data-stufe], [data-gehe]').forEach(k => k.addEventListener('click', () => zeigeStufe(Number(k.dataset.stufe !== undefined ? k.dataset.stufe : k.dataset.gehe), true)));
+  window.addEventListener('hashchange', () => zeigeStufe(stufeAusAdresse(), false));
+
+  // ---------- Die Programme ----------
+  // Jedes Programm so, wie Go 1.26 es übersetzt und ausgeführt hat. Eingerückt ist mit einem Tabulator.
+  // Die Lektion zeigt statt Listing 4.1 ein eigenes Programm, Thomas' Beschluss vom 2026-11-02.
+  const KREISE = 'package main\n\nimport (\n\t"fmt"\n\t"math"\n)\n\n// kreisflaeche berechnet die Fläche eines Kreises mit dem Radius r.\nfunc kreisflaeche(r float64) float64 {\n\treturn math.Pi * r * r\n}\n\nfunc main() {\n\tvar r0 float64 = 0.5 // Radien in Metern\n\tvar r1 float64 = 2\n\tvar r2 float64 = 10\n\tvar r3 float64 = 125\n\n\tfmt.Println("Radius", r0, "m ergibt", kreisflaeche(r0), "m²")\n\tfmt.Println("Radius", r1, "m ergibt", kreisflaeche(r1), "m²")\n\tfmt.Println("Radius", r2, "m ergibt", kreisflaeche(r2), "m²")\n\tfmt.Println("Radius", r3, "m ergibt", kreisflaeche(r3), "m²")\n}\n';
+  // Das Programm mit fmt.Printf und dem Format f in den Zeilen 19 bis 22
+  const mitPrintf = f => KREISE.replace(/fmt\.Println\("Radius", r(\d), "m ergibt", kreisflaeche\(r\d\), "m²"\)/g,
+    (m, i) => 'fmt.Printf("Radius ' + f + ' m ergibt ' + f + ' m²\\n", r' + i + ', kreisflaeche(r' + i + '))');
+  const SCHRITT1 = 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Printf("%v m", 0.5)\n\tfmt.Printf("%v m", 2.0)\n\tfmt.Println()\n\tfmt.Println("%v m ergibt", 0.5)\n}\n';
+  const SCHRITT3 = 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Printf("Der Rabatt beträgt %v %%.\\n", 15)\n\tfmt.Printf("Ein Vollkreis hat %f Grad.\\n", 360)\n\tfmt.Printf("Radius %v m ergibt %v m²\\n", 2.0)\n\tfmt.Printf("Radius %v m.\\n", 2.0, 12.5)\n\tfmt.Println("Ende")\n}\n';
+  const zeilenVon = code => code.replace(/\n$/, '').split('\n');
+  function zeichneProgramm(ol, code, gelb) {
+    ol.innerHTML = zeilenVon(code).map((z, i) => '<li' + ((gelb || []).includes(i + 1) ? ' class="aktuell"' : '') + '><span class="nr">' + (i + 1) + '</span>' + esc(z) + '</li>').join('');
+  }
+
+  // Die Ausgaben aller Formate, erzeugt mit Go 1.26: Format → vier Zeilen
+  const AUSGABE = {"%.0f": ["Radius 0 m ergibt 1 m²", "Radius 2 m ergibt 13 m²", "Radius 10 m ergibt 314 m²", "Radius 125 m ergibt 49087 m²"], "%.1f": ["Radius 0.5 m ergibt 0.8 m²", "Radius 2.0 m ergibt 12.6 m²", "Radius 10.0 m ergibt 314.2 m²", "Radius 125.0 m ergibt 49087.4 m²"], "%.2f": ["Radius 0.50 m ergibt 0.79 m²", "Radius 2.00 m ergibt 12.57 m²", "Radius 10.00 m ergibt 314.16 m²", "Radius 125.00 m ergibt 49087.39 m²"], "%.3f": ["Radius 0.500 m ergibt 0.785 m²", "Radius 2.000 m ergibt 12.566 m²", "Radius 10.000 m ergibt 314.159 m²", "Radius 125.000 m ergibt 49087.385 m²"], "%.4f": ["Radius 0.5000 m ergibt 0.7854 m²", "Radius 2.0000 m ergibt 12.5664 m²", "Radius 10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%.5f": ["Radius 0.50000 m ergibt 0.78540 m²", "Radius 2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%10.0f": ["Radius          0 m ergibt          1 m²", "Radius          2 m ergibt         13 m²", "Radius         10 m ergibt        314 m²", "Radius        125 m ergibt      49087 m²"], "%10.1f": ["Radius        0.5 m ergibt        0.8 m²", "Radius        2.0 m ergibt       12.6 m²", "Radius       10.0 m ergibt      314.2 m²", "Radius      125.0 m ergibt    49087.4 m²"], "%10.2f": ["Radius       0.50 m ergibt       0.79 m²", "Radius       2.00 m ergibt      12.57 m²", "Radius      10.00 m ergibt     314.16 m²", "Radius     125.00 m ergibt   49087.39 m²"], "%10.3f": ["Radius      0.500 m ergibt      0.785 m²", "Radius      2.000 m ergibt     12.566 m²", "Radius     10.000 m ergibt    314.159 m²", "Radius    125.000 m ergibt  49087.385 m²"], "%10.4f": ["Radius     0.5000 m ergibt     0.7854 m²", "Radius     2.0000 m ergibt    12.5664 m²", "Radius    10.0000 m ergibt   314.1593 m²", "Radius   125.0000 m ergibt 49087.3852 m²"], "%10.5f": ["Radius    0.50000 m ergibt    0.78540 m²", "Radius    2.00000 m ergibt   12.56637 m²", "Radius   10.00000 m ergibt  314.15927 m²", "Radius  125.00000 m ergibt 49087.38521 m²"], "%10.6f": ["Radius   0.500000 m ergibt   0.785398 m²", "Radius   2.000000 m ergibt  12.566371 m²", "Radius  10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%10f": ["Radius   0.500000 m ergibt   0.785398 m²", "Radius   2.000000 m ergibt  12.566371 m²", "Radius  10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%10v": ["Radius        0.5 m ergibt 0.7853981633974483 m²", "Radius          2 m ergibt 12.566370614359172 m²", "Radius         10 m ergibt 314.1592653589793 m²", "Radius        125 m ergibt 49087.385212340516 m²"], "%4.0f": ["Radius    0 m ergibt    1 m²", "Radius    2 m ergibt   13 m²", "Radius   10 m ergibt  314 m²", "Radius  125 m ergibt 49087 m²"], "%4.1f": ["Radius  0.5 m ergibt  0.8 m²", "Radius  2.0 m ergibt 12.6 m²", "Radius 10.0 m ergibt 314.2 m²", "Radius 125.0 m ergibt 49087.4 m²"], "%4.2f": ["Radius 0.50 m ergibt 0.79 m²", "Radius 2.00 m ergibt 12.57 m²", "Radius 10.00 m ergibt 314.16 m²", "Radius 125.00 m ergibt 49087.39 m²"], "%4.3f": ["Radius 0.500 m ergibt 0.785 m²", "Radius 2.000 m ergibt 12.566 m²", "Radius 10.000 m ergibt 314.159 m²", "Radius 125.000 m ergibt 49087.385 m²"], "%4.4f": ["Radius 0.5000 m ergibt 0.7854 m²", "Radius 2.0000 m ergibt 12.5664 m²", "Radius 10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%4.5f": ["Radius 0.50000 m ergibt 0.78540 m²", "Radius 2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%4.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%4f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%4v": ["Radius  0.5 m ergibt 0.7853981633974483 m²", "Radius    2 m ergibt 12.566370614359172 m²", "Radius   10 m ergibt 314.1592653589793 m²", "Radius  125 m ergibt 49087.385212340516 m²"], "%5.0f": ["Radius     0 m ergibt     1 m²", "Radius     2 m ergibt    13 m²", "Radius    10 m ergibt   314 m²", "Radius   125 m ergibt 49087 m²"], "%5.1f": ["Radius   0.5 m ergibt   0.8 m²", "Radius   2.0 m ergibt  12.6 m²", "Radius  10.0 m ergibt 314.2 m²", "Radius 125.0 m ergibt 49087.4 m²"], "%5.2f": ["Radius  0.50 m ergibt  0.79 m²", "Radius  2.00 m ergibt 12.57 m²", "Radius 10.00 m ergibt 314.16 m²", "Radius 125.00 m ergibt 49087.39 m²"], "%5.3f": ["Radius 0.500 m ergibt 0.785 m²", "Radius 2.000 m ergibt 12.566 m²", "Radius 10.000 m ergibt 314.159 m²", "Radius 125.000 m ergibt 49087.385 m²"], "%5.4f": ["Radius 0.5000 m ergibt 0.7854 m²", "Radius 2.0000 m ergibt 12.5664 m²", "Radius 10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%5.5f": ["Radius 0.50000 m ergibt 0.78540 m²", "Radius 2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%5.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%5f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%5v": ["Radius   0.5 m ergibt 0.7853981633974483 m²", "Radius     2 m ergibt 12.566370614359172 m²", "Radius    10 m ergibt 314.1592653589793 m²", "Radius   125 m ergibt 49087.385212340516 m²"], "%6.0f": ["Radius      0 m ergibt      1 m²", "Radius      2 m ergibt     13 m²", "Radius     10 m ergibt    314 m²", "Radius    125 m ergibt  49087 m²"], "%6.1f": ["Radius    0.5 m ergibt    0.8 m²", "Radius    2.0 m ergibt   12.6 m²", "Radius   10.0 m ergibt  314.2 m²", "Radius  125.0 m ergibt 49087.4 m²"], "%6.2f": ["Radius   0.50 m ergibt   0.79 m²", "Radius   2.00 m ergibt  12.57 m²", "Radius  10.00 m ergibt 314.16 m²", "Radius 125.00 m ergibt 49087.39 m²"], "%6.3f": ["Radius  0.500 m ergibt  0.785 m²", "Radius  2.000 m ergibt 12.566 m²", "Radius 10.000 m ergibt 314.159 m²", "Radius 125.000 m ergibt 49087.385 m²"], "%6.4f": ["Radius 0.5000 m ergibt 0.7854 m²", "Radius 2.0000 m ergibt 12.5664 m²", "Radius 10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%6.5f": ["Radius 0.50000 m ergibt 0.78540 m²", "Radius 2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%6.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%6v": ["Radius    0.5 m ergibt 0.7853981633974483 m²", "Radius      2 m ergibt 12.566370614359172 m²", "Radius     10 m ergibt 314.1592653589793 m²", "Radius    125 m ergibt 49087.385212340516 m²"], "%7.0f": ["Radius       0 m ergibt       1 m²", "Radius       2 m ergibt      13 m²", "Radius      10 m ergibt     314 m²", "Radius     125 m ergibt   49087 m²"], "%7.1f": ["Radius     0.5 m ergibt     0.8 m²", "Radius     2.0 m ergibt    12.6 m²", "Radius    10.0 m ergibt   314.2 m²", "Radius   125.0 m ergibt 49087.4 m²"], "%7.2f": ["Radius    0.50 m ergibt    0.79 m²", "Radius    2.00 m ergibt   12.57 m²", "Radius   10.00 m ergibt  314.16 m²", "Radius  125.00 m ergibt 49087.39 m²"], "%7.3f": ["Radius   0.500 m ergibt   0.785 m²", "Radius   2.000 m ergibt  12.566 m²", "Radius  10.000 m ergibt 314.159 m²", "Radius 125.000 m ergibt 49087.385 m²"], "%7.4f": ["Radius  0.5000 m ergibt  0.7854 m²", "Radius  2.0000 m ergibt 12.5664 m²", "Radius 10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%7.5f": ["Radius 0.50000 m ergibt 0.78540 m²", "Radius 2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%7.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%7f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%7v": ["Radius     0.5 m ergibt 0.7853981633974483 m²", "Radius       2 m ergibt 12.566370614359172 m²", "Radius      10 m ergibt 314.1592653589793 m²", "Radius     125 m ergibt 49087.385212340516 m²"], "%8.0f": ["Radius        0 m ergibt        1 m²", "Radius        2 m ergibt       13 m²", "Radius       10 m ergibt      314 m²", "Radius      125 m ergibt    49087 m²"], "%8.1f": ["Radius      0.5 m ergibt      0.8 m²", "Radius      2.0 m ergibt     12.6 m²", "Radius     10.0 m ergibt    314.2 m²", "Radius    125.0 m ergibt  49087.4 m²"], "%8.2f": ["Radius     0.50 m ergibt     0.79 m²", "Radius     2.00 m ergibt    12.57 m²", "Radius    10.00 m ergibt   314.16 m²", "Radius   125.00 m ergibt 49087.39 m²"], "%8.3f": ["Radius    0.500 m ergibt    0.785 m²", "Radius    2.000 m ergibt   12.566 m²", "Radius   10.000 m ergibt  314.159 m²", "Radius  125.000 m ergibt 49087.385 m²"], "%8.4f": ["Radius   0.5000 m ergibt   0.7854 m²", "Radius   2.0000 m ergibt  12.5664 m²", "Radius  10.0000 m ergibt 314.1593 m²", "Radius 125.0000 m ergibt 49087.3852 m²"], "%8.5f": ["Radius  0.50000 m ergibt  0.78540 m²", "Radius  2.00000 m ergibt 12.56637 m²", "Radius 10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%8.6f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%8f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%8v": ["Radius      0.5 m ergibt 0.7853981633974483 m²", "Radius        2 m ergibt 12.566370614359172 m²", "Radius       10 m ergibt 314.1592653589793 m²", "Radius      125 m ergibt 49087.385212340516 m²"], "%9.0f": ["Radius         0 m ergibt         1 m²", "Radius         2 m ergibt        13 m²", "Radius        10 m ergibt       314 m²", "Radius       125 m ergibt     49087 m²"], "%9.1f": ["Radius       0.5 m ergibt       0.8 m²", "Radius       2.0 m ergibt      12.6 m²", "Radius      10.0 m ergibt     314.2 m²", "Radius     125.0 m ergibt   49087.4 m²"], "%9.2f": ["Radius      0.50 m ergibt      0.79 m²", "Radius      2.00 m ergibt     12.57 m²", "Radius     10.00 m ergibt    314.16 m²", "Radius    125.00 m ergibt  49087.39 m²"], "%9.3f": ["Radius     0.500 m ergibt     0.785 m²", "Radius     2.000 m ergibt    12.566 m²", "Radius    10.000 m ergibt   314.159 m²", "Radius   125.000 m ergibt 49087.385 m²"], "%9.4f": ["Radius    0.5000 m ergibt    0.7854 m²", "Radius    2.0000 m ergibt   12.5664 m²", "Radius   10.0000 m ergibt  314.1593 m²", "Radius  125.0000 m ergibt 49087.3852 m²"], "%9.5f": ["Radius   0.50000 m ergibt   0.78540 m²", "Radius   2.00000 m ergibt  12.56637 m²", "Radius  10.00000 m ergibt 314.15927 m²", "Radius 125.00000 m ergibt 49087.38521 m²"], "%9.6f": ["Radius  0.500000 m ergibt  0.785398 m²", "Radius  2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%9f": ["Radius  0.500000 m ergibt  0.785398 m²", "Radius  2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%9v": ["Radius       0.5 m ergibt 0.7853981633974483 m²", "Radius         2 m ergibt 12.566370614359172 m²", "Radius        10 m ergibt 314.1592653589793 m²", "Radius       125 m ergibt 49087.385212340516 m²"], "%f": ["Radius 0.500000 m ergibt 0.785398 m²", "Radius 2.000000 m ergibt 12.566371 m²", "Radius 10.000000 m ergibt 314.159265 m²", "Radius 125.000000 m ergibt 49087.385212 m²"], "%v": ["Radius 0.5 m ergibt 0.7853981633974483 m²", "Radius 2 m ergibt 12.566370614359172 m²", "Radius 10 m ergibt 314.1592653589793 m²", "Radius 125 m ergibt 49087.385212340516 m²"]};
+
+  // ---------- Worum es geht ----------
+  zeichneProgramm(el('w-programm'), KREISE);
+  el('w-ausgabe').textContent = AUSGABE['%v'].join('\n');
+
+  // ---------- Schritt 1 ----------
+  const SCHRITT1_AUSGABE = '0.5 m2 m\n%v m ergibt 0.5';
+  let verbenGezeigt = false;
+  zeichneProgramm(el('v-programm'), SCHRITT1);
+  el('v-ausgabe').textContent = SCHRITT1_AUSGABE;
+  el('v-zeigen').addEventListener('click', () => {
+    verbenGezeigt = true;
+    el('v-ausgabe').hidden = el('v-erklaerung').hidden = false;
+    el('v-zeigen').hidden = true;
+    melde(false);
+  });
+
+  // ---------- Schritt 2 ----------
+  let antwortGezeigt = false;
+  el('b-zeigen').addEventListener('click', () => {
+    antwortGezeigt = true;
+    el('b-antwort').hidden = false;
+    el('b-zeigen').hidden = true;
+    melde(false);
+  });
+  const VERBEN = ['v', 'f'];
+  const BREITEN = ['', '4', '5', '6', '7', '8', '9', '10'];
+  const GENAU = ['', '0', '1', '2', '3', '4', '5', '6'];
+  const wahl = { verb: 'f', breite: '8', genau: '2' };
+  function knoepfe(ziel, werte, schluessel, name) {
+    werte.forEach(w => {
+      const k = document.createElement('button');
+      k.type = 'button';
+      k.className = 'code';
+      k.textContent = name(w);
+      k.dataset.wert = w;
+      k.addEventListener('click', () => { wahl[schluessel] = w; zeigeFormat(); });
+      el(ziel).appendChild(k);
+    });
+  }
+  knoepfe('b-verb', VERBEN, 'verb', w => '%' + w);
+  knoepfe('b-breite', BREITEN, 'breite', w => w === '' ? 'ohne' : w);
+  knoepfe('b-genau', GENAU, 'genau', w => w === '' ? 'ohne' : '.' + w);
+  const format = () => '%' + wahl.breite + (wahl.verb === 'f' && wahl.genau !== '' ? '.' + wahl.genau : '') + wahl.verb;
+  // Eine Zeile der Ausgabe: die zwei Werte grau hinterlegt
+  function zeileHtml(z) {
+    const m = z.match(/^Radius (.*) m ergibt (.*) m²$/);
+    return 'Radius <span class="wert">' + esc(m[1]) + '</span> m ergibt <span class="wert">' + esc(m[2]) + '</span> m²';
+  }
+  function satzZumFormat() {
+    const f = format();
+    const breit = wahl.breite === '' ? 'ohne Mindestbreite: Jeder Wert belegt nur so viele Zeichen, wie er braucht' : 'mit der Mindestbreite ' + wahl.breite + ': Jeder Wert belegt mindestens ' + wahl.breite + ' Zeichen';
+    if (wahl.verb === 'v') return f + ' gibt jeden Wert im Standardformat aus, ' + breit + '. Eine Genauigkeit wählt diese Lektion nur für %f.';
+    const genau = wahl.genau === '' ? 'mit sechs Nachkommastellen, weil keine Genauigkeit angegeben ist' : 'mit ' + wahl.genau + (wahl.genau === '1' ? ' Nachkommastelle' : ' Nachkommastellen') + (wahl.genau === '0' ? ' und ohne Punkt' : '');
+    return f + ' gibt jeden Wert ' + genau + ' aus, ' + breit + '.';
+  }
+  function zeigeFormat() {
+    const f = format();
+    el('b-verb').querySelectorAll('button').forEach(k => k.classList.toggle('gewaehlt', k.dataset.wert === wahl.verb));
+    el('b-breite').querySelectorAll('button').forEach(k => k.classList.toggle('gewaehlt', k.dataset.wert === wahl.breite));
+    el('b-genau').querySelectorAll('button').forEach(k => { k.classList.toggle('gewaehlt', wahl.verb === 'f' && k.dataset.wert === wahl.genau); k.disabled = wahl.verb !== 'f'; });
+    el('b-format').textContent = f;
+    el('b-aufruf').textContent = 'fmt.Printf("Radius ' + f + ' m ergibt ' + f + ' m²\\n", r0, kreisflaeche(r0))';
+    el('b-ausgabe').innerHTML = AUSGABE[f].map(zeileHtml).join('\n');
+    el('b-satz').textContent = satzZumFormat();
+    melde(false);
+  }
+  zeigeFormat();
+
+  // ---------- Schritt 3 ----------
+  const FAELLE = [
+    { name: 'Prozentzeichen', aufruf: 'fmt.Printf("Der Rabatt beträgt %v %%.\\n", 15)', ausgabe: 'Der Rabatt beträgt 15 %.',
+      html: '<p>Ein einzelnes <code>%</code> leitet ein Verb ein. Soll das Prozentzeichen selbst erscheinen, steht im Format-String <code>%%</code>. Dieses Verb braucht kein Argument.</p>' },
+    { name: '%f mit einer ganzen Zahl', aufruf: 'fmt.Printf("Ein Vollkreis hat %f Grad.\\n", 360)', ausgabe: 'Ein Vollkreis hat %!f(int=360) Grad.',
+      html: '<p><code>%f</code> ist für Gleitkommazahlen gedacht, <code>360</code> ist eine ganze Zahl vom Typ <code>int</code>. Go übersetzt das Programm trotzdem, und es läuft weiter. An der Stelle des Verbs steht <code>%!f(int=360)</code>: das Verb mit Ausrufezeichen, dahinter Typ und Wert des Arguments.</p><p>Wer <code>fmt.Printf</code> benutzt, sieht sich deshalb die Ausgabe an. Eine Meldung beim Übersetzen gibt es nicht.</p>' },
+    { name: 'ein Argument zu wenig', aufruf: 'fmt.Printf("Radius %v m ergibt %v m²\\n", 2.0)', ausgabe: 'Radius 2 m ergibt %!v(MISSING) m²',
+      html: '<p>Zwei Verben, aber nur ein Argument. Das erste <code>%v</code> bekommt <code>2.0</code>. Für das zweite fehlt ein Argument, an seiner Stelle steht <code>%!v(MISSING)</code>. „missing“ heißt „fehlt“.</p>' },
+    { name: 'ein Argument zu viel', aufruf: 'fmt.Printf("Radius %v m.\\n", 2.0, 12.5)', ausgabe: 'Radius 2 m.\n%!(EXTRA float64=12.5)',
+      html: '<p>Ein Verb, aber zwei Argumente. Das übrige Argument hängt <code>fmt.Printf</code> mit <code>%!(EXTRA float64=12.5)</code> ans Ende der Ausgabe, mit Typ und Wert. „extra“ heißt „zusätzlich“.</p><p>Weil der Format-String mit <code>\\n</code> endet, steht der Hinweis schon in der nächsten Zeile. Die nächste Ausgabe des Programms schließt direkt an ihn an.</p>' }
+  ];
+  let fall = 0, fallGezeigt = false;
+  FAELLE.forEach((f, i) => {
+    const k = document.createElement('button');
+    k.type = 'button';
+    k.textContent = f.name;
+    k.addEventListener('click', () => zeigeFall(i, false));
+    el('s-wahl').appendChild(k);
+  });
+  function zeigeFall(i, gezeigt) {
+    fall = i; fallGezeigt = gezeigt;
+    el('s-wahl').querySelectorAll('button').forEach((k, j) => k.classList.toggle('gewaehlt', j === i));
+    el('s-aufruf').textContent = FAELLE[i].aufruf;
+    el('s-ausgabe').textContent = FAELLE[i].ausgabe;
+    el('s-erklaerung').innerHTML = FAELLE[i].html;
+    el('s-ausgabe').hidden = el('s-erklaerung').hidden = !gezeigt;
+    el('s-zeigen').hidden = gezeigt;
+    melde(false);
+  }
+  el('s-zeigen').addEventListener('click', () => zeigeFall(fall, true));
+  zeigeFall(0, false);
+
+  // ---------- Schritt 4: selbst ausprobieren ----------
+  const probe = Ausprobieren.einrichten({
+    ziel: el('werkstatt'),
+    reiter: document.querySelector('.tab[data-stufe="4"]'),
+    fassungen: [
+      { name: 'Kreisflächen mit Println', code: KREISE, ergebnis: { ausgabe: AUSGABE['%v'].join('\n') + '\n' } },
+      { name: 'Printf mit %v', code: mitPrintf('%v'), ergebnis: { ausgabe: AUSGABE['%v'].join('\n') + '\n' } },
+      { name: 'Printf mit %f', code: mitPrintf('%f'), ergebnis: { ausgabe: AUSGABE['%f'].join('\n') + '\n' } },
+      { name: 'Printf mit %8.2f', code: mitPrintf('%8.2f'), ergebnis: { ausgabe: AUSGABE['%8.2f'].join('\n') + '\n' } },
+      { name: 'Programm aus Schritt 1', code: SCHRITT1, ergebnis: { ausgabe: SCHRITT1_AUSGABE + '\n' } },
+      { name: 'Programm aus Schritt 3', code: SCHRITT3, ergebnis: { ausgabe: FAELLE.map(f => f.ausgabe).join('\n') + 'Ende\n' } }
+    ],
+    beiAenderung: () => { if (stufe === 4) melde(false); }
+  });
+
+  // ---------- Kurslotse ----------
+  function standSaetze() {
+    switch (stufe) {
+      case 0: return ['Zu sehen sind das Programm mit den Kreisflächen und seine Ausgabe. Die Codeblöcke sind fest. In diesem Schritt lässt sich nichts ausprobieren.'];
+      case 1: return [verbenGezeigt ? 'Die Ausgabe des Programms zum Vorhersagen ist aufgedeckt: ' + SCHRITT1_AUSGABE.replace('\n', ' / ') : 'Die Ausgabe des Programms zum Vorhersagen ist noch verdeckt. Der Student soll sie erst vorhersagen.'];
+      case 2: return [
+        antwortGezeigt ? 'Die Antwort auf die Frage zum Vorhersagen ist aufgedeckt: Mindestbreite 8.' : 'Die Antwort auf die Frage nach der Mindestbreite ist noch verdeckt. Der Student soll sie erst vorhersagen.',
+        'Eingestellt ist das Format ' + format() + '. Die Seite sagt dazu: ' + satzZumFormat(),
+        'Die Ausgabe von Go mit diesem Format, Zeile für Zeile: ' + AUSGABE[format()].join(' / ')];
+      case 3: return ['Gewählt ist der Aufruf „' + FAELLE[fall].name + '“: ' + FAELLE[fall].aufruf,
+        fallGezeigt ? 'Die Ausgabe ist aufgedeckt: ' + FAELLE[fall].ausgabe.replace('\n', ' / ') : 'Die Ausgabe ist noch verdeckt. Der Student soll sie erst vorhersagen.'];
+      case 4: return probe.stand();
+      default: return ['Dieser Schritt hat keine Demo. In diesem Schritt lässt sich nichts ausprobieren.'];
+    }
+  }
+  function kurzStand() {
+    switch (stufe) {
+      case 1: return verbenGezeigt ? 'Ausgabe aufgedeckt' : 'Ausgabe verdeckt';
+      case 2: return 'Format ' + format();
+      case 3: return FAELLE[fall].name + (fallGezeigt ? ', Ausgabe aufgedeckt' : '');
+      case 4: return probe.kurz();
+      default: return '';
+    }
+  }
+  function zeilen() {
+    switch (stufe) {
+      case 0: return zeilenVon(KREISE);
+      case 1: return zeilenVon(SCHRITT1);
+      case 2: return [el('b-aufruf').textContent];
+      case 3: return [FAELLE[fall].aufruf];
+      case 4: return probe.zeilen();
+      default: return [];
+    }
+  }
+
+  zeigeStufe(stufeAusAdresse(), false);
+  Kurslotse.einrichten({
+    titel: 'Formatierte Ausgabe mit fmt.Printf',
+    thema: 'fmt.Printf, Format-String, Verb %v %f, Mindestbreite, Genauigkeit, %8.2f, Escape-Sequenz \\n, %%, %!f(int=360), Kreisflächen',
+    bezug: 'Kurstext v3.0.6, Abschnitt 4.2, Seiten 53–58',
+    beschreibung: '../kurslotse/kap4-primitive-datentypen/go_k4_printf_interaktiv.md',
+    reiter: () => ANKER[stufe],
+    schritt: () => SCHRITTE[stufe],
+    sichtbar: () => el('stufe-' + stufe),
+    text: '.card > h3, .card > p:not(.quelle), .card > ul, .frage, .auskunft:not([hidden]), .hinweis, table.text',
+    zeilen: zeilen,
+    zeilenTitel: 'Das Programm, das in diesem Schritt zu sehen ist:',
+    stand: standSaetze,
+    kurz: kurzStand,
+    beispiel: 'Warum steht bei %8.2f die 8 vor dem Punkt?'
+  });
+  angemeldet = true;
+})();
+</script>
+</body>
+</html>

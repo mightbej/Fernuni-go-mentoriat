@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-26T16:14",
+ "stand": "2026-11-02T10:52",
  "abschnitte": {
   "1.1": [
    {
@@ -622,6 +622,13 @@
     "art": "nennt"
    },
    {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Höhere und niedrigere Programmiersprachen: vom Programmtext zum Maschinenbefehl",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap2-grundlagen/go_k2_maschinensprache_compiler_interaktiv.html",
     "beschreibung": "Die Seite ist die HTML-Seite zu Abschnitt 2.7 des Kurstexts. Sie zeigt in vier Schritten ein Programm in Maschinensprache, die zwei Wege mit Compiler und mit Interpreter, die Zerlegung einer Anweisung in Token und Aufbau und drei Arten von Fehlern. Sie kommt ohne Go aus, wie Kapitel 2 des Kurstexts.",
@@ -1092,6 +1099,13 @@
   ],
   "4.2": [
    {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "erklaert"
+   },
+   {
     "titel": "Exkurs: Speichern und Rechnen im Rechner nach von Neumann",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_exkurs_von_neumann_interaktiv.html",
     "beschreibung": "Die Seite gibt die Orientierung für Kapitel 4. Sie zeigt, dass ein Rechner Werte speichert und verarbeitet, und ordnet die Datentypen dort ein: Der Wertebereich gehört zum Speicherwerk, die Operationen gehören zum Rechenwerk. Sie ist das Bild zu den Abschnitten 2.2 und 2.3 des Kurstexts und damit die Brücke von Kapitel 2 zu Kapitel 4. Den Namen von Neumann nennt der Kurstext nicht. Die Seite führt keine Zellen und keine Adressen ein, das tut erst das Speichermodell.",
@@ -1111,6 +1125,24 @@
     "beschreibung": "Die Seite zeigt, wie eine ganze Zahl im Quelltext dezimal, binär, oktal und hexadezimal geschrieben wird, welche Schreibweisen Go annimmt und wie `fmt.Printf` einen Wert in jedem der vier Zahlensysteme ausgibt.",
     "geprueft": true,
     "art": "nennt"
+   }
+  ],
+  "4.2.1": [
+   {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "erklaert"
+   }
+  ],
+  "4.2.2": [
+   {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "erklaert"
    }
   ],
   "4.3.1": [
@@ -1557,6 +1589,13 @@
   ],
   "4.4": [
    {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "nennt"
+   },
+   {
     "titel": "Typkonvertierung: implizite Typanpassung und explizite Typkonvertierung in Go",
     "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_typkonvertierung_interaktiv.html",
     "beschreibung": "Die Seite zeigt, wann Go den Typ eines Ausdrucks selbst anpasst und wann das Programm ihn mit `float64(a)` oder `int(f)` umwandeln muss.",
@@ -1813,6 +1852,13 @@
     "beschreibung": "Die Seite zeigt, wie man einen String im Quelltext schreibt, was der Backslash darin bewirkt, wie man zwei Strings verkettet und warum sich ein String nicht ändern lässt.",
     "geprueft": true,
     "art": "erklaert"
+   },
+   {
+    "titel": "Formatierte Ausgabe mit fmt.Printf",
+    "adresse": "https://mightbej.github.io/Fernuni-go-mentoriat/kap4-primitive-datentypen/go_k4_printf_interaktiv.html",
+    "beschreibung": "Die Lektion erklärt Abschnitt 4.2 des Kurstexts an einem eigenen Programm mit vier Kreisflächen. Sie steht auf GitHub Pages und läuft mit „Selbst ausprobieren“ im Editorlotsen.",
+    "geprueft": true,
+    "art": "nennt"
    },
    {
     "titel": "Strings: Bytes und Zeichen in Go",
