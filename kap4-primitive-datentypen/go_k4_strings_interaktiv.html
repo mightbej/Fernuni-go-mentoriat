@@ -218,11 +218,11 @@ fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</p
     <p>Go arbeitet mit dem Zeichensatz Unicode. Er enthält über 120.000 Zeichen: die Buchstaben vieler Sprachen, mathematische Zeichen, Symbole und Emojis. Der alte Zeichensatz ASCII hatte 128 Zeichen. Jedes Unicode-Zeichen darf in einem String-Literal stehen.</p>
     <p>Viele Zeichen gibt es auf keiner Tastatur. Deshalb hat jedes Unicode-Zeichen eine Nummer, den Unicode code point. In Go heißt diese Nummer auch <em>rune</em>. Man schreibt sie hexadezimal.</p>
     <ul>
-      <li><strong><code>\u</code> mit vier Hexadezimalziffern:</strong> <code>"∞"</code> ist das Zeichen ∞ mit der Nummer 221E.</li>
+      <li><strong><code>\u</code> mit vier Hexadezimalziffern:</strong> <code>"\u221e"</code> ist das Zeichen ∞ mit der Nummer 221E.</li>
       <li><strong><code>\U</code> mit acht Hexadezimalziffern:</strong> <code>"\U0001f600"</code> ist der Smiley 😀 mit der Nummer 1F600. Das große <code>U</code> braucht man für Nummern mit mehr als vier Ziffern.</li>
     </ul>
-    <p>Eine kürzere Nummer wird vorn mit Nullen aufgefüllt: Das ü hat die Nummer FC und heißt <code>ü</code>.</p>
-<pre class="code-block">fmt.Println("Unendlich ist ∞ und Smiley ist \U0001f600")
+    <p>Eine kürzere Nummer wird vorn mit Nullen aufgefüllt: Das ü hat die Nummer FC und heißt <code>"\u00fc"</code>.</p>
+<pre class="code-block">fmt.Println("Unendlich ist \u221e und Smiley ist \U0001f600")
 // Ausgabe: Unendlich ist ∞ und Smiley ist 😀</pre>
 
     <h3>Ausprobieren: von der Nummer zum Zeichen</h3>
@@ -245,7 +245,7 @@ fmt.Println(htmlCode)    // gibt die fünf Zeilen mit allen Einrückungen aus</p
       <div class="gross" id="u-zeichen"></div>
       <div class="feld" id="u-feld"></div>
     </div>
-    <div class="hinweis">Die Escape-Sequenzen <code>\u</code> und <code>\U</code> gelten nur im interpretierten String-Literal. Im rohen Literal <code>`∞`</code> stehen sechs gewöhnliche Zeichen.</div>
+    <div class="hinweis">Die Escape-Sequenzen <code>\u</code> und <code>\U</code> gelten nur im interpretierten String-Literal. Im rohen Literal <code>`\u221e`</code> stehen sechs gewöhnliche Zeichen.</div>
     <p>Wie viele Bytes ein Zeichen im Speicher belegt und warum <code>len("∞")</code> den Wert 3 hat, zeigt die Seite <a href="go_k4_stringbytes_interaktiv.html">Strings: Bytes und Zeichen</a>.</p>
   </div>
   <div class="zeile schritte">
